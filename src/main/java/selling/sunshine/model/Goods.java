@@ -1,5 +1,7 @@
 package selling.sunshine.model;
 
+import selling.sunshine.form.GoodsForm;
+
 /**
  * Created by sunshine on 4/8/16.
  */
@@ -21,6 +23,15 @@ public class Goods extends Entity {
 
     public Goods(String name, double price, String description) {
         this(name, price);
+        this.description = description;
+    }
+
+    public Goods(GoodsForm form) {
+        String name = form.getName();
+        double price = Double.parseDouble(form.getPrice());
+        String description = form.getDescription();
+        this.name = name;
+        this.price = price;
         this.description = description;
     }
 
