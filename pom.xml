@@ -15,6 +15,12 @@
             <artifactId>spring-webmvc</artifactId>
             <version>4.2.5.RELEASE</version>
         </dependency>
-    </dependencies>
 
+        <!-- library for react js -->
+        <dependency>
+            <groupId>org.webjars.npm</groupId>
+            <artifactId>react</artifactId>
+            <version>15.0.0-rc.2</version>
+        </dependency>
+    </dependencies>
 </project>

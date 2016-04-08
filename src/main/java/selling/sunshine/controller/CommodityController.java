@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+import selling.sunshine.form.GoodsForm;
 
 /**
  * Created by sunshine on 4/8/16.
@@ -20,9 +21,9 @@ public class CommodityController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/create")
-    public ModelAndView create(String input) {
+    public ModelAndView create(GoodsForm form) {
         ModelAndView view = new ModelAndView();
-
+        
         return view;
     }
 }

@@ -3,5 +3,5 @@ package selling.sunshine.dao;
 /**
  * Created by sunshine on 4/8/16.
  */
-public class CommodityDao {
+public interface CommodityDao {
 }
