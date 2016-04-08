@@ -16,5 +16,16 @@
 
     <context:annotation-config/>
 
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
+        <property name="prefix" value="/WEB-INF/template"/>
+        <property name="suffix" value=".vm"/>
+    </bean>
+
+    <bean id="velocityConfigurer"
+          class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
+        <property name="resourceLoaderPath" value="/WEB-INF/template"/>
+        <property name="configLocation" value="velocity.properties"/>
+    </bean>
+
     <context:component-scan base-package="selling"/>
 </beans>
