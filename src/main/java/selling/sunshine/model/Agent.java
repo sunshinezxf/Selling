@@ -1,0 +1,78 @@
+package selling.sunshine.model;
+
+/**
+ * Created by sunshine on 4/7/16.
+ */
+public class Agent extends Entity {
+    private String agentId;
+    private String name;
+    private String gender;
+    private String phone;
+    private String address;
+    private String wechat;
+
+    public Agent() {
+        super();
+    }
+
+    public Agent(String name, String gender, String phone, String address) {
+        this();
+        this.name = name;
+        this.gender = gender;
+        this.phone = phone;
+        this.address = address;
+    }
+
+    public Agent(String name, String gender, String phone, String address, String wechat) {
+        this(name, gender, phone, address);
+        this.wechat = wechat;
+    }
+
+    public String getAgentId() {
+        return agentId;
+    }
+
+    public void setAgentId(String agentId) {
+        this.agentId = agentId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getWechat() {
+        return wechat;
+    }
+
+    public void setWechat(String wechat) {
+        this.wechat = wechat;
+    }
+}
