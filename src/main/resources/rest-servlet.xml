@@ -13,19 +13,14 @@
 
     <bean id="viewResolver" class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
         <property name="suffix" value=".vm"/>
+        <property name="requestContextAttribute" value="request"/>
+        <property name="contentType" value="text/html;charset=utf-8"/>
     </bean>
 
     <bean id="velocityConfigurer"
           class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
         <property name="resourceLoaderPath" value="/WEB-INF/template"/>
-        <property name="velocityProperties">
-            <props>
-                <prop key="directive.foreach.counter.name">loopCounter</prop>
-                <prop key="directive.foreach.counter.initial.value">0</prop>
-                <prop key="input.encoding">UTF-8</prop>
-                <prop key="output.encoding">UTF-8</prop>
-            </props>
-        </property>
+        <property name="configLocation" value="classpath:velocity.properties"/>
     </bean>
 
     <context:component-scan base-package="selling"/>

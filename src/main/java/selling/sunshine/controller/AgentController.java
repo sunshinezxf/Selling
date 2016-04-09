@@ -23,4 +23,11 @@ public class AgentController {
         view.setViewName("/agent/index");
         return view;
     }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/register")
+    public ModelAndView register() {
+        ModelAndView view = new ModelAndView();
+        view.setViewName("/agent/register");
+        return view;
+    }
 }
