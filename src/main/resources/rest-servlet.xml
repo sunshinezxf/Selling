@@ -1,14 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:mvc="http://www.springframework.org/schema/mvc"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
-        http://www.springframework.org/schema/context
-        http://www.springframework.org/schema/context/spring-context.xsd
-        http://www.springframework.org/schema/mvc
-        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
     <mvc:annotation-driven/>
 
@@ -17,14 +12,20 @@
     <context:annotation-config/>
 
     <bean id="viewResolver" class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
-        <property name="prefix" value="/WEB-INF/template"/>
         <property name="suffix" value=".vm"/>
     </bean>
 
     <bean id="velocityConfigurer"
           class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
         <property name="resourceLoaderPath" value="/WEB-INF/template"/>
-        <property name="configLocation" value="velocity.properties"/>
+        <property name="velocityProperties">
+            <props>
+                <prop key="directive.foreach.counter.name">loopCounter</prop>
+                <prop key="directive.foreach.counter.initial.value">0</prop>
+                <prop key="input.encoding">UTF-8</prop>
+                <prop key="output.encoding">UTF-8</prop>
+            </props>
+        </property>
     </bean>
 
     <context:component-scan base-package="selling"/>
