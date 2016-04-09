@@ -1,8 +1,8 @@
 #parse("/agent/util.vm")
-<html lang="zh_CN">
+<html>
 <head>
     #parse("/agent/component/init.vm")
-    <title>首页</title>
+    <title>代理注册</title>
 </head>
 <body>
     #parse("/agent/component/navigate.vm")
