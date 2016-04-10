@@ -1,0 +1,31 @@
+<form class="form-signin" id="lg-form">
+    <h2 class="form-signin-heading">
+        登录
+    </h2>
+
+    <div class="form-group has-feedback">
+        <label for="account_email" class="sr-only">
+            Email address
+        </label>
+        <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+        <input type="email" class="form-control" id="account_email" name="email"
+               placeholder="邮箱" required="" autocomplete="off">
+    </div>
+    <div class="form-group has-feedback">
+        <label for="account_password" class="sr-only">
+            Password
+        </label>
+        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+        <input type="password" class="form-control" name="password"
+               id="account_password" placeholder="密码" required="" autocomplete="off">
+    </div>
+    <button type="submit" class="btn btn-lg btn-primary btn-block btn-info" id="lgbtn">登录
+    </button>
+</form>
+<script>
+    $("#lgbtn").click(function () {
+        $("#lg-form").attr("action", "${path.concat('/login')}");
+        $("#lg-form").attr("method", "post");
+        $("#lg-form").submit();
+    });
+</script>

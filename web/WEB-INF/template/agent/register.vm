@@ -1,4 +1,4 @@
-#parse("/agent/util.vm")
+#parse("/common/util.vm")
 <html>
 <head>
     #parse("/agent/component/init.vm")
