@@ -2,7 +2,7 @@
 <html>
 <head>
     #parse("/agent/component/init.vm")
-    <title>代理注册</title>
+    <title>代理商注册</title>
 </head>
 <body ontouchstart>
 <div class="container">

@@ -1,0 +1,24 @@
+<div class="weui_cells weui_cells_access clear-margin-top">
+    <a class="weui_cell">
+        <div class="weui_cell_bd weui_cell_primary">
+            <p>客户姓名</p>
+        </div>
+        <div class="weui_cell_ft"></div>
+    </a>
+    <a class="weui_cell">
+        <div class="weui_cell_bd weui_cell_primary">
+            <p>商品名称</p>
+        </div>
+        <div class="weui_cell_ft"></div>
+    </a>
+    <a class="weui_cell">
+        <div class="weui_cell_bd weui_cell_primary">
+            <p>数量</p>
+        </div>
+        <div class="weui_cell_ft">1</div>
+    </a>
+
+    <div class="weui_cell weui_cells_tips">
+        金额:元
+    </div>
+</div>

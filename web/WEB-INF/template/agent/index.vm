@@ -4,7 +4,14 @@
     #parse("/agent/component/init.vm")
     <title>首页</title>
 </head>
-<body>
-    #parse("/agent/component/navigate.vm")
+<body ontouchstart>
+<div class="container">
+    <div class="tabbar">
+        <div class="weui_tab_bd">
+            #parse("/agent/component/place_order_form.vm")
+        </div>
+        #parse("/agent/component/navigate.vm")
+    </div>
+</div>
 </body>
 </html>

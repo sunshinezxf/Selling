@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import selling.sunshine.service.AgentService;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * Created by sunshine on 4/8/16.
  */
@@ -28,6 +30,20 @@ public class AgentController {
     public ModelAndView register() {
         ModelAndView view = new ModelAndView();
         view.setViewName("/agent/register");
+        return view;
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/register")
+    public ModelAndView register(HttpServletRequest request) {
+        ModelAndView view = new ModelAndView();
+        view.setViewName("redirect:/agent/prompt");
+        return view;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/prompt")
+    public ModelAndView prompt() {
+        ModelAndView view = new ModelAndView();
+        view.setViewName("/agent/prompt");
         return view;
     }
 }

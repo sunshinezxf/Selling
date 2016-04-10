@@ -279,3 +279,7 @@ body {
 .clear-padding-left {
     padding-left: 0;
 }
+
+.clear-margin-top {
+    margin-top: 0;
+}

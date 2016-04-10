@@ -1,0 +1,20 @@
+<div class="weui_tabbar">
+    <a class="weui_tabbar_item weui_bar_item_on">
+        <div class="weui_tabbar_icon">
+            <img src="${path.concat('/material/images/icon_nav_article.png')}" alt=""/>
+        </div>
+        <p class="weui_tabbar_label">下单</p>
+    </a>
+    <a class="weui_tabbar_item">
+        <div class="weui_tabbar_icon">
+            <img src="${path.concat('/material/images/icon_nav_msg.png')}" alt=""/>
+        </div>
+        <p class="weui_tabbar_label">客户</p>
+    </a>
+    <a class="weui_tabbar_item">
+        <div class="weui_tabbar_icon">
+            <img src="${path.concat('/material/images/icon_nav_cell.png')}" alt=""/>
+        </div>
+        <p class="weui_tabbar_label">我</p>
+    </a>
+</div>
