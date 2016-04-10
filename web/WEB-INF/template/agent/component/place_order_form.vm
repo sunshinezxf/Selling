@@ -1,4 +1,4 @@
-<div class="panel">
+<div class="panel" id="place_order_panel">
     <div class="hd">
         <h1 class="page_title">代客下单</h1>
     </div>

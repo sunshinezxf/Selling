@@ -9,9 +9,16 @@
     <div class="tabbar">
         <div class="weui_tab_bd">
             #parse("/agent/component/place_order_form.vm")
+            #parse("/agent/component/customer_list.vm")
+            #parse("/agent/component/me.vm")
         </div>
         #parse("/agent/component/navigate.vm")
     </div>
 </div>
 </body>
+<script>
+    $("#customer_list_panel").hide();
+    $("#self_info_panel").hide();
+    $("#place_order_panel").show();
+</script>
 </html>

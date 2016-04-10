@@ -18,7 +18,7 @@
         <div class="weui_cell_ft">1</div>
     </a>
 
-    <div class="weui_cell weui_cells_tips">
+    <div class="weui_cell weui_cells_tips clear-margin-top">
         金额:元
     </div>
 </div>

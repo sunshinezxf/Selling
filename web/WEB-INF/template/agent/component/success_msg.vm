@@ -6,7 +6,7 @@
         <div class="weui_text_area">
             <h2 class="weui_msg_title">操作成功</h2>
 
-            <p class="weui_msg_desc">您已成功提交申请,带审核后即可使用</p>
+            <p class="weui_msg_desc">您已成功提交申请,待审核后即可使用</p>
         </div>
         <div class="weui_opr_area">
             <p class="weui_btn_area">

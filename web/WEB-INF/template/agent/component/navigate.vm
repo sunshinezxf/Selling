@@ -1,20 +1,48 @@
 <div class="weui_tabbar">
-    <a class="weui_tabbar_item weui_bar_item_on">
+    <a class="weui_tabbar_item weui_bar_item_on" id="place_order">
         <div class="weui_tabbar_icon">
             <img src="${path.concat('/material/images/icon_nav_article.png')}" alt=""/>
         </div>
         <p class="weui_tabbar_label">下单</p>
     </a>
-    <a class="weui_tabbar_item">
+    <a class="weui_tabbar_item" id="view_customer">
         <div class="weui_tabbar_icon">
             <img src="${path.concat('/material/images/icon_nav_msg.png')}" alt=""/>
         </div>
         <p class="weui_tabbar_label">客户</p>
     </a>
-    <a class="weui_tabbar_item">
+    <a class="weui_tabbar_item" id="info_me">
         <div class="weui_tabbar_icon">
             <img src="${path.concat('/material/images/icon_nav_cell.png')}" alt=""/>
         </div>
         <p class="weui_tabbar_label">我</p>
     </a>
 </div>
+<script>
+    $(".weui_tabbar_item").click(function () {
+        var current = $(".weui_bar_item_on");
+        var current_id = current.attr("id");
+        var target_id = $(this).attr("id");
+        if (current_id != target_id) {
+            current.removeClass("weui_bar_item_on");
+            if (current_id == "place_order") {
+                $("#place_order_panel").hide();
+            }
+            if (current_id == "view_customer") {
+                $("#customer_list_panel").hide();
+            }
+            if (current_id == "info_me") {
+                $("#self_info_panel").hide();
+            }
+            $(this).addClass("weui_bar_item_on")
+            if (target_id == "place_order") {
+                $("#place_order_panel").show();
+            } else if (target_id == "view_customer") {
+                $("#customer_list_panel").show();
+            } else if (target_id == "info_me") {
+                $("#self_info_panel").show();
+            }
+        }
+    });
+
+</script>

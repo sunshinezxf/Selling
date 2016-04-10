@@ -1,0 +1,37 @@
+<div class="panel" id="customer_list_panel">
+    <div id="customer_panel">
+        <div class="hd">
+            <h1 class="page_title">我的客户</h1>
+        </div>
+        <div class="bd">
+            <div class="weui_panel">
+                <div class="weui_cells weui_cells_access clear-margin-top">
+                    <a class="weui_cell" id="add_customer_btn">
+                        <div class="weui_cell_bd weui_cell_primary">
+                            <p>新增客户</p>
+                        </div>
+                        <div class="weui_cell_ft"></div>
+                    </a>
+                </div>
+                <div class="list-cell">
+                    <div class="weui_cells weui_cells_access" id="customer_list">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    #parse("/agent/component/add_customer.vm")
+</div>
+<script>
+    $("#add_customer_form").hide();
+    $("#add_customer_btn").click(function () {
+        $("#add_customer_form").fadeIn();
+        $("#customer_panel").hide();
+    });
+    var list = JSON.parse('[{"name": "章许帆", "phone": "15895862305", "address": "江苏省南京市鼓楼区汉口路22号"}]');
+    for (var i = 0; i < list.length; i++) {
+        var item = list[i];
+        var node = "<a class='weui_cell'><div class='weui_cell_bd weui_cell_primary'><p>" + item.name + "</p></div><div class='weui_cell_ft'>" + item.phone + "</div></a>";
+        $("#customer_list").append(node);
+    }
+</script>
