@@ -1,0 +1,46 @@
+<div class="weui_cells">
+    <div class="weui_cell">
+        <div class="weui_cell_hd">
+            <label class="weui_label">姓名</label>
+        </div>
+        <div class="weui_cell_bd weui_cell_primary">
+            <input class="weui_input" type="text" placeholder="请填写姓名"/>
+        </div>
+    </div>
+    <a class="weui_cells_access weui_cell">
+        <div class="weui_cell_bd weui_cell_primary">
+            <p>称谓</p>
+        </div>
+        <div class="weui_cell_ft">先生</div>
+    </a>
+
+    <div class="weui_cell">
+        <div class="weui_cell_hd">
+            <label class="weui_label">手机</label>
+        </div>
+        <div class="weui_cell_bd weui_cell_primary">
+            <input class="weui_input" type="number" pattern="1[0-9]{10}" placeholder="请填写手机号"/>
+        </div>
+    </div>
+    <div class="weui_cell">
+        <div class="weui_cell_hd">
+            <label class="weui_label">地址</label>
+        </div>
+        <div class="weui_cell_bd weui_cell_primary">
+            <input class="weui_input" type="text" placeholder="请填写联系地址"/>
+        </div>
+    </div>
+    <div class="weui_cell">
+        <div class="weui_cell_hd">
+            <label class="weui_label">微信号</label>
+        </div>
+        <div class="weui_cell_bd weui_cell_primary">
+            <input class="weui_input" type="text" placeholder="请填写微信号"/>
+        </div>
+    </div>
+</div>
+<div class="weui_btn_area">
+    <a class="weui_btn weui_btn_primary">
+        支付保障金并注册
+    </a>
+</div>
