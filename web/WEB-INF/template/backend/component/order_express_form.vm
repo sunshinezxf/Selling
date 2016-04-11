@@ -1,0 +1,81 @@
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+            <h1><i class="fa fa-home"></i> 生成快递单 </h1>
+            <ol class="breadcrumb">
+                <li><a href="${path.concat('/dashboard')}">首页</a></li>
+                <li><a data-toggle="collapse" data-parent="#accordion" href="#order-management">订单管理</a></li>
+                <li class="active">生成快递单</li>
+            </ol>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+
+            <div class="" id="express-form">
+                <div id="basic-sender-info" class="table bs-callout">
+                    <div class="row">
+                        <div class="col-xs-2 col-md-2 col-lg-2">寄件
+                            <small>单位名称</small>
+                        </div>
+                        <div class="col-xs-5 col-md-5 col-lg-5">xxx公司</div>
+                        <div class="col-xs-2 col-md-2 col-lg-2">
+                            <small>寄件人</small>
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-3">xxx</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-2 col-md-2 col-lg-2">地址</div>
+                        <div class="col-xs-10 col-md-10 col-lg-10">江苏省南京市鼓楼区汉口路22号</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-2 col-md-2 col-lg-2">联系电话</div>
+                        <div class="col-xs-10 col-md-10 col-lg-10">18066668888</div>
+                    </div>
+                </div>
+                <div id="basic-receiver-info" class="table bs-callout">
+                    <div class="row">
+                        <div class="col-xs-2 col-md-2 col-lg-2">收件
+                            <small>单位名称</small>
+                        </div>
+                        <div class="col-xs-5 col-md-5 col-lg-5">xxx公司</div>
+                        <div class="col-xs-2 col-md-2 col-lg-2">
+                            <small>收件人</small>
+                        </div>
+                        <div class="col-xs-3 col-md-3 col-lg-3">xxx</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-2 col-md-2 col-lg-2">地址</div>
+                        <div class="col-xs-1 col-md-1 col-lg-1">xx</div>
+                        <div class="col-xs-1 col-md-1 col-lg-1">省</div>
+                        <div class="col-xs-1 col-md-1 col-lg-1">xx</div>
+                        <div class="col-xs-1 col-md-1 col-lg-1">市</div>
+                        <div class="col-xs-1 col-md-1 col-lg-1">xx</div>
+                        <div class="col-xs-2 col-md-2 col-lg-2">区(县)</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-md-12 col-lg-12">江苏省南京市鼓楼区汉口路111号</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-2 col-md-2 col-lg-2">联系电话</div>
+                        <div class="col-xs-10 col-md-10 col-lg-10">13980806666</div>
+                    </div>
+                </div>
+                <div id="basic-goods-info" class="table bs-callout">
+                    <div class="row">
+                        <div class="col-xs-3 col-md-3 col-lg-3">托寄物详细资料</div>
+                        <div class="col-xs-9 col-md-9 col-lg-9" style="height:50px;"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-3 col-md-3 col-lg-3"></div>
+                        <div class="col-xs-2 col-md-2 col-lg-2">数量</div>
+                        <div class="col-xs-2 col-md-2 col-lg-2">xxx</div>
+                        <div class="col-xs-2 col-md-2 col-lg-2">声明价值</div>
+                        <div class="col-xs-2 col-md-2 col-lg-2">xxx</div>
+                        <div class="col-xs-1 col-md-1 col-lg-1">元</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,15 @@
+#parse("/common/util.vm")
+<html lang="zh_CN">
+<head>
+    #parse("/backend/component/init.vm")
+    #parse("/backend/component/init_datatable.vm")
+    <title>顾客概览</title>
+</head>
+<bod>
+    #parse("/backend/component/navigate_with_login.vm")
+    <div class="container-fluid">
+        #parse("/backend/component/sidebar.vm")
+        #parse("/backend/component/customer_overview_table.vm")
+    </div>
+</bod>
+</html>

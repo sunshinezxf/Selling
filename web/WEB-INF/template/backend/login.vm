@@ -2,7 +2,7 @@
 <html lang="zh_CN">
 <head>
     #parse("/backend/component/init.vm")
-    <link rel="stylesheet" href="${path.concat('/material/css/signin.css')}"/>
+    <link rel="stylesheet" href="${path.concat('/material/css/backend/signin.css')}"/>
     <title>登录</title>
 </head>
 <body>

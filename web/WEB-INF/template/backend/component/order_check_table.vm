@@ -1,0 +1,127 @@
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+            <h1><i class="fa fa-home"></i> 订单审核 </h1>
+            <ol class="breadcrumb">
+                <li><a href="${path.concat('/dashboard')}">首页</a></li>
+                <li><a data-toggle="collapse" data-parent="#accordion" href="#order-management">订单管理</a></li>
+                <li class="active">订单审核</li>
+            </ol>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+            <p>待处理订单累计：3笔</p>
+
+            <div class="bs-callout">
+                <p>代理商A订单</p>
+                <table class="table table-striped" style="margin-bottom: 0.2em">
+                    <tr>
+                        <th>客户</th>
+                        <th>产品</th>
+                        <th>数量</th>
+                        <th>价格</th>
+                    </tr>
+                    <tr>
+                        <td>客户A</td>
+                        <td>商品A</td>
+                        <td>3</td>
+                        <td>298</td>
+                    </tr>
+                    <tr>
+                        <td>客户B</td>
+                        <td>商品A</td>
+                        <td>2</td>
+                        <td>298</td>
+                    </tr>
+                    <tr>
+                        <td>客户C</td>
+                        <td>商品B</td>
+                        <td>2</td>
+                        <td>298</td>
+                    </tr>
+                    <tr>
+                        <td>客户D</td>
+                        <td>商品B</td>
+                        <td>3</td>
+                        <td>298</td>
+                    </tr>
+                </table>
+                <button type="button" class="btn btn-info">一键发货</button>
+            </div>
+
+            <div class="bs-callout">
+                <p>代理商B订单</p>
+                <table class="table table-striped" style="margin-bottom: 0.2em">
+                    <tr>
+                        <th>客户</th>
+                        <th>产品</th>
+                        <th>数量</th>
+                        <th>价格</th>
+                    </tr>
+                    <tr>
+                        <td>客户A</td>
+                        <td>商品A</td>
+                        <td>3</td>
+                        <td>298</td>
+                    </tr>
+                    <tr>
+                        <td>客户B</td>
+                        <td>商品A</td>
+                        <td>2</td>
+                        <td>298</td>
+                    </tr>
+                    <tr>
+                        <td>客户C</td>
+                        <td>商品B</td>
+                        <td>2</td>
+                        <td>298</td>
+                    </tr>
+                    <tr>
+                        <td>客户D</td>
+                        <td>商品B</td>
+                        <td>3</td>
+                        <td>298</td>
+                    </tr>
+                </table>
+                <button type="button" class="btn btn-info">一键发货</button>
+            </div>
+
+            <div class="bs-callout">
+                <p>代理商C订单</p>
+                <table class="table table-striped" style="margin-bottom: 0.2em">
+                    <tr>
+                        <th>客户</th>
+                        <th>产品</th>
+                        <th>数量</th>
+                        <th>价格</th>
+                    </tr>
+                    <tr>
+                        <td>客户A</td>
+                        <td>商品A</td>
+                        <td>3</td>
+                        <td>298</td>
+                    </tr>
+                    <tr>
+                        <td>客户B</td>
+                        <td>商品A</td>
+                        <td>2</td>
+                        <td>298</td>
+                    </tr>
+                    <tr>
+                        <td>客户C</td>
+                        <td>商品B</td>
+                        <td>2</td>
+                    </tr>
+                    <tr>
+                        <td>客户D</td>
+                        <td>商品B</td>
+                        <td>3</td>
+                        <td>298</td>
+                    </tr>
+                </table>
+                <button type="button" class="btn btn-info">一键发货</button>
+            </div>
+        </div>
+    </div>
+</div>

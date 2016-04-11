@@ -6,5 +6,8 @@
 </head>
 <body>
     #parse("/backend/component/navigate_with_login.vm")
+<div class="container-fluid">
+    #parse("/backend/component/sidebar.vm")
+</div>
 </body>
 </html>

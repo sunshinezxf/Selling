@@ -46,4 +46,18 @@ public class AgentController {
         view.setViewName("/agent/prompt");
         return view;
     }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/check")
+    public ModelAndView check() {
+        ModelAndView view = new ModelAndView();
+        view.setViewName("/backend/agent/check");
+        return view;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/overview")
+    public ModelAndView overview() {
+        ModelAndView view = new ModelAndView();
+        view.setViewName("/backend/agent/overview");
+        return view;
+    }
 }

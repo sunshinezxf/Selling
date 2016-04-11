@@ -1,0 +1,39 @@
+<div class="row">
+    <div class="col-sm-3 col-md-2 sidebar">
+        <ul class="nav nav-sidebar" id="accordion" aria-multiselectable="true">
+            <li><a href="${path.concat('/dashboard')}"><i class="fa fa-desktop"></i> 首页</a></li>
+            <li><a data-toggle="collapse" data-parent="#accordion" href="#agent-management"><i
+                    class="fa fa-book"></i> 代理管理<i
+                    class="pull-right fa fa-caret-down"></i></a>
+                <ul id="agent-management" class="nav nav-collapse collapse">
+                    <li><a class="sub-nav" href="${path.concat('/agent/check')}"><i class="fa fa-edit"></i>
+                        代理审核</a>
+                    </li>
+                    <li><a class="sub-nav" href="${path.concat('/agent/overview')}"><i class="fa fa-tasks"></i>
+                        代理概览</a>
+                    </li>
+                </ul>
+            </li>
+            <li><a data-toggle="collapse" data-parent="#accordion" href="#order-management"><i
+                    class="fa fa-book"></i> 订单管理<i
+                    class="pull-right fa fa-caret-down"></i></a>
+                <ul id="order-management" class="nav nav-collapse collapse">
+                    <li><a class="sub-nav" href="${path.concat('/order/check')}"><i class="fa fa-edit"></i>
+                        订单审核</a>
+                    </li>
+                    <li><a class="sub-nav" href="${path.concat('/order/overview')}"><i class="fa fa-tasks"></i>
+                        订单概览</a>
+                </ul>
+            </li>
+            <li><a data-toggle="collapse" data-parent="#accordion" href="#customer-management"><i
+                    class="fa fa-book"></i> 顾客管理<i
+                    class="pull-right fa fa-caret-down"></i></a>
+                <ul id="customer-management" class="nav nav-collapse collapse">
+                    <li><a class="sub-nav" href="${path.concat('/customer/overview')}"><i class="fa fa-tasks"></i>
+                        顾客概览</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>

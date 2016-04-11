@@ -1,0 +1,4 @@
+<link rel="stylesheet" href="${path.concat('/plugins/datatable/css/dataTables.bootstrap.css')}"/>
+<script type="text/javascript" src="/plugins/datatable/js/jquery.dataTables.js"></script>
+<script type="text/javascript"
+        src="${path.concat('/plugins/datatable/js/dataTables.bootstrap.js')}"></script>
