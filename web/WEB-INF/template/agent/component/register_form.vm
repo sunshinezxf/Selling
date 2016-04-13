@@ -40,11 +40,11 @@
             </div>
         </div>
     </form>
-    <div class="weui_btn_area">
-        <button type="button" class="weui_btn weui_btn_primary" id="register_pay_btn">
-            支付保障金并注册
-        </button>
-    </div>
+</div>
+<div class="weui_btn_area">
+    <button type="button" class="weui_btn weui_btn_primary" id="register_pay_btn">
+        提交注册申请
+    </button>
 </div>
 <script>
     $("#register_pay_btn").click(function () {

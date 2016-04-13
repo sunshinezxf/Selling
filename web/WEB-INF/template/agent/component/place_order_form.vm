@@ -12,9 +12,8 @@
             </div>
         </div>
         <div class="weui_btn_area">
-            <a class="weui_btn weui_btn_primary">
-                确认下单
-            </a>
+            <a class="weui_btn weui_btn_plain_primary">保存订单</a>
+            <a class="weui_btn weui_btn_primary">确认下单</a>
         </div>
     </div>
 </div>

@@ -18,11 +18,25 @@ public class AgentController {
     @Autowired
     private AgentService agentService;
 
-    @RequestMapping(method = RequestMethod.GET, value = "/index")
+    @RequestMapping(method = RequestMethod.GET, value = "/me/index")
     public ModelAndView index() {
         ModelAndView view = new ModelAndView();
 
-        view.setViewName("/agent/index");
+        view.setViewName("/agent/me/index");
+        return view;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/order/place")
+    public ModelAndView placeOrder() {
+        ModelAndView view = new ModelAndView();
+        view.setViewName("/agent/order/place");
+        return view;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/customer/manage")
+    public ModelAndView manageCustomer() {
+        ModelAndView view = new ModelAndView();
+        view.setViewName("/agent/customer/manage");
         return view;
     }
 
