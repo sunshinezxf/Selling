@@ -33,6 +33,13 @@ public class AgentController {
         return view;
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/order/manage")
+    public ModelAndView manageOrder() {
+        ModelAndView view = new ModelAndView();
+        view.setViewName("/agent/order/manage");
+        return view;
+    }
+
     @RequestMapping(method = RequestMethod.GET, value = "/customer/manage")
     public ModelAndView manageCustomer() {
         ModelAndView view = new ModelAndView();

@@ -1,4 +1,4 @@
-<div id="add_customer_form">
+<div id="add_customer_form" style="display: none;">
     <div class="weui_cells">
         <div class="weui_cell">
             <div class="weui_cell_hd">

@@ -28,7 +28,7 @@
         $("#add_customer_form").fadeIn();
         $("#customer_panel").hide();
     });
-    var list = JSON.parse('[{"name": "章许帆", "phone": "15895862305", "address": "江苏省南京市鼓楼区汉口路22号"}]');
+    var list = JSON.parse('[{"name": "xxx", "phone": "15895862305", "address": "江苏省南京市鼓楼区汉口路22号"}]');
     for (var i = 0; i < list.length; i++) {
         var item = list[i];
         var node = "<a class='weui_cell'><div class='weui_cell_bd weui_cell_primary'><p>" + item.name + "</p></div><div class='weui_cell_ft'>" + item.phone + "</div></a>";

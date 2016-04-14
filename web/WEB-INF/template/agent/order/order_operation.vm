@@ -1,0 +1,81 @@
+<div class="hd">
+    <h1 class="page_title">订单管理</h1>
+
+    <p class="page_desc">更多关于订单(创建,查询)的操作</p>
+</div>
+<div class="bd">
+    <div class="weui_btn_area clear-margin-top">
+        <a href="${path.concat('/agent/order/place')}" class="weui_btn weui_btn_plain_primary">新建订单</a>
+    </div>
+    <div class="weui_tab">
+        <div class="weui_navbar">
+            <div class="weui_navbar_item weui_bar_item_on" id="not_submit">
+                未提交
+            </div>
+            <div class="weui_navbar_item" id="submit">
+                已提交
+            </div>
+            <div class="weui_navbar_item" id="close">
+                已结束
+            </div>
+        </div>
+        <div class="weui_tab_bd">
+            <div class="weui_cells weui_cells_access clear-margin-top">
+                <a class="weui_cell">
+                    <div class="weui_cell_hd">
+                        <i class="icon icon_article"></i>
+                    </div>
+                    <div class="weui_cell_bd weui_cell_primary">
+                        <p>2016年4月15日</p>
+                    </div>
+                    <div class="weui_cell_ft">含3名客户</div>
+                </a>
+                <a class="weui_cell">
+                    <div class="weui_cell_hd">
+                        <i class="icon icon_article"></i>
+                    </div>
+                    <div class="weui_cell_bd weui_cell_primary">
+                        <p>2016年4月14日</p>
+                    </div>
+                    <div class="weui_cell_ft">含4名客户</div>
+                </a>
+                <a class="weui_cell">
+                    <div class="weui_cell_hd">
+                        <i class="icon icon_article"></i>
+                    </div>
+                    <div class="weui_cell_bd weui_cell_primary">
+                        <p>2016年4月13日</p>
+                    </div>
+                    <div class="weui_cell_ft">含2名客户</div>
+                </a>
+                <a class="weui_cell">
+                    <div class="weui_cell_hd">
+                        <i class="icon icon_article"></i>
+                    </div>
+                    <div class="weui_cell_bd weui_cell_primary">
+                        <p>2016年4月12日</p>
+                    </div>
+                    <div class="weui_cell_ft">含3名客户</div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(".weui_navbar_item").click(function () {
+        var current = $(".weui_bar_item_on");
+        var current_id = current.attr("id");
+        var target_id = $(this).attr("id");
+        if (current_id != target_id) {
+            current.removeClass("weui_bar_item_on");
+            if (target_id == "not_submit") {
+
+            } else if (target_id == "submit") {
+
+            } else if (target_id == "closed") {
+
+            }
+            $(this).addClass("weui_bar_item_on")
+        }
+    });
+</script>

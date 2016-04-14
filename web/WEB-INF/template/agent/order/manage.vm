@@ -1,0 +1,12 @@
+#parse("/common/util.vm")
+<html lang="zh_CN">
+<head>
+    #parse("/agent/component/init.vm")
+    <title>订单管理</title>
+</head>
+<body ontouchstart>
+<div class="container">
+    #parse("/agent/order/order_operation.vm")
+</div>
+</body>
+</html>

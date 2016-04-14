@@ -1,0 +1,33 @@
+<div class="panel" id="self_info_panel">
+    <div class="hd">
+        <h1 class="page_title">个人信息</h1>
+
+        <p class="page_desc"></p>
+    </div>
+    <div class="bd">
+        <div class="weui_panel">
+            <div class="list-cell">
+                <div class="weui_grids">
+                    <a class="weui_grid" href="${path.concat('/agent/order/manage')}">
+                        <div class="weui_grid_icon">
+                            <i class="icon icon_article"></i>
+                        </div>
+                        <p class="weui_grid_label">订单</p>
+                    </a>
+                    <a class="weui_grid" href="${path.concat('/agent/customer/manage')}">
+                        <div class="weui_grid_icon">
+                            <i class="icon icon_dialog"></i>
+                        </div>
+                        <p class="weui_grid_label">客户</p>
+                    </a>
+                    <a class="weui_grid" href="${path.concat('/agent/customer/manage')}">
+                        <div class="weui_grid_icon">
+                            <i class="icon icon_panel"></i>
+                        </div>
+                        <p class="weui_grid_label">账户</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
