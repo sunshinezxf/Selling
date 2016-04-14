@@ -1,0 +1,41 @@
+<div style="display: none;" id="add_order_item">
+    <div class="weui_cells weui_cells_access">
+        <a class="weui_cell">
+            <div class="weui_cell_bd weui_cell_primary">
+                <p>客户姓名</p>
+            </div>
+            <div class="weui_cell_ft"></div>
+        </a>
+        <a class="weui_cell">
+            <div class="weui_cell_bd weui_cell_primary">
+                <p>商品名称</p>
+            </div>
+            <div class="weui_cell_ft"></div>
+        </a>
+        <a class="weui_cell">
+            <div class="weui_cell_bd weui_cell_primary">
+                <p>数量</p>
+            </div>
+            <div class="weui_cell_ft">1</div>
+        </a>
+
+        <div class="weui_cell weui_cells_tips clear-margin-top">
+            金额:元
+        </div>
+    </div>
+    <div class="weui_btn_area">
+        <button type="button" class="weui_btn weui_btn_primary" id="add_confirm_btn">确认添加</button>
+        <button type="button" class="weui_btn weui_btn_default" id="add_cancel_btn">取消</button>
+    </div>
+</div>
+<script>
+    $("#add_confirm_btn").click(function () {
+        $("#add_order_item").hide();
+        $("#place_order_panel").fadeIn();
+    });
+
+    $("#add_cancel_btn").click(function () {
+        $("#add_order_item").hide();
+        $("#place_order_panel").fadeIn();
+    });
+</script>

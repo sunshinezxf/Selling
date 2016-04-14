@@ -1,0 +1,12 @@
+<div class="weui_cells">
+    <div class="weui_cells_title">缴纳保障金后即可正常使用</div>
+    <div class="weui_cell">
+        <div class="weui_cell_bd weui_cell_primary">
+            缴纳金额:10000元
+        </div>
+        <div class="weui_cell_ft">
+            <a class="weui_btn weui_btn_mini weui_btn_plain_primary">支付</a>
+        </div>
+    </div>
+</div>
+

@@ -20,7 +20,7 @@
                         </div>
                         <p class="weui_grid_label">客户</p>
                     </a>
-                    <a class="weui_grid" href="${path.concat('/agent/customer/manage')}">
+                    <a class="weui_grid" href="${path.concat('/agent/account/info')}">
                         <div class="weui_grid_icon">
                             <i class="icon icon_panel"></i>
                         </div>

@@ -47,6 +47,20 @@ public class AgentController {
         return view;
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/account/info")
+    public ModelAndView info() {
+        ModelAndView view = new ModelAndView();
+        view.setViewName("/agent/account/info");
+        return view;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/statement")
+    public ModelAndView statement() {
+        ModelAndView view = new ModelAndView();
+        view.setViewName("/agent/account/statement");
+        return view;
+    }
+
     @RequestMapping(method = RequestMethod.GET, value = "/register")
     public ModelAndView register() {
         ModelAndView view = new ModelAndView();

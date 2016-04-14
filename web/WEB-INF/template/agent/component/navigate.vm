@@ -31,8 +31,6 @@
             } else if (target_id == "info_me") {
                 window.location.href = "${path.concat('/agent/me/index')}";
             }
-            $("#" + target_id).addClass("weui_bar_item_on");
-
         }
     });
 

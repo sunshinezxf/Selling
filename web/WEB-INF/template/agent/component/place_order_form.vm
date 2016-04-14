@@ -4,11 +4,16 @@
     </div>
     <div class="bd">
         <div class="weui_panel">
+            <div class="weui_cells weui_cells_access clear-margin-top">
+                <a class="weui_cell" id="add_order_btn">
+                    <div class="weui_cell_bd weui_cell_primary">
+                        <p>添加订货单</p>
+                    </div>
+                    <div class="weui_cell_ft"></div>
+                </a>
+            </div>
             <div class="list-cell">
                 #parse("/agent/component/place_order_item.vm")
-            </div>
-            <div class="weui_btn_area">
-                <a class="weui_btn weui_btn_mini weui_btn_plain_primary">添加</a>
             </div>
         </div>
         <div class="weui_btn_area">
@@ -17,3 +22,11 @@
         </div>
     </div>
 </div>
+#parse("/agent/order/add_order_item.vm")
+<script>
+    $("#add_order_item").hide();
+    $("#add_order_btn").click(function () {
+        $("#add_order_item").fadeIn();
+        $("#place_order_panel").hide();
+    });
+</script>

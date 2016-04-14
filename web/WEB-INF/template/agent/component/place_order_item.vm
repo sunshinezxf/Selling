@@ -1,15 +1,16 @@
-<div class="weui_cells weui_cells_access clear-margin-top">
+<div class="weui_cells weui_cells_access">
+    <div class="weui_cells_title">订货单编号xxxxxxxx</div>
     <a class="weui_cell">
         <div class="weui_cell_bd weui_cell_primary">
             <p>客户姓名</p>
         </div>
-        <div class="weui_cell_ft"></div>
+        <div class="weui_cell_ft">xxx</div>
     </a>
     <a class="weui_cell">
         <div class="weui_cell_bd weui_cell_primary">
             <p>商品名称</p>
         </div>
-        <div class="weui_cell_ft"></div>
+        <div class="weui_cell_ft">xxx</div>
     </a>
     <a class="weui_cell">
         <div class="weui_cell_bd weui_cell_primary">
@@ -19,6 +20,43 @@
     </a>
 
     <div class="weui_cell weui_cells_tips clear-margin-top">
-        金额:元
+        金额:298元
+    </div>
+</div>
+<div class="weui_cells weui_cells_access">
+    <div class="weui_cells_title">订货单编号xxxxxxxx</div>
+    <a class="weui_cell">
+        <div class="weui_cell_bd weui_cell_primary">
+            <p>客户姓名</p>
+        </div>
+        <div class="weui_cell_ft">xxx</div>
+    </a>
+    <a class="weui_cell">
+        <div class="weui_cell_bd weui_cell_primary">
+            <p>商品名称</p>
+        </div>
+        <div class="weui_cell_ft">xxx</div>
+    </a>
+    <a class="weui_cell">
+        <div class="weui_cell_bd weui_cell_primary">
+            <p>数量</p>
+        </div>
+        <div class="weui_cell_ft">1</div>
+    </a>
+
+    <div class="weui_cell weui_cells_tips clear-margin-top">
+        金额:298元
+    </div>
+</div>
+<div class="weui_panel">
+    <div class="weui_panel_bd">
+        <div class="weui_media_box">
+            总计:
+            <p class="weui_media_text">商品A: 30件, 共5100元</p>
+
+            <p class="weui_media_text">商品B: 20件, 共4000元</p>
+
+            <p class="weui_media_text">共计9100元</p>
+        </div>
     </div>
 </div>
