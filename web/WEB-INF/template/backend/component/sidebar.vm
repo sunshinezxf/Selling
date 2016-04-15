@@ -34,6 +34,30 @@
                     </li>
                 </ul>
             </li>
+            <li><a data-toggle="collapse" data-parent="#accordion" href="#goods-management"><i
+                    class="fa fa-book"></i> 商品管理<i
+                    class="pull-right fa fa-caret-down"></i></a>
+                <ul id="goods-management" class="nav nav-collapse collapse">
+                    <li><a class="sub-nav" href="${path.concat('/commodity/create')}"><i class="fa fa-edit"></i>
+                        添加商品</a>
+                    </li>
+                    <li><a class="sub-nav" href="${path.concat('/commodity/overview')}"><i class="fa fa-tasks"></i>
+                        商品概览</a>
+                    </li>
+                </ul>
+            </li>
+            <li><a data-toggle="collapse" data-parent="#accordion" href="#statement-management"><i
+                    class="fa fa-book"></i> 返现管理<i
+                    class="pull-right fa fa-caret-down"></i></a>
+                <ul id="statement-management" class="nav nav-collapse collapse">
+                    <li><a class="sub-nav" href="${path.concat('/')}"><i class="fa fa-edit"></i>
+                        当月返现</a>
+                    </li>
+                    <li><a class="sub-nav" href="${path.concat('/')}"><i class="fa fa-tasks"></i>
+                        返现记录</a>
+                    </li>
+                </ul>
+            </li>
         </ul>
     </div>
 </div>

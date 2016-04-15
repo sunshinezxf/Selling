@@ -48,4 +48,11 @@ public class PlatformController {
         view.setViewName("redirect:/login");
         return view;
     }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/navigate")
+    public ModelAndView navigate() {
+        ModelAndView view = new ModelAndView();
+        view.setViewName("/navigate");
+        return view;
+    }
 }

@@ -48,15 +48,3 @@
         金额:298元
     </div>
 </div>
-<div class="weui_panel">
-    <div class="weui_panel_bd">
-        <div class="weui_media_box">
-            总计:
-            <p class="weui_media_text">商品A: 30件, 共5100元</p>
-
-            <p class="weui_media_text">商品B: 20件, 共4000元</p>
-
-            <p class="weui_media_text">共计9100元</p>
-        </div>
-    </div>
-</div>

@@ -22,27 +22,44 @@
                     <td>代理商A</td>
                     <td>3</td>
                     <td>30</td>
-                    <td>查看详情</td>
+                    <td>
+                        <button type="button" class="btn btn-info">查看详情</button>
+                    </td>
                 </tr>
                 <tr>
                     <td>代理商B</td>
                     <td>2</td>
                     <td>20</td>
-                    <td>查看详情</td>
+                    <td>
+                        <button type="button" class="btn btn-info">查看详情</button>
+                    </td>
                 </tr>
                 <tr>
                     <td>代理商C</td>
                     <td>2</td>
                     <td>23</td>
-                    <td>查看详情</td>
+                    <td>
+                        <button type="button" class="btn btn-info">查看详情</button>
+                    </td>
                 </tr>
                 <tr>
                     <td>代理商D</td>
                     <td>3</td>
                     <td>26</td>
-                    <td>查看详情</td>
+                    <td>
+                        <button type="button" class="btn btn-info">查看详情</button>
+                    </td>
                 </tr>
             </table>
         </div>
     </div>
 </div>
+<script>
+    $(function () {
+        $("#agent-management").collapse('show');
+        $("#order-management").collapse('hide');
+        $("#customer-management").collapse('hide');
+        $("#goods-management").collapse('hide');
+        $("#statement-management").collapse('hide');
+    });
+</script>

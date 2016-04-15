@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import selling.sunshine.form.GoodsForm;
-import selling.sunshine.model.Goods;
 import selling.sunshine.service.CommodityService;
 
 /**
@@ -22,7 +21,7 @@ public class CommodityController {
     @RequestMapping(method = RequestMethod.GET, value = "/create")
     public ModelAndView create() {
         ModelAndView view = new ModelAndView();
-
+        view.setViewName("/backend/goods/create");
         return view;
     }
 
@@ -32,4 +31,13 @@ public class CommodityController {
 
         return view;
     }
+
+
+    @RequestMapping(method = RequestMethod.GET, value = "/overview")
+    public ModelAndView overview() {
+        ModelAndView view = new ModelAndView();
+        view.setViewName("/backend/goods/overview");
+        return view;
+    }
+
 }

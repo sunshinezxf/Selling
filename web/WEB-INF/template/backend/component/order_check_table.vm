@@ -47,6 +47,7 @@
                         <td>298</td>
                     </tr>
                 </table>
+                <p>总计:&nbsp;3000元,&nbsp;商品A:&nbsp;5件,&nbsp;商品B:&nbsp;2件</p>
                 <button type="button" class="btn btn-info">一键发货</button>
             </div>
 
@@ -84,6 +85,7 @@
                         <td>298</td>
                     </tr>
                 </table>
+                <p>总计:&nbsp;3000元,&nbsp;商品A:&nbsp;5件,&nbsp;商品B:&nbsp;2件</p>
                 <button type="button" class="btn btn-info">一键发货</button>
             </div>
 
@@ -120,8 +122,23 @@
                         <td>298</td>
                     </tr>
                 </table>
+                <p>总计:&nbsp;3000元,&nbsp;商品A:&nbsp;5件,&nbsp;商品B:&nbsp;2件</p>
                 <button type="button" class="btn btn-info">一键发货</button>
             </div>
         </div>
     </div>
 </div>
+<script>
+    $(function () {
+        $("#agent-management").collapse('hide');
+        $("#order-management").collapse('show');
+        $("#customer-management").collapse('hide');
+        $("#goods-management").collapse('hide');
+        $("#statement-management").collapse('hide');
+    });
+</script>
+<script>
+    $(".btn-info").click(function () {
+        window.location.href = "${path.concat('/order/express')}";
+    });
+</script>
