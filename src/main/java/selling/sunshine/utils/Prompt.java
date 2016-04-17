@@ -11,6 +11,11 @@ public class Prompt {
         code = PromptCode.SUCCESS;
     }
 
+    public Prompt(PromptCode code, String message) {
+        this.code = code;
+        this.message = message;
+    }
+
     public PromptCode getCode() {
         return code;
     }
