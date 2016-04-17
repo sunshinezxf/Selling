@@ -6,4 +6,6 @@
     <bean id="commodityService" class="selling.sunshine.service.impl.CommodityServiceImpl"></bean>
 
     <bean id="agentService" class="selling.sunshine.service.impl.AgentServiceImpl"></bean>
+
+    <bean id="adminService" class="selling.sunshine.service.impl.AdminServiceImpl"></bean>
 </beans>

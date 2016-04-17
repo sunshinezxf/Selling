@@ -1,11 +1,15 @@
 package selling.sunshine.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import selling.sunshine.form.AdminForm;
+import selling.sunshine.model.Admin;
+import selling.sunshine.service.AdminService;
+import selling.sunshine.utils.ResultData;
 
 import javax.validation.Valid;
 
@@ -15,6 +19,9 @@ import javax.validation.Valid;
 @RequestMapping("/")
 @RestController
 public class PlatformController {
+
+    @Autowired
+    private AdminService adminService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/")
     public ModelAndView index() {
@@ -36,6 +43,7 @@ public class PlatformController {
         if (result.hasErrors()) {
             view.setViewName("redirect:/login");
         }
+        ResultData loginResponse = adminService.login(new Admin(form.getUsername(), form.getPassword()));
         view.setViewName("redirect:/dashboard");
         return view;
     }
