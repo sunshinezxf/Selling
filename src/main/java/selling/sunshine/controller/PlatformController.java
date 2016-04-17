@@ -1,11 +1,13 @@
 package selling.sunshine.controller;
 
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+import selling.sunshine.form.AdminForm;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 /**
  * Created by sunshine on 4/10/16.
@@ -29,8 +31,11 @@ public class PlatformController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/login")
-    public ModelAndView login(HttpServletRequest request) {
+    public ModelAndView login(@Valid AdminForm form, BindingResult result) {
         ModelAndView view = new ModelAndView();
+        if (result.hasErrors()) {
+            view.setViewName("redirect:/login");
+        }
         view.setViewName("redirect:/dashboard");
         return view;
     }
