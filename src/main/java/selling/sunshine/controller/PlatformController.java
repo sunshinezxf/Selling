@@ -9,6 +9,7 @@ import org.springframework.web.servlet.ModelAndView;
 import selling.sunshine.form.AdminForm;
 import selling.sunshine.model.Admin;
 import selling.sunshine.service.AdminService;
+import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
 import javax.validation.Valid;
@@ -44,7 +45,12 @@ public class PlatformController {
             view.setViewName("redirect:/login");
         }
         ResultData loginResponse = adminService.login(new Admin(form.getUsername(), form.getPassword()));
-        view.setViewName("redirect:/dashboard");
+        if (loginResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            view.setViewName("redirect:/dashboard");
+            return view;
+        } else {
+            view.setViewName("redirect:/login");
+        }
         return view;
     }
 

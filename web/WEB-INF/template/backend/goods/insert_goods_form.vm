@@ -10,7 +10,50 @@
         </div>
     </div>
     <div class="row">
+        <div class="col-md-12 col-lg-12">
+            <hr>
+            <form id="create_goods_form" class="form-horizontal">
+                <div class="form-group">
+                    <label class="col-sm-2 col-md-2 col-lg-2 control-label" for="goods_name">
+                        商品名称
+                    </label>
 
+                    <div class="col-sm-8 col-md-8 col-lg-8">
+                        <input type="text" class="form-control" id="goods_name" name="goodsName" placeholder="商品名称"
+                               required="" autocomplete="off"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 col-md-2 col-lg-2 control-label" for="goods_price">
+                        商品单价
+                    </label>
+
+                    <div class="col-sm-8 col-md-8 col-lg-8">
+                        <input type="number" class="form-control" id="goods_price" name="goodsPrice" placeholder="商品价格"
+                               required="" autocomplete="off"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 col-md-2 col-lg-2 control-label" for="">
+                        商品描述
+                    </label>
+
+                    <div class="col-sm-8 col-md-8 col-lg-8">
+                        <input type="text" class="form-control" id="goods_description" name="goodsDesc"
+                               placeholder="商品描述" required="" autocomplete="off"/>
+                    </div>
+                </div>
+            </form>
+            <hr>
+            <div class="form-inline">
+                <button type="button" id="confirm_create_goods"
+                        class="btn btn-primary">添加
+                </button>
+                <button type="button" id="confirm_create_goods"
+                        class="btn btn-warning">清空
+                </button>
+            </div>
+        </div>
     </div>
 </div>
 <script>
