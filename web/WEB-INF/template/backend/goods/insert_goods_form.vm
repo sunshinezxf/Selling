@@ -49,7 +49,7 @@
                 <button type="button" id="confirm_create_goods"
                         class="btn btn-primary">添加
                 </button>
-                <button type="button" id="confirm_create_goods"
+                <button type="button" id="clear_goods_content"
                         class="btn btn-warning">清空
                 </button>
             </div>
@@ -64,4 +64,14 @@
         $("#goods-management").collapse('show');
         $("#statement-management").collapse('hide');
     });
+
+    $("#clear_goods_content").click(function () {
+        $("#goods_name").val("");
+        $("#goods_price").val("");
+        $("#goods_description").val("");
+    });
+
+    $("#confirm_create_goods").click(function () {
+
+    })
 </script>
