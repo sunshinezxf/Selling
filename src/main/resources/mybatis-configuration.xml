@@ -4,5 +4,6 @@
 <configuration>
     <mappers>
         <mapper resource="selling/sunshine/mapper/commodity.xml"/>
+        <mapper resource="selling/sunshine/mapper/agent.xml"/>
     </mappers>
 </configuration>

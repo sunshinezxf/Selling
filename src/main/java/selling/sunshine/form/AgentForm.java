@@ -1,0 +1,62 @@
+package selling.sunshine.form;
+
+import org.hibernate.validator.constraints.Length;
+
+import javax.validation.constraints.NotNull;
+
+/**
+ * Created by sunshine on 4/19/16.
+ */
+public class AgentForm {
+    @NotNull
+    private String name;
+    @NotNull
+    private String gender;
+    @NotNull
+    @Length(min = 11, max = 11)
+    private String phone;
+    @NotNull
+    private String address;
+
+    private String wechat;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getWechat() {
+        return wechat;
+    }
+
+    public void setWechat(String wechat) {
+        this.wechat = wechat;
+    }
+}

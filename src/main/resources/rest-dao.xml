@@ -6,5 +6,7 @@
         <property name="sqlSession" ref="sqlSession"></property>
     </bean>
 
-    <bean id="agentDao" class="selling.sunshine.dao.impl.AgentDaoImpl"></bean>
+    <bean id="agentDao" class="selling.sunshine.dao.impl.AgentDaoImpl">
+        <property name="sqlSession" ref="sqlSession"></property>
+    </bean>
 </beans>

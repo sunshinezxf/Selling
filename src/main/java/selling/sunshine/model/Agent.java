@@ -1,5 +1,7 @@
 package selling.sunshine.model;
 
+import org.springframework.util.StringUtils;
+
 /**
  * Created by sunshine on 4/7/16.
  */
@@ -10,9 +12,11 @@ public class Agent extends Entity {
     private String phone;
     private String address;
     private String wechat;
+    private boolean verified;
 
     public Agent() {
         super();
+        verified = false;
     }
 
     public Agent(String name, String gender, String phone, String address) {
@@ -25,7 +29,9 @@ public class Agent extends Entity {
 
     public Agent(String name, String gender, String phone, String address, String wechat) {
         this(name, gender, phone, address);
-        this.wechat = wechat;
+        if (!StringUtils.isEmpty(wechat)) {
+            this.wechat = wechat;
+        }
     }
 
     public String getAgentId() {
@@ -74,5 +80,13 @@ public class Agent extends Entity {
 
     public void setWechat(String wechat) {
         this.wechat = wechat;
+    }
+
+    public boolean isVerified() {
+        return verified;
+    }
+
+    public void setVerified(boolean verified) {
+        this.verified = verified;
     }
 }

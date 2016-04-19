@@ -42,7 +42,7 @@
                     <label class="weui_label">微信号</label>
                 </div>
                 <div class="weui_cell_bd weui_cell_primary">
-                    <input class="weui_input" type="text" placeholder="请填写微信号"/>
+                    <input class="weui_input" id="agent_wechat" name="wechat" type="text" placeholder="请填写微信号"/>
                 </div>
             </div>
         </form>
