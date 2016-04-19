@@ -71,28 +71,28 @@
 <script>
     $(document).ready(function () {
         $("#agent_name").bind("input propertychange", function () {
-            if (login_validate()) {
+            if (register_validate()) {
                 $("#register_pay_btn").removeAttr("disabled");
             } else {
                 $("#register_pay_btn").attr("disabled", "disabled");
             }
         });
         $("#gender").bind("input propertychange", function () {
-            if (login_validate()) {
+            if (register_validate()) {
                 $("#register_pay_btn").removeAttr("disabled");
             } else {
                 $("#register_pay_btn").attr("disabled", "disabled");
             }
         });
         $("#agent_tel").bind("input propertychange", function () {
-            if (login_validate()) {
+            if (register_validate()) {
                 $("#register_pay_btn").removeAttr("disabled");
             } else {
                 $("#register_pay_btn").attr("disabled", "disabled");
             }
         });
         $("#agent_addr").bind("input propertychange", function () {
-            if (login_validate()) {
+            if (register_validate()) {
                 $("#register_pay_btn").removeAttr("disabled");
             } else {
                 $("#register_pay_btn").attr("disabled", "disabled");
@@ -101,7 +101,7 @@
 
     });
 
-    function login_validate() {
+    function register_validate() {
         var name = $("#agent_name").val();
         var gender = $("#gender").val();
         var phone = $("#agent_tel").val();
