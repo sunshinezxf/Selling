@@ -3,7 +3,7 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
     <bean id="commodityDao" class="selling.sunshine.dao.impl.CommodityDaoImpl">
-        <property name="sqlSession"></property>
+        <property name="sqlSession" ref="sqlSession"></property>
     </bean>
 
     <bean id="agentDao" class="selling.sunshine.dao.impl.AgentDaoImpl"></bean>

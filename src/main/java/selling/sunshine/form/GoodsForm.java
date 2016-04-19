@@ -7,6 +7,7 @@ public class GoodsForm {
     private String name;
     private String price;
     private String description;
+    private boolean block;
 
     public String getName() {
         return name;
@@ -30,5 +31,13 @@ public class GoodsForm {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public boolean isBlock() {
+        return block;
+    }
+
+    public void setBlock(boolean block) {
+        this.block = block;
     }
 }
