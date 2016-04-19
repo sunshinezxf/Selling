@@ -1,52 +1,67 @@
-<div class="weui_cells">
-    <form id="agent_register_form">
-        <div class="weui_cell">
-            <div class="weui_cell_hd">
-                <label class="weui_label">姓名</label>
+<div id="agent_register_area">
+    <div class="weui_cells">
+        <form id="agent_register_form">
+            <div class="weui_cell">
+                <div class="weui_cell_hd">
+                    <label class="weui_label">姓名</label>
+                </div>
+                <div class="weui_cell_bd weui_cell_primary">
+                    <input class="weui_input" type="text" placeholder="请填写姓名"/>
+                </div>
             </div>
-            <div class="weui_cell_bd weui_cell_primary">
-                <input class="weui_input" type="text" placeholder="请填写姓名"/>
-            </div>
-        </div>
-        <a class="weui_cells_access weui_cell">
-            <div class="weui_cell_bd weui_cell_primary">
-                <p>称谓</p>
-            </div>
-            <div class="weui_cell_ft">先生</div>
-        </a>
+            <a class="weui_cells_access weui_cell" id="gender_selection">
+                <div class="weui_cell_bd weui_cell_primary">
+                    <p>称谓</p>
+                </div>
+                <div class="weui_cell_ft">
+                    <input type="hidden" id="gender" name="gender" value="M"/>
+                <span id="gender_description">
+                    先生
+                </span>
+                </div>
+            </a>
 
-        <div class="weui_cell">
-            <div class="weui_cell_hd">
-                <label class="weui_label">手机</label>
+            <div class="weui_cell">
+                <div class="weui_cell_hd">
+                    <label class="weui_label">手机</label>
+                </div>
+                <div class="weui_cell_bd weui_cell_primary">
+                    <input class="weui_input" type="number" pattern="1[0-9]{10}" placeholder="请填写手机号"/>
+                </div>
             </div>
-            <div class="weui_cell_bd weui_cell_primary">
-                <input class="weui_input" type="number" pattern="1[0-9]{10}" placeholder="请填写手机号"/>
+            <div class="weui_cell">
+                <div class="weui_cell_hd">
+                    <label class="weui_label">地址</label>
+                </div>
+                <div class="weui_cell_bd weui_cell_primary">
+                    <input class="weui_input" type="text" placeholder="请填写联系地址"/>
+                </div>
             </div>
-        </div>
-        <div class="weui_cell">
-            <div class="weui_cell_hd">
-                <label class="weui_label">地址</label>
+            <div class="weui_cell">
+                <div class="weui_cell_hd">
+                    <label class="weui_label">微信号</label>
+                </div>
+                <div class="weui_cell_bd weui_cell_primary">
+                    <input class="weui_input" type="text" placeholder="请填写微信号"/>
+                </div>
             </div>
-            <div class="weui_cell_bd weui_cell_primary">
-                <input class="weui_input" type="text" placeholder="请填写联系地址"/>
-            </div>
-        </div>
-        <div class="weui_cell">
-            <div class="weui_cell_hd">
-                <label class="weui_label">微信号</label>
-            </div>
-            <div class="weui_cell_bd weui_cell_primary">
-                <input class="weui_input" type="text" placeholder="请填写微信号"/>
-            </div>
-        </div>
-    </form>
+        </form>
+    </div>
+    <div class="weui_btn_area">
+        <button type="button" class="weui_btn weui_btn_primary" id="register_pay_btn">
+            提交注册申请
+        </button>
+    </div>
 </div>
-<div class="weui_btn_area">
-    <button type="button" class="weui_btn weui_btn_primary" id="register_pay_btn">
-        提交注册申请
-    </button>
-</div>
+#parse("/agent/component/gender_list.vm")
 <script>
+    $("#gender_option").hide();
+
+    $("#gender_selection").click(function () {
+        $("#agent_register_area").hide();
+        $("#gender_option").show();
+    });
+
     $("#register_pay_btn").click(function () {
         $("#agent_register_form").attr("action", "${path.concat('/agent/register')}");
         $("#agent_register_form").attr("method", "post");
