@@ -56,6 +56,4 @@
         $("#gender_option").hide();
         $("#agent_register_area").fadeIn();
     });
-
-
 </script>
