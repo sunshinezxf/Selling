@@ -16,7 +16,7 @@
                 <div class="weui_cell_ft">
                     <input type="hidden" id="gender" name="gender" value="M"/>
                 <span id="gender_description">
-                    先生
+
                 </span>
                 </div>
             </a>
@@ -26,7 +26,7 @@
                     <label class="weui_label">手机</label>
                 </div>
                 <div class="weui_cell_bd weui_cell_primary">
-                    <input class="weui_input" type="number" pattern="1[0-9]{10}" placeholder="请填写手机号"/>
+                    <input class="weui_input" type="tel" placeholder="请填写手机号"/>
                 </div>
             </div>
             <div class="weui_cell">

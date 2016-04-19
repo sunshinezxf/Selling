@@ -1,38 +1,61 @@
-<div id="gender_option" class="weui_cells" style="display: none;">
-    <label class="weui_cell weui_check_label" id="male" for="">
+<div id="gender_option" class="weui_cells weui_cells_radio" style="display: none;">
+    <label class="weui_cell weui_check_label" id="male" for="male_check">
         <div class="weui_cell_bd weui_cell_primary">
             先生
         </div>
-        <div class="weui_cell_ft" id="male_check_label">
-            <span class="weui_icon_checked"></span>
+        <div class="weui_cell_ft">
+            <input type="radio" class="weui_check" id="male_check">
+            <span id="male_check_label" class="weui_icon_checked"></span>
         </div>
     </label>
-    <label class="weui_cell weui_check_label" id="female">
+    <label class="weui_cell weui_check_label" id="female" for="female_check">
         <div class="weui_cell_bd weui_cell_primary">
             女士
         </div>
-        <div class="weui_cell_ft" id="female_check_label">
-
+        <div class="weui_cell_ft">
+            <input type="radio" class="weui_check" id="female_check">
+            <span id="female_check_label"></span>
         </div>
     </label>
+
 </div>
 <script>
+    var current_gender = $("#gender").val();
+    if (current_gender == "M") {
+        $("#gender_description").text("先生");
+        $("#female_check_label").removeClass("weui_icon_checked");
+        $("#male_check_label").addClass("weui_icon_checked");
+        $("#female_check").removeAttr("checked");
+        $("#male_check").attr("checked", "checked");
+    } else if (current_gender == "F") {
+        $("#gender_description").text("女士");
+        $("#male_check_label").removeClass("weui_icon_checked");
+        $("#female_check_label").addClass("weui_icon_checked");
+        $("#male_check").removeAttr("checked")
+        $("#female_check").attr("checked", "checked");
+    }
+
     $(".weui_check_label").click(function () {
         var check_label = "<span class='weui_icon_checked'></span>";
         var id_value = $(this).attr("id");
         if (id_value == "male") {
-            console.debug("enter male method..")
-            var item = $("#gender_description");
             $("#gender_description").text("先生");
             $("#gender").val("M");
+            $("#female_check").removeAttr("checked");
+            $("#male_check").attr("checked", "checked");
+            $("#male_check_label").addClass("weui_icon_checked");
+            $("#female_check_label").removeClass("weui_icon_checked");
         } else if (id_value == "female") {
-            console.debug("enter female method");
-            var item = $("#gender_description");
-            console.debug("hahah" + item);
             $("#gender_description").text("女士");
             $("#gender").val("F");
+            $("#male_check").removeAttr("checked")
+            $("#female_check").attr("checked", "checked");
+            $("#female_check_label").addClass("weui_icon_checked");
+            $("#male_check_label").removeClass("weui_icon_checked");
         }
         $("#gender_option").hide();
         $("#agent_register_area").fadeIn();
     });
+
+
 </script>
