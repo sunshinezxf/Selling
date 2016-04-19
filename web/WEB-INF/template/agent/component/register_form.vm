@@ -6,7 +6,7 @@
                     <label class="weui_label">姓名</label>
                 </div>
                 <div class="weui_cell_bd weui_cell_primary">
-                    <input class="weui_input" type="text" placeholder="请填写姓名"/>
+                    <input id="agent_name" name="name" class="weui_input" type="text" placeholder="请填写姓名"/>
                 </div>
             </div>
             <a class="weui_cells_access weui_cell" id="gender_selection">
@@ -26,7 +26,7 @@
                     <label class="weui_label">手机</label>
                 </div>
                 <div class="weui_cell_bd weui_cell_primary">
-                    <input class="weui_input" type="tel" placeholder="请填写手机号"/>
+                    <input class="weui_input" id="agent_tel" name="phone" type="tel" placeholder="请填写手机号"/>
                 </div>
             </div>
             <div class="weui_cell">
@@ -34,7 +34,7 @@
                     <label class="weui_label">地址</label>
                 </div>
                 <div class="weui_cell_bd weui_cell_primary">
-                    <input class="weui_input" type="text" placeholder="请填写联系地址"/>
+                    <input class="weui_input" id="agent_addr" name="address" type="text" placeholder="请填写联系地址"/>
                 </div>
             </div>
             <div class="weui_cell">
@@ -48,7 +48,7 @@
         </form>
     </div>
     <div class="weui_btn_area">
-        <button type="button" class="weui_btn weui_btn_primary" id="register_pay_btn">
+        <button type="button" class="weui_btn weui_btn_primary" id="register_pay_btn" disabled="disabled">
             提交注册申请
         </button>
     </div>
@@ -67,4 +67,55 @@
         $("#agent_register_form").attr("method", "post");
         $("#agent_register_form").submit();
     })
+</script>
+<script>
+    $(document).ready(function () {
+        $("#agent_name").bind("input propertychange", function () {
+            if (login_validate()) {
+                $("#register_pay_btn").removeAttr("disabled");
+            } else {
+                $("#register_pay_btn").attr("disabled", "disabled");
+            }
+        });
+        $("#gender").bind("input propertychange", function () {
+            if (login_validate()) {
+                $("#register_pay_btn").removeAttr("disabled");
+            } else {
+                $("#register_pay_btn").attr("disabled", "disabled");
+            }
+        });
+        $("#agent_tel").bind("input propertychange", function () {
+            if (login_validate()) {
+                $("#register_pay_btn").removeAttr("disabled");
+            } else {
+                $("#register_pay_btn").attr("disabled", "disabled");
+            }
+        });
+        $("#agent_addr").bind("input propertychange", function () {
+            if (login_validate()) {
+                $("#register_pay_btn").removeAttr("disabled");
+            } else {
+                $("#register_pay_btn").attr("disabled", "disabled");
+            }
+        });
+
+    });
+
+    function login_validate() {
+        var name = $("#agent_name").val();
+        var gender = $("#gender").val();
+        var phone = $("#agent_tel").val();
+        var address = $("#agent_addr").val();
+        if (not_null(name) && not_null(gender) && not_null(phone) && not_null(address)) {
+            return true;
+        }
+        return false;
+    }
+
+    function not_null(item) {
+        if (item == null || item == "" || item.length <= 0) {
+            return false;
+        }
+        return true;
+    }
 </script>
