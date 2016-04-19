@@ -42,7 +42,7 @@ public class CommodityController {
             return view;
         }
         try {
-            Goods goods = new Goods(form.getName(), Double.parseDouble(form.getPrice()), form.getDescription());
+            Goods goods = new Goods(form.getName(), Double.parseDouble(form.getPrice()), form.getDescription(), form.isBlock());
             ResultData createResponse = commodityService.createCommodity(goods);
             if (createResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
                 view.setViewName("redirect:/commodity/overview");
