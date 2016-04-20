@@ -84,7 +84,6 @@ public class AgentDaoImpl extends BaseDao implements AgentDao {
     private List<Agent> queryAgentByPage(Map<String, Object> condition, int start, int length) {
         List<Agent> result = new ArrayList<Agent>();
         try {
-            logger.debug("start: " + start + ", length: " + length);
             result = sqlSession.selectList("selling.agent.query", condition, new RowBounds(start, length));
         } catch (Exception e) {
             logger.error(e.getMessage());

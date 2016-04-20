@@ -124,13 +124,13 @@ public class AgentController {
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/check")
-    public DataTablePage<Agent> check(DataTableParam param, HttpServletRequest request) {
+    public DataTablePage<Agent> check(DataTableParam param) {
         DataTablePage<Agent> result = new DataTablePage<Agent>(param);
         if (StringUtils.isEmpty(param)) {
             return result;
         }
         Map<String, Object> condition = new HashMap<String, Object>();
-        condition.put("paid", 0);
+        condition.put("paid", false);
         ResultData fetchResponse = agentService.fetchAgent(condition, param);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             result = (DataTablePage<Agent>) fetchResponse.getData();

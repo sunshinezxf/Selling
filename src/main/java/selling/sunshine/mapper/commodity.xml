@@ -14,4 +14,19 @@
         INSERT INTO goods(goods_id, goods_name, goods_price, goods_description, block_flag, create_time)
         VALUES (#{goodsId}, #{name}, #{price}, #{description}, #{blockFlag}, #{createAt})
     </insert>
+
+    <select id="query" parameterType="java.util.Map" resultMap="goodsVo">
+        SELECT goods_id, goods_name, goods_price, goods_description, block_flag, create_time
+        FROM goods
+        WHERE 1 = 1
+        <if test="goodsId != null and goodsId != ''">
+            AND goods_id = #{goodsId}
+        </if>
+        <if test="name != null and name != ''">
+            AND goods_name = #{name}
+        </if>
+        <if test="blockFlag != null and blockFlag != ''">
+            AND block_flag = #{blockFlag}
+        </if>
+    </select>
 </mapper>

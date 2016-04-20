@@ -3,18 +3,24 @@ package selling.sunshine.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import selling.sunshine.form.GoodsForm;
 import selling.sunshine.model.Goods;
+import selling.sunshine.pagination.DataTablePage;
+import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.CommodityService;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
 import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by sunshine on 4/8/16.
@@ -62,6 +68,21 @@ public class CommodityController {
         ModelAndView view = new ModelAndView();
         view.setViewName("/backend/goods/overview");
         return view;
+    }
+
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value = "/overview")
+    public DataTablePage<Goods> overview(DataTableParam param) {
+        DataTablePage<Goods> result = new DataTablePage<Goods>(param);
+        if (StringUtils.isEmpty(param)) {
+            return result;
+        }
+        Map<String, Object> condition = new HashMap<String, Object>();
+        ResultData fetchResponse = commodityService.fetchCommodity(condition, param);
+        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result = (DataTablePage<Goods>) fetchResponse.getData();
+        }
+        return result;
     }
 
 }

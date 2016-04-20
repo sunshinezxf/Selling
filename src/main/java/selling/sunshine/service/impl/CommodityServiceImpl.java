@@ -6,9 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import selling.sunshine.dao.CommodityDao;
 import selling.sunshine.model.Goods;
+import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.CommodityService;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
+
+import java.util.Map;
 
 /**
  * Created by sunshine on 4/8/16.
@@ -28,6 +31,19 @@ public class CommodityServiceImpl implements CommodityService {
             result.setData(insertResponse.getData());
         } else {
             result.setDescription(insertResponse.getDescription());
+        }
+        return result;
+    }
+
+    @Override
+    public ResultData fetchCommodity(Map<String, Object> condition, DataTableParam param) {
+        ResultData result = new ResultData();
+        ResultData queryResponse = commodityDao.queryCommodityByPage(condition, param);
+        result.setResponseCode(queryResponse.getResponseCode());
+        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(queryResponse.getData());
+        } else if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
+            result.setDescription(queryResponse.getDescription());
         }
         return result;
     }
