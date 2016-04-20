@@ -8,13 +8,42 @@
         <result property="phone" column="agent_phone"></result>
         <result property="address" column="agent_address"></result>
         <result property="wechat" column="agent_wechat"></result>
-        <result property="verified" column="agent_verified"></result>
+        <result property="paid" column="agent_paid"></result>
+        <result property="granted" column="agent_granted"></result>
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
     </resultMap>
 
     <insert id="insert" parameterType="selling.sunshine.model.Agent" useGeneratedKeys="false">
-        INSERT INTO agent(agent_id, agent_name, agent_gender, agent_phone, agent_address, agent_wechat, agent_verified, block_flag, create_time)
-        VALUES (#{agentId}, #{name}, #{gender}, #{phone}, #{address}, #{wechat}, #{verified}, #{blockFlag}, #{createAt})
+        INSERT INTO agent(agent_id, agent_name, agent_gender, agent_phone, agent_address, agent_wechat, agent_paid, agent_granted, block_flag, create_time)
+        VALUES (#{agentId}, #{name}, #{gender}, #{phone}, #{address}, #{wechat}, #{paid}, #{granted}, #{blockFlag}, #{createAt})
     </insert>
+
+    <select id="query" parameterType="java.util.Map" resultMap="agentVo">
+        SELECT agent_id, agent_name, agent_gender, agent_phone, agent_address, agent_wechat, agent_paid, block_flag,
+        create_time
+        FROM agent
+        WHERE 1 = 1
+        <if test="agentId != null and agentId != ''">
+            AND agent_id = #{agentId}
+        </if>
+        <if test="name != null and name != ''">
+            AND agent_name = #{name}
+        </if>
+        <if test="gender != null and gender != ''">
+            AND agent_gender = #{gender}
+        </if>
+        <if test="phone != null and phone != ''">
+            AND agent_phone = #{phone}
+        </if>
+        <if test="paid != null and paid != ''">
+            AND agent_paid = #{paid}
+        </if>
+        <if test="granted != null and granted != ''">
+            AND agent_granted = #{granted}
+        </if>
+        <if test="blockFlag != null and blockFlag != ''">
+            AND block_flag = #{blockFlag}
+        </if>
+    </select>
 </mapper>

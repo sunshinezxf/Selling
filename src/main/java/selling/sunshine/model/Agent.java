@@ -12,11 +12,13 @@ public class Agent extends Entity {
     private String phone;
     private String address;
     private String wechat;
-    private boolean verified;
+    private boolean paid;
+    private boolean granted;
 
     public Agent() {
         super();
-        verified = false;
+        paid = false;
+        granted = false;
     }
 
     public Agent(String name, String gender, String phone, String address) {
@@ -82,11 +84,19 @@ public class Agent extends Entity {
         this.wechat = wechat;
     }
 
-    public boolean isVerified() {
-        return verified;
+    public boolean isPaid() {
+        return paid;
     }
 
-    public void setVerified(boolean verified) {
-        this.verified = verified;
+    public void setPaid(boolean paid) {
+        this.paid = paid;
+    }
+
+    public boolean isGranted() {
+        return granted;
+    }
+
+    public void setGranted(boolean granted) {
+        this.granted = granted;
     }
 }

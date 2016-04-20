@@ -6,9 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import selling.sunshine.dao.AgentDao;
 import selling.sunshine.model.Agent;
+import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.AgentService;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by sunshine on 4/8/16.
@@ -29,6 +33,19 @@ public class AgentServiceImpl implements AgentService {
             result.setData(insertResponse.getData());
         } else {
             result.setDescription(insertResponse.getDescription());
+        }
+        return result;
+    }
+
+    @Override
+    public ResultData fetchAgent(Map<String, Object> condition, DataTableParam param) {
+        ResultData result = new ResultData();
+        ResultData queryResponse = agentDao.queryAgentByPage(condition, param);
+        result.setResponseCode(queryResponse.getResponseCode());
+        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(queryResponse.getData());
+        } else if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
+            result.setDescription(queryResponse.getDescription());
         }
         return result;
     }

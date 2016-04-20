@@ -3,18 +3,25 @@ package selling.sunshine.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import selling.sunshine.form.AgentForm;
 import selling.sunshine.model.Agent;
+import selling.sunshine.pagination.DataTablePage;
+import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.AgentService;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by sunshine on 4/8/16.
@@ -113,6 +120,22 @@ public class AgentController {
         ModelAndView view = new ModelAndView();
         view.setViewName("/backend/agent/check");
         return view;
+    }
+
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value = "/check")
+    public DataTablePage<Agent> check(DataTableParam param, HttpServletRequest request) {
+        DataTablePage<Agent> result = new DataTablePage<Agent>(param);
+        if (StringUtils.isEmpty(param)) {
+            return result;
+        }
+        Map<String, Object> condition = new HashMap<String, Object>();
+        condition.put("paid", 0);
+        ResultData fetchResponse = agentService.fetchAgent(condition, param);
+        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result = (DataTablePage<Agent>) fetchResponse.getData();
+        }
+        return result;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/overview")
