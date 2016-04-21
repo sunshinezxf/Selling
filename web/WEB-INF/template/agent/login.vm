@@ -14,7 +14,7 @@
         <p class="page_desc">欢迎加入销售代理商</p>
     </div>
     <div class="bd">
-
+        #parse("/agent/component/login_form.vm")
     </div>
 </div>
 </body>

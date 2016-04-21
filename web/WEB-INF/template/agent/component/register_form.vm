@@ -6,7 +6,8 @@
                     <label class="weui_label">姓名</label>
                 </div>
                 <div class="weui_cell_bd weui_cell_primary">
-                    <input id="agent_name" name="name" class="weui_input" type="text" placeholder="请填写姓名" autocomplete="off"/>
+                    <input id="agent_name" name="name" class="weui_input" type="text" placeholder="请填写姓名"
+                           autocomplete="off"/>
                 </div>
             </div>
             <a class="weui_cells_access weui_cell" id="gender_selection">
@@ -26,7 +27,8 @@
                     <label class="weui_label">手机</label>
                 </div>
                 <div class="weui_cell_bd weui_cell_primary">
-                    <input class="weui_input" id="agent_tel" name="phone" type="tel" placeholder="请填写手机号" autocomplete="off"/>
+                    <input class="weui_input" id="agent_tel" name="phone" type="tel" placeholder="请填写手机号"
+                           autocomplete="off"/>
                 </div>
             </div>
             <div class="weui_cell">
@@ -34,7 +36,8 @@
                     <label class="weui_label">地址</label>
                 </div>
                 <div class="weui_cell_bd weui_cell_primary">
-                    <input class="weui_input" id="agent_addr" name="address" type="text" placeholder="请填写联系地址" autocomplete="off"/>
+                    <input class="weui_input" id="agent_addr" name="address" type="text" placeholder="请填写联系地址"
+                           autocomplete="off"/>
                 </div>
             </div>
             <div class="weui_cell">
@@ -51,13 +54,15 @@
                     <label class="weui_label">微信号</label>
                 </div>
                 <div class="weui_cell_bd weui_cell_primary">
-                    <input class="weui_input" id="agent_wechat" name="wechat" type="text" placeholder="请填写微信号" autocomplete="off"/>
+                    <input class="weui_input" id="agent_wechat" name="wechat" type="text" placeholder="请填写微信号"
+                           autocomplete="off"/>
                 </div>
             </div>
         </form>
     </div>
     <div class="weui_btn_area">
-        <button type="button" class="weui_btn weui_btn_primary" id="register_pay_btn" disabled="disabled">
+        <button type="button" class="weui_btn weui_btn_disabled weui_btn_default" id="register_pay_btn"
+                disabled="disabled">
             提交注册申请
         </button>
     </div>
@@ -81,41 +86,55 @@
     $(document).ready(function () {
         $("#agent_name").bind("input propertychange", function () {
             if (register_validate()) {
-                $("#register_pay_btn").removeAttr("disabled");
+                active();
             } else {
-                $("#register_pay_btn").attr("disabled", "disabled");
+                inactive();
             }
         });
         $("#gender").bind("input propertychange", function () {
             if (register_validate()) {
-                $("#register_pay_btn").removeAttr("disabled");
+                active();
             } else {
-                $("#register_pay_btn").attr("disabled", "disabled");
+                inactive();
             }
         });
         $("#agent_tel").bind("input propertychange", function () {
             if (register_validate()) {
-                $("#register_pay_btn").removeAttr("disabled");
+                active();
             } else {
-                $("#register_pay_btn").attr("disabled", "disabled");
+                inactive();
             }
         });
         $("#agent_addr").bind("input propertychange", function () {
             if (register_validate()) {
-                $("#register_pay_btn").removeAttr("disabled");
+                active();
             } else {
-                $("#register_pay_btn").attr("disabled", "disabled");
+                inactive();
             }
         });
         $("#agent_password").bind("input propertychange", function () {
             if (register_validate()) {
-                $("#register_pay_btn").removeAttr("disabled");
+                active();
             } else {
-                $("#register_pay_btn").attr("disabled", "disabled");
+                inactive();
             }
         });
 
     });
+
+    function active() {
+        $("#register_pay_btn").removeAttr("disabled");
+        $("#register_pay_btn").removeClass("weui_btn_disabled");
+        $("#register_pay_btn").removeClass("weui_btn_default");
+        $("#register_pay_btn").addClass("weui_btn_primary");
+    }
+
+    function inactive() {
+        $("#register_pay_btn").attr("disabled", "disabled");
+        $("#register_pay_btn").removeClass("weui_btn_primary");
+        $("#register_pay_btn").addClass("weui_btn_disabled");
+        $("#register_pay_btn").addClass("weui_btn_default");
+    }
 
     function register_validate() {
         var name = $("#agent_name").val();

@@ -1,0 +1,76 @@
+<div class="weui_cells">
+    <form id="agent_login_form">
+        <div class="weui_cell">
+            <div class="weui_cell_hd">
+                <label class="weui_label">手机</label>
+            </div>
+            <div class="weui_cell_bd weui_cell_primary">
+                <input class="weui_input" id="agent_phone" name="phone" type="tel" placeholder="填写手机号"
+                       autocomplete="off"/>
+            </div>
+        </div>
+        <div class="weui_cell">
+            <div class="weui_cell_hd">
+                <label class="weui_label">密码</label>
+            </div>
+            <div class="weui_cell_bd weui_cell_primary">
+                <input class="weui_input" id="agent_password" name="password" type="password" placeholder="填写账户密码"
+                       autocomplete="off"/>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="weui_btn_area">
+    <button type="button" class="weui_btn weui_btn_disabled weui_btn_default" id="lg_btn" disabled="disabled">
+        登录
+    </button>
+</div>
+<script>
+
+    $(document).ready(function () {
+        $("#agent_phone").bind("input propertychange", function () {
+            if (login_validate()) {
+                active();
+            } else {
+                inactive();
+            }
+        })
+        $("#agent_password").bind("input propertychange", function () {
+            if (login_validate()) {
+                active();
+            } else {
+                inactive();
+            }
+        })
+    });
+
+    function active() {
+        $("#lg_btn").removeAttr("disabled");
+        $("#lg_btn").removeClass("weui_btn_disabled");
+        $("#lg_btn").removeClass("weui_btn_default");
+        $("#lg_btn").addClass("weui_btn_primary");
+    }
+
+    function inactive() {
+        $("#lg_btn").attr("disabled", "disabled");
+        $("#lg_btn").removeClass("weui_btn_primary");
+        $("#lg_btn").addClass("weui_btn_default");
+        $("#lg_btn").addClass("weui_btn_disabled");
+    }
+
+    function login_validate() {
+        var phone = $("#agent_phone").val();
+        var password = $("#agent_password").val();
+        if (not_null(phone) && not_null(password)) {
+            return true;
+        }
+        return false;
+    }
+
+    function not_null(item) {
+        if (item == null || item == "" || item.length <= 0) {
+            return false;
+        }
+        return true;
+    }
+</script>

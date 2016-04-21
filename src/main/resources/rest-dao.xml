@@ -9,4 +9,8 @@
     <bean id="agentDao" class="selling.sunshine.dao.impl.AgentDaoImpl">
         <property name="sqlSession" ref="sqlSession"></property>
     </bean>
+
+    <bean id="adminDao" class="selling.sunshine.dao.impl.AdminDaoImpl">
+        <property name="sqlSession" ref="sqlSession"></property>
+    </bean>
 </beans>

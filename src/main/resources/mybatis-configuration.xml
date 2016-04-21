@@ -3,6 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
     <mappers>
+        <mapper resource="selling/sunshine/mapper/admin.xml"/>
         <mapper resource="selling/sunshine/mapper/commodity.xml"/>
         <mapper resource="selling/sunshine/mapper/agent.xml"/>
     </mappers>
