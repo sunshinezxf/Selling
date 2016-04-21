@@ -6,7 +6,7 @@
                     <label class="weui_label">姓名</label>
                 </div>
                 <div class="weui_cell_bd weui_cell_primary">
-                    <input id="agent_name" name="name" class="weui_input" type="text" placeholder="请填写姓名"/>
+                    <input id="agent_name" name="name" class="weui_input" type="text" placeholder="请填写姓名" autocomplete="off"/>
                 </div>
             </div>
             <a class="weui_cells_access weui_cell" id="gender_selection">
@@ -14,7 +14,7 @@
                     <p>称谓</p>
                 </div>
                 <div class="weui_cell_ft">
-                    <input type="hidden" id="gender" name="gender" value="M"/>
+                    <input type="hidden" id="gender" name="gender" value="M" autocomplete="off"/>
                 <span id="gender_description">
 
                 </span>
@@ -26,7 +26,7 @@
                     <label class="weui_label">手机</label>
                 </div>
                 <div class="weui_cell_bd weui_cell_primary">
-                    <input class="weui_input" id="agent_tel" name="phone" type="tel" placeholder="请填写手机号"/>
+                    <input class="weui_input" id="agent_tel" name="phone" type="tel" placeholder="请填写手机号" autocomplete="off"/>
                 </div>
             </div>
             <div class="weui_cell">
@@ -34,7 +34,16 @@
                     <label class="weui_label">地址</label>
                 </div>
                 <div class="weui_cell_bd weui_cell_primary">
-                    <input class="weui_input" id="agent_addr" name="address" type="text" placeholder="请填写联系地址"/>
+                    <input class="weui_input" id="agent_addr" name="address" type="text" placeholder="请填写联系地址" autocomplete="off"/>
+                </div>
+            </div>
+            <div class="weui_cell">
+                <div class="weui_cell_hd">
+                    <label class="weui_label">密码</label>
+                </div>
+                <div class="weui_cell_bd weui_cell_primary">
+                    <input class="weui_input" id="agent_password" name="password" type="password"
+                           placeholder="请设置账户密码" autocomplete="off"/>
                 </div>
             </div>
             <div class="weui_cell">
@@ -42,7 +51,7 @@
                     <label class="weui_label">微信号</label>
                 </div>
                 <div class="weui_cell_bd weui_cell_primary">
-                    <input class="weui_input" id="agent_wechat" name="wechat" type="text" placeholder="请填写微信号"/>
+                    <input class="weui_input" id="agent_wechat" name="wechat" type="text" placeholder="请填写微信号" autocomplete="off"/>
                 </div>
             </div>
         </form>
@@ -98,6 +107,13 @@
                 $("#register_pay_btn").attr("disabled", "disabled");
             }
         });
+        $("#agent_password").bind("input propertychange", function () {
+            if (register_validate()) {
+                $("#register_pay_btn").removeAttr("disabled");
+            } else {
+                $("#register_pay_btn").attr("disabled", "disabled");
+            }
+        });
 
     });
 
@@ -106,7 +122,8 @@
         var gender = $("#gender").val();
         var phone = $("#agent_tel").val();
         var address = $("#agent_addr").val();
-        if (not_null(name) && not_null(gender) && not_null(phone) && not_null(address)) {
+        var password = $("#agent_password").val();
+        if (not_null(name) && not_null(gender) && not_null(phone) && not_null(address) && not_null(password)) {
             return true;
         }
         return false;

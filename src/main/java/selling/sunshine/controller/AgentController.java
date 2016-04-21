@@ -18,7 +18,6 @@ import selling.sunshine.service.AgentService;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
@@ -93,7 +92,7 @@ public class AgentController {
             return view;
         }
         try {
-            Agent agent = new Agent(form.getName(), form.getGender(), form.getPhone(), form.getAddress(), form.getWechat());
+            Agent agent = new Agent(form.getName(), form.getGender(), form.getPhone(), form.getAddress(), form.getPassword(), form.getWechat());
             ResultData createResponse = agentService.createAgent(agent);
             if (createResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
                 view.setViewName("redirect:/agent/prompt");
@@ -106,6 +105,22 @@ public class AgentController {
             view.setViewName("redirect:/agent/register");
             return view;
         }
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/login")
+    public ModelAndView login() {
+        ModelAndView view = new ModelAndView();
+        view.setViewName("/agent/login");
+        return view;
+    }
+
+    public ModelAndView login(@Valid AgentForm form, BindingResult result) {
+        ModelAndView view = new ModelAndView();
+        if (result.hasErrors()) {
+            view.setViewName("redirect:/agent/login");
+            return view;
+        }
+        return view;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/prompt")

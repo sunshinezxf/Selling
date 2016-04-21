@@ -8,10 +8,10 @@ import selling.sunshine.dao.AgentDao;
 import selling.sunshine.model.Agent;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.AgentService;
+import selling.sunshine.utils.Encryption;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -27,6 +27,7 @@ public class AgentServiceImpl implements AgentService {
     @Override
     public ResultData createAgent(Agent agent) {
         ResultData result = new ResultData();
+        agent.setPassword(Encryption.desEncode(agent.getPassword(), agent.getPhone()));
         ResultData insertResponse = agentDao.insertAgent(agent);
         result.setResponseCode(insertResponse.getResponseCode());
         if (insertResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {

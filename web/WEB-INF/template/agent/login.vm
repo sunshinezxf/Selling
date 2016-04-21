@@ -1,0 +1,21 @@
+#parse("/common/util.vm")
+<html lang="zh_CN">
+<head>
+    #parse("/agent/component/init.vm")
+    <title>代理商登录</title>
+</head>
+<body ontouchstart>
+<div class="container">
+    <div class="hd">
+        <h1 class="page_title">
+            登录
+        </h1>
+
+        <p class="page_desc">欢迎加入销售代理商</p>
+    </div>
+    <div class="bd">
+
+    </div>
+</div>
+</body>
+</html>

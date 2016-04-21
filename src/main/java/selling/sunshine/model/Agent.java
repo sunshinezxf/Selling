@@ -11,6 +11,7 @@ public class Agent extends Entity {
     private String gender;
     private String phone;
     private String address;
+    private String password;
     private String wechat;
     private boolean paid;
     private boolean granted;
@@ -21,16 +22,17 @@ public class Agent extends Entity {
         granted = false;
     }
 
-    public Agent(String name, String gender, String phone, String address) {
+    public Agent(String name, String gender, String phone, String address, String password) {
         this();
         this.name = name;
         this.gender = gender;
         this.phone = phone;
         this.address = address;
+        this.password = password;
     }
 
-    public Agent(String name, String gender, String phone, String address, String wechat) {
-        this(name, gender, phone, address);
+    public Agent(String name, String gender, String phone, String address, String password, String wechat) {
+        this(name, gender, phone, address, password);
         if (!StringUtils.isEmpty(wechat)) {
             this.wechat = wechat;
         }
@@ -74,6 +76,14 @@ public class Agent extends Entity {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getWechat() {

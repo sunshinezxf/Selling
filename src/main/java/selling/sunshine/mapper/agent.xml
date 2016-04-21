@@ -8,6 +8,7 @@
         <result property="phone" column="agent_phone"></result>
         <result property="address" column="agent_address"></result>
         <result property="wechat" column="agent_wechat"></result>
+        <result property="password" column="agent_password"></result>
         <result property="paid" column="agent_paid"></result>
         <result property="granted" column="agent_granted"></result>
         <result property="blockFlag" column="block_flag"></result>
@@ -15,12 +16,12 @@
     </resultMap>
 
     <insert id="insert" parameterType="selling.sunshine.model.Agent" useGeneratedKeys="false">
-        INSERT INTO agent(agent_id, agent_name, agent_gender, agent_phone, agent_address, agent_wechat, agent_paid, agent_granted, block_flag, create_time)
-        VALUES (#{agentId}, #{name}, #{gender}, #{phone}, #{address}, #{wechat}, #{paid}, #{granted}, #{blockFlag}, #{createAt})
+        INSERT INTO agent(agent_id, agent_name, agent_gender, agent_phone, agent_address, agent_password, agent_wechat, agent_paid, agent_granted, block_flag, create_time)
+        VALUES (#{agentId}, #{name}, #{gender}, #{phone}, #{address}, #{password}, #{wechat}, #{paid}, #{granted}, #{blockFlag}, #{createAt})
     </insert>
 
     <select id="query" parameterType="java.util.Map" resultMap="agentVo">
-        SELECT agent_id, agent_name, agent_gender, agent_phone, agent_address, agent_wechat, agent_paid, agent_granted,
+        SELECT agent_id, agent_name, agent_gender, agent_phone, agent_address, agent_password, agent_wechat, agent_paid, agent_granted,
         block_flag,
         create_time
         FROM agent
