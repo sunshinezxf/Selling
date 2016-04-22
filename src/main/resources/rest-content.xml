@@ -47,6 +47,29 @@
         <constructor-arg index="1" value="BATCH"/>
     </bean>
 
+    <bean id="shiroEhcacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+        <property name="cacheManagerConfigFile" value="classpath:encache-shiro.xml"/>
+    </bean>
+
+    <bean id="adminRealm" class="selling.sunshine.security.AdminRealm">
+    </bean>
+
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <property name="realm" ref="adminRealm"/>
+        <property name="cacheManager" ref="shiroEhcacheManager"/>
+    </bean>
+
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <property name="securityManager" ref="securityManager"/>
+        <property name="loginUrl" value="/login"/>
+        <property name="unauthorizedUrl" value="/index"/>
+        <property name="filterChainDefinitions">
+            <value>
+                /** = anon
+            </value>
+        </property>
+    </bean>
+
     <task:annotation-driven/>
     <import resource="rest-controller.xml"/>
     <import resource="rest-service.xml"/>

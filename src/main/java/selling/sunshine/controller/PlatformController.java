@@ -1,5 +1,8 @@
 package selling.sunshine.controller;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -7,10 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import selling.sunshine.form.AdminForm;
-import selling.sunshine.model.Admin;
 import selling.sunshine.service.AdminService;
-import selling.sunshine.utils.ResponseCode;
-import selling.sunshine.utils.ResultData;
 
 import javax.validation.Valid;
 
@@ -43,14 +43,20 @@ public class PlatformController {
         ModelAndView view = new ModelAndView();
         if (result.hasErrors()) {
             view.setViewName("redirect:/login");
-        }
-        ResultData loginResponse = adminService.login(new Admin(form.getUsername(), form.getPassword()));
-        if (loginResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            view.setViewName("redirect:/dashboard");
             return view;
-        } else {
-            view.setViewName("redirect:/login");
         }
+        try {
+            Subject subject = SecurityUtils.getSubject();
+            if (subject.isAuthenticated()) {
+                view.setViewName("redirect:/dashboard");
+                return view;
+            }
+            subject.login(new UsernamePasswordToken(form.getUsername(), form.getPassword()));
+        } catch (Exception e) {
+            view.setViewName("redirect:/login");
+            return view;
+        }
+        view.setViewName("redirect:/dashboard");
         return view;
     }
 
