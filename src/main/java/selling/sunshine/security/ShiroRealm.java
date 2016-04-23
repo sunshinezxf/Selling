@@ -16,11 +16,10 @@ import selling.sunshine.utils.ResultData;
 /**
  * Created by sunshine on 4/21/16.
  */
-public class AdminRealm extends AuthorizingRealm {
+public class ShiroRealm extends AuthorizingRealm {
 
     @Autowired
     private AdminService adminService;
-
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {

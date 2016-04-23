@@ -51,11 +51,11 @@
         <property name="cacheManagerConfigFile" value="classpath:encache-shiro.xml"/>
     </bean>
 
-    <bean id="adminRealm" class="selling.sunshine.security.AdminRealm">
+    <bean id="shiroRealm" class="selling.sunshine.security.ShiroRealm">
     </bean>
 
     <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
-        <property name="realm" ref="adminRealm"/>
+        <property name="realm" ref="shiroRealm"/>
         <property name="cacheManager" ref="shiroEhcacheManager"/>
     </bean>
 

@@ -25,6 +25,13 @@ public class AgentServiceImpl implements AgentService {
     private AgentDao agentDao;
 
     @Override
+    public ResultData login(Map<String, Object> condition) {
+        ResultData result = new ResultData();
+
+        return result;
+    }
+
+    @Override
     public ResultData createAgent(Agent agent) {
         ResultData result = new ResultData();
         agent.setPassword(Encryption.desEncode(agent.getPassword(), agent.getPhone()));

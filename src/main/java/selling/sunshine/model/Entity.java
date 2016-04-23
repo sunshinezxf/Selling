@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 /**
  * Created by sunshine on 4/8/16.
  */
-public class Entity {
+public abstract class Entity {
     private boolean blockFlag;
     private Timestamp createAt;
 
