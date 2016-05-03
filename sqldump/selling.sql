@@ -1,56 +1,43 @@
--- MySQL dump 10.13  Distrib 5.6.27, for osx10.11 (x86_64)
---
--- Host: localhost    Database: selling
--- ------------------------------------------------------
--- Server version	5.6.27
+-- MySQL Workbench Forward Engineering
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
---
--- Current Database: `selling`
---
+-- -----------------------------------------------------
+-- Schema selling
+-- -----------------------------------------------------
+-- best selling system ever
 
-CREATE DATABASE /*!32312 IF NOT EXISTS*/ `selling` /*!40100 DEFAULT CHARACTER SET utf8 */;
-
-USE `selling`;
-
+-- -----------------------------------------------------
+-- Schema selling
 --
--- Table structure for table `agent`
---
+-- best selling system ever
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `selling` DEFAULT CHARACTER SET utf8 ;
+USE `selling` ;
 
-DROP TABLE IF EXISTS `agent`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `agent` (
-  `agent_id` varchar(20) NOT NULL,
-  `upper_agent_id` varchar(20) DEFAULT NULL,
-  `agent_name` varchar(45) NOT NULL,
-  `agent_gender` varchar(10) NOT NULL,
-  `agent_phone` varchar(45) NOT NULL,
-  `agent_address` varchar(100) NOT NULL,
-  `agent_password` varchar(100) NOT NULL,
-  `agent_wechat` varchar(45) DEFAULT NULL,
-  `agent_level` int(11) DEFAULT NULL,
-  `agent_paid` tinyint(1) NOT NULL DEFAULT '0',
-  `agent_granted` tinyint(1) NOT NULL DEFAULT '0',
-  `block_flag` tinyint(1) NOT NULL DEFAULT '0',
-  `create_time` datetime NOT NULL,
-  PRIMARY KEY (`agent_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+-- -----------------------------------------------------
+-- Table `selling`.`agent`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `selling`.`agent` ;
 
---
--- Dumping data for table `agent`
---
+CREATE TABLE IF NOT EXISTS `selling`.`agent` (
+  `agent_id` VARCHAR(20) NOT NULL,
+  `upper_agent_id` VARCHAR(20) NULL,
+  `agent_name` VARCHAR(45) NOT NULL,
+  `agent_gender` VARCHAR(10) NOT NULL,
+  `agent_phone` VARCHAR(45) NOT NULL,
+  `agent_address` VARCHAR(100) NOT NULL,
+  `agent_password` VARCHAR(50) NOT NULL,
+  `agent_wechat` VARCHAR(45) NULL,
+  `agent_level` INT NULL,
+  `agent_paid` TINYINT(1) NOT NULL DEFAULT 0,
+  `agent_granted` TINYINT(1) NOT NULL DEFAULT 0,
+  `block_flag` TINYINT(1) NOT NULL DEFAULT 0,
+  `create_time` DATETIME NOT NULL,
+  PRIMARY KEY (`agent_id`))
+  ENGINE = InnoDB;
 
 LOCK TABLES `agent` WRITE;
 /*!40000 ALTER TABLE `agent` DISABLE KEYS */;
@@ -58,52 +45,42 @@ INSERT INTO `agent` VALUES ('AGTyzfryl36',NULL,'章许帆','M','15895862305','�
 /*!40000 ALTER TABLE `agent` ENABLE KEYS */;
 UNLOCK TABLES;
 
---
--- Table structure for table `customer`
---
 
-DROP TABLE IF EXISTS `customer`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `customer` (
-  `customer_id` varchar(20) NOT NULL,
-  `customer_name` varchar(45) NOT NULL,
-  `customer_phone` varchar(45) NOT NULL,
-  `customer_address` varchar(100) NOT NULL,
-  PRIMARY KEY (`customer_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+-- -----------------------------------------------------
+-- Table `selling`.`customer`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `selling`.`customer` ;
 
---
--- Dumping data for table `customer`
---
+CREATE TABLE IF NOT EXISTS `selling`.`customer` (
+  `customer_id` VARCHAR(20) NOT NULL,
+  `customer_name` VARCHAR(45) NOT NULL,
+  `customer_phone` VARCHAR(45) NOT NULL,
+  `customer_address` VARCHAR(100) NOT NULL,
+  `agent_id` VARCHAR(20) NOT NULL,
+  PRIMARY KEY (`customer_id`),
+  INDEX `fk_customer_agent1_idx` (`agent_id` ASC),
+  CONSTRAINT `fk_customer_agent1`
+  FOREIGN KEY (`agent_id`)
+  REFERENCES `selling`.`agent` (`agent_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+  ENGINE = InnoDB;
 
-LOCK TABLES `customer` WRITE;
-/*!40000 ALTER TABLE `customer` DISABLE KEYS */;
-/*!40000 ALTER TABLE `customer` ENABLE KEYS */;
-UNLOCK TABLES;
 
---
--- Table structure for table `goods`
---
+-- -----------------------------------------------------
+-- Table `selling`.`goods`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `selling`.`goods` ;
 
-DROP TABLE IF EXISTS `goods`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `goods` (
-  `goods_id` varchar(20) NOT NULL,
-  `goods_name` varchar(45) NOT NULL,
-  `goods_price` double NOT NULL,
-  `goods_description` varchar(45) DEFAULT NULL,
-  `block_flag` tinyint(1) NOT NULL DEFAULT '0',
-  `create_time` datetime NOT NULL,
-  PRIMARY KEY (`goods_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `goods`
---
+CREATE TABLE IF NOT EXISTS `selling`.`goods` (
+  `goods_id` VARCHAR(20) NOT NULL,
+  `goods_name` VARCHAR(45) NOT NULL,
+  `goods_price` DOUBLE NOT NULL,
+  `goods_description` VARCHAR(45) NULL,
+  `block_flag` TINYINT(1) NOT NULL DEFAULT 0,
+  `create_time` DATETIME NOT NULL,
+  PRIMARY KEY (`goods_id`))
+  ENGINE = InnoDB;
 
 LOCK TABLES `goods` WRITE;
 /*!40000 ALTER TABLE `goods` DISABLE KEYS */;
@@ -111,24 +88,70 @@ INSERT INTO `goods` VALUES ('COMofrefl41','三七粉',298,'100g',0,'2016-04-29 1
 /*!40000 ALTER TABLE `goods` ENABLE KEYS */;
 UNLOCK TABLES;
 
---
--- Table structure for table `manager`
---
+-- -----------------------------------------------------
+-- Table `selling`.`order`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `selling`.`order` ;
 
-DROP TABLE IF EXISTS `manager`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `manager` (
-  `manager_id` varchar(20) NOT NULL,
-  `manager_username` varchar(45) NOT NULL,
-  `manager_password` varchar(45) NOT NULL,
-  PRIMARY KEY (`manager_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+CREATE TABLE IF NOT EXISTS `selling`.`order` (
+  `order_id` VARCHAR(20) NOT NULL,
+  `agent_id` VARCHAR(20) NOT NULL,
+  `create_time` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`order_id`),
+  INDEX `fk_order_agent1_idx` (`agent_id` ASC),
+  CONSTRAINT `fk_order_agent1`
+  FOREIGN KEY (`agent_id`)
+  REFERENCES `selling`.`agent` (`agent_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+  ENGINE = InnoDB;
 
---
--- Dumping data for table `manager`
---
+
+-- -----------------------------------------------------
+-- Table `selling`.`order_item`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `selling`.`order_item` ;
+
+CREATE TABLE IF NOT EXISTS `selling`.`order_item` (
+  `order_item_id` VARCHAR(20) NOT NULL,
+  `order_id` VARCHAR(20) NOT NULL,
+  `goods_id` VARCHAR(20) NOT NULL,
+  `goods_quantity` INT NOT NULL DEFAULT 1,
+  `order_item_price` DOUBLE NOT NULL,
+  `customer_id` VARCHAR(20) NOT NULL,
+  PRIMARY KEY (`order_item_id`),
+  INDEX `fk_order_item_order_idx` (`order_id` ASC),
+  INDEX `fk_order_item_goods1_idx` (`goods_id` ASC),
+  INDEX `fk_order_item_customer1_idx` (`customer_id` ASC),
+  CONSTRAINT `fk_order_item_order`
+  FOREIGN KEY (`order_id`)
+  REFERENCES `selling`.`order` (`order_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_order_item_goods1`
+  FOREIGN KEY (`goods_id`)
+  REFERENCES `selling`.`goods` (`goods_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_order_item_customer1`
+  FOREIGN KEY (`customer_id`)
+  REFERENCES `selling`.`customer` (`customer_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+  ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `selling`.`manager`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `selling`.`manager` ;
+
+CREATE TABLE IF NOT EXISTS `selling`.`manager` (
+  `manager_id` VARCHAR(20) NOT NULL,
+  `manager_username` VARCHAR(45) NOT NULL,
+  `manager_password` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`manager_id`))
+  ENGINE = InnoDB;
 
 LOCK TABLES `manager` WRITE;
 /*!40000 ALTER TABLE `manager` DISABLE KEYS */;
@@ -136,72 +159,55 @@ INSERT INTO `manager` VALUES ('MNG000001','admin','21232f297a57a5a743894a0e4a801
 /*!40000 ALTER TABLE `manager` ENABLE KEYS */;
 UNLOCK TABLES;
 
---
--- Table structure for table `order`
---
 
-DROP TABLE IF EXISTS `order`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `order` (
-  `order_id` varchar(20) NOT NULL,
-  `agent_id` varchar(20) NOT NULL,
-  `create_time` varchar(45) NOT NULL,
-  PRIMARY KEY (`order_id`),
-  KEY `fk_order_agent1_idx` (`agent_id`),
-  CONSTRAINT `fk_order_agent1` FOREIGN KEY (`agent_id`) REFERENCES `agent` (`agent_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+-- -----------------------------------------------------
+-- Table `selling`.`role`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `selling`.`role` ;
 
---
--- Dumping data for table `order`
---
+CREATE TABLE IF NOT EXISTS `selling`.`role` (
+  `role_id` VARCHAR(20) NOT NULL,
+  `role_name` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`role_id`))
+  ENGINE = InnoDB;
 
-LOCK TABLES `order` WRITE;
-/*!40000 ALTER TABLE `order` DISABLE KEYS */;
-/*!40000 ALTER TABLE `order` ENABLE KEYS */;
-UNLOCK TABLES;
 
---
--- Table structure for table `order_item`
---
+-- -----------------------------------------------------
+-- Table `selling`.`user`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `selling`.`user` ;
 
-DROP TABLE IF EXISTS `order_item`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `order_item` (
-  `order_item_id` varchar(20) NOT NULL,
-  `order_id` varchar(20) NOT NULL,
-  `goods_id` varchar(20) NOT NULL,
-  `goods_quantity` int(11) NOT NULL DEFAULT '1',
-  `order_item_price` double NOT NULL,
-  `customer_id` varchar(20) NOT NULL,
-  PRIMARY KEY (`order_item_id`),
-  KEY `fk_order_item_order_idx` (`order_id`),
-  KEY `fk_order_item_goods1_idx` (`goods_id`),
-  KEY `fk_order_item_customer1_idx` (`customer_id`),
-  CONSTRAINT `fk_order_item_customer1` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_order_item_goods1` FOREIGN KEY (`goods_id`) REFERENCES `goods` (`goods_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_order_item_order` FOREIGN KEY (`order_id`) REFERENCES `order` (`order_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+CREATE TABLE IF NOT EXISTS `selling`.`user` (
+  `userid` VARCHAR(20) NOT NULL,
+  `username` VARCHAR(45) NOT NULL,
+  `password` VARCHAR(45) NOT NULL,
+  `role_id` VARCHAR(20) NOT NULL,
+  `manager_id` VARCHAR(20) NULL,
+  `agent_id` VARCHAR(20) NULL,
+  `block_flag` TINYINT(1) NOT NULL DEFAULT 0,
+  `create_time` DATETIME NOT NULL,
+  PRIMARY KEY (`userid`),
+  INDEX `fk_user_role1_idx` (`role_id` ASC),
+  INDEX `fk_user_agent1_idx` (`agent_id` ASC),
+  INDEX `fk_user_manager1_idx` (`manager_id` ASC),
+  CONSTRAINT `fk_user_role1`
+  FOREIGN KEY (`role_id`)
+  REFERENCES `selling`.`role` (`role_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_user_agent1`
+  FOREIGN KEY (`agent_id`)
+  REFERENCES `selling`.`agent` (`agent_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_user_manager1`
+  FOREIGN KEY (`manager_id`)
+  REFERENCES `selling`.`manager` (`manager_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+  ENGINE = InnoDB;
 
---
--- Dumping data for table `order_item`
---
 
-LOCK TABLES `order_item` WRITE;
-/*!40000 ALTER TABLE `order_item` DISABLE KEYS */;
-/*!40000 ALTER TABLE `order_item` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
-
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2016-04-29 15:35:40
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
