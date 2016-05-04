@@ -1,7 +1,5 @@
 package selling.sunshine.model;
 
-import java.util.List;
-
 /**
  * Created by sunshine on 4/23/16.
  */
@@ -9,7 +7,9 @@ public class User extends Entity {
     private String userId;
     private String username;
     private String password;
-    private List<Role> roles;
+    private Role role;
+    private Admin admin;
+    private Agent agent;
 
     private User() {
         super();
@@ -27,16 +27,22 @@ public class User extends Entity {
         this.password = admin.getPassword();
     }
 
+    public User(String username, String password) {
+        this();
+        this.username = username;
+        this.password = password;
+    }
+
     public String getUserId() {
         return userId;
     }
 
-    public List<Role> getRoles() {
-        return roles;
+    public Role getRole() {
+        return role;
     }
 
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     public void setUserId(String userId) {
@@ -57,5 +63,21 @@ public class User extends Entity {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Admin getAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(Admin admin) {
+        this.admin = admin;
+    }
+
+    public Agent getAgent() {
+        return agent;
+    }
+
+    public void setAgent(Agent agent) {
+        this.agent = agent;
     }
 }

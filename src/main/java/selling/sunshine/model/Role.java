@@ -3,7 +3,7 @@ package selling.sunshine.model;
 /**
  * Created by sunshine on 4/23/16.
  */
-public class Role {
+public class Role extends Entity {
     private String roleId;
     private String name;
 

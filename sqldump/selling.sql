@@ -39,12 +39,6 @@ CREATE TABLE IF NOT EXISTS `selling`.`agent` (
   PRIMARY KEY (`agent_id`))
   ENGINE = InnoDB;
 
-LOCK TABLES `agent` WRITE;
-/*!40000 ALTER TABLE `agent` DISABLE KEYS */;
-INSERT INTO `agent` VALUES ('AGTyzfryl36',NULL,'章许帆','M','15895862305','江苏省南京市鼓楼区汉口路22号','Cl1z+N+m7H4FeMDP4jiCVQ==',NULL,NULL,0,0,0,'2016-04-21 16:30:05');
-/*!40000 ALTER TABLE `agent` ENABLE KEYS */;
-UNLOCK TABLES;
-
 
 -- -----------------------------------------------------
 -- Table `selling`.`customer`
@@ -82,11 +76,6 @@ CREATE TABLE IF NOT EXISTS `selling`.`goods` (
   PRIMARY KEY (`goods_id`))
   ENGINE = InnoDB;
 
-LOCK TABLES `goods` WRITE;
-/*!40000 ALTER TABLE `goods` DISABLE KEYS */;
-INSERT INTO `goods` VALUES ('COMofrefl41','三七粉',298,'100g',0,'2016-04-29 14:23:08');
-/*!40000 ALTER TABLE `goods` ENABLE KEYS */;
-UNLOCK TABLES;
 
 -- -----------------------------------------------------
 -- Table `selling`.`order`
@@ -153,12 +142,6 @@ CREATE TABLE IF NOT EXISTS `selling`.`manager` (
   PRIMARY KEY (`manager_id`))
   ENGINE = InnoDB;
 
-LOCK TABLES `manager` WRITE;
-/*!40000 ALTER TABLE `manager` DISABLE KEYS */;
-INSERT INTO `manager` VALUES ('MNG000001','admin','21232f297a57a5a743894a0e4a801fc3');
-/*!40000 ALTER TABLE `manager` ENABLE KEYS */;
-UNLOCK TABLES;
-
 
 -- -----------------------------------------------------
 -- Table `selling`.`role`
@@ -168,6 +151,8 @@ DROP TABLE IF EXISTS `selling`.`role` ;
 CREATE TABLE IF NOT EXISTS `selling`.`role` (
   `role_id` VARCHAR(20) NOT NULL,
   `role_name` VARCHAR(45) NOT NULL,
+  `block_flag` TINYINT(1) NOT NULL,
+  `create_time` DATETIME NOT NULL,
   PRIMARY KEY (`role_id`))
   ENGINE = InnoDB;
 
@@ -178,7 +163,7 @@ CREATE TABLE IF NOT EXISTS `selling`.`role` (
 DROP TABLE IF EXISTS `selling`.`user` ;
 
 CREATE TABLE IF NOT EXISTS `selling`.`user` (
-  `userid` VARCHAR(20) NOT NULL,
+  `user_id` VARCHAR(20) NOT NULL,
   `username` VARCHAR(45) NOT NULL,
   `password` VARCHAR(45) NOT NULL,
   `role_id` VARCHAR(20) NOT NULL,
@@ -186,7 +171,7 @@ CREATE TABLE IF NOT EXISTS `selling`.`user` (
   `agent_id` VARCHAR(20) NULL,
   `block_flag` TINYINT(1) NOT NULL DEFAULT 0,
   `create_time` DATETIME NOT NULL,
-  PRIMARY KEY (`userid`),
+  PRIMARY KEY (`user_id`),
   INDEX `fk_user_role1_idx` (`role_id` ASC),
   INDEX `fk_user_agent1_idx` (`agent_id` ASC),
   INDEX `fk_user_manager1_idx` (`manager_id` ASC),
@@ -211,3 +196,34 @@ CREATE TABLE IF NOT EXISTS `selling`.`user` (
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+-- -----------------------------------------------------
+-- Data for table `selling`.`manager`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `selling`;
+INSERT INTO `selling`.`manager` (`manager_id`, `manager_username`, `manager_password`) VALUES ('MNG00000001', 'admin', '21232f297a57a5a743894a0e4a801fc3');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `selling`.`role`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `selling`;
+INSERT INTO `selling`.`role` (`role_id`, `role_name`, `block_flag`, `create_time`) VALUES ('ROL00000001', 'admin', 0, '2016-5-3 11:00:00');
+INSERT INTO `selling`.`role` (`role_id`, `role_name`, `block_flag`, `create_time`) VALUES ('ROL00000002', 'agent', 0, '2016-5-3 11:00:10');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `selling`.`user`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `selling`;
+INSERT INTO `selling`.`user` (`user_id`, `username`, `password`, `role_id`, `manager_id`, `agent_id`, `block_flag`, `create_time`) VALUES ('USR00000001', 'admin', '21232f297a57a5a743894a0e4a801fc3', 'ROL00000001', 'MNG00000001', NULL, 0, '2016-5-3 11:00:20');
+
+COMMIT;
+

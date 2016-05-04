@@ -23,11 +23,12 @@ import java.util.Map;
 public class AgentDaoImpl extends BaseDao implements AgentDao {
     private Logger logger = LoggerFactory.getLogger(AgentDaoImpl.class);
 
+    private Object lock = new Object();
+
     @Transactional
     @Override
     public ResultData insertAgent(Agent agent) {
         ResultData result = new ResultData();
-        Object lock = new Object();
         synchronized (lock) {
             try {
                 agent.setAgentId(IDGenerator.generate("AGT"));

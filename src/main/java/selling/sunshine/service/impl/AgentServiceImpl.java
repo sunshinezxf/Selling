@@ -34,7 +34,7 @@ public class AgentServiceImpl implements AgentService {
     @Override
     public ResultData createAgent(Agent agent) {
         ResultData result = new ResultData();
-        agent.setPassword(Encryption.desEncode(agent.getPassword(), agent.getPhone()));
+        agent.setPassword(Encryption.md5(agent.getPassword()));
         ResultData insertResponse = agentDao.insertAgent(agent);
         result.setResponseCode(insertResponse.getResponseCode());
         if (insertResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {

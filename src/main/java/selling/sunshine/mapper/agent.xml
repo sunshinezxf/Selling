@@ -21,7 +21,8 @@
     </insert>
 
     <select id="query" parameterType="java.util.Map" resultMap="agentVo">
-        SELECT agent_id, agent_name, agent_gender, agent_phone, agent_address, agent_password, agent_wechat, agent_paid, agent_granted,
+        SELECT agent_id, agent_name, agent_gender, agent_phone, agent_address, agent_password, agent_wechat, agent_paid,
+        agent_granted,
         block_flag,
         create_time
         FROM agent

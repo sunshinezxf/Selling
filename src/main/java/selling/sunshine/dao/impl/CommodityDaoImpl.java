@@ -25,10 +25,11 @@ import java.util.Map;
 public class CommodityDaoImpl extends BaseDao implements CommodityDao {
     private Logger logger = LoggerFactory.getLogger(CommodityDaoImpl.class);
 
+    private Object lock = new Object();
+
     @Transactional
     public ResultData insertCommodity(Goods goods) {
         ResultData result = new ResultData();
-        Object lock = new Object();
         synchronized (lock) {
             try {
                 goods.setGoodsId(IDGenerator.generate("COM"));

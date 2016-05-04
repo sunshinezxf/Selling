@@ -8,8 +8,8 @@ import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
-import selling.sunshine.model.Admin;
-import selling.sunshine.service.AdminService;
+import selling.sunshine.model.User;
+import selling.sunshine.service.UserService;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
@@ -19,10 +19,11 @@ import selling.sunshine.utils.ResultData;
 public class ShiroRealm extends AuthorizingRealm {
 
     @Autowired
-    private AdminService adminService;
+    private UserService userService;
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
+
         return null;
     }
 
@@ -31,17 +32,17 @@ public class ShiroRealm extends AuthorizingRealm {
         UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
         String username = token.getUsername();
         String password = new String(token.getPassword());
-        Admin admin = new Admin(username, password);
-        ResultData loginResponse = adminService.login(admin);
+        User user = new User(username, password);
+        ResultData loginResponse = userService.login(user);
         if (loginResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            admin = (Admin) loginResponse.getData();
-            if (admin != null) {
+            user = (User) loginResponse.getData();
+            if (user != null) {
                 Subject subject = SecurityUtils.getSubject();
                 if (subject != null) {
                     Session session = subject.getSession();
-                    session.setAttribute("current", admin);
+                    session.setAttribute("current", user);
                 }
-                return new SimpleAuthenticationInfo(admin, token.getPassword(), getName());
+                return new SimpleAuthenticationInfo(user, token.getPassword(), getName());
             }
         }
         return null;

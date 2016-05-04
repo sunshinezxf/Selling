@@ -5,8 +5,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import selling.sunshine.dao.BaseDao;
-import selling.sunshine.dao.UserDao;
-import selling.sunshine.model.User;
+import selling.sunshine.dao.RoleDao;
+import selling.sunshine.model.Role;
+import selling.sunshine.utils.IDGenerator;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
@@ -17,24 +18,20 @@ import java.util.Map;
  * Created by sunshine on 5/3/16.
  */
 @Repository
-public class UserDaoImpl extends BaseDao implements UserDao {
-    private Logger logger = LoggerFactory.getLogger(UserDaoImpl.class);
+public class RoleDaoImpl extends BaseDao implements RoleDao {
+    private Logger logger = LoggerFactory.getLogger(RoleDaoImpl.class);
 
     private Object lock = new Object();
 
     @Transactional
     @Override
-    public ResultData insertUser(User user) {
+    public ResultData insertRole(Role role) {
         ResultData result = new ResultData();
         synchronized (lock) {
             try {
-                sqlSession.insert("selling.user.insert", user);
-                if (user.getAdmin() != null) {
-                    sqlSession.insert("selling.admin.insert", user.getAdmin());
-                }
-                if (user.getAgent() != null) {
-                    sqlSession.insert("selling.agent.insert", user.getAgent());
-                }
+                role.setRoleId(IDGenerator.generate("ROL"));
+                sqlSession.insert("selling.role.insert", role);
+                result.setData(role);
             } catch (Exception e) {
                 logger.error(e.getMessage());
                 result.setResponseCode(ResponseCode.RESPONSE_ERROR);
@@ -46,10 +43,10 @@ public class UserDaoImpl extends BaseDao implements UserDao {
     }
 
     @Override
-    public ResultData queryUser(Map<String, Object> condition) {
+    public ResultData queryRole(Map<String, Object> condition) {
         ResultData result = new ResultData();
         try {
-            List<User> list = sqlSession.selectList("selling.user.query", condition);
+            List<Role> list = sqlSession.selectList("selling.role.query", condition);
             result.setData(list);
         } catch (Exception e) {
             logger.error(e.getMessage());

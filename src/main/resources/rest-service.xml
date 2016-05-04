@@ -8,4 +8,6 @@
     <bean id="agentService" class="selling.sunshine.service.impl.AgentServiceImpl"></bean>
 
     <bean id="adminService" class="selling.sunshine.service.impl.AdminServiceImpl"></bean>
+
+    <bean id="userService" class="selling.sunshine.service.impl.UserServiceImpl"></bean>
 </beans>
