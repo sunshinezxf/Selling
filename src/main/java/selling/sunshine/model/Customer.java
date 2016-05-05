@@ -52,4 +52,22 @@ public class Customer extends Entity {
     public void setAgent(Agent agent) {
         this.agent = agent;
     }
+
+	public CustomerPhone getPhone() {
+		return phone;
+	}
+
+	public void setPhone(CustomerPhone phone) {
+		this.phone = phone;
+	}
+
+	public CustomerAddress getAddress() {
+		return address;
+	}
+
+	public void setAddress(CustomerAddress address) {
+		this.address = address;
+	}
+    
+    
 }
