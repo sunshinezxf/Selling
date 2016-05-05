@@ -22,6 +22,10 @@
     <div class="weui_cell weui_cells_tips clear-margin-top">
         金额:298元
     </div>
+    <input type="hidden" name="goodsQuantity" value="1"/>
+    <input type="hidden" name="goodsId" value="123456"/>
+    <input type="hidden" name="orderItemPrice" value="234"/>
+    <input type="hidden" name="customerId" value="12"/>
 </div>
 <div class="weui_cells weui_cells_access">
     <div class="weui_cells_title">订货单编号xxxxxxxx</div>
@@ -47,4 +51,8 @@
     <div class="weui_cell weui_cells_tips clear-margin-top">
         金额:298元
     </div>
+    <input type="hidden" name="goodsQuantity" value="1"/>
+    <input type="hidden" name="goodsId" value="123456"/>
+    <input type="hidden" name="orderItemPrice" value="234"/>
+    <input type="hidden" name="customerId" value="13"/>
 </div>
