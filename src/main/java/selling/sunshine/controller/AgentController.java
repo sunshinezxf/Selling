@@ -11,7 +11,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.alibaba.fastjson.JSON;
+
 import selling.sunshine.form.AgentForm;
+import selling.sunshine.form.OrderItemForm;
 import selling.sunshine.model.Agent;
 import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
@@ -48,6 +52,15 @@ public class AgentController {
         view.setViewName("/agent/order/place");
         return view;
     }
+    
+    @RequestMapping(method = RequestMethod.POST, value = "/order/place")
+    public ModelAndView placeOrder(@Valid OrderItemForm form, BindingResult result) {
+		ModelAndView view = new ModelAndView();
+		logger.debug(JSON.toJSON(form).toString());
+		view.setViewName("");
+		return view;
+    	
+    }
 
     @RequestMapping(method = RequestMethod.GET, value = "/order/manage")
     public ModelAndView manageOrder() {
@@ -80,7 +93,6 @@ public class AgentController {
     @RequestMapping(method = RequestMethod.GET, value = "/register")
     public ModelAndView register() {
         ModelAndView view = new ModelAndView();
-
         view.setViewName("/agent/register");
         return view;
     }
