@@ -17,14 +17,20 @@ import com.alibaba.fastjson.JSON;
 import selling.sunshine.form.AgentForm;
 import selling.sunshine.form.OrderItemForm;
 import selling.sunshine.model.Agent;
+import selling.sunshine.model.Order;
+import selling.sunshine.model.OrderItem;
 import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.AgentService;
+import selling.sunshine.service.OrderService;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
 import javax.validation.Valid;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -37,6 +43,9 @@ public class AgentController {
 
     @Autowired
     private AgentService agentService;
+    
+    @Autowired
+    private OrderService orderService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/me/index")
     public ModelAndView index() {
@@ -56,10 +65,23 @@ public class AgentController {
     @RequestMapping(method = RequestMethod.POST, value = "/order/place")
     public ModelAndView placeOrder(@Valid OrderItemForm form, BindingResult result) {
 		ModelAndView view = new ModelAndView();
-		logger.debug(JSON.toJSON(form).toString());
-		view.setViewName("");
-		return view;
-    	
+		List<OrderItem> orderItems = new ArrayList<OrderItem>();
+		int length = form.getCustomerId().length;
+		Order order = new Order();
+		Agent agent = new Agent();
+		agent.setAgentId(form.getAgentId());
+		order.setAgent(agent);
+		for(int i = 0; i < length; i++){
+			OrderItem orderItem = new OrderItem(form.getCustomerId()[i],form.getGoodsId()[i],Integer.parseInt(form.getGoodsQuantity()[i]));
+			orderItems.add(orderItem);
+		}
+		order.setOrderItems(orderItems);
+        ResultData fetchResponse = orderService.placeOrder(order);
+        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+        	view.setViewName("/agent/prompt");
+        }
+        	view.setViewName("/agent/prompt");
+        return view;	
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/order/manage")

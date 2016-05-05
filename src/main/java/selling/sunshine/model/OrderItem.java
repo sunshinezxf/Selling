@@ -3,7 +3,7 @@ package selling.sunshine.model;
 /**
  * Created by sunshine on 4/8/16.
  */
-public class OrderItem {
+public class OrderItem extends Entity {
 	private String orderItemId;
 	private String customerId;
 	private String goodsId;
@@ -11,8 +11,7 @@ public class OrderItem {
 	private double orderItemPrice;
 	private Order order;
 	
-	public OrderItem(String orderItemId, String customerId, String goodsId, int goodsQuantity) {
-		this.orderItemId = orderItemId;
+	public OrderItem(String customerId, String goodsId, int goodsQuantity) {
 		this.customerId = customerId;
 		this.goodsId = goodsId;
 		this.goodsQuantity = goodsQuantity;

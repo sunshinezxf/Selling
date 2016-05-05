@@ -54,5 +54,5 @@
     <input type="hidden" name="goodsQuantity" value="1"/>
     <input type="hidden" name="goodsId" value="123456"/>
     <input type="hidden" name="orderItemPrice" value="234"/>
-    <input type="hidden" name="customerId" value="13"/>
+    <input type="hidden" name="customerId" value="12"/>
 </div>

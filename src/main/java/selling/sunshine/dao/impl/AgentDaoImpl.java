@@ -92,4 +92,5 @@ public class AgentDaoImpl extends BaseDao implements AgentDao {
             return result;
         }
     }
+
 }

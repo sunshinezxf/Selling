@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="selling.order.item">
+	<resultMap id="orderItemVo" type="selling.sunshine.model.OrderItem">
+		<result property="orderItemId" column="order_item_id"></result>
+		<result property="customerId" column="customer_id"></result>
+		<result property="goodsId" column="goods_id"></result>
+		<result property="goodsQuantity" column="goods_quantity"></result>
+		<result property="orderItemPrice" column="order_item_price"></result>
+	</resultMap>
+	<insert id="insertBatch" parameterType="java.util.List" useGeneratedKeys="false">
+        INSERT INTO order_item(order_item_id, order_id, customer_id, goods_id, goods_quantity, order_item_price)
+        VALUES 
+		<foreach collection="list" item="element" index="index" separator=",">
+			(#{element.orderItemId}, #{element.order.orderId}, #{element.customerId},#{element.goodsId},#{element.goodsQuantity},#{element.orderItemPrice})
+		</foreach>
+    </insert>
+</mapper>

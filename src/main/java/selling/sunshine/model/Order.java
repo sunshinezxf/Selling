@@ -1,18 +1,14 @@
 package selling.sunshine.model;
 
+import java.util.List;
+
 /**
  * Created by sunshine on 4/8/16.
  */
-public class Order {
+public class Order extends Entity {
 	private String orderId;
-	private String agentId;
-	private String createTime;
-
-	public Order(String orderId, String agentId, String createTime) {
-		this.orderId = orderId;
-		this.agentId = agentId;
-		this.createTime = createTime;
-	}
+	private Agent agent;
+	private List<OrderItem> orderItems;
 
 	public String getOrderId() {
 		return orderId;
@@ -22,20 +18,21 @@ public class Order {
 		this.orderId = orderId;
 	}
 
-	public String getAgentId() {
-		return agentId;
+	public List<OrderItem> getOrderItems() {
+		return orderItems;
 	}
 
-	public void setAgentId(String agentId) {
-		this.agentId = agentId;
+	public void setOrderItems(List<OrderItem> orderItems) {
+		this.orderItems = orderItems;
 	}
 
-	public String getCreateTime() {
-		return createTime;
+	public Agent getAgent() {
+		return agent;
 	}
 
-	public void setCreateTime(String createTime) {
-		this.createTime = createTime;
+	public void setAgent(Agent agent) {
+		this.agent = agent;
 	}
-
+	
+	
 }

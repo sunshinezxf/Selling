@@ -57,4 +57,10 @@ public class AgentServiceImpl implements AgentService {
         }
         return result;
     }
+
+	@Override
+	public ResultData placeOrder(Map<String, Object> conditon) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
