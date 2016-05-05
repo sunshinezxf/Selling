@@ -44,7 +44,6 @@ public class Customer extends Entity {
         this.name = name;
     }
 
-
     public Agent getAgent() {
         return agent;
     }
@@ -53,21 +52,21 @@ public class Customer extends Entity {
         this.agent = agent;
     }
 
-	public CustomerPhone getPhone() {
-		return phone;
-	}
+    public CustomerPhone getPhone() {
+        return phone;
+    }
 
-	public void setPhone(CustomerPhone phone) {
-		this.phone = phone;
-	}
+    public void setPhone(CustomerPhone phone) {
+        this.phone = phone;
+    }
 
-	public CustomerAddress getAddress() {
-		return address;
-	}
+    public CustomerAddress getAddress() {
+        return address;
+    }
 
-	public void setAddress(CustomerAddress address) {
-		this.address = address;
-	}
-    
-    
+    public void setAddress(CustomerAddress address) {
+        this.address = address;
+    }
+
+
 }
