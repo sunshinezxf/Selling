@@ -44,7 +44,24 @@ public class UserServiceImpl implements UserService {
                 return result;
             }
         }
-        result.setResponseCode(ResponseCode.RESPONSE_NULL);
+        result.setResponseCode(queryResponse.getResponseCode());
+        return result;
+    }
+
+    @Override
+    public ResultData fetchUser(Map<String, Object> condition) {
+        ResultData result = new ResultData();
+        ResultData queryResponse = userDao.queryUser(condition);
+        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            if (((List<User>) queryResponse.getData()).size() == 0) {
+                result.setResponseCode(ResponseCode.RESPONSE_NULL);
+                return result;
+            }
+            User target = ((List<User>) queryResponse.getData()).get(0);
+            result.setData(target);
+            return result;
+        }
+        result.setResponseCode(queryResponse.getResponseCode());
         return result;
     }
 }
