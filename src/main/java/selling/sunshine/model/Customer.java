@@ -4,53 +4,52 @@ package selling.sunshine.model;
  * Created by sunshine on 4/8/16.
  */
 public class Customer extends Entity {
-	private String customerId;
-	private String name;
-	private String address;
-	private String phone;
+    private String customerId;
+    private String name;
+    private CustomerPhone phone;
+    private CustomerAddress address;
+    private Agent agent;
 
-	public Customer() {
-		super();
-	}
+    public Customer() {
+        super();
+    }
 
-	public Customer(String customerId, String name, String address, String phone) {
-		super();
-		this.customerId = customerId;
-		this.name = name;
-		this.address = address;
-		this.phone = phone;
-	}
+    public Customer(String name, String address, String phone) {
+        super();
+        this.name = name;
+        this.phone = new CustomerPhone(phone);
+        this.address = new CustomerAddress(address);
+        this.phone.setCustomer(this);
+        this.address.setCustomer(this);
+    }
 
-	public String getCustomerId() {
-		return customerId;
-	}
+    public Customer(String name, String address, String phone, Agent agent) {
+        this(name, address, phone);
+        this.agent = agent;
+    }
 
-	public void setCustomerId(String customerId) {
-		this.customerId = customerId;
-	}
+    public String getCustomerId() {
+        return customerId;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getAddress() {
-		return address;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setAddress(String address) {
-		this.address = address;
-	}
 
-	public String getPhone() {
-		return phone;
-	}
+    public Agent getAgent() {
+        return agent;
+    }
 
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
-
+    public void setAgent(Agent agent) {
+        this.agent = agent;
+    }
 }

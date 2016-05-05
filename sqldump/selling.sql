@@ -48,11 +48,11 @@ DROP TABLE IF EXISTS `selling`.`customer` ;
 CREATE TABLE IF NOT EXISTS `selling`.`customer` (
   `customer_id` VARCHAR(20) NOT NULL,
   `customer_name` VARCHAR(45) NOT NULL,
-  `customer_phone` VARCHAR(45) NOT NULL,
-  `customer_address` VARCHAR(100) NOT NULL,
   `agent_id` VARCHAR(20) NOT NULL,
-  PRIMARY KEY (`customer_id`),
+  `block_flag` TINYINT(1) NOT NULL DEFAULT 0,
+  `create_time` VARCHAR(45) NOT NULL,
   INDEX `fk_customer_agent1_idx` (`agent_id` ASC),
+  PRIMARY KEY (`customer_id`),
   CONSTRAINT `fk_customer_agent1`
   FOREIGN KEY (`agent_id`)
   REFERENCES `selling`.`agent` (`agent_id`)
@@ -85,7 +85,8 @@ DROP TABLE IF EXISTS `selling`.`order` ;
 CREATE TABLE IF NOT EXISTS `selling`.`order` (
   `order_id` VARCHAR(20) NOT NULL,
   `agent_id` VARCHAR(20) NOT NULL,
-  `create_time` VARCHAR(45) NOT NULL,
+  `block_flag` TINYINT(1) NOT NULL DEFAULT 0,
+  `create_time` DATETIME NOT NULL,
   PRIMARY KEY (`order_id`),
   INDEX `fk_order_agent1_idx` (`agent_id` ASC),
   CONSTRAINT `fk_order_agent1`
@@ -188,6 +189,48 @@ CREATE TABLE IF NOT EXISTS `selling`.`user` (
   CONSTRAINT `fk_user_manager1`
   FOREIGN KEY (`manager_id`)
   REFERENCES `selling`.`manager` (`manager_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+  ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `selling`.`customer_phone`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `selling`.`customer_phone` ;
+
+CREATE TABLE IF NOT EXISTS `selling`.`customer_phone` (
+  `customer_phone_id` VARCHAR(20) NOT NULL,
+  `customer_id` VARCHAR(20) NOT NULL,
+  `phone` VARCHAR(45) NOT NULL,
+  `block_flag` TINYINT(1) NOT NULL DEFAULT 0,
+  `create_time` DATETIME NOT NULL,
+  PRIMARY KEY (`customer_phone_id`),
+  INDEX `fk_customer_phone_customer1_idx` (`customer_id` ASC),
+  CONSTRAINT `fk_customer_phone_customer1`
+  FOREIGN KEY (`customer_id`)
+  REFERENCES `selling`.`customer` (`customer_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+  ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `selling`.`customer_address`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `selling`.`customer_address` ;
+
+CREATE TABLE IF NOT EXISTS `selling`.`customer_address` (
+  `customer_address_id` VARCHAR(20) NOT NULL,
+  `customer_id` VARCHAR(20) NOT NULL,
+  `address` VARCHAR(100) NOT NULL,
+  `block_flag` TINYINT(1) NOT NULL DEFAULT 0,
+  `create_time` DATETIME NOT NULL,
+  PRIMARY KEY (`customer_address_id`),
+  INDEX `fk_customer_address_customer1_idx` (`customer_id` ASC),
+  CONSTRAINT `fk_customer_address_customer1`
+  FOREIGN KEY (`customer_id`)
+  REFERENCES `selling`.`customer` (`customer_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
   ENGINE = InnoDB;
