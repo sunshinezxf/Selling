@@ -6,16 +6,26 @@ package selling.sunshine.model;
 public class Customer extends Entity {
     private String customerId;
     private String name;
-    private String address;
+    private CustomerPhone phone;
+    private CustomerAddress address;
+    private Agent agent;
 
     public Customer() {
         super();
     }
 
-    public Customer(String name, String address) {
-        this();
+    public Customer(String name, String address, String phone) {
+        super();
         this.name = name;
-        this.address = address;
+        this.phone = new CustomerPhone(phone);
+        this.address = new CustomerAddress(address);
+        this.phone.setCustomer(this);
+        this.address.setCustomer(this);
+    }
+
+    public Customer(String name, String address, String phone, Agent agent) {
+        this(name, address, phone);
+        this.agent = agent;
     }
 
     public String getCustomerId() {
@@ -34,11 +44,12 @@ public class Customer extends Entity {
         this.name = name;
     }
 
-    public String getAddress() {
-        return address;
+
+    public Agent getAgent() {
+        return agent;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setAgent(Agent agent) {
+        this.agent = agent;
     }
 }
