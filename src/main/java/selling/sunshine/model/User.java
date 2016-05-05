@@ -11,7 +11,7 @@ public class User extends Entity {
     private Admin admin;
     private Agent agent;
 
-    private User() {
+    public User() {
         super();
     }
 
