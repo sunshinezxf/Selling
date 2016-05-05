@@ -22,7 +22,7 @@ public class CustomerDaoImpl extends BaseDao implements CustomerDao {
 	@Override
 	public ResultData insertCustomer(Customer customer, Agent agent) {
 		ResultData result = new ResultData();
-
+        //sqlSession.select(arg0, arg1);
 		return result;
 	}
 
