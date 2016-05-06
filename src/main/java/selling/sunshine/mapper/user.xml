@@ -46,7 +46,7 @@
             user_id = #{userId},
             username = #{username},
             password = #{password},
-            role_id = #{role.role_id},
+            role_id = #{role.roleId},
             <if test="admin != null and admin != ''">
                 manager_id = #{admin.adminId},
             </if>
