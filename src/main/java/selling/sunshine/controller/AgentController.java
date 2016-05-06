@@ -1,7 +1,9 @@
 package selling.sunshine.controller;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
-
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
@@ -24,6 +26,7 @@ import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
 import javax.validation.Valid;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -127,12 +130,24 @@ public class AgentController {
         return view;
     }
 
+    @RequestMapping(method=RequestMethod.POST,value = "/login")
     public ModelAndView login(@Valid AgentForm form, BindingResult result) {
         ModelAndView view = new ModelAndView();
         if (result.hasErrors()) {
             view.setViewName("redirect:/agent/login");
             return view;
+        }try {
+            Subject subject = SecurityUtils.getSubject();
+            if (subject.isAuthenticated()) {
+                view.setViewName("redirect:/agent/order/place");
+                return view;
+            }
+            subject.login(new UsernamePasswordToken(form.getPhone(), form.getPassword()));
+        } catch (Exception e) {
+            view.setViewName("redirect:/agent/login");
+            return view;
         }
+        view.setViewName("redirect:/agent/order/place");
         return view;
     }
 
