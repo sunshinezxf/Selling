@@ -15,6 +15,14 @@
                 </div>
                 <div class="list-cell">
                     <div class="weui_cells weui_cells_access" id="customer_list">
+                      <a class='weui_cell'>
+                          <div class='weui_cell_bd weui_cell_primary'>
+                             <p> ${agent.getName()} </p>
+                          </div>
+                          <div class='weui_cell_ft'>
+                             ${agent.getPhone()} 
+                          </div>
+                      </a>
                     </div>
                 </div>
             </div>
@@ -28,10 +36,14 @@
         $("#add_customer_form").fadeIn();
         $("#customer_panel").hide();
     });
+    #*
     var list = JSON.parse('[{"name": "梅长苏", "phone": "15895882300", "address": "江苏省南京市鼓楼区汉口路22号"}]');
     for (var i = 0; i < list.length; i++) {
         var item = list[i];
         var node = "<a class='weui_cell'><div class='weui_cell_bd weui_cell_primary'><p>" + item.name + "</p></div><div class='weui_cell_ft'>" + item.phone + "</div></a>";
         $("#customer_list").append(node);
     }
+    
+    $("#customer_list").append("<a class='weui_cell'><div class='weui_cell_bd weui_cell_primary'><p>" + ${agent.getName()} + "</p></div><div class='weui_cell_ft'>" + ${agent.getPhone} + "</div></a>");
+    *#
 </script>

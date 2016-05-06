@@ -19,8 +19,6 @@ public class Customer extends Entity {
         this.name = name;
         this.phone = new CustomerPhone(phone);
         this.address = new CustomerAddress(address);
-        this.phone.setCustomer(this);
-        this.address.setCustomer(this);
     }
 
     public Customer(String name, String address, String phone, Agent agent) {

@@ -37,10 +37,14 @@ public class CustomerDaoImpl extends BaseDao implements CustomerDao {
                 sqlSession.insert("selling.customer.insert", customer);
                 CustomerPhone phoneNumber = customer.getPhone();
                 CustomerAddress address = customer.getAddress();
+                phoneNumber.setCustomer(customer);
+                address.setCustomer(customer);
                 phoneNumber.setPhoneId(IDGenerator.generate("PNM"));
                 address.setAddressId(IDGenerator.generate("ADD"));
                 sqlSession.insert("selling.customer.phone.insert", phoneNumber);
                 sqlSession.insert("selling.customer.address.insert", address);
+                address.setCustomer(null);
+                phoneNumber.setCustomer(null);
                 result.setData(customer);
             } catch (Exception e) {
                 logger.error(e.getMessage());
@@ -66,7 +70,7 @@ public class CustomerDaoImpl extends BaseDao implements CustomerDao {
             if (ResponseCode.RESPONSE_OK.equals(queryCustomer(condition).getResponseCode())) {
                 CustomerPhone phoneNumber = customer.getPhone();
                 CustomerAddress address = customer.getAddress();
-
+                
                 sqlSession.insert("selling.customer.phone.insert", phoneNumber);
                 sqlSession.insert("selling.customer.address.insert", address);
                 Customer c = ((List<Customer>) queryCustomer(condition).getData()).get(0);
