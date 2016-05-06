@@ -1,0 +1,25 @@
+<div id="goods_option" class="weui_cells weui_cells_radio" style="display: none;">
+    #foreach($elem in $goods)
+    <label class="weui_cell weui_check_label goods" id="${elem.goodsId}" for="goods_check${elem.goodsId}">
+        <div class="weui_cell_bd weui_cell_primary">
+            ${elem.name}
+        </div>
+        <div class="weui_cell_ft">
+            <input type="radio">
+            <span id="goods_check_label"></span>
+        </div>
+    </label>
+    #end
+</div>
+<script>
+    $(".weui_check_label.goods").click(function () {
+        var check_label = "<span class='weui_icon_checked'></span>";
+        var id_value = $(this).attr("id");
+        goods_id = id_value;
+        var goods_name = $(this).find(".weui_cell_bd").html();
+        $("#goods").find(".weui_cell_bd").html(goods_name);
+        $(this).addClass("weui_icon_checked");    
+        $("#goods_option").hide();
+        $("#add_order_item").fadeIn();
+    });
+</script>

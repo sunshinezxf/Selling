@@ -12,7 +12,7 @@
             </div>
             <div class="weui_cell_ft"></div>
         </a>
-        <a class="weui_cell" id="good">
+        <a class="weui_cell" id="goods">
             <div class="weui_cell_bd weui_cell_primary">
                 <p>商品名称</p>
             </div>
@@ -34,6 +34,8 @@
         <button type="button" class="weui_btn weui_btn_default" id="add_cancel_btn">取消</button>
     </div>
 </div>
+#parse("/agent/component/customer_list.vm")
+#parse("/agent/component/good_list.vm")
 #parse("/agent/component/navigate.vm")
 <script>
     $("#add_confirm_btn").click(function () {
@@ -49,5 +51,10 @@
     $("#customer").click(function(){
     	$("#add_order_item").hide();
     	$("#customer_option").fadeIn();
+    });
+    
+    $("#goods").click(function(){
+    	$("#add_order_item").hide();
+    	$("#goods_option").fadeIn();
     });
 </script>

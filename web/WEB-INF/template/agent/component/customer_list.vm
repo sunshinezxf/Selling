@@ -1,36 +1,25 @@
-<div id="customer_option" style="display: none;" class="weui_cells weui_cells_radio" style="display: none;">
-    #foreach($elem in $customers)
-    <label class="weui_cell weui_check_label" id="customer${elem.customerId}" for="customer_check${elem.customerId}">
+<div id="customer_option" class="weui_cells weui_cells_radio" style="display: none;">
+    #foreach($elem in $customer)
+    <label class="weui_cell weui_check_label customer" id="${elem.customerId}" for="customer_check${elem.customerId}">
         <div class="weui_cell_bd weui_cell_primary">
             ${elem.name}
         </div>
         <div class="weui_cell_ft">
-            <input type="radio" id="customer_check${elem.customerId}">
+            <input type="radio">
             <span id="customer_check_label"></span>
         </div>
     </label>
     #end
 </div>
 <script>
-    $(".weui_check_label").click(function () {
+    $(".weui_check_label.customer").click(function () {
         var check_label = "<span class='weui_icon_checked'></span>";
         var id_value = $(this).attr("id");
-        if (id_value == "male") {
-            $("#gender_description").text("先生");
-            $("#gender").val("M");
-            $("#female_check").removeAttr("checked");
-            $("#male_check").attr("checked", "checked");
-            $("#male_check_label").addClass("weui_icon_checked");
-            $("#female_check_label").removeClass("weui_icon_checked");
-        } else if (id_value == "female") {
-            $("#gender_description").text("女士");
-            $("#gender").val("F");
-            $("#male_check").removeAttr("checked")
-            $("#female_check").attr("checked", "checked");
-            $("#female_check_label").addClass("weui_icon_checked");
-            $("#male_check_label").removeClass("weui_icon_checked");
-        }
-        $("#gender_option").hide();
-        $("#agent_register_area").fadeIn();
+        customer_id = id_value;
+        var customer_name = $(this).find(".weui_cell_bd").html();
+        $("#customer").find(".weui_cell_bd").html(customer_name);
+        $(this).addClass("weui_icon_checked");
+        $("#customer_option").hide();
+        $("#add_order_item").fadeIn();
     });
 </script>
