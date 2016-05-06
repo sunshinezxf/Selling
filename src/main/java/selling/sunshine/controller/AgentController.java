@@ -1,5 +1,8 @@
 package selling.sunshine.controller;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 
 import org.slf4j.LoggerFactory;
@@ -17,9 +20,11 @@ import com.alibaba.fastjson.JSON;
 import selling.sunshine.form.AgentForm;
 import selling.sunshine.form.OrderItemForm;
 import selling.sunshine.model.Agent;
+import selling.sunshine.model.Customer;
 import selling.sunshine.model.Goods;
 import selling.sunshine.model.Order;
 import selling.sunshine.model.OrderItem;
+import selling.sunshine.model.User;
 import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.AgentService;
@@ -66,9 +71,28 @@ public class AgentController {
     @RequestMapping(method = RequestMethod.GET, value = "/order/place")
     public ModelAndView placeOrder() {
         ModelAndView view = new ModelAndView();
+        
+        Subject subject = SecurityUtils.getSubject();
+        User user = null;
+        if (subject != null) {
+            Session session = subject.getSession();
+            user = (User) session.getAttribute("current");
+        }
+        
         Map<String, Object> condition = new HashMap<String, Object>();
         ResultData fetchDataGoods = commodityService.fetchCommodity(condition);
-        List<Goods> goods = (List<Goods>) fetchDataGoods.getData();
+        ResultData fetchDataCustomers = customerService.fetchCustomer(user.getAgent());
+        List<Goods> goods = null;
+        List<Customer> customers = null;
+        if(fetchDataGoods.getResponseCode() == ResponseCode.RESPONSE_OK) {
+        	goods = (List<Goods>) fetchDataGoods.getData();
+        }
+        if(fetchDataGoods.getResponseCode() == ResponseCode.RESPONSE_OK) {
+        	customers = (List<Customer>) fetchDataCustomers.getData();
+        }
+        
+        view.addObject("goods", goods);
+        view.addObject("customer", customers);
         view.setViewName("/agent/order/place");
         return view;
     }
