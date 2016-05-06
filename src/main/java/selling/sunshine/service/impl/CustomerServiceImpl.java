@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import selling.sunshine.dao.CustomerDao;
+import selling.sunshine.model.Agent;
 import selling.sunshine.model.Customer;
 import selling.sunshine.service.CustomerService;
 import selling.sunshine.utils.ResponseCode;
@@ -45,4 +46,11 @@ public class CustomerServiceImpl implements CustomerService {
         }
         return result;
     }
+
+	@Override
+	public ResultData fetchCustomer(Agent agent) {
+		return null;
+	}
+    
+    
 }

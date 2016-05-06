@@ -15,4 +15,6 @@ public interface CommodityService {
     ResultData createCommodity(Goods goods);
 
     ResultData fetchCommodity(Map<String, Object> condition, DataTableParam param);
+    
+    ResultData fetchCommodity(Map<String, Object> condition);
 }

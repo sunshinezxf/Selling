@@ -17,11 +17,14 @@ import com.alibaba.fastjson.JSON;
 import selling.sunshine.form.AgentForm;
 import selling.sunshine.form.OrderItemForm;
 import selling.sunshine.model.Agent;
+import selling.sunshine.model.Goods;
 import selling.sunshine.model.Order;
 import selling.sunshine.model.OrderItem;
 import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.AgentService;
+import selling.sunshine.service.CommodityService;
+import selling.sunshine.service.CustomerService;
 import selling.sunshine.service.OrderService;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
@@ -47,10 +50,15 @@ public class AgentController {
     @Autowired
     private OrderService orderService;
 
+    @Autowired
+    private CommodityService commodityService;
+    
+    @Autowired
+    private CustomerService customerService;
+    
     @RequestMapping(method = RequestMethod.GET, value = "/me/index")
     public ModelAndView index() {
         ModelAndView view = new ModelAndView();
-
         view.setViewName("/agent/me/index");
         return view;
     }
@@ -58,6 +66,9 @@ public class AgentController {
     @RequestMapping(method = RequestMethod.GET, value = "/order/place")
     public ModelAndView placeOrder() {
         ModelAndView view = new ModelAndView();
+        Map<String, Object> condition = new HashMap<String, Object>();
+        ResultData fetchDataGoods = commodityService.fetchCommodity(condition);
+        List<Goods> goods = (List<Goods>) fetchDataGoods.getData();
         view.setViewName("/agent/order/place");
         return view;
     }

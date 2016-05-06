@@ -1,4 +1,4 @@
-<form id="place-order-form">
+<form id="place_order_form">
 <div id="place_order_panel">
     <div class="order_content">
         <div class="panel">
@@ -51,8 +51,8 @@
         $("#place_order_panel").hide();
     });
     $("#place_order_btn").click(function(){
-    	$("#place-order-form").attr("action", "${path.concat('/agent/order/place')}");
-    	$("#place-order-form").attr("method","post");
-    	$("#place-order-form").submit();
+    	$("#place_order_form").attr("action", "${path.concat('/agent/order/place')}");
+    	$("#place_order_form").attr("method","post");
+    	$("#place_order_form").submit();
     });
 </script>
