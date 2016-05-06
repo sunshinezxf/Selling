@@ -26,6 +26,13 @@
     </button>
 </div>
 <script>
+    $("#lg_btn").click(function () {
+        $("#agent_login_form").attr("action", "${path.concat('/agent/login')}");
+        $("#agent_login_form").attr("method", "post");
+        $("#agent_login_form").submit();
+    });
+</script>
+<script>
 
     $(document).ready(function () {
         $("#agent_phone").bind("input propertychange", function () {
