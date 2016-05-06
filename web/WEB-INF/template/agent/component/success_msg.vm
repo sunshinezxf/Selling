@@ -16,7 +16,12 @@
                 #end
             </h2>
 
-            <p class="weui_msg_desc">您已成功提交申请,待审核后即可使用</p>
+            <p class="weui_msg_desc">
+                #if(${prompt} && ${prompt.message})
+                    ${prompt.message}
+                #else
+                    对不起,当前您没有任何消息
+                #end</p>
         </div>
         <div class="weui_opr_area">
             <p class="weui_btn_area">
