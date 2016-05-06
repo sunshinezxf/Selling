@@ -35,12 +35,20 @@
 <script>
     $("#add_confirm_btn").click(function () {
         $("#add_customer_form").hide();
+        var url = "${path.concat('/customer/add')}";
         var name = $("#customer_name").val();
         var phone = $("#customer_phone").val();
         var address = $("#customer_address").val();
         var node = "<a class='weui_cell'><div class='weui_cell_bd weui_cell_primary'><p>" + name + "</p></div><div class='weui_cell_ft'>" + phone + "</div></a>";
         $("#customer_list").append(node);
         $("#customer_panel").fadeIn();
+         $.post(url, {
+                    name: name,
+                    phone: phone,
+                    address: address,
+                }, function (result) {
+                    console.debug(JSON.stringify(result));
+                });
     });
 
     $("#add_cancel_btn").click(function () {

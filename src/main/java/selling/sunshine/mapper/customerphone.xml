@@ -38,7 +38,7 @@
     </select>
 
     <insert id="insert" parameterType="selling.sunshine.model.CustomerPhone" useGeneratedKeys="false">
-        INSERT INTO custmer_phone(customer_phone_id, customer_id, phone, block_flag, create_time)
+        INSERT INTO customer_phone(customer_phone_id, customer_id, phone, block_flag, create_time)
         VALUES (#{phoneId}, #{customer.customerId}, #{phone}, #{blockFlag}, #{createAt})
     </insert>
 
