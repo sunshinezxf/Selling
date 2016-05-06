@@ -40,6 +40,7 @@ public class AgentDaoImpl extends BaseDao implements AgentDao {
                 Role role = new Role();
                 role.setRoleId("ROL00000002");
                 user.setRole(role);
+                user.setAgent(agent);
                 sqlSession.insert("selling.user.insert", user);
                 result.setData(agent);
             } catch (Exception e) {
