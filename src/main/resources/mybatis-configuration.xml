@@ -9,5 +9,6 @@
         <mapper resource="selling/sunshine/mapper/user.xml"/>
         <mapper resource="selling/sunshine/mapper/order.xml"/>
         <mapper resource="selling/sunshine/mapper/orderitem.xml"/>
+        <mapper resource="selling/sunshine/mapper/customer.xml"/>
     </mappers>
 </configuration>

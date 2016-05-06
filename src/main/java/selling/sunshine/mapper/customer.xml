@@ -26,7 +26,7 @@
 
     <select id="query" parameterType="java.util.Map" resultMap="customerVo">
         SELECT customer_id, customer_name, block_flag, create_time
-        FROM custmer
+        FROM customer
         WHERE 1 = 1
         <if test="customerId != null and customerId != ''">
             AND customer_id = #{customerId}
