@@ -53,9 +53,6 @@ public class CustomerDaoImpl extends BaseDao implements CustomerDao {
 	}
 
 	@Override
-	/*
-	 * 在更新一个customer之前要先根据条件查询这个customer是否已存在,存在的话要获得这个customer的现有地址和电话，然后block
-	 */
 	public ResultData updateCustomer(Customer customer) {
 		ResultData result = new ResultData();
 		try {
@@ -68,11 +65,11 @@ public class CustomerDaoImpl extends BaseDao implements CustomerDao {
 			if(ResponseCode.RESPONSE_OK.equals(queryCustomer(condition).getResponseCode())){
 				CustomerPhone phoneNumber=customer.getPhone();
                 CustomerAddress address=customer.getAddress();
-                //添加customer现有地址和电话
+                
                 sqlSession.insert("selling.customer.phone.insert", phoneNumber);
                 sqlSession.insert("selling.customer.address.insert", address);
                 Customer c=((List<Customer>)queryCustomer(condition).getData()).get(0);
-                //把customer原有地址和电话block掉
+               
                 sqlSession.update("selling.customer.phone.block",c.getPhone());
                 sqlSession.update("selling.customer.address.block",c.getAddress());                
 			}
