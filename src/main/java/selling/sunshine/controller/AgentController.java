@@ -26,6 +26,7 @@ import selling.sunshine.service.CommodityService;
 import selling.sunshine.service.CustomerService;
 import selling.sunshine.service.OrderService;
 import selling.sunshine.utils.Prompt;
+import selling.sunshine.utils.PromptCode;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
@@ -164,6 +165,8 @@ public class AgentController {
             ResultData createResponse = agentService.createAgent(agent);
             if (createResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
                 Prompt prompt = new Prompt();
+                prompt.setCode(PromptCode.SUCCESS);
+                prompt.setMessage("您已成功提交申请,待审核后即可使用");
                 attr.addFlashAttribute("prompt", prompt);
                 view.setViewName("redirect:/agent/prompt");
                 return view;
