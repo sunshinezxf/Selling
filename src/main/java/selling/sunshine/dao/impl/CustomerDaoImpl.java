@@ -3,6 +3,7 @@ package selling.sunshine.dao.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import selling.sunshine.dao.BaseDao;
 import selling.sunshine.dao.CustomerDao;
 import selling.sunshine.model.Customer;
@@ -26,6 +27,7 @@ public class CustomerDaoImpl extends BaseDao implements CustomerDao {
     private Logger logger = LoggerFactory.getLogger(CustomerDaoImpl.class);
     private Object lock = new Object();
 
+    @Transactional
     @Override
     public ResultData insertCustomer(Customer customer) {
         ResultData result = new ResultData();
@@ -50,31 +52,32 @@ public class CustomerDaoImpl extends BaseDao implements CustomerDao {
         }
     }
 
-	@Override
-	public ResultData updateCustomer(Customer customer) {
-		ResultData result = new ResultData();
-		try {
-			
-            Map<String, Object> condition=new HashMap<String, Object>();
-            condition.put("customerId",customer.getCustomerId());
-            condition.put("name",customer.getName());
-            condition.put("blockFlag",customer.isBlockFlag());
-            
-			if(ResponseCode.RESPONSE_OK.equals(queryCustomer(condition).getResponseCode())){
-				CustomerPhone phoneNumber=customer.getPhone();
-                CustomerAddress address=customer.getAddress();
-                
+    @Transactional
+    @Override
+    public ResultData updateCustomer(Customer customer) {
+        ResultData result = new ResultData();
+        try {
+
+            Map<String, Object> condition = new HashMap<String, Object>();
+            condition.put("customerId", customer.getCustomerId());
+            condition.put("name", customer.getName());
+            condition.put("blockFlag", customer.isBlockFlag());
+
+            if (ResponseCode.RESPONSE_OK.equals(queryCustomer(condition).getResponseCode())) {
+                CustomerPhone phoneNumber = customer.getPhone();
+                CustomerAddress address = customer.getAddress();
+
                 sqlSession.insert("selling.customer.phone.insert", phoneNumber);
                 sqlSession.insert("selling.customer.address.insert", address);
-                Customer c=((List<Customer>)queryCustomer(condition).getData()).get(0);
-               
-                sqlSession.update("selling.customer.phone.block",c.getPhone());
-                sqlSession.update("selling.customer.address.block",c.getAddress());                
-			}
-			result.setData(customer);
-			result.setResponseCode(ResponseCode.RESPONSE_OK);
-		} catch (Exception e) {
-			logger.error(e.getMessage());
+                Customer c = ((List<Customer>) queryCustomer(condition).getData()).get(0);
+
+                sqlSession.update("selling.customer.phone.block", c.getPhone());
+                sqlSession.update("selling.customer.address.block", c.getAddress());
+            }
+            result.setData(customer);
+            result.setResponseCode(ResponseCode.RESPONSE_OK);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
             result.setResponseCode(ResponseCode.RESPONSE_ERROR);
         } finally {
             return result;
