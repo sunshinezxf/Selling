@@ -50,34 +50,31 @@ public class CustomerDaoImpl extends BaseDao implements CustomerDao {
         }
     }
 
-    @Override
-    /*
-     * �ڸ���һ��customer֮ǰҪ�ȸ���������ѯ���customer�Ƿ��Ѵ���,���ڵĻ�Ҫ������customer�����е�ַ�͵绰��Ȼ��block
-	 */
-    public ResultData updateCustomer(Customer customer) {
-        ResultData result = new ResultData();
-        try {
-
-            Map<String, Object> condition = new HashMap<String, Object>();
-            condition.put("customerId", customer.getCustomerId());
-            condition.put("name", customer.getName());
-            condition.put("blockFlag", customer.isBlockFlag());
-
-            if (ResponseCode.RESPONSE_OK.equals(queryCustomer(condition).getResponseCode())) {
-                CustomerPhone phoneNumber = customer.getPhone();
-                CustomerAddress address = customer.getAddress();
-                //���customer���е�ַ�͵绰
+	@Override
+	public ResultData updateCustomer(Customer customer) {
+		ResultData result = new ResultData();
+		try {
+			
+            Map<String, Object> condition=new HashMap<String, Object>();
+            condition.put("customerId",customer.getCustomerId());
+            condition.put("name",customer.getName());
+            condition.put("blockFlag",customer.isBlockFlag());
+            
+			if(ResponseCode.RESPONSE_OK.equals(queryCustomer(condition).getResponseCode())){
+				CustomerPhone phoneNumber=customer.getPhone();
+                CustomerAddress address=customer.getAddress();
+                
                 sqlSession.insert("selling.customer.phone.insert", phoneNumber);
                 sqlSession.insert("selling.customer.address.insert", address);
-                Customer c = ((List<Customer>) queryCustomer(condition).getData()).get(0);
-                //��customerԭ�е�ַ�͵绰block��
-                sqlSession.update("selling.customer.phone.block", c.getPhone());
-                sqlSession.update("selling.customer.address.block", c.getAddress());
-            }
-            result.setData(customer);
-            result.setResponseCode(ResponseCode.RESPONSE_OK);
-        } catch (Exception e) {
-            logger.error(e.getMessage());
+                Customer c=((List<Customer>)queryCustomer(condition).getData()).get(0);
+               
+                sqlSession.update("selling.customer.phone.block",c.getPhone());
+                sqlSession.update("selling.customer.address.block",c.getAddress());                
+			}
+			result.setData(customer);
+			result.setResponseCode(ResponseCode.RESPONSE_OK);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
             result.setResponseCode(ResponseCode.RESPONSE_ERROR);
         } finally {
             return result;
