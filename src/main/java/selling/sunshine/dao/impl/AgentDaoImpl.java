@@ -7,6 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 import selling.sunshine.dao.AgentDao;
 import selling.sunshine.dao.BaseDao;
 import selling.sunshine.model.Agent;
+import selling.sunshine.model.Role;
+import selling.sunshine.model.User;
 import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.utils.IDGenerator;
@@ -33,6 +35,12 @@ public class AgentDaoImpl extends BaseDao implements AgentDao {
             try {
                 agent.setAgentId(IDGenerator.generate("AGT"));
                 sqlSession.insert("selling.agent.insert", agent);
+                User user = new User(agent);
+                user.setUserId(IDGenerator.generate("USR"));
+                Role role = new Role();
+                role.setRoleId("ROL00000002");
+                user.setRole(role);
+                sqlSession.insert("selling.user.insert", user);
                 result.setData(agent);
             } catch (Exception e) {
                 logger.error(e.getMessage());
