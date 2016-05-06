@@ -11,6 +11,9 @@ import selling.sunshine.service.CustomerService;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by sunshine on 5/5/16.
  */
@@ -47,10 +50,22 @@ public class CustomerServiceImpl implements CustomerService {
         return result;
     }
 
-	@Override
-	public ResultData fetchCustomer(Agent agent) {
-		return null;
-	}
-    
-    
+    @Override
+    public ResultData fetchCustomer(Agent agent) {
+        ResultData result = new ResultData();
+        if (agent == null) {
+            result.setResponseCode(ResponseCode.RESPONSE_NULL);
+            return result;
+        }
+        Map<String, Object> condition = new HashMap<String, Object>();
+        condition.put("agentId", agent.getAgentId());
+        ResultData queryResponse = customerDao.queryCustomer(condition);
+        result.setResponseCode(queryResponse.getResponseCode());
+        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(queryResponse.getData());
+        } else if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
+            result.setDescription(queryResponse.getDescription());
+        }
+        return result;
+    }
 }
