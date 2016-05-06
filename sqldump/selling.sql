@@ -241,6 +241,16 @@ SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 -- -----------------------------------------------------
+-- Data for table `selling`.`agent`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `selling`;
+INSERT INTO `selling`.`agent` (`agent_id`, `upper_agent_id`, `agent_name`, `agent_gender`, `agent_phone`, `agent_address`, `agent_password`, `agent_wechat`, `agent_level`, `agent_paid`, `agent_granted`, `block_flag`, `create_time`) VALUES ('王旻', NULL, '王旻', 'M', '18000000000', '江苏省南京市鼓楼区汉口路22号', 'e10adc3949ba59abbe56e057f20f883e', NULL, NULL, 0, 0, 0, '2016-05-05 15:57:56');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
 -- Data for table `selling`.`manager`
 -- -----------------------------------------------------
 START TRANSACTION;

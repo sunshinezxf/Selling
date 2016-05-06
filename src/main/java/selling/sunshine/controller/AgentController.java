@@ -2,6 +2,7 @@ package selling.sunshine.controller;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,15 +20,26 @@ import com.alibaba.fastjson.JSON;
 import selling.sunshine.form.AgentForm;
 import selling.sunshine.form.OrderItemForm;
 import selling.sunshine.model.Agent;
+import selling.sunshine.model.Customer;
+import selling.sunshine.model.Goods;
+import selling.sunshine.model.Order;
+import selling.sunshine.model.OrderItem;
+import selling.sunshine.model.User;
 import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.AgentService;
+import selling.sunshine.service.CommodityService;
+import selling.sunshine.service.CustomerService;
+import selling.sunshine.service.OrderService;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
 import javax.validation.Valid;
 
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -40,11 +52,19 @@ public class AgentController {
 
     @Autowired
     private AgentService agentService;
+    
+    @Autowired
+    private OrderService orderService;
 
+    @Autowired
+    private CommodityService commodityService;
+    
+    @Autowired
+    private CustomerService customerService;
+    
     @RequestMapping(method = RequestMethod.GET, value = "/me/index")
     public ModelAndView index() {
         ModelAndView view = new ModelAndView();
-
         view.setViewName("/agent/me/index");
         return view;
     }
@@ -52,6 +72,28 @@ public class AgentController {
     @RequestMapping(method = RequestMethod.GET, value = "/order/place")
     public ModelAndView placeOrder() {
         ModelAndView view = new ModelAndView();
+        
+        Subject subject = SecurityUtils.getSubject();
+        User user = null;
+        if (subject != null) {
+            Session session = subject.getSession();
+            user = (User) session.getAttribute("current");
+        }
+        
+        Map<String, Object> condition = new HashMap<String, Object>();
+        ResultData fetchDataGoods = commodityService.fetchCommodity(condition);
+        ResultData fetchDataCustomers = customerService.fetchCustomer(user.getAgent());
+        List<Goods> goods = null;
+        List<Customer> customers = null;
+        if(fetchDataGoods.getResponseCode() == ResponseCode.RESPONSE_OK) {
+        	goods = (List<Goods>) fetchDataGoods.getData();
+        }
+        if(fetchDataGoods.getResponseCode() == ResponseCode.RESPONSE_OK) {
+        	customers = (List<Customer>) fetchDataCustomers.getData();
+        }
+        
+        view.addObject("goods", goods);
+        view.addObject("customer", customers);
         view.setViewName("/agent/order/place");
         return view;
     }
@@ -59,10 +101,23 @@ public class AgentController {
     @RequestMapping(method = RequestMethod.POST, value = "/order/place")
     public ModelAndView placeOrder(@Valid OrderItemForm form, BindingResult result) {
 		ModelAndView view = new ModelAndView();
-		logger.debug(JSON.toJSON(form).toString());
-		view.setViewName("");
-		return view;
-    	
+		List<OrderItem> orderItems = new ArrayList<OrderItem>();
+		int length = form.getCustomerId().length;
+		Order order = new Order();
+		Agent agent = new Agent();
+		agent.setAgentId(form.getAgentId());
+		order.setAgent(agent);
+		for(int i = 0; i < length; i++){
+			OrderItem orderItem = new OrderItem(form.getCustomerId()[i],form.getGoodsId()[i],Integer.parseInt(form.getGoodsQuantity()[i]));
+			orderItems.add(orderItem);
+		}
+		order.setOrderItems(orderItems);
+        ResultData fetchResponse = orderService.placeOrder(order);
+        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+        	view.setViewName("/agent/prompt");
+        }
+        	view.setViewName("/agent/prompt");
+        return view;	
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/order/manage")

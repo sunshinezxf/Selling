@@ -8,6 +8,6 @@
         <mapper resource="selling/sunshine/mapper/agent.xml"/>
         <mapper resource="selling/sunshine/mapper/user.xml"/>
         <mapper resource="selling/sunshine/mapper/order.xml"/>
-        <mapper resource="selling/sunshine/mapper/order_item.xml"/>
+        <mapper resource="selling/sunshine/mapper/orderitem.xml"/>
     </mappers>
 </configuration>

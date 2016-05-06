@@ -15,4 +15,6 @@ public interface AgentService {
     ResultData createAgent(Agent agent);
 
     ResultData fetchAgent(Map<String, Object> condition, DataTableParam param);
+    
+    ResultData placeOrder(Map<String, Object> conditon);
 }

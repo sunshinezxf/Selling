@@ -47,4 +47,17 @@ public class CommodityServiceImpl implements CommodityService {
         }
         return result;
     }
+
+	@Override
+	public ResultData fetchCommodity(Map<String, Object> condition) {
+		ResultData result = new ResultData();
+		ResultData queryResponse = commodityDao.queryCommodity(condition);
+		if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+			result.setData(queryResponse.getData());
+		} else if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
+			result.setDescription(queryResponse.getDescription());
+		}
+		return result;
+	}
+    
 }
