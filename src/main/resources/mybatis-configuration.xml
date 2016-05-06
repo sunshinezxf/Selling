@@ -10,5 +10,7 @@
         <mapper resource="selling/sunshine/mapper/order.xml"/>
         <mapper resource="selling/sunshine/mapper/orderitem.xml"/>
         <mapper resource="selling/sunshine/mapper/customer.xml"/>
+        <mapper resource="selling/sunshine/mapper/customerphone.xml"/>
+        <mapper resource="selling/sunshine/mapper/customeraddress.xml"/>
     </mappers>
 </configuration>
