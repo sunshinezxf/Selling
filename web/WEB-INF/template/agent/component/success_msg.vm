@@ -8,9 +8,11 @@
                 #if(${prompt.code} == "SUCCESS")
                     操作成功
                 #elseif(${prompt.code} == "WARNING")
-                    提示信息
-                #else
+                    操作提示
+                #elseif(${prompt.code} == "DANGER")
                     操作失败
+                #else
+                    警告信息
                 #end
             </h2>
 
