@@ -70,7 +70,10 @@ public class AgentController {
             Session session = subject.getSession();
             user = (User) session.getAttribute("current");
         }
-
+        user = new User();
+        Agent agent = new Agent();
+        agent.setAgentId("王旻");
+        user.setAgent(agent);
         Map<String, Object> condition = new HashMap<String, Object>();
         ResultData fetchDataGoods = commodityService.fetchCommodity(condition);
         ResultData fetchDataCustomers = customerService.fetchCustomer(user.getAgent());
@@ -82,7 +85,8 @@ public class AgentController {
         if (fetchDataGoods.getResponseCode() == ResponseCode.RESPONSE_OK) {
             customers = (List<Customer>) fetchDataCustomers.getData();
         }
-
+        logger.debug(goods == null ? "NULL!!!!!!!": "OK");
+        logger.debug(customers == null ? "NULL!!!!!!!": "OK");
         view.addObject("goods", goods);
         view.addObject("customer", customers);
         view.setViewName("/agent/order/place");

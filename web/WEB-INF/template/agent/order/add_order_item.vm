@@ -1,18 +1,24 @@
 <div style="display: none;" id="add_order_item">
     <div class="weui_cells weui_cells_access">
-        <a class="weui_cell">
+        <a class="weui_cell" id="customer">
             <div class="weui_cell_bd weui_cell_primary">
                 <p>客户姓名</p>
             </div>
             <div class="weui_cell_ft"></div>
         </a>
-        <a class="weui_cell">
+        <a class="weui_cell" id="phone">
+            <div class="weui_cell_bd weui_cell_primary">
+                <p>手机号</p>
+            </div>
+            <div class="weui_cell_ft"></div>
+        </a>
+        <a class="weui_cell" id="good">
             <div class="weui_cell_bd weui_cell_primary">
                 <p>商品名称</p>
             </div>
             <div class="weui_cell_ft"></div>
         </a>
-        <a class="weui_cell">
+        <a class="weui_cell" id="quantity">
             <div class="weui_cell_bd weui_cell_primary">
                 <p>数量</p>
             </div>
@@ -28,6 +34,7 @@
         <button type="button" class="weui_btn weui_btn_default" id="add_cancel_btn">取消</button>
     </div>
 </div>
+#parse("/agent/component/navigate.vm")
 <script>
     $("#add_confirm_btn").click(function () {
         $("#add_order_item").hide();
@@ -37,5 +44,10 @@
     $("#add_cancel_btn").click(function () {
         $("#add_order_item").hide();
         $("#place_order_panel").fadeIn();
+    });
+    
+    $("#customer").click(function(){
+    	$("#add_order_item").hide();
+    	$("#customer_option").fadeIn();
     });
 </script>
