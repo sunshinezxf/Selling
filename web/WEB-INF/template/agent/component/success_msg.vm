@@ -4,7 +4,15 @@
             <i class="weui_icon_success weui_icon_msg"></i>
         </div>
         <div class="weui_text_area">
-            <h2 class="weui_msg_title">操作成功</h2>
+            <h2 class="weui_msg_title">
+                #if(${prompt.code} == "SUCCESS")
+                    操作成功
+                #elseif(${prompt.code} == "WARNING")
+                    提示信息
+                #else
+                    操作失败
+                #end
+            </h2>
 
             <p class="weui_msg_desc">您已成功提交申请,待审核后即可使用</p>
         </div>

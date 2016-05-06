@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import selling.sunshine.form.AgentForm;
 import selling.sunshine.form.AgentLoginForm;
 import selling.sunshine.form.OrderItemForm;
@@ -24,6 +25,7 @@ import selling.sunshine.service.AgentService;
 import selling.sunshine.service.CommodityService;
 import selling.sunshine.service.CustomerService;
 import selling.sunshine.service.OrderService;
+import selling.sunshine.utils.Prompt;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
@@ -85,8 +87,8 @@ public class AgentController {
         if (fetchDataGoods.getResponseCode() == ResponseCode.RESPONSE_OK) {
             customers = (List<Customer>) fetchDataCustomers.getData();
         }
-        logger.debug(goods == null ? "NULL!!!!!!!": "OK");
-        logger.debug(customers == null ? "NULL!!!!!!!": "OK");
+        logger.debug(goods == null ? "NULL!!!!!!!" : "OK");
+        logger.debug(customers == null ? "NULL!!!!!!!" : "OK");
         view.addObject("goods", goods);
         view.addObject("customer", customers);
         view.setViewName("/agent/order/place");
@@ -151,7 +153,7 @@ public class AgentController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/register")
-    public ModelAndView register(@Valid AgentForm form, BindingResult result) {
+    public ModelAndView register(@Valid AgentForm form, BindingResult result, RedirectAttributes attr) {
         ModelAndView view = new ModelAndView();
         if (result.hasErrors()) {
             view.setViewName("redirect:/agent/register");
@@ -161,6 +163,8 @@ public class AgentController {
             Agent agent = new Agent(form.getName(), form.getGender(), form.getPhone(), form.getAddress(), form.getPassword(), form.getWechat());
             ResultData createResponse = agentService.createAgent(agent);
             if (createResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                Prompt prompt = new Prompt();
+                attr.addFlashAttribute("prompt", prompt);
                 view.setViewName("redirect:/agent/prompt");
                 return view;
             } else {
