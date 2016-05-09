@@ -72,6 +72,7 @@
                 /material/** = anon
                 /agent/register = anon
                 /agent/login = anon
+                /agent/prompt = anon
 
                 /agent/** = roles[agent]
 
