@@ -158,6 +158,7 @@ public class AgentController {
              prompt.setMessage("下单成功");
              attr.addFlashAttribute("prompt", prompt);
              view.setViewName("redirect:/agent/prompt");
+             return view;
          }
          Prompt prompt = new Prompt();
          prompt.setCode(PromptCode.WARNING);

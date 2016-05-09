@@ -7,12 +7,14 @@
 		<result property="goodsId" column="goods_id"></result>
 		<result property="goodsQuantity" column="goods_quantity"></result>
 		<result property="orderItemPrice" column="order_item_price"></result>
+		<result property="blockFlag" column="block_flag"></result>
+		<result property="createAt" column="create_time"></result>
 	</resultMap>
 	<insert id="insertBatch" parameterType="java.util.List" useGeneratedKeys="false">
-        INSERT INTO order_item(order_item_id, order_id, customer_id, goods_id, goods_quantity, order_item_price)
+        INSERT INTO order_item(order_item_id, order_id, customer_id, goods_id, goods_quantity, order_item_price, block_flag, create_time)
         VALUES 
 		<foreach collection="list" item="element" index="index" separator=",">
-			(#{element.orderItemId}, #{element.order.orderId}, #{element.customerId},#{element.goodsId},#{element.goodsQuantity},#{element.orderItemPrice})
+			(#{element.orderItemId}, #{element.order.orderId}, #{element.customerId},#{element.goodsId},#{element.goodsQuantity},#{element.orderItemPrice},#{element.blockFlag}, #{element.createAt})
 		</foreach>
     </insert>
 </mapper>
