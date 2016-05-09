@@ -133,7 +133,7 @@ public class AgentController {
         Agent agent = null;
         if (subject != null) {
             Session session = subject.getSession();
-            user = (User) sssion.getAttribute("current");
+            user = (User) session.getAttribute("current");
             agent = user.getAgent();
         }
         view.addObject("agent", agent);
