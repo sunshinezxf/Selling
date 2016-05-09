@@ -145,6 +145,22 @@ public class AgentController {
     @RequestMapping(method = RequestMethod.POST, value = "/customer/list")
     public ResultData viewCustomerList() {
         ResultData result = new ResultData();
+        Subject subject = SecurityUtils.getSubject();
+        User user = null;
+        Agent agent = null;
+        if (subject != null) {
+            Session session = subject.getSession();
+            user = (User) session.getAttribute("current");
+            agent = user.getAgent();
+        }
+        result=customerService.fetchCustomer(agent);
+        if (ResponseCode.RESPONSE_OK.equals(result.getResponseCode())) {
+        	List<Customer> customers=(List<Customer>)result.getData();
+        	 for (int i = 0; i < customers.size(); i++) {
+     			System.out.println(customers.get(i).getName());
+     		}
+		}
+       
 
         return result;
     }
