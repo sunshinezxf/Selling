@@ -2,11 +2,11 @@
     #foreach($elem in $goods)
     <label class="weui_cell weui_check_label goods" id="${elem.goodsId}" for="goods_check${elem.goodsId}">
         <div class="weui_cell_bd weui_cell_primary">
-            ${elem.name}
+            <span>${elem.name}</span>&nbsp<span>${elem.price}</span><span>元</span>
         </div>
         <div class="weui_cell_ft">
             <input type="radio">
-            <span id="goods_check_label"></span>
+            <span id="goods_check${elem.goodsId}"></span>
         </div>
     </label>
     #end
@@ -16,9 +16,10 @@
         var check_label = "<span class='weui_icon_checked'></span>";
         var id_value = $(this).attr("id");
         goods_id = id_value;
-        var goods_name = $(this).find(".weui_cell_bd").html();
-        $("#goods").find(".weui_cell_bd").html(goods_name);
-        $(this).addClass("weui_icon_checked");    
+        goods_name = $(this).find(".weui_cell_bd span:first-child").html();
+        goods_price = $(this).find(".weui_cell_bd span:nth-last-child(2)").html();
+        $("#goods").find(".weui_cell_bd").html("<p>" + goods_name + "</p>");
+        $(this).addClass("weui_icon_checked");
         $("#goods_option").hide();
         $("#add_order_item").fadeIn();
     });
