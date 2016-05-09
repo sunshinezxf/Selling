@@ -71,6 +71,16 @@
 	    	"<input type='hidden' name='customerId' value='" + customer_id + "'/>" + 
 			"</div>";
         $("#order_item_list").append(place_order_item);
+        var order_info = new Object();
+        var order_item_list = $("#order_item_list div");
+        for(var order_item in order_item_list) {
+        	var name = order_item.find("div:nth-last-child(7) .weui_cell_ft").html();
+        	var quantity = order_item.find("div:nth-last-child(6) .weui_cell_ft").html();
+        	var price = order_item.find("div:nth-last-child(2)").val();
+        	if(order_info[name] == undefined) {
+        		
+        	}
+        }
         $("#place_order_panel").fadeIn();  
     });
 
