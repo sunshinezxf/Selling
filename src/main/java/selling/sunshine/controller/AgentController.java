@@ -130,15 +130,23 @@ public class AgentController {
         ModelAndView view = new ModelAndView();
         Subject subject = SecurityUtils.getSubject();
         User user = null;
-        Agent agent=null;
+        Agent agent = null;
         if (subject != null) {
             Session session = subject.getSession();
-            user = (User) session.getAttribute("current");
-            agent=user.getAgent();
-        } 
+            user = (User) sssion.getAttribute("current");
+            agent = user.getAgent();
+        }
         view.addObject("agent", agent);
         view.setViewName("/agent/customer/manage");
         return view;
+    }
+
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value = "/customer/list")
+    public ResultData viewCustomerList() {
+        ResultData result = new ResultData();
+
+        return result;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/account/info")
