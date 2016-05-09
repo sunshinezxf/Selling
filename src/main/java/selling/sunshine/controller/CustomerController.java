@@ -4,6 +4,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,6 +22,8 @@ import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
 import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by sunshine on 4/11/16.
@@ -42,9 +45,16 @@ public class CustomerController {
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/overview")
     public DataTablePage<Customer> overview(DataTableParam param) {
-        DataTablePage<Customer> page = new DataTablePage<Customer>();
-
-        return page;
+        DataTablePage<Customer> result = new DataTablePage<Customer>();
+        if (StringUtils.isEmpty(result)) {
+            return result;
+        }
+        Map<String, Object> condition = new HashMap<String, Object>();
+        ResultData fetchResponse = customerService.fetchCustomer(condition, param);
+        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result = (DataTablePage<Customer>) fetchResponse.getData();
+        }
+        return result;
     }
 
     @ResponseBody
