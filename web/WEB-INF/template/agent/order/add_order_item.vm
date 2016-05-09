@@ -19,10 +19,12 @@
             <div class="weui_cell_ft"></div>
         </a>
         <a class="weui_cell" id="quantity">
-            <div class="weui_cell_bd weui_cell_primary">
-                <p>数量</p>
+            <div class="weui_cell_hd">
+                <p>数量:&nbsp</p>
             </div>
-            <div class="weui_cell_ft">1</div>
+            <div class="weui_cell_bd weui_cell_primary">
+            	<input class="weui_input" id="goods_quantity" type="number" pattern="[0-9]*" placeholder="请输入数量">
+            </div>
         </a>
 
         <div class="weui_cell weui_cells_tips clear-margin-top">
@@ -40,7 +42,36 @@
 <script>
     $("#add_confirm_btn").click(function () {
         $("#add_order_item").hide();
-        $("#place_order_panel").fadeIn();
+        var place_order_item = 
+        	"<div class='weui_cells weui_cells_access'>" +
+        	"<a class='weui_cell'>" + 
+	       	"<div class='weui_cell_bd weui_cell_primary'>" +
+	        "<p>客户姓名</p>" + 
+	        "</div>" +
+	        "<div class='weui_cell_ft'>" + customer_name + "</div>" +
+	    	"</a>" +
+	        "<a class='weui_cell'>" + 
+	        "<div class='weui_cell_bd weui_cell_primary'>" + 
+	        "<p>商品名称</p>" + 
+	        "</div>" +
+	        "<div class='weui_cell_ft'>" + goods_name + "</div>" + 
+	    	"</a>" +
+	    	"<a class='weui_cell'>" + 
+	        "<div class='weui_cell_bd weui_cell_primary'>" + 
+	        "<p>数量</p>" + 
+	        "</div>" + 
+	        "<div class='weui_cell_ft'>" + $("#goods_quantity").val() + "</div>" + 
+	        "</a>" +
+	    	"<div class='weui_cell weui_cells_tips clear-margin-top'>" + 
+	        "金额:" + goods_price * $("#goods_quantity").val() + "元" + 
+	    	"</div>" + 
+	    	"<input type='hidden' name='goodsQuantity' value='" + $("#goods_quantity").val() + "'/>" + 
+	    	"<input type='hidden' name='goodsId' value='" + goods_id + "'/>" + 
+	    	"<input type='hidden' name='orderItemPrice' value='" + goods_price + "'/>" + 
+	    	"<input type='hidden' name='customerId' value='" + customer_id + "'/>" + 
+			"</div>";
+        $("#order_item_list").append(place_order_item);
+        $("#place_order_panel").fadeIn();  
     });
 
     $("#add_cancel_btn").click(function () {

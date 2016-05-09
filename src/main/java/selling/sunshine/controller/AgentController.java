@@ -72,11 +72,12 @@ public class AgentController {
         if (subject != null) {
             Session session = subject.getSession();
             user = (User) session.getAttribute("current");
+        } else {
+        	view.addObject("code",PromptCode.SUCCESS);
+        	view.addObject("message", "您未登录");
+        	view.setViewName("/agent/prompt");
+        	return view;
         }
-        user = new User();
-        Agent agent = new Agent();
-        agent.setAgentId("王旻");
-        user.setAgent(agent);
         Map<String, Object> condition = new HashMap<String, Object>();
         ResultData fetchDataGoods = commodityService.fetchCommodity(condition);
         ResultData fetchDataCustomers = customerService.fetchCustomer(user.getAgent());
@@ -97,25 +98,40 @@ public class AgentController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/order/place")
-    public ModelAndView placeOrder(@Valid OrderItemForm form, BindingResult result) {
-        ModelAndView view = new ModelAndView();
-        List<OrderItem> orderItems = new ArrayList<OrderItem>();
-        int length = form.getCustomerId().length;
-        Order order = new Order();
-        Agent agent = new Agent();
-        agent.setAgentId(form.getAgentId());
-        order.setAgent(agent);
-        for (int i = 0; i < length; i++) {
-            OrderItem orderItem = new OrderItem(form.getCustomerId()[i], form.getGoodsId()[i], Integer.parseInt(form.getGoodsQuantity()[i]));
-            orderItems.add(orderItem);
-        }
-        order.setOrderItems(orderItems);
-        ResultData fetchResponse = orderService.placeOrder(order);
-        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            view.setViewName("/agent/prompt");
-        }
-        view.setViewName("/agent/prompt");
-        return view;
+    public ModelAndView placeOrder(@Valid OrderItemForm form, BindingResult result, RedirectAttributes attr) {
+    	 ModelAndView view = new ModelAndView();
+         List<OrderItem> orderItems = new ArrayList<OrderItem>();
+         int length = form.getCustomerId().length;
+         Order order = new Order();
+         Agent agent = new Agent();
+         agent.setAgentId(form.getAgentId());
+         order.setAgent(agent);
+         for (int i = 0; i < length; i++) {
+         	String goodsId = form.getGoodsId()[i].replaceAll(".*([';]+|(--)+).*", " ");//商品ID
+         	String customerId = form.getCustomerId()[i].replaceAll(".*([';]+|(--)+).*", " ");//顾客ID
+         	int goodsQuantity = Integer.parseInt(form.getGoodsQuantity()[i]);//商品数量
+         	Map<String, Object> goodsCondition = new HashMap<String, Object>();//查询商品价格
+         	goodsCondition.put("goodsId", goodsId);
+         	ResultData goodsData = commodityService.fetchCommodity(goodsCondition);
+         	List<Goods> goodsList = (List<Goods>) goodsData.getData();
+             OrderItem orderItem = new OrderItem(customerId, goodsId, goodsQuantity);//构造OrderItem
+             orderItems.add(orderItem);
+         }
+         order.setOrderItems(orderItems);//构造Order
+         ResultData fetchResponse = orderService.placeOrder(order);
+         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+        	 Prompt prompt = new Prompt();
+             prompt.setCode(PromptCode.SUCCESS);
+             prompt.setMessage("下单成功");
+             attr.addFlashAttribute("prompt", prompt);
+             view.setViewName("redirect:/agent/prompt");
+         }
+         Prompt prompt = new Prompt();
+         prompt.setCode(PromptCode.WARNING);
+         prompt.setMessage("下单失败");
+         attr.addFlashAttribute("prompt", prompt);
+         view.setViewName("redirect:/agent/prompt");
+         return view;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/order/manage")
