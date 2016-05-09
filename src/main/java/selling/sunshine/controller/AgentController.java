@@ -113,9 +113,19 @@ public class AgentController {
          	Map<String, Object> goodsCondition = new HashMap<String, Object>();//查询商品价格
          	goodsCondition.put("goodsId", goodsId);
          	ResultData goodsData = commodityService.fetchCommodity(goodsCondition);
-         	List<Goods> goodsList = (List<Goods>) goodsData.getData();
-             OrderItem orderItem = new OrderItem(customerId, goodsId, goodsQuantity);//构造OrderItem
-             orderItems.add(orderItem);
+         	Goods goods;
+         	if(goodsData.getResponseCode() == ResponseCode.RESPONSE_OK) {
+         		List<Goods> goodsList = (List<Goods>) goodsData.getData();
+         	} else {
+         		 Prompt prompt = new Prompt();
+                 prompt.setCode(PromptCode.WARNING);
+                 prompt.setMessage("商品信息异常");
+                 attr.addFlashAttribute("prompt", prompt);
+                 view.setViewName("redirect:/agent/prompt");
+                 return view;
+         	}
+            OrderItem orderItem = new OrderItem(customerId, goodsId, goodsQuantity);//构造OrderItem
+            orderItems.add(orderItem);
          }
          order.setOrderItems(orderItems);//构造Order
          ResultData fetchResponse = orderService.placeOrder(order);
