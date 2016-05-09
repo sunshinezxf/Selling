@@ -72,11 +72,12 @@ public class AgentController {
         if (subject != null) {
             Session session = subject.getSession();
             user = (User) session.getAttribute("current");
+        } else {
+        	view.addObject("code",PromptCode.SUCCESS);
+        	view.addObject("message", "您未登录");
+        	view.setViewName("/agent/prompt");
+        	return view;
         }
-        user = new User();
-        Agent agent = new Agent();
-        agent.setAgentId("王旻");
-        user.setAgent(agent);
         Map<String, Object> condition = new HashMap<String, Object>();
         ResultData fetchDataGoods = commodityService.fetchCommodity(condition);
         ResultData fetchDataCustomers = customerService.fetchCustomer(user.getAgent());
@@ -97,7 +98,7 @@ public class AgentController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/order/place")
-    public ModelAndView placeOrder(@Valid OrderItemForm form, BindingResult result) {
+    public ModelAndView placeOrder(@Valid OrderItemForm form, BindingResult result, RedirectAttributes attr) {
     	 ModelAndView view = new ModelAndView();
          List<OrderItem> orderItems = new ArrayList<OrderItem>();
          int length = form.getCustomerId().length;
@@ -119,9 +120,17 @@ public class AgentController {
          order.setOrderItems(orderItems);//构造Order
          ResultData fetchResponse = orderService.placeOrder(order);
          if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-             view.setViewName("/agent/prompt");
+        	 Prompt prompt = new Prompt();
+             prompt.setCode(PromptCode.SUCCESS);
+             prompt.setMessage("下单成功");
+             attr.addFlashAttribute("prompt", prompt);
+             view.setViewName("redirect:/agent/prompt");
          }
-         view.setViewName("/agent/prompt");
+         Prompt prompt = new Prompt();
+         prompt.setCode(PromptCode.WARNING);
+         prompt.setMessage("下单失败");
+         attr.addFlashAttribute("prompt", prompt);
+         view.setViewName("redirect:/agent/prompt");
          return view;
     }
 
