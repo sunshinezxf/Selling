@@ -204,14 +204,6 @@ public class AgentController {
             agent = user.getAgent();
         }
         result=customerService.fetchCustomer(agent);
-        if (ResponseCode.RESPONSE_OK.equals(result.getResponseCode())) {
-        	List<Customer> customers=(List<Customer>)result.getData();
-        	 for (int i = 0; i < customers.size(); i++) {
-     			System.out.println(customers.get(i).getName());
-     		}
-		}
-       
-
         return result;
     }
 
