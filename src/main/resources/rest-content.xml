@@ -62,10 +62,20 @@
     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
         <property name="securityManager" ref="securityManager"/>
         <property name="loginUrl" value="/login"/>
-        <property name="unauthorizedUrl" value="/index"/>
+        <property name="unauthorizedUrl" value="/login"/>
         <property name="filterChainDefinitions">
             <value>
-                /** = anon
+                / = anon
+                /login = anon
+                /logout = anon
+                /plugins/** = anon
+                /material/** = anon
+                /dashboard = roles[admin]
+                /agent/register = anon
+                /agent/login = anon
+                /agent/
+                /agent/** = roles[agent]
+                /** = authc
             </value>
         </property>
     </bean>

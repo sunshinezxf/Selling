@@ -15,9 +15,6 @@ import selling.sunshine.service.UserService;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Created by sunshine on 4/21/16.
  */
@@ -29,15 +26,9 @@ public class ShiroRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
-        String username = String.valueOf(principalCollection.getPrimaryPrincipal());
-        Map<String, Object> condition = new HashMap<String, Object>();
-        condition.put("username", username);
-        ResultData fetchResponse = userService.fetchUser(condition);
-        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            User user = (User) fetchResponse.getData();
-            Role role = user.getRole();
-            info.addRole(role.getName());
-        }
+        User user = (User) principalCollection.getPrimaryPrincipal();
+        Role role = user.getRole();
+        info.addRole(role.getName());
         return info;
     }
 
