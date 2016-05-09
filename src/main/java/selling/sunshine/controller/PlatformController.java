@@ -12,6 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 import selling.sunshine.form.AdminForm;
 import selling.sunshine.service.AdminService;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 /**
@@ -68,8 +69,13 @@ public class PlatformController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/logout")
-    public ModelAndView logout() {
+    public ModelAndView logout(HttpSession session) {
         ModelAndView view = new ModelAndView();
+        session.removeAttribute("current");
+        Subject subject = SecurityUtils.getSubject();
+        if (subject != null) {
+            subject.logout();
+        }
         view.setViewName("redirect:/login");
         return view;
     }
