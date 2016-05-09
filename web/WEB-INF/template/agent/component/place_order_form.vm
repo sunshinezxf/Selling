@@ -17,7 +17,6 @@
                     </div>
                     <div class="list-cell" id="order_item_list">
                        <!-- 改成了动态添加 -->
-                       <!-- #parse("/agent/component/place_order_item.vm") -->
                     </div>
                 </div>
                 <div class="weui_btn_area">
