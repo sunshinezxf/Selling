@@ -42,7 +42,6 @@
         </div>
     </div>
 </div>
-<input type="hidden" name="agentId" value="王旻" />
 </form>
 #parse("/agent/order/add_order_item.vm")
 <script>

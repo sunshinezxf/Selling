@@ -99,23 +99,45 @@ public class AgentController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/order/place")
     public ModelAndView placeOrder(@Valid OrderItemForm form, BindingResult result, RedirectAttributes attr) {
-    	 ModelAndView view = new ModelAndView();
+    	ModelAndView view = new ModelAndView();
+		 Subject subject = SecurityUtils.getSubject();
+		 User user = null;
+		 if (subject != null) {
+		     Session session = subject.getSession();
+		     user = (User) session.getAttribute("current");
+		 } else {
+		 	view.addObject("code",PromptCode.SUCCESS);
+		 	view.addObject("message", "您未登录");
+		 	view.setViewName("/agent/prompt");
+		 	return view;
+		 }
+		 
          List<OrderItem> orderItems = new ArrayList<OrderItem>();
          int length = form.getCustomerId().length;
          Order order = new Order();
          Agent agent = new Agent();
-         agent.setAgentId(form.getAgentId());
+         agent.setAgentId(user.getAgent().getAgentId());
          order.setAgent(agent);
          for (int i = 0; i < length; i++) {
-         	String goodsId = form.getGoodsId()[i].replaceAll(".*([';]+|(--)+).*", " ");//商品ID
-         	String customerId = form.getCustomerId()[i].replaceAll(".*([';]+|(--)+).*", " ");//顾客ID
+         	String goodsId = form.getGoodsId()[i];//商品ID
+         	String customerId = form.getCustomerId()[i];//顾客ID
          	int goodsQuantity = Integer.parseInt(form.getGoodsQuantity()[i]);//商品数量
+         	double orderItemPrice = 0;//OrderItem总价
          	Map<String, Object> goodsCondition = new HashMap<String, Object>();//查询商品价格
          	goodsCondition.put("goodsId", goodsId);
          	ResultData goodsData = commodityService.fetchCommodity(goodsCondition);
-         	Goods goods;
+         	Goods goods = null;
          	if(goodsData.getResponseCode() == ResponseCode.RESPONSE_OK) {
          		List<Goods> goodsList = (List<Goods>) goodsData.getData();
+         		if(goodsList.size() != 1) {
+         			Prompt prompt = new Prompt();
+                    prompt.setCode(PromptCode.WARNING);
+                    prompt.setMessage("商品不唯一或未找到");
+                    attr.addFlashAttribute("prompt", prompt);
+                    view.setViewName("redirect:/agent/prompt");
+                    return view;
+         		}
+         		goods = goodsList.get(0);
          	} else {
          		 Prompt prompt = new Prompt();
                  prompt.setCode(PromptCode.WARNING);
@@ -124,7 +146,8 @@ public class AgentController {
                  view.setViewName("redirect:/agent/prompt");
                  return view;
          	}
-            OrderItem orderItem = new OrderItem(customerId, goodsId, goodsQuantity);//构造OrderItem
+         	orderItemPrice = goods.getPrice() * goodsQuantity;//得到一个OrderItem的总价
+            OrderItem orderItem = new OrderItem(customerId, goodsId, goodsQuantity, orderItemPrice);//构造OrderItem
             orderItems.add(orderItem);
          }
          order.setOrderItems(orderItems);//构造Order
