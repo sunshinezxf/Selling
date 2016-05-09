@@ -14,6 +14,8 @@ import selling.sunshine.form.CustomerForm;
 import selling.sunshine.model.Agent;
 import selling.sunshine.model.Customer;
 import selling.sunshine.model.User;
+import selling.sunshine.pagination.DataTablePage;
+import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.CustomerService;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
@@ -35,6 +37,14 @@ public class CustomerController {
         ModelAndView view = new ModelAndView();
         view.setViewName("/backend/customer/overview");
         return view;
+    }
+
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value = "/overview")
+    public DataTablePage<Customer> overview(DataTableParam param) {
+        DataTablePage<Customer> page = new DataTablePage<Customer>();
+
+        return page;
     }
 
     @ResponseBody
