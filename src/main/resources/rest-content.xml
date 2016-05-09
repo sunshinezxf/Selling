@@ -73,7 +73,6 @@
                 /dashboard = roles[admin]
                 /agent/register = anon
                 /agent/login = anon
-                /agent/
                 /agent/** = roles[agent]
                 /** = authc
             </value>
