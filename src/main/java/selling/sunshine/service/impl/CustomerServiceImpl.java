@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import selling.sunshine.dao.CustomerDao;
 import selling.sunshine.model.Agent;
 import selling.sunshine.model.Customer;
+import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.CustomerService;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
@@ -60,6 +61,19 @@ public class CustomerServiceImpl implements CustomerService {
         Map<String, Object> condition = new HashMap<String, Object>();
         condition.put("agentId", agent.getAgentId());
         ResultData queryResponse = customerDao.queryCustomer(condition);
+        result.setResponseCode(queryResponse.getResponseCode());
+        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(queryResponse.getData());
+        } else if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
+            result.setDescription(queryResponse.getDescription());
+        }
+        return result;
+    }
+
+    @Override
+    public ResultData fetchCustomer(Map<String, Object> condition, DataTableParam param) {
+        ResultData result = new ResultData();
+        ResultData queryResponse = customerDao.queryCustomerByPage(condition, param);
         result.setResponseCode(queryResponse.getResponseCode());
         if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             result.setData(queryResponse.getData());

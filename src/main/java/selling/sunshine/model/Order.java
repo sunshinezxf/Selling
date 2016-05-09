@@ -10,6 +10,10 @@ public class Order extends Entity {
 	private Agent agent;
 	private List<OrderItem> orderItems;
 
+	public Order(){
+		super();
+	}
+	
 	public String getOrderId() {
 		return orderId;
 	}

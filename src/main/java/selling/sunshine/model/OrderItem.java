@@ -11,10 +11,16 @@ public class OrderItem extends Entity {
 	private double orderItemPrice;
 	private Order order;
 	
-	public OrderItem(String customerId, String goodsId, int goodsQuantity) {
+	public OrderItem() {
+		super();
+	}
+
+	public OrderItem(String customerId, String goodsId, int goodsQuantity, double orderItemPrice) {
+		this();
 		this.customerId = customerId;
 		this.goodsId = goodsId;
 		this.goodsQuantity = goodsQuantity;
+		this.orderItemPrice = orderItemPrice;
 	}
 
 	public String getOrderItemId() {

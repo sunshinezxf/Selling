@@ -1,5 +1,6 @@
 package selling.sunshine.dao.impl;
 
+import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -10,10 +11,13 @@ import selling.sunshine.model.Customer;
 import selling.sunshine.model.CustomerAddress;
 import selling.sunshine.model.CustomerPhone;
 import selling.sunshine.model.Goods;
+import selling.sunshine.pagination.DataTablePage;
+import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.utils.IDGenerator;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,7 +74,7 @@ public class CustomerDaoImpl extends BaseDao implements CustomerDao {
             if (ResponseCode.RESPONSE_OK.equals(queryCustomer(condition).getResponseCode())) {
                 CustomerPhone phoneNumber = customer.getPhone();
                 CustomerAddress address = customer.getAddress();
-                
+
                 sqlSession.insert("selling.customer.phone.insert", phoneNumber);
                 sqlSession.insert("selling.customer.address.insert", address);
                 Customer c = ((List<Customer>) queryCustomer(condition).getData()).get(0);
@@ -100,6 +104,39 @@ public class CustomerDaoImpl extends BaseDao implements CustomerDao {
             logger.error(e.getMessage());
             result.setResponseCode(ResponseCode.RESPONSE_ERROR);
             result.setDescription(e.getMessage());
+        } finally {
+            return result;
+        }
+    }
+
+    @Override
+    public ResultData queryCustomerByPage(Map<String, Object> condition, DataTableParam param) {
+        ResultData result = new ResultData();
+        DataTablePage<Customer> page = new DataTablePage<Customer>();
+        page.setsEcho(param.getsEcho());
+        ResultData total = queryCustomer(condition);
+        if (total.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription(total.getDescription());
+            logger.error(result.getDescription());
+        }
+        page.setiTotalRecords(((List<Customer>) total.getData()).size());
+        page.setiTotalDisplayRecords(((List<Customer>) total.getData()).size());
+        List<Customer> current = queryCustomerByPage(condition, param.getiDisplayStart(), param.getiDisplayLength());
+        if (current.size() == 0) {
+            result.setResponseCode(ResponseCode.RESPONSE_NULL);
+        }
+        page.setData(current);
+        result.setData(page);
+        return result;
+    }
+
+    private List<Customer> queryCustomerByPage(Map<String, Object> condition, int start, int length) {
+        List<Customer> result = new ArrayList<Customer>();
+        try {
+            result = sqlSession.selectList("selling.customer.query", condition, new RowBounds(start, length));
+        } catch (Exception e) {
+            logger.error(e.getMessage());
         } finally {
             return result;
         }

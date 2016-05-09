@@ -65,9 +65,9 @@
 	    	"<div class='weui_cell weui_cells_tips clear-margin-top'>" + 
 	        "金额:" + goods_price * $("#goods_quantity").val() + "元" + 
 	    	"</div>" + 
-	    	"<input type='hidden' name='goodsQuantity' value='" + $("#goods_quantity").val() + "'/>" + 
-	    	"<input type='hidden' name='goodsId' value='" + goods_id + "'/>" + 
-	    	"<input type='hidden' name='orderItemPrice' value='" + goods_price + "'/>" + 
+	    	"<input class='goods_quantity' type='hidden' name='goodsQuantity' value='" + $("#goods_quantity").val() + "'/>" + 
+	    	"<input class='goods_id' type='hidden' name='goodsId' value='" + goods_id + "'/>" + 
+	    	"<input class='order_item_price' type='hidden' name='orderItemPrice' value='" + goods_price + "'/>" + 
 	    	"<input type='hidden' name='customerId' value='" + customer_id + "'/>" + 
 			"</div>";
         $("#order_item_list").append(place_order_item);

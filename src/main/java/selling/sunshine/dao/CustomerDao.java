@@ -1,6 +1,7 @@
 package selling.sunshine.dao;
 
 import selling.sunshine.model.Customer;
+import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.utils.ResultData;
 
 import java.util.Map;
@@ -14,4 +15,6 @@ public interface CustomerDao {
     ResultData updateCustomer(Customer customer);
 
     ResultData queryCustomer(Map<String, Object> condition);
+
+    ResultData queryCustomerByPage(Map<String, Object> condition, DataTableParam param);
 }
