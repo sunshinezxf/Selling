@@ -70,10 +70,19 @@
                 /logout = anon
                 /plugins/** = anon
                 /material/** = anon
-                /dashboard = roles[admin]
                 /agent/register = anon
                 /agent/login = anon
+
                 /agent/** = roles[agent]
+
+                /dashboard = roles[admin]
+
+                /commodity/create = roles[admin]
+                /commodity/overview = roles[admin]
+
+                /customer/overview = roles[admin]
+                /customer/add = roles[agent]
+                /customer/modify = roles[agent]
                 /** = authc
             </value>
         </property>
