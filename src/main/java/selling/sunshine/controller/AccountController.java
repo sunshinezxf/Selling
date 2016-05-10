@@ -7,6 +7,8 @@ import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,6 +17,8 @@ import selling.sunshine.model.DepositBill;
 import selling.sunshine.model.User;
 import selling.sunshine.service.BillService;
 import selling.sunshine.service.ToolService;
+import selling.sunshine.utils.Prompt;
+import selling.sunshine.utils.PromptCode;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
@@ -55,5 +59,21 @@ public class AccountController {
             charge = (Charge) createResponse.getData();
         }
         return charge;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/deposit/{billId}/prompt")
+    public ModelAndView prompt(@PathVariable("billId") String billId, String result) {
+        ModelAndView view = new ModelAndView();
+        Prompt prompt = new Prompt();
+        if (!StringUtils.isEmpty(result) && result.equals("success")) {
+            prompt.setCode(PromptCode.SUCCESS);
+            prompt.setMessage("恭喜您,充值成功!");
+        } else {
+            prompt.setCode(PromptCode.WARNING);
+            prompt.setMessage("对不起,您的充值已取消.");
+        }
+        view.addObject("prompt", prompt);
+        view.setViewName("/agent/prompt");
+        return view;
     }
 }

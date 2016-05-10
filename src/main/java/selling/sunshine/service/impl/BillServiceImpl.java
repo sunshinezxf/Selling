@@ -42,15 +42,15 @@ public class BillServiceImpl implements BillService {
         bill = (DepositBill) insertResponse.getData();
         Map<String, Object> params = new HashMap<>();
         params.put("order_no", bill.getBillId());
-        params.put("amount", bill.getBillAmount());
+        params.put("amount", bill.getBillAmount() * 100);
         Map<String, Object> app = new HashMap<>();
         app.put("id", "app_DazjbTLybjHGbv9O");
         params.put("app", app);
         params.put("channel", bill.getChannel());
         if (!StringUtils.isEmpty(bill.getChannel()) && bill.getChannel().equals("alipay_wap")) {
             Map<String, String> url = new HashMap<>();
-            url.put("success_url", "http://yuncaogangmu.com");
-            url.put("cancel_url", "http://yuncaogangmu.com");
+            url.put("success_url", "http://192.168.31.138:8080/account/deposit/" + bill.getBillId() + "/prompt");
+            url.put("cancel_url", "http://192.168.31.138:8080/account/deposit/" + bill.getBillId() + "/prompt");
             params.put("extra", url);
         }
         params.put("currency", "cny");
