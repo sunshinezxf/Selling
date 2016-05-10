@@ -23,7 +23,7 @@
                 <p>数量:&nbsp</p>
             </div>
             <div class="weui_cell_bd weui_cell_primary">
-            	<input class="weui_input" id="goods_quantity" type="number" pattern="[0-9]*" placeholder="请输入数量" value="1">
+            	<input class="weui_input" id="goods_quantity" type="tel" pattern="[0-9]*" placeholder="请输入数量" value="1">
             </div>
         </a>
 

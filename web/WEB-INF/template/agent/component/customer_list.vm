@@ -34,7 +34,7 @@
 		    customer_name = $(this).find(".weui_cell_bd span").html();
 		    customer_phone = $("#customer_phone"+customer_id).val();
         	$("#customer_name" + customer_id).html(customer_name + "(" + customer_phone + ")");
-        	$("#customer_name" + customer_id).parent(".weui_cells.weui_cells_access").find(".customer_id").val(customer_id);
+        	$("#customer_name" + customer_id).parents(".weui_cells.weui_cells_access").find(".customer_id").val(customer_id);
         	$.mark(customer_id);
         	$("#customer_option").hide();
         	$("#place_order_panel").fadeIn();  
