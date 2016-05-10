@@ -1,27 +1,43 @@
 <div id="customer_option" class="weui_cells weui_cells_radio" style="display: none;">
     #foreach($elem in $customer)
-    <label class="weui_cell weui_check_label customer" id="${elem.customerId}" for="customer_check${elem.customerId}">
+    <label class="weui_cell customer" id="${elem.customerId}">
         <div class="weui_cell_bd weui_cell_primary">
-            ${elem.name}
+            <span>${elem.name}</span>(${elem.phone.phone})
         </div>
         <input id="customer_phone${elem.customerId}" type="hidden" value="${elem.phone.phone}"/>
-        <div class="weui_cell_ft">
-            <input type="radio" class="weui_check">
-            <span id="customer_check${elem.customerId}"></span>
-        </div>
+        <div class="weui_cell_ft"></div>
     </label>
     #end
 </div>
 <script>
-    $(".weui_check_label.customer").click(function () {
-        var check_label = "<span class='weui_icon_checked'></span>";
-        var id_value = $(this).attr("id");
-        customer_id = id_value;
-        customer_name = $(this).find(".weui_cell_bd").html();
-        customer_phone = $("#customer_phone"+customer_id).val();
-        $("#customer").find(".weui_cell_bd").html("<p>" + customer_name + "</p>");
-        $("#phone").find(".weui_cell_bd").html("<p>" + customer_phone + "</p>");
-        $("#customer_option").hide();
-        $("#add_order_item").fadeIn();
+    $(".weui_cell.customer").click(function () {
+    	if($(this).find(".weui_cell_ft").html() == "已下单"){
+    		$("#dialog").find(".weui_dialog_bd").html("该用户已下过单");
+    		$("#dialog").fadeIn();
+    		return false;
+    	}
+   		if(isAdd){
+		    var id_value = $(this).attr("id");
+		    customer_id = id_value;
+		    customer_name = $(this).find(".weui_cell_bd span").html();
+		    customer_phone = $("#customer_phone"+customer_id).val();
+	        $("#customer").find(".weui_cell_bd").html("<p>" + customer_name + "</p>");
+	        $("#phone").find(".weui_cell_bd").html("<p>" + customer_phone + "</p>");
+	        $("#customer_option").hide();
+        	$("#add_order_item").fadeIn();
+        } else {
+        	isAdd = true;
+        	var pre_customer_id = customer_id;
+        	var id_value = $(this).attr("id");
+        	customer_id = id_value;
+        	$("#customer_name" + pre_customer_id).attr("id","customer_name" + customer_id);
+		    customer_name = $(this).find(".weui_cell_bd span").html();
+		    customer_phone = $("#customer_phone"+customer_id).val();
+        	$("#customer_name" + customer_id).html(customer_name + "(" + customer_phone + ")");
+        	$("#customer_name" + customer_id).parent(".weui_cells.weui_cells_access").find(".customer_id").val(customer_id);
+        	$.mark(customer_id);
+        	$("#customer_option").hide();
+        	$("#place_order_panel").fadeIn();  
+        }
     });
 </script>

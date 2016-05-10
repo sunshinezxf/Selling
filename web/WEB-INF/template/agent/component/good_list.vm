@@ -1,26 +1,43 @@
 <div id="goods_option" class="weui_cells weui_cells_radio" style="display: none;">
     #foreach($elem in $goods)
-    <label class="weui_cell weui_check_label goods" id="${elem.goodsId}" for="goods_check${elem.goodsId}">
+    <label class="weui_cell goods" id="${elem.goodsId}">
         <div class="weui_cell_bd weui_cell_primary">
             <span>${elem.name}</span>&nbsp<span>${elem.price}</span><span>元</span>
         </div>
         <div class="weui_cell_ft">
-            <input type="radio" class="weui_check">
-            <span id="goods_check${elem.goodsId}" ></span>
         </div>
     </label>
     #end
 </div>
 <script>
-    $(".weui_check_label.goods").click(function () {
-        var check_label = "<span class='weui_icon_checked'></span>";
-        var id_value = $(this).attr("id");
-        goods_id = id_value;
-        goods_name = $(this).find(".weui_cell_bd span:first-child").html();
-        goods_price = $(this).find(".weui_cell_bd span:nth-last-child(2)").html();
-        $("#goods").find(".weui_cell_bd").html("<p>" + goods_name + "</p>");
-        $("#price").html("金额：" + goods_price + "元");
-        $("#goods_option").hide();
-        $("#add_order_item").fadeIn();
+    $(".weui_cell.goods").click(function () {
+    	if(isAdd){
+	        var id_value = $(this).attr("id");
+	        goods_id = id_value;
+	        goods_name = $(this).find(".weui_cell_bd span:first-child").html();
+	        goods_price = $(this).find(".weui_cell_bd span:nth-last-child(2)").html();
+	        $("#goods").find(".weui_cell_bd").html("<p>" + goods_name + "</p>");
+	        $("#price").html("金额：" + goods_price + "元");
+	        $("#goods_option").hide();
+	        $("#add_order_item").fadeIn();
+        } else {
+        	isAdd = true;
+        	var pre_goods_id = goods_id;
+        	var pre_goods_name = goods_name;
+        	var pre_goods_price = goods_price;
+        	var id_value = $(this).attr("id");
+        	goods_id = id_value;
+	        goods_name = $(this).find(".weui_cell_bd span:first-child").html();
+	        goods_price = $(this).find(".weui_cell_bd span:nth-last-child(2)").html();
+	        $("#good_name" + pre_goods_id).html(goods_name);
+        	$("#goods_name" + pre_goods_id).parent(".weui_cells.weui_cells_access").find(".goods_id").val(goods_id);
+        	$("#goods_name" + pre_goods_id).parent(".weui_cells.weui_cells_access").find(".order_item_price").val(goods_price);
+        	$("#goods_name" + pre_goods_id).attr("id","goods_name" + goods_id);
+        	$("#goods_quantity" + pre_goods_id).attr("id","goods_quantity" + goods_id);
+        	$("#goods_price" + pre_goods_id).attr("id","goods_price" + goods_id);
+        	$("#goods_price" + goods_id).html("金额:" + goods_price * parseInt($("#goods_quantity"+goods_id).html()) + "元");
+        	$("#goods_option").hide();
+        	$("#place_order_panel").fadeIn();  
+        }
     });
 </script>

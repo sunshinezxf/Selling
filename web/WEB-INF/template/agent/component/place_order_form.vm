@@ -21,7 +21,7 @@
                 </div>
                 <div class="weui_btn_area">
                     <a class="weui_btn weui_btn_plain_primary">保存订单</a>
-                    <a class="weui_btn weui_btn_primary" id="place_order_btn" >确认下单</a>
+                    <a class="weui_btn weui_btn_primary" id="place_order_btn">确认下单</a>
                 </div>
             </div>
         </div>
@@ -31,9 +31,7 @@
             <div class="weui_panel_bd">
                 <div id="total_goods" class="weui_media_box">
                     总计:
-                    <p class="weui_media_text">商品A: 30件, 共5100元</p>
-						
-                    <p class="weui_media_text">共计9100元</p>
+                    <p class="weui_media_text">共计0元</p>
                 </div>
             </div>
         </div>
@@ -42,8 +40,27 @@
 </form>
 #parse("/agent/order/add_order_item.vm")
 <script>
+	//立了一个flag，判断是新增还是修改订单
+	isAdd = true;
     $("#add_order_item").hide();
     $("#add_order_btn").click(function () {
+    	isAdd = true;
+    	
+    	//判断是否所有用户都已添加订单
+    	var all_customer_done = true;
+    	var customer_list = $("#customer_option").find(".weui_cell_ft");
+    	$.each(customer_list, function(i, val){
+    		if($(val).html() == "") {
+    			all_customer_done = false;
+    		}
+    	});
+    	if(all_customer_done){
+    		$("#dialog").find(".weui_dialog_bd").html("所有客户已下过单");
+    		$("#dialog").fadeIn();
+    		return false;
+    	}
+    	
+    	
         $("#add_order_item").fadeIn();
         $("#place_order_panel").hide();
     });

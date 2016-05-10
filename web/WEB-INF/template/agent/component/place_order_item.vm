@@ -22,8 +22,9 @@
     <div class="weui_cell weui_cells_tips clear-margin-top">
         金额:298元
     </div>
+    <div class="weui_cells_tips">删除</div>
     <input class="goods_quantity" type="hidden" name="goodsQuantity" value="1"/>
     <input class="goods_id" type="hidden" name="goodsId" value="123456"/>
     <input class="order_item_price" type="hidden" name="orderItemPrice" value="234"/>
-    <input type="hidden" name="customerId" value="12"/>
+    <input class='customer_id' type="hidden" name="customerId" value="12"/>
 </div>

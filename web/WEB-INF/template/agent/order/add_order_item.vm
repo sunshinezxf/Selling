@@ -35,7 +35,11 @@
         <button type="button" class="weui_btn weui_btn_primary" id="add_confirm_btn">确认添加</button>
         <button type="button" class="weui_btn weui_btn_default" id="add_cancel_btn">取消</button>
     </div>
-    <div class="weui_dialog_alert" id="dialog" style="display: none;">
+</div>
+#parse("/agent/component/customer_list.vm")
+#parse("/agent/component/good_list.vm")
+#parse("/agent/component/navigate.vm")
+<div class="weui_dialog_alert" id="dialog" style="display: none;">
 	    <div class="weui_mask"></div>
 	    <div class="weui_dialog">
 	        <div class="weui_dialog_hd"><strong class="weui_dialog_title">消息</strong></div>
@@ -44,17 +48,15 @@
 	            <a href="javascript:;" class="weui_btn_dialog primary">确定</a>
 	        </div>
 	    </div>
-	</div>
 </div>
-#parse("/agent/component/customer_list.vm")
-#parse("/agent/component/good_list.vm")
-#parse("/agent/component/navigate.vm")
 <script>
     
     $("#add_confirm_btn").click(function () {
     	if(!$.check()){
     		return;
     	}
+    	
+    	//添加一栏
         $("#add_order_item").hide();
         var place_order_item = 
         	"<div class='weui_cells weui_cells_access'>" +
@@ -62,56 +64,75 @@
 	       	"<div class='weui_cell_bd weui_cell_primary'>" +
 	        "<p>客户姓名</p>" + 
 	        "</div>" +
-	        "<div class='weui_cell_ft'>" + customer_name + "</div>" +
+	        "<div id='customer_name" + customer_id + "' class='weui_cell_ft'><span>" + customer_name + "</span>(<span>" + customer_phone + "</span>)</div>" +
 	    	"</a>" +
 	        "<a class='weui_cell'>" + 
 	        "<div class='weui_cell_bd weui_cell_primary'>" + 
 	        "<p>商品名称</p>" + 
 	        "</div>" +
-	        "<div class='weui_cell_ft'>" + goods_name + "</div>" + 
+	        "<div id='goods_name" + goods_id + "' class='weui_cell_ft'>" + goods_name + "</div>" + 
 	    	"</a>" +
 	    	"<a class='weui_cell'>" + 
 	        "<div class='weui_cell_bd weui_cell_primary'>" + 
 	        "<p>数量</p>" + 
 	        "</div>" + 
-	        "<div class='weui_cell_ft'>" + $("#goods_quantity").val() + "</div>" + 
+	        "<div id='goods_quantity" + goods_id + "' class='weui_cell_ft'>" + $("#goods_quantity").val() + "</div>" + 
 	        "</a>" +
-	    	"<div class='weui_cell weui_cells_tips clear-margin-top'>" + 
+	    	"<div id='goods_price" + goods_id + "' class='weui_cell weui_cells_tips clear-margin-top'>" + 
 	        "金额:" + goods_price * $("#goods_quantity").val() + "元" + 
 	    	"</div>" + 
+	    	"<div class='weui_cells_tips delete'>删除</div>" + 
 	    	"<input class='goods_quantity' type='hidden' name='goodsQuantity' value='" + $("#goods_quantity").val() + "'/>" + 
 	    	"<input class='goods_id' type='hidden' name='goodsId' value='" + goods_id + "'/>" + 
 	    	"<input class='order_item_price' type='hidden' name='orderItemPrice' value='" + goods_price + "'/>" + 
-	    	"<input type='hidden' name='customerId' value='" + customer_id + "'/>" + 
+	    	"<input class='customer_id' type='hidden' name='customerId' value='" + customer_id + "'/>" + 
 			"</div>";
         $("#order_item_list").append(place_order_item);
-        var order_info_list = new Object();
+        
+        //添加修改事件
         var order_item_list = $("#order_item_list").children();
- 		
- 		//计算总价
         $.each(order_item_list, function(i, val){
-        	var name = $(val).children().eq(1).find(".weui_cell_ft").text();
-        	var quantity = $(val).children().eq(2).find(".weui_cell_ft").text();
-        	var price = $(val).children().eq(6).val();
-        	if(order_info_list[name] == undefined) {
-        		order_info_list[name] = new Object();
-        		order_info_list[name]['quantity'] = parseInt(quantity);
-        		order_info_list[name]['order_item_price'] = parseFloat(price) * quantity ;
-        	} else {
-        		order_info_list[name]['quantity'] += parseInt(quantity);
-        		order_info_list[name]['order_item_price'] += parseInt(price) * quantity;
-        	}
+        	//客户修改事件
+        	$(val).children().eq(0).on("click", function(){
+        		isAdd = false;
+        		customer_id = $(this).parent(".weui_cells.weui_cells_access").find(".customer_id").val();
+        		customer_name = $(this).find(".weui_cell_ft span").eq(0).html();
+        		customer_phone = $(this).find(".weui_cell_ft span").eq(1).html();
+        		$.demark(customer_id);
+        		$("#place_order_panel").hide();
+        		$("#customer_option").fadeIn();
+        	});
+        	//商品修改事件
+        	$(val).children().eq(1).on("click", function(){
+        		isAdd = false;
+        		goods_id = $(this).parent(".weui_cells.weui_cells_access").find(".goods_id").val();
+        		goods_name = $(this).find(".weui_cell_ft").html();
+				goods_price = parseFloat($(this).parent(".weui_cells.weui_cells_access").find(".order_item_price").val());
+        		$("#place_order_panel").hide();
+        		$("#goods_option").fadeIn();
+        	});
         });
-        $("#total_goods").empty();
-        var total_price = 0;
-        for(var order_info in order_info_list) {
-        	total_price += order_info_list[order_info]['order_item_price'];
-        	$("#total_goods").append("<p class='weui_media_text'>" 
-        		+ order_info + ": " + order_info_list[order_info]['quantity'] +
- 				"件, 共" + order_info_list[order_info]['order_item_price'] + "元</p>")
-        }
-        $("#total_goods").append(" <p class='weui_media_text'>共计" + total_price + "元</p>")
+        
+        //添加删除事件
+        $(".weui_cells_tips.delete").on("click",function(){
+    		$(this).closest(".weui_cells.weui_cells_access").remove();
+    		$.demark($(this).closest(".weui_cells.weui_cells_access").find(".customer_id").val());
+    		$.calculate();
+        });
+        
+        //计算总价
+        $.calculate();
+        
+        //切换页面
         $("#place_order_panel").fadeIn();  
+        
+        //重置本页面
+        $("#customer").find(".weui_cell_bd.weui_cell_primary").html("客户姓名");
+        $("#phone").find(".weui_cell_bd.weui_cell_primary").html("手机号");
+        customer_name = "";
+        
+        //标记下单客户
+        $.mark(customer_id);
     });
 
     $("#add_cancel_btn").click(function () {
@@ -130,12 +151,12 @@
     });
     
     $.check = function(){
-    	if(typeof customer_name == "undefined") {
+    	if(typeof customer_name == "undefined" || customer_name == "") {
     		$("#dialog").find(".weui_dialog_bd").html("没有选择客户");
     		$("#dialog").fadeIn();
     		return false;
     	}
-    	if(typeof goods_name == "undefined") {
+    	if(typeof goods_name == "undefined" || customer_name == "") {
     		$("#dialog").find(".weui_dialog_bd").html("没有选择商品");
     		$("#dialog").fadeIn();
     		return false;
@@ -146,6 +167,44 @@
     		return false;
     	}
     	return true;
+    }
+    
+    //计算总价
+    $.calculate = function(){
+    	var order_info_list = new Object();
+        var order_item_list = $("#order_item_list").children();
+        $.each(order_item_list, function(i, val){
+        	var name = $(val).children().eq(1).find(".weui_cell_ft").text();
+        	var quantity = $(val).children().eq(2).find(".weui_cell_ft").text();
+        	var price = $(val).children().eq(7).val();
+        	if(order_info_list[name] == undefined) {
+        		order_info_list[name] = new Object();
+        		order_info_list[name]['quantity'] = parseInt(quantity);
+        		order_info_list[name]['order_item_price'] = parseFloat(price) * quantity ;
+        	} else {
+        		order_info_list[name]['quantity'] += parseInt(quantity);
+        		order_info_list[name]['order_item_price'] += parseInt(price) * quantity;
+        	}
+        });
+        $("#total_goods").empty();
+        var total_price = 0;
+        for(var order_info in order_info_list) {
+        	total_price += order_info_list[order_info]['order_item_price'];
+        	$("#total_goods").append("<p class='weui_media_text'>" 
+        		+ order_info + ": " + order_info_list[order_info]['quantity'] +
+ 				"件, 共" + order_info_list[order_info]['order_item_price'] + "元</p>")
+        }
+        $("#total_goods").append(" <p class='weui_media_text'>共计" + total_price + "元</p>")
+    }
+    
+    //标记已选择的用户
+    $.mark = function(customer_id){
+    	$("#" + customer_id).find(".weui_cell_ft").html("已下单");
+    }
+    
+    //清除标记的用户
+    $.demark = function(customer_id){
+    	$("#" + customer_id).find(".weui_cell_ft").html("");
     }
     
     $("#dialog").find(".weui_btn_dialog.primary").click(function(){
