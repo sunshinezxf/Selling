@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="selling.bill.deposit">
+    <resultMap id="depositBillVo" type="selling.sunshine.model.DepositBill">
+        <result property="billId" column="bill_id"></result>
+        <result property="billAmount" column="bill_amount"></result>
+        <result property="status" column="bill_status" typeHandler="selling.sunshine.handler.mybatis.BillStatusHandler"></result>
+        <result property="clientIp" column="client_ip"></result>
+        <result property="blockFlag" column="block_flag"></result>
+        <result property="createAt" column="create_time"></result>
+        <association property="agent" column="agentId = agent_id" select="agentQuery"></association>
+    </resultMap>
+
+    <resultMap id="agentVo" type="selling.sunshine.model.Agent">
+        <result property="agentId" column="agent_id"></result>
+        <result property="name" column="agent_name"></result>
+        <result property="gender" column="agent_gender"></result>
+        <result property="phone" column="agent_phone"></result>
+        <result property="address" column="agent_address"></result>
+        <result property="wechat" column="agent_wechat"></result>
+        <result property="password" column="agent_password"></result>
+        <result property="paid" column="agent_paid"></result>
+        <result property="granted" column="agent_granted"></result>
+        <result property="blockFlag" column="block_flag"></result>
+        <result property="createAt" column="create_time"></result>
+    </resultMap>
+
+    <select id="agentQuery" parameterType="java.util.Map" resultMap="agentVo">
+        SELECT agent_id, agent_name, agent_gender, agent_phone, agent_address, agent_password, agent_wechat, agent_paid, agent_granted,
+        agent_granted, block_flag, create_time
+        FROM agent
+        WHERE agent_id = #{agentId}
+    </select>
+
+    <insert id="insert" parameterType="selling.sunshine.model.DepositBill" useGeneratedKeys="false">
+        INSERT INTO deposit_bill(bill_id, agent_id, client_ip, bill_amount, bill_status, block_flag, create_time)
+        VALUES (#{billId}, #{agent.agentId}, #{clientIp}, #{billAmount}, #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler}, #{blockFlag}, #{createAt})
+    </insert>
+
+    <select id="query" parameterType="java.util.Map" resultMap="depositBillVo">
+        SELECT bill_id, agent_id, bill_amount, bill_status, client_ip, block_flag, create_time
+        FROM deposit_bill
+        WHERE 1 = 1
+        <if test="billId != null and billId != ''">
+            AND bill_id = #{billId}
+        </if>
+        <if test="agentId != null and agentId != ''">
+            AND agent_id = #{agentId}
+        </if>
+        <if test="blockFlag != null and blockFlag !=''">
+            AND block_flag = #{blockFlag}
+        </if>
+    </select>
+</mapper>
