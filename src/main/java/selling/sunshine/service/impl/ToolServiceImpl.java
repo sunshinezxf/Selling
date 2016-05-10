@@ -57,7 +57,7 @@ public class ToolServiceImpl implements ToolService {
             while ((length = reader.read(buff)) != -1) {
                 sb.append(buff, 0, length);
             }
-            result = new JSONObject().getJSONObject(sb.toString());
+            result = JSONObject.parseObject(sb.toString());
         } catch (IOException e) {
             return result;
         }

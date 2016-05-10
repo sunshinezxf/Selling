@@ -31,7 +31,7 @@
             }, function (result) {
                 //debug 模式下获取 charge_url 的返回结果
                 if (result.debug && result.chargeUrlOutput) {
-                    console.log(res.chargeUrlOutput);
+                    console.log(result.chargeUrlOutput);
                 }
                 if (!result.status) {
                     //处理错误

@@ -246,6 +246,7 @@ DROP TABLE IF EXISTS `selling`.`deposit_bill` ;
 CREATE TABLE IF NOT EXISTS `selling`.`deposit_bill` (
   `bill_id` VARCHAR(20) NOT NULL,
   `agent_id` VARCHAR(20) NOT NULL,
+  `channel_name` VARCHAR(45) NOT NULL,
   `client_ip` VARCHAR(45) NOT NULL,
   `bill_amount` DOUBLE NOT NULL,
   `bill_status` TINYINT(2) NOT NULL DEFAULT 0,
