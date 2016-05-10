@@ -6,6 +6,7 @@ package selling.sunshine.model;
 public abstract class Bill extends Entity {
     private String billId;
     private String clientIp;
+    private String channel;
     private double billAmount;
     private BillStatus status;
 
@@ -14,18 +15,19 @@ public abstract class Bill extends Entity {
         status = BillStatus.NOT_PAYED;
     }
 
-    public Bill(double billAmount) {
+    public Bill(double billAmount, String channel) {
         this();
         this.billAmount = billAmount;
+        this.channel = channel;
     }
 
-    public Bill(double billAmount, String clientIp) {
-        this(billAmount);
+    public Bill(double billAmount, String channel, String clientIp) {
+        this(billAmount, channel);
         this.clientIp = clientIp;
     }
 
-    public Bill(double billAmount, String clientIp, BillStatus status) {
-        this(billAmount, clientIp);
+    public Bill(double billAmount, String channel, String clientIp, BillStatus status) {
+        this(billAmount, channel, clientIp);
         this.status = status;
     }
 
@@ -43,6 +45,14 @@ public abstract class Bill extends Entity {
 
     public void setClientIp(String clientIp) {
         this.clientIp = clientIp;
+    }
+
+    public String getChannel() {
+        return channel;
+    }
+
+    public void setChannel(String channel) {
+        this.channel = channel;
     }
 
     public double getBillAmount() {

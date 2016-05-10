@@ -19,6 +19,7 @@
     document.addEventListener('pingpp_one_ready', function () {
         $("#confirm").click(function () {
             var amount = $("#amount").val();
+            console.debug(amount);
             pingpp_one.init({
                 app_id: "app_DazjbTLybjHGbv9O",
                 amount: amount,

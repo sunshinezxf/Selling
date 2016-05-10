@@ -11,13 +11,13 @@ public class DepositBill extends Bill {
         agent = new Agent();
     }
 
-    public DepositBill(double billAmount, String clientIp, Agent agent) {
-        super(billAmount, clientIp);
+    public DepositBill(double billAmount, String channel, String clientIp, Agent agent) {
+        super(billAmount, channel, clientIp);
         this.agent = agent;
     }
 
-    public DepositBill(double billAmount, String clientIp, BillStatus status, Agent agent) {
-        super(billAmount, clientIp, status);
+    public DepositBill(double billAmount, String channel, String clientIp, BillStatus status, Agent agent) {
+        super(billAmount, channel, clientIp, status);
         this.agent = agent;
     }
 

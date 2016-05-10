@@ -4,6 +4,7 @@
     <resultMap id="depositBillVo" type="selling.sunshine.model.DepositBill">
         <result property="billId" column="bill_id"></result>
         <result property="billAmount" column="bill_amount"></result>
+        <result property="channel" column="channel_name"></result>
         <result property="status" column="bill_status" typeHandler="selling.sunshine.handler.mybatis.BillStatusHandler"></result>
         <result property="clientIp" column="client_ip"></result>
         <result property="blockFlag" column="block_flag"></result>
@@ -33,12 +34,12 @@
     </select>
 
     <insert id="insert" parameterType="selling.sunshine.model.DepositBill" useGeneratedKeys="false">
-        INSERT INTO deposit_bill(bill_id, agent_id, client_ip, bill_amount, bill_status, block_flag, create_time)
-        VALUES (#{billId}, #{agent.agentId}, #{clientIp}, #{billAmount}, #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler}, #{blockFlag}, #{createAt})
+        INSERT INTO deposit_bill(bill_id, agent_id, channel_name, client_ip, bill_amount, bill_status, block_flag, create_time)
+        VALUES (#{billId}, #{agent.agentId}, #{channel}, #{clientIp}, #{billAmount}, #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler}, #{blockFlag}, #{createAt})
     </insert>
 
     <select id="query" parameterType="java.util.Map" resultMap="depositBillVo">
-        SELECT bill_id, agent_id, bill_amount, bill_status, client_ip, block_flag, create_time
+        SELECT bill_id, agent_id, channel_name, bill_amount, bill_status, client_ip, block_flag, create_time
         FROM deposit_bill
         WHERE 1 = 1
         <if test="billId != null and billId != ''">
@@ -46,6 +47,9 @@
         </if>
         <if test="agentId != null and agentId != ''">
             AND agent_id = #{agentId}
+        </if>
+        <if test="channel != null and channel != ''">
+            AND channel_name = #{channel}
         </if>
         <if test="blockFlag != null and blockFlag !=''">
             AND block_flag = #{blockFlag}
