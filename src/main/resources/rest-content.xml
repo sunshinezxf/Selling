@@ -74,6 +74,8 @@
                 /agent/login = anon
                 /agent/prompt = anon
 
+                /account/** = roles[agent]
+
                 /agent/** = roles[agent]
 
                 /dashboard = roles[admin]
