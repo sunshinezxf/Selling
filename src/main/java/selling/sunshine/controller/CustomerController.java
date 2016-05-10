@@ -6,10 +6,7 @@ import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import selling.sunshine.form.CustomerForm;
 import selling.sunshine.model.Agent;
@@ -103,5 +100,21 @@ public class CustomerController {
         System.out.println(customer2.getAddress().getAddress());
         System.out.println(customer2.getPhone().getPhone());
         return resultData;
+    }
+
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value = "/{customerId}")
+    public ResultData fetchCustomer(@PathVariable("customerId") String customerId) {
+        ResultData result = new ResultData();
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("customerId", customerId);
+        ResultData fetchResponse = customerService.fetchCustomer(condition);
+        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(fetchResponse.getData());
+        } else {
+            fetchResponse.setResponseCode(fetchResponse.getResponseCode());
+            fetchResponse.setDescription(fetchResponse.getDescription());
+        }
+        return result;
     }
 }

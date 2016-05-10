@@ -1,6 +1,5 @@
 package selling.sunshine.service;
 
-import selling.sunshine.model.Agent;
 import selling.sunshine.model.Customer;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.utils.ResultData;
@@ -15,7 +14,7 @@ public interface CustomerService {
 
     ResultData updateCustomer(Customer customer);
 
-    ResultData fetchCustomer(Agent agent);
+    ResultData fetchCustomer(Map<String, Object> condition);
 
     ResultData fetchCustomer(Map<String, Object> condition, DataTableParam param);
 }

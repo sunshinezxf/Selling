@@ -74,6 +74,8 @@
                 /agent/login = anon
                 /agent/prompt = anon
 
+                /account/** = roles[agent]
+
                 /agent/** = roles[agent]
 
                 /dashboard = roles[admin]
@@ -84,6 +86,7 @@
                 /customer/overview = roles[admin]
                 /customer/add = roles[agent]
                 /customer/modify = roles[agent]
+
                 /** = authc
             </value>
         </property>

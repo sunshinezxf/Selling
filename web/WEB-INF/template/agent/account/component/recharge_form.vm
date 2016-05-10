@@ -1,0 +1,63 @@
+<div class="weui_cells_title">
+    账户充值
+</div>
+<div class="weui_cells weui_cells_form">
+    <div class="weui_cell">
+        <div class="weui_cell_hd">
+            <label class="weui_label">金额</label>
+        </div>
+        <div class="weui_cell_bd weui_cell_primary">
+            <input type="tel" class="weui_input" placeholder="请输入充值金额"/>
+        </div>
+    </div>
+    <div class="weui_btn_area">
+        <a id="confirm" class="weui_btn weui_btn_primary">确认金额</a>
+    </div>
+</div>
+<script type="text/javascript" src="${path.concat('/plugins/pingxx/pingpp_one.js')}"></script>
+<script>
+    document.addEventListener('pingpp_one_ready', function () {
+        $("#confirm").click(function () {
+            pingpp_one.init({
+                app_id: "app_DazjbTLybjHGbv9O",
+                order_no: "no",
+                amount: 100,
+                channel: ['aplipay_wap', 'wx_pub'],
+                charge_url: "${path.concat('/account/deposit')}",
+                charge_param: {},
+                open_id: 'wxf2c47b5e41605c26',
+                debug: 'true'
+            }, function (result) {
+                //debug 模式下获取 charge_url 的返回结果
+                if (result.debug && result.chargeUrlOutput) {
+                    console.log(res.chargeUrlOutput);
+                }
+                if (!result.status) {
+                    //处理错误
+                    alert(result.msg);
+                }
+                else {
+                    //debug 模式下调用 charge_url 后会暂停，可以调用 pingpp_one.resume 方法继续执行
+                    if (result.debug && !result.wxSuccess) {
+                        if (confirm('当前为 debug 模式，是否继续支付？')) {
+                            pingpp_one.resume();
+                        }
+                    }
+                    //若微信公众号渠道需要使用壹收款的支付成功页面，则在这里进行成功回调，
+                    //调用 pingpp_one.success 方法，你也可以自己定义回调函数
+                    //其他渠道的处理方法请见第 2 节
+                    else pingpp_one.success(function (result) {
+                        if (!result.status) {
+                            alert(result.msg);
+                        }
+                    }, function () {
+                        //这里处理支付成功页面点击“继续购物”按钮触发的方法，
+                        //例如：若你需要点击“继续购物”按钮跳转到你的购买页，
+                        //则在该方法内写入 window.location.href = "你的购买页面 url"
+                        window.location.href = 'http://yourdomain.com/payment_succeeded';//示例
+                    });
+                }
+            });
+        });
+    });
+</script>

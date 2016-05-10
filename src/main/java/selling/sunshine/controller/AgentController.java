@@ -70,7 +70,9 @@ public class AgentController {
         Map<String, Object> condition = new HashMap<String, Object>();
         ResultData fetchGoodsResponse = commodityService.fetchCommodity(condition);
         User user = (User) subject.getPrincipal();
-        ResultData fetchCustomerResponse = customerService.fetchCustomer(user.getAgent());
+        condition.clear();
+        condition.put("agentId", user.getAgent().getAgentId());
+        ResultData fetchCustomerResponse = customerService.fetchCustomer(condition);
         if (fetchGoodsResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             view.addObject("goods", fetchGoodsResponse.getData());
         }
@@ -174,14 +176,16 @@ public class AgentController {
     public ResultData viewCustomerList() {
         ResultData result = new ResultData();
         Subject subject = SecurityUtils.getSubject();
-        User user = null;
-        Agent agent = null;
-        if (subject != null) {
-            Session session = subject.getSession();
-            user = (User) session.getAttribute("current");
-            agent = user.getAgent();
+        User user = (User) subject.getPrincipal();
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("agentId", user.getAgent().getAgentId());
+        ResultData fetchResponse = customerService.fetchCustomer(condition);
+        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(fetchResponse.getData());
+        } else {
+            result.setResponseCode(fetchResponse.getResponseCode());
+            result.setDescription(fetchResponse.getDescription());
         }
-        result = customerService.fetchCustomer(agent);
         return result;
     }
 
