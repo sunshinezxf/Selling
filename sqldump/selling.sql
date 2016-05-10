@@ -238,6 +238,29 @@ CREATE TABLE IF NOT EXISTS `selling`.`customer_address` (
   ENGINE = InnoDB;
 
 
+-- -----------------------------------------------------
+-- Table `selling`.`deposit_bill`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `selling`.`deposit_bill` ;
+
+CREATE TABLE IF NOT EXISTS `selling`.`deposit_bill` (
+  `bill_id` VARCHAR(20) NOT NULL,
+  `agent_id` VARCHAR(20) NOT NULL,
+  `client_ip` VARCHAR(45) NOT NULL,
+  `bill_amount` DOUBLE NOT NULL,
+  `bill_status` TINYINT(2) NOT NULL DEFAULT 0,
+  `block_flag` TINYINT(0) NOT NULL DEFAULT 0,
+  `create_time` DATETIME NOT NULL,
+  PRIMARY KEY (`bill_id`),
+  INDEX `fk_deposit_bill_agent1_idx` (`agent_id` ASC),
+  CONSTRAINT `fk_deposit_bill_agent1`
+  FOREIGN KEY (`agent_id`)
+  REFERENCES `selling`.`agent` (`agent_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+  ENGINE = InnoDB;
+
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
