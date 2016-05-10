@@ -1,5 +1,4 @@
 #parse("/common/util.vm")
-<!DOCTYPE html>
 <html lang="zh_CN">
 <head>
     #parse("/agent/component/init.vm")
