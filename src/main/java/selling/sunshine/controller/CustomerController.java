@@ -8,6 +8,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
 import selling.sunshine.form.CustomerForm;
 import selling.sunshine.model.Agent;
 import selling.sunshine.model.Customer;
@@ -15,11 +16,14 @@ import selling.sunshine.model.User;
 import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.CustomerService;
+import selling.sunshine.utils.IDGenerator;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
 import javax.validation.Valid;
+
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -94,11 +98,9 @@ public class CustomerController {
         }
         Customer customer = new Customer(customerForm.getName(),
                 customerForm.getAddress(), customerForm.getPhone(), agent);
+        customer.setCustomerId(customerForm.getCustomerId());
+       
         resultData =  customerService.updateCustomer(customer);
-        System.out.println("-----------------------------------------------------------------test----------------------------------------------------------");
-        Customer customer2=(Customer)resultData.getData();
-        System.out.println(customer2.getAddress().getAddress());
-        System.out.println(customer2.getPhone().getPhone());
         return resultData;
     }
 
@@ -110,7 +112,7 @@ public class CustomerController {
         condition.put("customerId", customerId);
         ResultData fetchResponse = customerService.fetchCustomer(condition);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            result.setData(fetchResponse.getData());
+            result.setData(((List<Customer>)fetchResponse.getData()).get(0));
         } else {
             fetchResponse.setResponseCode(fetchResponse.getResponseCode());
             fetchResponse.setDescription(fetchResponse.getDescription());

@@ -28,117 +28,130 @@ import java.util.Map;
 @Repository
 public class CustomerDaoImpl extends BaseDao implements CustomerDao {
 
-    private Logger logger = LoggerFactory.getLogger(CustomerDaoImpl.class);
-    private Object lock = new Object();
+	private Logger logger = LoggerFactory.getLogger(CustomerDaoImpl.class);
+	private Object lock = new Object();
 
-    @Transactional
-    @Override
-    public ResultData insertCustomer(Customer customer) {
-        ResultData result = new ResultData();
-        synchronized (lock) {
-            try {
-                customer.setCustomerId(IDGenerator.generate("CUS"));
-                sqlSession.insert("selling.customer.insert", customer);
-                CustomerPhone phoneNumber = customer.getPhone();
-                CustomerAddress address = customer.getAddress();
-                phoneNumber.setCustomer(customer);
-                address.setCustomer(customer);
-                phoneNumber.setPhoneId(IDGenerator.generate("PNM"));
-                address.setAddressId(IDGenerator.generate("ADD"));
-                sqlSession.insert("selling.customer.phone.insert", phoneNumber);
-                sqlSession.insert("selling.customer.address.insert", address);
-                address.setCustomer(null);
-                phoneNumber.setCustomer(null);
-                result.setData(customer);
-            } catch (Exception e) {
-                logger.error(e.getMessage());
-                result.setResponseCode(ResponseCode.RESPONSE_ERROR);
-                result = insertCustomer(customer);
-            } finally {
-                return result;
-            }
-        }
-    }
+	@Transactional
+	@Override
+	public ResultData insertCustomer(Customer customer) {
+		ResultData result = new ResultData();
+		synchronized (lock) {
+			try {
+				customer.setCustomerId(IDGenerator.generate("CUS"));
+				sqlSession.insert("selling.customer.insert", customer);
+				CustomerPhone phoneNumber = customer.getPhone();
+				CustomerAddress address = customer.getAddress();
+				phoneNumber.setCustomer(customer);
+				address.setCustomer(customer);
+				phoneNumber.setPhoneId(IDGenerator.generate("PNM"));
+				address.setAddressId(IDGenerator.generate("ADD"));
+				sqlSession.insert("selling.customer.phone.insert", phoneNumber);
+				sqlSession.insert("selling.customer.address.insert", address);
+				address.setCustomer(null);
+				phoneNumber.setCustomer(null);
+				result.setData(customer);
+			} catch (Exception e) {
+				logger.error(e.getMessage());
+				result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+				result = insertCustomer(customer);
+			} finally {
+				return result;
+			}
+		}
+	}
 
-    @Transactional
-    @Override
-    public ResultData updateCustomer(Customer customer) {
-        ResultData result = new ResultData();
-        try {
+	@Transactional
+	@Override
+	public ResultData updateCustomer(Customer customer) {
 
-            Map<String, Object> condition = new HashMap<String, Object>();
-            condition.put("customerId", customer.getCustomerId());
-            condition.put("name", customer.getName());
-            condition.put("blockFlag", customer.isBlockFlag());
+		ResultData result = new ResultData();
+		try {
+			customer.getPhone().setPhoneId(IDGenerator.generate("PNW"));
+	        customer.getAddress().setAddressId(IDGenerator.generate("ADD"));
 
-            if (ResponseCode.RESPONSE_OK.equals(queryCustomer(condition).getResponseCode())) {
-                CustomerPhone phoneNumber = customer.getPhone();
-                CustomerAddress address = customer.getAddress();
+			Map<String, Object> condition = new HashMap<String, Object>();
+			condition.put("customerId", customer.getCustomerId());
+			ResultData resultData = queryCustomer(condition);
 
-                sqlSession.insert("selling.customer.phone.insert", phoneNumber);
-                sqlSession.insert("selling.customer.address.insert", address);
-                Customer c = ((List<Customer>) queryCustomer(condition).getData()).get(0);
+			CustomerPhone phoneNumber = customer.getPhone();
+			CustomerAddress address = customer.getAddress();
+			
+			phoneNumber.setCustomer(customer);
+			address.setCustomer(customer);
 
-                sqlSession.update("selling.customer.phone.block", c.getPhone());
-                sqlSession.update("selling.customer.address.block", c.getAddress());
-            }
-            result.setData(customer);
-            result.setResponseCode(ResponseCode.RESPONSE_OK);
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
-        } finally {
-            return result;
-        }
+			sqlSession.insert("selling.customer.phone.insert", phoneNumber);
+			sqlSession.insert("selling.customer.address.insert", address);
+			Customer customer2 = ((List<Customer>) resultData.getData()).get(0);
 
-    }
+			sqlSession.update("selling.customer.phone.block",
+					customer2.getPhone());
+			sqlSession.update("selling.customer.address.block",
+					customer2.getAddress());
 
-    @Override
-    public ResultData queryCustomer(Map<String, Object> condition) {
-        ResultData result = new ResultData();
-        try {
-            List<Goods> list = sqlSession.selectList("selling.customer.query", condition);
-            result.setData(list);
-            result.setResponseCode(ResponseCode.RESPONSE_OK);
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
-            result.setDescription(e.getMessage());
-        } finally {
-            return result;
-        }
-    }
+			customer= ((List<Customer>)queryCustomer(condition).getData()).get(0);
+			result.setData(customer);
+			result.setResponseCode(ResponseCode.RESPONSE_OK);
 
-    @Override
-    public ResultData queryCustomerByPage(Map<String, Object> condition, DataTableParam param) {
-        ResultData result = new ResultData();
-        DataTablePage<Customer> page = new DataTablePage<Customer>();
-        page.setsEcho(param.getsEcho());
-        ResultData total = queryCustomer(condition);
-        if (total.getResponseCode() != ResponseCode.RESPONSE_OK) {
-            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
-            result.setDescription(total.getDescription());
-            logger.error(result.getDescription());
-        }
-        page.setiTotalRecords(((List<Customer>) total.getData()).size());
-        page.setiTotalDisplayRecords(((List<Customer>) total.getData()).size());
-        List<Customer> current = queryCustomerByPage(condition, param.getiDisplayStart(), param.getiDisplayLength());
-        if (current.size() == 0) {
-            result.setResponseCode(ResponseCode.RESPONSE_NULL);
-        }
-        page.setData(current);
-        result.setData(page);
-        return result;
-    }
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+		} finally {
+			return result;
+		}
 
-    private List<Customer> queryCustomerByPage(Map<String, Object> condition, int start, int length) {
-        List<Customer> result = new ArrayList<Customer>();
-        try {
-            result = sqlSession.selectList("selling.customer.query", condition, new RowBounds(start, length));
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-        } finally {
-            return result;
-        }
-    }
+	}
+
+	@Override
+	public ResultData queryCustomer(Map<String, Object> condition) {
+		ResultData result = new ResultData();
+		try {
+			List<Customer> list = sqlSession.selectList(
+					"selling.customer.query", condition);
+			result.setData(list);
+			result.setResponseCode(ResponseCode.RESPONSE_OK);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+			result.setDescription(e.getMessage());
+		} finally {
+			return result;
+		}
+	}
+
+	@Override
+	public ResultData queryCustomerByPage(Map<String, Object> condition,
+			DataTableParam param) {
+		ResultData result = new ResultData();
+		DataTablePage<Customer> page = new DataTablePage<Customer>();
+		page.setsEcho(param.getsEcho());
+		ResultData total = queryCustomer(condition);
+		if (total.getResponseCode() != ResponseCode.RESPONSE_OK) {
+			result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+			result.setDescription(total.getDescription());
+			logger.error(result.getDescription());
+		}
+		page.setiTotalRecords(((List<Customer>) total.getData()).size());
+		page.setiTotalDisplayRecords(((List<Customer>) total.getData()).size());
+		List<Customer> current = queryCustomerByPage(condition,
+				param.getiDisplayStart(), param.getiDisplayLength());
+		if (current.size() == 0) {
+			result.setResponseCode(ResponseCode.RESPONSE_NULL);
+		}
+		page.setData(current);
+		result.setData(page);
+		return result;
+	}
+
+	private List<Customer> queryCustomerByPage(Map<String, Object> condition,
+			int start, int length) {
+		List<Customer> result = new ArrayList<Customer>();
+		try {
+			result = sqlSession.selectList("selling.customer.query", condition,
+					new RowBounds(start, length));
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		} finally {
+			return result;
+		}
+	}
 }

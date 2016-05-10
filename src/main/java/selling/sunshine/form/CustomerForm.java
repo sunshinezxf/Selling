@@ -5,11 +5,22 @@ import javax.validation.constraints.NotNull;
 public class CustomerForm {
 
 	@NotNull
+	private String customerId;
+
+	@NotNull
 	private String name;
 	@NotNull
 	private String phone;
 	@NotNull
 	private String address;
+
+	public String getCustomerId() {
+		return customerId;
+	}
+
+	public void setCustomerId(String customerId) {
+		this.customerId = customerId;
+	}
 
 	public String getName() {
 		return name;
