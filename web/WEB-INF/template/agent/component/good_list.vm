@@ -30,8 +30,8 @@
 	        goods_name = $(this).find(".weui_cell_bd span:first-child").html();
 	        goods_price = $(this).find(".weui_cell_bd span:nth-last-child(2)").html();
 	        $("#good_name" + pre_goods_id).html(goods_name);
-        	$("#goods_name" + pre_goods_id).parent(".weui_cells.weui_cells_access").find(".goods_id").val(goods_id);
-        	$("#goods_name" + pre_goods_id).parent(".weui_cells.weui_cells_access").find(".order_item_price").val(goods_price);
+        	$("#goods_name" + pre_goods_id).parents(".weui_cells.weui_cells_access").find(".goods_id").val(goods_id);
+        	$("#goods_name" + pre_goods_id).parents(".weui_cells.weui_cells_access").find(".order_item_price").val(goods_price);
         	$("#goods_name" + pre_goods_id).attr("id","goods_name" + goods_id);
         	$("#goods_quantity" + pre_goods_id).attr("id","goods_quantity" + goods_id);
         	$("#goods_price" + pre_goods_id).attr("id","goods_price" + goods_id);
