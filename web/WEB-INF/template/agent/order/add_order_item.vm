@@ -130,15 +130,25 @@
     });
     
     $.check = function(){
-    	if(typeof customer_name == undefined) {
+    	if(typeof customer_name == "undefined") {
+    		$("#dialog").find(".weui_dialog_bd").html("没有选择客户");
+    		$("#dialog").fadeIn();
     		return false;
     	}
-    	if(typeof goods_name == undefined) {
+    	if(typeof goods_name == "undefined") {
+    		$("#dialog").find(".weui_dialog_bd").html("没有选择商品");
+    		$("#dialog").fadeIn();
     		return false;
     	}
-    	if(!$("#goods_quantity").val().isNaN() || $("#goods_quantity").val() <= 0) {
+    	if(isNaN(parseInt($("#goods_quantity").val())) || parseInt($("#goods_quantity").val()) <= 0) {
+    		$("#dialog").find(".weui_dialog_bd").html("数量格式不正确");
+    		$("#dialog").fadeIn();
     		return false;
     	}
     	return true;
     }
+    
+    $("#dialog").find(".weui_btn_dialog.primary").click(function(){
+    	$("#dialog").hide();
+    });
 </script>
