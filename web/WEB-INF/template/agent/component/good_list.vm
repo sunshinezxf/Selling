@@ -5,8 +5,8 @@
             <span>${elem.name}</span>&nbsp<span>${elem.price}</span><span>元</span>
         </div>
         <div class="weui_cell_ft">
-            <input type="radio">
-            <span id="goods_check${elem.goodsId}"></span>
+            <input type="radio" class="weui_check">
+            <span id="goods_check${elem.goodsId}" ></span>
         </div>
     </label>
     #end
@@ -19,7 +19,7 @@
         goods_name = $(this).find(".weui_cell_bd span:first-child").html();
         goods_price = $(this).find(".weui_cell_bd span:nth-last-child(2)").html();
         $("#goods").find(".weui_cell_bd").html("<p>" + goods_name + "</p>");
-        $(this).addClass("weui_icon_checked");
+        $("#price").html("金额：" + goods_price + "元");
         $("#goods_option").hide();
         $("#add_order_item").fadeIn();
     });

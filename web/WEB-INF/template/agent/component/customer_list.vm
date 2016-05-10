@@ -6,7 +6,7 @@
         </div>
         <input id="customer_phone${elem.customerId}" type="hidden" value="${elem.phone.phone}"/>
         <div class="weui_cell_ft">
-            <input type="radio">
+            <input type="radio" class="weui_check">
             <span id="customer_check${elem.customerId}"></span>
         </div>
     </label>
@@ -21,7 +21,6 @@
         customer_phone = $("#customer_phone"+customer_id).val();
         $("#customer").find(".weui_cell_bd").html("<p>" + customer_name + "</p>");
         $("#phone").find(".weui_cell_bd").html("<p>" + customer_phone + "</p>");
-        $(this).addClass("weui_icon_checked");
         $("#customer_option").hide();
         $("#add_order_item").fadeIn();
     });

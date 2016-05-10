@@ -1,3 +1,4 @@
+<!--这个类已经不起作用，用作js动态添加的模板-->
 <div class="weui_cells weui_cells_access">
     <a class="weui_cell">
         <div class="weui_cell_bd weui_cell_primary">

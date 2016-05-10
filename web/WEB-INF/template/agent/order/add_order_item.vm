@@ -23,11 +23,11 @@
                 <p>数量:&nbsp</p>
             </div>
             <div class="weui_cell_bd weui_cell_primary">
-            	<input class="weui_input" id="goods_quantity" type="number" pattern="[0-9]*" placeholder="请输入数量">
+            	<input class="weui_input" id="goods_quantity" type="number" pattern="[0-9]*" placeholder="请输入数量" value="1">
             </div>
         </a>
 
-        <div class="weui_cell weui_cells_tips clear-margin-top">
+        <div id="price" class="weui_cell weui_cells_tips clear-margin-top">
             金额:元
         </div>
     </div>
@@ -35,12 +35,26 @@
         <button type="button" class="weui_btn weui_btn_primary" id="add_confirm_btn">确认添加</button>
         <button type="button" class="weui_btn weui_btn_default" id="add_cancel_btn">取消</button>
     </div>
+    <div class="weui_dialog_alert" id="dialog" style="display: none;">
+	    <div class="weui_mask"></div>
+	    <div class="weui_dialog">
+	        <div class="weui_dialog_hd"><strong class="weui_dialog_title">消息</strong></div>
+	        <div class="weui_dialog_bd"></div>
+	        <div class="weui_dialog_ft">
+	            <a href="javascript:;" class="weui_btn_dialog primary">确定</a>
+	        </div>
+	    </div>
+	</div>
 </div>
 #parse("/agent/component/customer_list.vm")
 #parse("/agent/component/good_list.vm")
 #parse("/agent/component/navigate.vm")
 <script>
+    
     $("#add_confirm_btn").click(function () {
+    	if(!$.check()){
+    		return;
+    	}
         $("#add_order_item").hide();
         var place_order_item = 
         	"<div class='weui_cells weui_cells_access'>" +
@@ -73,6 +87,8 @@
         $("#order_item_list").append(place_order_item);
         var order_info_list = new Object();
         var order_item_list = $("#order_item_list").children();
+ 		
+ 		//计算总价
         $.each(order_item_list, function(i, val){
         	var name = $(val).children().eq(1).find(".weui_cell_ft").text();
         	var quantity = $(val).children().eq(2).find(".weui_cell_ft").text();
@@ -112,4 +128,18 @@
     	$("#add_order_item").hide();
     	$("#goods_option").fadeIn();
     });
+    
+    $.check = function(){
+    	if(typeof customer_name == undefined) {
+    		$("#dialog")
+    		return false;
+    	}
+    	if(typeof goods_name == undefined) {
+    		return false;
+    	}
+    	if(!$("#goods_quantity").val().isNaN() || $("#goods_quantity").val() <= 0) {
+    		return false;
+    	}
+    	return true;
+    }
 </script>
