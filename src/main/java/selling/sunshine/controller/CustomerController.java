@@ -81,9 +81,27 @@ public class CustomerController {
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/modify")
-    public ResultData updateCustomer() {
-        ResultData result = new ResultData();
-
-        return result;
+    public ResultData updateCustomer(@Valid CustomerForm customerForm,
+            BindingResult result) {
+        ResultData resultData = new ResultData();
+        if (result.hasErrors()) {
+            resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            return resultData;
+        }
+        Subject subject = SecurityUtils.getSubject();
+        Agent agent = null;
+        if (subject != null) {
+            Session session = subject.getSession();
+            User user = (User) session.getAttribute("current");
+            agent = user.getAgent();
+        }
+        Customer customer = new Customer(customerForm.getName(),
+                customerForm.getAddress(), customerForm.getPhone(), agent);
+        resultData =  customerService.updateCustomer(customer);
+        System.out.println("-----------------------------------------------------------------test----------------------------------------------------------");
+        Customer customer2=(Customer)resultData.getData();
+        System.out.println(customer2.getAddress().getAddress());
+        System.out.println(customer2.getPhone().getPhone());
+        return resultData;
     }
 }

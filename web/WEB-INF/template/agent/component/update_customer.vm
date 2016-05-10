@@ -1,0 +1,58 @@
+<div id="update_customer_form" style="display: none;">
+    <div class="weui_cells">
+        <div class="weui_cell">
+            <div class="weui_cell_hd">
+                <label class="weui_label">
+                    姓名
+                </label>
+            </div>
+            <div class="weui_cell_bd weui_cell_primary">
+                <input id="customer_name_new" class="weui_input" type="text" disabled="disabled"/>
+            </div>
+        </div>
+        <div class="weui_cell">
+            <div class="weui_cell_hd">
+                <label class="weui_label">新手机</label>
+            </div>
+            <div class="weui_cell_bd weui_cell_primary">
+                <input id="customer_phone_new" class="weui_input" type="number" pattern="1[0-9]{10}" />
+            </div>
+        </div>
+        <div class="weui_cell">
+            <div class="weui_cell_hd">
+                <label class="weui_label">新收货地址</label>
+            </div>
+            <div class="weui_cell_bd weui_cell_primary">
+                <input id="customer_address_new" class="weui_input" type="text" />
+            </div>
+        </div>
+    </div>
+    <div class="weui_btn_area">
+        <button type="button" class="weui_btn weui_btn_primary" id="update_confirm_btn">确认修改</button>
+        <button type="button" class="weui_btn weui_btn_default" id="update_cancel_btn">取消</button>
+    </div>
+</div>
+<script>
+    $("#update_confirm_btn").click(function () {
+        $("#update_customer_form").hide();
+        var url = "${path.concat('/customer/modify')}";
+        var name = $("#customer_name_new").val();
+        var phone = $("#customer_phone_new").val();
+        var address = $("#customer_address_new").val();
+        $("#customer_panel").fadeIn();
+         $.post(url, {
+                    name: name,
+                    phone: phone,
+                    address: address,
+                }, function (result) {                  
+                     var customer=result.data;
+                     var node = "<a class='weui_cell' onclick='updateCustomer(this)' id='" + customer.customerId + "'><div class='weui_cell_bd weui_cell_primary'><p>" + name + "</p></div><div class='weui_cell_ft'>" + phone + "</div></a>";
+                     $("#customer_list").append(node);
+                });
+    });
+
+    $("#update_cancel_btn").click(function () {
+        $("#update_customer_form").hide();
+        $("#customer_panel").fadeIn();
+    });
+</script>
