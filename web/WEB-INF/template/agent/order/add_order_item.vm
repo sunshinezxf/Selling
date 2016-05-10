@@ -131,7 +131,6 @@
     
     $.check = function(){
     	if(typeof customer_name == undefined) {
-    		$("#dialog")
     		return false;
     	}
     	if(typeof goods_name == undefined) {
