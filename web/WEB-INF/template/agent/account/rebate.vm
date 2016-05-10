@@ -6,8 +6,9 @@
                 账户余额:2000元
             </div>
             <div class="weui_cell_ft">
-                <a class="weui_btn weui_btn_mini weui_btn_plain_primary">充值</a>
-                <a class="weui_btn weui_btn_mini weui_btn_plain_primary">提现</a>
+                <a href="${path.concat('/account/deposit')}"
+                   class="weui_btn weui_btn_mini weui_btn_plain_primary operation">充值</a>
+                <a class="weui_btn weui_btn_mini weui_btn_plain_primary operation">提现</a>
             </div>
         </div>
     </div>

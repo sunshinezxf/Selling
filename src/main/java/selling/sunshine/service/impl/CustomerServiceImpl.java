@@ -52,14 +52,8 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public ResultData fetchCustomer(Agent agent) {
+    public ResultData fetchCustomer(Map<String, Object> condition) {
         ResultData result = new ResultData();
-        if (agent == null) {
-            result.setResponseCode(ResponseCode.RESPONSE_NULL);
-            return result;
-        }
-        Map<String, Object> condition = new HashMap<String, Object>();
-        condition.put("agentId", agent.getAgentId());
         ResultData queryResponse = customerDao.queryCustomer(condition);
         result.setResponseCode(queryResponse.getResponseCode());
         if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {

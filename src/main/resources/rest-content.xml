@@ -86,6 +86,7 @@
                 /customer/overview = roles[admin]
                 /customer/add = roles[agent]
                 /customer/modify = roles[agent]
+
                 /** = authc
             </value>
         </property>
