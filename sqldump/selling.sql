@@ -263,6 +263,37 @@ CREATE TABLE IF NOT EXISTS `selling`.`deposit_bill` (
   ENGINE = InnoDB;
 
 
+-- -----------------------------------------------------
+-- Table `selling`.`order_bill`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `selling`.`order_bill` ;
+
+CREATE TABLE IF NOT EXISTS `selling`.`order_bill` (
+  `bill_id` VARCHAR(20) NOT NULL,
+  `agent_id` VARCHAR(20) NOT NULL,
+  `order_id` VARCHAR(45) NULL,
+  `channel_name` VARCHAR(45) NOT NULL,
+  `client_ip` VARCHAR(45) NOT NULL,
+  `bill_amount` DOUBLE NOT NULL,
+  `bill_status` VARCHAR(45) NOT NULL DEFAULT 0,
+  `block_flag` TINYINT(1) NOT NULL DEFAULT 0,
+  `create_time` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`bill_id`),
+  INDEX `fk_order_bill_agent1_idx` (`agent_id` ASC),
+  INDEX `fk_order_bill_order1_idx` (`order_id` ASC),
+  CONSTRAINT `fk_order_bill_agent1`
+  FOREIGN KEY (`agent_id`)
+  REFERENCES `selling`.`agent` (`agent_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_order_bill_order1`
+  FOREIGN KEY (`order_id`)
+  REFERENCES `selling`.`order` (`order_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+  ENGINE = InnoDB;
+
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
