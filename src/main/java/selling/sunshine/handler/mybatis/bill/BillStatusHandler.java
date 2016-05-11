@@ -1,8 +1,8 @@
-package selling.sunshine.handler.mybatis;
+package selling.sunshine.handler.mybatis.bill;
 
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
-import selling.sunshine.model.OrderStatus;
+import selling.sunshine.model.BillStatus;
 
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
@@ -10,14 +10,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Created by sunshine on 5/11/16.
+ * Created by sunshine on 5/10/16.
  */
-public class OrderStatusHandler extends BaseTypeHandler<OrderStatus> {
+public class BillStatusHandler extends BaseTypeHandler<BillStatus> {
 
-    private Class<OrderStatus> type;
-    private final OrderStatus[] enums;
+    private Class<BillStatus> type;
+    private final BillStatus[] enums;
 
-    public OrderStatusHandler(Class<OrderStatus> type) {
+    public BillStatusHandler(Class<BillStatus> type) {
         if (type == null) {
             throw new IllegalArgumentException("Type argument cannot be null");
         }
@@ -30,13 +30,14 @@ public class OrderStatusHandler extends BaseTypeHandler<OrderStatus> {
     }
 
     @Override
-    public void setNonNullParameter(PreparedStatement preparedStatement, int i, OrderStatus orderStatus, JdbcType jdbcType) throws SQLException {
-        preparedStatement.setInt(i, orderStatus.getCode());
+    public void setNonNullParameter(PreparedStatement preparedStatement, int i, BillStatus billStatus, JdbcType jdbcType) throws SQLException {
+        preparedStatement.setInt(i, billStatus.getCode());
     }
 
     @Override
-    public OrderStatus getNullableResult(ResultSet resultSet, String s) throws SQLException {
+    public BillStatus getNullableResult(ResultSet resultSet, String s) throws SQLException {
         int i = resultSet.getInt(s);
+
         if (resultSet.wasNull()) {
             return null;
         } else {
@@ -46,7 +47,7 @@ public class OrderStatusHandler extends BaseTypeHandler<OrderStatus> {
     }
 
     @Override
-    public OrderStatus getNullableResult(ResultSet resultSet, int i) throws SQLException {
+    public BillStatus getNullableResult(ResultSet resultSet, int i) throws SQLException {
         int index = resultSet.getInt(i);
         if (resultSet.wasNull()) {
             return null;
@@ -57,7 +58,7 @@ public class OrderStatusHandler extends BaseTypeHandler<OrderStatus> {
     }
 
     @Override
-    public OrderStatus getNullableResult(CallableStatement callableStatement, int i) throws SQLException {
+    public BillStatus getNullableResult(CallableStatement callableStatement, int i) throws SQLException {
         int index = callableStatement.getInt(i);
         if (callableStatement.wasNull()) {
             return null;
@@ -67,8 +68,8 @@ public class OrderStatusHandler extends BaseTypeHandler<OrderStatus> {
         }
     }
 
-    private OrderStatus locateEnumStatus(int code) {
-        for (OrderStatus status : enums) {
+    private BillStatus locateEnumStatus(int code) {
+        for (BillStatus status : enums) {
             if (status.getCode() == (Integer.valueOf(code))) {
                 return status;
             }

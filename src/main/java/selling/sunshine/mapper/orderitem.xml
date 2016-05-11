@@ -26,7 +26,7 @@
     <resultMap id="orderItemVo" type="selling.sunshine.model.OrderItem">
         <result property="orderItemId" column="order_item_id"></result>
         <result property="status" column="order_item_status"
-                typeHandler="selling.sunshine.handler.mybatis.OrderItemStatusHandler"></result>
+                typeHandler="selling.sunshine.handler.mybatis.order.OrderItemStatusHandler"></result>
         <result property="goodsQuantity" column="goods_quantity"></result>
         <result property="orderItemPrice" column="order_item_price"></result>
         <result property="blockFlag" column="block_flag"></result>

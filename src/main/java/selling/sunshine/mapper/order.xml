@@ -4,7 +4,7 @@
     <resultMap id="orderVo" type="selling.sunshine.model.Order">
         <result property="orderId" column="order_id"></result>
         <result property="status" column="order_status"
-                typeHandler="selling.sunshine.handler.mybatis.OrderStatusHandler"></result>
+                typeHandler="selling.sunshine.handler.mybatis.order.OrderStatusHandler"></result>
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
         <association property="agent" column="agentId = agent_id" select="agentQuery"></association>

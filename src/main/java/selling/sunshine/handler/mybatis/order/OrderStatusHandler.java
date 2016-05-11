@@ -1,8 +1,8 @@
-package selling.sunshine.handler.mybatis;
+package selling.sunshine.handler.mybatis.order;
 
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
-import selling.sunshine.model.OrderItemStatus;
+import selling.sunshine.model.OrderStatus;
 
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
@@ -12,11 +12,12 @@ import java.sql.SQLException;
 /**
  * Created by sunshine on 5/11/16.
  */
-public class OrderItemStatusHandler extends BaseTypeHandler<OrderItemStatus> {
-    private Class<OrderItemStatus> type;
-    private final OrderItemStatus[] enums;
+public class OrderStatusHandler extends BaseTypeHandler<OrderStatus> {
 
-    public OrderItemStatusHandler(Class<OrderItemStatus> type) {
+    private Class<OrderStatus> type;
+    private final OrderStatus[] enums;
+
+    public OrderStatusHandler(Class<OrderStatus> type) {
         if (type == null) {
             throw new IllegalArgumentException("Type argument cannot be null");
         }
@@ -29,14 +30,13 @@ public class OrderItemStatusHandler extends BaseTypeHandler<OrderItemStatus> {
     }
 
     @Override
-    public void setNonNullParameter(PreparedStatement preparedStatement, int i, OrderItemStatus orderItemStatus, JdbcType jdbcType) throws SQLException {
-        preparedStatement.setInt(i, orderItemStatus.getCode());
+    public void setNonNullParameter(PreparedStatement preparedStatement, int i, OrderStatus orderStatus, JdbcType jdbcType) throws SQLException {
+        preparedStatement.setInt(i, orderStatus.getCode());
     }
 
     @Override
-    public OrderItemStatus getNullableResult(ResultSet resultSet, String s) throws SQLException {
+    public OrderStatus getNullableResult(ResultSet resultSet, String s) throws SQLException {
         int i = resultSet.getInt(s);
-
         if (resultSet.wasNull()) {
             return null;
         } else {
@@ -46,7 +46,7 @@ public class OrderItemStatusHandler extends BaseTypeHandler<OrderItemStatus> {
     }
 
     @Override
-    public OrderItemStatus getNullableResult(ResultSet resultSet, int i) throws SQLException {
+    public OrderStatus getNullableResult(ResultSet resultSet, int i) throws SQLException {
         int index = resultSet.getInt(i);
         if (resultSet.wasNull()) {
             return null;
@@ -57,7 +57,7 @@ public class OrderItemStatusHandler extends BaseTypeHandler<OrderItemStatus> {
     }
 
     @Override
-    public OrderItemStatus getNullableResult(CallableStatement callableStatement, int i) throws SQLException {
+    public OrderStatus getNullableResult(CallableStatement callableStatement, int i) throws SQLException {
         int index = callableStatement.getInt(i);
         if (callableStatement.wasNull()) {
             return null;
@@ -67,8 +67,8 @@ public class OrderItemStatusHandler extends BaseTypeHandler<OrderItemStatus> {
         }
     }
 
-    private OrderItemStatus locateEnumStatus(int code) {
-        for (OrderItemStatus status : enums) {
+    private OrderStatus locateEnumStatus(int code) {
+        for (OrderStatus status : enums) {
             if (status.getCode() == (Integer.valueOf(code))) {
                 return status;
             }
