@@ -66,15 +66,6 @@
                 }
                 },
                 {
-                    title: "众筹状态", "mRender": function (data, type, full) {
-                    if (full.paid) {
-                        return "<span class='text-success'>已缴</span>";
-                    } else {
-                        return "<span class='text-danger'>未缴</span>";
-                    }
-                }
-                },
-                {
                     title: "操作", "mRender": function (data, type, full) {
                     var operation = "";
                     if (!full.granted) {

@@ -32,7 +32,6 @@ CREATE TABLE IF NOT EXISTS `selling`.`agent` (
   `agent_password` VARCHAR(50) NOT NULL,
   `agent_wechat` VARCHAR(45) NULL,
   `agent_level` INT NULL,
-  `agent_paid` TINYINT(1) NOT NULL DEFAULT 0,
   `agent_granted` TINYINT(1) NOT NULL DEFAULT 0,
   `block_flag` TINYINT(1) NOT NULL DEFAULT 0,
   `create_time` DATETIME NOT NULL,
@@ -271,8 +270,8 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `selling`;
-INSERT INTO `selling`.`agent` (`agent_id`, `upper_agent_id`, `agent_name`, `agent_gender`, `agent_phone`, `agent_address`, `agent_password`, `agent_wechat`, `agent_level`, `agent_paid`, `agent_granted`, `block_flag`, `create_time`) VALUES ('AGTvlorff50', NULL, '王旻', 'M', '18000000000', '江苏省南京市鼓楼区汉口路22号', 'e10adc3949ba59abbe56e057f20f883e', NULL, NULL, 0, 0, 0, '2016-05-09 16:13:10');
-INSERT INTO `selling`.`agent` (`agent_id`, `upper_agent_id`, `agent_name`, `agent_gender`, `agent_phone`, `agent_address`, `agent_password`, `agent_wechat`, `agent_level`, `agent_paid`, `agent_granted`, `block_flag`, `create_time`) VALUES ('AGTyoewlw97', NULL, '王晓迪', 'M', '18100000000', '江苏省南京市鼓楼区汉口路22号', 'e10adc3949ba59abbe56e057f20f883e', NULL, NULL, 0, 0, 0, '2016-05-09 16:14:15');
+INSERT INTO `selling`.`agent` (`agent_id`, `upper_agent_id`, `agent_name`, `agent_gender`, `agent_phone`, `agent_address`, `agent_password`, `agent_wechat`, `agent_level`, `agent_granted`, `block_flag`, `create_time`) VALUES ('AGTvlorff50', NULL, '王旻', 'M', '18000000000', '江苏省南京市鼓楼区汉口路22号', 'e10adc3949ba59abbe56e057f20f883e', NULL, NULL, 0, 0, '2016-05-09 16:13:10');
+INSERT INTO `selling`.`agent` (`agent_id`, `upper_agent_id`, `agent_name`, `agent_gender`, `agent_phone`, `agent_address`, `agent_password`, `agent_wechat`, `agent_level`, `agent_granted`, `block_flag`, `create_time`) VALUES ('AGTyoewlw97', NULL, '王晓迪', 'M', '18100000000', '江苏省南京市鼓楼区汉口路22号', 'e10adc3949ba59abbe56e057f20f883e', NULL, NULL, 0, 0, '2016-05-09 16:14:15');
 
 COMMIT;
 
