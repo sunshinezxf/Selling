@@ -76,6 +76,9 @@
 
                 /account/** = roles[agent]
 
+                /agent/check = roles[admin]
+                /agent/overview = roles[admin]
+
                 /agent/** = roles[agent]
 
                 /dashboard = roles[admin]

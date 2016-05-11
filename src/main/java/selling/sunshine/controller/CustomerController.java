@@ -8,7 +8,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
 import selling.sunshine.form.CustomerForm;
 import selling.sunshine.model.Agent;
 import selling.sunshine.model.Customer;
@@ -16,12 +15,10 @@ import selling.sunshine.model.User;
 import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.CustomerService;
-import selling.sunshine.utils.IDGenerator;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
 import javax.validation.Valid;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -81,27 +78,27 @@ public class CustomerController {
     }
 
     @ResponseBody
-    @RequestMapping(method = RequestMethod.POST, value = "/modify")
-    public ResultData updateCustomer(@Valid CustomerForm customerForm,
-            BindingResult result) {
-        ResultData resultData = new ResultData();
+    @RequestMapping(method = RequestMethod.POST, value = "/modify/{customerId}")
+    public ResultData updateCustomer(@PathVariable("customerId") String customerId, @Valid CustomerForm customerForm, BindingResult result) {
+        ResultData response = new ResultData();
         if (result.hasErrors()) {
-            resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
-            return resultData;
+            response.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            return response;
         }
         Subject subject = SecurityUtils.getSubject();
-        Agent agent = null;
-        if (subject != null) {
-            Session session = subject.getSession();
-            User user = (User) session.getAttribute("current");
-            agent = user.getAgent();
-        }
+        User user = (User) subject.getPrincipal();
+        Agent agent = user.getAgent();
         Customer customer = new Customer(customerForm.getName(),
                 customerForm.getAddress(), customerForm.getPhone(), agent);
-        customer.setCustomerId(customerForm.getCustomerId());
-       
-        resultData =  customerService.updateCustomer(customer);
-        return resultData;
+        customer.setCustomerId(customerId);
+        ResultData updateResponse = customerService.updateCustomer(customer);
+        if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            response.setData(updateResponse.getData());
+        } else {
+            response.setResponseCode(updateResponse.getResponseCode());
+            response.setDescription(updateResponse.getDescription());
+        }
+        return response;
     }
 
     @ResponseBody
@@ -112,7 +109,7 @@ public class CustomerController {
         condition.put("customerId", customerId);
         ResultData fetchResponse = customerService.fetchCustomer(condition);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            result.setData(((List<Customer>)fetchResponse.getData()).get(0));
+            result.setData(((List<Customer>) fetchResponse.getData()).get(0));
         } else {
             fetchResponse.setResponseCode(fetchResponse.getResponseCode());
             fetchResponse.setDescription(fetchResponse.getDescription());

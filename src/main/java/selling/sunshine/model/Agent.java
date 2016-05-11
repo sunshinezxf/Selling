@@ -13,12 +13,10 @@ public class Agent extends Entity {
     private String address;
     private String password;
     private String wechat;
-    private boolean paid;
     private boolean granted;
 
     public Agent() {
         super();
-        paid = false;
         granted = false;
     }
 
@@ -92,14 +90,6 @@ public class Agent extends Entity {
 
     public void setWechat(String wechat) {
         this.wechat = wechat;
-    }
-
-    public boolean isPaid() {
-        return paid;
-    }
-
-    public void setPaid(boolean paid) {
-        this.paid = paid;
     }
 
     public boolean isGranted() {

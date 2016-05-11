@@ -32,7 +32,6 @@ CREATE TABLE IF NOT EXISTS `selling`.`agent` (
   `agent_password` VARCHAR(50) NOT NULL,
   `agent_wechat` VARCHAR(45) NULL,
   `agent_level` INT NULL,
-  `agent_paid` TINYINT(1) NOT NULL DEFAULT 0,
   `agent_granted` TINYINT(1) NOT NULL DEFAULT 0,
   `block_flag` TINYINT(1) NOT NULL DEFAULT 0,
   `create_time` DATETIME NOT NULL,
@@ -85,6 +84,7 @@ DROP TABLE IF EXISTS `selling`.`order` ;
 CREATE TABLE IF NOT EXISTS `selling`.`order` (
   `order_id` VARCHAR(20) NOT NULL,
   `agent_id` VARCHAR(20) NOT NULL,
+  `order_status` INT NOT NULL DEFAULT 0,
   `block_flag` TINYINT(1) NOT NULL DEFAULT 0,
   `create_time` DATETIME NOT NULL,
   PRIMARY KEY (`order_id`),
@@ -109,6 +109,7 @@ CREATE TABLE IF NOT EXISTS `selling`.`order_item` (
   `goods_quantity` INT NOT NULL DEFAULT 1,
   `order_item_price` DOUBLE NOT NULL,
   `customer_id` VARCHAR(20) NOT NULL,
+  `order_item_status` INT NULL DEFAULT 0,
   `block_flag` TINYINT(1) NOT NULL DEFAULT 0,
   `create_time` DATETIME NOT NULL,
   PRIMARY KEY (`order_item_id`),
@@ -249,7 +250,7 @@ CREATE TABLE IF NOT EXISTS `selling`.`deposit_bill` (
   `channel_name` VARCHAR(45) NOT NULL,
   `client_ip` VARCHAR(45) NOT NULL,
   `bill_amount` DOUBLE NOT NULL,
-  `bill_status` TINYINT(2) NOT NULL DEFAULT 0,
+  `bill_status` INT NOT NULL DEFAULT 0,
   `block_flag` TINYINT(0) NOT NULL DEFAULT 0,
   `create_time` DATETIME NOT NULL,
   PRIMARY KEY (`bill_id`),
@@ -271,8 +272,8 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `selling`;
-INSERT INTO `selling`.`agent` (`agent_id`, `upper_agent_id`, `agent_name`, `agent_gender`, `agent_phone`, `agent_address`, `agent_password`, `agent_wechat`, `agent_level`, `agent_paid`, `agent_granted`, `block_flag`, `create_time`) VALUES ('AGTvlorff50', NULL, '王旻', 'M', '18000000000', '江苏省南京市鼓楼区汉口路22号', 'e10adc3949ba59abbe56e057f20f883e', NULL, NULL, 0, 0, 0, '2016-05-09 16:13:10');
-INSERT INTO `selling`.`agent` (`agent_id`, `upper_agent_id`, `agent_name`, `agent_gender`, `agent_phone`, `agent_address`, `agent_password`, `agent_wechat`, `agent_level`, `agent_paid`, `agent_granted`, `block_flag`, `create_time`) VALUES ('AGTyoewlw97', NULL, '王晓迪', 'M', '18100000000', '江苏省南京市鼓楼区汉口路22号', 'e10adc3949ba59abbe56e057f20f883e', NULL, NULL, 0, 0, 0, '2016-05-09 16:14:15');
+INSERT INTO `selling`.`agent` (`agent_id`, `upper_agent_id`, `agent_name`, `agent_gender`, `agent_phone`, `agent_address`, `agent_password`, `agent_wechat`, `agent_level`, `agent_granted`, `block_flag`, `create_time`) VALUES ('AGTvlorff50', NULL, '王旻', 'M', '18000000000', '江苏省南京市鼓楼区汉口路22号', 'e10adc3949ba59abbe56e057f20f883e', NULL, NULL, 0, 0, '2016-05-09 16:13:10');
+INSERT INTO `selling`.`agent` (`agent_id`, `upper_agent_id`, `agent_name`, `agent_gender`, `agent_phone`, `agent_address`, `agent_password`, `agent_wechat`, `agent_level`, `agent_granted`, `block_flag`, `create_time`) VALUES ('AGTyoewlw97', NULL, '王晓迪', 'M', '18100000000', '江苏省南京市鼓楼区汉口路22号', 'e10adc3949ba59abbe56e057f20f883e', NULL, NULL, 0, 0, '2016-05-09 16:14:15');
 
 COMMIT;
 

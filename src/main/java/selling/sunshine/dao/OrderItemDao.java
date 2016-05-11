@@ -1,10 +1,13 @@
 package selling.sunshine.dao;
 
-import java.util.List;
-
 import selling.sunshine.model.OrderItem;
 import selling.sunshine.utils.ResultData;
 
+import java.util.List;
+import java.util.Map;
+
 public interface OrderItemDao {
-	public ResultData insertOrderItems(List<OrderItem> orderItems);
+    ResultData insertOrderItems(List<OrderItem> orderItems);
+
+    ResultData queryOrderItem(Map<String, Object> condition);
 }

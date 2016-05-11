@@ -9,22 +9,18 @@
         <result property="address" column="agent_address"></result>
         <result property="wechat" column="agent_wechat"></result>
         <result property="password" column="agent_password"></result>
-        <result property="paid" column="agent_paid"></result>
         <result property="granted" column="agent_granted"></result>
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
     </resultMap>
 
     <insert id="insert" parameterType="selling.sunshine.model.Agent" useGeneratedKeys="false">
-        INSERT INTO agent(agent_id, agent_name, agent_gender, agent_phone, agent_address, agent_password, agent_wechat, agent_paid, agent_granted, block_flag, create_time)
-        VALUES (#{agentId}, #{name}, #{gender}, #{phone}, #{address}, #{password}, #{wechat}, #{paid}, #{granted}, #{blockFlag}, #{createAt})
+        INSERT INTO agent(agent_id, agent_name, agent_gender, agent_phone, agent_address, agent_password, agent_wechat, agent_granted, block_flag, create_time)
+        VALUES (#{agentId}, #{name}, #{gender}, #{phone}, #{address}, #{password}, #{wechat}, #{granted}, #{blockFlag}, #{createAt})
     </insert>
 
     <select id="query" parameterType="java.util.Map" resultMap="agentVo">
-        SELECT agent_id, agent_name, agent_gender, agent_phone, agent_address, agent_password, agent_wechat, agent_paid,
-        agent_granted,
-        block_flag,
-        create_time
+        SELECT agent_id, agent_name, agent_gender, agent_phone, agent_address, agent_password, agent_wechat, agent_granted, block_flag, create_time
         FROM agent
         WHERE 1 = 1
         <if test="agentId != null and agentId != ''">
@@ -38,9 +34,6 @@
         </if>
         <if test="phone != null and phone != ''">
             AND agent_phone = #{phone}
-        </if>
-        <if test="paid != null and paid != ''">
-            AND agent_paid = #{paid}
         </if>
         <if test="granted != null and granted != ''">
             AND agent_granted = #{granted}
