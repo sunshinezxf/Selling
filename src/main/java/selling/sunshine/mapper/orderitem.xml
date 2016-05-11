@@ -49,6 +49,30 @@
         </foreach>
     </insert>
 
+    <insert id="insert" parameterType="selling.sunshine.model.OrderItem" useGeneratedKeys="false">
+        INSERT INTO order_item(order_item_id, order_item_status, order_id, customer_id, goods_id, goods_quantity, order_item_price, block_flag, create_time)
+        VALUES (#{orderItemId}, #{status}, #{order.orderId}, #{customer.customerId}, #{goods.goodsId}, #{goodsQuantity}, #{orderItemPrice}, #{blockFlag}, #{createAt})
+    </insert>
+
+    <select id="query" parameterType="java.util.Map" resultMap="orderItemVo">
+        SELECT order_item_id, order_item_status, goods_quantity, order_item_price, customer_id, goods_id, order_id,
+        block_flag, create_time
+        FROM order_item
+        WHERE 1 = 1
+        <if test="orderItemId != null and orderItemId != ''">
+            AND order_item_id = #{orderItemId}
+        </if>
+        <if test="status != null and status != ''">
+            AND order_item_status = #{status}
+        </if>
+        <if test="customerId != null and customerId != ''">
+            AND customer_id = #{customerId}
+        </if>
+        <if test="goodsId != null and goodsId != ''">
+            AND goods_id = #{goodsId}
+        </if>
+    </select>
+
     <select id="goodsQuery" parameterType="java.util.Map" resultMap="goodsVo">
          SELECT goods_id, goods_name, goods_price, goods_description, block_flag, create_time
          FROM goods
