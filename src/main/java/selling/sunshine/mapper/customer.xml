@@ -39,7 +39,7 @@
     </resultMap>
 
     <select id="query" parameterType="java.util.Map" resultMap="customerVo">
-        SELECT customer_id, customer_name, block_flag, create_time
+        SELECT customer_id, customer_name, agent_id, block_flag, create_time
         FROM customer
         WHERE 1 = 1
         <if test="customerId != null and customerId != ''">

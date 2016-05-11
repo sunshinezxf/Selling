@@ -2,7 +2,9 @@
     <div id="customer_panel">
         <div class="hd">
             <h1 class="page_title">我的客户</h1>
+
             <p class="page_desc">代理商:${agent.getName()}</p>
+
             <p class="page_desc">电话: ${agent.getPhone()} </p>
         </div>
         <div class="bd">
@@ -17,7 +19,7 @@
                 </div>
                 <div class="list-cell">
                     <div class="weui_cells weui_cells_access" id="customer_list">
-                      #*
+                    #*
                       <a class='weui_cell' id="test">                     
                           <div class='weui_cell_bd weui_cell_primary'>
                              <p> ${agent.getName()} </p>
@@ -41,26 +43,25 @@
         $("#add_customer_form").fadeIn();
         $("#customer_panel").hide();
     });
-    window.onload=function () {
+    window.onload = function () {
         var url = "${path.concat('/agent/customer/list')}";
-         $.post(url, function (result) {
-         console.debug(JSON.stringify(result));
-         var list= result.data;        
-         for (var i = 0; i < list.length; i++) {
-            var item = list[i];
-            var node = "<a class='weui_cell' onclick='updateCustomer(this)' id='" + item.customerId + "' ><div class='weui_cell_bd weui_cell_primary'><p>" + item.name + "</p></div><div class='weui_cell_ft'>" + item.phone.phone + "</div></a>";
-            $("#customer_list").append(node);
-         }
-         });
-         
-        
-         #*
-         alert($("#CUSivelry34").html());
-         $("#CUSivelry34").click(function () {
-        	console.debug("test");
-        	alert("test");
-    		});  
-    	*#      
+        $.post(url, function (result) {
+            var list = result.data;
+            for (var i = 0; i < list.length; i++) {
+                var item = list[i];
+                var node = "<a class='weui_cell' onclick='updateCustomer(this)' id='" + item.customerId + "' ><div class='weui_cell_bd weui_cell_primary'><p>" + item.name + "</p></div><div class='weui_cell_ft'>" + item.phone.phone + "</div></a>";
+                $("#customer_list").append(node);
+            }
+        });
+
+
+    #*
+    alert($("#CUSivelry34").html());
+    $("#CUSivelry34").click(function () {
+       console.debug("test");
+       alert("test");
+       });
+   *#
     };
     #*
     var list = JSON.parse('[{"name": "梅长苏", "phone": "15895882300", "address": "江苏省南京市鼓楼区汉口路22号"}]');
@@ -69,7 +70,7 @@
         var node = "<a class='weui_cell'><div class='weui_cell_bd weui_cell_primary'><p>" + item.name + "</p></div><div class='weui_cell_ft'>" + item.phone + "</div></a>";
         $("#customer_list").append(node);
     }
-    
+
     $("#customer_list").append("<a class='weui_cell'><div class='weui_cell_bd weui_cell_primary'><p>" + ${agent.getName()} + "</p></div><div class='weui_cell_ft'>" + ${agent.getPhone} + "</div></a>");
     *#
 </script>
