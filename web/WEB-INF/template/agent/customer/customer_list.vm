@@ -41,29 +41,6 @@
         $("#add_customer_form").fadeIn();
         $("#customer_panel").hide();
     });
-    var customerId;
-    function updateCustomer(obj){
-        $("#update_customer_form").fadeIn();
-        customerId=obj.id;
-        var url = "${path.concat('/customer/" + customerId + "')}";
-         $.post(url, function (result) {
-             console.debug(JSON.stringify(result));
-             var customer= result.data;      
-             
-             $("#customer_name_new").attr('value',customer.name);            
-             $("#customer_phone_new").attr('value',parseInt(customer.phone.phone));
-             $("#customer_address_new").attr('value',customer.address.address);
-             
-         });
-        #*
-        var element=document.getElementById(obj.id);
-        alert(element.childNodes[0].childNodes[0].innerHTML+"   "+element.childNodes[1].innerHTML);
-        $("#customer_name_new").attr('value',element.childNodes[0].childNodes[0].innerHTML);
-        $("#customer_phone_new").attr('value',parseInt(element.childNodes[1].innerHTML));
-        $("#customer_address_new").attr('value',element.childNodes[1].innerHTML);
-        *#
-        $("#customer_panel").hide();
-    }
     window.onload=function () {
         var url = "${path.concat('/agent/customer/list')}";
          $.post(url, function (result) {

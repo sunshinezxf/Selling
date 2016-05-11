@@ -78,26 +78,27 @@ public class CustomerController {
     }
 
     @ResponseBody
-    @RequestMapping(method = RequestMethod.POST, value = "/modify")
-    public ResultData updateCustomer(@Valid CustomerForm customerForm, BindingResult result) {
-        ResultData data = new ResultData();
+    @RequestMapping(method = RequestMethod.POST, value = "/modify/{customerId}")
+    public ResultData updateCustomer(@PathVariable("customerId") String customerId, @Valid CustomerForm customerForm, BindingResult result) {
+        ResultData response = new ResultData();
         if (result.hasErrors()) {
-            data.setResponseCode(ResponseCode.RESPONSE_ERROR);
-            return data;
+            response.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            return response;
         }
         Subject subject = SecurityUtils.getSubject();
-        Agent agent = null;
-        if (subject != null) {
-            Session session = subject.getSession();
-            User user = (User) session.getAttribute("current");
-            agent = user.getAgent();
-        }
+        User user = (User) subject.getPrincipal();
+        Agent agent = user.getAgent();
         Customer customer = new Customer(customerForm.getName(),
                 customerForm.getAddress(), customerForm.getPhone(), agent);
-        customer.setCustomerId(customerForm.getCustomerId());
-
-        data = customerService.updateCustomer(customer);
-        return data;
+        customer.setCustomerId(customerId);
+        ResultData updateResponse = customerService.updateCustomer(customer);
+        if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            response.setData(updateResponse.getData());
+        } else {
+            response.setResponseCode(updateResponse.getResponseCode());
+            response.setDescription(updateResponse.getDescription());
+        }
+        return response;
     }
 
     @ResponseBody
