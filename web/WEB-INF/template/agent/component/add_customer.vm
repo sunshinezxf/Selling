@@ -48,7 +48,7 @@
         }, function (result) {
             if (result.responseCode == "RESPONSE_OK") {
                 var item = result.data;
-                var node = "<a class='weui_cell' onclick='updateCustomer(this)' id='" + item.customerId + "' ><div class='weui_cell_bd weui_cell_primary'><p>" + item.name + "</p></div><div class='weui_cell_ft'>" + item.phone.phone + "</div></a>";
+                var node = "<a class='weui_cell customer' onclick='updateCustomer(this)' id='" + item.customerId + "' ><div class='weui_cell_bd weui_cell_primary'><p>" + item.name + "</p></div><div class='weui_cell_ft'>" + item.phone.phone + "</div></a>";
                 $("#customer_list").append(node);
             }
         });
