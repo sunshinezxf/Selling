@@ -3,6 +3,8 @@
 <mapper namespace="selling.order">
     <resultMap id="orderVo" type="selling.sunshine.model.Order">
         <result property="orderId" column="order_id"></result>
+        <result property="status" column="order_status"
+                typeHandler="selling.sunshine.handler.mybatis.OrderStatusHandler"></result>
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
         <association property="agent" column="agentId = agent_id" select="agentQuery"></association>
@@ -38,16 +40,19 @@
 
 
     <insert id="insert" parameterType="selling.sunshine.model.Order" useGeneratedKeys="false">
-        INSERT INTO `order`(order_id, agent_id, block_flag, create_time)
-        VALUES (#{orderId}, #{agent.agentId}, #{blockFlag}, #{createAt})
+        INSERT INTO `order`(order_id, order_status, agent_id, block_flag, create_time)
+        VALUES (#{orderId}, #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler}, #{agent.agentId}, #{blockFlag}, #{createAt})
     </insert>
 
     <select id="query" parameterType="java.util.Map" resultMap="orderVo">
-        SELECT order_id, agent_id, block_flag, create_time
+        SELECT order_id, order_status, agent_id, block_flag, create_time
         FROM `order`
         WHERE 1 = 1
         <if test="orderId != null and orderId != ''">
             AND order_id = #{orderId}
+        </if>
+        <if test="status != null and status != ''">
+            AND order_status = #{status}
         </if>
         <if test="agentId != null and agentId !=''">
             AND agent_id = #{agentId}

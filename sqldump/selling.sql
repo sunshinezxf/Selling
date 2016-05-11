@@ -84,7 +84,7 @@ DROP TABLE IF EXISTS `selling`.`order` ;
 CREATE TABLE IF NOT EXISTS `selling`.`order` (
   `order_id` VARCHAR(20) NOT NULL,
   `agent_id` VARCHAR(20) NOT NULL,
-  `order_status` INT NOT NULL,
+  `order_status` INT NOT NULL DEFAULT 0,
   `block_flag` TINYINT(1) NOT NULL DEFAULT 0,
   `create_time` DATETIME NOT NULL,
   PRIMARY KEY (`order_id`),
@@ -109,7 +109,7 @@ CREATE TABLE IF NOT EXISTS `selling`.`order_item` (
   `goods_quantity` INT NOT NULL DEFAULT 1,
   `order_item_price` DOUBLE NOT NULL,
   `customer_id` VARCHAR(20) NOT NULL,
-  `order_item_status` INT NULL,
+  `order_item_status` INT NULL DEFAULT 0,
   `block_flag` TINYINT(1) NOT NULL DEFAULT 0,
   `create_time` DATETIME NOT NULL,
   PRIMARY KEY (`order_item_id`),

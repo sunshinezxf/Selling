@@ -4,71 +4,82 @@ package selling.sunshine.model;
  * Created by sunshine on 4/8/16.
  */
 public class OrderItem extends Entity {
-	private String orderItemId;
-	private String customerId;
-	private String goodsId;
-	private int goodsQuantity;
-	private double orderItemPrice;
-	private Order order;
-	
-	public OrderItem() {
-		super();
-	}
+    private String orderItemId;
+    private OrderItemStatus status;
+    private int goodsQuantity;
+    private double orderItemPrice;
+    private Customer customer;
+    private Goods goods;
+    private Order order;
 
-	public OrderItem(String customerId, String goodsId, int goodsQuantity, double orderItemPrice) {
-		this();
-		this.customerId = customerId;
-		this.goodsId = goodsId;
-		this.goodsQuantity = goodsQuantity;
-		this.orderItemPrice = orderItemPrice;
-	}
+    public OrderItem() {
+        super();
+        this.status = OrderItemStatus.NOT_PAYED;
+    }
 
-	public String getOrderItemId() {
-		return orderItemId;
-	}
+    public OrderItem(String customerId, String goodsId, int goodsQuantity, double orderItemPrice) {
+        this();
+        customer = new Customer();
+        customer.setCustomerId(customerId);
+        goods = new Goods();
+        goods.setGoodsId(goodsId);
+        this.goodsQuantity = goodsQuantity;
+        this.orderItemPrice = orderItemPrice;
+    }
 
-	public void setOrderItemId(String orderItemId) {
-		this.orderItemId = orderItemId;
-	}
+    public String getOrderItemId() {
+        return orderItemId;
+    }
 
-	public String getCustomerId() {
-		return customerId;
-	}
+    public void setOrderItemId(String orderItemId) {
+        this.orderItemId = orderItemId;
+    }
+    
+    public OrderItemStatus getStatus() {
+        return status;
+    }
 
-	public void setCustomerId(String customerId) {
-		this.customerId = customerId;
-	}
+    public void setStatus(OrderItemStatus status) {
+        this.status = status;
+    }
 
-	public String getGoodsId() {
-		return goodsId;
-	}
+    public int getGoodsQuantity() {
+        return goodsQuantity;
+    }
 
-	public void setGoodsId(String goodsId) {
-		this.goodsId = goodsId;
-	}
+    public void setGoodsQuantity(int goodsQuantity) {
+        this.goodsQuantity = goodsQuantity;
+    }
 
-	public int getGoodsQuantity() {
-		return goodsQuantity;
-	}
+    public double getOrderItemPrice() {
+        return orderItemPrice;
+    }
 
-	public void setGoodsQuantity(int goodsQuantity) {
-		this.goodsQuantity = goodsQuantity;
-	}
+    public void setOrderItemPrice(double orderItemPrice) {
+        this.orderItemPrice = orderItemPrice;
+    }
 
-	public double getOrderItemPrice() {
-		return orderItemPrice;
-	}
+    public Order getOrder() {
+        return order;
+    }
 
-	public void setOrderItemPrice(double orderItemPrice) {
-		this.orderItemPrice = orderItemPrice;
-	}
+    public void setOrder(Order order) {
+        this.order = order;
+    }
 
-	public Order getOrder() {
-		return order;
-	}
+    public Goods getGoods() {
+        return goods;
+    }
 
-	public void setOrder(Order order) {
-		this.order = order;
-	}
+    public void setGoods(Goods goods) {
+        this.goods = goods;
+    }
 
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
 }
