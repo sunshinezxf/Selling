@@ -2,10 +2,9 @@
     #foreach($elem in $goods)
     <label class="weui_cell goods" id="${elem.goodsId}">
         <div class="weui_cell_bd weui_cell_primary">
-            <span>${elem.name}</span>&nbsp<span>${elem.price}</span><span>元</span>
+            <span>${elem.name}</span>
         </div>
-        <div class="weui_cell_ft">
-        </div>
+        <div class="weui_cell_ft"><span>${elem.price}</span><span>元</span></div>
     </label>
     #end
 </div>
@@ -14,28 +13,27 @@
     	if(isAdd){
 	        var id_value = $(this).attr("id");
 	        goods_id = id_value;
-	        goods_name = $(this).find(".weui_cell_bd span:first-child").html();
-	        goods_price = $(this).find(".weui_cell_bd span:nth-last-child(2)").html();
+	        goods_name = $(this).find(".weui_cell_bd span").html();
+	        goods_price = $(this).find(".weui_cell_ft span:first-child").html();
 	        $("#goods").find(".weui_cell_bd").html("<p>" + goods_name + "</p>");
-	        $("#price").html("金额：" + goods_price + "元");
+	        $("#price").html("单价：" + goods_price + "元");
 	        $("#goods_option").hide();
 	        $("#add_order_item").fadeIn();
         } else {
         	isAdd = true;
         	var pre_goods_id = goods_id;
-        	var pre_goods_name = goods_name;
-        	var pre_goods_price = goods_price;
         	var id_value = $(this).attr("id");
         	goods_id = id_value;
-	        goods_name = $(this).find(".weui_cell_bd span:first-child").html();
-	        goods_price = $(this).find(".weui_cell_bd span:nth-last-child(2)").html();
-	        $("#good_name" + pre_goods_id).html(goods_name);
-        	$("#goods_name" + pre_goods_id).parents(".weui_cells.weui_cells_access").find(".goods_id").val(goods_id);
-        	$("#goods_name" + pre_goods_id).parents(".weui_cells.weui_cells_access").find(".order_item_price").val(goods_price);
-        	$("#goods_name" + pre_goods_id).attr("id","goods_name" + goods_id);
-        	$("#goods_quantity" + pre_goods_id).attr("id","goods_quantity" + goods_id);
-        	$("#goods_price" + pre_goods_id).attr("id","goods_price" + goods_id);
-        	$("#goods_price" + goods_id).html("金额:" + goods_price * parseInt($("#goods_quantity"+goods_id).html()) + "元");
+	        goods_name = $(this).find(".weui_cell_bd span").html();
+	        //修改了js的商品名称，那当然要修改默认的添加商品为该商品啦
+	        $("#goods").find(".weui_cell_ft").html(goods_name);
+	        goods_price = $(this).find(".weui_cell_ft span:first-child").html();
+	        var quantity = parseInt($(current_modify_dom).parents(".weui_cells.weui_cells_access").find(".weui_cell_ft.quantity").html());
+	        $(current_modify_dom).find(".weui_cell_ft").html(goods_name);
+        	$(current_modify_dom).parents(".weui_cells.weui_cells_access").find(".goods_id").val(goods_id);
+        	$(current_modify_dom).parents(".weui_cells.weui_cells_access").find(".order_item_price").val(goods_price);
+        	$(current_modify_dom).parents(".weui_cells.weui_cells_access").find(".weui_cell.weui_cells_tips.clear-margin-top").html("金额:" + goods_price * quantity + "元");
+        	$.calculate();
         	$("#goods_option").hide();
         	$("#place_order_panel").fadeIn();  
         }

@@ -1,0 +1,42 @@
+<div id="quantity_modify" style="display: none;" >
+<div class="weui_cell" >
+	<div class="weui_cell_hd">
+	    <p>数量:&nbsp</p>
+	</div>
+	<div class="weui_cell_bd weui_cell_primary">
+		<input class="weui_input" type="tel" pattern="[0-9]*" placeholder="请输入数量" value="1">
+	</div>
+</div>
+	<div class="weui_btn_area">
+		<button type="button" class="weui_btn weui_btn_primary" id="num_modify_confirm_btn">确认修改</button>
+		<button type="button" class="weui_btn weui_btn_default" id="num_modify_cancel_btn">取消</button>
+	</div>
+</div>
+<script>
+	$("#num_modify_confirm_btn").click(function(){
+		if(!$.num_check()){
+			return;
+		}
+		var quantity = $("#quantity_modify").find(".weui_input").val();
+		$(current_modify_dom).find(".weui_cell_ft").html(quantity);
+		$(current_modify_dom).parents(".weui_cells.weui_cells_access").find(".goods_quantity").val(quantity);
+		$(current_modify_dom).parents(".weui_cells.weui_cells_access").find(".weui_cell.weui_cells_tips.clear-margin-top").html("金额:" + goods_price * parseInt(quantity) + "元");
+		$.calculate();
+		$("#quantity_modify").hide();
+		$("#place_order_panel").fadeIn();  
+	});
+	
+	$("#num_modify_cancel_btn").click(function(){
+		$("#quantity_modify").hide();
+		$("#place_order_panel").fadeIn();  
+	});
+	
+	$.num_check = function(){
+		if(isNaN(parseInt($("#quantity_modify").find(".weui_input").val())) || parseInt($("#quantity_modify").find(".weui_input").val()) <= 0) {
+			$("#dialog").find(".weui_dialog_bd").html("数量格式不正确");
+    		$("#dialog").fadeIn();
+			return false;
+		}
+		return true;
+	}
+</script>

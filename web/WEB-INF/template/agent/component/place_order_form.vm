@@ -45,22 +45,6 @@
     $("#add_order_item").hide();
     $("#add_order_btn").click(function () {
     	isAdd = true;
-    	
-    	//判断是否所有用户都已添加订单
-    	var all_customer_done = true;
-    	var customer_list = $("#customer_option").find(".weui_cell_ft");
-    	$.each(customer_list, function(i, val){
-    		if($(val).html() == "") {
-    			all_customer_done = false;
-    		}
-    	});
-    	if(all_customer_done){
-    		$("#dialog").find(".weui_dialog_bd").html("所有客户已下过单");
-    		$("#dialog").fadeIn();
-    		return false;
-    	}
-    	
-    	
         $("#add_order_item").fadeIn();
         $("#place_order_panel").hide();
     });

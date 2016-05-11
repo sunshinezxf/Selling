@@ -38,6 +38,7 @@
 </div>
 #parse("/agent/component/customer_list.vm")
 #parse("/agent/component/good_list.vm")
+#parse("/agent/component/num.vm")
 #parse("/agent/component/navigate.vm")
 <div class="weui_dialog_alert" id="dialog" style="display: none;">
 	    <div class="weui_mask"></div>
@@ -64,21 +65,21 @@
 	       	"<div class='weui_cell_bd weui_cell_primary'>" +
 	        "<p>客户姓名</p>" + 
 	        "</div>" +
-	        "<div id='customer_name" + customer_id + "' class='weui_cell_ft'><span>" + customer_name + "</span>(<span>" + customer_phone + "</span>)</div>" +
+	        "<div class='weui_cell_ft'><span>" + customer_name + "</span>(<span>" + customer_phone + "</span>)</div>" +
 	    	"</a>" +
 	        "<a class='weui_cell'>" + 
 	        "<div class='weui_cell_bd weui_cell_primary'>" + 
 	        "<p>商品名称</p>" + 
 	        "</div>" +
-	        "<div id='goods_name" + goods_id + "' class='weui_cell_ft'>" + goods_name + "</div>" + 
+	        "<div class='weui_cell_ft'>" + goods_name + "</div>" + 
 	    	"</a>" +
 	    	"<a class='weui_cell'>" + 
-	        "<div class='weui_cell_bd weui_cell_primary'>" + 
+	        "<div class='weui_cell_bd weui_cell_primary quantity'>" + 
 	        "<p>数量</p>" + 
 	        "</div>" + 
-	        "<div id='goods_quantity" + goods_id + "' class='weui_cell_ft'>" + $("#goods_quantity").val() + "</div>" + 
+	        "<div class='weui_cell_ft quantity'>" + $("#goods_quantity").val() + "</div>" + 
 	        "</a>" +
-	    	"<div id='goods_price" + goods_id + "' class='weui_cell weui_cells_tips clear-margin-top'>" + 
+	    	"<div class='weui_cell weui_cells_tips clear-margin-top'>" + 
 	        "金额:" + goods_price * $("#goods_quantity").val() + "元" + 
 	    	"</div>" + 
 	    	"<div class='weui_cells_tips delete'>删除</div>" + 
@@ -95,28 +96,39 @@
         	//客户修改事件
         	$(val).children().eq(0).on("click", function(){
         		isAdd = false;
+        		current_modify_dom = this;
         		customer_id = $(this).parent(".weui_cells.weui_cells_access").find(".customer_id").val();
         		customer_name = $(this).find(".weui_cell_ft span").eq(0).html();
         		customer_phone = $(this).find(".weui_cell_ft span").eq(1).html();
-        		$.demark(customer_id);
         		$("#place_order_panel").hide();
         		$("#customer_option").fadeIn();
         	});
         	//商品修改事件
         	$(val).children().eq(1).on("click", function(){
         		isAdd = false;
+        		current_modify_dom = this;
         		goods_id = $(this).parent(".weui_cells.weui_cells_access").find(".goods_id").val();
         		goods_name = $(this).find(".weui_cell_ft").html();
 				goods_price = parseFloat($(this).parent(".weui_cells.weui_cells_access").find(".order_item_price").val());
         		$("#place_order_panel").hide();
         		$("#goods_option").fadeIn();
         	});
+        	//数量修改事件
+        	$(val).children().eq(2).on("click",function(){
+        		current_modify_dom = this;
+        		goods_id = $(this).parent(".weui_cells.weui_cells_access").find(".goods_id").val();
+        		goods_name = $(this).find(".weui_cell_ft").html();
+				goods_price = parseFloat($(this).parent(".weui_cells.weui_cells_access").find(".order_item_price").val());
+				var goods_quantity = $(this).find(".weui_cell_ft").html();
+        		$("#quantity_modify").find(".weui_input").val(goods_quantity);
+        		$("#place_order_panel").hide();
+        		$("#quantity_modify").fadeIn();
+        	});
         });
         
         //添加删除事件
         $(".weui_cells_tips.delete").on("click",function(){
     		$(this).closest(".weui_cells.weui_cells_access").remove();
-    		$.demark($(this).closest(".weui_cells.weui_cells_access").find(".customer_id").val());
     		$.calculate();
         });
         
@@ -130,9 +142,6 @@
         $("#customer").find(".weui_cell_bd.weui_cell_primary").html("客户姓名");
         $("#phone").find(".weui_cell_bd.weui_cell_primary").html("手机号");
         customer_name = "";
-        
-        //标记下单客户
-        $.mark(customer_id);
     });
 
     $("#add_cancel_btn").click(function () {
@@ -183,7 +192,7 @@
         		order_info_list[name]['order_item_price'] = parseFloat(price) * quantity ;
         	} else {
         		order_info_list[name]['quantity'] += parseInt(quantity);
-        		order_info_list[name]['order_item_price'] += parseInt(price) * quantity;
+        		order_info_list[name]['order_item_price'] += parseFloat(price) * quantity;
         	}
         });
         $("#total_goods").empty();
@@ -195,16 +204,6 @@
  				"件, 共" + order_info_list[order_info]['order_item_price'] + "元</p>")
         }
         $("#total_goods").append(" <p class='weui_media_text'>共计" + total_price + "元</p>")
-    }
-    
-    //标记已选择的用户
-    $.mark = function(customer_id){
-    	$("#" + customer_id).find(".weui_cell_ft").html("已下单");
-    }
-    
-    //清除标记的用户
-    $.demark = function(customer_id){
-    	$("#" + customer_id).find(".weui_cell_ft").html("");
     }
     
     $("#dialog").find(".weui_btn_dialog.primary").click(function(){
