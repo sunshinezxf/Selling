@@ -20,15 +20,13 @@
         <result property="address" column="agent_address"></result>
         <result property="wechat" column="agent_wechat"></result>
         <result property="password" column="agent_password"></result>
-        <result property="paid" column="agent_paid"></result>
         <result property="granted" column="agent_granted"></result>
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
     </resultMap>
 
     <select id="agentQuery" parameterType="java.util.Map" resultMap="agentVo">
-        SELECT agent_id, agent_name, agent_gender, agent_phone, agent_address, agent_password, agent_wechat, agent_paid, agent_granted,
-        agent_granted, block_flag, create_time
+        SELECT agent_id, agent_name, agent_gender, agent_phone, agent_address, agent_password, agent_wechat, agent_granted, block_flag, create_time
         FROM agent
         WHERE agent_id = #{agentId}
     </select>

@@ -31,8 +31,7 @@
     </resultMap>
 
     <select id="agentQuery" parameterType="java.util.Map" resultMap="agentVo">
-        SELECT agent_id, agent_name, agent_gender, agent_phone, agent_address, agent_password, agent_wechat, agent_granted,
-        agent_granted, block_flag, create_time
+        SELECT agent_id, agent_name, agent_gender, agent_phone, agent_address, agent_password, agent_wechat, agent_granted, block_flag, create_time
         FROM agent
         WHERE agent_id = #{agentId}
     </select>
