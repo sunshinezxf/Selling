@@ -170,7 +170,7 @@
     		$("#dialog").fadeIn();
     		return false;
     	}
-    	if(isNaN(parseInt($("#goods_quantity").val())) || parseInt($("#goods_quantity").val()) <= 0) {
+    	if(isNaN($("#goods_quantity").val()) || parseInt($("#goods_quantity").val()) <= 0) {
     		$("#dialog").find(".weui_dialog_bd").html("数量格式不正确");
     		$("#dialog").fadeIn();
     		return false;

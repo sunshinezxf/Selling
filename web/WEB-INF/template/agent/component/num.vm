@@ -32,7 +32,7 @@
 	});
 	
 	$.num_check = function(){
-		if(isNaN(parseInt($("#quantity_modify").find(".weui_input").val())) || parseInt($("#quantity_modify").find(".weui_input").val()) <= 0) {
+		if(isNaN($("#quantity_modify").find(".weui_input").val()) || parseInt($("#quantity_modify").find(".weui_input").val()) <= 0) {
 			$("#dialog").find(".weui_dialog_bd").html("数量格式不正确");
     		$("#dialog").fadeIn();
 			return false;
