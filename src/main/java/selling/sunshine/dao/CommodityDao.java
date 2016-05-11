@@ -15,5 +15,7 @@ public interface CommodityDao {
     ResultData queryCommodity(Map<String, Object> condition);
 
     ResultData queryCommodityByPage(Map<String, Object> condition, DataTableParam param);
+    
+    ResultData updateCommodity(Goods goods);
 
 }

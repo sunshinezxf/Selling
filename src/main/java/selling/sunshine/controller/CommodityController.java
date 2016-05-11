@@ -5,11 +5,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
+
+import selling.sunshine.form.CustomerForm;
 import selling.sunshine.form.GoodsForm;
 import selling.sunshine.model.Goods;
 import selling.sunshine.pagination.DataTablePage;
@@ -19,6 +23,8 @@ import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
 import javax.validation.Valid;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -62,6 +68,44 @@ public class CommodityController {
             return view;
         }
     }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/edit/{goodsId}")
+    public ModelAndView edit(@PathVariable("goodsId") String goodsId) {
+    	ModelAndView view = new ModelAndView();
+    	Map<String,Object> condition=new HashMap<String,Object>();
+    	condition.put("goodsId", goodsId);
+    	ResultData resultData=commodityService.fetchCommodity(condition);
+    	if (resultData.getResponseCode()!=ResponseCode.RESPONSE_OK) {
+    		view.setViewName("redirect:/commodity/overview");
+            return view;
+		}
+    	Goods targetGoods=((ArrayList<Goods>)resultData.getData()).get(0);
+    	view.addObject("goods", targetGoods);
+    	
+    	view.setViewName("/backend/goods/update");  	
+        return view;
+		
+	}
+    
+    @RequestMapping(method = RequestMethod.POST, value = "/edit/{goodsId}")
+    public ModelAndView edit(@PathVariable("goodsId") String goodsId, @Valid GoodsForm goodsForm, BindingResult result) {
+    	ModelAndView view = new ModelAndView();
+    	if(result.hasErrors()) {
+    		view.setViewName("redirect:/commodity/overview"); 
+    		return view;
+    	}
+    	Goods previousGoods=new Goods(goodsForm.getName(),Double.parseDouble(goodsForm.getPrice()),goodsForm.getDescription(),goodsForm.isBlock());
+    	previousGoods.setGoodsId(goodsId);
+    	ResultData resultData=commodityService.updateCommodity(previousGoods);
+    	if (resultData.getResponseCode()!=ResponseCode.RESPONSE_OK) {
+    		view.setViewName("redirect:/commodity/overview");  	
+            return view;
+		}
+
+    	view.setViewName("redirect:/commodity/overview");  	
+        return view;
+		
+	}
 
     @RequestMapping(method = RequestMethod.GET, value = "/overview")
     public ModelAndView overview() {
@@ -84,5 +128,7 @@ public class CommodityController {
         }
         return result;
     }
+    
+    
 
 }

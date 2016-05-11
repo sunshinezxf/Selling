@@ -24,6 +24,7 @@
         $("#goods-management").collapse('show');
         $("#statement-management").collapse('hide');
     });
+    
 
     $(document).ready(function () {
         $("#goods_overview_table").DataTable({
@@ -67,9 +68,12 @@
                     title: "操作", "mRender": function (data, type, full) {
                     var operation = "";
                     var limit_button = "<button type='button' class='btn btn-warning btn-group-sm'>禁用</button>&nbsp;"
+                    var edit_url = "${path.concat('/commodity/edit/')}" + full.goodsId;
+                    var update_button = "<button type='button' class='btn btn-success btn-group-sm' id='test' onclick=\"javascript:location.href='" + edit_url + "'\" id='" + full.goodsId + "'>修改</button>&nbsp;"
                     operation += limit_button;
+                    operation += update_button;
                     return operation;
-                }
+                    }
                 }
             ],
             "language": {

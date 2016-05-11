@@ -1,0 +1,101 @@
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+            <h1><i class="fa fa-home"></i> 修改商品 </h1>
+            <ol class="breadcrumb">
+                <li><a href="${path.concat('/dashboard')}">首页</a></li>
+                <li><a data-toggle="collapse" data-parent="#accordion" href="#goods-management">商品管理</a></li>
+                <li class="active">修改商品</li>
+            </ol>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+            <hr>
+            <form id="update_goods_form" class="form-horizontal">
+                <div class="form-group">
+                    <label class="col-sm-2 col-md-2 col-lg-2 control-label" for="goods_name">
+                        商品名称
+                    </label>
+
+                    <div class="col-sm-8 col-md-8 col-lg-8">
+                        <input type="text" class="form-control" id="goods_name" name="name" value=${goods.name}
+                               required="" autocomplete="off"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 col-md-2 col-lg-2 control-label" for="goods_price">
+                        商品单价
+                    </label>
+
+                    <div class="col-sm-8 col-md-8 col-lg-8">
+                        <input type="number" class="form-control" id="goods_price" name="price" value=${goods.price}
+                               required="" autocomplete="off"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 col-md-2 col-lg-2 control-label" for="goods_description">
+                        商品描述
+                    </label>
+
+                    <div class="col-sm-8 col-md-8 col-lg-8">
+                        <input type="text" class="form-control" id="goods_description" name="description"
+                               value=${goods.description} required="" autocomplete="off"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 col-md-2 col-lg-2 control-label" for="goods_description">
+                        是否上架
+                    </label>
+
+                    <div class="col-sm-8 col-md-8 col-lg-8">
+                        <label class="radio-inline">
+                            <input type="radio" name="block" id="later" value="true"> 暂不上架
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="block" id="immediate" value="false" checked="checked"> 即时上架
+                        </label>
+                    </div>
+                </div>
+            </form>
+            <hr>
+            <div class="form-inline">
+                <button type="button" id="confirm_update_goods"
+                        class="btn btn-primary">修改
+                </button>
+                <button type="button" id="clear_goods_content"
+                        class="btn btn-warning">清空
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        $("#agent-management").collapse('hide');
+        $("#order-management").collapse('hide');
+        $("#customer-management").collapse('hide');
+        $("#goods-management").collapse('show');
+        $("#statement-management").collapse('hide');
+    });
+
+    $("#clear_goods_content").click(function () {
+        $("#goods_name").val("");
+        $("#goods_price").val("");
+        $("#goods_description").val("");
+    });
+
+    $("#confirm_update_goods").click(function () {
+        $("#update_goods_form").attr("action", "${path.concat('/commodity/edit/')}${goods.goodsId}");
+        $("#update_goods_form").attr("method", "post");
+        $("#update_goods_form").submit();
+    })
+    
+    $(document).ready(function () {
+        if(${goods.blockFlag}){
+            $("#later").attr("checked", "checked");
+        }else{           
+            $("#immediate").attr("checked", "checked");
+        }
+    });
+</script>
