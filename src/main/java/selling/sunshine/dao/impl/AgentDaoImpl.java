@@ -120,10 +120,5 @@ public class AgentDaoImpl extends BaseDao implements AgentDao {
         }
     }
 
-	@Override
-	public ResultData updateAgent(Agent agent) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 }
