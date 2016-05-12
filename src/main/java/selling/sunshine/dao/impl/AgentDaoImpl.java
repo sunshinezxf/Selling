@@ -91,6 +91,24 @@ public class AgentDaoImpl extends BaseDao implements AgentDao {
         return result;
     }
 
+    @Transactional
+    @Override
+    public ResultData updateAgent(Agent agent) {
+        ResultData result = new ResultData();
+        synchronized (lock) {
+            try {
+                sqlSession.update("selling.agent.update", agent);
+                result.setData(agent);
+            } catch (Exception e) {
+                logger.debug(e.getMessage());
+                result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+                result.setDescription(e.getMessage());
+            } finally {
+                return result;
+            }
+        }
+    }
+
     private List<Agent> queryAgentByPage(Map<String, Object> condition, int start, int length) {
         List<Agent> result = new ArrayList<Agent>();
         try {

@@ -16,6 +16,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.alibaba.fastjson.JSONObject;
+import com.pingplusplus.model.Event;
+import com.pingplusplus.model.Webhooks;
+
 import selling.sunshine.form.AgentForm;
 import selling.sunshine.form.AgentLoginForm;
 import selling.sunshine.form.OrderItemForm;
@@ -26,12 +31,17 @@ import selling.sunshine.service.AgentService;
 import selling.sunshine.service.CommodityService;
 import selling.sunshine.service.CustomerService;
 import selling.sunshine.service.OrderService;
+import selling.sunshine.service.ToolService;
 import selling.sunshine.utils.Prompt;
 import selling.sunshine.utils.PromptCode;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -53,6 +63,9 @@ public class AgentController {
 
     @Autowired
     private CommodityService commodityService;
+    
+    @Autowired
+    private ToolService toolService;
 
     @Autowired
     private CustomerService customerService;
@@ -310,5 +323,31 @@ public class AgentController {
         ModelAndView view = new ModelAndView();
         view.setViewName("/backend/agent/overview");
         return view;
+    }
+    
+    @RequestMapping(method = RequestMethod.POST, value = "/reward")
+    @ResponseBody
+    public String reward(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        JSONObject webhooks = toolService.getParams(request);
+        logger.debug("webhooks info == " + webhooks);
+        JSONObject charge = webhooks.getJSONObject("data").getJSONObject("object");
+        logger.debug("charge info == " + charge);
+        String dealId = charge.getString("order_no");
+        logger.debug("deal id: " + dealId);
+        if (charge.getBoolean("paid") == true) {
+            Deal deal = new Deal();
+            deal.setDealId(dealId);
+            deal.setDealStatus(true);
+            dealService.updateDealRecord(deal);
+        }
+        Event event = Webhooks.eventParse(webhooks.toString());
+        if ("charge.succeeded".equals(event.getType())) {
+            response.setStatus(200);
+        } else if ("refund.succeeded".equals(event.getType())) {
+            response.setStatus(200);
+        } else {
+            response.setStatus(500);
+        }
+        return "complete";
     }
 }
