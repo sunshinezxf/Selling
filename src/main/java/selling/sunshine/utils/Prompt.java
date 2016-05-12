@@ -6,6 +6,7 @@ package selling.sunshine.utils;
 public class Prompt {
     private PromptCode code;
     private String message;
+    private String title;
 
     public Prompt() {
         code = PromptCode.SUCCESS;
@@ -31,4 +32,14 @@ public class Prompt {
     public void setMessage(String message) {
         this.message = message;
     }
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+    
+    
 }

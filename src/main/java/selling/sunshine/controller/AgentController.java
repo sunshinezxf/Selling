@@ -71,6 +71,7 @@ public class AgentController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/order/place")
     public ModelAndView placeOrder() {
+
         ModelAndView view = new ModelAndView();
         Subject subject = SecurityUtils.getSubject();
         Map<String, Object> condition = new HashMap<String, Object>();
@@ -85,7 +86,17 @@ public class AgentController {
         if (fetchGoodsResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             view.addObject("customer", fetchCustomerResponse.getData());
         }
-        view.setViewName("/agent/order/place");
+        if (user.getAgent().isGranted()) {
+        	 view.setViewName("/agent/order/place");
+             return view;
+		}
+        Prompt prompt = new Prompt();
+        prompt.setCode(PromptCode.WARNING);
+        prompt.setTitle("提示");
+
+        prompt.setMessage("尊敬的代理商，您的资料现在正在审核中，只有当审核通过后才能代客下单，请耐心等待！");
+        view.addObject("prompt", prompt);
+        view.setViewName("/agent/prompt");
         return view;
     }
 
