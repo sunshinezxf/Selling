@@ -1,11 +1,16 @@
 package selling.sunshine.form;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * Created by sunshine on 4/8/16.
  */
 public class GoodsForm {
+    @NotNull
     private String name;
+    @NotNull
     private String price;
+    @NotNull
     private String description;
     private boolean block;
 
