@@ -8,8 +8,8 @@
 <div class="container">
     <div class="tabbar">
         <div class="weui_tab_bd">
-            <div class="order">
-                #parse("/agent/component/place_order_form.vm")
+            <div class="order" id="order">
+                   #parse("/agent/component/place_order_form.vm")
             </div>
         </div>
         #parse("/agent/component/navigate.vm")
@@ -18,5 +18,6 @@
 </body>
 </html>
 <script>
+　  
     $("#place_order").addClass("weui_bar_item_on");
 </script>
