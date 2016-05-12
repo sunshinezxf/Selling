@@ -173,7 +173,8 @@ public class AgentController {
         return view;
     }
     
-    @RequestMapping(method = RequestMethod.GET, value = "/order/list")
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.GET, value = "/order/list/{type}")
     public ResultData viewOrderList(@PathVariable("type") String type){
     	Subject subject = SecurityUtils.getSubject();
     	User user = (User) subject.getPrincipal();
@@ -189,7 +190,7 @@ public class AgentController {
 		    result.setResponseCode(fetchResponse.getResponseCode());
 		    result.setDescription(fetchResponse.getDescription());
 		}
-    	return null;
+    	return result;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/customer/manage")
