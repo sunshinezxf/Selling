@@ -28,6 +28,7 @@ import selling.sunshine.model.*;
 import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.AgentService;
+import selling.sunshine.service.BillService;
 import selling.sunshine.service.CommodityService;
 import selling.sunshine.service.CustomerService;
 import selling.sunshine.service.OrderService;
@@ -69,6 +70,9 @@ public class AgentController {
 
     @Autowired
     private CustomerService customerService;
+    
+    @Autowired
+    private BillService billService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/me/index")
     public ModelAndView index() {
@@ -327,19 +331,27 @@ public class AgentController {
     
     @RequestMapping(method = RequestMethod.POST, value = "/reward")
     @ResponseBody
-    public String reward(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public ModelAndView reward(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    	 ModelAndView view = new ModelAndView();
+    	ResultData resultData=new ResultData();
         JSONObject webhooks = toolService.getParams(request);
         logger.debug("webhooks info == " + webhooks);
         JSONObject charge = webhooks.getJSONObject("data").getJSONObject("object");
         logger.debug("charge info == " + charge);
         String dealId = charge.getString("order_no");
         logger.debug("deal id: " + dealId);
-        if (charge.getBoolean("paid") == true) {
-            Deal deal = new Deal();
-            deal.setDealId(dealId);
-            deal.setDealStatus(true);
-            dealService.updateDealRecord(deal);
-        }
+        Map<String, Object> condition=new HashMap<String, Object>();
+        condition.put("billId", dealId);
+        ResultData queryData=billService.fetchDepositBill(condition);
+        if (queryData.getResponseCode()==ResponseCode.RESPONSE_ERROR) {
+        	view.setViewName("/backend/agent/overview");
+            return view;
+		}
+        DepositBill depositBill=((List<DepositBill>)queryData.getData()).get(0);
+        Agent agent=depositBill.getAgent();
+        
+        
+        //agentService.fetchAgent(condition);
         Event event = Webhooks.eventParse(webhooks.toString());
         if ("charge.succeeded".equals(event.getType())) {
             response.setStatus(200);
@@ -348,6 +360,7 @@ public class AgentController {
         } else {
             response.setStatus(500);
         }
-        return "complete";
+        view.setViewName("/backend/agent/overview");
+        return view;
     }
 }

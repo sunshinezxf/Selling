@@ -14,6 +14,7 @@ public class Agent extends Entity {
     private String password;
     private String wechat;
     private boolean granted;
+    private double coffer;
 
     public Agent() {
         super();
@@ -35,8 +36,15 @@ public class Agent extends Entity {
             this.wechat = wechat;
         }
     }
+   
+    public Agent(String agentId, String name, String gender, String phone,
+			String address, String password, String wechat, boolean granted,
+			double coffer) {
+		this(name, gender, phone, address, password, wechat);
+		this.coffer = coffer;
+	}
 
-    public String getAgentId() {
+	public String getAgentId() {
         return agentId;
     }
 
@@ -99,4 +107,14 @@ public class Agent extends Entity {
     public void setGranted(boolean granted) {
         this.granted = granted;
     }
+
+	public double getCoffer() {
+		return coffer;
+	}
+
+	public void setCoffer(double coffer) {
+		this.coffer = coffer;
+	}
+    
+    
 }

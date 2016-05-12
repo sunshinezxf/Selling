@@ -2,11 +2,13 @@ package selling.sunshine.service.impl;
 
 import com.pingplusplus.Pingpp;
 import com.pingplusplus.model.Charge;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+
 import selling.sunshine.dao.BillDao;
 import selling.sunshine.model.DepositBill;
 import selling.sunshine.service.BillService;
@@ -49,8 +51,8 @@ public class BillServiceImpl implements BillService {
         params.put("channel", bill.getChannel());
         if (!StringUtils.isEmpty(bill.getChannel()) && bill.getChannel().equals("alipay_wap")) {
             Map<String, String> url = new HashMap<>();
-            url.put("success_url", "http://192.168.31.138:8080/account/deposit/" + bill.getBillId() + "/prompt");
-            url.put("cancel_url", "http://192.168.31.138:8080/account/deposit/" + bill.getBillId() + "/prompt");
+            url.put("success_url", "http://192.168.15.180:8080/selling/account/deposit/" + bill.getBillId() + "/prompt");
+            url.put("cancel_url", "http://192.168.15.180:8080/selling/account/deposit/" + bill.getBillId() + "/prompt");
             params.put("extra", url);
         }
         params.put("currency", "cny");
@@ -67,4 +69,17 @@ public class BillServiceImpl implements BillService {
         }
         return result;
     }
+
+	@Override
+	public ResultData fetchDepositBill(Map<String, Object> condition) {
+		 ResultData result = new ResultData();
+		 ResultData queryResponse = billDao.queryDepositBill(condition);
+	        result.setResponseCode(queryResponse.getResponseCode());
+	        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+	            result.setData(queryResponse.getData());
+	        } else if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
+	            result.setDescription(queryResponse.getDescription());
+	        }
+	        return result;
+	}
 }

@@ -25,9 +25,15 @@ public class AgentServiceImpl implements AgentService {
     private AgentDao agentDao;
 
     @Override
-    public ResultData login(Map<String, Object> condition) {
+    public ResultData fetchAgent(Map<String, Object> condition) {
         ResultData result = new ResultData();
-
+        ResultData queryResponse = agentDao.queryAgent(condition);
+        result.setResponseCode(queryResponse.getResponseCode());
+        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(queryResponse.getData());
+        } else if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
+            result.setDescription(queryResponse.getDescription());
+        }
         return result;
     }
 
@@ -62,5 +68,18 @@ public class AgentServiceImpl implements AgentService {
 	public ResultData placeOrder(Map<String, Object> conditon) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public ResultData updateAgent(Agent agent) {
+		 ResultData result = new ResultData();
+	        ResultData updateResponse = agentDao.updateAgent(agent);
+	        result.setResponseCode(updateResponse.getResponseCode());
+	        if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+	            result.setData(updateResponse.getData());
+	        } else {
+	            result.setDescription(updateResponse.getDescription());
+	        }
+	        return result;
 	}
 }

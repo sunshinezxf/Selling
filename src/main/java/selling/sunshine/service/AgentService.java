@@ -10,11 +10,13 @@ import java.util.Map;
  * Created by sunshine on 4/8/16.
  */
 public interface AgentService {
-    ResultData login(Map<String, Object> condition);
+    ResultData fetchAgent(Map<String, Object> condition);
 
     ResultData createAgent(Agent agent);
 
     ResultData fetchAgent(Map<String, Object> condition, DataTableParam param);
     
     ResultData placeOrder(Map<String, Object> conditon);
+    
+    ResultData updateAgent(Agent agent);
 }

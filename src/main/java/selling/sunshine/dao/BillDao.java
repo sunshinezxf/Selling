@@ -1,5 +1,7 @@
 package selling.sunshine.dao;
 
+import java.util.Map;
+
 import selling.sunshine.model.DepositBill;
 import selling.sunshine.utils.ResultData;
 
@@ -8,4 +10,6 @@ import selling.sunshine.utils.ResultData;
  */
 public interface BillDao {
     ResultData insertDepositBill(DepositBill bill);
+    
+    ResultData queryDepositBill(Map<String, Object> condition);
 }

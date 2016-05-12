@@ -19,4 +19,6 @@ public interface AgentDao {
 
     ResultData queryAgentByPage(Map<String, Object> condition, DataTableParam param);
     
+    ResultData updateAgent(Agent agent);
+    
 }
