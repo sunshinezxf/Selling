@@ -35,4 +35,10 @@ public class OrderServiceImpl implements OrderService {
 		return result;
 	}
 
+	@Override
+	public ResultData fetchOrder(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
