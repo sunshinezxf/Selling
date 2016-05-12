@@ -9,11 +9,7 @@
     <div class="tabbar">
         <div class="weui_tab_bd">
             <div class="order" id="order">
-               #if(${agent.granted})
                    #parse("/agent/component/place_order_form.vm")
-               #else
-                  #parse("/agent/component/place_order_prompt.vm")
-               #end
             </div>
         </div>
         #parse("/agent/component/navigate.vm")
