@@ -2,7 +2,7 @@
 <div id="place_order_panel">
     <div class="order_content">
         <div class="panel">
-            <div class="hd">
+           <div class="hd">
                 <h1 class="page_title">代客下单</h1>
             </div>
             <div class="bd">
@@ -53,4 +53,6 @@
     	$("#place_order_form").attr("method","post");
     	$("#place_order_form").submit();
     });
+    
+    
 </script>
