@@ -52,7 +52,9 @@
             AND order_id = #{orderId}
         </if>
         <if test="status != null and status != ''">
-            AND order_status = #{status}
+            <if test="status == 1">AND order_status = 0</if>
+            <if test="status == 2">AND (order_status = 1 || order_status = 2 || order_status = 3)</if>
+            <if test="status == 3">AND order_status = 4</if>
         </if>
         <if test="agentId != null and agentId !=''">
             AND agent_id = #{agentId}
