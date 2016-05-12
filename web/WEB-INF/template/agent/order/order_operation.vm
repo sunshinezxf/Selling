@@ -58,9 +58,8 @@
     
     //异步获取已保存
     $.submit_get = function(){
-    	var url = "${path.concat('/agent/order/list')}";
-    	var param = {type:1};
-    	$.get(url, param, function(data){
+    	var url = "${path.concat('/agent/order/list')}/1";
+    	$.get(url, function(data){
     		var list = data.data;
     		$("#order_list").empty();
     		$.each(list, function(i, val){
