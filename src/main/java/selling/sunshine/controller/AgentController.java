@@ -1,5 +1,8 @@
 package selling.sunshine.controller;
 
+import com.alibaba.fastjson.JSONObject;
+import com.pingplusplus.model.Event;
+import com.pingplusplus.model.Webhooks;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.session.Session;
@@ -9,30 +12,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import com.alibaba.fastjson.JSONObject;
-import com.pingplusplus.model.Event;
-import com.pingplusplus.model.Webhooks;
-
 import selling.sunshine.form.AgentForm;
 import selling.sunshine.form.AgentLoginForm;
 import selling.sunshine.form.OrderItemForm;
 import selling.sunshine.model.*;
 import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
-import selling.sunshine.service.AgentService;
-import selling.sunshine.service.BillService;
-import selling.sunshine.service.CommodityService;
-import selling.sunshine.service.CustomerService;
-import selling.sunshine.service.OrderService;
-import selling.sunshine.service.ToolService;
+import selling.sunshine.service.*;
 import selling.sunshine.utils.Prompt;
 import selling.sunshine.utils.PromptCode;
 import selling.sunshine.utils.ResponseCode;
@@ -41,7 +30,6 @@ import selling.sunshine.utils.ResultData;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,13 +52,13 @@ public class AgentController {
 
     @Autowired
     private CommodityService commodityService;
-    
+
     @Autowired
     private ToolService toolService;
 
     @Autowired
     private CustomerService customerService;
-    
+
     @Autowired
     private BillService billService;
 
@@ -172,25 +160,25 @@ public class AgentController {
         view.setViewName("/agent/order/manage");
         return view;
     }
-    
+
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/order/list/{type}")
-    public ResultData viewOrderList(@PathVariable("type") String type){
-    	Subject subject = SecurityUtils.getSubject();
-    	User user = (User) subject.getPrincipal();
-    	Agent agent = user.getAgent();
-    	ResultData result = new ResultData();
-    	Map<String, Object> condition = new HashMap<String, Object>();
-    	condition.put("agentId", agent.getAgentId());
-    	condition.put("status", type);
-    	ResultData fetchResponse = orderService.fetchOrder(condition);
-		if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-		    result.setData(fetchResponse.getData());
-		} else {
-		    result.setResponseCode(fetchResponse.getResponseCode());
-		    result.setDescription(fetchResponse.getDescription());
-		}
-    	return result;
+    public ResultData viewOrderList(@PathVariable("type") String type) {
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        Agent agent = user.getAgent();
+        ResultData result = new ResultData();
+        Map<String, Object> condition = new HashMap<String, Object>();
+        condition.put("agentId", agent.getAgentId());
+        condition.put("status", type);
+        ResultData fetchResponse = orderService.fetchOrder(condition);
+        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(fetchResponse.getData());
+        } else {
+            result.setResponseCode(fetchResponse.getResponseCode());
+            result.setDescription(fetchResponse.getDescription());
+        }
+        return result;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/customer/manage")
@@ -334,37 +322,56 @@ public class AgentController {
         return result;
     }
 
+    @RequestMapping(method = RequestMethod.POST, value = "/grant")
+    public ModelAndView grant(String agentId) {
+        ModelAndView view = new ModelAndView();
+        if (StringUtils.isEmpty(agentId)) {
+            view.setViewName("redirect:/agent/check");
+            return view;
+        }
+        Agent agent = new Agent();
+        agent.setAgentId(agentId);
+        agent.setGranted(true);
+        ResultData updateResponse = agentService.updateAgent(agent);
+        if (updateResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            view.setViewName("redirect:/agent/check");
+            return view;
+        }
+        view.setViewName("redirect:/agent/check");
+        return view;
+    }
+
     @RequestMapping(method = RequestMethod.GET, value = "/overview")
     public ModelAndView overview() {
         ModelAndView view = new ModelAndView();
         view.setViewName("/backend/agent/overview");
         return view;
     }
-    
+
     @RequestMapping(method = RequestMethod.POST, value = "/reward")
     @ResponseBody
-    public  ResultData reward(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    	ModelAndView view = new ModelAndView();
-    	ResultData resultData=new ResultData();
+    public ResultData reward(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        ModelAndView view = new ModelAndView();
+        ResultData resultData = new ResultData();
         JSONObject webhooks = toolService.getParams(request);
         logger.debug("webhooks info == " + webhooks);
         JSONObject charge = webhooks.getJSONObject("data").getJSONObject("object");
         logger.debug("charge info == " + charge);
         String dealId = charge.getString("order_no");
         logger.debug("deal id: " + dealId);
-        Map<String, Object> condition=new HashMap<String, Object>();
+        Map<String, Object> condition = new HashMap<String, Object>();
         condition.put("billId", dealId);
-        resultData=billService.fetchDepositBill(condition);
+        resultData = billService.fetchDepositBill(condition);
 
-        
-        DepositBill depositBill=((List<DepositBill>)resultData.getData()).get(0);
-        Agent agent=depositBill.getAgent();      
-        resultData=agentService.updateAgent(agent);
 
-        
-        resultData=billService.updateDepositBill(depositBill);
+        DepositBill depositBill = ((List<DepositBill>) resultData.getData()).get(0);
+        Agent agent = depositBill.getAgent();
+        resultData = agentService.updateAgent(agent);
 
-        
+
+        resultData = billService.updateDepositBill(depositBill);
+
+
         Event event = Webhooks.eventParse(webhooks.toString());
         if ("charge.succeeded".equals(event.getType())) {
             response.setStatus(200);

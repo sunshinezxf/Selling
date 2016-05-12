@@ -37,7 +37,7 @@
         <if test="phone != null and phone != ''">
             AND agent_phone = #{phone}
         </if>
-        <if test="granted != null and granted != ''">
+        <if test="granted != null">
             AND agent_granted = #{granted}
         </if>
         <if test="blockFlag != null and blockFlag != ''">

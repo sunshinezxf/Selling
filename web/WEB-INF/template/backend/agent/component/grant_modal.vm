@@ -1,0 +1,45 @@
+<div class="modal fade" id="grant_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">x</button>
+                <h4 class="modal-title">代理审核确认</h4>
+            </div>
+            <div class="modal-body">
+                <form id="confirm_check_form">
+                    <input type="hidden" name="agentId" id="to_confirm_agent_id"/>
+                </form>
+                <p>代理姓名:&nbsp;&nbsp;
+                    <text id="to_confirm_agent_name"></text>
+                </p>
+                <p>联系方式:&nbsp;&nbsp;
+                    <text id="to_confirm_agent_phone"></text>
+                </p>
+                <p>联系地址:&nbsp;&nbsp;
+                    <text id="to_confirm_agent_address"></text>
+                </p>
+                <p>当前状态:&nbsp;&nbsp;
+                    <text id="to_confirm_agent_granted"></text>
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="check_confirm">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        $("#grant_modal").modal({
+            show: false,
+            keyboard: true
+        });
+    })
+
+    $("#check_confirm").on('click', function () {
+        $("#confirm_check_form").attr("action", "${path.concat('/agent/grant')}");
+        $("#confirm_check_form").attr("method", "post");
+        $("#confirm_check_form").submit();
+    })
+</script>
