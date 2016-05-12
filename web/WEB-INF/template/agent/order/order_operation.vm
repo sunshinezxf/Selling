@@ -9,18 +9,18 @@
     </div>
     <div class="weui_tab">
         <div class="weui_navbar">
-            <div class="weui_navbar_item weui_bar_item_on" id="not_submit">
-                未提交
+            <div class="weui_navbar_item weui_bar_item_on" id="submit">
+                已保存 
             </div>
-            <div class="weui_navbar_item" id="submit">
-                已提交
+            <div class="weui_navbar_item" id="paid">
+                已付款
             </div>
             <div class="weui_navbar_item" id="close">
                 已结束
             </div>
         </div>
         <div class="weui_tab_bd">
-            <div class="weui_cells weui_cells_access clear-margin-top">
+            <div id="order_list" class="weui_cells weui_cells_access clear-margin-top">
                 <a class="weui_cell">
                     <div class="weui_cell_hd">
                         <i class="icon icon_article"></i>
@@ -30,47 +30,24 @@
                     </div>
                     <div class="weui_cell_ft">含3名客户</div>
                 </a>
-                <a class="weui_cell">
-                    <div class="weui_cell_hd">
-                        <i class="icon icon_article"></i>
-                    </div>
-                    <div class="weui_cell_bd weui_cell_primary">
-                        <p>2016年4月14日</p>
-                    </div>
-                    <div class="weui_cell_ft">含4名客户</div>
-                </a>
-                <a class="weui_cell">
-                    <div class="weui_cell_hd">
-                        <i class="icon icon_article"></i>
-                    </div>
-                    <div class="weui_cell_bd weui_cell_primary">
-                        <p>2016年4月13日</p>
-                    </div>
-                    <div class="weui_cell_ft">含2名客户</div>
-                </a>
-                <a class="weui_cell">
-                    <div class="weui_cell_hd">
-                        <i class="icon icon_article"></i>
-                    </div>
-                    <div class="weui_cell_bd weui_cell_primary">
-                        <p>2016年4月12日</p>
-                    </div>
-                    <div class="weui_cell_ft">含3名客户</div>
-                </a>
             </div>
         </div>
     </div>
 </div>
 <script>
+	$(document).ready(function(){
+		$.submit_get();
+	});
+
     $(".weui_navbar_item").click(function () {
         var current = $(".weui_bar_item_on");
         var current_id = current.attr("id");
         var target_id = $(this).attr("id");
         if (current_id != target_id) {
             current.removeClass("weui_bar_item_on");
-            if (target_id == "not_submit") {
-
-            } else if (target_id == "submit") {
+            if (target_id == "submit") {
+				
+            } else if (target_id == "paid") {
 
             } else if (target_id == "closed") {
 
@@ -78,4 +55,38 @@
             $(this).addClass("weui_bar_item_on")
         }
     });
+    
+    //异步获取已保存
+    $.submit_get = function(){
+    	var url = "${path.concat('/agent/order/list')}";
+    	var param = {type:1};
+    	$.get(url, param, function(data){
+    		var list = data.data;
+    		$("#order_list").empty();
+    		$.each(list, function(i, val){
+    			var	timeString = val.createAt.split(" ")[0]
+    			var time = timeString.split("-");
+    			var html = 
+    				"<a class='weui_cell'>" + 
+    				"<div class='weui_cell_hd'>" + 
+    				"<i class='icon icon_article'></id>" + 
+    				"</div>" + 
+    				"<div class='weui_cell_bd weui_cell_primary'>" +
+    				"<p>" + time[0] + "年" + parseInt(time[1]) + "月" + time[2] + "日</p>" + 
+    				"</div>" + 
+    				"<div class='weui_cell_ft'>含" + val.orderItems.length + "个订单项</div>"
+    			$("#order_list").append(html);
+    		});
+    	});
+    }
+    
+    //异步获取已付款
+    $.paid_get = function(){
+    
+    }
+    
+    //异步获取已结束
+    $.closed_get = function(){
+    
+    }
 </script>
