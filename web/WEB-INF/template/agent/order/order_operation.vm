@@ -21,22 +21,14 @@
         </div>
         <div class="weui_tab_bd">
             <div id="order_list" class="weui_cells weui_cells_access clear-margin-top">
-                <a class="weui_cell">
-                    <div class="weui_cell_hd">
-                        <i class="icon icon_article"></i>
-                    </div>
-                    <div class="weui_cell_bd weui_cell_primary">
-                        <p>2016年4月15日</p>
-                    </div>
-                    <div class="weui_cell_ft">含3名客户</div>
-                </a>
             </div>
         </div>
     </div>
 </div>
+#parse("/agent/component/navigate.vm")
 <script>
 	$(document).ready(function(){
-		$.submit_get();
+		$.get_order(1);
 	});
 
     $(".weui_navbar_item").click(function () {
@@ -46,46 +38,65 @@
         if (current_id != target_id) {
             current.removeClass("weui_bar_item_on");
             if (target_id == "submit") {
-				
+				$.get_order(1);
             } else if (target_id == "paid") {
-
+				$.get_order(2);
             } else if (target_id == "closed") {
-
+				$.get_order(3);
             }
             $(this).addClass("weui_bar_item_on")
         }
     });
     
     //异步获取已保存
-    $.submit_get = function(){
-    	var url = "${path.concat('/agent/order/list')}/1";
-    	$.get(url, function(data){
+    $.get_order = function(type){
+    	var url = "${path.concat('/agent/order/list')}/" + type;
+    	$.getJSON(url, function(data){
     		var list = data.data;
     		$("#order_list").empty();
     		$.each(list, function(i, val){
-    			var	timeString = val.createAt.split(" ")[0]
-    			var time = timeString.split("-");
+    			var	timeString = (new Date(val.createAt)).format("yyyy MM dd");
+    			var time = timeString.split(" ");
     			var html = 
     				"<a class='weui_cell'>" + 
     				"<div class='weui_cell_hd'>" + 
-    				"<i class='icon icon_article'></id>" + 
+    				"<i class='icon icon_article'></i>" + 
     				"</div>" + 
     				"<div class='weui_cell_bd weui_cell_primary'>" +
     				"<p>" + time[0] + "年" + parseInt(time[1]) + "月" + time[2] + "日</p>" + 
     				"</div>" + 
-    				"<div class='weui_cell_ft'>含" + val.orderItems.length + "个订单项</div>"
+    				"<div class='weui_cell_ft'>含" + val.orderItems.length + "个订单项</div>" + 
+    				"</a>";
     			$("#order_list").append(html);
     		});
     	});
     }
-    
-    //异步获取已付款
-    $.paid_get = function(){
-    
+        
+    Date.prototype.format = function (format) {
+    var o = {
+        "M+": this.getMonth() + 1,
+        // month
+        "d+": this.getDate(),
+        // day
+        "h+": this.getHours(),
+        // hour
+        "m+": this.getMinutes(),
+        // minute
+        "s+": this.getSeconds(),
+        // second
+        "q+": Math.floor((this.getMonth() + 3) / 3),
+        // quarter
+        "S": this.getMilliseconds()
+        // millisecond
+    };
+    if (/(y+)/.test(format) || /(Y+)/.test(format)) {
+        format = format.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
     }
-    
-    //异步获取已结束
-    $.closed_get = function(){
-    
+    for (var k in o) {
+        if (new RegExp("(" + k + ")").test(format)) {
+            format = format.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k] : ("00" + o[k]).substr(("" + o[k]).length));
+        }
     }
+    return format;
+};
 </script>
