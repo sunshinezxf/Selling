@@ -51,7 +51,6 @@
 	    </div>
 </div>
 <script>
-    
     $("#add_confirm_btn").click(function () {
     	if(!$.check()){
     		return;
