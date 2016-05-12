@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -153,6 +154,14 @@ public class AgentController {
         ModelAndView view = new ModelAndView();
         view.setViewName("/agent/order/manage");
         return view;
+    }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/order/list")
+    public ResultData viewOrderList(@PathVariable("type") String type){
+    	Map<String, Object> condition = new HashMap<String, Object>();
+    	condition.put("order_status", type);
+    	ResultData orderList = orderService.fetchOrder(condition);
+    	return null;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/customer/manage")
