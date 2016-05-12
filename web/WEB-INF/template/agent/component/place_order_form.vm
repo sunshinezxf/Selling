@@ -20,7 +20,7 @@
                     </div>
                 </div>
                 <div class="weui_btn_area">
-                    <a class="weui_btn weui_btn_plain_primary">保存订单</a>
+                    <a class="weui_btn weui_btn_plain_primary" id="save_order_btn">保存订单</a>
                     <a class="weui_btn weui_btn_primary" id="place_order_btn">确认下单</a>
                 </div>
             </div>
@@ -49,8 +49,27 @@
         $("#place_order_panel").hide();
     });
     $("#place_order_btn").click(function(){
+    	if(!$.check_order()){
+    		return;
+    	}
     	$("#place_order_form").attr("action", "${path.concat('/agent/order/place')}");
     	$("#place_order_form").attr("method","post");
     	$("#place_order_form").submit();
     });
+    $("#save_order_btn").click(function(){
+    	if(!$.check_order()){
+    		return;
+    	}
+    	$("#place_order_form").attr("action", "${path.concat('/agent/order/place')}");
+    	$("#place_order_form").attr("method","post");
+    	$("#place_order_form").submit();
+    });
+    $.check_order = function(){
+    	if($("#order_item_list").children().size() == 0) {
+    		$("#dialog").find(".weui_dialog_bd").html("还没有创建订单");
+    		$("#dialog").fadeIn();
+    		return false;
+    	}
+    	return true;
+    }
 </script>
