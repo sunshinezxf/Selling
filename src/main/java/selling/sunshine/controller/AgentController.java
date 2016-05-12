@@ -175,9 +175,20 @@ public class AgentController {
     
     @RequestMapping(method = RequestMethod.GET, value = "/order/list")
     public ResultData viewOrderList(@PathVariable("type") String type){
+    	Subject subject = SecurityUtils.getSubject();
+    	User user = (User) subject.getPrincipal();
+    	Agent agent = user.getAgent();
+    	ResultData result = new ResultData();
     	Map<String, Object> condition = new HashMap<String, Object>();
-    	condition.put("order_status", type);
-    	ResultData orderList = orderService.fetchOrder(condition);
+    	condition.put("agentId", agent.getAgentId());
+    	condition.put("status", type);
+    	ResultData fetchResponse = orderService.fetchOrder(condition);
+		if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+		    result.setData(fetchResponse.getData());
+		} else {
+		    result.setResponseCode(fetchResponse.getResponseCode());
+		    result.setDescription(fetchResponse.getDescription());
+		}
     	return null;
     }
 

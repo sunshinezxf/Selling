@@ -21,7 +21,8 @@
     </insert>
 
     <select id="query" parameterType="java.util.Map" resultMap="agentVo">
-        SELECT agent_id, agent_name, agent_gender, agent_phone, agent_address, agent_password, agent_wechat, agent_granted, block_flag, create_time,agent_coffer
+        SELECT agent_id, agent_coffer, agent_name, agent_gender, agent_phone, agent_address, agent_password,
+        agent_wechat, agent_granted, block_flag, create_time
         FROM agent
         WHERE 1 = 1
         <if test="agentId != null and agentId != ''">
@@ -43,4 +44,26 @@
             AND block_flag = #{blockFlag}
         </if>
     </select>
+
+    <update id="update" parameterType="selling.sunshine.model.Agent" useGeneratedKeys="false">
+        UPDATE agent
+        <set>
+            <if test="gender != null and gender != ''">
+                agent_gender = #{gender},
+            </if>
+            <if test="phone != null and phone != ''">
+                agent_phone = #{phone},
+            </if>
+            <if test="address != null and address != ''">
+                agent_address = #{address},
+            </if>
+            <if test="wechat != null and wechat != ''">
+                agent_wechat = #{wechat},
+            </if>
+            <if test="granted != null and granted != ''">
+                agent_granted = #{granted},
+            </if>
+        </set>
+        WHERE agent_id = #{agentId}
+    </update>
 </mapper>
