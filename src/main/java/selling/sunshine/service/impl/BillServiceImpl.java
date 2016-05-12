@@ -82,4 +82,17 @@ public class BillServiceImpl implements BillService {
 	        }
 	        return result;
 	}
+
+	
+	public ResultData updateDepositBill(DepositBill bill) {
+		 ResultData result = new ResultData();
+		 ResultData updateResponse = billDao.updateDepositBill(bill);
+	        result.setResponseCode(updateResponse.getResponseCode());
+	        if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+	            result.setData(updateResponse.getData());
+	        } else if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
+	            result.setDescription(updateResponse.getDescription());
+	        }
+	        return result;
+	}
 }

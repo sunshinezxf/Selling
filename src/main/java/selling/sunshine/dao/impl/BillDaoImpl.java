@@ -1,7 +1,6 @@
 package selling.sunshine.dao.impl;
 
 import java.util.List;
-
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -11,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import selling.sunshine.dao.BaseDao;
 import selling.sunshine.dao.BillDao;
+import selling.sunshine.model.BillStatus;
 import selling.sunshine.model.DepositBill;
 import selling.sunshine.utils.IDGenerator;
 import selling.sunshine.utils.ResponseCode;
@@ -58,5 +58,23 @@ public class BillDaoImpl extends BaseDao implements BillDao {
 	        } finally {
 	            return result;
 	        }
+	}
+
+	@Override
+	public ResultData updateDepositBill(DepositBill bill) {
+		ResultData result = new ResultData();
+        synchronized (lock) {
+            try {
+            	bill.setStatus(BillStatus.values()[1]);
+                sqlSession.update("selling.bill.deposit.update", bill);
+                result.setData(bill);
+            } catch (Exception e) {
+                logger.debug(e.getMessage());
+                result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+                result.setDescription(e.getMessage());
+            } finally {
+                return result;
+            }
+        }
 	}
 }

@@ -12,4 +12,6 @@ public interface BillService {
     ResultData createDepositBill(DepositBill bill);
     
     ResultData fetchDepositBill(Map<String, Object> condition);
+    
+    ResultData updateDepositBill(DepositBill bill);
 }

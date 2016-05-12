@@ -63,6 +63,9 @@
             <if test="granted != null and granted != ''">
                 agent_granted = #{granted},
             </if>
+            <if test="coffer != null and coffer != ''">
+                agent_coffer = #{coffer},
+            </if>
         </set>
         WHERE agent_id = #{agentId}
     </update>

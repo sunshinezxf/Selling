@@ -12,4 +12,6 @@ public interface BillDao {
     ResultData insertDepositBill(DepositBill bill);
     
     ResultData queryDepositBill(Map<String, Object> condition);
+    
+    ResultData updateDepositBill(DepositBill bill);
 }

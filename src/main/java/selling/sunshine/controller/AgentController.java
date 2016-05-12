@@ -342,8 +342,8 @@ public class AgentController {
     
     @RequestMapping(method = RequestMethod.POST, value = "/reward")
     @ResponseBody
-    public ModelAndView reward(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    	 ModelAndView view = new ModelAndView();
+    public  ResultData reward(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    	ModelAndView view = new ModelAndView();
     	ResultData resultData=new ResultData();
         JSONObject webhooks = toolService.getParams(request);
         logger.debug("webhooks info == " + webhooks);
@@ -353,16 +353,17 @@ public class AgentController {
         logger.debug("deal id: " + dealId);
         Map<String, Object> condition=new HashMap<String, Object>();
         condition.put("billId", dealId);
-        ResultData queryData=billService.fetchDepositBill(condition);
-        if (queryData.getResponseCode()==ResponseCode.RESPONSE_ERROR) {
-        	view.setViewName("/backend/agent/overview");
-            return view;
-		}
-        DepositBill depositBill=((List<DepositBill>)queryData.getData()).get(0);
-        Agent agent=depositBill.getAgent();
+        resultData=billService.fetchDepositBill(condition);
+
         
+        DepositBill depositBill=((List<DepositBill>)resultData.getData()).get(0);
+        Agent agent=depositBill.getAgent();      
+        resultData=agentService.updateAgent(agent);
+
         
-        //agentService.fetchAgent(condition);
+        resultData=billService.updateDepositBill(depositBill);
+
+        
         Event event = Webhooks.eventParse(webhooks.toString());
         if ("charge.succeeded".equals(event.getType())) {
             response.setStatus(200);
@@ -372,6 +373,6 @@ public class AgentController {
             response.setStatus(500);
         }
         view.setViewName("/backend/agent/overview");
-        return view;
+        return resultData;
     }
 }

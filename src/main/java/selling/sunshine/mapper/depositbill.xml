@@ -53,4 +53,26 @@
             AND block_flag = #{blockFlag}
         </if>
     </select>
+    
+    <update id="update" parameterType="selling.sunshine.model.DepositBill" useGeneratedKeys="false">
+        UPDATE deposit_bill
+        <set>
+            <if test="agent.agentId != null and agent.agentId != ''">
+                agent_id = #{agent.agentId},
+            </if>
+            <if test="channel != null and channel != ''">
+                channel_name = #{channel},
+            </if>
+            <if test="clientIp != null and clientIp != ''">
+                client_ip = #{clientIp},
+            </if>
+            <if test="billAmount != null and billAmount != ''">
+                bill_amount = #{billAmount},
+            </if>
+            <if test="status != null and status != ''">
+                bill_status = #{status},
+            </if>
+        </set>
+        WHERE bill_id = #{billId}
+    </update>
 </mapper>
