@@ -21,6 +21,5 @@ public interface AgentDao {
 
     ResultData updateAgent(Agent agent);
     
-    ResultData updateAgent(Agent agent);
     
 }
