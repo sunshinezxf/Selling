@@ -1,5 +1,8 @@
 package selling.sunshine.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -9,6 +12,9 @@ import selling.sunshine.model.Order;
 import selling.sunshine.model.OrderStatus;
 import selling.sunshine.pagination.MobilePage;
 import selling.sunshine.pagination.MobilePageParam;
+import selling.sunshine.service.OrderService;
+import selling.sunshine.utils.ResponseCode;
+import selling.sunshine.utils.ResultData;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +25,11 @@ import java.util.Map;
 @RequestMapping("/order")
 @RestController
 public class OrderController {
+    private Logger logger = LoggerFactory.getLogger(OrderController.class);
+
+    @Autowired
+    private OrderService orderService;
+
     @RequestMapping(method = RequestMethod.GET, value = "/check")
     public ModelAndView handle() {
         ModelAndView view = new ModelAndView();
@@ -34,6 +45,10 @@ public class OrderController {
         }
         Map<String, Object> condition = new HashMap<>();
         condition.put("status", OrderStatus.PAYED);
+        ResultData fetchResponse = orderService.fetchOrder(condition, param);
+        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result = (MobilePage<Order>) fetchResponse.getData();
+        }
         return result;
     }
 
