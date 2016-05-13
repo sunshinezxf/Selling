@@ -181,7 +181,7 @@ public class AgentController {
         ResultData result = new ResultData();
         Map<String, Object> condition = new HashMap<String, Object>();
         condition.put("agentId", agent.getAgentId());
-        condition.put("status", OrderStatus.SAVED);
+        condition.put("status", type);
         ResultData fetchResponse = orderService.fetchOrder(condition);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             result.setData(fetchResponse.getData());
