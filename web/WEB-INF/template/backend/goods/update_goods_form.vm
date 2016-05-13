@@ -1,4 +1,4 @@
-<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id-target="goods-management">
     <div class="row">
         <div class="col-md-12 col-lg-12">
             <h1><i class="fa fa-home"></i> 修改商品 </h1>
@@ -71,14 +71,6 @@
     </div>
 </div>
 <script>
-    $(function () {
-        $("#agent-management").collapse('hide');
-        $("#order-management").collapse('hide');
-        $("#customer-management").collapse('hide');
-        $("#goods-management").collapse('show');
-        $("#statement-management").collapse('hide');
-    });
-
     $("#clear_goods_content").click(function () {
         $("#goods_name").val("");
         $("#goods_price").val("");

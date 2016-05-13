@@ -1,4 +1,4 @@
-<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id-target="agent-management">
     <div class="row">
         <div class="col-md-12 col-lg-12">
             <h1><i class="fa fa-home"></i> 代理概览 </h1>
@@ -17,14 +17,6 @@
     </div>
 </div>
 <script>
-    $(function () {
-        $("#agent-management").collapse('show');
-        $("#order-management").collapse('hide');
-        $("#customer-management").collapse('hide');
-        $("#goods-management").collapse('hide');
-        $("#statement-management").collapse('hide');
-    });
-
     $(document).ready(function () {
         $("#overview_agent_table").DataTable({
             searching: false,
