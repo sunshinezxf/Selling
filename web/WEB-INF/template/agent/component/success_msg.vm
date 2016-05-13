@@ -2,13 +2,13 @@
     <div class="weui_msg">
         <div class="weui_icon_area">
              #if(${prompt.code} == "SUCCESS")
-                    <i class="weui_icon_success weui_icon_msg"></i>
+                    <i class="weui_icon_msg weui_icon_success"></i>
              #elseif(${prompt.code} == "WARNING")
-                   <i class="weui_icon_success weui_icon_warn"></i>
+                   <i class="weui_icon_msg weui_icon_waiting"></i>
              #elseif(${prompt.code} == "DANGER")
-                    <i class="weui_icon_success weui_icon_msg"></i>
+                   <i class="weui_icon_msg weui_icon_warn"></i>
              #else
-                    <i class="weui_icon_success weui_icon_msg"></i>
+                   <i class="weui_icon_msg weui_icon_info"></i>
              #end
         </div>
         <div class="weui_text_area">

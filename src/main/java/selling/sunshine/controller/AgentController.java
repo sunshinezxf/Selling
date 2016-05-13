@@ -87,9 +87,9 @@ public class AgentController {
             view.addObject("customer", fetchCustomerResponse.getData());
         }
         if (user.getAgent().isGranted()) {
-        	 view.setViewName("/agent/order/place");
-             return view;
-		}
+            view.setViewName("/agent/order/place");
+            return view;
+        }
         Prompt prompt = new Prompt();
         prompt.setCode(PromptCode.WARNING);
         prompt.setTitle("提示");
@@ -181,7 +181,7 @@ public class AgentController {
         ResultData result = new ResultData();
         Map<String, Object> condition = new HashMap<String, Object>();
         condition.put("agentId", agent.getAgentId());
-        condition.put("status", OrderStatus);
+        condition.put("status", OrderStatus.SAVED);
         ResultData fetchResponse = orderService.fetchOrder(condition);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             result.setData(fetchResponse.getData());
@@ -375,6 +375,21 @@ public class AgentController {
         ModelAndView view = new ModelAndView();
         view.setViewName("/backend/agent/overview");
         return view;
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/overview")
+    public DataTablePage<Agent> overview(DataTableParam param) {
+        DataTablePage<Agent> result = new DataTablePage<>(param);
+        if (StringUtils.isEmpty(param)) {
+            return result;
+        }
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("granted", true);
+        ResultData fetchResponse = agentService.fetchAgent(condition, param);
+        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result = (DataTablePage<Agent>) fetchResponse.getData();
+        }
+        return result;
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/reward")
