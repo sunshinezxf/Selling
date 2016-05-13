@@ -301,6 +301,35 @@ CREATE TABLE IF NOT EXISTS `selling`.`order_bill` (
   ENGINE = InnoDB;
 
 
+-- -----------------------------------------------------
+-- Table `selling`.`refund`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `selling`.`refund` ;
+
+CREATE TABLE IF NOT EXISTS `selling`.`refund` (
+  `refund_id` VARCHAR(20) NOT NULL,
+  `refund_name` VARCHAR(45) NOT NULL,
+  `redund_percent` VARCHAR(45) NOT NULL,
+  `block_flag` TINYINT(1) NOT NULL DEFAULT 0,
+  `create_time` DATETIME NOT NULL,
+  PRIMARY KEY (`refund_id`))
+  ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `selling`.`ship_config`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `selling`.`ship_config` ;
+
+CREATE TABLE IF NOT EXISTS `selling`.`ship_config` (
+  `ship_config_id` VARCHAR(20) NOT NULL,
+  `ship_config_date` INT NOT NULL,
+  `block_flag` TINYINT(1) NOT NULL,
+  `create_time` DATETIME NOT NULL,
+  PRIMARY KEY (`ship_config_id`))
+  ENGINE = InnoDB;
+
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
