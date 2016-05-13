@@ -16,4 +16,6 @@
     <bean id="orderService" class="selling.sunshine.service.impl.OrderServiceImpl"></bean>
 
     <bean id="toolService" class="selling.sunshine.service.impl.ToolServiceImpl"></bean>
+
+    <bean id="shipmentService" class="selling.sunshine.service.impl.ShipmentServiceImpl"></bean>
 </beans>

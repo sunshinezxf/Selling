@@ -21,12 +21,16 @@
     <bean id="customerDao" class="selling.sunshine.dao.impl.CustomerDaoImpl">
         <property name="sqlSession" ref="sqlSession"></property>
     </bean>
-    
+
     <bean id="orderDao" class="selling.sunshine.dao.impl.OrderDaoImpl">
         <property name="sqlSession" ref="sqlSession"></property>
     </bean>
-    
+
     <bean id="orderItemDao" class="selling.sunshine.dao.impl.OrderItemDaoImpl">
+        <property name="sqlSession" ref="sqlSession"></property>
+    </bean>
+
+    <bean id="shipmentDao" class="selling.sunshine.dao.impl.ShipmentDaoImpl">
         <property name="sqlSession" ref="sqlSession"></property>
     </bean>
 </beans>
