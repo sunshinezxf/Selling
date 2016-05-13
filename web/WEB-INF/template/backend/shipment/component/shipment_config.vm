@@ -1,0 +1,39 @@
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id-target="shipment-management">
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+            <h1><i class="fa fa-home"></i> 发货配置 </h1>
+            <ol class="breadcrumb">
+                <li><a href="${path.concat('/dashboard')}">首页</a></li>
+                <li><a data-toggle="collapse" data-parent="#accordion" href="#shipment-management">基本配置</a></li>
+                <li class="active">发货配置</li>
+            </ol>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-12">
+            <div class="form-group">
+                <label class="col-sm-1 col-md-1 col-lg-1 control-label">
+                    发货日期
+                </label>
+
+                <div class="col-sm-10 col-md-10 col-lg-10 btn-toolbar">
+                    <div class="btn-group">
+                        #foreach($i in [1..10])
+                            <button type="button" class="btn btn-default">${i}</button>
+                        #end
+                    </div>
+                    <div class="btn-group">
+                        #foreach($i in [11..20])
+                            <button type="button" class="btn btn-default">${i}</button>
+                        #end
+                    </div>
+                    <div class="btn-group">
+                        #foreach($i in [21..30])
+                            <button type="button" class="btn btn-default">${i}</button>
+                        #end
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
