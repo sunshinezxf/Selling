@@ -1143,6 +1143,7 @@ input.weui_btn_plain_default {
 
 .weui_navbar_item.weui_bar_item_on {
     background-color: #eaeaea;
+    font-weight: bold;
 }
 
 .weui_navbar_item:after {

@@ -56,4 +56,10 @@ public class OrderServiceImpl implements OrderService {
         }
         return result;
     }
+
+	@Override
+	public ResultData modifyOrder(Order order) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

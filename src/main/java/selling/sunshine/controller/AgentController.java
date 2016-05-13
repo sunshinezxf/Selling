@@ -99,9 +99,50 @@ public class AgentController {
         view.setViewName("/agent/prompt");
         return view;
     }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/order/modify/{orderId}")
+    public ModelAndView modifyOrder(@PathVariable("orderId") String orderId) {
+        ModelAndView view = new ModelAndView();
+        Subject subject = SecurityUtils.getSubject();
+        Map<String, Object> condition = new HashMap<String, Object>();
+        ResultData fetchGoodsResponse = commodityService.fetchCommodity(condition);
+        User user = (User) subject.getPrincipal();
+        condition.clear();
+        condition.put("agentId", user.getAgent().getAgentId());
+        ResultData fetchCustomerResponse = customerService.fetchCustomer(condition);
+        condition.put("orderId", orderId);
+        ResultData fetchOrderResponse = orderService.fetchOrder(condition);
+        if(fetchOrderResponse.getResponseCode() == ResponseCode.RESPONSE_OK){
+        	Order order = ((List<Order>)fetchOrderResponse.getData()).get(0);
+        	view.addObject("order", order);
+        	view.addObject("status", order.getStatus());
+        }
+        if (fetchGoodsResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            view.addObject("goods", fetchGoodsResponse.getData());
+        }
+        if (fetchGoodsResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            view.addObject("customer", fetchCustomerResponse.getData());
+        }
+        view.addObject("operation", "MODIFY");
+        if (user.getAgent().isGranted()) {
+            view.setViewName("/agent/order/modify");
+            return view;
+        }
+        
+        Prompt prompt = new Prompt();
+        prompt.setCode(PromptCode.WARNING);
+        prompt.setTitle("提示");
 
-    @RequestMapping(method = RequestMethod.POST, value = "/order/place")
-    public ModelAndView placeOrder(@Valid OrderItemForm form, BindingResult result, RedirectAttributes attr) {
+        prompt.setMessage("尊敬的代理商，您的资料现在正在审核中，只有当审核通过后才能代客下单，请耐心等待！");
+        view.addObject("prompt", prompt);
+        view.setViewName("/agent/prompt");
+        return view;
+    }
+    
+    
+
+    @RequestMapping(method = RequestMethod.POST, value = "/order/place/{type}")
+    public ModelAndView placeOrder(@Valid OrderItemForm form, BindingResult result, RedirectAttributes attr, @PathVariable("type") String type) {
         ModelAndView view = new ModelAndView();
         if (result.hasErrors()) {
             view.setViewName("redirect:/agent/order/place");
@@ -148,6 +189,12 @@ public class AgentController {
             orderItems.add(orderItem);
         }
         order.setOrderItems(orderItems);//构造Order
+        switch(type){
+        case "save":order.setStatus(OrderStatus.SAVED);break;
+        case "submit":order.setStatus(OrderStatus.SUBMITTED);break;
+        default: order.setStatus(OrderStatus.SAVED);
+        }
+        
         ResultData fetchResponse = orderService.placeOrder(order);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             Prompt prompt = new Prompt();
@@ -202,10 +249,10 @@ public class AgentController {
     	condition.put("agentId", agent.getAgentId());
     	condition.put("orderId", orderId);
     	ResultData fetchOrderResponse = orderService.fetchOrder(condition);
-    	Order order = (Order)fetchOrderResponse.getData();
-    	List<OrderItem> orderItemList = order.getOrderItems();
-    	view.addObject("orderItems", orderItemList);
+    	Order order = ((List<Order>)fetchOrderResponse.getData()).get(0);
+    	view.addObject("order", order);
     	view.addObject("status", order.getStatus());
+    	 view.addObject("operation", "VIEW");
     	view.setViewName("/agent/order/modify");
     	return view;
     }
