@@ -10,121 +10,10 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-12 col-lg-12">
-            <p>待处理订单累计：3笔</p>
+        <div class="col-md-12 col-lg-12" id="check_order_table">
+            <p id="total"></p>
 
-            <div class="bs-callout">
-                <p>代理商A订单</p>
-                <table class="table table-striped" style="margin-bottom: 0.2em">
-                    <tr>
-                        <th>客户</th>
-                        <th>产品</th>
-                        <th>数量</th>
-                        <th>价格</th>
-                    </tr>
-                    <tr>
-                        <td>客户A</td>
-                        <td>商品A</td>
-                        <td>3</td>
-                        <td>298</td>
-                    </tr>
-                    <tr>
-                        <td>客户B</td>
-                        <td>商品A</td>
-                        <td>2</td>
-                        <td>298</td>
-                    </tr>
-                    <tr>
-                        <td>客户C</td>
-                        <td>商品B</td>
-                        <td>2</td>
-                        <td>298</td>
-                    </tr>
-                    <tr>
-                        <td>客户D</td>
-                        <td>商品B</td>
-                        <td>3</td>
-                        <td>298</td>
-                    </tr>
-                </table>
-                <p>总计:&nbsp;3000元,&nbsp;商品A:&nbsp;5件,&nbsp;商品B:&nbsp;2件</p>
-                <button type="button" class="btn btn-info">一键发货</button>
-            </div>
-
-            <div class="bs-callout">
-                <p>代理商B订单</p>
-                <table class="table table-striped" style="margin-bottom: 0.2em">
-                    <tr>
-                        <th>客户</th>
-                        <th>产品</th>
-                        <th>数量</th>
-                        <th>价格</th>
-                    </tr>
-                    <tr>
-                        <td>客户A</td>
-                        <td>商品A</td>
-                        <td>3</td>
-                        <td>298</td>
-                    </tr>
-                    <tr>
-                        <td>客户B</td>
-                        <td>商品A</td>
-                        <td>2</td>
-                        <td>298</td>
-                    </tr>
-                    <tr>
-                        <td>客户C</td>
-                        <td>商品B</td>
-                        <td>2</td>
-                        <td>298</td>
-                    </tr>
-                    <tr>
-                        <td>客户D</td>
-                        <td>商品B</td>
-                        <td>3</td>
-                        <td>298</td>
-                    </tr>
-                </table>
-                <p>总计:&nbsp;3000元,&nbsp;商品A:&nbsp;5件,&nbsp;商品B:&nbsp;2件</p>
-                <button type="button" class="btn btn-info">一键发货</button>
-            </div>
-
-            <div class="bs-callout">
-                <p>代理商C订单</p>
-                <table class="table table-striped" style="margin-bottom: 0.2em">
-                    <tr>
-                        <th>客户</th>
-                        <th>产品</th>
-                        <th>数量</th>
-                        <th>价格</th>
-                    </tr>
-                    <tr>
-                        <td>客户A</td>
-                        <td>商品A</td>
-                        <td>3</td>
-                        <td>298</td>
-                    </tr>
-                    <tr>
-                        <td>客户B</td>
-                        <td>商品A</td>
-                        <td>2</td>
-                        <td>298</td>
-                    </tr>
-                    <tr>
-                        <td>客户C</td>
-                        <td>商品B</td>
-                        <td>2</td>
-                    </tr>
-                    <tr>
-                        <td>客户D</td>
-                        <td>商品B</td>
-                        <td>3</td>
-                        <td>298</td>
-                    </tr>
-                </table>
-                <p>总计:&nbsp;3000元,&nbsp;商品A:&nbsp;5件,&nbsp;商品B:&nbsp;2件</p>
-                <button type="button" class="btn btn-info">一键发货</button>
-            </div>
+          
         </div>
     </div>
 </div>
@@ -136,9 +25,69 @@
         $("#goods-management").collapse('hide');
         $("#statement-management").collapse('hide');
     });
+    
+    $(document).ready(function () {
+        var url = "${path.concat('/order/check')}";
+        var start = 0;
+        var length= 5;
+        $.post(url, {
+            start: start,
+            length :length,
+        }, function (result) {
+            var total=result.total;
+            var orderList=result.data; 
+    
+            document.getElementById("total").innerHTML="待处理订单累计："+total+"笔";
+            if(total<length){
+               length=total;
+            }
+            for (var i = 0; i < length; i++) {  
+                var order= orderList[i];        
+                var node1 = "<div class='bs-callout' ><p>代理商"+ order.agent.name+ "订单</p></div>";
+                $("#check_order_table").append(node1);
+                var orderItems=order.orderItems;
+
+                var node2 = "<table class='table table-striped' style='margin-bottom: 0.2em'><tr><th>客户</th><th>产品</th><th>数量</th><th>价格</th></tr>";
+                var totalPrice=0;
+                var goods_quantity_list = new Object();
+                for(var j=0; j<orderItems.length; j++){
+                    var node3="<tr><td>" +orderItems[j].customer.name+ "</td><td>" +orderItems[j].goods.name+ "</td><td>" +orderItems[j].goodsQuantity+ "</td><td>" +orderItems[j].orderItemPrice+ "</td></tr>";
+                    node2=node2+node3;
+                    totalPrice=totalPrice+orderItems[j].orderItemPrice;
+                    var name=orderItems[j].goods.name;
+                    
+                    if(goods_quantity_list[name] == undefined) {
+        		       goods_quantity_list[name] = new Object();
+        		       goods_quantity_list[name]['quantity'] = orderItems[j].goodsQuantity;        		       
+        	        } else {
+        		       goods_quantity_list[name]['quantity'] += orderItems[j].goodsQuantity;
+        	        }
+                }
+                node2=node2+"</table>";
+                $("#check_order_table").append(node2);
+                
+                var node4="<p>总计:&nbsp;"+ totalPrice+ "元,&nbsp;";
+                for(var goods_quantity in goods_quantity_list){
+                      node4=node4+goods_quantity+":&nbsp;"+goods_quantity_list[goods_quantity]['quantity']+"件  &nbsp;";
+                }
+                node4=node4+"</p>";
+                $("#check_order_table").append(node4);
+                var node5="<button type='button' class='btn btn-info' onclick=express(this)>一键发货</button>";
+                $("#check_order_table").append(node5);
+                
+            }
+        });
+     
+    });
+
+    
 </script>
 <script>
     $(".btn-info").click(function () {
         window.location.href = "${path.concat('/order/express')}";
     });
+    
+    function express(obj){
+      window.location.href = "${path.concat('/order/express')}";
+    }
 </script>
