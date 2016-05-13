@@ -22,6 +22,15 @@ public class OrderController {
         return view;
     }
 
+    @RequestMapping(method = RequestMethod.POST, value = "/check")
+    public MobilePage<Order> handle(MobilePageParam param) {
+        MobilePage<Order> result = new MobilePage<>();
+        if (StringUtils.isEmpty(param)) {
+            return result;
+        }
+        return result;
+    }
+
     @RequestMapping(method = RequestMethod.GET, value = "/overview")
     public ModelAndView overview() {
         ModelAndView view = new ModelAndView();

@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import selling.sunshine.dao.OrderDao;
 import selling.sunshine.model.Order;
+import selling.sunshine.pagination.MobilePageParam;
 import selling.sunshine.service.OrderService;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
@@ -43,4 +44,16 @@ public class OrderServiceImpl implements OrderService {
         return result;
     }
 
+    @Override
+    public ResultData fetchOrder(Map<String, Object> condition, MobilePageParam param) {
+        ResultData result = new ResultData();
+        ResultData queryResponse = orderDao.queryOrderByPage(condition, param);
+        result.setResponseCode(queryResponse.getResponseCode());
+        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(queryResponse.getData());
+        } else {
+            result.setDescription(queryResponse.getDescription());
+        }
+        return result;
+    }
 }
