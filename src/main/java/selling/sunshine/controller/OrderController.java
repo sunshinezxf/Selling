@@ -6,8 +6,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import selling.sunshine.model.Order;
+import selling.sunshine.model.OrderStatus;
 import selling.sunshine.pagination.MobilePage;
 import selling.sunshine.pagination.MobilePageParam;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by sunshine on 4/11/16.
@@ -28,6 +32,8 @@ public class OrderController {
         if (StringUtils.isEmpty(param)) {
             return result;
         }
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("status", OrderStatus.PAYED);
         return result;
     }
 
