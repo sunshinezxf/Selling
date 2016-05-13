@@ -87,9 +87,9 @@ public class AgentController {
             view.addObject("customer", fetchCustomerResponse.getData());
         }
         if (user.getAgent().isGranted()) {
-        	 view.setViewName("/agent/order/place");
-             return view;
-		}
+            view.setViewName("/agent/order/place");
+            return view;
+        }
         Prompt prompt = new Prompt();
         prompt.setCode(PromptCode.WARNING);
         prompt.setTitle("提示");
@@ -191,21 +191,21 @@ public class AgentController {
         }
         return result;
     }
-    
-    @RequestMapping(method = RequestMethod.GET, value= "/order/detail/{orderId}")
-    public ModelAndView viewOrder(@PathVariable("orderId") String orderId){
-    	ModelAndView view = new ModelAndView();
-    	Subject subject = SecurityUtils.getSubject();
-    	User user = (User) subject.getPrincipal();
-    	Agent agent = user.getAgent();
-    	Map<String, Object> condition = new HashMap<String, Object>();
-    	condition.put("agentId", agent.getAgentId());
-    	condition.put("orderId", orderId);
-    	ResultData fetchOrderResponse = orderService.fetchOrder(condition);
-    	List<OrderItem> orderItemList = ((Order)fetchOrderResponse.getData()).getOrderItems();
-    	view.addObject("orderItems", orderItemList);
-    	view.setViewName("/agent/order/modify");
-    	return view;
+
+    @RequestMapping(method = RequestMethod.GET, value = "/order/detail/{orderId}")
+    public ModelAndView viewOrder(@PathVariable("orderId") String orderId) {
+        ModelAndView view = new ModelAndView();
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        Agent agent = user.getAgent();
+        Map<String, Object> condition = new HashMap<String, Object>();
+        condition.put("agentId", agent.getAgentId());
+        condition.put("orderId", orderId);
+        ResultData fetchOrderResponse = orderService.fetchOrder(condition);
+        List<OrderItem> orderItemList = ((Order) fetchOrderResponse.getData()).getOrderItems();
+        view.addObject("orderItems", orderItemList);
+        view.setViewName("/agent/order/modify");
+        return view;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/customer/manage")
@@ -373,6 +373,20 @@ public class AgentController {
         ModelAndView view = new ModelAndView();
         view.setViewName("/backend/agent/overview");
         return view;
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/overview")
+    public DataTablePage<Agent> overview(DataTableParam param) {
+        DataTablePage<Agent> result = new DataTablePage<>(param);
+        if (StringUtils.isEmpty(param)) {
+            return result;
+        }
+        Map<String, Object> condition = new HashMap<>();
+        ResultData fetchResponse = agentService.fetchAgent(condition, param);
+        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result = (DataTablePage<Agent>) fetchResponse.getData();
+        }
+        return result;
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/reward")
