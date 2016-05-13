@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import selling.sunshine.model.Order;
@@ -37,6 +38,7 @@ public class OrderController {
         return view;
     }
 
+    @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/check")
     public MobilePage<Order> handle(MobilePageParam param) {
         MobilePage<Order> result = new MobilePage<>();
@@ -44,7 +46,7 @@ public class OrderController {
             return result;
         }
         Map<String, Object> condition = new HashMap<>();
-        condition.put("status", OrderStatus.PAYED);
+        condition.put("status", OrderStatus.PAYED.getCode());
         ResultData fetchResponse = orderService.fetchOrder(condition, param);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             result = (MobilePage<Order>) fetchResponse.getData();
