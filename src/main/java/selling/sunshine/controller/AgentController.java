@@ -181,7 +181,7 @@ public class AgentController {
         ResultData result = new ResultData();
         Map<String, Object> condition = new HashMap<String, Object>();
         condition.put("agentId", agent.getAgentId());
-        condition.put("status", type);
+        condition.put("status", OrderStatus.SAVED);
         ResultData fetchResponse = orderService.fetchOrder(condition);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             result.setData(fetchResponse.getData());
@@ -191,21 +191,23 @@ public class AgentController {
         }
         return result;
     }
-
-    @RequestMapping(method = RequestMethod.GET, value = "/order/detail/{orderId}")
-    public ModelAndView viewOrder(@PathVariable("orderId") String orderId) {
-        ModelAndView view = new ModelAndView();
-        Subject subject = SecurityUtils.getSubject();
-        User user = (User) subject.getPrincipal();
-        Agent agent = user.getAgent();
-        Map<String, Object> condition = new HashMap<String, Object>();
-        condition.put("agentId", agent.getAgentId());
-        condition.put("orderId", orderId);
-        ResultData fetchOrderResponse = orderService.fetchOrder(condition);
-        List<OrderItem> orderItemList = ((Order) fetchOrderResponse.getData()).getOrderItems();
-        view.addObject("orderItems", orderItemList);
-        view.setViewName("/agent/order/modify");
-        return view;
+    
+    @RequestMapping(method = RequestMethod.GET, value= "/order/detail/{orderId}")
+    public ModelAndView viewOrder(@PathVariable("orderId") String orderId){
+    	ModelAndView view = new ModelAndView();
+    	Subject subject = SecurityUtils.getSubject();
+    	User user = (User) subject.getPrincipal();
+    	Agent agent = user.getAgent();
+    	Map<String, Object> condition = new HashMap<String, Object>();
+    	condition.put("agentId", agent.getAgentId());
+    	condition.put("orderId", orderId);
+    	ResultData fetchOrderResponse = orderService.fetchOrder(condition);
+    	Order order = (Order)fetchOrderResponse.getData();
+    	List<OrderItem> orderItemList = order.getOrderItems();
+    	view.addObject("orderItems", orderItemList);
+    	view.addObject("status", order.getStatus());
+    	view.setViewName("/agent/order/modify");
+    	return view;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/customer/manage")
