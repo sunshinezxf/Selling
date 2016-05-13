@@ -59,10 +59,10 @@
                 </ul>
             </li>
             <li><a data-toggle="collapse" data-parent="#accordion" href="#shipment-management"><i
-                    class="fa fa-book"></i> 基本配置<i
+                    class="fa fa-cog"></i> 基本配置<i
                     class="pull-right fa fa-caret-down"></i></a>
                 <ul id="shipment-management" class="nav nav-collapse collapse">
-                    <li><a class="sub-nav" href="${path.concat('/shipment/config')}"><i class="fa fa-edit"></i>
+                    <li><a class="sub-nav" href="${path.concat('/shipment/config')}"><i class="fa fa-cog"></i>
                         发货配置</a>
                     </li>
                 </ul>

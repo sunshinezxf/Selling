@@ -76,4 +76,20 @@ public class OrderController {
         view.setViewName("/backend/order/express");
         return view;
     }
+
+
+    @RequestMapping(method = RequestMethod.GET, value = "/save")
+    public ModelAndView save() {
+        ModelAndView view = new ModelAndView();
+        view.setViewName("");
+        return view;
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/place")
+    public ModelAndView place() {
+        ModelAndView view = new ModelAndView();
+
+        view.setViewName("");
+        return view;
+    }
 }
