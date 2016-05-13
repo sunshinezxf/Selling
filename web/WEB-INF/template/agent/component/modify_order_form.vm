@@ -1,5 +1,5 @@
-<form id="modify_order_form">
-<div id="modify_order_panel">
+<form id="place_order_form">
+<div id="place_order_panel">
     <div class="order_content">
         <div class="panel">
            <div class="hd">
@@ -7,9 +7,9 @@
             </div>
             <div class="bd">
                 <div class="weui_panel">
-                	#if (${status} == "SAVED")
+                	#if (${status} == "SAVED" && ${operation} == "MODIFY")
                     <div class="weui_cells weui_cells_access clear-margin-top">
-                        <a class="weui_cell" id="add_order_btn" style="display:none;">
+                        <a class="weui_cell" id="add_order_btn">
                             <div class="weui_cell_bd weui_cell_primary">
                                 <p>添加订货单</p>
                             </div>
@@ -18,13 +18,13 @@
                     </div>
                     #end
                     <div class="list-cell" id="order_item_list">
-                    	#foreach($orderItem in $orderItems)
+                    	#foreach($orderItem in ${order.orderItems})
                 		<div class="weui_cells weui_cells_access">
 			        		<a class="weui_cell">
 				       			<div class="weui_cell_bd weui_cell_primary">
 				        			<p>客户姓名</p>
 				        		</div>
-				        		<div class="weui_cell_ft"><span>${orderItem.customer.name}</span>(<span>${orderItem.customer.phone}</span>)</div>
+				        		<div class="weui_cell_ft"><span>${orderItem.customer.name}</span>(<span>${orderItem.customer.phone.phone}</span>)</div>
 				    		</a> 
 				        	<a class="weui_cell"> 
 				        		<div class="weui_cell_bd weui_cell_primary"> 
@@ -36,24 +36,30 @@
 				        		<div class="weui_cell_bd weui_cell_primary quantity"> 
 				        			<p>数量</p> 
 				        		</div> 
-				        		<div class="weui_cell_ft quantity"></div>
-				        "</a>" +
-				    	"<div class='weui_cell weui_cells_tips clear-margin-top'>" + 
-				        "金额:" + goods_price * $("#goods_quantity").val() + "元" + 
-				    	"</div>" + 
-				    	"<div class='weui_cells_tips delete'>删除</div>" + 
-				    	"<input class='goods_quantity' type='hidden' name='goodsQuantity' value='" + $("#goods_quantity").val() + "'/>" + 
-				    	"<input class='goods_id' type='hidden' name='goodsId' value='" + goods_id + "'/>" + 
-				    	"<input class='order_item_price' type='hidden' name='orderItemPrice' value='" + goods_price + "'/>" + 
-				    	"<input class='customer_id' type='hidden' name='customerId' value='" + customer_id + "'/>" + 
-						"</div>";
+				        		<div class="weui_cell_ft quantity">${orderItem.goodsQuantity}</div>
+				        	</a>
+				    		<div class="weui_cell weui_cells_tips clear-margin-top">金额:${orderItem.orderItemPrice}元 </div>
+				    		#if(${status} == "SAVED" && ${operation} == "MODIFY")
+				    		<div class="weui_cells_tips delete">删除</div>
+				    		#end
+				    		<input class="goods_quantity" type="hidden" name="goodsQuantity" value="${orderItem.goodsQuantity}"/> 
+				    		<input class="goods_id" type="hidden" name="goodsId" value="${orderItem.goods.goodsId}"/> 
+				    		<input class="order_item_price" type="hidden" name="orderItemPrice" value="${orderItem.goods.price}"/> 
+				    		<input class="customer_id" type="hidden" name="customerId" value="${orderItem.customer.customerId}"/>
+						</div>
                     	#end
                     </div>
                 </div>
+                #if(${status} == "SAVED" && ${operation} == "MODIFY")
                 <div class="weui_btn_area">
                     <a class="weui_btn weui_btn_plain_primary" id="save_order_btn">保存订单</a>
                     <a class="weui_btn weui_btn_primary" id="place_order_btn">确认下单</a>
                 </div>
+                #elseif(${status} == "SAVED" && ${operation} == "VIEW")
+                <div class="weui_btn_area">
+                    <a class="weui_btn weui_btn_plain_primary" id="modify_order_btn">修改订单</a>
+                </div>
+                #end
             </div>
         </div>
     </div>
@@ -69,11 +75,54 @@
     </div>
 </div>
 </form>
+#if(${status} == "SAVED" && ${operation} == "MODIFY")
 #parse("/agent/order/add_order_item.vm")
+#end
 <script>
 	//立了一个flag，判断是新增还是修改订单
 	isAdd = true;
-    $("#add_order_item").hide();
+	$(document).ready(function(){
+		$("#add_order_item").hide();
+		$.calculate();
+		#if(${status} == "SAVED" && ${operation} == "MODIFY")
+			//添加事件
+			var order_item_list = $("#order_item_list").children();
+			$.each(order_item_list, function(i, val){
+				//客户修改事件
+				$(val).children().eq(0).on("click", function(){
+		    		isAdd = false;
+		    		current_modify_dom = this;
+		    		customer_id = $(this).parent(".weui_cells.weui_cells_access").find(".customer_id").val();
+		    		customer_name = $(this).find(".weui_cell_ft span").eq(0).html();
+		    		customer_phone = $(this).find(".weui_cell_ft span").eq(1).html();
+		    		$("#place_order_panel").hide();
+		    		$("#customer_option").fadeIn();
+		    	});
+		    	//商品修改事件
+		    	$(val).children().eq(1).on("click", function(){
+		    		isAdd = false;
+		    		current_modify_dom = this;
+		    		goods_id = $(this).parent(".weui_cells.weui_cells_access").find(".goods_id").val();
+		    		goods_name = $(this).find(".weui_cell_ft").html();
+					goods_price = parseFloat($(this).parent(".weui_cells.weui_cells_access").find(".order_item_price").val());
+		    		$("#place_order_panel").hide();
+		    		$("#goods_option").fadeIn();
+		    	});
+		    	//数量修改事件
+		    	$(val).children().eq(2).on("click",function(){
+		    		current_modify_dom = this;
+		    		goods_id = $(this).parent(".weui_cells.weui_cells_access").find(".goods_id").val();
+		    		goods_name = $(this).find(".weui_cell_ft").html();
+					goods_price = parseFloat($(this).parent(".weui_cells.weui_cells_access").find(".order_item_price").val());
+					var goods_quantity = $(this).find(".weui_cell_ft").html();
+		    		$("#quantity_modify").find(".weui_input").val(goods_quantity);
+		    		$("#place_order_panel").hide();
+		    		$("#quantity_modify").fadeIn();
+		    	});
+			});
+		#end
+	});
+    
     $("#add_order_btn").click(function () {
     	isAdd = true;
         $("#add_order_item").fadeIn();
@@ -83,17 +132,20 @@
     	if(!$.check_order()){
     		return;
     	}
-    	$("#place_order_form").attr("action", "${path.concat('/agent/order/place')}");
+    	$("#place_order_form").attr("action", "${path.concat('/agent/order/place/submit')}");
     	$("#place_order_form").attr("method","post");
     	$("#place_order_form").submit();
     });
-
-    
+    #if(${status} == "SAVED" && ${operation} == "VIEW")
+	$("#modify_order_btn").click(function(){
+		window.location = "${path.concat('/agent/order/modify/')}" + "${order.orderId}";
+	});
+    #end
     $("#save_order_btn").click(function(){
     	if(!$.check_order()){
     		return;
     	}
-    	$("#place_order_form").attr("action", "${path.concat('/agent/order/place')}");
+    	$("#place_order_form").attr("action", "${path.concat('/agent/order/place/save')}");
     	$("#place_order_form").attr("method","post");
     	$("#place_order_form").submit();
     });
@@ -104,5 +156,32 @@
     		return false;
     	}
     	return true;
+    }
+     //计算总价
+    $.calculate = function(){
+    	var order_info_list = new Object();
+        var order_item_list = $("#order_item_list").children();
+        $.each(order_item_list, function(i, val){
+        	var name = $(val).children().eq(1).find(".weui_cell_ft").text();
+        	var quantity = $(val).children().eq(2).find(".weui_cell_ft").text();
+        	var price = $(val).find(".order_item_price").val();
+        	if(order_info_list[name] == undefined) {
+        		order_info_list[name] = new Object();
+        		order_info_list[name]['quantity'] = parseInt(quantity);
+        		order_info_list[name]['order_item_price'] = parseFloat(price) * quantity ;
+        	} else {
+        		order_info_list[name]['quantity'] += parseInt(quantity);
+        		order_info_list[name]['order_item_price'] += parseFloat(price) * quantity;
+        	}
+        });
+        $("#total_goods").empty();
+        var total_price = 0;
+        for(var order_info in order_info_list) {
+        	total_price += order_info_list[order_info]['order_item_price'];
+        	$("#total_goods").append("<p class='weui_media_text'>" 
+        		+ order_info + ": " + order_info_list[order_info]['quantity'] +
+ 				"件, 共" + order_info_list[order_info]['order_item_price'] + "元</p>")
+        }
+        $("#total_goods").append(" <p class='weui_media_text'>共计" + total_price + "元</p>")
     }
 </script>

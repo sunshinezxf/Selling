@@ -174,34 +174,6 @@
     	return true;
     }
     
-    //计算总价
-    $.calculate = function(){
-    	var order_info_list = new Object();
-        var order_item_list = $("#order_item_list").children();
-        $.each(order_item_list, function(i, val){
-        	var name = $(val).children().eq(1).find(".weui_cell_ft").text();
-        	var quantity = $(val).children().eq(2).find(".weui_cell_ft").text();
-        	var price = $(val).children().eq(7).val();
-        	if(order_info_list[name] == undefined) {
-        		order_info_list[name] = new Object();
-        		order_info_list[name]['quantity'] = parseInt(quantity);
-        		order_info_list[name]['order_item_price'] = parseFloat(price) * quantity ;
-        	} else {
-        		order_info_list[name]['quantity'] += parseInt(quantity);
-        		order_info_list[name]['order_item_price'] += parseFloat(price) * quantity;
-        	}
-        });
-        $("#total_goods").empty();
-        var total_price = 0;
-        for(var order_info in order_info_list) {
-        	total_price += order_info_list[order_info]['order_item_price'];
-        	$("#total_goods").append("<p class='weui_media_text'>" 
-        		+ order_info + ": " + order_info_list[order_info]['quantity'] +
- 				"件, 共" + order_info_list[order_info]['order_item_price'] + "元</p>")
-        }
-        $("#total_goods").append(" <p class='weui_media_text'>共计" + total_price + "元</p>")
-    }
-    
     $("#dialog").find(".weui_btn_dialog.primary").click(function(){
     	$("#dialog").hide();
     });

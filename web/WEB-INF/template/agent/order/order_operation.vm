@@ -9,7 +9,7 @@
     </div>
     <div class="weui_tab">
         <div class="weui_navbar">
-            <div class="weui_navbar_item weui_bar_item_on" id="saved">
+            <div class="weui_navbar_item weui_bar_item_on" style="font-weight:bold;" id="saved">
                 已保存 
             </div>
             <div class="weui_navbar_item" id="submit">
@@ -31,7 +31,7 @@
 #parse("/agent/component/navigate.vm")
 <script>
 	$(document).ready(function(){
-		$.get_order(1);
+		$.get_order(0);
 	});
 
     $(".weui_navbar_item").click(function () {
@@ -40,6 +40,7 @@
         var target_id = $(this).attr("id");
         if (current_id != target_id) {
             current.removeClass("weui_bar_item_on");
+            current.css("font-weight","normal");
             if (target_id == "saved") {
             	$.get_order(0);
             } else if (target_id == "submit") {
@@ -49,6 +50,7 @@
             } else if (target_id == "closed") {
 				$.get_order(3);
             }
+            $(this).css("font-weight","bold");
             $(this).addClass("weui_bar_item_on")
         }
     });
@@ -63,7 +65,7 @@
     			var	timeString = (new Date(val.createAt)).format("yyyy MM dd");
     			var time = timeString.split(" ");
     			var html = 
-    				"<a class='weui_cell'>" + 
+    				"<a class='weui_cell' id='" + val.orderId + "'>" + 
     				"<div class='weui_cell_hd'>" + 
     				"<i class='icon icon_article'></i>" + 
     				"</div>" + 
@@ -73,6 +75,9 @@
     				"<div class='weui_cell_ft'>含" + val.orderItems.length + "个订单项</div>" + 
     				"</a>";
     			$("#order_list").append(html);
+    			$("#" + val.orderId).on("click", function(){
+    				window.location = "${path.concat('/agent/order/detail/" + val.orderId + "')}";
+    			});
     		});
     	});
     }
