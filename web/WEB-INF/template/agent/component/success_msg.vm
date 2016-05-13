@@ -1,19 +1,19 @@
 <div class="msg">
     <div class="weui_msg">
         <div class="weui_icon_area">
-            <i class="weui_icon_success weui_icon_msg"></i>
+             #if(${prompt.code} == "SUCCESS")
+                    <i class="weui_icon_msg weui_icon_success"></i>
+             #elseif(${prompt.code} == "WARNING")
+                   <i class="weui_icon_msg weui_icon_waiting"></i>
+             #elseif(${prompt.code} == "DANGER")
+                   <i class="weui_icon_msg weui_icon_warn"></i>
+             #else
+                   <i class="weui_icon_msg weui_icon_info"></i>
+             #end
         </div>
         <div class="weui_text_area">
             <h2 class="weui_msg_title">
-                #if(${prompt.code} == "SUCCESS")
-                    操作成功
-                #elseif(${prompt.code} == "WARNING")
-                    操作提示
-                #elseif(${prompt.code} == "DANGER")
-                    操作失败
-                #else
-                    警告信息
-                #end
+               ${prompt.title}
             </h2>
 
             <p class="weui_msg_desc">
@@ -21,7 +21,8 @@
                     ${prompt.message}
                 #else
                     对不起,当前您没有任何消息
-                #end</p>
+                #end
+            </p>
         </div>
         <div class="weui_opr_area">
             <p class="weui_btn_area">
