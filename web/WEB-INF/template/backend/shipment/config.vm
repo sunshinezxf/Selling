@@ -1,0 +1,10 @@
+#parse("/common/util.vm")
+<html lang="zh_CN">
+<head>
+    #parse("/backend/component/init.vm")
+    <title>发货配置</title>
+</head>
+<body>
+
+</body>
+</html>
