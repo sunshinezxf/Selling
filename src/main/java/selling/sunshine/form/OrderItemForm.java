@@ -7,6 +7,7 @@ public class OrderItemForm {
 	private String[] goodsQuantity;
 	private String[] orderItemPrice;
 	private String agentId;
+	private String orderId;
 
 	public String[] getOrderItemId() {
 		return orderItemId;
@@ -55,5 +56,14 @@ public class OrderItemForm {
 	public void setAgentId(String agentId) {
 		this.agentId = agentId;
 	}
+
+	public String getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
+	}
+	
 	
 }

@@ -46,6 +46,7 @@
 				    		<input class="goods_id" type="hidden" name="goodsId" value="${orderItem.goods.goodsId}"/> 
 				    		<input class="order_item_price" type="hidden" name="orderItemPrice" value="${orderItem.goods.price}"/> 
 				    		<input class="customer_id" type="hidden" name="customerId" value="${orderItem.customer.customerId}"/>
+				    		<input class="order_item_id" type="hidden" name="orderItemId" value="${orderItem.orderItemId}"/>
 						</div>
                     	#end
                     </div>
@@ -74,6 +75,9 @@
         </div>
     </div>
 </div>
+#if(${status} == "SAVED" && ${operation} == "MODIFY")
+<input type="hidden" name="orderId" value="${order.orderId}"/>
+#end
 </form>
 #if(${status} == "SAVED" && ${operation} == "MODIFY")
 #parse("/agent/order/add_order_item.vm")
@@ -85,6 +89,7 @@
 		$("#add_order_item").hide();
 		$.calculate();
 		#if(${status} == "SAVED" && ${operation} == "MODIFY")
+			
 			//添加事件
 			var order_item_list = $("#order_item_list").children();
 			$.each(order_item_list, function(i, val){
@@ -132,7 +137,7 @@
     	if(!$.check_order()){
     		return;
     	}
-    	$("#place_order_form").attr("action", "${path.concat('/agent/order/place/submit')}");
+    	$("#place_order_form").attr("action", "${path.concat('/order/modify/submit')}");
     	$("#place_order_form").attr("method","post");
     	$("#place_order_form").submit();
     });
@@ -145,7 +150,7 @@
     	if(!$.check_order()){
     		return;
     	}
-    	$("#place_order_form").attr("action", "${path.concat('/agent/order/place/save')}");
+    	$("#place_order_form").attr("action", "${path.concat('/order/modify/save')}");
     	$("#place_order_form").attr("method","post");
     	$("#place_order_form").submit();
     });

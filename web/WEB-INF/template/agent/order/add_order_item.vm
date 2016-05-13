@@ -86,6 +86,7 @@
 	    	"<input class='goods_id' type='hidden' name='goodsId' value='" + goods_id + "'/>" + 
 	    	"<input class='order_item_price' type='hidden' name='orderItemPrice' value='" + goods_price + "'/>" + 
 	    	"<input class='customer_id' type='hidden' name='customerId' value='" + customer_id + "'/>" + 
+	    	"<input class='order_item_id' type='hidden' name='orderItemId' value=''/>" +
 			"</div>";
         $("#order_item_list").append(place_order_item);
         
