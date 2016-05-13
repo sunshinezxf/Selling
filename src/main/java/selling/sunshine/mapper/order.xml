@@ -37,6 +37,14 @@
         <result property="name" column="customer_name"></result>
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
+        <association property="phone" column="customerId = customer_id" select="phoneQuery"></association>
+    </resultMap>
+
+    <resultMap id="phoneVo" type="selling.sunshine.model.CustomerPhone">
+        <result property="phoneId" column="customer_phone_id"></result>
+        <result property="phone" column="phone"></result>
+        <result property="blockFlag" column="block_flag"></result>
+        <result property="createAt" column="create_time"></result>
     </resultMap>
 
     <resultMap id="goodsVo" type="selling.sunshine.model.Goods">
@@ -91,6 +99,13 @@
         SELECT customer_id, customer_name, agent_id, block_flag, create_time
         FROM customer
         WHERE customer_id = #{customerId}
+    </select>
+
+    <select id="phoneQuery" parameterType="java.util.Map" resultMap="phoneVo">
+        SELECT customer_phone_id, phone, block_flag, create_time
+        FROM customer_phone
+        WHERE customer_id = #{customerId}
+        AND block_flag = 0
     </select>
 
     <select id="goodsQuery" parameterType="java.util.Map" resultMap="goodsVo">
