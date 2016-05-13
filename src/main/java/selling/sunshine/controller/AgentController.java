@@ -382,6 +382,7 @@ public class AgentController {
             return result;
         }
         Map<String, Object> condition = new HashMap<>();
+        condition.put("granted", true);
         ResultData fetchResponse = agentService.fetchAgent(condition, param);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             result = (DataTablePage<Agent>) fetchResponse.getData();
