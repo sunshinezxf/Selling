@@ -9,8 +9,11 @@
     </div>
     <div class="weui_tab">
         <div class="weui_navbar">
-            <div class="weui_navbar_item weui_bar_item_on" id="submit">
+            <div class="weui_navbar_item weui_bar_item_on" id="saved">
                 已保存 
+            </div>
+            <div class="weui_navbar_item" id="submit">
+                未付款
             </div>
             <div class="weui_navbar_item" id="paid">
                 已付款
@@ -37,7 +40,9 @@
         var target_id = $(this).attr("id");
         if (current_id != target_id) {
             current.removeClass("weui_bar_item_on");
-            if (target_id == "submit") {
+            if (target_id == "saved") {
+            	$.get_order(0);
+            } else if (target_id == "submit") {
 				$.get_order(1);
             } else if (target_id == "paid") {
 				$.get_order(2);
