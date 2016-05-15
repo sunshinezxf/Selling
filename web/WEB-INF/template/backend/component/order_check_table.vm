@@ -11,9 +11,7 @@
     </div>
     <div class="row">
         <div class="col-md-12 col-lg-12" id="check_order_table">
-            <p id="total"></p>
-
-          
+            <p id="total"></p>       
         </div>
     </div>
 </div>
@@ -43,7 +41,7 @@
             }
             for (var i = 0; i < length; i++) {  
                 var order= orderList[i];        
-                var node1 = "<div class='bs-callout' ><p>代理商"+ order.agent.name+ "订单</p></div>";
+                var node1 = "<div class='bs-callout' id='order" + i + "'><p>代理商"+ order.agent.name+ "订单</p></div>";
                 $("#check_order_table").append(node1);
                 var orderItems=order.orderItems;
 
@@ -64,18 +62,22 @@
         	        }
                 }
                 node2=node2+"</table>";
-                $("#check_order_table").append(node2);
+                $("#order"+i).append(node2);
                 
                 var node4="<p>总计:&nbsp;"+ totalPrice+ "元,&nbsp;";
                 for(var goods_quantity in goods_quantity_list){
                       node4=node4+goods_quantity+":&nbsp;"+goods_quantity_list[goods_quantity]['quantity']+"件  &nbsp;";
                 }
                 node4=node4+"</p>";
-                $("#check_order_table").append(node4);
+                $("#order"+i).append(node4);
                 var node5="<button type='button' class='btn btn-info' onclick=express(this)>一键发货</button>";
-                $("#check_order_table").append(node5);
+                $("#order"+i).append(node5);
                 
             }
+           
+            var node6="<button type='button' class='btn btn-success' onclick=express(this)>下一页</button>";
+            $("#check_order_table").append(node6);
+             
         });
      
     });
