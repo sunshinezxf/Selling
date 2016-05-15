@@ -45,7 +45,7 @@
                 $("#check_order_table").append(node1);
                 var orderItems=order.orderItems;
 
-                var node2 = "<table class='table table-striped' style='margin-bottom: 0.2em'><tr><th>客户</th><th>产品</th><th>数量</th><th>价格</th></tr>";
+                var node2 = "<table class='table table-striped' style='margin-bottom: 0.2em'><colgroup><col width='25%'></col><col width='25%'></col><col width='25%'></col><col width='25%'></col></colgroup><tr><th>客户</th><th>产品</th><th>数量</th><th>价格</th></tr>";
                 var totalPrice=0;
                 var goods_quantity_list = new Object();
                 for(var j=0; j<orderItems.length; j++){
