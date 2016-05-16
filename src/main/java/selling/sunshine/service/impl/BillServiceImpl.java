@@ -51,8 +51,8 @@ public class BillServiceImpl implements BillService {
         params.put("channel", bill.getChannel());
         if (!StringUtils.isEmpty(bill.getChannel()) && bill.getChannel().equals("alipay_wap")) {
             Map<String, String> url = new HashMap<>();
-            url.put("success_url", "http://192.168.15.180:8080/selling/account/deposit/" + bill.getBillId() + "/prompt");
-            url.put("cancel_url", "http://192.168.15.180:8080/selling/account/deposit/" + bill.getBillId() + "/prompt");
+            url.put("success_url", "http://192.168.1.100:8080/selling/account/deposit/" + bill.getBillId() + "/prompt");
+            url.put("cancel_url", "http://192.168.1.100:8080/selling/account/deposit/" + bill.getBillId() + "/prompt");
             params.put("extra", url);
         }
         params.put("currency", "cny");

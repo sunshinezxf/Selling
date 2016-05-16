@@ -310,13 +310,6 @@ public class AgentController {
         return result;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/account/info")
-    public ModelAndView info() {
-        ModelAndView view = new ModelAndView();
-        view.setViewName("/agent/account/info");
-        return view;
-    }
-
     @RequestMapping(method = RequestMethod.GET, value = "/statement")
     public ModelAndView statement() {
         ModelAndView view = new ModelAndView();
