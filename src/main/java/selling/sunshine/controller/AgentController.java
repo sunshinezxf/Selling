@@ -18,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import selling.sunshine.form.AgentForm;
 import selling.sunshine.form.AgentLoginForm;
 import selling.sunshine.form.OrderItemForm;
+import selling.sunshine.form.SortRule;
 import selling.sunshine.model.*;
 import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
@@ -99,7 +100,7 @@ public class AgentController {
         view.setViewName("/agent/prompt");
         return view;
     }
-    
+
     @RequestMapping(method = RequestMethod.GET, value = "/order/modify/{orderId}")
     public ModelAndView modifyOrder(@PathVariable("orderId") String orderId) {
         ModelAndView view = new ModelAndView();
@@ -112,10 +113,10 @@ public class AgentController {
         ResultData fetchCustomerResponse = customerService.fetchCustomer(condition);
         condition.put("orderId", orderId);
         ResultData fetchOrderResponse = orderService.fetchOrder(condition);
-        if(fetchOrderResponse.getResponseCode() == ResponseCode.RESPONSE_OK){
-        	Order order = ((List<Order>)fetchOrderResponse.getData()).get(0);
-        	view.addObject("order", order);
-        	view.addObject("status", order.getStatus());
+        if (fetchOrderResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            Order order = ((List<Order>) fetchOrderResponse.getData()).get(0);
+            view.addObject("order", order);
+            view.addObject("status", order.getStatus());
         }
         if (fetchGoodsResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             view.addObject("goods", fetchGoodsResponse.getData());
@@ -128,7 +129,7 @@ public class AgentController {
             view.setViewName("/agent/order/modify");
             return view;
         }
-        
+
         Prompt prompt = new Prompt();
         prompt.setCode(PromptCode.WARNING);
         prompt.setTitle("提示");
@@ -138,8 +139,7 @@ public class AgentController {
         view.setViewName("/agent/prompt");
         return view;
     }
-    
-    
+
 
     @RequestMapping(method = RequestMethod.POST, value = "/order/place/{type}")
     public ModelAndView placeOrder(@Valid OrderItemForm form, BindingResult result, RedirectAttributes attr, @PathVariable("type") String type) {
@@ -191,26 +191,31 @@ public class AgentController {
             orderItems.add(orderItem);
         }
         order.setOrderItems(orderItems);//构造Order
-        switch(type){
-        case "save":order.setStatus(OrderStatus.SAVED);break;
-        case "submit":order.setStatus(OrderStatus.SUBMITTED);break;
-        default: order.setStatus(OrderStatus.SAVED);
+        switch (type) {
+            case "save":
+                order.setStatus(OrderStatus.SAVED);
+                break;
+            case "submit":
+                order.setStatus(OrderStatus.SUBMITTED);
+                break;
+            default:
+                order.setStatus(OrderStatus.SAVED);
         }
-        
+
         ResultData fetchResponse = orderService.placeOrder(order);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             Prompt prompt = new Prompt();
             prompt.setCode(PromptCode.SUCCESS);
             prompt.setTitle("提示");
             prompt.setConfirmURL("/agent/order/manage");
-            switch(type){
-            case "save":
-            	prompt.setMessage("保存成功");
-            	break;
-            case "submit":
-            	prompt.setMessage("下单成功");
-            	break;
-            default:
+            switch (type) {
+                case "save":
+                    prompt.setMessage("保存成功");
+                    break;
+                case "submit":
+                    prompt.setMessage("下单成功");
+                    break;
+                default:
             }
             attr.addFlashAttribute("prompt", prompt);
             view.setViewName("redirect:/agent/prompt");
@@ -252,23 +257,23 @@ public class AgentController {
         }
         return result;
     }
-    
-    @RequestMapping(method = RequestMethod.GET, value= "/order/detail/{orderId}")
-    public ModelAndView viewOrder(@PathVariable("orderId") String orderId){
-    	ModelAndView view = new ModelAndView();
-    	Subject subject = SecurityUtils.getSubject();
-    	User user = (User) subject.getPrincipal();
-    	Agent agent = user.getAgent();
-    	Map<String, Object> condition = new HashMap<String, Object>();
-    	condition.put("agentId", agent.getAgentId());
-    	condition.put("orderId", orderId);
-    	ResultData fetchOrderResponse = orderService.fetchOrder(condition);
-    	Order order = ((List<Order>)fetchOrderResponse.getData()).get(0);
-    	view.addObject("order", order);
-    	view.addObject("status", order.getStatus());
-    	 view.addObject("operation", "VIEW");
-    	view.setViewName("/agent/order/modify");
-    	return view;
+
+    @RequestMapping(method = RequestMethod.GET, value = "/order/detail/{orderId}")
+    public ModelAndView viewOrder(@PathVariable("orderId") String orderId) {
+        ModelAndView view = new ModelAndView();
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        Agent agent = user.getAgent();
+        Map<String, Object> condition = new HashMap<String, Object>();
+        condition.put("agentId", agent.getAgentId());
+        condition.put("orderId", orderId);
+        ResultData fetchOrderResponse = orderService.fetchOrder(condition);
+        Order order = ((List<Order>) fetchOrderResponse.getData()).get(0);
+        view.addObject("order", order);
+        view.addObject("status", order.getStatus());
+        view.addObject("operation", "VIEW");
+        view.setViewName("/agent/order/modify");
+        return view;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/customer/manage")
@@ -446,6 +451,9 @@ public class AgentController {
         }
         Map<String, Object> condition = new HashMap<>();
         condition.put("granted", true);
+        List<SortRule> rule = new ArrayList<>();
+        rule.add(new SortRule("create_time", "asc"));
+        condition.put("rule", rule);
         ResultData fetchResponse = agentService.fetchAgent(condition, param);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             result = (DataTablePage<Agent>) fetchResponse.getData();

@@ -4,9 +4,11 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import selling.sunshine.dao.AgentDao;
 import selling.sunshine.dao.BaseDao;
+import selling.sunshine.form.SortRule;
 import selling.sunshine.model.Agent;
 import selling.sunshine.model.Role;
 import selling.sunshine.model.User;
@@ -58,6 +60,7 @@ public class AgentDaoImpl extends BaseDao implements AgentDao {
     public ResultData queryAgent(Map<String, Object> condition) {
         ResultData result = new ResultData();
         try {
+
             List<Agent> list = sqlSession.selectList("selling.agent.query", condition);
             logger.debug(JSONObject.toJSONString(condition));
             logger.debug(JSONObject.toJSONString(list));
