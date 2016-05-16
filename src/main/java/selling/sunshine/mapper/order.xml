@@ -89,6 +89,16 @@
         </if>
     </select>
 
+    <update id="update" parameterType="selling.sunshine.model.Order">
+        UPDATE `order`
+        <set>
+            <if test="status != null and status != ''">
+                order_status = #{status},
+            </if>
+        </set>
+        WHERE order_id = #{orderId}
+    </update>
+
     <select id="orderItemQuery" parameterType="java.util.Map" resultMap="orderItemVo">
     	SELECT order_item_id, customer_id, goods_id, goods_quantity, order_item_price
     	from order_item
@@ -113,4 +123,6 @@
         FROM goods
         WHERE goods_id = #{goodsId}
     </select>
+
+
 </mapper>

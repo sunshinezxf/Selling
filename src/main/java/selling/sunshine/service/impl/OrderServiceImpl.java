@@ -57,9 +57,16 @@ public class OrderServiceImpl implements OrderService {
         return result;
     }
 
-	@Override
-	public ResultData modifyOrder(Order order) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public ResultData modifyOrder(Order order) {
+        ResultData result = new ResultData();
+        ResultData updateResponse = orderDao.updateOrder(order);
+        result.setResponseCode(updateResponse.getResponseCode());
+        if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(updateResponse.getData());
+        } else {
+            result.setDescription(updateResponse.getDescription());
+        }
+        return result;
+    }
 }

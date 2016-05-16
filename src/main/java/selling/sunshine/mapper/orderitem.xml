@@ -17,7 +17,7 @@
     </resultMap>
 
     <resultMap id="customerVo" type="selling.sunshine.model.Customer">
-     	<result property="customerId" column="customer_id"></result>
+        <result property="customerId" column="customer_id"></result>
         <result property="name" column="customer_name"></result>
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
@@ -72,6 +72,45 @@
             AND goods_id = #{goodsId}
         </if>
     </select>
+
+    <update id="update" parameterType="selling.sunshine.model.OrderItem" useGeneratedKeys="false">
+        UPDATE order_item
+        <set>
+            <if test="status != null and status != ''">
+                order_item_status = #{status},
+            </if>
+            <if test="customer != null and customer.customerId != null and customer.customerId != ''">
+                customer_id = #{customer.customerId},
+            </if>
+            <if test="goodsQuantity != null">
+                goods_quantity = #{goodsQuantity},
+            </if>
+            <if test="orderItemPrice != null">
+                order_item_price = #{orderItemPrice},
+            </if>
+            <if test="goods != null and goods.goodsId != null and goods.goodsId != ''">
+                goods_id = #{goods.goodsId},
+            </if>
+            <if test="blockFlag != null and blockFlag != ''">
+                block_flag = #{blockFlag},
+            </if>
+            <if test="createAt != null and createAt != ''">
+                create_time = #{createAt},
+            </if>
+            <if test="order != null and order.orderId != null and order.orderId != ''">
+                order_item_id = #{orderItemId}
+            </if>
+        </set>
+        WHERE order_item_id = #{orderItemId}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM order_item
+        WHERE order_item_id IN
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item.orderItemId}
+        </foreach>
+    </delete>
 
     <select id="goodsQuery" parameterType="java.util.Map" resultMap="goodsVo">
          SELECT goods_id, goods_name, goods_price, goods_description, block_flag, create_time
