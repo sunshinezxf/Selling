@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.alibaba.fastjson.JSON;
+
 import selling.sunshine.form.OrderItemForm;
 import selling.sunshine.model.Agent;
 import selling.sunshine.model.Goods;
@@ -165,22 +167,18 @@ public class OrderController {
         
         ResultData fetchResponse = orderService.placeOrder(order);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            Prompt prompt = new Prompt();
-            prompt.setCode(PromptCode.SUCCESS);
-            prompt.setTitle("提示");
-            prompt.setConfirmURL("/agent/order/manage");
-            switch(type){
-            case "save":
-            	prompt.setMessage("保存成功");
-            	break;
-            case "submit":
-            	prompt.setMessage("下单成功");
-            	break;
-            default:
+        	if(type.equals("save")){
+		        Prompt prompt = new Prompt();
+		        prompt.setCode(PromptCode.SUCCESS);
+		        prompt.setTitle("提示");
+		        prompt.setConfirmURL("/agent/order/manage");
+		    	prompt.setMessage("保存成功");
+		    	attr.addFlashAttribute("prompt", prompt);
+		        view.setViewName("redirect:/agent/prompt");
+            } else if(type.equals("submit")){
+            	view.setViewName("redirect:/order/pay/" + order.getOrderId());
             }
-            attr.addFlashAttribute("prompt", prompt);
-            view.setViewName("redirect:/agent/prompt");
-            return view;
+        	return view;
         }
         Prompt prompt = new Prompt();
         prompt.setCode(PromptCode.WARNING);
@@ -190,11 +188,31 @@ public class OrderController {
         return view;
     }
     
-    @RequestMapping(method = RequestMethod.POST, value = "/place")
-    public ModelAndView place() {
+    @RequestMapping(method = RequestMethod.GET, value = "/pay/{orderId}")
+    public ModelAndView place(@PathVariable("orderId") String orderId) {
         ModelAndView view = new ModelAndView();
-
-        view.setViewName("");
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        Agent agent = user.getAgent();
+        Map<String, Object> condition = new HashMap<String, Object>();
+        condition.put("agentId", agent.getAgentId());
+        condition.put("orderId", orderId);
+        ResultData orderData =  orderService.fetchOrder(condition);
+        Order order = null;
+        if(orderData.getResponseCode() == ResponseCode.RESPONSE_OK){
+        	order = ((List<Order>) orderData.getData()).get(0);
+        } else {
+        	 Prompt prompt = new Prompt();
+             prompt.setCode(PromptCode.WARNING);
+             prompt.setTitle("提示");
+             prompt.setMessage("保存成功");
+             view.addObject("prompt", prompt);
+             view.setViewName("redirect:/agent/prompt");
+             return view;
+        }
+        view.addObject("order", JSON.toJSONString(order));
+        view.addObject("agent", agent);
+        view.setViewName("agent/order/pay");
         return view;
     }
 }
