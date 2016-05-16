@@ -245,9 +245,12 @@ public class AgentController {
         User user = (User) subject.getPrincipal();
         Agent agent = user.getAgent();
         ResultData result = new ResultData();
+        List<SortRule> orderBy = new ArrayList<SortRule>();
+        orderBy.add(new SortRule("create_time","desc"));
         Map<String, Object> condition = new HashMap<String, Object>();
         condition.put("agentId", agent.getAgentId());
         condition.put("status", type);
+        condition.put("sort", orderBy);
         ResultData fetchResponse = orderService.fetchOrder(condition);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             result.setData(fetchResponse.getData());

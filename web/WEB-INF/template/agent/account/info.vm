@@ -12,6 +12,7 @@
     <div class="bd">
         #parse("/agent/account/rebate.vm")
     </div>
+    #parse("/agent/component/navigate.vm")
 </div>
 </body>
 </html>
