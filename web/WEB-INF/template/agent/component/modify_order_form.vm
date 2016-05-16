@@ -56,6 +56,10 @@
                     <a class="weui_btn weui_btn_plain_primary" id="save_order_btn">保存订单</a>
                     <a class="weui_btn weui_btn_primary" id="place_order_btn">确认下单</a>
                 </div>
+                #elseif(${status} == "SUBMIT" && ${operation} == "VIEW")
+                <div class="weui_btn_area">
+                    <a class="weui_btn weui_btn_primary" id="place_order_btn">确认下单</a>
+                </div>
                 #elseif(${status} == "SAVED" && ${operation} == "VIEW")
                 <div class="weui_btn_area">
                     <a class="weui_btn weui_btn_plain_primary" id="modify_order_btn">修改订单</a>
@@ -124,6 +128,11 @@
 		    		$("#place_order_panel").hide();
 		    		$("#quantity_modify").fadeIn();
 		    	});
+		    	 //添加删除事件
+		        $(val).children().eq(4).on("click",function(){
+		    		$(this).closest(".weui_cells.weui_cells_access").remove();
+		    		$.calculate();
+		        });
 			});
 		#end
 	});
