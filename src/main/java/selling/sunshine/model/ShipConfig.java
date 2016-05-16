@@ -1,7 +1,5 @@
 package selling.sunshine.model;
 
-import com.alibaba.fastjson.JSON;
-
 /**
  * Created by sunshine on 5/13/16.
  */
@@ -14,6 +12,7 @@ public class ShipConfig extends Entity {
     }
 
     public ShipConfig(int date) {
+        this();
         this.date = date;
     }
 
@@ -31,10 +30,5 @@ public class ShipConfig extends Entity {
 
     public void setDate(int date) {
         this.date = date;
-    }
-
-    @Override
-    public String toString() {
-        return JSON.toJSONString(this);
     }
 }
