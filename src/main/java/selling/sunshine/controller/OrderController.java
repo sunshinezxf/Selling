@@ -16,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import selling.sunshine.form.OrderItemForm;
+import selling.sunshine.form.SortRule;
 import selling.sunshine.model.Agent;
 import selling.sunshine.model.Goods;
 import selling.sunshine.model.Order;
@@ -68,6 +69,9 @@ public class OrderController {
         }
         Map<String, Object> condition = new HashMap<>();
         condition.put("status", OrderStatus.PAYED.getCode());
+        List<SortRule> rule = new ArrayList<SortRule>();
+        rule.add(new SortRule("create_time", "asc"));
+        condition.put("sort", rule);
         ResultData fetchResponse = orderService.fetchOrder(condition, param);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             result = (MobilePage<Order>) fetchResponse.getData();
