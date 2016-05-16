@@ -9,48 +9,72 @@
             </ol>
         </div>
     </div>
-             
-          <div class="accordion" id="accordion2">
-            <div class="accordion-group">
-              <div class="accordion-heading">
-                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
-                  Click me to exapand. Click me again to collapse. Part I.
-                </a>
-              </div>
-              <div id="collapseOne" class="accordion-body collapse" style="height: 0px; ">
-                <div class="accordion-inner">
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                </div>
-              </div>
-            </div>
-            <div class="accordion-group">
-              <div class="accordion-heading">
-                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">
-                 Click me to exapand. Click me again to collapse. Part II.
-                </a>
-              </div>
-              <div id="collapseTwo" class="accordion-body collapse">
-                <div class="accordion-inner">
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                </div>
-              </div>
-            </div>
-            <div class="accordion-group">
-              <div class="accordion-heading">
-                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseThree">
-                  Click me to exapand. Click me again to collapse. Part III.
-                </a>
-              </div>
-              <div id="collapseThree" class="accordion-body collapse">
-                <div class="accordion-inner">
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                </div>
-              </div>
-            </div>
-          </div>
+            
+  
+        <div class="row"> 
+           <ul class="nav navbar-nav">
+              <li class="active" id="li1"><a id="1" href="javascript:void(0);" onclick="select(this)"><h4 id="order_class1" class="text-success"><strong>已付款订单</strong></h4></a></li>
+              <li id="li2"><a id="2" href="javascript:void(0);" onclick="select(this)"><h4 id="order_class2" class="text-info"><strong>未付款订单</strong></h4></a></li>
+              <li id="li3"><a id="3" href="javascript:void(0);" onclick="select(this)"><h4 id="order_class3" class="text-info"><strong>已结束订单</strong></h4></a></li>           
+           </ul>
+        </div>
+
+    <div class="row">
+        <div class="col-md-12 col-lg-12" id="overview_order">
+            
+        </div>
+    </div>
    
 </div>
 <script>
+    var url = "${path.concat('/order/overview')}";
+    var payed_start = 0;
+    var submited_start=0;
+    var finish_start=0;
+    var length= 5;  
+    var payed_params={"status":2};
+    var submited_params={"status":1};
+    var finish_params={"status":5};
+    var payed_order_total=0;
+    var submited_order_total=0;
+    var finish_order_total=0;
+    $(document).ready(function () {
+        $.post(url, {
+            start : payed_start,
+            length :length,
+            params :payed_params,
+        }, function (result) {
+            payed_order_total=result.total;
+            var orderList=result.data;   
+            if(payed_order_total<length){
+               length=payed_order_total;
+            }
+            var node1="<table id='payed_order_table' class='table table-striped table-bordered' cellspacing='0' width='100%'><tr><th>订单号</th><th>代理商姓名</th><th>生成时间</th><th>订单状态</th><th>操作</th></tr>";                     
+            for (var i = 0; i < length; i++) {  
+                var order= orderList[i]; 
+                if(order.status=="PAYED"){
+                    var status="已付款未发货";
+                }else if(order.status=="PATIAL_SHIPMENT"){
+                    var status="部分发货";
+                }else{
+                    var status="完全发货";
+                }
+                var date=(new Date(order.createAt)).format("yyyy/MM/dd hh:mm");
+                node1+="<tr><td>" +order.orderId+ "</td><td>" +order.agent.name+ "</td><td>" +date+ "</td><td>" +status+ "</td><td><button type='button' class='btn btn-success'>详情</button></td></tr>";  
+            } 
+            $("#overview_order").append(node1);
+            payed_order_total-=length;
+            if(payed_order_total>0){
+                 var node2="<button type='button' class='btn btn-success' id='loadPayedMore' onclick=loadPayedTable(this)>加载更多</button>";
+                 $("#overview_order").append(node2);
+            }                      
+        });
+        
+        
+       
+     
+    });
+    
     $(function () {
         $("#agent-management").collapse('hide');
         $("#order-management").collapse('show');
@@ -58,4 +82,156 @@
         $("#goods-management").collapse('hide');
         $("#statement-management").collapse('hide');
     });
+</script>
+<script>
+    function select(obj){
+       switch(obj.id){
+           case "1":$("#li1").attr("class","active");$("#li2").attr("class","");$("#li3").attr("class","");$("#order_class1").attr("class","text-success");$("#order_class2").attr("class","text-info");$("#order_class3").attr("class","text-info");                   
+                    $("#payed_order_table").fadeIn();
+                    $("#loadPayedMore").fadeIn();
+                    if(document.getElementById("submited_order_table")) 
+                    {  
+                        $("#submited_order_table").fadeOut();
+                        if(document.getElementById("loadSubmitedMore")) {
+                              $("#loadSubmitedMore").fadeOut();
+                        }                     
+                    }
+                    if(document.getElementById("finish_order_table")) 
+                    {  
+                        $("#finish_order_table").fadeOut();
+                        if(document.getElementById("loadFinishMore")) {
+                              $("#loadFinishMore").fadeOut();
+                        }                     
+                    }
+                    break;
+           case "2":$("#li2").attr("class","active");$("#li1").attr("class","");$("#li3").attr("class","");$("#order_class2").attr("class","text-success");$("#order_class1").attr("class","text-info");$("#order_class3").attr("class","text-info");
+                    $("#payed_order_table").fadeOut();
+                    $("#loadPayedMore").fadeOut();
+                    if(document.getElementById("finish_order_table")) 
+                    {  
+                        $("#finish_order_table").fadeOut();
+                        if(document.getElementById("loadFinishMore")) {
+                              $("#loadFinishMore").fadeOut();
+                        }                     
+                    }
+                    if(document.getElementById("submited_order_table")) 
+                    {  
+                        $("#submited_order_table").fadeIn();
+                        if(document.getElementById("loadSubmitedMore")) {
+                              $("#loadSubmitedMore").fadeIn();
+                        }                     
+                    }else{ 
+                    $.post(url, {
+                       start : submited_start,
+                       length :length,
+                       params :submited_params,
+                     }, function (result) {
+                       submited_order_total=result.total;
+                       var orderList=result.data;   
+                       if(submited_order_total<length){
+                          length=submited_order_total;
+                       }
+                       var node3="<table id='submited_order_table' class='table table-striped table-bordered' cellspacing='0' width='100%'><tr><th>订单号</th><th>代理商姓名</th><th>生成时间</th><th>订单状态</th><th>操作</th></tr>";                     
+                       for (var i = 0; i < length; i++) {  
+                         var order= orderList[i]; 
+                         if(order.status=="SAVED"){
+                            var status="已保存未支付";
+                         }else if(order.status=="SUBMITTED"){
+                            var status="已提交未支付";
+                         }else{
+                            var status="未支付";
+                         }
+                         var date=(new Date(order.createAt)).format("yyyy/MM/dd hh:mm");
+                         node3+="<tr><td>" +order.orderId+ "</td><td>" +order.agent.name+ "</td><td>" +date+ "</td><td>" +status+ "</td><td><button type='button' class='btn btn-success'>详情</button></td></tr>";  
+                       } 
+                       $("#overview_order").append(node3);
+                       submited_order_total-=length;
+                       if(submited_order_total>0){
+                           var node4="<button type='button' class='btn btn-success' id='loadSubmitedMore' onclick=loadSubmitedTable(this)>加载更多</button>";
+                           $("#overview_order").append(node4);
+                       }                      
+                    });
+                    }
+                    break;
+           case "3":$("#li3").attr("class","active");$("#li1").attr("class","");$("#li2").attr("class","");$("#order_class3").attr("class","text-success");$("#order_class1").attr("class","text-info");$("#order_class2").attr("class","text-info");
+                    $("#payed_order_table").fadeOut();
+                    $("#loadPayedMore").fadeOut();
+                    if(document.getElementById("submited_order_table")) 
+                    {  
+                        $("#submited_order_table").fadeOut();
+                        if(document.getElementById("loadSubmitedMore")) {
+                              $("#loadSubmitedMore").fadeOut();
+                        }                     
+                    }
+                    if(document.getElementById("finish_order_table")) 
+                    {  
+                        $("#finish_order_table").fadeIn();
+                        if(document.getElementById("loadFinishMore")) {
+                              $("#loadFinishMore").fadeIn();
+                        }                     
+                    }else{
+                       $.post(url, {
+                          start : finish_start,
+                          length :length,
+                          params :finish_params,
+                       }, function (result) {
+                          finish_order_total=result.total;
+                          alert(finish_order_total);
+                          var orderList=result.data;  
+                          alert(orderList.length); 
+                          if(finish_order_total<length){
+                             length=finish_order_total;
+                          }
+                          var node5="<table id='finish_order_table' class='table table-striped table-bordered' cellspacing='0' width='100%'><tr><th>订单号</th><th>代理商姓名</th><th>生成时间</th><th>订单状态</th><th>操作</th></tr>";                     
+                          for (var i = 0; i < length; i++) {  
+                             var order= orderList[i];                            
+                             var date=(new Date(order.createAt)).format("yyyy/MM/dd hh:mm");
+                             node5+="<tr><td>" +order.orderId+ "</td><td>" +order.agent.name+ "</td><td>" +date+ "</td><td>已完成</td><td><button type='button' class='btn btn-success'>详情</button></td></tr>";  
+                          } 
+                          $("#overview_order").append(node5);
+                          finish_order_total-=length;
+                          if(finish_order_total>0){
+                             var node6="<button type='button' class='btn btn-success' id='loadFinishMore' onclick=loadFinishTable(this)>加载更多</button>";
+                             $("#overview_order").append(node6);
+                          }                      
+                       });                  
+                    }
+                    break;
+           default:break; 
+       }
+    }
+    
+    function loadPayedTable(obj){
+            $("#loadPayedMore").remove();  
+            payed_start+=length; 
+            $.post(url, {
+               start: payed_start,
+               length :length,
+               params :payed_params,
+            }, function (result) {
+                 var orderList=result.data;   
+                 if(payed_order_total<length){
+                    length=payed_order_total;
+                 }
+                var node1;                  
+                for (var i = 0; i < length; i++) {  
+                   var order= orderList[i]; 
+                   if(order.status=="PAYED"){
+                      var status="已付款未发货";
+                   }else if(order.status=="PATIAL_SHIPMENT"){
+                      var status="部分发货";
+                   }else{
+                      var status="完全发货";
+                   }
+                   var date=(new Date(order.createAt)).format("yyyy/MM/dd hh:mm");
+                   node1+="<tr><td>" +order.orderId+ "</td><td>" +order.agent.name+ "</td><td>" +date+ "</td><td>" +status+ "</td><td><button type='button' class='btn btn-success'>详情</button></td></tr>";  
+                } 
+                $("#payed_order_table").append(node1);
+                payed_order_total-=length;
+                if(payed_order_total>0){
+                   var node2="<button type='button' class='btn btn-success' id='loadPayedMore' onclick=loadPayedTable(this)>加载更多</button>";
+                   $("#overview_order").append(node2);
+                }
+         });   
+      }
 </script>

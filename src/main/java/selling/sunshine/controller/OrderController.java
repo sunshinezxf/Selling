@@ -85,12 +85,19 @@ public class OrderController {
         view.setViewName("/backend/order/overview");
         return view;
     }
-
+    
+    @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/overview")
     public MobilePage<Order> overview(MobilePageParam param) {
         MobilePage<Order> result = new MobilePage<>();
         if (StringUtils.isEmpty(param)) {
             return result;
+        }
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("status", param.getParams().get("status"));
+        ResultData fetchResponse = orderService.fetchOrder(condition, param);
+        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result = (MobilePage<Order>) fetchResponse.getData();
         }
         return result;
     }

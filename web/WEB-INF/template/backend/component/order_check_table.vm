@@ -28,6 +28,7 @@
     var start = 0;
     var length= 5;
     var total=0;
+
     $(document).ready(function () {
         $.post(url, {
             start: start,
@@ -149,9 +150,8 @@
                    var node6="<button type='button' class='btn btn-success' id='loadMore' onclick=loadTable(this)>加载更多</button>";
                    $("#check_order_table").append(node6);
                 }
-         });
-    
-   }
+         });   
+      }
         
 
 </script>
