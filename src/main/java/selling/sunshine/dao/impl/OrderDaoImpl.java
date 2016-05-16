@@ -55,6 +55,7 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
     public ResultData queryOrder(Map<String, Object> condition) {
         ResultData result = new ResultData();
         try {
+        	condition = handle(condition);
             List<Order> list = sqlSession.selectList("selling.order.query", condition);
             result.setData(list);
         } catch (Exception e) {
