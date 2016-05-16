@@ -1,0 +1,26 @@
+<div class="modal fade" id="config_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">x</button>
+                <h4 class="modal-title">发货配置确认</h4>
+            </div>
+            <div class="modal-body">
+                当前选择的发货日期为:
+                <text id="date_setting"></text>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="config_confirm">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        $("#config_modal").modal({
+            show: false,
+            keyboard: true
+        });
+    });
+</script>

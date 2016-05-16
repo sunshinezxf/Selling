@@ -3,6 +3,7 @@ package selling.sunshine.dao;
 import selling.sunshine.model.ShipConfig;
 import selling.sunshine.utils.ResultData;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -10,6 +11,8 @@ import java.util.Map;
  */
 public interface ShipmentDao {
     ResultData insertShipmentConfig(ShipConfig config);
+
+    ResultData insertShipmentConfig(List<ShipConfig> list);
 
     ResultData queryShipmentConfig(Map<String, Object> condition);
 }
