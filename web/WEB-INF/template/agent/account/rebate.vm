@@ -12,7 +12,4 @@
             </div>
         </div>
     </div>
-    <a class="weui_panel_ft" href="${path.concat('/agent/statement')}">
-        查看对账单
-    </a>
 </div>
