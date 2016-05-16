@@ -170,6 +170,7 @@ public class AgentController {
                 if (goodsList.size() != 1) {
                     Prompt prompt = new Prompt();
                     prompt.setCode(PromptCode.WARNING);
+                    prompt.setTitle("提示");
                     prompt.setMessage("商品不唯一或未找到");
                     attr.addFlashAttribute("prompt", prompt);
                     view.setViewName("redirect:/agent/prompt");
@@ -179,6 +180,7 @@ public class AgentController {
             } else {
                 Prompt prompt = new Prompt();
                 prompt.setCode(PromptCode.WARNING);
+                prompt.setTitle("提示");
                 prompt.setMessage("商品信息异常");
                 attr.addFlashAttribute("prompt", prompt);
                 view.setViewName("redirect:/agent/prompt");
@@ -199,14 +201,26 @@ public class AgentController {
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             Prompt prompt = new Prompt();
             prompt.setCode(PromptCode.SUCCESS);
-            prompt.setMessage("下单成功");
+            prompt.setTitle("提示");
+            prompt.setConfirmURL("/agent/order/manage");
+            switch(type){
+            case "save":
+            	prompt.setMessage("保存成功");
+            	break;
+            case "submit":
+            	prompt.setMessage("下单成功");
+            	break;
+            default:
+            }
             attr.addFlashAttribute("prompt", prompt);
             view.setViewName("redirect:/agent/prompt");
             return view;
         }
         Prompt prompt = new Prompt();
         prompt.setCode(PromptCode.WARNING);
-        prompt.setMessage("下单失败");
+        prompt.setTitle("提示");
+        prompt.setConfirmURL("/order/list/0");
+        prompt.setMessage("失败");
         attr.addFlashAttribute("prompt", prompt);
         view.setViewName("redirect:/agent/prompt");
         return view;

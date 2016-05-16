@@ -26,7 +26,7 @@
         </div>
         <div class="weui_opr_area">
             <p class="weui_btn_area">
-                <a class="weui_btn weui_btn_primary">确定</a>
+                <a class="weui_btn weui_btn_primary" id="confirm">确定</a>
             </p>
         </div>
         <div class="weui_extra_area">
@@ -34,3 +34,10 @@
         </div>
     </div>
 </div>
+<script>
+	$("#confirm").click(function(){
+		#if(!$null.isNull(${prompt.confirmURL}))
+			window.location="${path.concat(${prompt.confirmURL})}";
+		#end
+	});
+</script>

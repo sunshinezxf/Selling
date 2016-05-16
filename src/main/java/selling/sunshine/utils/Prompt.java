@@ -7,6 +7,7 @@ public class Prompt {
     private PromptCode code;
     private String message;
     private String title;
+    private String confirmURL;
 
     public Prompt() {
         code = PromptCode.SUCCESS;
@@ -40,6 +41,14 @@ public class Prompt {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-    
+
+	public String getConfirmURL() {
+		return confirmURL;
+	}
+
+	public void setConfirmURL(String confirmURL) {
+		this.confirmURL = confirmURL;
+	}
+	    
     
 }
