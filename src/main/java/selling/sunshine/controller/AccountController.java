@@ -13,8 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+
+import selling.sunshine.model.Agent;
 import selling.sunshine.model.DepositBill;
 import selling.sunshine.model.User;
+import selling.sunshine.service.AgentService;
 import selling.sunshine.service.BillService;
 import selling.sunshine.service.ToolService;
 import selling.sunshine.utils.Prompt;
@@ -38,6 +41,18 @@ public class AccountController {
 
     @Autowired
     private BillService billService;
+    
+
+    @RequestMapping(method = RequestMethod.GET, value = "/info")
+    public ModelAndView info() {
+        ModelAndView view = new ModelAndView();
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        Agent agent = user.getAgent();
+        view.addObject("agent", agent);
+        view.setViewName("/agent/account/info");
+        return view;
+    }
 
     @RequestMapping(method = RequestMethod.GET, value = "/deposit")
     public ModelAndView deposit() {
@@ -45,7 +60,7 @@ public class AccountController {
         view.setViewName("/agent/account/recharge");
         return view;
     }
-
+   
     @RequestMapping(method = RequestMethod.POST, value = "/deposit")
     public Charge deposit(HttpServletRequest request) {
         Charge charge = new Charge();
