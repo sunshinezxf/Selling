@@ -12,6 +12,11 @@
     <div class="bd">
         #parse("/agent/account/rebate.vm")
     </div>
+    <div class="weui_panel weui_panel_access">
+	    <a class="weui_panel_ft" href="${path.concat('/agent/statement')}">
+	        查看对账单
+	    </a>
+    </div>
     #parse("/agent/component/navigate.vm")
 </div>
 </body>

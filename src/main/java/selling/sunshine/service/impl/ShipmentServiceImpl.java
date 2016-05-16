@@ -10,6 +10,7 @@ import selling.sunshine.service.ShipmentService;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -26,6 +27,19 @@ public class ShipmentServiceImpl implements ShipmentService {
     public ResultData createShipmentConfig(ShipConfig config) {
         ResultData result = new ResultData();
         ResultData insertResponse = shipmentDao.insertShipmentConfig(config);
+        result.setResponseCode(insertResponse.getResponseCode());
+        if (insertResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(insertResponse.getData());
+        } else {
+            result.setDescription(insertResponse.getDescription());
+        }
+        return result;
+    }
+
+    @Override
+    public ResultData createShipmentConfig(List<ShipConfig> list) {
+        ResultData result = new ResultData();
+        ResultData insertResponse = shipmentDao.insertShipmentConfig(list);
         result.setResponseCode(insertResponse.getResponseCode());
         if (insertResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             result.setData(insertResponse.getData());

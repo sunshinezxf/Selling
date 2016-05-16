@@ -1,5 +1,7 @@
 package selling.sunshine.model;
 
+import com.alibaba.fastjson.JSONObject;
+
 import java.sql.Timestamp;
 
 /**
@@ -28,5 +30,10 @@ public abstract class Entity {
 
     public void setCreateAt(Timestamp createAt) {
         this.createAt = createAt;
+    }
+
+    @Override
+    public String toString() {
+        return JSONObject.toJSONString(this);
     }
 }

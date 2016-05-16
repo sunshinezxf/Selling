@@ -13,6 +13,14 @@
         VALUES (#{shipConfigId}, #{date}, #{blockFlag}, #{createAt})
     </insert>
 
+    <insert id="insertBatch" parameterType="java.util.List" useGeneratedKeys="false">
+        INSERT INTO ship_config(ship_config_id, ship_config_date, block_flag, create_time)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.shipConfigId}, #{item.date}, #{item.blockFlag}, #{item.createAt})
+        </foreach>
+    </insert>
+
     <select id="query" parameterType="java.util.Map" resultMap="shipConfigVo">
         SELECT ship_config_id, ship_config_date, block_flag, create_time
         FROM ship_config
@@ -24,4 +32,8 @@
             AND block_flag = #{blockFlag}
         </if>
     </select>
+
+    <delete id="delete">
+        DELETE from ship_config
+    </delete>
 </mapper>

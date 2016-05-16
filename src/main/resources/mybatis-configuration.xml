@@ -13,5 +13,6 @@
         <mapper resource="selling/sunshine/mapper/customerphone.xml"/>
         <mapper resource="selling/sunshine/mapper/customeraddress.xml"/>
         <mapper resource="selling/sunshine/mapper/depositbill.xml"/>
+        <mapper resource="selling/sunshine/mapper/shipmentconfig.xml"/>
     </mappers>
 </configuration>

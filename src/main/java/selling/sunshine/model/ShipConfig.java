@@ -12,6 +12,7 @@ public class ShipConfig extends Entity {
     }
 
     public ShipConfig(int date) {
+        this();
         this.date = date;
     }
 
