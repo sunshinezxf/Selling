@@ -44,7 +44,7 @@
             AND block_flag = #{blockFlag}
         </if>
         <if test="rule != null and rule != ''">
-            ORDER BY rule
+            ORDER BY ${rule}
         </if>
     </select>
 

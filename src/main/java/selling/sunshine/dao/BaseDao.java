@@ -23,13 +23,14 @@ public class BaseDao {
     }
 
     public Map<String, Object> handle(Map<String, Object> condition) {
-        List<SortRule> constraints = (List<SortRule>) condition.get("rule");
+        List<SortRule> constraints = (List<SortRule>) condition.get("sort");
         if (constraints != null && constraints.size() != 0) {
             StringBuffer sb = new StringBuffer();
             for (SortRule item : constraints) {
                 sb.append(item.getName()).append(" ").append(item.getMethod()).append(",");
             }
             sb.deleteCharAt(sb.length() - 1);
+            condition.remove("sort");
             condition.put("rule", sb.toString());
         }
         return condition;

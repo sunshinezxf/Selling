@@ -4,11 +4,9 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import selling.sunshine.dao.AgentDao;
 import selling.sunshine.dao.BaseDao;
-import selling.sunshine.form.SortRule;
 import selling.sunshine.model.Agent;
 import selling.sunshine.model.Role;
 import selling.sunshine.model.User;
@@ -60,7 +58,7 @@ public class AgentDaoImpl extends BaseDao implements AgentDao {
     public ResultData queryAgent(Map<String, Object> condition) {
         ResultData result = new ResultData();
         try {
-
+            condition = handle(condition);
             List<Agent> list = sqlSession.selectList("selling.agent.query", condition);
             logger.debug(JSONObject.toJSONString(condition));
             logger.debug(JSONObject.toJSONString(list));
@@ -80,6 +78,8 @@ public class AgentDaoImpl extends BaseDao implements AgentDao {
         ResultData result = new ResultData();
         DataTablePage<Agent> page = new DataTablePage<Agent>();
         page.setsEcho(param.getsEcho());
+        condition = handle(condition);
+        logger.debug(JSONObject.toJSONString(condition));
         ResultData total = queryAgent(condition);
         if (total.getResponseCode() != ResponseCode.RESPONSE_OK) {
             result.setResponseCode(ResponseCode.RESPONSE_ERROR);
@@ -118,6 +118,7 @@ public class AgentDaoImpl extends BaseDao implements AgentDao {
     private List<Agent> queryAgentByPage(Map<String, Object> condition, int start, int length) {
         List<Agent> result = new ArrayList<>();
         try {
+            condition = handle(condition);
             result = sqlSession.selectList("selling.agent.query", condition, new RowBounds(start, length));
         } catch (Exception e) {
             logger.error(e.getMessage());

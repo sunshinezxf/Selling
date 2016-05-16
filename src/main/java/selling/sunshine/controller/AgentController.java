@@ -445,8 +445,9 @@ public class AgentController {
         Map<String, Object> condition = new HashMap<>();
         condition.put("granted", true);
         List<SortRule> rule = new ArrayList<>();
-        rule.add(new SortRule("create_time", "asc"));
-        condition.put("rule", rule);
+        rule.add(new SortRule("create_time", "desc"));
+        condition.put("sort", rule);
+        logger.debug(JSONObject.toJSONString(condition));
         ResultData fetchResponse = agentService.fetchAgent(condition, param);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             result = (DataTablePage<Agent>) fetchResponse.getData();
