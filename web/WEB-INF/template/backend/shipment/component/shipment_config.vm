@@ -66,8 +66,8 @@
         }
 
         $(".option").on('click', function () {
-            var value = $(this).attr("option-value");
-            var index = list.indexOf(parseInt(value));
+            var value = parseInt($(this).attr("option-value"));
+            var index = list.indexOf((value));
             if (index == -1) {
                 $(this).removeClass("btn-default");
                 $(this).addClass("btn-info");
