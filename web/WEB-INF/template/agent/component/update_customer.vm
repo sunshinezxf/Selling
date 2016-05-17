@@ -1,28 +1,20 @@
 <div id="update_customer_form" style="display: none;">
-    <div class="weui_cells">
+    <div class="weui_cells weui_cells_access">
         <div class="weui_cell">
-            <div class="weui_cell_hd">
-                <label class="weui_label">
-                    姓名
-                </label>
-            </div>
-            <div class="weui_cell_bd weui_cell_primary">
+            <div class="weui_cell_hd weui_cell_primary">姓名</div>
+            <div class="weui_cell_bd">
                 <input id="customer_name_new" class="weui_input" type="text" disabled="disabled"/>
             </div>
         </div>
         <div class="weui_cell">
-            <div class="weui_cell_hd">
-                <label class="weui_label">手机</label>
-            </div>
-            <div class="weui_cell_bd weui_cell_primary">
+            <div class="weui_cell_hd weui_cell_primary">手机</div>
+            <div class="weui_cell_bd ">
                 <input id="customer_phone_new" class="weui_input" type="number" pattern="1[0-9]{10}"/>
             </div>
         </div>
         <div class="weui_cell">
-            <div class="weui_cell_hd">
-                <label class="weui_label">收货地址</label>
-            </div>
-            <div class="weui_cell_bd weui_cell_primary">
+            <div class="weui_cell_hd weui_cell_primary">收货地址</div>
+            <div class="weui_cell_bd">
                 <input id="customer_address_new" class="weui_input" type="text"/>
             </div>
         </div>
