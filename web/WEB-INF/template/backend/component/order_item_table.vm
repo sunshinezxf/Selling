@@ -1,0 +1,47 @@
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id-target="order-management">
+      <div class="row">
+        <div class="col-md-12 col-lg-12">
+            <h1><i class="fa fa-home"></i> 订单信息概览 </h1>
+            <ol class="breadcrumb">
+                <li><a href="${path.concat('/dashboard')}">首页</a></li>
+                <li><a data-toggle="collapse" data-parent="#accordion" href="#order-management">订单管理</a></li>
+                <li class="active">订单信息概览</li>
+            </ol>
+        </div>
+    </div>
+   <div class="row">
+        <div class="col-md-12 col-lg-12">
+            <div class="bs-callout">
+                <p>代理商${order.agent.name}订单</p>
+                <table class="table table-striped" style="margin-bottom: 0.2em">
+                    <tr>
+                        <th>客户</th>
+                        <th>产品</th>
+                        <th>数量</th>
+                        <th>价格</th>
+                    </tr>
+                    #foreach($orderItem in ${order.orderItems})
+                       <tr>
+                          <td>$orderItem.customer.name</td>
+                          <td>$orderItem.goods.name</td>
+                          <td>$orderItem.goodsQuantity</td>
+                          <td>$orderItem.orderItemPrice</td>
+                       </tr>
+                    #end
+                </table>
+                <br>
+                <p>总计:&nbsp;${totalPrices}元</p>
+                <br/>
+                #foreach($key in ${goods_quantity_Map.keySet()})
+                   <p>商品:&nbsp;$key&nbsp;&nbsp;&nbsp;&nbsp;总共:&nbsp;${goods_quantity_Map[$key]}件</p>
+                   <br>
+                #end
+            </div>
+
+           
+        </div>
+    </div>
+</div>
+</div>
+<script>
+</script>

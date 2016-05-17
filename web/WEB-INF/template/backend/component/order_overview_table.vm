@@ -60,7 +60,8 @@
                     var status="完全发货";
                 }
                 var date=(new Date(order.createAt)).format("yyyy/MM/dd hh:mm");
-                node1+="<tr><td>" +order.orderId+ "</td><td>" +order.agent.name+ "</td><td>" +date+ "</td><td>" +status+ "</td><td><button type='button' id='" + order.orderId + "' class='btn btn-success' >详情</button></td></tr>";  
+                var item_url = "${path.concat('/order/orderItem/')}" + order.orderId;
+                node1+="<tr><td>" +order.orderId+ "</td><td>" +order.agent.name+ "</td><td>" +date+ "</td><td>" +status+ "</td><td><button type='button' id='" + order.orderId + "' class='btn btn-success' onclick=\"javascript:location.href='" + item_url + "'\">详情</button></td></tr>";  
             } 
             $("#overview_order").append(node1);
             payed_order_total-=length;
@@ -129,7 +130,8 @@
                                var status="完全发货";
                             }
                             var date=(new Date(order.createAt)).format("yyyy/MM/dd hh:mm");
-                           node1+="<tr><td>" +order.orderId+ "</td><td>" +order.agent.name+ "</td><td>" +date+ "</td><td>" +status+ "</td><td><button type='button' class='btn btn-success'>详情</button></td></tr>";  
+                            var item_url = "${path.concat('/order/orderItem/')}" + order.orderId;
+                           node1+="<tr><td>" +order.orderId+ "</td><td>" +order.agent.name+ "</td><td>" +date+ "</td><td>" +status+ "</td><td><button type='button' class='btn btn-success' id='" + order.orderId + "' class='btn btn-success' onclick=\"javascript:location.href='" + item_url + "'\">详情</button></td></tr>";  
                        } 
                        $("#overview_order").append(node1);
                        payed_order_total-=length;
@@ -162,7 +164,8 @@
                             var status="未支付";
                          }
                          var date=(new Date(order.createAt)).format("yyyy/MM/dd hh:mm");
-                         node3+="<tr><td>" +order.orderId+ "</td><td>" +order.agent.name+ "</td><td>" +date+ "</td><td>" +status+ "</td><td><button type='button' class='btn btn-success'>详情</button></td></tr>";  
+                         var item_url = "${path.concat('/order/orderItem/')}" + order.orderId;
+                         node3+="<tr><td>" +order.orderId+ "</td><td>" +order.agent.name+ "</td><td>" +date+ "</td><td>" +status+ "</td><td><button type='button' class='btn btn-success' id='" + order.orderId + "' class='btn btn-success' onclick=\"javascript:location.href='" + item_url + "'\">详情</button></td></tr>";  
                        } 
                        $("#overview_order").append(node3);
                        submited_order_total-=length;
@@ -189,7 +192,8 @@
                           for (var i = 0; i < length; i++) {  
                              var order= orderList[i];                            
                              var date=(new Date(order.createAt)).format("yyyy/MM/dd hh:mm");
-                             node5+="<tr><td>" +order.orderId+ "</td><td>" +order.agent.name+ "</td><td>" +date+ "</td><td>已完成</td><td><button type='button' class='btn btn-success'>详情</button></td></tr>";  
+                             var item_url = "${path.concat('/order/orderItem/')}" + order.orderId;
+                             node5+="<tr><td>" +order.orderId+ "</td><td>" +order.agent.name+ "</td><td>" +date+ "</td><td>已完成</td><td><button type='button' class='btn btn-success' id='" + order.orderId + "' class='btn btn-success' onclick=\"javascript:location.href='" + item_url + "'\">详情</button></td></tr>";  
                           } 
                           $("#overview_order").append(node5);
                           finish_order_total-=length;
@@ -226,7 +230,8 @@
                       var status="完全发货";
                    }
                    var date=(new Date(order.createAt)).format("yyyy/MM/dd hh:mm");
-                   node1+="<tr><td>" +order.orderId+ "</td><td>" +order.agent.name+ "</td><td>" +date+ "</td><td>" +status+ "</td><td><button type='button' class='btn btn-success'>详情</button></td></tr>";  
+                   var item_url = "${path.concat('/order/orderItem/')}" + order.orderId;
+                   node1+="<tr><td>" +order.orderId+ "</td><td>" +order.agent.name+ "</td><td>" +date+ "</td><td>" +status+ "</td><td><button type='button' class='btn btn-success' id='" + order.orderId + "' class='btn btn-success' onclick=\"javascript:location.href='" + item_url + "'\">详情</button></td></tr>";  
                 } 
                 $("#payed_order_table").append(node1);
                 payed_order_total-=length;
@@ -260,7 +265,8 @@
                       var status="未支付";
                    }
                    var date=(new Date(order.createAt)).format("yyyy/MM/dd hh:mm");
-                   node1+="<tr><td>" +order.orderId+ "</td><td>" +order.agent.name+ "</td><td>" +date+ "</td><td>" +status+ "</td><td><button type='button' class='btn btn-success'>详情</button></td></tr>";  
+                   var item_url = "${path.concat('/order/orderItem/')}" + order.orderId;
+                   node1+="<tr><td>" +order.orderId+ "</td><td>" +order.agent.name+ "</td><td>" +date+ "</td><td>" +status+ "</td><td><button type='button' class='btn btn-success' id='" + order.orderId + "' class='btn btn-success' onclick=\"javascript:location.href='" + item_url + "'\">详情</button></td></tr>";  
                 } 
                 $("#submited_order_table").append(node1);
                 submited_order_total-=length;
@@ -287,7 +293,8 @@
                 for (var i = 0; i < length; i++) {  
                    var order= orderList[i]; 
                    var date=(new Date(order.createAt)).format("yyyy/MM/dd hh:mm");
-                   node1+="<tr><td>" +order.orderId+ "</td><td>" +order.agent.name+ "</td><td>" +date+ "</td><td>已完成</td><td><button type='button' class='btn btn-success'>详情</button></td></tr>";  
+                   var item_url = "${path.concat('/order/orderItem/')}" + order.orderId;
+                   node1+="<tr><td>" +order.orderId+ "</td><td>" +order.agent.name+ "</td><td>" +date+ "</td><td>已完成</td><td><button type='button' class='btn btn-success' id='" + order.orderId + "' class='btn btn-success' onclick=\"javascript:location.href='" + item_url + "'\">详情</button></td></tr>";  
                 } 
                 $("#finish_order_table").append(node1);
                 finish_order_total-=length;
