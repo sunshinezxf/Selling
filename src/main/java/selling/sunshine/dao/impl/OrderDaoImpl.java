@@ -55,7 +55,7 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
     public ResultData queryOrder(Map<String, Object> condition) {
         ResultData result = new ResultData();
         try {
-        	condition = handle(condition);
+            condition = handle(condition);
             List<Order> list = sqlSession.selectList("selling.order.query", condition);
             result.setData(list);
         } catch (Exception e) {
@@ -126,6 +126,13 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
                         sqlSession.update("selling.order.item.update", nowItem);
                         primary.remove(primaryItem);
                         now.remove(nowItem);
+                        if (primary.size() == 0) {
+                            break;
+                        }
+                        if (now.size() == 0) {
+                            toDelete.addAll(primary);
+                            break;
+                        }
                         primaryItem = primary.get(0);
                         nowItem = now.get(0);
                         i--;
@@ -135,8 +142,12 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
                     primary.remove(primaryItem);
                     primaryItem = primary.get(0);
                 }
-                sqlSession.delete("selling.order.item.delete", toDelete);
-                sqlSession.insert("selling.order.item.insertBatch", now);
+                if (toDelete.size() > 0) {
+                    sqlSession.delete("selling.order.item.delete", toDelete);
+                }
+                if (now.size() > 0) {
+                    sqlSession.insert("selling.order.item.insertBatch", now);
+                }
                 result.setData(order);
             } catch (Exception e) {
                 logger.error(e.getMessage());
