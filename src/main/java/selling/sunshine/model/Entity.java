@@ -1,6 +1,7 @@
 package selling.sunshine.model;
 
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 
 import java.sql.Timestamp;
 
@@ -34,6 +35,6 @@ public abstract class Entity {
 
     @Override
     public String toString() {
-        return JSONObject.toJSONString(this);
+        return JSONObject.toJSONString(this,SerializerFeature.DisableCircularReferenceDetect);
     }
 }

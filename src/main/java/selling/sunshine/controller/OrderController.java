@@ -16,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 
 import selling.sunshine.form.OrderItemForm;
 import selling.sunshine.form.SortRule;
@@ -24,9 +25,11 @@ import selling.sunshine.model.Goods;
 import selling.sunshine.model.Order;
 import selling.sunshine.model.OrderItem;
 import selling.sunshine.model.OrderStatus;
+import selling.sunshine.model.Role;
 import selling.sunshine.model.User;
 import selling.sunshine.pagination.MobilePage;
 import selling.sunshine.pagination.MobilePageParam;
+import selling.sunshine.service.AgentService;
 import selling.sunshine.service.CommodityService;
 import selling.sunshine.service.OrderService;
 import selling.sunshine.utils.Prompt;
@@ -54,6 +57,9 @@ public class OrderController {
 
     @Autowired
     private CommodityService commodityService;
+    
+    @Autowired
+    private AgentService agentService;
     
     @RequestMapping(method = RequestMethod.GET, value = "/check")
     public ModelAndView handle() {
@@ -217,14 +223,55 @@ public class OrderController {
         	 Prompt prompt = new Prompt();
              prompt.setCode(PromptCode.WARNING);
              prompt.setTitle("提示");
-             prompt.setMessage("保存成功");
+             prompt.setMessage("失败");
              view.addObject("prompt", prompt);
              view.setViewName("redirect:/agent/prompt");
              return view;
         }
-        view.addObject("order", JSON.toJSONString(order));
+        view.addObject("order", order);
         view.addObject("agent", agent);
         view.setViewName("agent/order/pay");
         return view;
+    }
+    
+    @RequestMapping(method = RequestMethod.GET, value="/cofferpay/{orderId}")
+    public ModelAndView cofferPay(@PathVariable("orderId") String orderId) {
+    	ModelAndView view = new ModelAndView();
+		Subject subject = SecurityUtils.getSubject();
+		User user = (User) subject.getPrincipal();
+		Agent agent = user.getAgent();
+		Map<String, Object> condition = new HashMap<String, Object>();
+		condition.put("agentId", agent.getAgentId());
+		condition.put("orderId", orderId);
+		ResultData orderData = orderService.fetchOrder(condition);
+		Order order = null;
+		try{
+			order = ((List<Order>) orderData.getData()).get(0);
+		} catch(Exception e){
+			Prompt prompt = new Prompt();
+            prompt.setCode(PromptCode.WARNING);
+            prompt.setTitle("提示");
+            prompt.setMessage("失败");
+            view.addObject("prompt", prompt);
+            view.setViewName("redirect:/agent/prompt");
+            return view;
+		}
+		//计算总价
+		double totalPrice = 0.0;
+    	for(OrderItem orderItem : order.getOrderItems()){
+    		totalPrice += orderItem.getOrderItemPrice();
+    	}
+    	ResultData cofferData = agentService.consume(totalPrice);
+    	if(cofferData.getResponseCode() == ResponseCode.RESPONSE_OK){
+    		Prompt prompt = new Prompt();
+            prompt.setCode(PromptCode.WARNING);
+            prompt.setTitle("付款成功");
+            prompt.setMessage("订单号：" + order.getOrderId() + "，请等待发货");
+            prompt.setConfirmURL("/order/list/2");
+            view.addObject("prompt", prompt);
+            view.setViewName("redirect:/agent/prompt");
+            return view;
+    	}
+    	return view;
     }
 }

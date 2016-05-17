@@ -81,9 +81,7 @@
         </div>
     </div>
 </div>
-#if(${status} == "SAVED" && ${operation} == "MODIFY")
 <input type="hidden" name="orderId" value="${order.orderId}"/>
-#end
 </form>
 #if(${status} == "SAVED" && ${operation} == "MODIFY")
 #parse("/agent/order/add_order_item.vm")

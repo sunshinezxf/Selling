@@ -82,4 +82,10 @@ public class AgentServiceImpl implements AgentService {
 	        }
 	        return result;
 	}
+
+	@Override
+	public ResultData consume(double money) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

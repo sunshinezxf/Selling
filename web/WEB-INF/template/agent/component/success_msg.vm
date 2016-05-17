@@ -37,7 +37,7 @@
 <script>
 	$("#confirm").click(function(){
 		#if(!$null.isNull(${prompt.confirmURL}))
-			window.location="${path.concat()}" + "${prompt.confirmURL}";
+			window.location="${path}" + "${prompt.confirmURL}";
 		#end
 	});
 </script>
