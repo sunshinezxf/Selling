@@ -31,7 +31,7 @@
 				       			<div class="weui_cell_bd weui_cell_primary">
 				        			<p>收货地址</p>
 				        		</div>
-				        		<div class="weui_cell_ft">${orderItem.customer.address.address}</div>
+				        		<div class="weui_cell_ft address">${orderItem.customer.address.address}</div>
 				    		</a>
 				        	<a class="weui_cell"> 
 				        		<div class="weui_cell_bd weui_cell_primary"> 
@@ -98,8 +98,11 @@
 	$(document).ready(function(){
 		$("#add_order_item").hide();
 		$.calculate();
+		
+		//地址字符串截取
+		$.addressBeautify();
+		
 		#if(${status} == "SAVED" && ${operation} == "MODIFY")
-			
 			//添加事件
 			var order_item_list = $("#order_item_list").children();
 			$.each(order_item_list, function(i, val){
@@ -204,6 +207,13 @@
         }
         $("#total_goods").append(" <p class='weui_media_text'>共计" + total_price + "元</p>")
     }
-    
+    //地址美化长度
+    $.addressBeautify = function(){
+   		var order_item_list = $("#order_item_list").children();
+    	$.each(order_item_list,function(i, val){
+			var address = $(val).children().eq(1).find(".weui_cell_ft").html();
+			$(val).children().eq(1).find(".weui_cell_ft").html($.utf8Substr(address,25));
+		});
+	}
     
 </script>
