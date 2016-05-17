@@ -176,7 +176,7 @@ public class OrderController {
         default: order.setStatus(OrderStatus.SAVED);
         }
         
-        ResultData fetchResponse = orderService.placeOrder(order);
+        ResultData fetchResponse = orderService.modifyOrder(order);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
         	if(type.equals("save")){
 		        Prompt prompt = new Prompt();
@@ -193,6 +193,7 @@ public class OrderController {
         }
         Prompt prompt = new Prompt();
         prompt.setCode(PromptCode.WARNING);
+        prompt.setTitle("提示");
         prompt.setMessage("失败");
         attr.addFlashAttribute("prompt", prompt);
         view.setViewName("redirect:/agent/prompt");

@@ -99,6 +99,6 @@
         		+ order_info + ": " + order_info_list[order_info]['quantity'] +
  				"件, 共" + order_info_list[order_info]['order_item_price'] + "元</p>")
         }
-        $("#total_goods").append(" <p class='weui_media_text'>共计" + total_price + "元</p>")
+        $("#total_goods").append(" <p class='weui_media_text'>共计" + total_price + "元</p>");
     }
 </script>

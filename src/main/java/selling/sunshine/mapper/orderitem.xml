@@ -77,7 +77,7 @@
         UPDATE order_item
         <set>
             <if test="status != null and status != ''">
-                order_item_status = #{status},
+                order_item_status = #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler},
             </if>
             <if test="customer != null and customer.customerId != null and customer.customerId != ''">
                 customer_id = #{customer.customerId},

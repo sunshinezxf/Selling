@@ -129,6 +129,7 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
                         primaryItem = primary.get(0);
                         nowItem = now.get(0);
                         i--;
+                        continue;
                     }
                     toDelete.add(primaryItem);
                     primary.remove(primaryItem);

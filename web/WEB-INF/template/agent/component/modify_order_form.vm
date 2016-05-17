@@ -7,6 +7,7 @@
             </div>
             <div class="bd">
                 <div class="weui_panel">
+                   <div class="weui_cells_title" id="orderId">订单号：${order.orderId}</div>
                 	#if (${status} == "SAVED" && ${operation} == "MODIFY")
                     <div class="weui_cells weui_cells_access clear-margin-top">
                         <a class="weui_cell" id="add_order_btn">
@@ -56,13 +57,14 @@
                     <a class="weui_btn weui_btn_plain_primary" id="save_order_btn">保存订单</a>
                     <a class="weui_btn weui_btn_primary" id="place_order_btn">确认下单</a>
                 </div>
-                #elseif(${status} == "SUBMIT" && ${operation} == "VIEW")
+                #elseif(${status} == "SUBMITTED" && ${operation} == "VIEW")
                 <div class="weui_btn_area">
                     <a class="weui_btn weui_btn_primary" id="place_order_btn">确认下单</a>
                 </div>
                 #elseif(${status} == "SAVED" && ${operation} == "VIEW")
                 <div class="weui_btn_area">
                     <a class="weui_btn weui_btn_plain_primary" id="modify_order_btn">修改订单</a>
+                    <a class="weui_btn weui_btn_primary" id="place_order_btn">确认下单</a>
                 </div>
                 #end
             </div>

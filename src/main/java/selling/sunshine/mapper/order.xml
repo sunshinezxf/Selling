@@ -96,7 +96,7 @@
         UPDATE `order`
         <set>
             <if test="status != null and status != ''">
-                order_status = #{status},
+                order_status = #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler},
             </if>
         </set>
         WHERE order_id = #{orderId}
