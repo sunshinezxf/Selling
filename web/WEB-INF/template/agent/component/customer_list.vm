@@ -9,7 +9,9 @@
         <div style="display:none;" id="customer_address${elem.customerId}">${elem.address.address}</div>
     </label>
     #end
-    <button type="button" class="weui_btn weui_btn_primary" id="add_customer">新增客户</a>
+    <div class="weui_btn_area">
+    	<button type="button" class="weui_btn weui_btn_primary" id="add_customer">新增客户</a>
+    </div>
 </div>
 #parse("/agent/component/add_customer_in_order.vm")
 <script>
