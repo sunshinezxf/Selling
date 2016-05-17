@@ -60,6 +60,13 @@ public class PlatformController {
         view.setViewName("redirect:/dashboard");
         return view;
     }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/register")
+    public ModelAndView register() {
+        ModelAndView view = new ModelAndView();
+        view.setViewName("/backend/admin/admin_register");
+        return view;
+    }
 
     @RequestMapping(method = RequestMethod.GET, value = "/dashboard")
     public ModelAndView dashboard() {

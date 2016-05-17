@@ -302,14 +302,15 @@ CREATE TABLE IF NOT EXISTS `selling`.`order_bill` (
 
 
 -- -----------------------------------------------------
--- Table `selling`.`refund`
+-- Table `selling`.`refund_record`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `selling`.`refund` ;
+DROP TABLE IF EXISTS `selling`.`refund_record` ;
 
-CREATE TABLE IF NOT EXISTS `selling`.`refund` (
+CREATE TABLE IF NOT EXISTS `selling`.`refund_record` (
   `refund_id` VARCHAR(20) NOT NULL,
   `refund_name` VARCHAR(45) NOT NULL,
   `redund_percent` VARCHAR(45) NOT NULL,
+  `refund_amount` DOUBLE NOT NULL,
   `block_flag` TINYINT(1) NOT NULL DEFAULT 0,
   `create_time` DATETIME NOT NULL,
   PRIMARY KEY (`refund_id`))
@@ -327,6 +328,28 @@ CREATE TABLE IF NOT EXISTS `selling`.`ship_config` (
   `block_flag` TINYINT(1) NOT NULL,
   `create_time` DATETIME NOT NULL,
   PRIMARY KEY (`ship_config_id`))
+  ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `selling`.`refund_config`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `selling`.`refund_config` ;
+
+CREATE TABLE IF NOT EXISTS `selling`.`refund_config` (
+  `refund_config_id` INT NOT NULL,
+  `goods_id` VARCHAR(20) NULL,
+  `refund_trigger_amount` DOUBLE NOT NULL,
+  `refund_percent` DOUBLE NOT NULL DEFAULT 0,
+  `block_flag` TINYINT(1) NOT NULL DEFAULT 0,
+  `create_time` DATETIME NOT NULL,
+  PRIMARY KEY (`refund_config_id`),
+  INDEX `fk_refund_config_goods1_idx` (`goods_id` ASC),
+  CONSTRAINT `fk_refund_config_goods1`
+  FOREIGN KEY (`goods_id`)
+  REFERENCES `selling`.`goods` (`goods_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
   ENGINE = InnoDB;
 
 
@@ -384,6 +407,17 @@ USE `selling`;
 INSERT INTO `selling`.`user` (`user_id`, `username`, `password`, `role_id`, `manager_id`, `agent_id`, `block_flag`, `create_time`) VALUES ('USR00000001', 'admin', '21232f297a57a5a743894a0e4a801fc3', 'ROL00000001', 'MNG00000001', NULL, 0, '2016-5-3 11:00:20');
 INSERT INTO `selling`.`user` (`user_id`, `username`, `password`, `role_id`, `manager_id`, `agent_id`, `block_flag`, `create_time`) VALUES ('USRflowfr67', '18000000000', 'e10adc3949ba59abbe56e057f20f883e', 'ROL00000002', NULL, 'AGTvlorff50', 0, '2016-05-09 16:13:10');
 INSERT INTO `selling`.`user` (`user_id`, `username`, `password`, `role_id`, `manager_id`, `agent_id`, `block_flag`, `create_time`) VALUES ('USRollvfy81', '18100000000', 'e10adc3949ba59abbe56e057f20f883e', 'ROL00000002', NULL, 'AGTyoewlw97', 0, '2016-05-09 16:14:15');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `selling`.`ship_config`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `selling`;
+INSERT INTO `selling`.`ship_config` (`ship_config_id`, `ship_config_date`, `block_flag`, `create_time`) VALUES ('SCGfvolfe87', 1, 0, '2016-05-17 09:41:57');
+INSERT INTO `selling`.`ship_config` (`ship_config_id`, `ship_config_date`, `block_flag`, `create_time`) VALUES ('SCGlzrwwe64', 16, 0, '2016-05-17 09:41:57');
 
 COMMIT;
 

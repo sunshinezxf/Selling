@@ -66,6 +66,12 @@
 	        "</div>" +
 	        "<div class='weui_cell_ft'><span>" + customer_name + "</span>(<span>" + customer_phone + "</span>)</div>" +
 	    	"</a>" +
+	    	"<a class='weui_cell'>" + 
+	       	"<div class='weui_cell_bd weui_cell_primary'>" +
+	        "<p>收货地址</p>" + 
+	        "</div>" +
+	        "<div class='weui_cell_ft address'>" + customer_address + "</div>" +
+	    	"</a>" +
 	        "<a class='weui_cell'>" + 
 	        "<div class='weui_cell_bd weui_cell_primary'>" + 
 	        "<p>商品名称</p>" + 
@@ -102,7 +108,7 @@
     		$("#customer_option").fadeIn();
     	});
     	//商品修改事件
-    	$(order_item_list).eq($(order_item_list).size()-1).children().eq(1).on("click", function(){
+    	$(order_item_list).eq($(order_item_list).size()-1).children().eq(2).on("click", function(){
     		isAdd = false;
     		current_modify_dom = this;
     		goods_id = $(this).parent(".weui_cells.weui_cells_access").find(".goods_id").val();
@@ -112,7 +118,7 @@
     		$("#goods_option").fadeIn();
     	});
     	//数量修改事件
-    	$(order_item_list).eq($(order_item_list).size()-1).children().eq(2).on("click",function(){
+    	$(order_item_list).eq($(order_item_list).size()-1).children().eq(3).on("click",function(){
     		current_modify_dom = this;
     		goods_id = $(this).parent(".weui_cells.weui_cells_access").find(".goods_id").val();
     		goods_name = $(this).find(".weui_cell_ft").html();
@@ -128,6 +134,8 @@
     		$(this).closest(".weui_cells.weui_cells_access").remove();
     		$.calculate();
         });
+        //地址字符串截取长度
+        $.addressBeautify();
         
         //计算总价
         $.calculate();

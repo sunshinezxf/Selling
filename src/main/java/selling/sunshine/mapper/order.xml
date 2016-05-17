@@ -38,6 +38,7 @@
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
         <association property="phone" column="customerId = customer_id" select="phoneQuery"></association>
+        <association property="address" column="customerId = customer_id" select="addressQuery"></association>
     </resultMap>
 
     <resultMap id="phoneVo" type="selling.sunshine.model.CustomerPhone">
@@ -46,6 +47,14 @@
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
     </resultMap>
+    
+    <resultMap id="addressVo" type="selling.sunshine.model.CustomerAddress">
+        <result property="addressId" column="customer_address_id"></result>
+        <result property="address" column="address"></result>
+        <result property="blockFlag" column="block_flag"></result>
+        <result property="createAt" column="create_time"></result>
+    </resultMap>
+    
 
     <resultMap id="goodsVo" type="selling.sunshine.model.Goods">
         <result property="goodsId" column="goods_id"></result>
@@ -121,6 +130,12 @@
         AND block_flag = 0
     </select>
 
+	<select id="addressQuery" parameterType="java.util.Map" resultMap="addressVo">
+        SELECT customer_address_id, address, block_flag, create_time
+        FROM customer_address
+        WHERE customer_id = #{customerId}
+        AND block_flag = 0
+    </select>
     <select id="goodsQuery" parameterType="java.util.Map" resultMap="goodsVo">
         SELECT goods_id, goods_name, goods_price, goods_description, block_flag, create_time
         FROM goods

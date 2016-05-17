@@ -1,0 +1,21 @@
+#parse("/common/util.vm")
+<html lang="zh_CN">
+<head>
+    #parse("/agent/component/init.vm")
+    <title>订单付款</title>
+</head>
+<body ontouchstart>
+<div class="container">
+    <div class="tabbar">
+        <div class="weui_tab_bd">
+            <div id="order_pay">
+                   #parse("/agent/order/order_pay_form.vm")
+            </div>
+        </div>
+        #parse("/agent/component/navigate.vm")
+    </div>
+</div>
+</body>
+</html>
+<script>
+</script>

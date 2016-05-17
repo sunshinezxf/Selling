@@ -1,0 +1,87 @@
+<form id="pay_form">
+<div class="hd">
+    <h1 class="page_title">订单付款</h1>
+</div>
+<div class="weui_panel">
+	<div class="weui_cells_title" id="orderId"></div>
+    <div class="weui_panel_bd">
+        <div id="total_goods" class="weui_media_box">
+            总计:
+            <p class="weui_media_text">共计0元</p>
+        </div>
+    </div>
+</div>
+<div class="bd">
+    #parse("/agent/account/rebate.vm")
+</div>
+<button type="button" class="weui_btn weui_btn_plain_primary" id="coffer_pay">账户余额付款</a>
+<button type="button" class="weui_btn weui_btn_primary" id="other_pay">其他支付方式</a>
+<input type="hidden" name="orderId" id="orderIdForm" value="">
+</form>
+<script>
+	agent_coffer = parseFloat(${agent.coffer});
+	total_price = 0.0;
+	$(document).ready(function(){
+		var order = eval('('+'${order}'+')');
+		
+		//显示订单号
+		$("#orderId").html("订单号：" + order.orderId);
+		$("#orderIdForm").val(order.orderId);
+		//显示订单各项金额
+		var order_info_list = new Object();
+		$.each(order.orderItems, function(i, val){
+			var name = val.goods.name;
+			var quantity = parseInt(val.goodsQuantity);
+			var price = parseFloat(val.orderItemPrice);
+			if(order_info_list[name] == undefined){
+				order_info_list[name] = new Object();
+				order_info_list[name]['quantity'] = quantity;
+				order_info_list[name]['order_item_price'] = price;
+			} else {
+				order_info_list[name]['quantity'] += quantity;
+				order_info_list[name]['order_item_price'] += price;
+			}
+		});
+		$("#total_goods").empty();
+        for(var order_info in order_info_list) {
+        	total_price += order_info_list[order_info]['order_item_price'];
+        	$("#total_goods").append("<p class='weui_media_text'>" 
+        		+ order_info + ": " + order_info_list[order_info]['quantity'] +
+ 				"件, 共" + order_info_list[order_info]['order_item_price'] + "元</p>")
+        }
+        $("#total_goods").append(" <p class='weui_media_text'>共计" + total_price + "元</p>");
+        
+        //判断账户余额是否充足
+        $.cofferCheck();
+	});
+	
+	$("#coffer_pay").click(function(){
+		$("#pay_form").attr("action", "${path.concat('/order/cofferpay')}");
+    	$("#pay_form").attr("method","post");
+    	$("#pay_form").submit();
+	});
+	
+	$.cofferCheck = function(){
+		if(total_price > agent_coffer){
+			$.inactive();
+		} else {
+			$.active();
+		}
+	}
+	
+	$.active = function(){
+        $("#coffer_pay").removeAttr("disabled");
+        $("#coffer_pay").removeClass("weui_btn_disabled");
+        $("#coffer_pay").removeClass("weui_btn_default");
+        $("#coffer_pay").addClass("weui_btn_primary");
+    	$("#coffer_pay").html("账户余额付款");
+    }
+
+    $.inactive = function(){
+        $("#coffer_pay").attr("disabled", "disabled");
+        $("#coffer_pay").removeClass("weui_btn_primary");
+        $("#coffer_pay").addClass("weui_btn_default");
+        $("#coffer_pay").addClass("weui_btn_disabled");
+        $("#coffer_pay").html("账户余额不足");
+    }
+</script>

@@ -1,0 +1,55 @@
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id-target="shipment-management">
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+            <h1><i class="fa fa-home"></i> 账号授权 </h1>
+            <ol class="breadcrumb">
+                <li><a href="${path.concat('/dashboard')}">首页</a></li>
+                <li><a data-toggle="collapse" data-parent="#accordion" href="#config-management">基本配置</a></li>
+                <li class="active">账号授权</li>
+            </ol>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+           <hr>
+           <form id="create_goods_form" class="form-horizontal">
+                <div class="form-group">
+                    <label class="col-sm-2 col-md-2 col-lg-2 control-label" for="goods_name">
+                        商品名称
+                    </label>
+                   <div class="form-group has-feedback col-sm-2 col-md-2 col-lg-2">
+                      <label for="account_email" class="sr-only">
+                           Email address
+                      </label>
+                      <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                      <input type="text" class="form-control" id="account_username" name="username" placeholder="邮箱" required="" autocomplete="off">
+                   </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 col-md-2 col-lg-2 control-label" for="goods_price">
+                        商品单价
+                    </label>
+                   <div class="form-group has-feedback col-sm-2 col-md-2 col-lg-2">
+                       <label for="account_password" class="sr-only">
+                            Password
+                       </label>
+                       <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                       <input type="password" class="form-control" name="password" id="account_password" placeholder="密码" required="" autocomplete="off">
+                   </div>
+               </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+
+    $(function () {
+        $("#agent-management").collapse('hide');
+        $("#order-management").collapse('hide');
+        $("#customer-management").collapse('hide');
+        $("#goods-management").collapse('hide');
+        $("#statement-management").collapse('hide');
+        $("#shipment-management").collapse('show');
+    });
+   
+</script>
