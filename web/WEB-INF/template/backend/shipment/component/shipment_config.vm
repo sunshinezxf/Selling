@@ -1,10 +1,10 @@
-<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id-target="shipment-management">
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id-target="config-management">
     <div class="row">
         <div class="col-md-12 col-lg-12">
             <h1><i class="fa fa-home"></i> 发货配置 </h1>
             <ol class="breadcrumb">
                 <li><a href="${path.concat('/dashboard')}">首页</a></li>
-                <li><a data-toggle="collapse" data-parent="#accordion" href="#shipment-management">基本配置</a></li>
+                <li><a data-toggle="collapse" data-parent="#accordion" href="#config-management">基本配置</a></li>
                 <li class="active">发货配置</li>
             </ol>
         </div>
@@ -23,7 +23,7 @@
                         发货日期
                     </label>
 
-                    <div class="col-sm-10 col-md-10 col-lg-10 btn-toolbar">
+                    <div class="col-sm-10 col-md-10 col-lg-10">
                         <div class="btn-group">
                             #foreach($i in [1..10])
                                 <button type="button" class="btn btn-default option" option-value="${i}">${i}</button>
