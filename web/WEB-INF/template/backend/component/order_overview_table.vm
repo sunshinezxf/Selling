@@ -27,6 +27,8 @@
    
 </div>
 <script>
+
+
     var url = "${path.concat('/order/overview')}";
     var payed_start = 0;
     var submited_start=0;
@@ -72,13 +74,7 @@
         });                    
     });
     
-    $(function () {
-        $("#agent-management").collapse('hide');
-        $("#order-management").collapse('show');
-        $("#customer-management").collapse('hide');
-        $("#goods-management").collapse('hide');
-        $("#statement-management").collapse('hide');
-    });
+
 </script>
 <script>
     function select(obj){

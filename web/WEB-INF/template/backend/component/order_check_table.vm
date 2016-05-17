@@ -16,14 +16,8 @@
     </div>
 </div>
 <script>
-    $(function () {
-        $("#agent-management").collapse('hide');
-        $("#order-management").collapse('show');
-        $("#customer-management").collapse('hide');
-        $("#goods-management").collapse('hide');
-        $("#statement-management").collapse('hide');
-    });
-    
+
+
     var url = "${path.concat('/order/check')}";
     var start = 0;
     var length= 5;

@@ -12,7 +12,7 @@
    <div class="row">
         <div class="col-md-12 col-lg-12">
             <div class="bs-callout">
-                <p>代理商${order.agent.name}订单</p>
+                <p class="text-info"><strong>代理商${order.agent.name}订单</strong></p>
                 <table class="table table-striped" style="margin-bottom: 0.2em">
                     <tr>
                         <th>客户</th>
@@ -43,5 +43,3 @@
     </div>
 </div>
 </div>
-<script>
-</script>
