@@ -9,10 +9,16 @@
         <div style="display:none;" id="customer_address${elem.customerId}">${elem.address.address}</div>
     </label>
     #end
+    <button type="button" class="weui_btn weui_btn_primary" id="add_customer">新增客户</a>
 </div>
+#parse("/agent/component/add_customer_in_order.vm")
 <script>
-    $(".weui_cell.customer").click(function () {
-   		if(isAdd){
+	$(document).ready(function(){
+		$(".weui_cell.customer").click($.customer_choose_click);
+	});
+    
+    $.customer_choose_click = function(){
+    	if(isAdd){
 		    var id_value = $(this).attr("id");
 		    customer_id = id_value;
 		    customer_name = $(this).find(".weui_cell_bd span").html();
@@ -36,5 +42,9 @@
         	$("#customer_option").hide();
         	$("#place_order_panel").fadeIn();  
         }
+    }
+    $("#add_customer").click(function(){
+    	$("#customer_option").hide();
+    	$("#add_customer_form").fadeIn();
     });
 </script>
