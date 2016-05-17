@@ -19,4 +19,6 @@ public interface AgentService {
     ResultData placeOrder(Map<String, Object> conditon);
     
     ResultData updateAgent(Agent agent);
+    
+    ResultData consume(double money);
 }
