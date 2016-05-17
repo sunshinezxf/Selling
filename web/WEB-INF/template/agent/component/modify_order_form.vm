@@ -27,6 +27,12 @@
 				        		</div>
 				        		<div class="weui_cell_ft"><span>${orderItem.customer.name}</span>(<span>${orderItem.customer.phone.phone}</span>)</div>
 				    		</a> 
+				    		<a class="weui_cell">
+				       			<div class="weui_cell_bd weui_cell_primary">
+				        			<p>收货地址</p>
+				        		</div>
+				        		<div class="weui_cell_ft address">${orderItem.customer.address.address}</div>
+				    		</a>
 				        	<a class="weui_cell"> 
 				        		<div class="weui_cell_bd weui_cell_primary"> 
 				        			<p>商品名称</p> 
@@ -92,8 +98,11 @@
 	$(document).ready(function(){
 		$("#add_order_item").hide();
 		$.calculate();
+		
+		//地址字符串截取
+		$.addressBeautify();
+		
 		#if(${status} == "SAVED" && ${operation} == "MODIFY")
-			
 			//添加事件
 			var order_item_list = $("#order_item_list").children();
 			$.each(order_item_list, function(i, val){
@@ -108,7 +117,7 @@
 		    		$("#customer_option").fadeIn();
 		    	});
 		    	//商品修改事件
-		    	$(val).children().eq(1).on("click", function(){
+		    	$(val).children().eq(2).on("click", function(){
 		    		isAdd = false;
 		    		current_modify_dom = this;
 		    		goods_id = $(this).parent(".weui_cells.weui_cells_access").find(".goods_id").val();
@@ -118,7 +127,7 @@
 		    		$("#goods_option").fadeIn();
 		    	});
 		    	//数量修改事件
-		    	$(val).children().eq(2).on("click",function(){
+		    	$(val).children().eq(3).on("click",function(){
 		    		current_modify_dom = this;
 		    		goods_id = $(this).parent(".weui_cells.weui_cells_access").find(".goods_id").val();
 		    		goods_name = $(this).find(".weui_cell_ft").html();
@@ -129,7 +138,7 @@
 		    		$("#quantity_modify").fadeIn();
 		    	});
 		    	 //添加删除事件
-		        $(val).children().eq(4).on("click",function(){
+		        $(val).children().eq(5).on("click",function(){
 		    		$(this).closest(".weui_cells.weui_cells_access").remove();
 		    		$.calculate();
 		        });
@@ -176,8 +185,8 @@
     	var order_info_list = new Object();
         var order_item_list = $("#order_item_list").children();
         $.each(order_item_list, function(i, val){
-        	var name = $(val).children().eq(1).find(".weui_cell_ft").text();
-        	var quantity = $(val).children().eq(2).find(".weui_cell_ft").text();
+        	var name = $(val).children().eq(2).find(".weui_cell_ft").text();
+        	var quantity = $(val).children().eq(3).find(".weui_cell_ft").text();
         	var price = $(val).find(".order_item_price").val();
         	if(order_info_list[name] == undefined) {
         		order_info_list[name] = new Object();
@@ -198,4 +207,13 @@
         }
         $("#total_goods").append(" <p class='weui_media_text'>共计" + total_price + "元</p>")
     }
+    //地址美化长度
+    $.addressBeautify = function(){
+   		var order_item_list = $("#order_item_list").children();
+    	$.each(order_item_list,function(i, val){
+			var address = $(val).children().eq(1).find(".weui_cell_ft").html();
+			$(val).children().eq(1).find(".weui_cell_ft").html($.utf8Substr(address,25));
+		});
+	}
+    
 </script>
