@@ -19,6 +19,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 
 import selling.sunshine.form.OrderItemForm;
+import selling.sunshine.form.PayForm;
 import selling.sunshine.form.SortRule;
 import selling.sunshine.model.Agent;
 import selling.sunshine.model.Goods;
@@ -234,9 +235,10 @@ public class OrderController {
         return view;
     }
     
-    @RequestMapping(method = RequestMethod.GET, value="/cofferpay/{orderId}")
-    public ModelAndView cofferPay(@PathVariable("orderId") String orderId) {
+    @RequestMapping(method = RequestMethod.POST, value="/cofferpay")
+    public ModelAndView cofferPay(@Valid PayForm form, BindingResult result, RedirectAttributes attr) {
     	ModelAndView view = new ModelAndView();
+    	String orderId = form.getOrderId();
 		Subject subject = SecurityUtils.getSubject();
 		User user = (User) subject.getPrincipal();
 		Agent agent = user.getAgent();
@@ -252,7 +254,7 @@ public class OrderController {
             prompt.setCode(PromptCode.WARNING);
             prompt.setTitle("提示");
             prompt.setMessage("失败");
-            view.addObject("prompt", prompt);
+            attr.addFlashAttribute(prompt);
             view.setViewName("redirect:/agent/prompt");
             return view;
 		}
@@ -268,10 +270,16 @@ public class OrderController {
             prompt.setTitle("付款成功");
             prompt.setMessage("订单号：" + order.getOrderId() + "，请等待发货");
             prompt.setConfirmURL("/order/list/2");
-            view.addObject("prompt", prompt);
+            attr.addFlashAttribute(prompt);
             view.setViewName("redirect:/agent/prompt");
             return view;
-    	}
+    	} 
+    	Prompt prompt = new Prompt();
+        prompt.setCode(PromptCode.WARNING);
+        prompt.setTitle("提示");
+        prompt.setMessage("失败");
+        attr.addFlashAttribute(prompt);
+        view.setViewName("redirect:/agent/prompt");
     	return view;
     }
 }
