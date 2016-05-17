@@ -6,14 +6,14 @@ package selling.sunshine.model;
 public class RefundConfig extends Entity {
     private String refundConfigId;
     private Goods goods;
-    private double amountTrigger;
+    private int amountTrigger;
     private double percent;
 
     public RefundConfig() {
         super();
     }
 
-    public RefundConfig(Goods goods, double amountTrigger, double percent) {
+    public RefundConfig(Goods goods, int amountTrigger, double percent) {
         this();
         this.goods = goods;
         this.amountTrigger = amountTrigger;
@@ -36,11 +36,11 @@ public class RefundConfig extends Entity {
         this.refundConfigId = refundConfigId;
     }
 
-    public double getAmountTrigger() {
+    public int getAmountTrigger() {
         return amountTrigger;
     }
 
-    public void setAmountTrigger(double amountTrigger) {
+    public void setAmountTrigger(int amountTrigger) {
         this.amountTrigger = amountTrigger;
     }
 

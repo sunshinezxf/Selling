@@ -337,9 +337,9 @@ CREATE TABLE IF NOT EXISTS `selling`.`ship_config` (
 DROP TABLE IF EXISTS `selling`.`refund_config` ;
 
 CREATE TABLE IF NOT EXISTS `selling`.`refund_config` (
-  `refund_config_id` INT NOT NULL,
+  `refund_config_id` VARCHAR(20) NOT NULL,
   `goods_id` VARCHAR(20) NULL,
-  `refund_trigger_amount` DOUBLE NOT NULL,
+  `refund_trigger_amount` INT NOT NULL,
   `refund_percent` DOUBLE NOT NULL DEFAULT 0,
   `block_flag` TINYINT(1) NOT NULL DEFAULT 0,
   `create_time` DATETIME NOT NULL,

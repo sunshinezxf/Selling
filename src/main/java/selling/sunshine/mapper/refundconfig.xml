@@ -34,13 +34,21 @@
         <if test="goodsId != null and goodsId != ''">
             AND goods_id = #{goodsId}
         </if>
-        <if test="blockFlag != null and blockFlag != ''">
+        <if test="blockFlag != null">
             AND block_flag = #{blockFlag}
         </if>
         <if test="rule != null and rule != ''">
             ORDER BY ${rule}
         </if>
     </select>
+
+    <update id="block" parameterType="selling.sunshine.model.RefundConfig">
+        UPDATE refund_config
+        <set>
+            block_flag = #{blockFlag}
+        </set>
+        WHERE goods_id = #{goods.goodsId}
+    </update>
 
     <select id="goodsQuery" parameterType="java.util.Map" resultMap="goodsVo">
         SELECT goods_id, goods_name, goods_price, goods_description, block_flag, create_time

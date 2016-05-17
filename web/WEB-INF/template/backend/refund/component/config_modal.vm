@@ -6,8 +6,8 @@
                 <h4 class="modal-title">返现配置修改</h4>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal">
-                    <input type="hidden" id="goods_id" name="goodsId"/>
+                <form class="form-horizontal" id="config_form">
+                    <input type="hidden" id="goods_id"/>
 
                     <p class="form-group">
                         <label class="col-sm-4 col-md-4 col-lg-3">选择的商品名称为:</label>&nbsp;&nbsp;
@@ -19,19 +19,20 @@
                     </p>
                     <p class="form-group">
                         <label class="col-sm-4 col-md-4 col-lg-3">返现标准数量为:</label>&nbsp;&nbsp;
-                        <input type="number" id="config_trigger" name="amountTrigger" value="0"/>&nbsp;<span>件</span>
+                        <input type="number" id="config_trigger" name="amountTrigger" value="0" autocomplete="off"/>&nbsp;<span>件</span>
                     </p>
 
                     <p class="form-group">
                         <label class="col-sm-4 col-md-4 col-lg-3">返现比例(百分比):</label>&nbsp;&nbsp;
-                        <input type="number" id="config_percent" name="percent" value="0"/>&nbsp;<span>%</span>
+                        <input type="number" id="config_percent" name="percent" value="0"
+                               autocomplete="off"/>&nbsp;<span>%</span>
                     </p>
 
                     <p class="form-group">
                         <label class="col-sm-12 col-md-12 col-lg-12">*只有当代理每批次达到返现标准数量时,才有资格获得返现机会</label>
                     </p>
+                </form>
             </div>
-            </form>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                 <button type="button" class="btn btn-primary" data-dismiss="modal" id="config_confirm">确认</button>
@@ -52,5 +53,8 @@
             return;
         }
         var url = "${path.concat('/refund/config/goods/')}" + $("#goods_id").val();
+        $("#config_form").attr("action", url);
+        $("#config_form").attr("method", "post");
+        $("#config_form").submit();
     });
 </script>

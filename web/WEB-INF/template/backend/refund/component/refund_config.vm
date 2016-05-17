@@ -87,7 +87,7 @@
                         success: function (result) {
                             var config = result.data;
                             if (result.responseCode == "RESPONSE_OK") {
-                                option += config.percent;
+                                option += (config.percent * 100) + "%";
                             } else {
                                 option += "暂未配置";
                             }
@@ -118,7 +118,7 @@
                                 var config = result.data;
                                 if (result.responseCode == "RESPONSE_OK") {
                                     $("#config_trigger").val(config.amountTrigger);
-                                    $("#config_percent").val(config.percent);
+                                    $("#config_percent").val(config.percent * 100);
                                 }
                             }
                         });
