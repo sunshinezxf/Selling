@@ -289,7 +289,7 @@ public class OrderController {
     	for(OrderItem orderItem : order.getOrderItems()){
     		totalPrice += orderItem.getOrderItemPrice();
     	}
-    	ResultData cofferData = agentService.consume(totalPrice);
+    	ResultData cofferData = agentService.consume(agent, totalPrice);
     	if(cofferData.getResponseCode() == ResponseCode.RESPONSE_OK){
     		Prompt prompt = new Prompt();
             prompt.setCode(PromptCode.WARNING);

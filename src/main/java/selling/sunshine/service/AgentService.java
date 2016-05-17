@@ -20,5 +20,5 @@ public interface AgentService {
     
     ResultData updateAgent(Agent agent);
     
-    ResultData consume(double money);
+    ResultData consume(Agent agent, double money);
 }

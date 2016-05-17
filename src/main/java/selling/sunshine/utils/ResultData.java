@@ -1,5 +1,8 @@
 package selling.sunshine.utils;
 
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SerializerFeature;
+
 /**
  * Created by sunshine on 4/8/16.
  */
@@ -34,5 +37,10 @@ public class ResultData {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public String toString() {
+        return JSONObject.toJSONString(this, SerializerFeature.DisableCircularReferenceDetect);
     }
 }

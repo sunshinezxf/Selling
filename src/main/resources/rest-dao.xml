@@ -33,4 +33,8 @@
     <bean id="shipmentDao" class="selling.sunshine.dao.impl.ShipmentDaoImpl">
         <property name="sqlSession" ref="sqlSession"></property>
     </bean>
+
+    <bean id="refundDao" class="selling.sunshine.dao.impl.RefundDaoImpl">
+        <property name="sqlSession" ref="sqlSession"></property>
+    </bean>
 </beans>
