@@ -1,6 +1,7 @@
 package selling.sunshine.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 import selling.sunshine.dao.AdminDao;
 import selling.sunshine.model.Admin;
@@ -44,4 +45,18 @@ public class AdminServiceImpl implements AdminService {
         result.setResponseCode(ResponseCode.RESPONSE_NULL);
         return result;
     }
+
+	@Override
+	public ResultData createAdmin(Admin admin) {
+		 ResultData result = new ResultData();
+	        admin.setPassword(Encryption.md5(admin.getPassword()));
+	        ResultData insertResponse = adminDao.insertAdmin(admin);
+	        result.setResponseCode(insertResponse.getResponseCode());
+	        if (insertResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+	            result.setData(insertResponse.getData());
+	        } else {
+	            result.setDescription(insertResponse.getDescription());
+	        }
+	        return result;
+	}
 }

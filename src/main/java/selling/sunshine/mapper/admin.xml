@@ -18,4 +18,9 @@
             AND manager_username = #{username}
         </if>
     </select>
+    
+    <insert id="insert" parameterType="selling.sunshine.model.Admin" useGeneratedKeys="false">
+        INSERT INTO manager(manager_id, manager_username, manager_password)
+        VALUES (#{adminId}, #{username}, #{password})
+    </insert>
 </mapper>

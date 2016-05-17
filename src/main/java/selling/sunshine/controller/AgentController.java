@@ -340,6 +340,7 @@ public class AgentController {
             if (createResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
                 Prompt prompt = new Prompt();
                 prompt.setCode(PromptCode.SUCCESS);
+                prompt.setTitle("提示");
                 prompt.setMessage("您已成功提交申请,待审核后即可使用");
                 attr.addFlashAttribute("prompt", prompt);
                 view.setViewName("redirect:/agent/prompt");

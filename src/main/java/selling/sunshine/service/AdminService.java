@@ -8,4 +8,5 @@ import selling.sunshine.utils.ResultData;
  */
 public interface AdminService {
     ResultData login(Admin admin);
+    ResultData createAdmin(Admin admin);
 }
