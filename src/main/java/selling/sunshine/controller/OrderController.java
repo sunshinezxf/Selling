@@ -1,6 +1,7 @@
 package selling.sunshine.controller;
 
 import org.apache.shiro.SecurityUtils;
+
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +38,6 @@ import selling.sunshine.utils.Prompt;
 import selling.sunshine.utils.PromptCode;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -115,6 +115,32 @@ public class OrderController {
     public ModelAndView express() {
         ModelAndView view = new ModelAndView();
         view.setViewName("/backend/order/express");
+        return view;
+    }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/orderItem/{orderId}")
+    public ModelAndView overviewOrderItem(@PathVariable("orderId") String orderId) {
+        ModelAndView view = new ModelAndView();
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("orderId", orderId);
+        ResultData orderData=orderService.fetchOrder(condition);
+        Order order=((List<Order>)orderData.getData()).get(0);
+        view.addObject("order",order);
+        double totalPrices=0.0;
+        Map<String, Object> goods_quantity_Map= new HashMap<>();
+        for(OrderItem item:order.getOrderItems()){
+        	totalPrices+=item.getOrderItemPrice();
+        	String goodsName=item.getGoods().getName();
+        	int goodsQuantity=item.getGoodsQuantity();
+        	if (goods_quantity_Map.containsKey(goodsName)) {
+				goods_quantity_Map.put(goodsName, ((int)goods_quantity_Map.get(goodsName)+goodsQuantity));
+			}else{
+				goods_quantity_Map.put(goodsName, goodsQuantity);
+			}
+        }
+        view.addObject("totalPrices",totalPrices);
+        view.addObject("goods_quantity_Map",goods_quantity_Map);
+        view.setViewName("/backend/order/orderItem");
         return view;
     }
 
