@@ -23,8 +23,10 @@ import selling.sunshine.form.OrderItemForm;
 import selling.sunshine.form.PayForm;
 import selling.sunshine.form.SortRule;
 import selling.sunshine.model.Agent;
+import selling.sunshine.model.Bill;
 import selling.sunshine.model.Goods;
 import selling.sunshine.model.Order;
+import selling.sunshine.model.OrderBill;
 import selling.sunshine.model.OrderItem;
 import selling.sunshine.model.OrderStatus;
 import selling.sunshine.model.Role;
@@ -32,8 +34,10 @@ import selling.sunshine.model.User;
 import selling.sunshine.pagination.MobilePage;
 import selling.sunshine.pagination.MobilePageParam;
 import selling.sunshine.service.AgentService;
+import selling.sunshine.service.BillService;
 import selling.sunshine.service.CommodityService;
 import selling.sunshine.service.OrderService;
+import selling.sunshine.service.ToolService;
 import selling.sunshine.utils.Prompt;
 import selling.sunshine.utils.PromptCode;
 import selling.sunshine.utils.ResponseCode;
@@ -43,6 +47,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 /**
@@ -61,6 +66,12 @@ public class OrderController {
     
     @Autowired
     private AgentService agentService;
+    
+    @Autowired
+    private BillService billService;
+    
+    @Autowired
+    private ToolService toolService;
     
     @RequestMapping(method = RequestMethod.GET, value = "/check")
     public ModelAndView handle() {
@@ -262,7 +273,7 @@ public class OrderController {
     }
     
     @RequestMapping(method = RequestMethod.POST, value="/cofferpay")
-    public ModelAndView cofferPay(@Valid PayForm form, BindingResult result, RedirectAttributes attr) {
+    public ModelAndView cofferPay(HttpServletRequest request,@Valid PayForm form, BindingResult result, RedirectAttributes attr) {
     	ModelAndView view = new ModelAndView();
     	String orderId = form.getOrderId();
 		Subject subject = SecurityUtils.getSubject();
@@ -289,17 +300,23 @@ public class OrderController {
     	for(OrderItem orderItem : order.getOrderItems()){
     		totalPrice += orderItem.getOrderItemPrice();
     	}
-    	ResultData cofferData = agentService.consume(agent, totalPrice);
-    	if(cofferData.getResponseCode() == ResponseCode.RESPONSE_OK){
-    		Prompt prompt = new Prompt();
-            prompt.setCode(PromptCode.WARNING);
-            prompt.setTitle("付款成功");
-            prompt.setMessage("订单号：" + order.getOrderId() + "，请等待发货");
-            prompt.setConfirmURL("/order/list/2");
-            attr.addFlashAttribute(prompt);
-            view.setViewName("redirect:/agent/prompt");
-            return view;
-    	} 
+    	//创建账单
+    	OrderBill orderBill = new OrderBill(totalPrice,"coffer",toolService.getIP(request),agent,order);
+    	ResultData billData = billService.createOrderBill(orderBill);
+    	if(billData.getResponseCode() == ResponseCode.RESPONSE_OK){
+    		ResultData cofferData = agentService.consume(agent, totalPrice);
+    		billService.updateOrderBill((OrderBill) billData.getData());
+    		if(cofferData.getResponseCode() == ResponseCode.RESPONSE_OK){
+        		Prompt prompt = new Prompt();
+                prompt.setCode(PromptCode.WARNING);
+                prompt.setTitle("付款成功");
+                prompt.setMessage("订单号：" + order.getOrderId() + "，请等待发货");
+                prompt.setConfirmURL("/order/list/2");
+                attr.addFlashAttribute(prompt);
+                view.setViewName("redirect:/agent/prompt");
+                return view;
+        	} 
+    	}
     	Prompt prompt = new Prompt();
         prompt.setCode(PromptCode.WARNING);
         prompt.setTitle("提示");

@@ -40,7 +40,7 @@
         <result property="goodsQuantity" column="goods_quantity"></result>
         <result property="orderItemPrice" column="order_item_price"></result>
         <result property="status" column="order_item_status"
-                typeHandler="selling.sunshine.handler.mybatis.orderItem.OrderItemStatusHandler"></result>
+                typeHandler="selling.sunshine.handler.mybatis.order.OrderItemStatusHandler"></result>
         <association property="customer" column="customerId = customer_id" select="customerQuery"></association>
         <association property="goods" column="goodsId = goods_id" select="goodsQuery"></association>
     </resultMap>
