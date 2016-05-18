@@ -100,7 +100,7 @@ public class BillDaoImpl extends BaseDao implements BillDao {
         ResultData result = new ResultData();
         synchronized (lock) {
             try {
-                bill.setBillId("ODB");
+                bill.setBillId(IDGenerator.generate("ODB"));
                 if (bill.getChannel().equals("coffer")) {
                     bill.setStatus(BillStatus.PAYED);
                 }
