@@ -92,7 +92,6 @@ public class BillDaoImpl extends BaseDao implements BillDao {
         } finally {
             return result;
         }
-        return result;
     }
 
     @Transactional
