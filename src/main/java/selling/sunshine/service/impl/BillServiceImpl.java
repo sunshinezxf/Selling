@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import selling.sunshine.dao.BillDao;
 import selling.sunshine.model.DepositBill;
+import selling.sunshine.model.OrderBill;
 import selling.sunshine.service.BillService;
 import selling.sunshine.utils.PlatformConfig;
 import selling.sunshine.utils.ResponseCode;
@@ -51,7 +52,7 @@ public class BillServiceImpl implements BillService {
         if (!StringUtils.isEmpty(bill.getChannel()) && bill.getChannel().equals("alipay_wap")) {
             Map<String, String> url = new HashMap<>();
             url.put("success_url", PlatformConfig.getValue("server_url") + "/account/deposit/" + bill.getBillId() + "/prompt");
-            url.put("cancel_url",  PlatformConfig.getValue("server_url") + "/account/deposit/" + bill.getBillId() + "/prompt");
+            url.put("cancel_url", PlatformConfig.getValue("server_url") + "/account/deposit/" + bill.getBillId() + "/prompt");
             params.put("extra", url);
         }
         params.put("currency", "cny");
@@ -82,7 +83,7 @@ public class BillServiceImpl implements BillService {
         return result;
     }
 
-
+    @Override
     public ResultData updateDepositBill(DepositBill bill) {
         ResultData result = new ResultData();
         ResultData updateResponse = billDao.updateDepositBill(bill);
@@ -92,6 +93,20 @@ public class BillServiceImpl implements BillService {
         } else if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
             result.setDescription(updateResponse.getDescription());
         }
+        return result;
+    }
+
+    @Override
+    public ResultData createOrderBill(OrderBill bill) {
+        ResultData result = new ResultData();
+
+        return result;
+    }
+
+    @Override
+    public ResultData updateOrderBill(OrderBill bill) {
+        ResultData result = new ResultData();
+
         return result;
     }
 }
