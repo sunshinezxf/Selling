@@ -61,7 +61,6 @@ public class BillController {
         logger.debug("charge info == " + charge);
         String dealId = charge.getString("order_no");
         logger.debug("deal id: " + dealId);
-        
         if (StringUtils.isEmpty(dealId)) {
 			resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
 			return resultData;
@@ -73,7 +72,9 @@ public class BillController {
             resultData = billService.fetchDepositBill(condition);
             DepositBill depositBill = ((List<DepositBill>) resultData.getData()).get(0);
             
-            Agent agent = depositBill.getAgent();
+            Map<String, Object> agentCondition = new HashMap<String, Object>();
+            condition.put("agentId", depositBill.getAgent().getAgentId());
+            Agent agent = ((List<Agent>)agentService.fetchAgent(agentCondition).getData()).get(0);
             agent.setCoffer(agent.getCoffer()+depositBill.getBillAmount());
             resultData = agentService.updateAgent(agent);
             depositBill.setStatus(BillStatus.PAYED);

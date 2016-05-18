@@ -90,7 +90,7 @@
                 bill_amount = #{billAmount},
             </if>
             <if test="status != null and status != ''">
-                bill_status = #{status},
+                bill_status = #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler},
             </if>
         </set>
         WHERE bill_id = #{billId}

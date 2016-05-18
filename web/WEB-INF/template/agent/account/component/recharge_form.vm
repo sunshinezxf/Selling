@@ -27,7 +27,7 @@
                 charge_url: "${path.concat('/account/deposit')}",
                 charge_param: {},
                 open_id: 'wxf2c47b5e41605c26',
-                debug: 'true'
+                debug: false
             }, function (result) {
                 //debug 模式下获取 charge_url 的返回结果
                 if (result.debug && result.chargeUrlOutput) {
