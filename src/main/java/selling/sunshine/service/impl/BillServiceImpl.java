@@ -2,16 +2,15 @@ package selling.sunshine.service.impl;
 
 import com.pingplusplus.Pingpp;
 import com.pingplusplus.model.Charge;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-
 import selling.sunshine.dao.BillDao;
 import selling.sunshine.model.DepositBill;
 import selling.sunshine.service.BillService;
+import selling.sunshine.utils.PlatformConfig;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
@@ -51,8 +50,8 @@ public class BillServiceImpl implements BillService {
         params.put("channel", bill.getChannel());
         if (!StringUtils.isEmpty(bill.getChannel()) && bill.getChannel().equals("alipay_wap")) {
             Map<String, String> url = new HashMap<>();
-            url.put("success_url", "http://192.168.1.100:8080/selling/account/deposit/" + bill.getBillId() + "/prompt");
-            url.put("cancel_url", "http://192.168.1.100:8080/selling/account/deposit/" + bill.getBillId() + "/prompt");
+            url.put("success_url", PlatformConfig.getValue("server_url") + "/account/deposit/" + bill.getBillId() + "/prompt");
+            url.put("cancel_url",  PlatformConfig.getValue("server_url") + "/account/deposit/" + bill.getBillId() + "/prompt");
             params.put("extra", url);
         }
         params.put("currency", "cny");
@@ -70,29 +69,29 @@ public class BillServiceImpl implements BillService {
         return result;
     }
 
-	@Override
-	public ResultData fetchDepositBill(Map<String, Object> condition) {
-		 ResultData result = new ResultData();
-		 ResultData queryResponse = billDao.queryDepositBill(condition);
-	        result.setResponseCode(queryResponse.getResponseCode());
-	        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-	            result.setData(queryResponse.getData());
-	        } else if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
-	            result.setDescription(queryResponse.getDescription());
-	        }
-	        return result;
-	}
+    @Override
+    public ResultData fetchDepositBill(Map<String, Object> condition) {
+        ResultData result = new ResultData();
+        ResultData queryResponse = billDao.queryDepositBill(condition);
+        result.setResponseCode(queryResponse.getResponseCode());
+        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(queryResponse.getData());
+        } else if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
+            result.setDescription(queryResponse.getDescription());
+        }
+        return result;
+    }
 
-	
-	public ResultData updateDepositBill(DepositBill bill) {
-		 ResultData result = new ResultData();
-		 ResultData updateResponse = billDao.updateDepositBill(bill);
-	        result.setResponseCode(updateResponse.getResponseCode());
-	        if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-	            result.setData(updateResponse.getData());
-	        } else if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
-	            result.setDescription(updateResponse.getDescription());
-	        }
-	        return result;
-	}
+
+    public ResultData updateDepositBill(DepositBill bill) {
+        ResultData result = new ResultData();
+        ResultData updateResponse = billDao.updateDepositBill(bill);
+        result.setResponseCode(updateResponse.getResponseCode());
+        if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(updateResponse.getData());
+        } else if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
+            result.setDescription(updateResponse.getDescription());
+        }
+        return result;
+    }
 }
