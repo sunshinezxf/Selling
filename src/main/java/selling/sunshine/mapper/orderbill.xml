@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="selling.billing">
+	 <resultMap id="orderBillVo" type="selling.sunshine.model.OrderBill">
+        <result property="billId" column="bill_id"></result>
+        <result property="billAmount" column="bill_amount"></result>
+        <result property="channel" column="channel_name"></result>
+        <result property="status" column="bill_status" typeHandler="selling.sunshine.handler.mybatis.bill.BillStatusHandler"></result>
+        <result property="clientIp" column="client_ip"></result>
+        <result property="blockFlag" column="block_flag"></result>
+        <result property="createAt" column="create_time"></result>
+        <association property="agent" column="agentId = agent_id" select="agentQuery"></association>
+        <association property="order" column="orderId = order_id" select="orderQuery"></association>
+    </resultMap>
+
+    <resultMap id="agentVo" type="selling.sunshine.model.Agent">
+        <result property="agentId" column="agent_id"></result>
+        <result property="name" column="agent_name"></result>
+        <result property="gender" column="agent_gender"></result>
+        <result property="phone" column="agent_phone"></result>
+        <result property="address" column="agent_address"></result>
+        <result property="wechat" column="agent_wechat"></result>
+        <result property="password" column="agent_password"></result>
+        <result property="granted" column="agent_granted"></result>
+        <result property="blockFlag" column="block_flag"></result>
+        <result property="createAt" column="create_time"></result>
+    </resultMap>
+    
+    <resultMap id="orderVo" type="selling.sunshine.model.Order">
+        <result property="orderId" column="order_id"></result>
+        <result property="status" column="order_status"
+                typeHandler="selling.sunshine.handler.mybatis.order.OrderStatusHandler"></result>
+        <result property="blockFlag" column="block_flag"></result>
+        <result property="createAt" column="create_time"></result>
+        <collection property="orderItems" column="orderId = order_id" select="orderItemQuery"></collection>
+    </resultMap>
+    
+     <resultMap id="orderItemVo" type="selling.sunshine.model.OrderItem">
+        <result property="orderItemId" column="order_item_id"></result>
+        <result property="goodsQuantity" column="goods_quantity"></result>
+        <result property="orderItemPrice" column="order_item_price"></result>
+        <result property="status" column="order_item_status"
+                typeHandler="selling.sunshine.handler.mybatis.orderItem.OrderItemStatusHandler"></result>
+        <association property="customer" column="customerId = customer_id" select="customerQuery"></association>
+        <association property="goods" column="goodsId = goods_id" select="goodsQuery"></association>
+    </resultMap>
+    
+    <select id="query" parameterType="java.util.Map" resultMap="orderBillVo">
+        SELECT bill_id, order_id, agent_id, channel_name, bill_amount, bill_status, client_ip, block_flag, create_time
+        FROM order_bill
+        WHERE 1 = 1
+        <if test="billId != null and billId != ''">
+            AND bill_id = #{billId}
+        </if>
+        <if test="orderId != null and orderId != ''">
+            AND order_id = #{orderId}
+        </if>
+        <if test="agentId != null and agentId != ''">
+            AND agent_id = #{agentId}
+        </if>
+        <if test="channel != null and channel != ''">
+            AND channel_name = #{channel}
+        </if>
+        <if test="blockFlag != null and blockFlag !=''">
+            AND block_flag = #{blockFlag}
+        </if>
+    </select>
+    
+    <insert id="insert" parameterType="selling.sunshine.model.OrderBill" useGeneratedKeys="false">
+        INSERT INTO order_bill(bill_id, agent_id, order_id, channel_name, client_ip, bill_amount, bill_status, block_flag, create_time)
+        VALUES (#{billId}, #{agent.agentId}, #{order.orderId}, #{channel}, #{clientIp}, #{billAmount}, #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler}, #{blockFlag}, #{createAt})
+    </insert>
+    
+    <update id="update" parameterType="selling.sunshine.model.OrderBill" useGeneratedKeys="false">
+        UPDATE order_bill
+        <set>
+            <if test="agent.agentId != null and agent.agentId != ''">
+                agent_id = #{agent.agentId},
+            </if>
+            <if test="order.orderId != null and order.orderId != ''">
+                order_id = #{order.agentId},
+            </if>
+            <if test="channel != null and channel != ''">
+                channel_name = #{channel},
+            </if>
+            <if test="clientIp != null and clientIp != ''">
+                client_ip = #{clientIp},
+            </if>
+            <if test="billAmount != null and billAmount != ''">
+                bill_amount = #{billAmount},
+            </if>
+            <if test="status != null and status != ''">
+                bill_status = #{status},
+            </if>
+        </set>
+        WHERE bill_id = #{billId}
+    </update>
+
+    <select id="agentQuery" parameterType="java.util.Map" resultMap="agentVo">
+        SELECT agent_id, agent_name, agent_gender, agent_phone, agent_address, agent_password, agent_wechat, agent_granted, block_flag, create_time
+        FROM agent
+        WHERE agent_id = #{agentId}
+    </select>
+    
+    
+    <select id="orderQuery" parameterType="java.util.Map" resultMap="orderVo">
+        SELECT order_id, order_status, block_flag, create_time
+        FROM `order`
+        WHERE 1 = 1
+        <if test="orderId != null and orderId != ''">
+            AND order_id = #{orderId}
+        </if>
+        <if test="status != null and status != ''">
+            <if test="status == 0">AND order_status = 0</if>
+            <if test="status == 1">AND order_status = 1</if>
+            <if test="status == 2">AND (order_status = 2 || order_status = 3 || order_status = 4)</if>
+            <if test="status == 3">AND order_status = 5</if>
+        </if>
+        <if test="blockFlag != null and blockFlag != ''">
+            AND block_flag = #{blockFlag}
+        </if>
+        <if test="rule != null and rule != ''">
+            ORDER BY ${rule}
+        </if>
+    </select>
+    
+     <select id="orderItemQuery" parameterType="java.util.Map" resultMap="orderItemVo">
+    	SELECT order_item_id, customer_id, goods_id, goods_quantity, order_item_price, order_item_status
+    	from order_item
+    	where order_id = #{orderId}
+    </select>
+    
+</mapper>

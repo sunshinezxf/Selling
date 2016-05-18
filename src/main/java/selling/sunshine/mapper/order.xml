@@ -28,6 +28,8 @@
         <result property="orderItemId" column="order_item_id"></result>
         <result property="goodsQuantity" column="goods_quantity"></result>
         <result property="orderItemPrice" column="order_item_price"></result>
+        <result property="status" column="order_item_status"
+                typeHandler="selling.sunshine.handler.mybatis.orderItem.OrderItemStatusHandler"></result>
         <association property="customer" column="customerId = customer_id" select="customerQuery"></association>
         <association property="goods" column="goodsId = goods_id" select="goodsQuery"></association>
     </resultMap>
@@ -112,7 +114,7 @@
     </update>
 
     <select id="orderItemQuery" parameterType="java.util.Map" resultMap="orderItemVo">
-    	SELECT order_item_id, customer_id, goods_id, goods_quantity, order_item_price
+    	SELECT order_item_id, customer_id, goods_id, goods_quantity, order_item_price, order_item_status
     	from order_item
     	where order_id = #{orderId}
     </select>
