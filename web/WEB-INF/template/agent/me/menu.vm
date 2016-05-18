@@ -8,7 +8,7 @@
         <div class="weui_panel">
             <div class="list-cell">
                 <div class="weui_grids">
-                    <a class="weui_grid" href="${path.concat('/agent/order/manage')}">
+                    <a class="weui_grid" href="${path.concat('/agent/order/manage/0')}">
                         <div class="weui_grid_icon">
                             <i class="icon icon_article"></i>
                         </div>

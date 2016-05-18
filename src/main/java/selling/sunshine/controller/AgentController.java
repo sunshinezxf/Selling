@@ -204,36 +204,34 @@ public class AgentController {
 
         ResultData fetchResponse = orderService.placeOrder(order);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            Prompt prompt = new Prompt();
-            prompt.setCode(PromptCode.SUCCESS);
-            prompt.setTitle("提示");
-            prompt.setConfirmURL("/agent/order/manage");
-            switch (type) {
-                case "save":
-                    prompt.setMessage("保存成功");
-                    break;
-                case "submit":
-                    prompt.setMessage("下单成功");
-                    break;
-                default:
+        	if(type.equals("save")){
+	            Prompt prompt = new Prompt();
+	            prompt.setCode(PromptCode.SUCCESS);
+	            prompt.setTitle("提示");
+	            prompt.setConfirmURL("/agent/order/manage/0");
+	            prompt.setMessage("保存成功");
+	            attr.addFlashAttribute("prompt", prompt);
+	            view.setViewName("redirect:/agent/prompt");
             }
-            attr.addFlashAttribute("prompt", prompt);
-            view.setViewName("redirect:/agent/prompt");
+        	else if(type.equals("submit")) {
+        		view.setViewName("redirect:/order/pay/" + order.getOrderId());
+        	}
             return view;
         }
         Prompt prompt = new Prompt();
         prompt.setCode(PromptCode.WARNING);
         prompt.setTitle("提示");
-        prompt.setConfirmURL("/order/list/0");
+        prompt.setConfirmURL("/agent/order/manage/0");
         prompt.setMessage("失败");
         attr.addFlashAttribute("prompt", prompt);
         view.setViewName("redirect:/agent/prompt");
         return view;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/order/manage")
-    public ModelAndView manageOrder() {
+    @RequestMapping(method = RequestMethod.GET, value = "/order/manage/{type}")
+    public ModelAndView manageOrder(@PathVariable("type") String type) {
         ModelAndView view = new ModelAndView();
+        view.addObject("type", type);
         view.setViewName("/agent/order/manage");
         return view;
     }

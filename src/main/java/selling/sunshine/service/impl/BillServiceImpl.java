@@ -99,14 +99,23 @@ public class BillServiceImpl implements BillService {
     @Override
     public ResultData createOrderBill(OrderBill bill) {
         ResultData result = new ResultData();
-
+        ResultData insertResponse = billDao.insertOrderBill(bill);
+        if (insertResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription(insertResponse.getDescription());
+        }
+        bill = (OrderBill) insertResponse.getData();
+        if (!StringUtils.isEmpty(bill.getChannel()) && bill.getChannel().equals("coffer")) {
+            result.setData(bill);
+            return result;
+        }
         return result;
     }
 
     @Override
     public ResultData updateOrderBill(OrderBill bill) {
         ResultData result = new ResultData();
-
+        
         return result;
     }
 }

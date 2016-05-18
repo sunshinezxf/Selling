@@ -9,7 +9,7 @@
     </div>
     <div class="weui_tab">
         <div class="weui_navbar">
-            <div class="weui_navbar_item weui_bar_item_on" style="font-weight:bold;" id="saved">
+            <div class="weui_navbar_item " id="saved">
                 已保存 
             </div>
             <div class="weui_navbar_item" id="submit">
@@ -18,7 +18,7 @@
             <div class="weui_navbar_item" id="paid">
                 已付款
             </div>
-            <div class="weui_navbar_item" id="close">
+            <div class="weui_navbar_item" id="closed">
                 已结束
             </div>
         </div>
@@ -31,7 +31,26 @@
 #parse("/agent/component/navigate.vm")
 <script>
 	$(document).ready(function(){
-		$.get_order(0);
+		$.get_order(${type});
+		switch(${type}){
+		case 0:
+			$("#saved").css("font-weight","bold");
+            $("#saved").addClass("weui_bar_item_on");
+            break;
+		case 1:
+			$("#submit").css("font-weight","bold");
+            $("#submit").addClass("weui_bar_item_on");
+            break;
+		case 2:
+			$("#paid").css("font-weight","bold");
+            $("#paid").addClass("weui_bar_item_on");
+            break;
+		case 3:
+			$("#closed").css("font-weight","bold");
+            $("#closed").addClass("weui_bar_item_on");
+            break;
+		default:
+		}
 	});
 
     $(".weui_navbar_item").click(function () {
