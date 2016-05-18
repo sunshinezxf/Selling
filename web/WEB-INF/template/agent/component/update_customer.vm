@@ -57,11 +57,9 @@
         var url = "${path.concat('/customer/" + customerId + "')}";
         $.post(url, function (result) {
             var customer = result.data;
-
-            $("#customer_name_new").attr('value', customer.name);
-            $("#customer_phone_new").attr('value', parseInt(customer.phone.phone));
-            $("#customer_address_new").attr('value', customer.address.address);
-
+			$("#customer_name_new").val(customer.name);
+            $("#customer_phone_new").val(customer.phone.phone);
+            $("#customer_address_new").val(customer.address.address);            
         });
         $("#customer_panel").hide();
     }
