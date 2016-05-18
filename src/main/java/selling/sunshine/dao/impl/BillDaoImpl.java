@@ -13,6 +13,7 @@ import selling.sunshine.utils.IDGenerator;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -79,6 +80,22 @@ public class BillDaoImpl extends BaseDao implements BillDao {
         }
     }
 
+    @Override
+    public ResultData queryOrderBill(Map<String, Object> condition) {
+        ResultData result = new ResultData();
+        try {
+            List<OrderBill> list = sqlSession.selectList("selling.bill.order.query", condition);
+            result.setData(list);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription(e.getMessage());
+        } finally {
+            return result;
+        }
+        return result;
+    }
+
     @Transactional
     @Override
     public ResultData insertOrderBill(OrderBill bill) {
@@ -90,6 +107,27 @@ public class BillDaoImpl extends BaseDao implements BillDao {
                     bill.setStatus(BillStatus.PAYED);
                 }
                 sqlSession.insert("selling.bill.order.insert", bill);
+                result.setData(bill);
+            } catch (Exception e) {
+                logger.error(e.getMessage());
+                result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+                result.setDescription(e.getMessage());
+            } finally {
+                return result;
+            }
+        }
+    }
+
+    @Transactional
+    @Override
+    public ResultData updateOrderBill(OrderBill bill) {
+        ResultData result = new ResultData();
+        synchronized (lock) {
+            try {
+                sqlSession.update("selling.bill.order.update", bill);
+                Map<String, Object> condition = new HashMap<>();
+                condition.put("billId", bill.getBillId());
+                bill = sqlSession.selectOne("selling.bill.order.query", condition);
                 result.setData(bill);
             } catch (Exception e) {
                 logger.error(e.getMessage());
