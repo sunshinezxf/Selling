@@ -462,7 +462,7 @@ public class AgentController {
     @RequestMapping(method = RequestMethod.POST, value = "/reward")
     @ResponseBody
     public ResultData reward(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        ModelAndView view = new ModelAndView();
+        
         ResultData resultData = new ResultData();
         JSONObject webhooks = toolService.getParams(request);
         logger.debug("webhooks info == " + webhooks);
@@ -477,6 +477,7 @@ public class AgentController {
         resultData = billService.fetchDepositBill(condition);
         DepositBill depositBill = ((List<DepositBill>) resultData.getData()).get(0);
         Agent agent = depositBill.getAgent();
+        agent.setCoffer(agent.getCoffer()+depositBill.getBillAmount());
         resultData = agentService.updateAgent(agent);
         resultData = billService.updateDepositBill(depositBill);
 
