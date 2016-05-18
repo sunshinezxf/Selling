@@ -1,6 +1,7 @@
 package selling.sunshine.controller;
 
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -49,8 +51,8 @@ public class BillController {
 
 
     @ResponseBody
-    @RequestMapping("/inform")
-    public ResultData inform(HttpServletRequest request, HttpServletResponse response) {
+    @RequestMapping(method = RequestMethod.POST, value="/inform")
+    public ResultData inform(HttpServletRequest request, HttpServletResponse response) throws IOException{
         ResultData resultData = new ResultData();
         
         JSONObject webhooks = toolService.getParams(request);
