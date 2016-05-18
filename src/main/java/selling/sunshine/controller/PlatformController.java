@@ -1,6 +1,7 @@
 package selling.sunshine.controller;
 
 import org.apache.shiro.SecurityUtils;
+
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,6 +80,7 @@ public class PlatformController {
 	@RequestMapping(method = RequestMethod.POST, value = "/register")
 	public ModelAndView register(@Valid AdminForm form, BindingResult result) {
 		ModelAndView view = new ModelAndView();
+
 		if (result.hasErrors()) {
 			view.setViewName("redirect:/register");
 			return view;
