@@ -97,11 +97,13 @@ public class AccountController {
 		Prompt prompt = new Prompt();
 		if (!StringUtils.isEmpty(result) && result.equals("success")) {
 			prompt.setCode(PromptCode.SUCCESS);
+			prompt.setTitle("提示");
 			prompt.setMessage("恭喜您,充值成功!");
 		} else {
-			prompt.setCode(PromptCode.WARNING);
+			prompt.setCode(PromptCode.WARNING);			
 			prompt.setMessage("对不起,您的充值已取消.");
 		}
+		prompt.setConfirmURL("/account/info");
 		view.addObject("prompt", prompt);
 		view.setViewName("/agent/prompt");
 		return view;
