@@ -67,7 +67,7 @@ public class BillController {
 			return resultData;
 		}
         
-        if (dealId.contains("ODB")) {
+        if (dealId.startsWith("DPB")) {
         	Map<String, Object> condition = new HashMap<String, Object>();
             condition.put("billId", dealId);
             resultData = billService.fetchDepositBill(condition);
