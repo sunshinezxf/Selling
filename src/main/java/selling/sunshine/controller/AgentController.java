@@ -470,16 +470,14 @@ public class AgentController {
         logger.debug("charge info == " + charge);
         String dealId = charge.getString("order_no");
         logger.debug("deal id: " + dealId);
+        
+        
         Map<String, Object> condition = new HashMap<String, Object>();
         condition.put("billId", dealId);
         resultData = billService.fetchDepositBill(condition);
-
-
         DepositBill depositBill = ((List<DepositBill>) resultData.getData()).get(0);
         Agent agent = depositBill.getAgent();
         resultData = agentService.updateAgent(agent);
-
-
         resultData = billService.updateDepositBill(depositBill);
 
 
@@ -491,7 +489,6 @@ public class AgentController {
         } else {
             response.setStatus(500);
         }
-        view.setViewName("/backend/agent/overview");
         return resultData;
     }
 }

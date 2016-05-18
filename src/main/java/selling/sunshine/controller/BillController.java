@@ -1,10 +1,13 @@
 package selling.sunshine.controller;
 
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
 import selling.sunshine.utils.ResultData;
 
 /**
@@ -18,7 +21,7 @@ public class BillController {
 
     @ResponseBody
     @RequestMapping("/{billId}/inform")
-    public ResultData inform() {
+    public ResultData inform(){
         ResultData result = new ResultData();
 
         return result;
