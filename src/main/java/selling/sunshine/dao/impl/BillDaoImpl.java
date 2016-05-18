@@ -1,20 +1,20 @@
 package selling.sunshine.dao.impl;
 
-import java.util.List;
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
 import selling.sunshine.dao.BaseDao;
 import selling.sunshine.dao.BillDao;
 import selling.sunshine.model.BillStatus;
 import selling.sunshine.model.DepositBill;
+import selling.sunshine.model.OrderBill;
 import selling.sunshine.utils.IDGenerator;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by sunshine on 5/10/16.
@@ -45,36 +45,59 @@ public class BillDaoImpl extends BaseDao implements BillDao {
         }
     }
 
-	@Override
-	public ResultData queryDepositBill(Map<String, Object> condition) {
-		  ResultData result = new ResultData();
-	        try {
-	            List<DepositBill> list = sqlSession.selectList("selling.bill.deposit.query", condition);
-	            result.setData(list);
-	        } catch (Exception e) {
-	            logger.error(e.getMessage());
-	            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
-	            result.setDescription(e.getMessage());
-	        } finally {
-	            return result;
-	        }
-	}
+    @Override
+    public ResultData queryDepositBill(Map<String, Object> condition) {
+        ResultData result = new ResultData();
+        try {
+            List<DepositBill> list = sqlSession.selectList("selling.bill.deposit.query", condition);
+            result.setData(list);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription(e.getMessage());
+        } finally {
+            return result;
+        }
+    }
 
-	@Override
-	public ResultData updateDepositBill(DepositBill bill) {
-		ResultData result = new ResultData();
+    @Transactional
+    @Override
+    public ResultData updateDepositBill(DepositBill bill) {
+        ResultData result = new ResultData();
         synchronized (lock) {
             try {
-            	bill.setStatus(BillStatus.values()[1]);
+                bill.setStatus(BillStatus.PAYED);
                 sqlSession.update("selling.bill.deposit.update", bill);
                 result.setData(bill);
             } catch (Exception e) {
-                logger.debug(e.getMessage());
+                logger.error(e.getMessage());
                 result.setResponseCode(ResponseCode.RESPONSE_ERROR);
                 result.setDescription(e.getMessage());
             } finally {
                 return result;
             }
         }
-	}
+    }
+
+    @Transactional
+    @Override
+    public ResultData insertOrderBill(OrderBill bill) {
+        ResultData result = new ResultData();
+        synchronized (lock) {
+            try {
+                bill.setBillId("ODB");
+                if (bill.getChannel().equals("coffer")) {
+                    bill.setStatus(BillStatus.PAYED);
+                }
+                sqlSession.insert("selling.bill.order.insert", bill);
+                result.setData(bill);
+            } catch (Exception e) {
+                logger.error(e.getMessage());
+                result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+                result.setDescription(e.getMessage());
+            } finally {
+                return result;
+            }
+        }
+    }
 }
