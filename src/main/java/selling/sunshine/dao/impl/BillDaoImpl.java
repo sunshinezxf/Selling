@@ -66,7 +66,6 @@ public class BillDaoImpl extends BaseDao implements BillDao {
         ResultData result = new ResultData();
         synchronized (lock) {
             try {
-                bill.setStatus(BillStatus.PAYED);
                 sqlSession.update("selling.bill.deposit.update", bill);
                 result.setData(bill);
             } catch (Exception e) {
