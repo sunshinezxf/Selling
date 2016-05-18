@@ -64,28 +64,39 @@ public class AgentServiceImpl implements AgentService {
         return result;
     }
 
-	@Override
-	public ResultData placeOrder(Map<String, Object> conditon) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public ResultData placeOrder(Map<String, Object> conditon) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	@Override
-	public ResultData updateAgent(Agent agent) {
-		 ResultData result = new ResultData();
-	        ResultData updateResponse = agentDao.updateAgent(agent);
-	        result.setResponseCode(updateResponse.getResponseCode());
-	        if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-	            result.setData(updateResponse.getData());
-	        } else {
-	            result.setDescription(updateResponse.getDescription());
-	        }
-	        return result;
-	}
+    @Override
+    public ResultData updateAgent(Agent agent) {
+        ResultData result = new ResultData();
+        ResultData updateResponse = agentDao.updateAgent(agent);
+        result.setResponseCode(updateResponse.getResponseCode());
+        if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(updateResponse.getData());
+        } else {
+            result.setDescription(updateResponse.getDescription());
+        }
+        return result;
+    }
 
-	@Override
-	public ResultData consume(Agent agent, double money) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public ResultData consume(Agent agent, double money) {
+        ResultData result = new ResultData();
+        if (agent.getCoffer() < money) {
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription("账户余额不足");
+        }
+        agent.setCoffer(agent.getCoffer() - money);
+        ResultData updateResponse = updateAgent(agent);
+        if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(updateResponse.getData());
+        } else {
+            result.setDescription(updateResponse.getDescription());
+        }
+        return result;
+    }
 }
