@@ -22,25 +22,59 @@
     <div class="weui_btn_area">
         <button type="button" class="weui_btn weui_btn_primary" id="update_confirm_btn">确认修改</button>
         <button type="button" class="weui_btn weui_btn_default" id="update_cancel_btn">取消</button>
-    </div>
+    </div>  
+</div>
+<div class="weui_dialog_alert" id="dialog" style="display: none;">
+	    <div class="weui_mask"></div>
+	    <div class="weui_dialog">
+	        <div class="weui_dialog_hd"><strong class="weui_dialog_title">消息</strong></div>
+	        <div class="weui_dialog_bd"></div>
+	        <div class="weui_dialog_ft">
+	            <a href="javascript:;" class="weui_btn_dialog primary">确定</a>
+	        </div>
+	    </div>
 </div>
 <script>
+
     $("#update_confirm_btn").click(function () {
-        $("#update_customer_form").hide();
+       
 
         var url = "${path.concat('/customer/modify/')}" + customerId;
         var name = $("#customer_name_new").val();
         var phone = $("#customer_phone_new").val();
         var address = $("#customer_address_new").val();
-
-        $("#customer_panel").fadeIn();
-        $.post(url, {customerId: customerId, name: name, phone: phone, address: address}, function (result) {
-            var customer = result.data;
-            var node = "<a class='weui_cell' onclick='updateCustomer(this)' id='" + customer.customerId + "'><div class='weui_cell_bd weui_cell_primary'><p>" + name + "</p></div><div class='weui_cell_ft'>" + phone + "</div></a>";
+        
+    
+        if((typeof phone == "undefined" || phone == "")&&(typeof address == "undefined" || address == "")){
+            $("#dialog").find(".weui_dialog_bd").html("手机号码和地址不能为空！");
+    		$("#dialog").fadeIn();
+    		$("#customer_phone_new").val(customer.phone.phone);
+            $("#customer_address_new").val(customer.address.address);       
+        }
+        else if(typeof phone == "undefined" || phone == "") {
+    		$("#dialog").find(".weui_dialog_bd").html("手机号码不能为空！");
+    		$("#dialog").fadeIn();
+    		$("#customer_phone_new").val(customer.phone.phone);     
+    	}else if(typeof address == "undefined" || address == "") {
+    		$("#dialog").find(".weui_dialog_bd").html("地址不能为空！");
+    		$("#dialog").fadeIn();
+            $("#customer_address_new").val(customer.address.address);       
+    	}else if(!(/^1[3|4|5|7|8]\d{9}$/.test(phone))){ 
+            $("#dialog").find(".weui_dialog_bd").html("手机号码有误，请重填！");
+    		$("#dialog").fadeIn();
+    		$("#customer_phone_new").val(customer.phone.phone);     
+        } else{
+    	    $("#update_customer_form").hide();
+            $("#customer_panel").fadeIn();
+            $.post(url, {customerId: customerId, name: name, phone: phone, address: address}, function (result) {
+            var newCustomer = result.data;
+            var node = "<a class='weui_cell' onclick='updateCustomer(this)' id='" + newCustomer.customerId + "'><div class='weui_cell_bd weui_cell_primary'><p>" + name + "</p></div><div class='weui_cell_ft'>" + phone + "</div></a>";
             $("#customer_list").append(node);
-            $("#" + customerId).remove();
-            
+            $("#" + customerId).remove();          
         });
+    	
+    	}
+       
        
     });
 
@@ -50,17 +84,22 @@
     });
 
     var customerId;
+    var customer;
     function updateCustomer(obj) {
         $("#update_customer_form").fadeIn();
         customerId = obj.id;
         
         var url = "${path.concat('/customer/" + customerId + "')}";
         $.post(url, function (result) {
-            var customer = result.data;
+            customer = result.data;
 			$("#customer_name_new").val(customer.name);
             $("#customer_phone_new").val(customer.phone.phone);
             $("#customer_address_new").val(customer.address.address);            
         });
         $("#customer_panel").hide();
     }
+    
+    $("#dialog").find(".weui_btn_dialog.primary").click(function(){
+    	$("#dialog").hide();
+    });
 </script>

@@ -1,4 +1,4 @@
-<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id-target="shipment-management">
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id-target="config-management">
     <div class="row">
         <div class="col-md-12 col-lg-12">
             <h1><i class="fa fa-home"></i> 账号授权 </h1>
@@ -52,6 +52,7 @@
 </div>
 <script>
     $("#clear_admin_info").click(function () {
+        alert("test");
         $("#admin_username").val("");
         $("#admin_password").val("");
         $("#confirm_password").val("");
