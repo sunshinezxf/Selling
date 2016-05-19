@@ -45,23 +45,58 @@
                         class="btn btn-warning">清空
                    </button>
                </div>
-            </form>
-             
+            </form>          
         </div>
     </div>
 </div>
+<div class="modal fade" id="dialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">
+               提示
+            </h4>
+         </div>
+         <div class="modal-body">
+
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="dialogConfirm">
+               确定
+            </button>
+         </div>
+   </div>
+</div>
 <script>
     $("#clear_admin_info").click(function () {
-        alert("test");
         $("#admin_username").val("");
         $("#admin_password").val("");
         $("#confirm_password").val("");
     });
 
     $("#confirm_register_admin").click(function () {
-        $("#register_admin_form").attr("action", "${path.concat('/register')}");
-        $("#register_admin_form").attr("method", "post");
-        $("#register_admin_form").submit();
-    })
+        var name=$("#admin_username").val();
+        var password=$("#admin_password").val();
+        if((typeof name == "undefined" || name == "")&&(typeof password == "undefined" || password == "")){
+            $("#dialog").find(".modal-body").html("用户名和密码不能为空！");
+    		$("#dialog").modal('show');    
+        }
+        else if(typeof name == "undefined" || name == "") {
+    		$("#dialog").find(".modal-body").html("用户名不能为空！");
+    		$("#dialog").modal('show');   
+    	}else if(typeof password == "undefined" || password == "") {
+    		$("#dialog").find(".modal-body").html("密码不能为空！");
+    		$("#dialog").modal('show');     
+    	} else{
+            $("#register_admin_form").attr("action", "${path.concat('/register')}");
+            $("#register_admin_form").attr("method", "post");
+            $("#register_admin_form").submit();
+        }
+    });
+    
+    $("#dialog").find("#dialogConfirm").click(function(){
+    	$("#dialog").modal('hide');
+    });
    
 </script>

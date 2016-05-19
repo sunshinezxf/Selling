@@ -1,0 +1,90 @@
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id-target="config-management">
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+            <h1><i class="fa fa-home"></i> 修改账号 </h1>
+            <ol class="breadcrumb">
+                <li><a href="${path.concat('/dashboard')}">首页</a></li>
+                <li><a data-toggle="collapse" data-parent="#accordion" href="#config-management">基本配置</a></li>
+                <li class="active">修改账号</li>
+            </ol>
+        </div>
+    </div>
+     <div class="row">
+        <div class="col-md-12 col-lg-12">
+           <hr>
+           <form id="update_admin_form" class="form-horizontal">
+                <div class="form-group">
+                    <label class="col-sm-2 col-md-2 col-lg-2 control-label" >
+                        管理员账号
+                    </label>
+                    <div class="form-group has-feedback col-sm-4 col-md-4 col-lg-4">
+                        <label for="account_email" class="sr-only">
+                              Email address
+                        </label>
+                        <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                        <input type="text" class="form-control" id="admin_username" name="username" placeholder="邮箱" required=""  readonly="true" value=${admin.username}>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 col-md-2 col-lg-2 control-label">
+                        管理员密码
+                    </label>
+                    <div class="form-group has-feedback col-sm-4 col-md-4 col-lg-4">
+                       <label for="account_password" class="sr-only">
+                            Password
+                       </label>
+                       <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                       <input type="password" class="form-control" name="password" id="admin_password" placeholder="密码" required="" value=${admin.password}>
+                    </div>
+               </div>
+               <div class="form-group">
+                   <button type="button" id="confirm_update_admin"
+                        class="btn btn-primary">修改
+                   </button>
+               </div>
+           </form>          
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="dialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">
+               提示
+            </h4>
+         </div>
+         <div class="modal-body">
+
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">
+               取消
+            </button>
+            <button type="button" class="btn btn-primary" id="dialogConfirm">
+               确定
+            </button>
+         </div>
+   </div>
+</div>
+<script>
+      $("#confirm_update_admin").click(function () {
+        var password=$("#admin_password").val();
+        var username=$("#admin_username").val();
+        $("#admin_username").val('${admin.username}');
+    	if(typeof password == "undefined" || password == "") {
+    		$("#dialog").find(".modal-body").html("密码不能为空！");
+    		$("#dialog").modal('show');     
+    	} else{
+    	    var url="${path.concat('/modify/')}"+'${admin.adminId}';
+            $("#update_admin_form").attr("action", url);
+            $("#update_admin_form").attr("method", "post");
+            $("#update_admin_form").submit();
+        }
+     });
+     
+     $("#dialog").find("#dialogConfirm").click(function(){
+    	$("#dialog").modal('hide');
+     });
+</script>

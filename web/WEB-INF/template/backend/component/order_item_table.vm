@@ -36,10 +36,8 @@
                    <p>商品:&nbsp;$key&nbsp;&nbsp;&nbsp;&nbsp;总共:&nbsp;${goods_quantity_Map[$key]}件</p>
                    <br>
                 #end
-            </div>
-
-           
+            </div>        
         </div>
     </div>
 </div>
-</div>
+

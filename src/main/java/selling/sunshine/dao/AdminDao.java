@@ -11,4 +11,6 @@ import java.util.Map;
 public interface AdminDao {
     ResultData queryAdmin(Map<String, Object> condition);
     ResultData insertAdmin(Admin admin);
+    ResultData updateAdmin(Admin admin);
+    ResultData deleteAdmin(Admin admin);
 }

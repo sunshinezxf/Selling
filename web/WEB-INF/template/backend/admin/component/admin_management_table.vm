@@ -1,0 +1,80 @@
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id-target="config-management">
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+            <h1><i class="fa fa-home"></i> 账号管理 </h1>
+            <ol class="breadcrumb">
+                <li><a href="${path.concat('/dashboard')}">首页</a></li>
+                <li><a data-toggle="collapse" data-parent="#accordion" href="#config-management">基本配置</a></li>
+                <li class="active">账号管理</li>
+            </ol>
+        </div>
+    </div>
+     <div class="row">
+        <div class="col-md-12 col-lg-12">
+            <div class="bs-callout">
+                <table class="table table-striped" style="margin-bottom: 0.2em" id="admin_list_table">
+                      <tr>
+                        <th>管理员账号</th>
+                        <th>操作</th>
+                      </tr>
+                </table>
+            </div>        
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="dialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">
+               提示
+            </h4>
+         </div>
+         <div class="modal-body">
+
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">
+               取消
+            </button>
+            <button type="button" class="btn btn-primary" id="dialogConfirm">
+               确定
+            </button>
+         </div>
+   </div>
+</div>
+<script>
+   
+    var adminId;
+    $("#dialog").find("#dialogConfirm").click(function(){
+    	$("#dialog").modal('hide');
+    	var url="${path.concat('/delete/')}"+adminId;
+    	alert(url);
+    	$.post(url, function (result) {
+    	   
+    	
+    	});
+    });
+    
+    $(document).ready(function () {
+     var url = "${path.concat('/admin/overview')}";
+        $.post(url,function (result) {
+            var adminList=result.data;
+            var node;
+            for(var i=0; i<adminList.length; i++){
+                var admin=adminList[i];
+                var item_url = "${path.concat('/admin/')}" + admin.adminId ;
+                node+="<tr><td>" +admin.username+ "</td><td><button type='button' class='btn btn-success' onclick=\"javascript:location.href='" + item_url + "'\">修改密码</button>&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' class='btn btn-danger' id='" + admin.adminId + "' onclick='deleteAdmin(this)'>删除</button></td></tr>";  
+            }
+            $("#admin_list_table").append(node);
+        });
+    });
+    
+    function deleteAdmin(obj){
+       $("#dialog").find(".modal-body").html("确定删除这个管理员账号吗！");
+       $("#dialog").modal('show');  
+       adminId=obj.id;  
+    }
+   
+</script>

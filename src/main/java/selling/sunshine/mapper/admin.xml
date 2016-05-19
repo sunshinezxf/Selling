@@ -23,4 +23,22 @@
         INSERT INTO manager(manager_id, manager_username, manager_password)
         VALUES (#{adminId}, #{username}, #{password})
     </insert>
+    
+    <update id="update" parameterType="selling.sunshine.model.Admin" useGeneratedKeys="false">
+        UPDATE manager
+        <set>
+            <if test="password != null and password != ''">
+                manager_password = #{password},
+            </if>
+        </set>
+        WHERE manager_id = #{adminId}
+    </update>
+    
+    <delete id="delete" parameterType="selling.sunshine.model.Admin" >
+       DELETE FROM manager
+       WHERE 1=1
+       <if test="adminId != null and adminId != ''">
+            AND manager_id = #{adminId}
+       </if>
+    </delete>
 </mapper>
