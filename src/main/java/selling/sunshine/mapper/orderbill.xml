@@ -78,7 +78,7 @@
                 agent_id = #{agent.agentId},
             </if>
             <if test="order.orderId != null and order.orderId != ''">
-                order_id = #{order.agentId},
+                order_id = #{order.orderId},
             </if>
             <if test="channel != null and channel != ''">
                 channel_name = #{channel},
