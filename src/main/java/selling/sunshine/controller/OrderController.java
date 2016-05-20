@@ -17,13 +17,16 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.pingplusplus.model.Charge;
 
 import selling.sunshine.form.OrderItemForm;
 import selling.sunshine.form.PayForm;
 import selling.sunshine.form.SortRule;
 import selling.sunshine.model.Agent;
 import selling.sunshine.model.Bill;
+import selling.sunshine.model.DepositBill;
 import selling.sunshine.model.Goods;
 import selling.sunshine.model.Order;
 import selling.sunshine.model.OrderBill;
@@ -334,4 +337,26 @@ public class OrderController {
         view.setViewName("redirect:/agent/prompt");
     	return view;
     }
+    
+    @RequestMapping(method = RequestMethod.POST, value = "/otherpay")
+	public Charge otherPay(HttpServletRequest request) {
+		Charge charge = new Charge();
+		JSONObject params = toolService.getParams(request);
+		Subject subject = SecurityUtils.getSubject();
+		String clientIp = toolService.getIP(request);
+		User user = (User) subject.getPrincipal();
+		Map<String, Object> condition = new HashMap<String, Object>();
+		condition.put("orderId", String.valueOf(params.get("order_id")));
+		ResultData orderData = orderService.fetchOrder(condition);
+		Order order = null;
+		if(orderData.getResponseCode() == ResponseCode.RESPONSE_OK && orderData.getData() != null) {
+			order = ((List<Order>)orderData.getData()).get(0);
+		}
+		OrderBill bill = new OrderBill(Double.parseDouble(String.valueOf(params.get("amount"))), String.valueOf(params.get("channel")), clientIp, user.getAgent(), order);
+		ResultData createResponse = billService.createOrderBill(bill);
+		if (createResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+			charge = (Charge) createResponse.getData();
+		}
+		return charge;
+	}
 }
