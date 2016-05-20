@@ -4,6 +4,12 @@ public class OrderBill extends Bill {
 	private Agent agent;
 	private Order order;
 	
+	public OrderBill(){
+		super();
+		this.agent = new Agent();
+		this.order = new Order();
+	}
+	
 	public OrderBill(double billAmount, String channel, String clientIp, Agent agent, Order order) {
 	    super(billAmount, channel, clientIp);
         this.agent = agent;
