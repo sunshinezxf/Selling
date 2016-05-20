@@ -141,14 +141,26 @@ public class BillServiceImpl implements BillService {
     @Override
     public ResultData fetchOrderBill(Map<String, Object> condition) {
         ResultData result = new ResultData();
-
+        ResultData queryResponse = billDao.queryOrderBill(condition);
+        result.setResponseCode(queryResponse.getResponseCode());
+        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(queryResponse.getData());
+        } else if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
+            result.setDescription(queryResponse.getDescription());
+        }
         return result;
     }
 
     @Override
     public ResultData updateOrderBill(OrderBill bill) {
         ResultData result = new ResultData();
-
+        ResultData updateResponse = billDao.updateOrderBill(bill);
+        result.setResponseCode(updateResponse.getResponseCode());
+        if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(updateResponse.getData());
+        } else if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
+            result.setDescription(updateResponse.getDescription());
+        }
         return result;
     }
 }
