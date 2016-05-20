@@ -51,8 +51,8 @@ public class BillServiceImpl implements BillService {
         params.put("channel", bill.getChannel());
         if (!StringUtils.isEmpty(bill.getChannel()) && bill.getChannel().equals("alipay_wap")) {
             Map<String, String> url = new HashMap<>();
-            url.put("success_url", PlatformConfig.getValue("server_url") + "/account/deposit/" + bill.getBillId() + "/prompt");
-            url.put("cancel_url", PlatformConfig.getValue("server_url") + "/account/deposit/" + bill.getBillId() + "/prompt");
+            url.put("success_url", PlatformConfig.getValue("server_url") + "/account/charge/" + bill.getBillId() + "/prompt");
+            url.put("cancel_url", PlatformConfig.getValue("server_url") + "/account/charge/" + bill.getBillId() + "/prompt");
             params.put("extra", url);
         }
         params.put("currency", "cny");
@@ -119,8 +119,8 @@ public class BillServiceImpl implements BillService {
         params.put("channel", bill.getChannel());
         if (!StringUtils.isEmpty(bill.getChannel()) && bill.getChannel().equals("alipay_wap")) {
             Map<String, String> url = new HashMap<>();
-            url.put("success_url", PlatformConfig.getValue("server_url") + "/account/deposit/" + bill.getBillId() + "/prompt");
-            url.put("cancel_url", PlatformConfig.getValue("server_url") + "/account/deposit/" + bill.getBillId() + "/prompt");
+            url.put("success_url", PlatformConfig.getValue("server_url") + "/account/charge/" + bill.getBillId() + "/prompt");
+            url.put("cancel_url", PlatformConfig.getValue("server_url") + "/account/charge/" + bill.getBillId() + "/prompt");
             params.put("extra", url);
         }
         params.put("currency", "cny");

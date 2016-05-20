@@ -92,9 +92,8 @@
 	            app_id: "app_DazjbTLybjHGbv9O",
 	            amount: total_price,
 	            channel: ['alipay_wap', 'wx_pub'],
-	            order_id: order_id,
-	            charge_url: "${path.concat('/order/pay/')}",
-	            charge_param: {},
+	            charge_url: "${path.concat('/order/otherpay')}",
+	            charge_param: {order_id: order_id},
 	            open_id: 'wxf2c47b5e41605c26',
 	            debug: false
 	        }, function (result) {

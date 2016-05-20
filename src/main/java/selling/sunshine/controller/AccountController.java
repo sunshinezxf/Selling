@@ -86,18 +86,28 @@ public class AccountController {
         return charge;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/deposit/{billId}/prompt")
+    @RequestMapping(method = RequestMethod.GET, value = "/charge/{billId}/prompt")
     public ModelAndView prompt(@PathVariable("billId") String billId,
                                String result) {
         ModelAndView view = new ModelAndView();
         Prompt prompt;
-        if (!StringUtils.isEmpty(result) && result.equals("success")) {
-            prompt = new Prompt("提示", "恭喜您,充值成功!", "/account/info");
-        } else {
-            prompt = new Prompt(PromptCode.WARNING, "提示", "对不起,您的充值已取消.", "/account/info");
+	    if(billId.startsWith("DPB")){
+	        if (!StringUtils.isEmpty(result) && result.equals("success")) {
+	            prompt = new Prompt("提示", "恭喜您,充值成功!", "/account/info");
+	        } else {
+	            prompt = new Prompt(PromptCode.WARNING, "提示", "对不起,您的充值已取消.", "/account/info");
+	        }
+	        view.addObject("prompt", prompt);
+	        view.setViewName("/agent/prompt");
+        } else if(billId.startsWith("ODB")){
+        	if (!StringUtils.isEmpty(result) && result.equals("success")) {
+	            prompt = new Prompt("提示", "付款成功!", "/agent/order/manage/2");
+	        } else {
+	            prompt = new Prompt(PromptCode.WARNING, "提示", "对不起,您的付款失败了，请联系工作人员.", "/agent/order/manage/2");
+	        }
+	        view.addObject("prompt", prompt);
+	        view.setViewName("/agent/prompt");
         }
-        view.addObject("prompt", prompt);
-        view.setViewName("/agent/prompt");
         return view;
     }
 }
