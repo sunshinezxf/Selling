@@ -12,4 +12,6 @@ public interface UserDao {
     ResultData insertUser(User user);
 
     ResultData queryUser(Map<String, Object> condition);
+    
+
 }

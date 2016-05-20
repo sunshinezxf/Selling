@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
 import selling.sunshine.dao.BaseDao;
 import selling.sunshine.dao.UserDao;
 import selling.sunshine.model.User;
@@ -59,4 +60,6 @@ public class UserDaoImpl extends BaseDao implements UserDao {
             return result;
         }
     }
+
+
 }

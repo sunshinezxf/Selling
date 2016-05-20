@@ -92,6 +92,8 @@ public class AdminDaoImpl extends BaseDao implements AdminDao {
 		ResultData result = new ResultData();
 		synchronized (lock) {
 			try {
+		        User user=new User(admin);
+		        sqlSession.delete("selling.user.delete", user);
 				sqlSession.delete("selling.admin.delete", admin);
 				result.setData(admin);
 			} catch (Exception e) {
