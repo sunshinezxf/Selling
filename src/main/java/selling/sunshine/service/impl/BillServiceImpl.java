@@ -139,6 +139,13 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
+    public ResultData fetchOrderBill(Map<String, Object> condition) {
+        ResultData result = new ResultData();
+
+        return result;
+    }
+
+    @Override
     public ResultData updateOrderBill(OrderBill bill) {
         ResultData result = new ResultData();
 

@@ -18,5 +18,7 @@ public interface BillService {
 
     ResultData createOrderBill(OrderBill bill);
 
+    ResultData fetchOrderBill(Map<String, Object> condition);
+
     ResultData updateOrderBill(OrderBill bill);
 }
