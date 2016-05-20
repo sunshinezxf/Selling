@@ -82,6 +82,8 @@
 
                 /agent/** = roles[agent]
 
+                /bill/inform = anon
+
                 /dashboard = roles[admin]
 
                 /commodity/create = roles[admin]

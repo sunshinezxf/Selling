@@ -109,13 +109,58 @@ public class BillServiceImpl implements BillService {
             result.setData(bill);
             return result;
         }
+        Map<String, Object> params = new HashMap<>();
+        params.put("order_no", bill.getBillId());
+        params.put("amount", bill.getBillAmount() * 100);
+        Map<String, Object> app = new HashMap<>();
+        app.put("id", "app_DazjbTLybjHGbv9O");
+        params.put("app", app);
+        params.put("app", app);
+        params.put("channel", bill.getChannel());
+        if (!StringUtils.isEmpty(bill.getChannel()) && bill.getChannel().equals("alipay_wap")) {
+            Map<String, String> url = new HashMap<>();
+            url.put("success_url", PlatformConfig.getValue("server_url") + "/account/deposit/" + bill.getBillId() + "/prompt");
+            url.put("cancel_url", PlatformConfig.getValue("server_url") + "/account/deposit/" + bill.getBillId() + "/prompt");
+            params.put("extra", url);
+        }
+        params.put("currency", "cny");
+        params.put("client_ip", bill.getClientIp());
+        params.put("subject", "订单支付");
+        params.put("body", "支付金额为:" + bill.getBillAmount() + "元");
+        try {
+            Charge charge = Charge.create(params);
+            result.setData(charge);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription(e.getMessage());
+        }
+        return result;
+    }
+
+    @Override
+    public ResultData fetchOrderBill(Map<String, Object> condition) {
+        ResultData result = new ResultData();
+        ResultData queryResponse = billDao.queryOrderBill(condition);
+        result.setResponseCode(queryResponse.getResponseCode());
+        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(queryResponse.getData());
+        } else if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
+            result.setDescription(queryResponse.getDescription());
+        }
         return result;
     }
 
     @Override
     public ResultData updateOrderBill(OrderBill bill) {
         ResultData result = new ResultData();
-        
+        ResultData updateResponse = billDao.updateOrderBill(bill);
+        result.setResponseCode(updateResponse.getResponseCode());
+        if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(updateResponse.getData());
+        } else if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
+            result.setDescription(updateResponse.getDescription());
+        }
         return result;
     }
 }
