@@ -1,96 +1,117 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="selling.user">
-    <resultMap id="roleVo" type="selling.sunshine.model.Role">
-        <result property="roleId" column="role_id"></result>
-        <result property="name" column="role_name"></result>
-        <result property="blockFlag" column="block_flag"></result>
-        <result property="createAt" column="create_time"></result>
-    </resultMap>
+	<resultMap id="roleVo" type="selling.sunshine.model.Role">
+		<result property="roleId" column="role_id"></result>
+		<result property="name" column="role_name"></result>
+		<result property="blockFlag" column="block_flag"></result>
+		<result property="createAt" column="create_time"></result>
+	</resultMap>
 
-    <resultMap id="adminVo" type="selling.sunshine.model.Admin">
-        <result property="adminId" column="manager_id"></result>
-        <result property="username" column="manager_username"></result>
-        <result property="password" column="manager_password"></result>
-    </resultMap>
+	<resultMap id="adminVo" type="selling.sunshine.model.Admin">
+		<result property="adminId" column="manager_id"></result>
+		<result property="username" column="manager_username"></result>
+		<result property="password" column="manager_password"></result>
+	</resultMap>
 
-    <resultMap id="agentVo" type="selling.sunshine.model.Agent">
-        <result property="agentId" column="agent_id"></result>
-        <result property="name" column="agent_name"></result>
-        <result property="gender" column="agent_gender"></result>
-        <result property="phone" column="agent_phone"></result>
-        <result property="address" column="agent_address"></result>
-        <result property="wechat" column="agent_wechat"></result>
-        <result property="password" column="agent_password"></result>
-        <result property="granted" column="agent_granted"></result>
-        <result property="coffer" column="agent_coffer"></result>
-        <result property="blockFlag" column="block_flag"></result>
-        <result property="createAt" column="create_time"></result>
-    </resultMap>
+	<resultMap id="agentVo" type="selling.sunshine.model.Agent">
+		<result property="agentId" column="agent_id"></result>
+		<result property="name" column="agent_name"></result>
+		<result property="gender" column="agent_gender"></result>
+		<result property="phone" column="agent_phone"></result>
+		<result property="address" column="agent_address"></result>
+		<result property="wechat" column="agent_wechat"></result>
+		<result property="password" column="agent_password"></result>
+		<result property="granted" column="agent_granted"></result>
+		<result property="coffer" column="agent_coffer"></result>
+		<result property="blockFlag" column="block_flag"></result>
+		<result property="createAt" column="create_time"></result>
+	</resultMap>
 
-    <resultMap id="userVo" type="selling.sunshine.model.User">
-        <result property="userId" column="user_id"></result>
-        <result property="username" column="username"></result>
-        <result property="password" column="password"></result>
-        <result property="blockFlag" column="block_flag"></result>
-        <result property="createAt" column="create_time"></result>
-        <association property="role" column="roleId = role_id" select="roleQuery"></association>
-        <association property="admin" column="adminId = manager_id" select="adminQuery"></association>
-        <association property="agent" column="agentId = agent_id" select="agentQuery"></association>
-    </resultMap>
+	<resultMap id="userVo" type="selling.sunshine.model.User">
+		<result property="userId" column="user_id"></result>
+		<result property="username" column="username"></result>
+		<result property="password" column="password"></result>
+		<result property="blockFlag" column="block_flag"></result>
+		<result property="createAt" column="create_time"></result>
+		<association property="role" column="roleId = role_id"
+			select="roleQuery"></association>
+		<association property="admin" column="adminId = manager_id"
+			select="adminQuery"></association>
+		<association property="agent" column="agentId = agent_id"
+			select="agentQuery"></association>
+	</resultMap>
 
-    <!-- insert user record in table user -->
-    <insert id="insert" parameterType="selling.sunshine.model.User" useGeneratedKeys="false">
-        INSERT INTO user
-        <set>
-            user_id = #{userId},
-            username = #{username},
-            password = #{password},
-            role_id = #{role.roleId},
-            <if test="admin != null and admin != ''">
-                manager_id = #{admin.adminId},
-            </if>
-            <if test="agent != null and agent != ''">
-                agent_id = #{agent.agentId},
-            </if>
-            block_flag = #{blockFlag},
-            create_time = #{createAt}
-        </set>
-    </insert>
+	<!-- insert user record in table user -->
+	<insert id="insert" parameterType="selling.sunshine.model.User"
+		useGeneratedKeys="false">
+		INSERT INTO user
+		<set>
+			user_id = #{userId},
+			username = #{username},
+			password = #{password},
+			role_id = #{role.roleId},
+			<if test="admin != null and admin != ''">
+				manager_id = #{admin.adminId},
+			</if>
+			<if test="agent != null and agent != ''">
+				agent_id = #{agent.agentId},
+			</if>
+			block_flag = #{blockFlag},
+			create_time = #{createAt}
+		</set>
+	</insert>
 
-    <select id="query" parameterType="java.util.Map" resultMap="userVo">
-        SELECT user_id, username, password, role_id, manager_id, agent_id, block_flag, create_time
-        FROM user
-        WHERE 1 = 1
-        <if test="userId != null and userId != ''">
-            AND user_id = #{userId}
-        </if>
-        <if test="username != null and username != ''">
-            AND username = #{username}
-            <if test="password != null and password != ''">
-                AND password = #{password}
-            </if>
-        </if>
-        <if test="blockFlag != null and blockFlag != ''">
-            AND block_flag = #{blockFlag}
-        </if>
-    </select>
+	<select id="query" parameterType="java.util.Map" resultMap="userVo">
+		SELECT user_id, username, password, role_id, manager_id, agent_id,
+		block_flag, create_time
+		FROM user
+		WHERE 1 = 1
+		<if test="userId != null and userId != ''">
+			AND user_id = #{userId}
+		</if>
+		<if test="username != null and username != ''">
+			AND username = #{username}
+			<if test="password != null and password != ''">
+				AND password = #{password}
+			</if>
+		</if>
+		<if test="blockFlag != null and blockFlag != ''">
+			AND block_flag = #{blockFlag}
+		</if>
+	</select>
 
-    <select id="roleQuery" parameterType="java.util.Map" resultMap="roleVo">
-        SELECT role_id, role_name, block_flag, create_time
-        FROM role
-        WHERE role_id = #{roleId}
-    </select>
+	<select id="roleQuery" parameterType="java.util.Map" resultMap="roleVo">
+		SELECT role_id, role_name, block_flag, create_time
+		FROM role
+		WHERE role_id = #{roleId}
+	</select>
 
-    <select id="adminQuery" parameterType="java.util.Map" resultMap="adminVo">
-        SELECT manager_id, manager_username, manager_password
-        FROM manager
-        WHERE manager_id = #{adminId}
-    </select>
+	<select id="adminQuery" parameterType="java.util.Map" resultMap="adminVo">
+		SELECT manager_id, manager_username, manager_password
+		FROM manager
+		WHERE manager_id = #{adminId}
+	</select>
 
-    <select id="agentQuery" parameterType="java.util.Map" resultMap="agentVo">
-        SELECT agent_id, agent_name, agent_gender, agent_phone, agent_address, agent_password, agent_wechat, agent_granted, agent_coffer, block_flag, create_time
-        FROM agent
-        WHERE agent_id = #{agentId}
-    </select>
+	<select id="agentQuery" parameterType="java.util.Map" resultMap="agentVo">
+		SELECT agent_id, agent_name, agent_gender, agent_phone, agent_address,
+		agent_password, agent_wechat, agent_granted, agent_coffer, block_flag,
+		create_time
+		FROM agent
+		WHERE agent_id = #{agentId}
+	</select>
+
+	<delete id="delete" parameterType="selling.sunshine.model.User">
+		DELETE FROM user
+		WHERE 1=1
+		<if test="userId != null and userId != ''">
+			AND user_id = #{userId}
+		</if>
+		<if test="admin != null and admin != ''">
+			AND manager_id = #{admin.adminId}
+		</if>
+		<if test="agent != null and agent != ''">
+			AND agent_id = #{agent.agentId}
+		</if>
+	</delete>
 </mapper>

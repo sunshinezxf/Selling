@@ -67,7 +67,7 @@ public class PlatformController {
         try {
             Subject subject = SecurityUtils.getSubject();
             if (subject.isAuthenticated()) {
-                view.setViewName("redirect:/dashboard");
+                view.setViewName("redirect:/manage");
                 return view;
             }
             subject.login(new UsernamePasswordToken(form.getUsername(), form
@@ -99,7 +99,7 @@ public class PlatformController {
             Admin admin = new Admin(form.getUsername(), form.getPassword());
             ResultData resultData = adminService.createAdmin(admin);
             if (resultData.getResponseCode() == ResponseCode.RESPONSE_OK) {
-                view.setViewName("redirect:/dashboard");
+                view.setViewName("redirect:/manage");
                 return view;
             } else {
                 view.setViewName("redirect:/register");
@@ -134,6 +134,7 @@ public class PlatformController {
     public ModelAndView updateAdmin(@PathVariable("adminId") String adminId, @Valid AdminForm adminForm, BindingResult result) {
         ResultData response = new ResultData();
         ModelAndView view = new ModelAndView();
+
         
         if (result.hasErrors()) {
             view.setViewName("redirect:/manage");
@@ -151,21 +152,24 @@ public class PlatformController {
 		}
     }
     
+    @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/delete/{adminId}")
-    public ModelAndView deleteAdmin(@PathVariable("adminId") String adminId) {
+    public ResultData deleteAdmin(@PathVariable("adminId") String adminId) {
         ResultData response = new ResultData();
         ModelAndView view = new ModelAndView();
+        
+        Map<String, Object> condition = new HashMap<>();
+        response=adminService.fetchAdmin(condition);
+        //当只有一个admin时不允许删除
+        if (((List<Admin>)response.getData()).size()==1) {
+        	response.setResponseCode(ResponseCode.RESPONSE_NULL);;
+			return response;
+		}
         
         Admin admin=new Admin();
         admin.setAdminId(adminId);
         response=adminService.deleteAdmin(admin);
-        if (response.getResponseCode()==ResponseCode.RESPONSE_OK) {
-        	 view.setViewName("redirect:/manage");
-             return view;
-		}else {
-			view.setViewName("redirect:/manage");
-	        return view;
-		}
+        return response;
     }
     
     @ResponseBody

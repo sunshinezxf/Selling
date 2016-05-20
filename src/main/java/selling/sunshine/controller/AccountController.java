@@ -90,16 +90,12 @@ public class AccountController {
     public ModelAndView prompt(@PathVariable("billId") String billId,
                                String result) {
         ModelAndView view = new ModelAndView();
-        Prompt prompt = new Prompt();
+        Prompt prompt;
         if (!StringUtils.isEmpty(result) && result.equals("success")) {
-            prompt.setCode(PromptCode.SUCCESS);
-            prompt.setTitle("提示");
-            prompt.setMessage("恭喜您,充值成功!");
+            prompt = new Prompt("提示", "恭喜您,充值成功!", "/account/info");
         } else {
-            prompt.setCode(PromptCode.WARNING);
-            prompt.setMessage("对不起,您的充值已取消.");
+            prompt = new Prompt(PromptCode.WARNING, "提示", "对不起,您的充值已取消.", "/account/info");
         }
-        prompt.setConfirmURL("/account/info");
         view.addObject("prompt", prompt);
         view.setViewName("/agent/prompt");
         return view;

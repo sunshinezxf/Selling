@@ -19,12 +19,14 @@ public class User extends Entity {
         this();
         this.username = agent.getPhone();
         this.password = agent.getPassword();
+        this.agent=agent;
     }
 
     public User(Admin admin) {
         this();
         this.username = admin.getUsername();
         this.password = admin.getPassword();
+        this.admin=admin;
     }
 
     public User(String username, String password) {

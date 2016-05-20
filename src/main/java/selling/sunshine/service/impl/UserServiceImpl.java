@@ -64,4 +64,6 @@ public class UserServiceImpl implements UserService {
         result.setResponseCode(queryResponse.getResponseCode());
         return result;
     }
+
+
 }

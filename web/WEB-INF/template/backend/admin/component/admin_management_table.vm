@@ -48,14 +48,21 @@
    
     var adminId;
     $("#dialog").find("#dialogConfirm").click(function(){
-    	$("#dialog").modal('hide');
-    	var url="${path.concat('/delete/')}"+adminId;
-    	alert(url);
-    	$.post(url, function (result) {
     	   
-    	
-    	});
+    	   var url="${path.concat('/delete/')}"+adminId;
+    	   $.post(url, function (result) {
+    	      var responseCode=result.responseCode;	    
+    	      if(responseCode=="RESPONSE_NULL"){  
+    	          BootstrapDialog.alert('当前系统中只有一个管理员账号，不能删除!');
+    	      }else{
+    	         $("#tr"+adminId).remove();
+    	      }   	
+    	  });
+    	  $("#dialog").modal('hide');
     });
+    
+    
+
     
     $(document).ready(function () {
      var url = "${path.concat('/admin/overview')}";
@@ -65,7 +72,7 @@
             for(var i=0; i<adminList.length; i++){
                 var admin=adminList[i];
                 var item_url = "${path.concat('/admin/')}" + admin.adminId ;
-                node+="<tr><td>" +admin.username+ "</td><td><button type='button' class='btn btn-success' onclick=\"javascript:location.href='" + item_url + "'\">修改密码</button>&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' class='btn btn-danger' id='" + admin.adminId + "' onclick='deleteAdmin(this)'>删除</button></td></tr>";  
+                node+="<tr id='tr" + admin.adminId + "'><td>" +admin.username+ "</td><td><button type='button' class='btn btn-success' onclick=\"javascript:location.href='" + item_url + "'\">修改密码</button>&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' class='btn btn-danger' id='" + admin.adminId + "' onclick='deleteAdmin(this)'>删除</button></td></tr>";  
             }
             $("#admin_list_table").append(node);
         });

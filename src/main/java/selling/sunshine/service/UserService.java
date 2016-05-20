@@ -12,4 +12,6 @@ public interface UserService {
     ResultData login(User user);
 
     ResultData fetchUser(Map<String, Object> condition);
+    
+
 }

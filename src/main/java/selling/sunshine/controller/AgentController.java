@@ -91,11 +91,7 @@ public class AgentController {
             view.setViewName("/agent/order/place");
             return view;
         }
-        Prompt prompt = new Prompt();
-        prompt.setCode(PromptCode.WARNING);
-        prompt.setTitle("提示");
-
-        prompt.setMessage("尊敬的代理商，您的资料现在正在审核中，只有当审核通过后才能代客下单，请耐心等待！");
+        Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "尊敬的代理商，您的资料现在正在审核中，只有当审核通过后才能代客下单，请耐心等待！", "/agent/login");
         view.addObject("prompt", prompt);
         view.setViewName("/agent/prompt");
         return view;
@@ -129,12 +125,7 @@ public class AgentController {
             view.setViewName("/agent/order/modify");
             return view;
         }
-
-        Prompt prompt = new Prompt();
-        prompt.setCode(PromptCode.WARNING);
-        prompt.setTitle("提示");
-
-        prompt.setMessage("尊敬的代理商，您的资料现在正在审核中，只有当审核通过后才能代客下单，请耐心等待！");
+        Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "尊敬的代理商，您的资料现在正在审核中，只有当审核通过后才能代客下单，请耐心等待！", "/agent/login");
         view.addObject("prompt", prompt);
         view.setViewName("/agent/prompt");
         return view;
@@ -168,20 +159,14 @@ public class AgentController {
             if (goodsData.getResponseCode() == ResponseCode.RESPONSE_OK) {
                 List<Goods> goodsList = (List<Goods>) goodsData.getData();
                 if (goodsList.size() != 1) {
-                    Prompt prompt = new Prompt();
-                    prompt.setCode(PromptCode.WARNING);
-                    prompt.setTitle("提示");
-                    prompt.setMessage("商品不唯一或未找到");
+                    Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "商品不唯一或未找到", "/agent/order/place");
                     attr.addFlashAttribute("prompt", prompt);
                     view.setViewName("redirect:/agent/prompt");
                     return view;
                 }
                 goods = goodsList.get(0);
             } else {
-                Prompt prompt = new Prompt();
-                prompt.setCode(PromptCode.WARNING);
-                prompt.setTitle("提示");
-                prompt.setMessage("商品信息异常");
+                Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "商品信息异常", "/agent/order/place");
                 attr.addFlashAttribute("prompt", prompt);
                 view.setViewName("redirect:/agent/prompt");
                 return view;
@@ -205,11 +190,7 @@ public class AgentController {
         ResultData fetchResponse = orderService.placeOrder(order);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             if (type.equals("save")) {
-                Prompt prompt = new Prompt();
-                prompt.setCode(PromptCode.SUCCESS);
-                prompt.setTitle("提示");
-                prompt.setConfirmURL("/agent/order/manage/0");
-                prompt.setMessage("保存成功");
+                Prompt prompt = new Prompt("提示", "保存成功", "/agent/order/manage/0");
                 attr.addFlashAttribute("prompt", prompt);
                 view.setViewName("redirect:/agent/prompt");
             } else if (type.equals("submit")) {
@@ -217,11 +198,7 @@ public class AgentController {
             }
             return view;
         }
-        Prompt prompt = new Prompt();
-        prompt.setCode(PromptCode.WARNING);
-        prompt.setTitle("提示");
-        prompt.setConfirmURL("/agent/order/manage/0");
-        prompt.setMessage("失败");
+        Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "失败", "/agent/order/manage/0");
         attr.addFlashAttribute("prompt", prompt);
         view.setViewName("redirect:/agent/prompt");
         return view;
@@ -335,10 +312,7 @@ public class AgentController {
             Agent agent = new Agent(form.getName(), form.getGender(), form.getPhone(), form.getAddress(), form.getPassword(), form.getWechat());
             ResultData createResponse = agentService.createAgent(agent);
             if (createResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-                Prompt prompt = new Prompt();
-                prompt.setCode(PromptCode.SUCCESS);
-                prompt.setTitle("提示");
-                prompt.setMessage("您已成功提交申请,待审核后即可使用");
+                Prompt prompt = new Prompt("提示", "您已成功提交申请,待审核后即可使用", "/agent/login");
                 attr.addFlashAttribute("prompt", prompt);
                 view.setViewName("redirect:/agent/prompt");
                 return view;
