@@ -204,18 +204,17 @@ public class AgentController {
 
         ResultData fetchResponse = orderService.placeOrder(order);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-        	if(type.equals("save")){
-	            Prompt prompt = new Prompt();
-	            prompt.setCode(PromptCode.SUCCESS);
-	            prompt.setTitle("提示");
-	            prompt.setConfirmURL("/agent/order/manage/0");
-	            prompt.setMessage("保存成功");
-	            attr.addFlashAttribute("prompt", prompt);
-	            view.setViewName("redirect:/agent/prompt");
+            if (type.equals("save")) {
+                Prompt prompt = new Prompt();
+                prompt.setCode(PromptCode.SUCCESS);
+                prompt.setTitle("提示");
+                prompt.setConfirmURL("/agent/order/manage/0");
+                prompt.setMessage("保存成功");
+                attr.addFlashAttribute("prompt", prompt);
+                view.setViewName("redirect:/agent/prompt");
+            } else if (type.equals("submit")) {
+                view.setViewName("redirect:/order/pay/" + order.getOrderId());
             }
-        	else if(type.equals("submit")) {
-        		view.setViewName("redirect:/order/pay/" + order.getOrderId());
-        	}
             return view;
         }
         Prompt prompt = new Prompt();
@@ -244,7 +243,7 @@ public class AgentController {
         Agent agent = user.getAgent();
         ResultData result = new ResultData();
         List<SortRule> orderBy = new ArrayList<SortRule>();
-        orderBy.add(new SortRule("create_time","desc"));
+        orderBy.add(new SortRule("create_time", "desc"));
         Map<String, Object> condition = new HashMap<String, Object>();
         condition.put("agentId", agent.getAgentId());
         condition.put("status", type);
@@ -460,7 +459,7 @@ public class AgentController {
     @RequestMapping(method = RequestMethod.POST, value = "/reward")
     @ResponseBody
     public ResultData reward(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        
+
         ResultData resultData = new ResultData();
         JSONObject webhooks = toolService.getParams(request);
         logger.debug("webhooks info == " + webhooks);
@@ -468,14 +467,14 @@ public class AgentController {
         logger.debug("charge info == " + charge);
         String dealId = charge.getString("order_no");
         logger.debug("deal id: " + dealId);
-        
-        
+
+
         Map<String, Object> condition = new HashMap<String, Object>();
         condition.put("billId", dealId);
         resultData = billService.fetchDepositBill(condition);
         DepositBill depositBill = ((List<DepositBill>) resultData.getData()).get(0);
         Agent agent = depositBill.getAgent();
-        agent.setCoffer(agent.getCoffer()+depositBill.getBillAmount());
+        agent.setCoffer(agent.getCoffer() + depositBill.getBillAmount());
         resultData = agentService.updateAgent(agent);
         resultData = billService.updateDepositBill(depositBill);
 
