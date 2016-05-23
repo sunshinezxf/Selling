@@ -4,7 +4,7 @@ package selling.sunshine.model.lite;
  * Created by sunshine on 5/20/16.
  */
 public class Agent {
-    private String id;
+    private String agentId;
     private String name;
     private String phone;
 
@@ -18,12 +18,12 @@ public class Agent {
         this.phone = phone;
     }
 
-    public String getId() {
-        return id;
+    public String getAgentId() {
+        return agentId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setAgentId(String agentId) {
+        this.agentId = agentId;
     }
 
     public String getName() {

@@ -154,10 +154,8 @@ public class OrderController {
         List<OrderItem> orderItems = new ArrayList<OrderItem>();
         int length = form.getCustomerId().length;
         Order order = new Order();
-        selling.sunshine.model.lite.Agent agent = new selling.sunshine.model.lite.Agent();
         User user = (User) subject.getPrincipal();
-        agent.setId(user.getAgent().getId());
-        order.setAgent(agent);
+        order.setAgent(user.getAgent());
         //构造订单和订单项
         double total_price = 0;
         for (int i = 0; i < length; i++) {
@@ -228,7 +226,7 @@ public class OrderController {
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         Map<String, Object> condition = new HashMap<String, Object>();
-        condition.put("agentId", user.getAgent().getId());
+        condition.put("agentId", user.getAgent().getAgentId());
         condition.put("blockFlag", false);
         ResultData fetchAgentResponse = agentService.fetchAgent(condition);
         Agent agent = ((List<Agent>) fetchAgentResponse.getData()).get(0);
@@ -269,7 +267,7 @@ public class OrderController {
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         Map<String, Object> condition = new HashMap<String, Object>();
-        condition.put("agentId", user.getAgent().getId());
+        condition.put("agentId", user.getAgent().getAgentId());
         condition.put("orderId", orderId);
         ResultData orderData = orderService.fetchOrder(condition);
         Order order = null;
@@ -288,7 +286,7 @@ public class OrderController {
         ResultData billData = billService.createOrderBill(orderBill);
         //获取代理信息
         condition.clear();
-        condition.put("agentId", user.getAgent().getId());
+        condition.put("agentId", user.getAgent().getAgentId());
         condition.put("blockFlag", false);
         ResultData fetchAgentResponse = agentService.fetchAgent(condition);
         Agent agent = ((List<Agent>) fetchAgentResponse.getData()).get(0);

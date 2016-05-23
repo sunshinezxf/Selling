@@ -87,7 +87,7 @@ public class AgentController {
         }
         //查询代理商的客户列表
         condition.clear();
-        condition.put("agentId", user.getAgent().getId());
+        condition.put("agentId", user.getAgent().getAgentId());
         ResultData fetchCustomerResponse = customerService.fetchCustomer(condition);
         if (fetchCustomerResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             view.addObject("customer", fetchCustomerResponse.getData());
@@ -121,7 +121,7 @@ public class AgentController {
         }
         //根据代理商的ID查询代理商的详细信息
         condition.clear();
-        condition.put("agentId", user.getAgent().getId());
+        condition.put("agentId", user.getAgent().getAgentId());
         ResultData queryAgentResponse = agentService.fetchAgent(condition);
         Agent agent = ((List<Agent>) queryAgentResponse.getData()).get(0);
         if (agent.isGranted()) {
@@ -149,7 +149,7 @@ public class AgentController {
         }
         //获取当前代理的客户列表
         condition.clear();
-        condition.put("agentId", user.getAgent().getId());
+        condition.put("agentId", user.getAgent().getAgentId());
         ResultData fetchCustomerResponse = customerService.fetchCustomer(condition);
         if (fetchCustomerResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             view.addObject("customer", fetchCustomerResponse.getData());
@@ -166,7 +166,7 @@ public class AgentController {
         view.addObject("operation", "MODIFY");
         //查询代理的详细信息
         condition.clear();
-        condition.put("agentId", user.getAgent().getId());
+        condition.put("agentId", user.getAgent().getAgentId());
         ResultData fetchAgentResponse = agentService.fetchAgent(condition);
         Agent agent = ((List<Agent>) fetchAgentResponse.getData()).get(0);
         if (agent.isGranted()) {
@@ -191,10 +191,8 @@ public class AgentController {
         List<OrderItem> orderItems = new ArrayList<OrderItem>();
         int length = form.getCustomerId().length;
         Order order = new Order();
-        selling.sunshine.model.lite.Agent agent = new selling.sunshine.model.lite.Agent();
         User user = (User) subject.getPrincipal();
-        agent.setId(user.getAgent().getId());
-        order.setAgent(agent);
+        order.setAgent(user.getAgent());
         //创建订单和订单项
         double order_price = 0;
         for (int i = 0; i < length; i++) {
@@ -273,7 +271,7 @@ public class AgentController {
         List<SortRule> orderBy = new ArrayList<SortRule>();
         orderBy.add(new SortRule("create_time", "desc"));
         Map<String, Object> condition = new HashMap<String, Object>();
-        condition.put("agentId", user.getAgent().getId());
+        condition.put("agentId", user.getAgent().getAgentId());
         condition.put("status", type);
         condition.put("sort", orderBy);
         ResultData fetchResponse = orderService.fetchOrder(condition);
@@ -292,7 +290,7 @@ public class AgentController {
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         Map<String, Object> condition = new HashMap<String, Object>();
-        condition.put("agentId", user.getAgent().getId());
+        condition.put("agentId", user.getAgent().getAgentId());
         condition.put("orderId", orderId);
         ResultData fetchOrderResponse = orderService.fetchOrder(condition);
         Order order = ((List<Order>) fetchOrderResponse.getData()).get(0);
@@ -310,7 +308,7 @@ public class AgentController {
         User user = null;
         //获取Agent详细信息
         Map<String, Object> condition = new HashMap<>();
-        condition.put("agentId", user.getAgent().getId());
+        condition.put("agentId", user.getAgent().getAgentId());
         condition.put("blockFlag", false);
         ResultData fetchResposne = agentService.fetchAgent(condition);
         if (fetchResposne.getResponseCode() == ResponseCode.RESPONSE_OK) {
@@ -328,7 +326,7 @@ public class AgentController {
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         Map<String, Object> condition = new HashMap<>();
-        condition.put("agentId", user.getAgent().getId());
+        condition.put("agentId", user.getAgent().getAgentId());
         ResultData fetchResponse = customerService.fetchCustomer(condition);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             result.setData(fetchResponse.getData());
@@ -501,7 +499,7 @@ public class AgentController {
         DepositBill depositBill = ((List<DepositBill>) resultData.getData()).get(0);
         //获取代理商信息
         condition.clear();
-        condition.put("agentId", depositBill.getAgent().getId());
+        condition.put("agentId", depositBill.getAgent().getAgentId());
         condition.put("blockFlag", false);
         ResultData fetchAgentResponse = agentService.fetchAgent(condition);
         Agent agent = ((List<Agent>) fetchAgentResponse.getData()).get(0);

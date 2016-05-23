@@ -55,7 +55,7 @@ public class AccountController {
         User user = (User) subject.getPrincipal();
         //获取agent的详细信息
         Map<String, Object> condition = new HashMap<>();
-        condition.put("agentId", user.getAgent().getId());
+        condition.put("agentId", user.getAgent().getAgentId());
         Agent target = ((List<Agent>) agentService.fetchAgent(condition)
                 .getData()).get(0);
         view.addObject("agent", target);
