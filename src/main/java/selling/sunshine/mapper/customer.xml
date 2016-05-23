@@ -18,7 +18,7 @@
     <resultMap id="agentLiteVo" type="selling.sunshine.model.lite.Agent">
         <result property="agentId" column="agent_id"></result>
         <result property="name" column="agent_name"></result>
-        <result property="phone" column="phone"></result>
+        <result property="phone" column="agent_phone"></result>
     </resultMap>
 
     <resultMap id="customerVo" type="selling.sunshine.model.Customer">
