@@ -118,10 +118,9 @@ public class OrderController {
         ResultData orderData = orderService.fetchOrder(condition);
         Order order = ((List<Order>) orderData.getData()).get(0);
         view.addObject("order", order);
-        double totalPrices = 0.0;
+        double totalPrices = order.getPrice();
         Map<String, Object> goods_quantity_Map = new HashMap<>();
         for (OrderItem item : order.getOrderItems()) {
-            totalPrices += item.getOrderItemPrice();
             String goodsName = item.getGoods().getName();
             int goodsQuantity = item.getGoodsQuantity();
             if (goods_quantity_Map.containsKey(goodsName)) {
@@ -159,6 +158,8 @@ public class OrderController {
         User user = (User) subject.getPrincipal();
         agent.setAgentId(user.getAgent().getId());
         order.setAgent(agent);
+        //构造订单和订单项
+        double total_price = 0;
         for (int i = 0; i < length; i++) {
             String goodsId = form.getGoodsId()[i];//商品ID
             String customerId = form.getCustomerId()[i];//顾客ID
@@ -185,11 +186,13 @@ public class OrderController {
                 return view;
             }
             orderItemPrice = goods.getPrice() * goodsQuantity;//得到一个OrderItem的总价
+            total_price += orderItemPrice;//累加金额
             OrderItem orderItem = new OrderItem(customerId, goodsId, goodsQuantity, orderItemPrice);//构造OrderItem
             orderItem.setOrderItemId(orderItemId);//传入OrderItemID
             orderItems.add(orderItem);
         }
         order.setOrderItems(orderItems);//构造Order
+        order.setPrice(total_price);
         order.setOrderId(form.getOrderId());
         switch (type) {
             case "save":
@@ -279,10 +282,7 @@ public class OrderController {
             return view;
         }
         //计算总价
-        double totalPrice = 0.0;
-        for (OrderItem orderItem : order.getOrderItems()) {
-            totalPrice += orderItem.getOrderItemPrice();
-        }
+        double totalPrice = order.getPrice();
         //创建账单
         OrderBill orderBill = new OrderBill(totalPrice, "coffer", toolService.getIP(request), user.getAgent(), order);
         ResultData billData = billService.createOrderBill(orderBill);

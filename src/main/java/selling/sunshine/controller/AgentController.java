@@ -193,6 +193,8 @@ public class AgentController {
         User user = (User) subject.getPrincipal();
         agent.setAgentId(user.getAgent().getId());
         order.setAgent(agent);
+        //创建订单和订单项
+        double order_price = 0;
         for (int i = 0; i < length; i++) {
             String goodsId = form.getGoodsId()[i];//商品ID
             String customerId = form.getCustomerId()[i];//顾客ID
@@ -218,10 +220,12 @@ public class AgentController {
                 return view;
             }
             orderItemPrice = goods.getPrice() * goodsQuantity;//得到一个OrderItem的总价
+            order_price += orderItemPrice;//累加Order总价
             OrderItem orderItem = new OrderItem(customerId, goodsId, goodsQuantity, orderItemPrice);//构造OrderItem
             orderItems.add(orderItem);
         }
         order.setOrderItems(orderItems);//构造Order
+        order.setPrice(order_price);
         switch (type) {
             case "save":
                 order.setStatus(OrderStatus.SAVED);
