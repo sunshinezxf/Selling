@@ -19,6 +19,8 @@ import selling.sunshine.form.AgentLoginForm;
 import selling.sunshine.form.OrderItemForm;
 import selling.sunshine.form.SortRule;
 import selling.sunshine.model.*;
+import selling.sunshine.model.Agent;
+import selling.sunshine.model.lite.*;
 import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.*;
@@ -189,9 +191,9 @@ public class AgentController {
         List<OrderItem> orderItems = new ArrayList<OrderItem>();
         int length = form.getCustomerId().length;
         Order order = new Order();
-        Agent agent = new Agent();
+        selling.sunshine.model.lite.Agent agent = new selling.sunshine.model.lite.Agent();
         User user = (User) subject.getPrincipal();
-        agent.setAgentId(user.getAgent().getId());
+        agent.setId(user.getAgent().getId());
         order.setAgent(agent);
         for (int i = 0; i < length; i++) {
             String goodsId = form.getGoodsId()[i];//商品ID
