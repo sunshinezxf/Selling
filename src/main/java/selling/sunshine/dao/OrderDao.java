@@ -14,4 +14,6 @@ public interface OrderDao {
     ResultData queryOrderByPage(Map<String, Object> condition, MobilePageParam param);
 
     ResultData updateOrder(Order order);
+
+    ResultData sumOrder();
 }

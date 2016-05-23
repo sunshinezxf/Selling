@@ -67,6 +67,13 @@
                     </li>
                     <li><a class="sub-nav" href="${path.concat('/refund/config')}"><i class="fa fa-cog"></i>
                         返现配置</a>
+                    </li>
+                </ul>
+            </li>
+            <li><a data-toggle="collapse" data-parent="#accordion" href="#admin-management"><i
+                    class="fa fa-book"></i> 管理员管理<i
+                    class="pull-right fa fa-caret-down"></i></a>
+                <ul id="admin-management" class="nav nav-collapse collapse">
                     <li><a class="sub-nav" href="${path.concat('/register')}"><i class="fa fa-cog"></i>
                         账号授权</a>
                     </li>
@@ -84,7 +91,8 @@
     $("#customer-management").collapse('hide');
     $("#goods-management").collapse('hide');
     $("#statement-management").collapse('hide');
-    $("#shipment-management").collapse('hide');
+    $("#config-management").collapse('hide');
+    $("#admin-management").collapse('hide');
     $(function () {
         var target_id = $(".main").attr("id-target");
         $("#" + target_id).collapse('show');
