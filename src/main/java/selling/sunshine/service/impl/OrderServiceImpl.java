@@ -85,4 +85,10 @@ public class OrderServiceImpl implements OrderService {
         return result;
     }
 
+    @Override
+    public ResultData poolOrder() {
+        ResultData result = new ResultData();
+
+        return result;
+    }
 }

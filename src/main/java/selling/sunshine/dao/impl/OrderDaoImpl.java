@@ -169,4 +169,11 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
             return result;
         }
     }
+
+    @Override
+    public ResultData sumOrder() {
+        ResultData result = new ResultData();
+
+        return result;
+    }
 }
