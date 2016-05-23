@@ -5,7 +5,6 @@ import com.pingplusplus.model.Event;
 import com.pingplusplus.model.Webhooks;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,12 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by sunshine on 4/8/16.
@@ -64,7 +58,7 @@ public class AgentController {
 
     @Autowired
     private BillService billService;
-    
+
     @Autowired
     private ShipmentService shipmentService;
 
@@ -77,48 +71,58 @@ public class AgentController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/order/place")
     public ModelAndView placeOrder() {
-
         ModelAndView view = new ModelAndView();
+        //获取当前登录的用户
         Subject subject = SecurityUtils.getSubject();
-        Map<String, Object> condition = new HashMap<String, Object>();
-        ResultData fetchGoodsResponse = commodityService.fetchCommodity(condition);
         User user = (User) subject.getPrincipal();
-        condition.clear();
-        condition.put("agentId", user.getAgent().getAgentId());
-        ResultData fetchCustomerResponse = customerService.fetchCustomer(condition);
-        condition.clear();
-        ResultData fetchShipmentResponse = shipmentService.fetchShipmentConfig(condition);
+        //创建查询的删选条件集合
+        Map<String, Object> condition = new HashMap<>();
+        //查询商品信息
+        condition.put("blockFlag", false);
+        ResultData fetchGoodsResponse = commodityService.fetchCommodity(condition);
         if (fetchGoodsResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             view.addObject("goods", fetchGoodsResponse.getData());
         }
+        //查询代理商的客户列表
+        condition.clear();
+        condition.put("agentId", user.getAgent().getId());
+        ResultData fetchCustomerResponse = customerService.fetchCustomer(condition);
         if (fetchCustomerResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             view.addObject("customer", fetchCustomerResponse.getData());
         }
+        //查询平台当前配置的发货日期
+        condition.clear();
+        ResultData fetchShipmentResponse = shipmentService.fetchShipmentConfig(condition);
         if (fetchShipmentResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-        	List<ShipConfig> shipmentList = (List<ShipConfig>) fetchShipmentResponse.getData();
-        	int currentDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
-        	shipmentList.sort(new Comparator<ShipConfig>(){
-				@Override
-				public int compare(ShipConfig ship1, ShipConfig ship2) {
-					return Integer.valueOf(ship1.getDate()).compareTo(Integer.valueOf(ship2.getDate()));
-				}
-			});
-        	int shipDay = 0;
-        	boolean isNextMonth = false;
-        	for(ShipConfig ship : shipmentList) {
-        		if(ship.getDate() > currentDay) {
-        			shipDay = ship.getDate();
-        			break;
-        		}
-        	}
-        	if(shipDay == 0) {
-        		shipDay = shipmentList.get(0).getDate();
-        		isNextMonth = true;
-        	}
-        	view.addObject("shipDay", shipDay);
-        	view.addObject("isNextMonth", isNextMonth);
+            List<ShipConfig> shipmentList = (List<ShipConfig>) fetchShipmentResponse.getData();
+            int currentDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+            shipmentList.sort(new Comparator<ShipConfig>() {
+                @Override
+                public int compare(ShipConfig ship1, ShipConfig ship2) {
+                    return Integer.valueOf(ship1.getDate()).compareTo(Integer.valueOf(ship2.getDate()));
+                }
+            });
+            int shipDay = 0;
+            boolean isNextMonth = false;
+            for (ShipConfig ship : shipmentList) {
+                if (ship.getDate() > currentDay) {
+                    shipDay = ship.getDate();
+                    break;
+                }
+            }
+            if (shipDay == 0) {
+                shipDay = shipmentList.get(0).getDate();
+                isNextMonth = true;
+            }
+            view.addObject("shipDay", shipDay);
+            view.addObject("isNextMonth", isNextMonth);
         }
-        if (user.getAgent().isGranted()) {
+        //根据代理商的ID查询代理商的详细信息
+        condition.clear();
+        condition.put("agentId", user.getAgent().getId());
+        ResultData queryAgentResponse = agentService.fetchAgent(condition);
+        Agent agent = ((List<Agent>) queryAgentResponse.getData()).get(0);
+        if (agent.isGranted()) {
             view.setViewName("/agent/order/place");
             return view;
         }
@@ -131,13 +135,25 @@ public class AgentController {
     @RequestMapping(method = RequestMethod.GET, value = "/order/modify/{orderId}")
     public ModelAndView modifyOrder(@PathVariable("orderId") String orderId) {
         ModelAndView view = new ModelAndView();
+        //获取当前登陆的用户
         Subject subject = SecurityUtils.getSubject();
-        Map<String, Object> condition = new HashMap<String, Object>();
-        ResultData fetchGoodsResponse = commodityService.fetchCommodity(condition);
         User user = (User) subject.getPrincipal();
+        Map<String, Object> condition = new HashMap<>();
+        //获取商品列表
+        condition.put("blockFlag", false);
+        ResultData fetchGoodsResponse = commodityService.fetchCommodity(condition);
+        if (fetchGoodsResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            view.addObject("goods", fetchGoodsResponse.getData());
+        }
+        //获取当前代理的客户列表
         condition.clear();
-        condition.put("agentId", user.getAgent().getAgentId());
+        condition.put("agentId", user.getAgent().getId());
         ResultData fetchCustomerResponse = customerService.fetchCustomer(condition);
+        if (fetchCustomerResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            view.addObject("customer", fetchCustomerResponse.getData());
+        }
+        //获取订单
+        condition.clear();
         condition.put("orderId", orderId);
         ResultData fetchOrderResponse = orderService.fetchOrder(condition);
         if (fetchOrderResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
@@ -145,14 +161,13 @@ public class AgentController {
             view.addObject("order", order);
             view.addObject("status", order.getStatus());
         }
-        if (fetchGoodsResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            view.addObject("goods", fetchGoodsResponse.getData());
-        }
-        if (fetchGoodsResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            view.addObject("customer", fetchCustomerResponse.getData());
-        }
         view.addObject("operation", "MODIFY");
-        if (user.getAgent().isGranted()) {
+        //查询代理的详细信息
+        condition.clear();
+        condition.put("agentId", user.getAgent().getId());
+        ResultData fetchAgentResponse = agentService.fetchAgent(condition);
+        Agent agent = ((List<Agent>) fetchAgentResponse.getData()).get(0);
+        if (agent.isGranted()) {
             view.setViewName("/agent/order/modify");
             return view;
         }
@@ -176,7 +191,7 @@ public class AgentController {
         Order order = new Order();
         Agent agent = new Agent();
         User user = (User) subject.getPrincipal();
-        agent.setAgentId(user.getAgent().getAgentId());
+        agent.setAgentId(user.getAgent().getId());
         order.setAgent(agent);
         for (int i = 0; i < length; i++) {
             String goodsId = form.getGoodsId()[i];//商品ID
@@ -248,12 +263,11 @@ public class AgentController {
     public ResultData viewOrderList(@PathVariable("type") String type) {
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
-        Agent agent = user.getAgent();
         ResultData result = new ResultData();
         List<SortRule> orderBy = new ArrayList<SortRule>();
         orderBy.add(new SortRule("create_time", "desc"));
         Map<String, Object> condition = new HashMap<String, Object>();
-        condition.put("agentId", agent.getAgentId());
+        condition.put("agentId", user.getAgent().getId());
         condition.put("status", type);
         condition.put("sort", orderBy);
         ResultData fetchResponse = orderService.fetchOrder(condition);
@@ -271,9 +285,8 @@ public class AgentController {
         ModelAndView view = new ModelAndView();
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
-        Agent agent = user.getAgent();
         Map<String, Object> condition = new HashMap<String, Object>();
-        condition.put("agentId", agent.getAgentId());
+        condition.put("agentId", user.getAgent().getId());
         condition.put("orderId", orderId);
         ResultData fetchOrderResponse = orderService.fetchOrder(condition);
         Order order = ((List<Order>) fetchOrderResponse.getData()).get(0);
@@ -289,13 +302,15 @@ public class AgentController {
         ModelAndView view = new ModelAndView();
         Subject subject = SecurityUtils.getSubject();
         User user = null;
-        Agent agent = null;
-        if (subject != null) {
-            Session session = subject.getSession();
-            user = (User) session.getAttribute("current");
-            agent = user.getAgent();
+        //获取Agent详细信息
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("agentId", user.getAgent().getId());
+        condition.put("blockFlag", false);
+        ResultData fetchResposne = agentService.fetchAgent(condition);
+        if (fetchResposne.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            Agent agent = ((List<Agent>) fetchResposne.getData()).get(0);
+            view.addObject("agent", agent);
         }
-        view.addObject("agent", agent);
         view.setViewName("/agent/customer/manage");
         return view;
     }
@@ -307,7 +322,7 @@ public class AgentController {
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         Map<String, Object> condition = new HashMap<>();
-        condition.put("agentId", user.getAgent().getAgentId());
+        condition.put("agentId", user.getAgent().getId());
         ResultData fetchResponse = customerService.fetchCustomer(condition);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             result.setData(fetchResponse.getData());
@@ -478,11 +493,15 @@ public class AgentController {
         condition.put("billId", dealId);
         resultData = billService.fetchDepositBill(condition);
         DepositBill depositBill = ((List<DepositBill>) resultData.getData()).get(0);
-        Agent agent = depositBill.getAgent();
+        //获取代理商信息
+        condition.clear();
+        condition.put("agentId", depositBill.getAgent().getId());
+        condition.put("blockFlag", false);
+        ResultData fetchAgentResponse = agentService.fetchAgent(condition);
+        Agent agent = ((List<Agent>) fetchAgentResponse.getData()).get(0);
         agent.setCoffer(agent.getCoffer() + depositBill.getBillAmount());
-        resultData = agentService.updateAgent(agent);
-        resultData = billService.updateDepositBill(depositBill);
-
+        agentService.updateAgent(agent);
+        billService.updateDepositBill(depositBill);
 
         Event event = Webhooks.eventParse(webhooks.toString());
         if ("charge.succeeded".equals(event.getType())) {

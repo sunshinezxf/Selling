@@ -94,7 +94,7 @@ public class BillController {
             DepositBill depositBill = ((List<DepositBill>) resultData.getData()).get(0);
             
             Map<String, Object> agentCondition = new HashMap<String, Object>();
-            agentCondition.put("agentId", depositBill.getAgent().getAgentId());
+            agentCondition.put("agentId", depositBill.getAgent().getId());
             Agent agent = ((List<Agent>)agentService.fetchAgent(agentCondition).getData()).get(0);
             agent.setCoffer(agent.getCoffer()+depositBill.getBillAmount());
             resultData = agentService.updateAgent(agent);
