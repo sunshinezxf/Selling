@@ -7,6 +7,10 @@ public class Admin {
     private String id;
     private String username;
 
+    public Admin() {
+        super();
+    }
+
     public String getId() {
         return id;
     }

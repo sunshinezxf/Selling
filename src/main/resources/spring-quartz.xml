@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="poolSchedule" class="selling.sunshine.schedule.PoolSchedule"></bean>
+
+    <bean id="poolDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="poolSchedule"></property>
+        <property name="targetMethod" value="schedule"></property>
+        <property name="concurrent" value="false"></property>
+    </bean>
+
+    <bean id="poolTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="poolDetail"></property>
+        <property name="cronExpression">
+            <value>0 0 0 * * ?</value>
+        </property>
+    </bean>
+
+    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref bean="poolTrigger"></ref>
+            </list>
+        </property>
+    </bean>
+</beans>
