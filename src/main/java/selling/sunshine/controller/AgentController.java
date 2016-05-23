@@ -305,7 +305,7 @@ public class AgentController {
     public ModelAndView manageCustomer() {
         ModelAndView view = new ModelAndView();
         Subject subject = SecurityUtils.getSubject();
-        User user = null;
+        User user = (User) subject.getPrincipal();
         //获取Agent详细信息
         Map<String, Object> condition = new HashMap<>();
         condition.put("agentId", user.getAgent().getAgentId());

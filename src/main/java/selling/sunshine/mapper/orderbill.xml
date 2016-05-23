@@ -9,7 +9,7 @@
         <result property="clientIp" column="client_ip"></result>
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
-        <association property="agent" column="agentId = agent_id" select="agentQuery"></association>
+        <association property="agent" column="agentId = agent_id" select="agentLiteQuery"></association>
         <association property="order" column="orderId = order_id" select="orderQuery"></association>
     </resultMap>
 
