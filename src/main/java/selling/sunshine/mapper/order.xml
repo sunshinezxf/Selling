@@ -69,7 +69,7 @@
 
     <insert id="insert" parameterType="selling.sunshine.model.Order" useGeneratedKeys="false">
         INSERT INTO `order`(order_id, order_status, agent_id, block_flag, create_time)
-        VALUES (#{orderId}, #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler}, #{agent.id}, #{blockFlag}, #{createAt})
+        VALUES (#{orderId}, #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler}, #{agent.agentId}, #{blockFlag}, #{createAt})
     </insert>
 
     <select id="query" parameterType="java.util.Map" resultMap="orderVo">

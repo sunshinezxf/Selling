@@ -59,7 +59,7 @@
     
     <insert id="insert" parameterType="selling.sunshine.model.OrderBill" useGeneratedKeys="false">
         INSERT INTO order_bill(bill_id, agent_id, order_id, channel_name, client_ip, bill_amount, bill_status, block_flag, create_time)
-        VALUES (#{billId}, #{agent.id}, #{order.orderId}, #{channel}, #{clientIp}, #{billAmount}, #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler}, #{blockFlag}, #{createAt})
+        VALUES (#{billId}, #{agent.agentId}, #{order.orderId}, #{channel}, #{clientIp}, #{billAmount}, #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler}, #{blockFlag}, #{createAt})
     </insert>
     
     <update id="update" parameterType="selling.sunshine.model.OrderBill" useGeneratedKeys="false">
