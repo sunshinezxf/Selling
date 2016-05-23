@@ -36,12 +36,12 @@ public class AgentDaoImpl extends BaseDao implements AgentDao {
             try {
                 agent.setAgentId(IDGenerator.generate("AGT"));
                 sqlSession.insert("selling.agent.insert", agent);
-                User user = new User(agent);
+                User user = new User(agent.getPhone(), agent.getPassword());
                 user.setUserId(IDGenerator.generate("USR"));
                 Role role = new Role();
                 role.setRoleId("ROL00000002");
                 user.setRole(role);
-                user.setAgent(agent);
+                user.setAgent(new selling.sunshine.model.lite.Agent(agent.getPassword(), agent.getPassword()));
                 sqlSession.insert("selling.user.insert", user);
                 result.setData(agent);
             } catch (Exception e) {
@@ -60,8 +60,6 @@ public class AgentDaoImpl extends BaseDao implements AgentDao {
         try {
             condition = handle(condition);
             List<Agent> list = sqlSession.selectList("selling.agent.query", condition);
-            logger.debug(JSONObject.toJSONString(condition));
-            logger.debug(JSONObject.toJSONString(list));
             result.setData(list);
         } catch (Exception e) {
             logger.error(e.getMessage());

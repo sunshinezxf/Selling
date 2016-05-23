@@ -1,7 +1,6 @@
 package selling.sunshine.controller;
 
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,12 +67,8 @@ public class CustomerController {
             return resultData;
         }
         Subject subject = SecurityUtils.getSubject();
-        Agent agent = null;
-        if (subject != null) {
-            Session session = subject.getSession();
-            User user = (User) session.getAttribute("current");
-            agent = user.getAgent();
-        }
+        User user = (User) subject.getPrincipal();
+        selling.sunshine.model.lite.Agent agent = user.getAgent();
         Customer customer = new Customer(customerForm.getName(),
                 customerForm.getAddress(), customerForm.getPhone(), agent);
         resultData = customerService.createCustomer(customer);
@@ -90,7 +85,7 @@ public class CustomerController {
         }
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
-        Agent agent = user.getAgent();
+        selling.sunshine.model.lite.Agent agent = user.getAgent();
         Customer customer = new Customer(customerForm.getName(),
                 customerForm.getAddress(), customerForm.getPhone(), agent);
         customer.setCustomerId(customerId);

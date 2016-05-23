@@ -9,24 +9,10 @@ public class User extends Entity {
     private String password;
     private Role role;
     private Admin admin;
-    private Agent agent;
+    private selling.sunshine.model.lite.Agent agent;
 
     public User() {
         super();
-    }
-
-    public User(Agent agent) {
-        this();
-        this.username = agent.getPhone();
-        this.password = agent.getPassword();
-        this.agent=agent;
-    }
-
-    public User(Admin admin) {
-        this();
-        this.username = admin.getUsername();
-        this.password = admin.getPassword();
-        this.admin=admin;
     }
 
     public User(String username, String password) {
@@ -75,11 +61,11 @@ public class User extends Entity {
         this.admin = admin;
     }
 
-    public Agent getAgent() {
+    public selling.sunshine.model.lite.Agent getAgent() {
         return agent;
     }
 
-    public void setAgent(Agent agent) {
+    public void setAgent(selling.sunshine.model.lite.Agent agent) {
         this.agent = agent;
     }
 }

@@ -8,6 +8,16 @@ public class Agent {
     private String name;
     private String phone;
 
+    public Agent() {
+        super();
+    }
+
+    public Agent(String name, String phone) {
+        this();
+        this.name = name;
+        this.phone = phone;
+    }
+
     public String getId() {
         return id;
     }
