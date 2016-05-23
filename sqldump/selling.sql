@@ -86,6 +86,7 @@ CREATE TABLE IF NOT EXISTS `selling`.`order` (
   `order_id` VARCHAR(20) NOT NULL,
   `agent_id` VARCHAR(20) NOT NULL,
   `order_status` INT NOT NULL DEFAULT 0,
+  `order_price` DOUBLE NOT NULL DEFAULT 0,
   `block_flag` TINYINT(1) NOT NULL DEFAULT 0,
   `create_time` DATETIME NOT NULL,
   PRIMARY KEY (`order_id`),
@@ -295,36 +296,6 @@ CREATE TABLE IF NOT EXISTS `selling`.`order_bill` (
 
 
 -- -----------------------------------------------------
--- Table `selling`.`refund_record`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `selling`.`refund_record` ;
-
-CREATE TABLE IF NOT EXISTS `selling`.`refund_record` (
-  `refund_id` VARCHAR(20) NOT NULL,
-  `refund_name` VARCHAR(45) NOT NULL,
-  `redund_percent` VARCHAR(45) NOT NULL,
-  `refund_amount` DOUBLE NOT NULL,
-  `block_flag` TINYINT(1) NOT NULL DEFAULT 0,
-  `create_time` DATETIME NOT NULL,
-  PRIMARY KEY (`refund_id`))
-  ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `selling`.`ship_config`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `selling`.`ship_config` ;
-
-CREATE TABLE IF NOT EXISTS `selling`.`ship_config` (
-  `ship_config_id` VARCHAR(20) NOT NULL,
-  `ship_config_date` INT NOT NULL,
-  `block_flag` TINYINT(1) NOT NULL,
-  `create_time` DATETIME NOT NULL,
-  PRIMARY KEY (`ship_config_id`))
-  ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
 -- Table `selling`.`refund_config`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `selling`.`refund_config` ;
@@ -353,12 +324,14 @@ DROP TABLE IF EXISTS `selling`.`order_pool` ;
 
 CREATE TABLE IF NOT EXISTS `selling`.`order_pool` (
   `pool_id` VARCHAR(20) NOT NULL,
-  `agent_id` VARCHAR(20) NULL,
+  `agent_id` VARCHAR(20) NOT NULL,
   `goods_id` VARCHAR(20) NOT NULL,
   `refund_config_id` VARCHAR(20) NOT NULL,
   `quantity` INT NOT NULL DEFAULT 0,
   `price` DOUBLE NOT NULL DEFAULT 0,
+  `refund_amount` DOUBLE NOT NULL DEFAULT 0,
   `pool_date` DATE NOT NULL,
+  `qualified` TINYINT(1) NOT NULL,
   `block_flag` TINYINT(1) NOT NULL DEFAULT 0,
   `create_time` DATETIME NOT NULL,
   PRIMARY KEY (`pool_id`),
@@ -380,6 +353,43 @@ CREATE TABLE IF NOT EXISTS `selling`.`order_pool` (
   REFERENCES `selling`.`refund_config` (`refund_config_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
+  ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `selling`.`refund_record`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `selling`.`refund_record` ;
+
+CREATE TABLE IF NOT EXISTS `selling`.`refund_record` (
+  `refund_id` VARCHAR(20) NOT NULL,
+  `order_pool_id` VARCHAR(45) NULL,
+  `refund_name` VARCHAR(45) NOT NULL,
+  `redund_percent` VARCHAR(45) NOT NULL,
+  `refund_amount` DOUBLE NOT NULL,
+  `block_flag` TINYINT(1) NOT NULL DEFAULT 0,
+  `create_time` DATETIME NOT NULL,
+  PRIMARY KEY (`refund_id`),
+  INDEX `fk_refund_record_order_pool1_idx` (`order_pool_id` ASC),
+  CONSTRAINT `fk_refund_record_order_pool1`
+  FOREIGN KEY (`order_pool_id`)
+  REFERENCES `selling`.`order_pool` (`pool_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+  ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `selling`.`ship_config`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `selling`.`ship_config` ;
+
+CREATE TABLE IF NOT EXISTS `selling`.`ship_config` (
+  `ship_config_id` VARCHAR(20) NOT NULL,
+  `ship_config_date` INT NOT NULL,
+  `block_flag` TINYINT(1) NOT NULL,
+  `create_time` DATETIME NOT NULL,
+  PRIMARY KEY (`ship_config_id`))
   ENGINE = InnoDB;
 
 
