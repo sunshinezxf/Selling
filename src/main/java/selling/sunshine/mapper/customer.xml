@@ -28,7 +28,7 @@
         <result property="createAt" column="create_time"></result>
         <association property="address" column="customerId = customer_id" select="addressQuery"></association>
         <association property="phone" column="customerId = customer_id" select="phoneQuery"></association>
-        <association property="agent" column="agentId = agent_id" select="agentQuery"></association>
+        <association property="agent" column="agent_id = agent_id" select="agentQuery"></association>
     </resultMap>
 
     <select id="query" parameterType="java.util.Map" resultMap="customerVo">
