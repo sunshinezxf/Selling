@@ -8,6 +8,7 @@ import java.util.List;
 public class Order extends Entity {
     private String orderId;
     private Agent agent;
+    private double price;
     private OrderStatus status;
     private List<OrderItem> orderItems;
 
@@ -47,4 +48,14 @@ public class Order extends Entity {
     public void setStatus(OrderStatus status) {
         this.status = status;
     }
+
+	public double getPrice() {
+		return price;
+	}
+
+	public void setPrice(double price) {
+		this.price = price;
+	}
+    
+    
 }
