@@ -1,6 +1,6 @@
 package selling.sunshine.model;
 
-import selling.sunshine.model.lite.*;
+import selling.sunshine.model.lite.Agent;
 
 /**
  * Created by sunshine on 4/8/16.
@@ -10,7 +10,7 @@ public class Customer extends Entity {
     private String name;
     private CustomerPhone phone;
     private CustomerAddress address;
-    private selling.sunshine.model.lite.Agent agent;
+    private Agent agent;
 
     public Customer() {
         super();
@@ -23,7 +23,7 @@ public class Customer extends Entity {
         this.address = new CustomerAddress(address);
     }
 
-    public Customer(String name, String address, String phone, selling.sunshine.model.lite.Agent agent) {
+    public Customer(String name, String address, String phone, Agent agent) {
         this(name, address, phone);
         this.agent = agent;
     }
@@ -44,11 +44,11 @@ public class Customer extends Entity {
         this.name = name;
     }
 
-    public selling.sunshine.model.lite.Agent getAgent() {
+    public Agent getAgent() {
         return agent;
     }
 
-    public void setAgent(selling.sunshine.model.lite.Agent agent) {
+    public void setAgent(Agent agent) {
         this.agent = agent;
     }
 
