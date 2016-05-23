@@ -11,17 +11,10 @@
         <collection property="orderItems" column="orderId = order_id" select="orderItemQuery"></collection>
     </resultMap>
 
-    <resultMap id="agentVo" type="selling.sunshine.model.Agent">
-        <result property="agentId" column="agent_id"></result>
+    <resultMap id="agentLiteVo" type="selling.sunshine.model.lite.Agent">
+        <result property="id" column="agent_id"></result>
         <result property="name" column="agent_name"></result>
-        <result property="gender" column="agent_gender"></result>
-        <result property="phone" column="agent_phone"></result>
-        <result property="address" column="agent_address"></result>
-        <result property="wechat" column="agent_wechat"></result>
-        <result property="password" column="agent_password"></result>
-        <result property="granted" column="agent_granted"></result>
-        <result property="blockFlag" column="block_flag"></result>
-        <result property="createAt" column="create_time"></result>
+        <result property="phone" column="phone"></result>
     </resultMap>
 
     <resultMap id="orderItemVo" type="selling.sunshine.model.OrderItem">
@@ -49,14 +42,14 @@
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
     </resultMap>
-    
+
     <resultMap id="addressVo" type="selling.sunshine.model.CustomerAddress">
         <result property="addressId" column="customer_address_id"></result>
         <result property="address" column="address"></result>
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
     </resultMap>
-    
+
 
     <resultMap id="goodsVo" type="selling.sunshine.model.Goods">
         <result property="goodsId" column="goods_id"></result>
@@ -67,8 +60,8 @@
         <result property="createAt" column="create_time"></result>
     </resultMap>
 
-    <select id="agentQuery" parameterType="java.util.Map" resultMap="agentVo">
-        SELECT agent_id, agent_name, agent_gender, agent_phone, agent_address, agent_password, agent_wechat, agent_granted, block_flag, create_time
+    <select id="agentLiteQuery" parameterType="java.util.Map" resultMap="agentLiteVo">
+        SELECT agent_id, agent_name, agent_phone
         FROM agent
         WHERE agent_id = #{agentId}
     </select>
@@ -132,7 +125,7 @@
         AND block_flag = 0
     </select>
 
-	<select id="addressQuery" parameterType="java.util.Map" resultMap="addressVo">
+    <select id="addressQuery" parameterType="java.util.Map" resultMap="addressVo">
         SELECT customer_address_id, address, block_flag, create_time
         FROM customer_address
         WHERE customer_id = #{customerId}
