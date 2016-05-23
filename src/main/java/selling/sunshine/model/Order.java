@@ -1,5 +1,7 @@
 package selling.sunshine.model;
 
+import selling.sunshine.model.lite.Agent;
+
 import java.util.List;
 
 /**
@@ -49,13 +51,13 @@ public class Order extends Entity {
         this.status = status;
     }
 
-	public double getPrice() {
-		return price;
-	}
+    public double getPrice() {
+        return price;
+    }
 
-	public void setPrice(double price) {
-		this.price = price;
-	}
-    
-    
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+
 }

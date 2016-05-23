@@ -154,9 +154,9 @@ public class OrderController {
         List<OrderItem> orderItems = new ArrayList<OrderItem>();
         int length = form.getCustomerId().length;
         Order order = new Order();
-        Agent agent = new Agent();
+        selling.sunshine.model.lite.Agent agent = new selling.sunshine.model.lite.Agent();
         User user = (User) subject.getPrincipal();
-        agent.setAgentId(user.getAgent().getId());
+        agent.setId(user.getAgent().getId());
         order.setAgent(agent);
         //构造订单和订单项
         double total_price = 0;
@@ -222,7 +222,7 @@ public class OrderController {
         return view;
     }
 
-	@RequestMapping(method = RequestMethod.GET, value = "/pay/{orderId}")
+    @RequestMapping(method = RequestMethod.GET, value = "/pay/{orderId}")
     public ModelAndView place(@PathVariable("orderId") String orderId) {
         ModelAndView view = new ModelAndView();
         Subject subject = SecurityUtils.getSubject();
@@ -246,12 +246,12 @@ public class OrderController {
         condition.clear();
         condition.put("agentId", agent.getAgentId());
         Agent target = null;
-        try{
-        	target = ((List<Agent>) agentService.fetchAgent(condition)
-                .getData()).get(0);
-        } catch (Exception e){
-        	logger.debug(e.getMessage());
-        	Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "失败", "/agent/order/manage/0");
+        try {
+            target = ((List<Agent>) agentService.fetchAgent(condition)
+                    .getData()).get(0);
+        } catch (Exception e) {
+            logger.debug(e.getMessage());
+            Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "失败", "/agent/order/manage/0");
             view.addObject("prompt", prompt);
             view.setViewName("redirect:/agent/prompt");
             return view;
