@@ -88,7 +88,13 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public ResultData poolOrder() {
         ResultData result = new ResultData();
-
+        ResultData sumResponse = orderDao.sumOrder();
+        result.setResponseCode(sumResponse.getResponseCode());
+        if (sumResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(sumResponse.getData());
+        } else {
+            result.setDescription(sumResponse.getDescription());
+        }
         return result;
     }
 }

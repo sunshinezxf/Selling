@@ -129,5 +129,7 @@
         FROM customer
         WHERE customer_id = #{customerId}
     </select>
+    
+    
 
 </mapper>

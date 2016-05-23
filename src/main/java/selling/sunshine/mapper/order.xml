@@ -98,6 +98,9 @@
         <if test="blockFlag != null and blockFlag != ''">
             AND block_flag = #{blockFlag}
         </if>
+        <if test="createAt != null and createAt != ''">
+            AND create_time = #{createAt}
+        </if>
         <if test="rule != null and rule != ''">
             ORDER BY ${rule}
         </if>
