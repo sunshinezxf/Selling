@@ -9,7 +9,8 @@
     #parse("/backend/component/navigate_with_login.vm")
     <div class="container-fluid">
         #parse("/backend/component/sidebar.vm")
-        #parse("/backend/admin/component/admin_management_table.vm")
+        #parse("/backend/admin/component/admin_management_table.vm")\
+       
     </div>
 </body>
 </html>
