@@ -346,6 +346,43 @@ CREATE TABLE IF NOT EXISTS `selling`.`refund_config` (
   ENGINE = InnoDB;
 
 
+-- -----------------------------------------------------
+-- Table `selling`.`order_pool`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `selling`.`order_pool` ;
+
+CREATE TABLE IF NOT EXISTS `selling`.`order_pool` (
+  `pool_id` VARCHAR(20) NOT NULL,
+  `agent_id` VARCHAR(20) NULL,
+  `goods_id` VARCHAR(20) NOT NULL,
+  `refund_config_id` VARCHAR(20) NOT NULL,
+  `quantity` INT NOT NULL DEFAULT 0,
+  `price` DOUBLE NOT NULL DEFAULT 0,
+  `pool_date` DATE NOT NULL,
+  `block_flag` TINYINT(1) NOT NULL DEFAULT 0,
+  `create_time` DATETIME NOT NULL,
+  PRIMARY KEY (`pool_id`),
+  INDEX `fk_order_pool_agent1_idx` (`agent_id` ASC),
+  INDEX `fk_order_pool_goods1_idx` (`goods_id` ASC),
+  INDEX `fk_order_pool_refund_config1_idx` (`refund_config_id` ASC),
+  CONSTRAINT `fk_order_pool_agent1`
+  FOREIGN KEY (`agent_id`)
+  REFERENCES `selling`.`agent` (`agent_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_order_pool_goods1`
+  FOREIGN KEY (`goods_id`)
+  REFERENCES `selling`.`goods` (`goods_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_order_pool_refund_config1`
+  FOREIGN KEY (`refund_config_id`)
+  REFERENCES `selling`.`refund_config` (`refund_config_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+  ENGINE = InnoDB;
+
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
