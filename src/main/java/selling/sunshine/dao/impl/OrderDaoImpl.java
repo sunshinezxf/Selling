@@ -100,80 +100,84 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
 		return result;
 	}
 
-	@Transactional
-	@Override
-	public ResultData updateOrder(Order order) {
-		ResultData result = new ResultData();
-		synchronized (lock) {
-			try {
-				sqlSession.update("selling.order.update", order);
-				Map<String, Object> condition = new HashMap<>();
-				condition.put("orderId", order.getOrderId());
-				Order target = sqlSession.selectOne("selling.order.query",
-						condition);
-				if (target == null) {
-					result.setResponseCode(ResponseCode.RESPONSE_ERROR);
-					result.setDescription("Order does not exist.");
-				}
-				List<OrderItem> primary = target.getOrderItems();
-				List<OrderItem> now = order.getOrderItems();
-				List<OrderItem> toDelete = new ArrayList<>();
-				if (primary.size() == 0) {
-					for (OrderItem item : now) {
-						item.setOrderItemId(IDGenerator.generate("ORI"));
-					}
-					sqlSession.insert("selling.order.item.insertBatch", now);
-				}
-				if (now.size() == 0) {
-					toDelete.addAll(primary);
-					sqlSession.delete("selling.orderItem.delete", toDelete);
-				}
-				OrderItem primaryItem = primary.get(0);
-				OrderItem nowItem = now.get(0);
-				for (int i = 0; i < now.size(); i++) {
-					if (StringUtils.isEmpty(nowItem.getOrderItemId())) {
-						toDelete.addAll(primary);
-						sqlSession
-								.delete("selling.order.item.delete", toDelete);
-						sqlSession.insert("selling.order.item.insert", now);
-					}
-					if (primaryItem.getOrderItemId().equals(
-							nowItem.getOrderItemId())) {
-						sqlSession.update("selling.order.item.update", nowItem);
-						primary.remove(primaryItem);
-						now.remove(nowItem);
-						if (primary.size() == 0) {
-							break;
-						}
-						if (now.size() == 0) {
-							toDelete.addAll(primary);
-							break;
-						}
-						primaryItem = primary.get(0);
-						nowItem = now.get(0);
-						i--;
-						continue;
-					}
-					toDelete.add(primaryItem);
-					primary.remove(primaryItem);
-					primaryItem = primary.get(0);
-				}
-				if (toDelete.size() > 0) {
-					sqlSession.delete("selling.order.item.delete", toDelete);
-				}
-				if (now.size() > 0) {
-					sqlSession.insert("selling.order.item.insertBatch", now);
-				}
-				result.setData(order);
-			} catch (Exception e) {
-				logger.error(e.getMessage());
-				result.setResponseCode(ResponseCode.RESPONSE_ERROR);
-				result.setDescription(e.getMessage());
-			} finally {
-				return result;
-			}
-		}
-	}
+	 @Transactional
+	    @Override
+	    public ResultData updateOrder(Order order) {
+	        ResultData result = new ResultData();
+	        synchronized (lock) {
+	            try {
+	                sqlSession.update("selling.order.update", order);
+	                Map<String, Object> condition = new HashMap<>();
+	                condition.put("orderId", order.getOrderId());
+	                Order target = sqlSession.selectOne("selling.order.query", condition);
+	                if (target == null) {
+	                    result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+	                    result.setDescription("Order does not exist.");
+	                }
+	                List<OrderItem> primary = target.getOrderItems();
+	                List<OrderItem> now = order.getOrderItems();
+	                List<OrderItem> toDelete = new ArrayList<>();
+	                if (primary.size() == 0) {
+	                    for (OrderItem item : now) {
+	                        item.setOrderItemId(IDGenerator.generate("ORI"));
+	                    }
+	                    sqlSession.insert("selling.order.item.insertBatch", now);
+	                }
+	                if (now.size() == 0) {
+	                    toDelete.addAll(primary);
+	                    sqlSession.delete("selling.orderItem.delete", toDelete);
+	                }
+	                OrderItem primaryItem = primary.get(0);
+	                OrderItem nowItem = now.get(0);
+	                for (int i = 0; i < now.size(); i++) {
+	                    if (StringUtils.isEmpty(nowItem.getOrderItemId())) {
+	                        toDelete.addAll(primary);
+	                        sqlSession.delete("selling.order.item.delete", toDelete);
+	                        sqlSession.insert("selling.order.item.insert", now);
+	                    }
+	                    if (primaryItem.getOrderItemId().equals(nowItem.getOrderItemId())) {
+	                        sqlSession.update("selling.order.item.update", nowItem);
+	                        primary.remove(primaryItem);
+	                        now.remove(nowItem);
+	                        if (primary.size() == 0) {
+	                            break;
+	                        }
+	                        if (now.size() == 0) {
+	                            toDelete.addAll(primary);
+	                            break;
+	                        }
+	                        primaryItem = primary.get(0);
+	                        nowItem = now.get(0);
+	                        i--;
+	                        continue;
+	                    }
+	                    toDelete.add(primaryItem);
+	                    primary.remove(primaryItem);
+	                    if(primary.isEmpty())break;
+	                    primaryItem = primary.get(0);
+	                }
+	                if (toDelete.size() > 0) {
+	                    sqlSession.delete("selling.order.item.delete", toDelete);
+	                }
+	                if (now.size() > 0) {
+	                	for(OrderItem item : now) {
+	                		item.setOrderItemId(IDGenerator.generate("ORI"));
+	                		Order temp = new Order();
+	                		temp.setOrderId(order.getOrderId());
+	                		item.setOrder(temp);
+	                	}
+	                    sqlSession.insert("selling.order.item.insertBatch", now);
+	                }
+	                result.setData(order);
+	            } catch (Exception e) {
+	                logger.error(e.getMessage());
+	                result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+	                result.setDescription(e.getMessage());
+	            } finally {
+	                return result;
+	            }
+	        }
+	    }
 
 	private List<Order> queryOrderByPage(Map<String, Object> condition,
 			int start, int length) {
@@ -185,6 +189,23 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
 			logger.error(e.getMessage());
 		} finally {
 			return result;
+		}
+	}
+	
+	@Override
+	public ResultData cancelOrder(Order order) {
+		ResultData result = new ResultData();
+		synchronized(lock){
+			try{
+				sqlSession.update("selling.order.update", order);
+				result.setData(order);
+			} catch (Exception e) {
+				logger.error(e.getMessage());
+				result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+				result.setDescription(e.getMessage());
+			} finally {
+				return result;
+			}				
 		}
 	}
 
@@ -202,7 +223,6 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
 		try {
 			Map<String, Object> condition = new HashMap<>();
 			condition.put("date", date + "%");
-
 			List<Map<String, Object>> resultList = sqlSession.selectList(
 					"selling.order.pool.sumOrder", condition);
 			Map<String, Object> configCondition = new HashMap<>();
@@ -236,7 +256,6 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
 			}
 			result.setData(resultList);
 			result.setResponseCode(ResponseCode.RESPONSE_OK);
-
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			result.setResponseCode(ResponseCode.RESPONSE_ERROR);

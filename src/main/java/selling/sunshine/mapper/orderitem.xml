@@ -58,7 +58,7 @@
         SELECT order_item_id, order_item_status, goods_quantity, order_item_price, customer_id, goods_id, order_id,
         block_flag, create_time
         FROM order_item
-        WHERE 1 = 1
+        WHERE 1 = 1 
         <if test="orderItemId != null and orderItemId != ''">
             AND order_item_id = #{orderItemId}
         </if>
@@ -70,6 +70,9 @@
         </if>
         <if test="goodsId != null and goodsId != ''">
             AND goods_id = #{goodsId}
+        </if>
+        <if test="blockFlag != null and blockFlag != ''">
+            AND block_flag = #{blockFlag}
         </if>
     </select>
 
@@ -121,7 +124,7 @@
     <select id="orderQuery" parameterType="java.util.Map" resultMap="orderVo">
         SELECT order_id, agent_id, block_flag, create_time
         FROM `order`
-        WHERE order_id = #{orderId}
+        WHERE order_id = #{orderId} AND block_flag = 0 
     </select>
 
     <select id="customerQuery" parameterType="java.util.Map" resultMap="customerVo">

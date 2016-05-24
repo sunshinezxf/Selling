@@ -19,4 +19,5 @@ public interface OrderService {
 
 	ResultData poolOrder();
 	
+	ResultData cancel(Order order);
 }

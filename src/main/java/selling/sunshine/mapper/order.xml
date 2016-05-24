@@ -89,7 +89,7 @@
         <if test="agentId != null and agentId !=''">
             AND agent_id = #{agentId}
         </if>
-        <if test="blockFlag != null and blockFlag != ''">
+        <if test="blockFlag != null">
             AND block_flag = #{blockFlag}
         </if>
         <if test="createAt != null and createAt != ''">
@@ -106,6 +106,9 @@
             <if test="status != null and status != ''">
                 order_status = #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler},
             </if>
+        	<if test="blockFlag != null and blockFlag != ''">
+        		block_flag = #{blockFlag}
+        	</if>
         </set>
         WHERE order_id = #{orderId}
     </update>

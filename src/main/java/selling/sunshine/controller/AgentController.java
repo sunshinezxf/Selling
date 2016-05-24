@@ -274,6 +274,7 @@ public class AgentController {
         condition.put("agentId", user.getAgent().getAgentId());
         condition.put("status", type);
         condition.put("sort", orderBy);
+        condition.put("blockFlag", false);
         ResultData fetchResponse = orderService.fetchOrder(condition);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             result.setData(fetchResponse.getData());

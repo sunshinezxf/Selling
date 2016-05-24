@@ -4,8 +4,16 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
     <bean id="poolSchedule" class="selling.sunshine.schedule.PoolSchedule"></bean>
 
+    <bean id="wechatSchedule" class="selling.sunshine.schedule.WechatSchedule"></bean>
+
     <bean id="poolDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <property name="targetObject" ref="poolSchedule"></property>
+        <property name="targetMethod" value="schedule"></property>
+        <property name="concurrent" value="false"></property>
+    </bean>
+
+    <bean id="wechatDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="wechatSchedule"></property>
         <property name="targetMethod" value="schedule"></property>
         <property name="concurrent" value="false"></property>
     </bean>
@@ -17,10 +25,18 @@
         </property>
     </bean>
 
+    <bean id="wechatTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="wechatDetail"></property>
+        <property name="cronExpression">
+            <value>0 0 0/2 * * ?</value>
+        </property>
+    </bean>
+
     <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="triggers">
             <list>
                 <ref bean="poolTrigger"></ref>
+                <ref bean="wechatTrigger"></ref>
             </list>
         </property>
     </bean>
