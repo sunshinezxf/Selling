@@ -44,7 +44,7 @@
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>
-            classpath:rest-content.xml
+            classpath:rest-content.xml, classpath:spring-quartz.xml
         </param-value>
     </context-param>
 

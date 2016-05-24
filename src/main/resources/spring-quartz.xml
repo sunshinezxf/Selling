@@ -28,7 +28,7 @@
     <bean id="wechatTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="wechatDetail"></property>
         <property name="cronExpression">
-            <value>0 0 0/2 * * ?</value>
+            <value>0 * * * * ?</value>
         </property>
     </bean>
 
