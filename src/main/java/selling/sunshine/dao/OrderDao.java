@@ -16,4 +16,5 @@ public interface OrderDao {
     ResultData updateOrder(Order order);
 
     ResultData sumOrder();
+    
 }

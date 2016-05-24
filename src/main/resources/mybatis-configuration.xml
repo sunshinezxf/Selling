@@ -16,5 +16,6 @@
         <mapper resource="selling/sunshine/mapper/shipmentconfig.xml"/>
         <mapper resource="selling/sunshine/mapper/refundconfig.xml"/>
         <mapper resource="selling/sunshine/mapper/orderbill.xml"/>
+        <mapper resource="selling/sunshine/mapper/orderpool.xml"/>
     </mappers>
 </configuration>

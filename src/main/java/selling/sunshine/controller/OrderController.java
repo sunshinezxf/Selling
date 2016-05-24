@@ -335,4 +335,15 @@ public class OrderController {
         }
         return charge;
     }
+
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/orderPool")
+    public ResultData sumOrderPool() {
+		ResultData resultData=new ResultData();
+		resultData=orderService.poolOrder();
+		return resultData;
+	}
+
+
+
 }
