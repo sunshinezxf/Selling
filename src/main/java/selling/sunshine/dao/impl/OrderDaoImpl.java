@@ -140,12 +140,19 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
                     }
                     toDelete.add(primaryItem);
                     primary.remove(primaryItem);
+                    if(primary.isEmpty())break;
                     primaryItem = primary.get(0);
                 }
                 if (toDelete.size() > 0) {
                     sqlSession.delete("selling.order.item.delete", toDelete);
                 }
                 if (now.size() > 0) {
+                	for(OrderItem item : now) {
+                		item.setOrderItemId(IDGenerator.generate("ORI"));
+                		Order temp = new Order();
+                		temp.setOrderId(order.getOrderId());
+                		item.setOrder(temp);
+                	}
                     sqlSession.insert("selling.order.item.insertBatch", now);
                 }
                 result.setData(order);

@@ -51,8 +51,8 @@
     <update id="update" parameterType="selling.sunshine.model.DepositBill" useGeneratedKeys="false">
         UPDATE deposit_bill
         <set>
-            <if test="agent.id != null and agent.id != ''">
-                agent_id = #{agent.id},
+            <if test="agent.agentId != null and agent.agentId != ''">
+                agent_id = #{agent.agentId},
             </if>
             <if test="channel != null and channel != ''">
                 channel_name = #{channel},
