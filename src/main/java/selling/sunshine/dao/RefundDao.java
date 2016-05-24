@@ -12,4 +12,6 @@ public interface RefundDao {
     ResultData insertRefundConfig(RefundConfig config);
 
     ResultData queryRefundConfig(Map<String, Object> condition);
+    
+    ResultData refund();
 }

@@ -23,8 +23,18 @@
                     </p>
 
                     <p class="form-group">
-                        <label class="col-sm-4 col-md-4 col-lg-3">返现比例(百分比):</label>&nbsp;&nbsp;
-                        <input type="number" id="config_percent" name="percent" value="0"
+                        <label class="col-sm-4 col-md-4 col-lg-3">一级(百分比):</label>&nbsp;&nbsp;
+                        <input type="number" id="config_percent_1" name="percent" value="0"
+                               autocomplete="off"/>&nbsp;<span>%</span>
+                    </p>
+                    <p class="form-group">
+                        <label class="col-sm-4 col-md-4 col-lg-3">二级(百分比):</label>&nbsp;&nbsp;
+                        <input type="number" id="config_percent_2" name="percent" value="0"
+                               autocomplete="off"/>&nbsp;<span>%</span>
+                    </p>
+                     <p class="form-group">
+                        <label class="col-sm-4 col-md-4 col-lg-3">三级(百分比):</label>&nbsp;&nbsp;
+                        <input type="number" id="config_percent_3" name="percent" value="0"
                                autocomplete="off"/>&nbsp;<span>%</span>
                     </p>
 

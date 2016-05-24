@@ -35,7 +35,6 @@
         <result property="price" column="price"></result>
         <result property="refundAmount" column="refund_amount"></result>
         <result property="poolDate" column="pool_date"></result>
-        <result property="qualified" column="qualified"></result>
         <association property="agent" column="agentId = agent_id"
 			select="agentQuery"></association>
 		<association property="goods" column="goodsId = goods_id"
@@ -89,9 +88,6 @@
 			quantity = #{quantity},
 			price = #{price},
 			pool_date=#{poolDate},
-			<if test="qualified != null and qualified != ''">
-			    qualified = #{qualified},
-			</if>
 			<if test="refundAmount != null and refundAmount != ''">
 			    refund_amount = #{refundAmount},
 			</if>
