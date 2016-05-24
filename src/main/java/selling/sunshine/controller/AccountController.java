@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import selling.sunshine.model.Agent;
 import selling.sunshine.model.DepositBill;
+import selling.sunshine.model.Order;
+import selling.sunshine.model.OrderBill;
 import selling.sunshine.model.User;
 import selling.sunshine.service.AgentService;
 import selling.sunshine.service.BillService;
@@ -101,8 +103,16 @@ public class AccountController {
 	        view.addObject("prompt", prompt);
 	        view.setViewName("/agent/prompt");
         } else if(billId.startsWith("ODB")){
+        	String orderId = "";
+        	Map<String, Object> condition = new HashMap<String, Object>();
+        	condition.put("billId", billId);
+        	ResultData billFetchData = billService.fetchOrderBill(condition);
+        	if(billFetchData.getResponseCode() == ResponseCode.RESPONSE_OK){
+        		OrderBill orderBill = ((List<OrderBill>)billFetchData.getData()).get(0);
+        		orderId = orderBill.getOrder().getOrderId();
+        	}
         	if (!StringUtils.isEmpty(result) && result.equals("success")) {
-	            prompt = new Prompt("提示", "付款成功!", "/agent/order/manage/2");
+	            prompt = new Prompt("付款成功", "订单号：" + orderId + "，请等待发货", "/agent/order/manage/2");
 	        } else {
 	            prompt = new Prompt(PromptCode.WARNING, "提示", "对不起,您的付款失败了，请联系工作人员.", "/agent/order/manage/2");
 	        }

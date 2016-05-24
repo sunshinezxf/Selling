@@ -97,4 +97,18 @@ public class OrderServiceImpl implements OrderService {
         }
         return result;
     }
+
+	@Override
+	public ResultData cancel(Order order) {
+		ResultData result = new ResultData();
+        ResultData cancelResponse = orderDao.cancelOrder(order);
+        result.setResponseCode(cancelResponse.getResponseCode());
+        if (cancelResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(cancelResponse.getData());
+        } else {
+            result.setDescription(cancelResponse.getDescription());
+        }
+        return result;
+	}
+
 }
