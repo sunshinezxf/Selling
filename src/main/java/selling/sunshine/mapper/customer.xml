@@ -15,17 +15,10 @@
         <result property="createAt" column="create_time"></result>
     </resultMap>
 
-    <resultMap id="agentVo" type="selling.sunshine.model.Agent">
+    <resultMap id="agentLiteVo" type="selling.sunshine.model.lite.Agent">
         <result property="agentId" column="agent_id"></result>
         <result property="name" column="agent_name"></result>
-        <result property="gender" column="agent_gender"></result>
         <result property="phone" column="agent_phone"></result>
-        <result property="address" column="agent_address"></result>
-        <result property="wechat" column="agent_wechat"></result>
-        <result property="password" column="agent_password"></result>
-        <result property="granted" column="agent_granted"></result>
-        <result property="blockFlag" column="block_flag"></result>
-        <result property="createAt" column="create_time"></result>
     </resultMap>
 
     <resultMap id="customerVo" type="selling.sunshine.model.Customer">
@@ -35,7 +28,7 @@
         <result property="createAt" column="create_time"></result>
         <association property="address" column="customerId = customer_id" select="addressQuery"></association>
         <association property="phone" column="customerId = customer_id" select="phoneQuery"></association>
-        <association property="agent" column="agentId = agent_id" select="agentQuery"></association>
+        <association property="agent" column="agentId = agent_id" select="agentLiteQuery"></association>
     </resultMap>
 
     <select id="query" parameterType="java.util.Map" resultMap="customerVo">
@@ -75,8 +68,8 @@
         AND block_flag = 0
     </select>
 
-    <select id="agentQuery" parameterType="java.util.Map" resultMap="agentVo">
-        SELECT agent_id, agent_name, agent_gender, agent_phone, agent_address, agent_password, agent_wechat, agent_granted, block_flag, create_time
+    <select id="agentLiteQuery" parameterType="java.util.Map" resultMap="agentLiteVo">
+        SELECT agent_id, agent_name, agent_phone
         FROM agent
         WHERE agent_id = #{agentId}
     </select>

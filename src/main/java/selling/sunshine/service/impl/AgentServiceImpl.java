@@ -89,6 +89,7 @@ public class AgentServiceImpl implements AgentService {
         if (agent.getCoffer() < money) {
             result.setResponseCode(ResponseCode.RESPONSE_ERROR);
             result.setDescription("账户余额不足");
+            return result;
         }
         agent.setCoffer(agent.getCoffer() - money);
         ResultData updateResponse = updateAgent(agent);
