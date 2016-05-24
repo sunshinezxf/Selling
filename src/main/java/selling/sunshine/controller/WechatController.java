@@ -17,7 +17,6 @@ import java.util.Comparator;
 /**
  * Created by sunshine on 5/24/16.
  */
-@RequestMapping("/wechat")
 @RestController
 public class WechatController {
     private Logger logger = LoggerFactory.getLogger(WechatController.class);

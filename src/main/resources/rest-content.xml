@@ -93,6 +93,8 @@
                 /customer/add = roles[agent]
                 /customer/modify = roles[agent]
 
+                /wechat = anon
+
                 /** = authc
             </value>
         </property>
