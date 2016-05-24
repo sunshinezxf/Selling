@@ -17,10 +17,9 @@ public class RefundConfig extends Entity {
 
    
 
-	public RefundConfig(String refundConfigId, Goods goods, int amountTrigger,
+	public RefundConfig(Goods goods, int amountTrigger,
 			double level1Percent, double level2Percent, double level3Percent) {
 		this();
-		this.refundConfigId = refundConfigId;
 		this.goods = goods;
 		this.amountTrigger = amountTrigger;
 		this.level1Percent = level1Percent;

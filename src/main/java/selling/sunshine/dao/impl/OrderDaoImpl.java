@@ -247,8 +247,8 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
 						if (Integer.parseInt(resultList.get(i)
 								.get("quantity").toString())>=config.getAmountTrigger()) {
 							pool.setBlockFlag(false);
-							pool.setRefundAmount(Double.parseDouble(resultList.get(i).get("price")
-									.toString())*config.getPercent());
+							//pool.setRefundAmount(Double.parseDouble(resultList.get(i).get("price")
+							//		.toString())*config.getLevel1Percent());
 						}
 					}
 				}
