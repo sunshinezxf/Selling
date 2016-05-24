@@ -194,37 +194,44 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
 		// 获取当月的前一个月的日期 xxxx年xx月
 		Calendar c = Calendar.getInstance();
 		/*
-		c.add(Calendar.MONTH, -1);
-		*/
+		 * c.add(Calendar.MONTH, -1);
+		 */
 		Timestamp lastMonth = new Timestamp(c.getTimeInMillis());
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM");
 		String date = dateFormat.format(lastMonth);
-		Map<String, Object> condition = new HashMap<>();
-		condition.put("date", date+"%");
 		try {
+			Map<String, Object> condition = new HashMap<>();
+			condition.put("date", date + "%");
+
 			List<Map<String, Object>> resultList = sqlSession.selectList(
 					"selling.order.pool.sumOrder", condition);
+			Map<String, Object> configCondition = new HashMap<>();
+			List<RefundConfig> configList=sqlSession.selectList("selling.refund.config.query", configCondition);
 			for (int i = 0; i < resultList.size(); i++) {
-				OrderPool pool=new OrderPool();
+				OrderPool pool = new OrderPool();
 				pool.setOrderPoolId(IDGenerator.generate("OPL"));
-				pool.setQuantity(Integer.parseInt(resultList.get(i).get("quantity").toString()));
-				pool.setPrice(Double.parseDouble(resultList.get(i).get("price").toString()));
+				pool.setQuantity(Integer.parseInt(resultList.get(i)
+						.get("quantity").toString()));
+				pool.setPrice(Double.parseDouble(resultList.get(i).get("price")
+						.toString()));
 				pool.setPoolDate(new Date(c.getTimeInMillis()));
-				Agent agent=new Agent();
-				agent.setAgentId((String)resultList.get(i).get("agent"));
+				Agent agent = new Agent();
+				agent.setAgentId((String) resultList.get(i).get("agent"));
 				pool.setAgent(agent);
-				Goods goods=new Goods();
-				goods.setGoodsId((String)resultList.get(i).get("goods"));
+				Goods goods = new Goods();
+				goods.setGoodsId((String) resultList.get(i).get("goods"));
 				pool.setGoods(goods);
-				RefundConfig refundConfig=new RefundConfig();
-				refundConfig.setRefundConfigId("RFC11111");
-				pool.setRefundConfig(refundConfig);
-				pool.setQualified(0);
+                for (RefundConfig config:configList) {
+					if (config.getGoods().getGoodsId().equals((String) resultList.get(i).get("goods"))) {
+						pool.setRefundConfig(config);
+					}
+				}
+				// pool.setQualified(1);
 				sqlSession.insert("selling.order.pool.insert", pool);
-			}			
+			}
 			result.setData(resultList);
 			result.setResponseCode(ResponseCode.RESPONSE_OK);
-			
+
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			result.setResponseCode(ResponseCode.RESPONSE_ERROR);

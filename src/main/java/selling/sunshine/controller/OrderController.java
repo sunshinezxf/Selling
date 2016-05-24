@@ -340,7 +340,7 @@ public class OrderController {
     @RequestMapping(method = RequestMethod.GET, value = "/orderPool")
     public ResultData sumOrderPool() {
 		ResultData resultData=new ResultData();
-		orderService.poolOrder();
+		resultData=orderService.poolOrder();
 		return resultData;
 	}
 
