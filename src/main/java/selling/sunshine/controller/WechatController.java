@@ -15,6 +15,7 @@ import selling.sunshine.utils.PlatformConfig;
 import selling.sunshine.utils.WechatUtil;
 import selling.wechat.model.Follower;
 import selling.wechat.model.InMessage;
+import selling.wechat.model.TextOutMessage;
 import selling.wechat.utils.XStreamFactory;
 
 import javax.servlet.ServletInputStream;
@@ -23,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 
 /**
  * Created by sunshine on 5/24/16.
@@ -65,7 +67,7 @@ public class WechatController {
             String input = WechatUtil.inputStream2String(stream);
             XStream content = XStreamFactory.init(false);
             content.alias("xml", InMessage.class);
-            InMessage message = (InMessage) content.fromXML(input);
+            final InMessage message = (InMessage) content.fromXML(input);
             switch (message.getMsgType()) {
                 case "event":
                     if (message.getEvent().equals("subscribe")) {
@@ -77,7 +79,14 @@ public class WechatController {
                             }
                         };
                         thread.start();
-                        return "";
+                        content.alias("xml", TextOutMessage.class);
+                        TextOutMessage result = new TextOutMessage();
+                        result.setFromUserName(message.getToUserName());
+                        result.setToUserName(message.getFromUserName());
+                        result.setCreateTime(new Date().getTime());
+                        result.setContent("欢迎您关注云草纲目!");
+                        String xml = content.toXML(result);
+                        return xml;
                     } else if (message.getEvent().equals("unsubscribe")) {
                         Thread thread = new Thread() {
                             @Override
