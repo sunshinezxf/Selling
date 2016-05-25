@@ -66,11 +66,13 @@
                 #elseif(${status} == "SUBMITTED" && ${operation} == "VIEW")
                 <div class="weui_btn_area">
                     <a class="weui_btn weui_btn_primary" id="place_order_btn">确认下单</a>
+                    <a class="weui_btn weui_btn_warn" id="cancel_order_btn">取消订单</a>
                 </div>
                 #elseif(${status} == "SAVED" && ${operation} == "VIEW")
                 <div class="weui_btn_area">
+                 	<a class="weui_btn weui_btn_primary" id="place_order_btn">确认下单</a>
                     <a class="weui_btn weui_btn_plain_primary" id="modify_order_btn">修改订单</a>
-                    <a class="weui_btn weui_btn_primary" id="place_order_btn">确认下单</a>
+                    <a class="weui_btn weui_btn_warn" id="cancel_order_btn">取消订单</a>
                 </div>
                 #end
             </div>
@@ -164,6 +166,9 @@
 		window.location = "${path.concat('/agent/order/modify/')}" + "${order.orderId}";
 	});
     #end
+    $("#cancel_order_btn").click(function(){
+    	window.location = "${path.concat('/order/cancel/')}" + "${order.orderId}";
+    });
     $("#save_order_btn").click(function(){
     	if(!$.check_order()){
     		return;

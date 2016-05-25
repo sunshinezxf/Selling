@@ -191,6 +191,23 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
 			return result;
 		}
 	}
+	
+	@Override
+	public ResultData cancelOrder(Order order) {
+		ResultData result = new ResultData();
+		synchronized(lock){
+			try{
+				sqlSession.update("selling.order.update", order);
+				result.setData(order);
+			} catch (Exception e) {
+				logger.error(e.getMessage());
+				result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+				result.setDescription(e.getMessage());
+			} finally {
+				return result;
+			}				
+		}
+	}
 
 	@Override
 	public ResultData sumOrder() {

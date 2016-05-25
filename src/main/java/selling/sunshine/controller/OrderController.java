@@ -142,6 +142,36 @@ public class OrderController {
         view.setViewName("");
         return view;
     }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/cancel/{orderId}")
+    public ModelAndView cancelOrder(@PathVariable("orderId") String orderId, RedirectAttributes attr){
+    	ModelAndView view = new ModelAndView();
+    	Subject subject = SecurityUtils.getSubject();
+    	User user = (User) subject.getPrincipal();
+    	Map<String, Object> condition = new HashMap<String, Object>();
+    	condition.put("agentId", user.getAgent().getAgentId());
+    	condition.put("orderId", orderId);
+    	ResultData orderFetchData = orderService.fetchOrder(condition);
+    	if(orderFetchData.getResponseCode() != ResponseCode.RESPONSE_OK){
+    		 Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "取消失败", "/agent/order/manage/0");
+    		 attr.addFlashAttribute("prompt", prompt);
+             view.setViewName("redirect:/agent/prompt");
+             return view;
+    	}
+    	Order order = ((List<Order>)orderFetchData.getData()).get(0);
+		order.setBlockFlag(true);
+		ResultData modifyFetchData = orderService.cancel(order);
+		if(modifyFetchData.getResponseCode() != ResponseCode.RESPONSE_OK){
+			 Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "取消失败", "/agent/order/manage/0");
+			 attr.addFlashAttribute("prompt", prompt);
+             view.setViewName("redirect:/agent/prompt");
+             return view;
+		}
+		Prompt prompt = new Prompt("提示", "成功", "/agent/order/manage/0");
+		attr.addFlashAttribute("prompt", prompt);
+        view.setViewName("redirect:/agent/prompt");
+    	return view;
+    }
 
     @RequestMapping(method = RequestMethod.POST, value = "/modify/{type}")
     public ModelAndView modifyOrder(@Valid OrderItemForm form, BindingResult result, RedirectAttributes attr, @PathVariable("type") String type) {
