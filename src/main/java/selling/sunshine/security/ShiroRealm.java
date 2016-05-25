@@ -1,13 +1,10 @@
 package selling.sunshine.security;
 
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
-import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.PrincipalCollection;
-import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import selling.sunshine.model.Role;
 import selling.sunshine.model.User;
@@ -42,11 +39,6 @@ public class ShiroRealm extends AuthorizingRealm {
         if (loginResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             user = (User) loginResponse.getData();
             if (user != null) {
-                Subject subject = SecurityUtils.getSubject();
-                if (subject != null) {
-                    Session session = subject.getSession();
-                    session.setAttribute("current", user);
-                }
                 return new SimpleAuthenticationInfo(user, token.getPassword(), getName());
             }
         }

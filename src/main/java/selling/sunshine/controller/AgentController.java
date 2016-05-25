@@ -19,8 +19,6 @@ import selling.sunshine.form.AgentLoginForm;
 import selling.sunshine.form.OrderItemForm;
 import selling.sunshine.form.SortRule;
 import selling.sunshine.model.*;
-import selling.sunshine.model.Agent;
-import selling.sunshine.model.lite.*;
 import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.*;
@@ -63,6 +61,20 @@ public class AgentController {
 
     @Autowired
     private ShipmentService shipmentService;
+
+    @RequestMapping(method = RequestMethod.GET, value = "/bind")
+    public ModelAndView bind() {
+        ModelAndView view = new ModelAndView();
+        return view;
+    }
+
+
+    @RequestMapping(method = RequestMethod.POST, value = "/bind")
+    public ModelAndView bind(String openId, AgentLoginForm form) {
+        ModelAndView view = new ModelAndView();
+
+        return view;
+    }
 
     @RequestMapping(method = RequestMethod.GET, value = "/me/index")
     public ModelAndView index() {
