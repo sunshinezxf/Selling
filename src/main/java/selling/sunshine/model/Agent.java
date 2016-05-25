@@ -2,6 +2,10 @@ package selling.sunshine.model;
 
 import org.springframework.util.StringUtils;
 
+
+
+
+
 /**
  * Created by sunshine on 4/7/16.
  */
@@ -15,6 +19,7 @@ public class Agent extends Entity {
     private String wechat;
     private boolean granted;
     private double coffer;
+    private selling.sunshine.model.lite.Agent upperAgent;
 
     public Agent() {
         super();
@@ -42,6 +47,13 @@ public class Agent extends Entity {
 			double coffer) {
 		this(name, gender, phone, address, password, wechat);
 		this.coffer = coffer;
+	}
+    
+    public Agent(String agentId, String name, String gender, String phone,
+			String address, String password, String wechat, boolean granted,
+			double coffer,selling.sunshine.model.lite.Agent upperAgent) {
+		this(agentId,name, gender, phone, address, password, wechat,granted,coffer);
+		this.upperAgent = upperAgent;
 	}
 
 	public String getAgentId() {
@@ -115,6 +127,16 @@ public class Agent extends Entity {
 	public void setCoffer(double coffer) {
 		this.coffer = coffer;
 	}
+
+	public selling.sunshine.model.lite.Agent getUpperAgent() {
+		return upperAgent;
+	}
+
+	public void setUpperAgent(selling.sunshine.model.lite.Agent upperAgent) {
+		this.upperAgent = upperAgent;
+	}
+	
+	
     
     
 }
