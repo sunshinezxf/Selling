@@ -19,31 +19,33 @@
             <div class="bd">
                 <div class="weui_panel">
                     <div class="weui_cells weui_cells_access clear-margin-top">
-                        <a class="weui_cell" id="add_order_btn">
+                        <div class="weui_cell" >
                             <div class="weui_cell_bd weui_cell_primary">
-                                <p>添加订货单</p>
+                                <a id="add_order_btn" class="weui_btn weui_btn_primary">添加订货单</a>
                             </div>
-                            <div class="weui_cell_ft"></div>
-                        </a>
+                        </div>
                     </div>
                     <div class="list-cell" id="order_item_list">
                        <!-- 改成了动态添加 -->
                     </div>
                 </div>
                 <div class="weui_btn_area">
-                    <a class="weui_btn weui_btn_plain_primary" id="save_order_btn">保存订单</a>
-                    <a class="weui_btn weui_btn_primary" id="place_order_btn">确认下单</a>
+                    <a class="weui_btn weui_btn_plain_primary" style="display:none" id="save_order_btn">保存订单</a>
                 </div>
             </div>
         </div>
     </div>
     <div class="order_summary">
         <div class="weui_panel">
-            <div class="weui_panel_bd">
-                <div id="total_goods" class="weui_media_box">
-                    总计:
-                    <p class="weui_media_text">共计0元</p>
-                </div>
+            <div class="weui_cell">
+            	<div class="weui_cell_bd weui_cell_primary">
+            		<div id="total_goods">
+            		</div>		
+            		<p id="total_goods_price" >共计:0元<p>
+            	</div>
+            	<div class="weui_cell_ft">
+            		<a class="weui_btn weui_btn_primary" id="place_order_btn">&nbsp&nbsp&nbsp下单&nbsp&nbsp&nbsp</a>
+            	</div>
             </div>
         </div>
     </div>
@@ -106,11 +108,17 @@
         var total_price = 0;
         for(var order_info in order_info_list) {
         	total_price += order_info_list[order_info]['order_item_price'];
-        	$("#total_goods").append("<p class='weui_media_text'>" 
+        	$("#total_goods").prepend("<p class='weui_media_text'>" 
         		+ order_info + ": " + order_info_list[order_info]['quantity'] +
  				"件, 共" + order_info_list[order_info]['order_item_price'] + "元</p>")
         }
-        $("#total_goods").append(" <p class='weui_media_text'>共计" + total_price + "元</p>");
+        $("#total_goods_price").html("共计:" + total_price + "元");
+        //判断是否总价是0，决定显示保存按钮与否
+        if(total_price == 0){
+        	$("#save_order_btn").hide();
+        } else {
+        	$("#save_order_btn").fadeIn();
+        }
     }
     //地址美化长度
     $.addressBeautify = function(){

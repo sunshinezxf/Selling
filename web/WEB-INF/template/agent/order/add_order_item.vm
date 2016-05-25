@@ -175,7 +175,8 @@
     		$("#dialog").fadeIn();
     		return false;
     	}
-    	if(isNaN($("#goods_quantity").val()) || parseInt($("#goods_quantity").val()) <= 0) {
+    	var reNum =/^[0-9]*$/;
+      	if(!reNum.test($("#goods_quantity").val()) || $("#goods_quantity").val() == ""){
     		$("#dialog").find(".weui_dialog_bd").html("数量格式不正确");
     		$("#dialog").fadeIn();
     		return false;
