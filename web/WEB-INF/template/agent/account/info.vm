@@ -9,9 +9,13 @@
     <div class="hd">
         <h1 class="page_title">我的账户</h1>
     </div>
-    <div class="bd">
-        #parse("/agent/account/rebate.vm")
-    </div>
+    <div style="text-align:center;">
+	    <h1 style="font-weight:normal">￥${agent.coffer}</h1>
+	</div>
+	<div class="weui_btn_area">
+		<a href="${path.concat('/account/deposit')}" class="weui_btn weui_btn_primary operation">充值</a>
+	    <a class="weui_btn weui_btn_plain_primary operation">提现</a>
+	</div>
     <div class="weui_panel weui_panel_access">
 	    <a class="weui_panel_ft" href="${path.concat('/agent/statement')}">
 	        查看对账单
