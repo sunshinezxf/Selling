@@ -32,4 +32,13 @@ public class FollowerServiceImpl implements FollowerService {
         }
         return result;
     }
+
+    @Override
+    public ResultData unsubscribe(String openId) {
+        ResultData result = new ResultData();
+        ResultData blockResponse = followerDao.blockFollower(openId);
+        result.setResponseCode(blockResponse.getResponseCode());
+        result.setDescription(blockResponse.getDescription());
+        return result;
+    }
 }

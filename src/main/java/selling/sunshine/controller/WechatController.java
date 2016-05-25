@@ -69,15 +69,23 @@ public class WechatController {
             switch (message.getMsgType()) {
                 case "event":
                     if (message.getEvent().equals("subscribe")) {
-                        logger.debug("subscribe a new follower");
-                        Thread r = new Thread() {
+                        Thread thread = new Thread() {
                             @Override
                             public void run() {
                                 Follower follower = WechatUtil.queryUserInfo(message.getFromUserName(), PlatformConfig.getAccessToken());
                                 followerService.subscribe(follower);
                             }
                         };
-                        r.start();
+                        thread.start();
+                        return "";
+                    } else if (message.getEvent().equals("unsubscribe")) {
+                        Thread thread = new Thread() {
+                            @Override
+                            public void run() {
+                                followerService.unsubscribe(message.getFromUserName());
+                            }
+                        };
+                        thread.start();
                         return "";
                     }
                     break;

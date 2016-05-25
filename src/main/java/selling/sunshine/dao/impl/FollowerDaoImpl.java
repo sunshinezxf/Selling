@@ -35,4 +35,20 @@ public class FollowerDaoImpl extends BaseDao implements FollowerDao {
             }
         }
     }
+
+    @Override
+    public ResultData blockFollower(String openId) {
+        ResultData result = new ResultData();
+        synchronized (lock) {
+            try {
+                sqlSession.update("selling.wechat.block", openId);
+            } catch (Exception e) {
+                logger.error(e.getMessage());
+                result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+                result.setDescription(e.getMessage());
+            } finally {
+                return result;
+            }
+        }
+    }
 }

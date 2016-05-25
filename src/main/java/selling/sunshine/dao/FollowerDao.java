@@ -8,4 +8,6 @@ import selling.wechat.model.Follower;
  */
 public interface FollowerDao {
     ResultData insertFollower(Follower follower);
+
+    ResultData blockFollower(String openId);
 }

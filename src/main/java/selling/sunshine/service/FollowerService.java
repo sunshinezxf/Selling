@@ -8,4 +8,6 @@ import selling.wechat.model.Follower;
  */
 public interface FollowerService {
     ResultData subscribe(Follower follower);
+
+    ResultData unsubscribe(String openId);
 }

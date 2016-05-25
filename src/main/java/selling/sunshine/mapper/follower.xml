@@ -12,7 +12,15 @@
     </resultMap>
 
     <insert id="insert" parameterType="selling.wechat.model.Follower" useGeneratedKeys="false">
-        INSERT INTO follower(follower_wechat_id, follower_nickname, follower_gender, follower_city, follower_province, block_flag, create_time)
+        REPLACE INTO follower(follower_wechat_id, follower_nickname, follower_gender, follower_city, follower_province, block_flag, create_time)
         VALUES (#{openId}, #{nickname}, #{gender}, #{city}, #{province}, #{blockFlag}, #{createAt})
     </insert>
+
+    <update id="block">
+        UPDATE follower
+        <set>
+            block_flag = FALSE
+        </set>
+        WHERE follower_wechat_id = #{openId}
+    </update>
 </mapper>
