@@ -125,7 +125,7 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
 	                }
 	                if (now.size() == 0) {
 	                    toDelete.addAll(primary);
-	                    sqlSession.delete("selling.orderItem.delete", toDelete);
+	                    sqlSession.delete("selling.order.item.delete", toDelete);
 	                }
 	                OrderItem primaryItem = primary.get(0);
 	                OrderItem nowItem = now.get(0);
