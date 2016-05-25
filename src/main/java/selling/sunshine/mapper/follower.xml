@@ -19,7 +19,7 @@
     <update id="block">
         UPDATE follower
         <set>
-            block_flag = FALSE
+            block_flag = TRUE
         </set>
         WHERE follower_wechat_id = #{openId}
     </update>
