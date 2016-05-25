@@ -16,6 +16,12 @@
         <association property="upperAgent" column="agentId = upper_agent_id" select="agentLiteQuery"></association>
     </resultMap>
 
+	<resultMap id="agentLiteVo" type="selling.sunshine.model.lite.Agent">
+        <result property="agentId" column="agent_id"></result>
+        <result property="name" column="agent_name"></result>
+        <result property="phone" column="agent_phone"></result>
+    </resultMap>
+
     <insert id="insert" parameterType="selling.sunshine.model.Agent" useGeneratedKeys="false">
         INSERT INTO agent(agent_id, agent_name, agent_gender, agent_phone, agent_address, agent_password, agent_wechat, agent_granted, block_flag, create_time,agent_coffer)
         VALUES (#{agentId}, #{name}, #{gender}, #{phone}, #{address}, #{password}, #{wechat}, #{granted}, #{blockFlag}, #{createAt},#{coffer})
