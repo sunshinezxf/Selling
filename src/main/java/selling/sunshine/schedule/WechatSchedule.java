@@ -12,6 +12,6 @@ public class WechatSchedule {
     private Logger logger = LoggerFactory.getLogger(WechatSchedule.class);
 
     public void schedule() {
-        PlatformConfig.accessToken = WechatUtil.queryAccessToken();
+        PlatformConfig.setAccessToken(WechatUtil.queryAccessToken());
     }
 }

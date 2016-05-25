@@ -10,14 +10,11 @@ import java.util.Properties;
  */
 public class PlatformConfig {
 
-    public static String accessToken;
+    private static String accessToken;
 
     private static Properties props = new Properties();
 
     static {
-        if (StringUtils.isEmpty(accessToken)) {
-            accessToken = WechatUtil.queryAccessToken();
-        }
         InputStream input = PlatformConfig.class.getClassLoader().getResourceAsStream("selling.properties");
         try {
             props.load(input);
@@ -28,6 +25,17 @@ public class PlatformConfig {
 
     private PlatformConfig() {
 
+    }
+
+    public static String getAccessToken() {
+        if (StringUtils.isEmpty(accessToken)) {
+            accessToken = WechatUtil.queryAccessToken();
+        }
+        return accessToken;
+    }
+
+    public static void setAccessToken(String token) {
+        accessToken = token;
     }
 
     public static String getValue(String key) {

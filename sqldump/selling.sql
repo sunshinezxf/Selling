@@ -304,9 +304,7 @@ CREATE TABLE IF NOT EXISTS `selling`.`refund_config` (
   `refund_config_id` VARCHAR(20) NOT NULL,
   `goods_id` VARCHAR(20) NULL,
   `refund_trigger_amount` INT NOT NULL,
-  `level_one_percent` DOUBLE NOT NULL DEFAULT 0,
-  `level_two_percent` DOUBLE NOT NULL DEFAULT 0,
-  `level_three_percent` DOUBLE NOT NULL DEFAULT 0,
+  `refund_percent` DOUBLE NOT NULL DEFAULT 0,
   `block_flag` TINYINT(1) NOT NULL DEFAULT 0,
   `create_time` DATETIME NOT NULL,
   PRIMARY KEY (`refund_config_id`),
@@ -333,7 +331,7 @@ CREATE TABLE IF NOT EXISTS `selling`.`order_pool` (
   `price` DOUBLE NOT NULL DEFAULT 0,
   `refund_amount` DOUBLE NOT NULL DEFAULT 0,
   `pool_date` DATE NOT NULL,
-  `block_flag` TINYINT(1) NOT NULL DEFAULT 1,
+  `block_flag` TINYINT(1) NOT NULL DEFAULT 0,
   `create_time` DATETIME NOT NULL,
   PRIMARY KEY (`pool_id`),
   INDEX `fk_order_pool_agent1_idx` (`agent_id` ASC),
@@ -366,7 +364,7 @@ CREATE TABLE IF NOT EXISTS `selling`.`refund_record` (
   `refund_id` VARCHAR(20) NOT NULL,
   `order_pool_id` VARCHAR(45) NULL,
   `refund_name` VARCHAR(45) NOT NULL,
-  `redund_percent` VARCHAR(45) NOT NULL,
+  `refund_percent` DOUBLE NOT NULL,
   `refund_amount` DOUBLE NOT NULL,
   `block_flag` TINYINT(1) NOT NULL DEFAULT 0,
   `create_time` DATETIME NOT NULL,
@@ -391,6 +389,23 @@ CREATE TABLE IF NOT EXISTS `selling`.`ship_config` (
   `block_flag` TINYINT(1) NOT NULL,
   `create_time` DATETIME NOT NULL,
   PRIMARY KEY (`ship_config_id`))
+  ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `selling`.`follower`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `selling`.`follower` ;
+
+CREATE TABLE IF NOT EXISTS `selling`.`follower` (
+  `follower_wechat_id` VARCHAR(30) NOT NULL,
+  `follower_nickname` VARCHAR(45) NULL,
+  `follower_gender` TINYINT(1) NOT NULL DEFAULT 0,
+  `follower_city` VARCHAR(45) NULL,
+  `follower_province` VARCHAR(45) NULL,
+  `block_flag` TINYINT(0) NOT NULL DEFAULT 0,
+  `create_time` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`follower_wechat_id`))
   ENGINE = InnoDB;
 
 

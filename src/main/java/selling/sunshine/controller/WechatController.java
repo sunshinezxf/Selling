@@ -4,15 +4,18 @@ import com.alibaba.fastjson.JSONObject;
 import com.thoughtworks.xstream.XStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import selling.sunshine.service.FollowerService;
 import selling.sunshine.utils.Encryption;
 import selling.sunshine.utils.PlatformConfig;
 import selling.sunshine.utils.WechatUtil;
-import wechat.model.InMessage;
-import wechat.utils.XStreamFactory;
+import selling.wechat.model.Follower;
+import selling.wechat.model.InMessage;
+import selling.wechat.utils.XStreamFactory;
 
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -27,6 +30,9 @@ import java.util.Comparator;
 @RestController
 public class WechatController {
     private Logger logger = LoggerFactory.getLogger(WechatController.class);
+
+    @Autowired
+    private FollowerService followerService;
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/wechat")
@@ -60,6 +66,22 @@ public class WechatController {
             XStream content = XStreamFactory.init(false);
             content.alias("xml", InMessage.class);
             InMessage message = (InMessage) content.fromXML(input);
+            switch (message.getMsgType()) {
+                case "event":
+                    if (message.getEvent().equals("subscribe")) {
+                        logger.debug("subscribe a new follower");
+                        Thread r = new Thread() {
+                            @Override
+                            public void run() {
+                                Follower follower = WechatUtil.queryUserInfo(message.getFromUserName(), PlatformConfig.getAccessToken());
+                                followerService.subscribe(follower);
+                            }
+                        };
+                        r.start();
+                        return "";
+                    }
+                    break;
+            }
             logger.debug(JSONObject.toJSONString(message));
         } catch (Exception e) {
             logger.error(e.getMessage());

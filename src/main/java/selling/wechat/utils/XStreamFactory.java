@@ -1,4 +1,4 @@
-package wechat.utils;
+package selling.wechat.utils;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.core.util.QuickWriter;
