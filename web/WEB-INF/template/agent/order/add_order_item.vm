@@ -94,11 +94,11 @@
 	    	"<input class='customer_id' type='hidden' name='customerId' value='" + customer_id + "'/>" + 
 	    	"<input class='order_item_id' type='hidden' name='orderItemId' value='0'/>" +
 			"</div>";
-        $("#order_item_list").append(place_order_item);
+        $("#order_item_list").prepend(place_order_item);
         
         //添加修改事件
         var order_item_list = $("#order_item_list").children();
-    	$(order_item_list).eq($(order_item_list).size()-1).children().eq(0).on("click", function(){
+    	$(order_item_list).eq(0).children().eq(0).on("click", function(){
     		isAdd = false;
     		current_modify_dom = this;
     		customer_id = $(this).parent(".weui_cells.weui_cells_access").find(".customer_id").val();
@@ -108,7 +108,7 @@
     		$("#customer_option").fadeIn();
     	});
     	//商品修改事件
-    	$(order_item_list).eq($(order_item_list).size()-1).children().eq(2).on("click", function(){
+    	$(order_item_list).eq(0).children().eq(2).on("click", function(){
     		isAdd = false;
     		current_modify_dom = this;
     		goods_id = $(this).parent(".weui_cells.weui_cells_access").find(".goods_id").val();
@@ -118,7 +118,7 @@
     		$("#goods_option").fadeIn();
     	});
     	//数量修改事件
-    	$(order_item_list).eq($(order_item_list).size()-1).children().eq(3).on("click",function(){
+    	$(order_item_list).eq(0).children().eq(3).on("click",function(){
     		current_modify_dom = this;
     		goods_id = $(this).parent(".weui_cells.weui_cells_access").find(".goods_id").val();
     		goods_name = $(this).find(".weui_cell_ft").html();
@@ -130,7 +130,7 @@
     	});
         
         //添加删除事件
-        $(".weui_cells_tips.delete").on("click",function(){
+        $(order_item_list).eq(0).find(".weui_cells_tips.delete").on("click",function(){
     		$(this).closest(".weui_cells.weui_cells_access").remove();
     		$.calculate();
         });
