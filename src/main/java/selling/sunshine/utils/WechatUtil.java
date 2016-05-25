@@ -42,4 +42,20 @@ public class WechatUtil {
             return result;
         }
     }
+
+    public static final String inputStream2String(InputStream in) throws IOException {
+        if(in == null) {
+            return "";
+        } else {
+            StringBuffer out = new StringBuffer();
+            byte[] b = new byte[4096];
+
+            int n;
+            while((n = in.read(b)) != -1) {
+                out.append(new String(b, 0, n, "UTF-8"));
+            }
+
+            return out.toString();
+        }
+    }
 }

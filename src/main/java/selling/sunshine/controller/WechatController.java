@@ -1,5 +1,7 @@
 package selling.sunshine.controller;
 
+import com.alibaba.fastjson.JSONObject;
+import com.thoughtworks.xstream.XStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -8,8 +10,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import selling.sunshine.utils.Encryption;
 import selling.sunshine.utils.PlatformConfig;
+import selling.sunshine.utils.WechatUtil;
+import wechat.model.InMessage;
+import wechat.utils.XStreamFactory;
 
+import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -44,5 +51,19 @@ public class WechatController {
         return "";
     }
 
-
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value = "/wechat", produces = "text/xml;charset=utf-8")
+    public String handle(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            ServletInputStream stream = request.getInputStream();
+            String input = WechatUtil.inputStream2String(stream);
+            XStream content = XStreamFactory.init(false);
+            content.alias("xml", InMessage.class);
+            InMessage message = (InMessage) content.fromXML(input);
+            logger.debug(JSONObject.toJSONString(message));
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        return "";
+    }
 }
