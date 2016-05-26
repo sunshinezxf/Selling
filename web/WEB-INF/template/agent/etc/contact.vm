@@ -1,0 +1,19 @@
+#parse("/common/util.vm")
+<html lang="zh_CN">
+<head>
+    #parse("/agent/component/init.vm")
+    <title>返现规则</title>
+</head>
+<body ontouchstart>
+<div class="container">
+    <div class="hd">
+    	<h1 class="page_title">联系我们</h1>
+    </div>
+    <div class="weui_cell">
+    	<div class="weui_cell_bd weui_cell_primary">客服电话</div>
+    	<div class="weui_cell_ft">13905160906</div>
+    </div>
+    #parse("/agent/component/navigate.vm")
+</div>
+</body>
+</html>
