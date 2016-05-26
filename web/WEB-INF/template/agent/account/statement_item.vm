@@ -1,3 +1,4 @@
+#foreach($refundRecord in $refundRecords)
 <div class="weui_panel">
     <div class="weui_panel_hd">
         月度电子对账单
@@ -14,35 +15,4 @@
         </div>
     </div>
 </div>
-<div class="weui_panel">
-    <div class="weui_panel_hd">
-        月度电子对账单
-    </div>
-    <div class="weui_panel_bd">
-        <div class="weui_media_box weui_media_text">
-            <h4 class="weui_media_title">三月份返现对账单</h4>
-
-            <p class="weui_media_desc">当期订单总计: 27笔, 金额总计: 9000元, 当期返现:2650元.</p>
-            <ul class="weui_media_info">
-                <li class="weui_media_info_meta">2016年3月15日</li>
-                <li class="weui_media_info_meta">返现</li>
-            </ul>
-        </div>
-    </div>
-</div>
-<div class="weui_panel">
-    <div class="weui_panel_hd">
-        月度电子对账单
-    </div>
-    <div class="weui_panel_bd">
-        <div class="weui_media_box weui_media_text">
-            <h4 class="weui_media_title">二月份返现对账单</h4>
-
-            <p class="weui_media_desc">当期订单总计: 23笔, 金额总计: 7500元, 当期返现:2400元.</p>
-            <ul class="weui_media_info">
-                <li class="weui_media_info_meta">2016年2月15日</li>
-                <li class="weui_media_info_meta">返现</li>
-            </ul>
-        </div>
-    </div>
-</div>
+#end

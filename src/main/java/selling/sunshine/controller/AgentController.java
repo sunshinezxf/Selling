@@ -378,8 +378,6 @@ public class AgentController {
         }
         Agent agent = ((List<Agent>)fetchAgentResponse.getData()).get(0);
     	view.addObject("agent", agent);
-        condition.clear();
-        condition.put("agent", agent);
         ResultData fetchRefundRecordResponse = refundService.fetchRefundRecord(condition);
         if(fetchRefundRecordResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
         	return view;

@@ -10,6 +10,12 @@
 		<association property="agent" column="agentId = agent_id" select="agentLiteQuery"></association>
 	</resultMap>
 	
+	  <resultMap id="agentLiteVo" type="selling.sunshine.model.lite.Agent">
+        <result property="agentId" column="agent_id"></result>
+        <result property="name" column="agent_name"></result>
+        <result property="phone" column="agent_phone"></result>
+    </resultMap>
+	
     <insert id="insert" parameterType="selling.sunshine.model.RefundRecord"
 		useGeneratedKeys="false">
 		INSERT INTO refund_record
