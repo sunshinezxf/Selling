@@ -55,7 +55,7 @@
             AND agent_phone = #{phone}
         </if>
         <if test="agentRefund != null">
-        	And agent_refund = #{agentRefund}
+        	AND agent_refund = #{agentRefund}
         </if>
         <if test="granted != null">
             AND agent_granted = #{granted}
