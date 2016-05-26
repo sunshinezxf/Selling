@@ -93,6 +93,10 @@
             <if test="coffer != null and coffer != ''">
                 agent_coffer = #{coffer},
             </if>
+            <if test="agentRefund != null and agentRefund != ''">
+                agent_refund = #{agentRefund},
+            </if>
+            agent_id = #{agentId}
         </set>
         WHERE agent_id = #{agentId}
     </update>

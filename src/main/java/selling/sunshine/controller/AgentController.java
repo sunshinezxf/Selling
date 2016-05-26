@@ -83,12 +83,14 @@ public class AgentController {
     @RequestMapping(method = RequestMethod.GET, value = "/order/place")
     public ModelAndView placeOrder(String code) {
         ModelAndView view = new ModelAndView();
+        logger.debug("code: " + code);
         if (!StringUtils.isEmpty(code)) {
             oauth(code);
         }
         //获取当前登录的用户
         Subject subject = SecurityUtils.getSubject();
-        if (subject == null) {
+        User user = (User) subject.getPrincipal();
+        if (user == null) {
             if (!StringUtils.isEmpty(code)) {
                 Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "尊敬的代理商，你尚未绑定账号！", "/agent/login");
                 view.addObject("prompt", prompt);
@@ -99,7 +101,6 @@ public class AgentController {
                 return view;
             }
         }
-        User user = (User) subject.getPrincipal();
         //创建查询的删选条件集合
         Map<String, Object> condition = new HashMap<>();
         //查询商品信息

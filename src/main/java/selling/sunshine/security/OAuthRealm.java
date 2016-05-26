@@ -1,5 +1,6 @@
 package selling.sunshine.security;
 
+import com.alibaba.fastjson.JSONObject;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -49,6 +50,7 @@ public class OAuthRealm extends AuthorizingRealm {
         Map<String, Object> condition = new HashMap<>();
         condition.put("wechat", wechat);
         condition.put("blockFlag", false);
+        logger.debug("wechat: " + wechat);
         ResultData fetchResponse = agentService.fetchAgent(condition);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             Agent agent = ((List<Agent>) fetchResponse.getData()).get(0);
@@ -56,8 +58,10 @@ public class OAuthRealm extends AuthorizingRealm {
             condition.put("username", agent.getPhone());
             condition.put("blockFlag", false);
             fetchResponse = userService.fetchUser(condition);
+            logger.debug(JSONObject.toJSONString(fetchResponse));
             if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
                 User user = (User) fetchResponse.getData();
+                logger.debug(JSONObject.toJSONString(user));
                 if (user != null) {
                     return new SimpleAuthenticationInfo(user, token.getPassword(), getName());
                 }
