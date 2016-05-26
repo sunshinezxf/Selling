@@ -50,8 +50,8 @@
 		WHERE agent_id = #{agentId}
 	</select>
 	
-	<select id="query">
-	    SELECT refund_id,redund_name,refund_percent,refund_amount,refund_description,agent_id
+	<select id="query" parameterType="java.util.Map" resultMap="refundRecordVo">
+	    SELECT refund_id,refund_name,refund_percent,refund_amount,refund_description,agent_id
 	    FROM refund_record
 	    WHERE 1 = 1
         <if test="refundRecordId != null and refundRecordId != ''">
