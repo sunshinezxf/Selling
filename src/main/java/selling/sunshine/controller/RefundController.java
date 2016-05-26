@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
 import selling.sunshine.form.RefundConfigForm;
 import selling.sunshine.model.Goods;
 import selling.sunshine.model.RefundConfig;
@@ -14,6 +15,7 @@ import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
 import javax.validation.Valid;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,7 +47,7 @@ public class RefundController {
         }
         Goods goods = new Goods();
         goods.setGoodsId(goodsId);
-        RefundConfig config = new RefundConfig(goods, Integer.parseInt(form.getAmountTrigger()), Double.parseDouble(form.getPercent()) / 100);
+        RefundConfig config = new RefundConfig(goods, Integer.parseInt(form.getAmountTrigger()), Double.parseDouble(form.getLevel1Percent()) / 100,Double.parseDouble(form.getLevel2Percent()) / 100,Double.parseDouble(form.getLevel3Percent()) / 100);
         ResultData createResponse = refundService.createRefundConfig(config);
         if (createResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             view.setViewName("redirect:/refund/config");
@@ -69,4 +71,11 @@ public class RefundController {
         }
         return result;
     }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/record")
+    public ResultData refundRecord() {
+		ResultData resultData=new ResultData();
+		resultData=refundService.refundRecord();
+		return resultData;
+	}
 }

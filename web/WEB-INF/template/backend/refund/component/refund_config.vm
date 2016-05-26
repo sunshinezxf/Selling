@@ -77,7 +77,7 @@
                 }
                 },
                 {
-                    title: "返现比例(百分比)", "mRender": function (data, type, full) {
+                    title: "一级返现(百分比)", "mRender": function (data, type, full) {
                     var url = "${path.concat('/refund/config/goods/')}" + full.goodsId;
                     var option = "";
                     $.ajax({
@@ -87,7 +87,47 @@
                         success: function (result) {
                             var config = result.data;
                             if (result.responseCode == "RESPONSE_OK") {
-                                option += (config.percent * 100) + "%";
+                                option += (config.level1Percent * 100) + "%";
+                            } else {
+                                option += "暂未配置";
+                            }
+                        }
+                    });
+                    return option;
+                }
+                },
+                {
+                    title: "二级返现(百分比)", "mRender": function (data, type, full) {
+                    var url = "${path.concat('/refund/config/goods/')}" + full.goodsId;
+                    var option = "";
+                    $.ajax({
+                        type: "get",
+                        url: url,
+                        async: false,
+                        success: function (result) {
+                            var config = result.data;
+                            if (result.responseCode == "RESPONSE_OK") {
+                                option += (config.level2Percent * 100) + "%";
+                            } else {
+                                option += "暂未配置";
+                            }
+                        }
+                    });
+                    return option;
+                }
+                },
+                {
+                    title: "三级返现(百分比)", "mRender": function (data, type, full) {
+                    var url = "${path.concat('/refund/config/goods/')}" + full.goodsId;
+                    var option = "";
+                    $.ajax({
+                        type: "get",
+                        url: url,
+                        async: false,
+                        success: function (result) {
+                            var config = result.data;
+                            if (result.responseCode == "RESPONSE_OK") {
+                                option += (config.level3Percent * 100) + "%";
                             } else {
                                 option += "暂未配置";
                             }
@@ -118,7 +158,9 @@
                                 var config = result.data;
                                 if (result.responseCode == "RESPONSE_OK") {
                                     $("#config_trigger").val(config.amountTrigger);
-                                    $("#config_percent").val(config.percent * 100);
+                                    $("#config_percent_1").val(config.level1Percent * 100);
+                                    $("#config_percent_2").val(config.level2Percent * 100);
+                                    $("#config_percent_3").val(config.level3Percent * 100);
                                 }
                             }
                         });

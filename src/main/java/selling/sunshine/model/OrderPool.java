@@ -9,19 +9,19 @@ public class OrderPool extends Entity {
 	private double price;
 	private double refundAmount;
 	private Date poolDate;
-	private int qualified;
 	private Agent agent;
 	private Goods goods;
 	private RefundConfig refundConfig;
 
 	public OrderPool() {
 		super();
+		this.setBlockFlag(true);
 	}
 
 	public OrderPool(String orderPoolId, int quantity, double price,
 			double refundAmount, Date poolDate, Agent agent, Goods goods,
-			RefundConfig refundConfig,int qualified) {
-		super();
+			RefundConfig refundConfig) {
+		this();
 		this.orderPoolId = orderPoolId;
 		this.quantity = quantity;
 		this.price = price;
@@ -30,7 +30,6 @@ public class OrderPool extends Entity {
 		this.agent = agent;
 		this.goods = goods;
 		this.refundConfig = refundConfig;
-		this.qualified=qualified;
 	}
 
 	public String getOrderPoolId() {
@@ -97,13 +96,6 @@ public class OrderPool extends Entity {
 		this.refundConfig = refundConfig;
 	}
 
-	public int getQualified() {
-		return qualified;
-	}
-
-	public void setQualified(int qualified) {
-		this.qualified = qualified;
-	}
 	
 	
 

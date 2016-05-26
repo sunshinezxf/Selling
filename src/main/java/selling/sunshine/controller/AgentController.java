@@ -364,6 +364,11 @@ public class AgentController {
     @RequestMapping(method = RequestMethod.GET, value = "/statement")
     public ModelAndView statement() {
         ModelAndView view = new ModelAndView();
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        Map<String, Object> condition = new HashMap<String, Object>();
+        condition.put("agentId", user.getAgent().getAgentId());
+        ResultData fetchAgentResponse = agentService.fetchAgent(condition);
         view.setViewName("/agent/account/statement");
         return view;
     }

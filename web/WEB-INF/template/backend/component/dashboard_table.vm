@@ -9,7 +9,12 @@
     </div>
     
     <div class="row">
-        <button type="button" class="btn btn-success" onclick="javascript:location.href='${path.concat('/order/orderPool')}'">orderPool</button>
+        <div class="col-md-6 col-lg-6">
+            <button type="button" class="btn btn-success" onclick="javascript:location.href='${path.concat('/order/orderPool')}'">orderPool</button>
+        </div>
+        <div class="col-md-6 col-lg-6">
+            <button type="button" class="btn btn-success" onclick="javascript:location.href='${path.concat('/refund/record')}'">refundRecord</button>
+        </div>
     </div>
     
         <div class="row">

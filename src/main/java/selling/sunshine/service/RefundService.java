@@ -12,4 +12,6 @@ public interface RefundService {
     ResultData createRefundConfig(RefundConfig config);
 
     ResultData fetchRefundConfig(Map<String, Object> condition);
+    
+    public ResultData refundRecord();
 }

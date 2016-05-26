@@ -2,21 +2,25 @@
 <html lang="zh_CN">
 <head>
     #parse("/agent/component/init.vm")
-    <title>电子对账单</title>
+    <title>我的返现</title>
 </head>
 <body ontouchstart>
 <div class="container">
     <div class="hd">
         <h1 class="page_title">
-            电子对账单
+            我的返现
         </h1>
-        <p class="page_desc">查看每月的返现概览及详情</p>
     </div>
+    <div style="text-align:center;">
+    	<p class="page_desc">累计返现</p>
+	    <h1 style="font-weight:normal">￥3000.0</h1>
+	</div>
     <div class="bd">
         <div class="weui_cells">
             #parse("/agent/account/statement_item.vm")
         </div>
     </div>
+      #parse("/agent/component/navigate.vm")
 </div>
 </body>
 </html>

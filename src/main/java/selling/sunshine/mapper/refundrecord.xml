@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="selling.refund.record">
+   
+    <insert id="insert" parameterType="selling.sunshine.model.RefundRecord"
+		useGeneratedKeys="false">
+		INSERT INTO refund_record
+		<set>
+		    refund_id=#{refundRecordId},
+			<if test="orderPool != null and orderPool != ''">
+				order_pool_id = #{orderPool.orderPoolId},
+			</if>
+			<if test="refundName != null and refundName != ''">
+				refund_name = #{refundName},
+			</if>
+			<if test="refundDescription != null and refundDescription != ''">
+				refund_description = #{refundDescription},
+			</if>
+			<if test="refundPercent != null and refundPercent != ''">
+				refund_percent = #{refundPercent},
+			</if>
+			<if test="refundAmount != null and refundAmount != ''">
+				refund_amount = #{refundAmount},
+			</if>
+			block_flag = #{blockFlag},
+			create_time = #{createAt}
+		</set>
+    </insert>
+
+</mapper>

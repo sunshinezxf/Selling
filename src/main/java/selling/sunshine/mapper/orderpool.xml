@@ -5,7 +5,9 @@
 	<resultMap id="refundConfigVo" type="selling.sunshine.model.RefundConfig">
 		<result property="refundConfigId" column="refund_config_id"></result>
 		<result property="amountTrigger" column="refund_trigger_amount"></result>
-		<result property="percent" column="refund_percent"></result>
+		<result property="level1Percent" column="level_1_percent"></result>
+		<result property="level2Percent" column="level_2_percent"></result>
+		<result property="level3Percent" column="level_3_percent"></result>
 	</resultMap>
 
 	<resultMap id="goodsVo" type="selling.sunshine.model.Goods">
@@ -14,6 +16,12 @@
 		<result property="price" column="goods_price"></result>
 		<result property="description" column="goods_description"></result>
 	</resultMap>
+	
+	<resultMap id="agentLiteVo" type="selling.sunshine.model.lite.Agent">
+        <result property="agentId" column="agent_id"></result>
+        <result property="name" column="agent_name"></result>
+        <result property="phone" column="agent_phone"></result>
+    </resultMap>
 
 	<resultMap id="agentVo" type="selling.sunshine.model.Agent">
 		<result property="agentId" column="agent_id"></result>
@@ -24,9 +32,11 @@
 		<result property="wechat" column="agent_wechat"></result>
 		<result property="password" column="agent_password"></result>
 		<result property="granted" column="agent_granted"></result>
+		<result property="agentRefund" column="agent_refund"></result>
 		<result property="coffer" column="agent_coffer"></result>
 		<result property="blockFlag" column="block_flag"></result>
 		<result property="createAt" column="create_time"></result>
+		<association property="upperAgent" column="agentId = upper_agent_id" select="agentLiteQuery"></association>
 	</resultMap>
 
     <resultMap id="orderPoolVo" type="selling.sunshine.model.OrderPool">
@@ -35,7 +45,8 @@
         <result property="price" column="price"></result>
         <result property="refundAmount" column="refund_amount"></result>
         <result property="poolDate" column="pool_date"></result>
-        <result property="qualified" column="qualified"></result>
+        <result property="blockFlag" column="block_flag"></result>
+        <result property="createAt" column="create_time"></result>
         <association property="agent" column="agentId = agent_id"
 			select="agentQuery"></association>
 		<association property="goods" column="goodsId = goods_id"
@@ -51,6 +62,11 @@
         <result property="price" column="price"></result>
     </resultMap>
     
+    <resultMap id="queryAgentGoodsVo" type="java.util.Map">
+        <result property="agentId" column="agent_id"></result>
+        <result property="goodsId" column="goods_id"></result>
+    </resultMap>
+    
     <select id="goodsQuery" parameterType="java.util.Map" resultMap="goodsVo">
 		SELECT goods_id, goods_name, goods_price, goods_description
 		FROM goods
@@ -58,17 +74,45 @@
 	</select>
 
 	<select id="refundConfigQuery" parameterType="java.util.Map" resultMap="refundConfigVo">
-		SELECT refund_config_id, refund_trigger_amount, refund_percent
+		SELECT refund_config_id, refund_trigger_amount, level_1_percent,level_2_percent,level_3_percent
 		FROM refund_config
 		WHERE refund_config_id = #{refundConfigId}
 	</select>
+	
+	<select id="agentLiteQuery" parameterType="java.util.Map" resultMap="agentLiteVo">
+        SELECT agent_id, agent_name, agent_phone
+        FROM agent
+        WHERE agent_id = #{agentId}
+    </select>
 
 	<select id="agentQuery" parameterType="java.util.Map" resultMap="agentVo">
-		SELECT agent_id, agent_name, agent_gender, agent_phone, agent_address,
+		SELECT agent_id, upper_agent_id,agent_name, agent_gender, agent_phone, agent_address,
 		agent_password, agent_wechat, agent_granted, agent_coffer, block_flag,
 		create_time
 		FROM agent
 		WHERE agent_id = #{agentId}
+	</select>
+	
+	<select id="query" parameterType="java.util.Map" resultMap="orderPoolVo">
+		SELECT pool_id,agent_id,goods_id,refund_config_id,quantity,price,refund_amount,pool_date,block_flag,create_time
+		FROM order_pool
+		WHERE 1 = 1 
+		<if test="orderPoolId != null and orderPoolId != ''">
+            AND pool_id	 = #{orderPoolId}
+        </if>
+        <if test="agentId != null and agentId != ''">
+            AND agent_id = #{agentId}
+        </if>
+        <if test="goodsId != null and goodsId != ''">
+            AND goods_id = #{goodsId}
+        </if>
+        <if test="poolDate != null and poolDate != ''">
+            AND pool_date = #{poolDate}
+        </if>
+        <if test="blockFlag != null and blockFlag != ''">
+            AND block_flag = #{blockFlag}
+        </if>
+        ORDER BY pool_date
 	</select>
 	
 	<select id="sumOrder" parameterType="java.util.Map" resultMap="sumOrderVo">
@@ -81,6 +125,13 @@
         GROUP BY o.agent_id,i.goods_id
 	</select>
 	
+	<select id="queryAgentGoods" parameterType="java.util.Map" resultMap="queryAgentGoodsVo">
+		SELECT agent_id,goods_id 
+		FROM order_pool
+		WHERE 1 = 1 
+        GROUP BY agent_id,goods_id
+	</select>
+	
 	<insert id="insert" parameterType="selling.sunshine.model.OrderPool"
 		useGeneratedKeys="false">
 		INSERT INTO order_pool
@@ -89,9 +140,6 @@
 			quantity = #{quantity},
 			price = #{price},
 			pool_date=#{poolDate},
-			<if test="qualified != null and qualified != ''">
-			    qualified = #{qualified},
-			</if>
 			<if test="refundAmount != null and refundAmount != ''">
 			    refund_amount = #{refundAmount},
 			</if>
@@ -108,5 +156,18 @@
 			create_time = #{createAt}
 		</set>
 	</insert>
+	
+	<update id="update" parameterType="selling.sunshine.model.OrderPool" useGeneratedKeys="false">
+	   UPDATE order_pool
+	    <set>
+            <if test="refundAmount != null and refundAmount != ''">
+                refund_amount = #{refundAmount},
+            </if>
+            <if test="blockFlag != null and blockFlag != ''">
+                block_flag = #{blockFlag},
+            </if>
+        </set>
+        WHERE pool_id = #{orderPoolId}
+	</update>
 
 </mapper>

@@ -1,6 +1,7 @@
 package selling.sunshine.dao.impl;
 
 import org.apache.ibatis.session.RowBounds;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -242,9 +243,34 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
                 for (RefundConfig config:configList) {
 					if (config.getGoods().getGoodsId().equals((String) resultList.get(i).get("goods"))) {
 						pool.setRefundConfig(config);
+						if (Integer.parseInt(resultList.get(i).get("quantity").toString())>=config.getAmountTrigger()) {
+							pool.setBlockFlag(false);
+							Map<String, Object> level1Con=new HashMap<>();
+							level1Con.put("agentId", (String) resultList.get(i).get("agent"));		
+							Agent agentLevel1=(Agent)sqlSession.selectList("selling.agent.query",level1Con).get(0);
+							if (agentLevel1.getUpperAgent()!=null) {
+								Map<String, Object> level2Con=new HashMap<>();
+								level2Con.put("agentId", agentLevel1.getUpperAgent().getAgentId());				
+								Agent agentLevel2=(Agent)sqlSession.selectList("selling.agent.query",level2Con).get(0);
+								if (agentLevel2.getUpperAgent()!=null) {
+									Map<String, Object> level3Con=new HashMap<>();
+									level2Con.put("agentId", agentLevel2.getUpperAgent().getAgentId());				
+									Agent agentLevel3=(Agent)sqlSession.selectList("selling.agent.query",level3Con).get(0);
+									//当前agent为三级代理商
+                                    pool.setRefundAmount(Double.parseDouble(resultList.get(i).get("price").toString())*config.getLevel3Percent());
+									
+								}else{
+									//当前agent为二级代理商
+								    pool.setRefundAmount(Double.parseDouble(resultList.get(i).get("price").toString())*config.getLevel2Percent());
+								}
+							}else {
+								//当前agent为一级代理商
+								   pool.setRefundAmount(Double.parseDouble(resultList.get(i).get("price").toString())*config.getLevel1Percent());
+							}
+
+						}
 					}
 				}
-				// pool.setQualified(1);
 				sqlSession.insert("selling.order.pool.insert", pool);
 			}
 			result.setData(resultList);

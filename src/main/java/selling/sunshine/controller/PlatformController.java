@@ -96,7 +96,14 @@ public class PlatformController {
             return view;
         }
         try {
-            Admin admin = new Admin(form.getUsername(), form.getPassword());
+        	Map<String, Object> condition=new HashMap<>();
+        	condition.put("username", form.getUsername());
+        	ResultData queryResult=adminService.fetchAdmin(condition);
+        	if (((List<Admin>)queryResult.getData()).size()!=0) {
+        		view.setViewName("redirect:/register");			 
+	            return view;
+			}
+        	Admin admin = new Admin(form.getUsername(), form.getPassword());
             ResultData resultData = adminService.createAdmin(admin);
             if (resultData.getResponseCode() == ResponseCode.RESPONSE_OK) {
                 view.setViewName("redirect:/manage");

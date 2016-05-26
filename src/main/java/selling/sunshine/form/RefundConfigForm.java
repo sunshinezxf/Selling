@@ -11,7 +11,11 @@ public class RefundConfigForm {
     @NotNull
     private String amountTrigger;
     @NotNull
-    private String percent;
+    private String level1Percent;
+    @NotNull
+    private String level2Percent;
+    @NotNull
+    private String level3Percent;
 
     public String getGoodsId() {
         return goodsId;
@@ -29,11 +33,29 @@ public class RefundConfigForm {
         this.amountTrigger = amountTrigger;
     }
 
-    public String getPercent() {
-        return percent;
-    }
+	public String getLevel1Percent() {
+		return level1Percent;
+	}
 
-    public void setPercent(String percent) {
-        this.percent = percent;
-    }
+	public void setLevel1Percent(String level1Percent) {
+		this.level1Percent = level1Percent;
+	}
+
+	public String getLevel2Percent() {
+		return level2Percent;
+	}
+
+	public void setLevel2Percent(String level2Percent) {
+		this.level2Percent = level2Percent;
+	}
+
+	public String getLevel3Percent() {
+		return level3Percent;
+	}
+
+	public void setLevel3Percent(String level3Percent) {
+		this.level3Percent = level3Percent;
+	}
+
+    
 }
