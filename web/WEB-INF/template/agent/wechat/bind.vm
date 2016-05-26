@@ -1,0 +1,21 @@
+#parse("/common/util.vm")
+<html lang="zh_CN">
+<head>
+    #parse("/agent/component/init.vm")
+    <title>账号绑定</title>
+</head>
+<body ontouchstart>
+<div class="container">
+    <div class="hd">
+        <h1 class="page_title">
+            账号绑定
+        </h1>
+
+        <p class="page_desc">成功绑定账号后,无需登录即可开始使用</p>
+    </div>
+    <div class="bd">
+        #parse("/agent/wechat/component/bind_form.vm")
+    </div>
+</div>
+</body>
+</html>

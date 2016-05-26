@@ -55,24 +55,64 @@ public class AgentController {
 
     @Autowired
     private BillService billService;
-    
+
     @Autowired
     private RefundService refundService;
-    
+
     @Autowired
     private ShipmentService shipmentService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/bind")
-    public ModelAndView bind() {
+    public ModelAndView bind(String code) {
         ModelAndView view = new ModelAndView();
+        if (StringUtils.isEmpty(code)) {
+            Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "尊敬的代理商,请通过服务号内菜单入口进入绑定页面", "/agent/bind");
+            view.addObject("prompt", prompt);
+            view.setViewName("/agent/prompt");
+            return view;
+        }
+        String openId = WechatUtil.queryOauthOpenId(code);
+        view.addObject("wechat", openId);
+        view.setViewName("/agent/wechat/bind");
         return view;
     }
 
 
     @RequestMapping(method = RequestMethod.POST, value = "/bind")
-    public ModelAndView bind(String openId, AgentLoginForm form) {
+    public ModelAndView bind(String wechat, @Valid AgentLoginForm form, BindingResult result) {
         ModelAndView view = new ModelAndView();
-
+        if (result.hasErrors() || StringUtils.isEmpty(wechat)) {
+            Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "尊敬的代理商，请输入正确的账号", "/agent/bind");
+            view.addObject("prompt", prompt);
+            view.setViewName("/agent/prompt");
+            return view;
+        }
+        Agent agent = new Agent(form.getPhone(), form.getPassword());
+        ResultData loginResponse = agentService.login(agent);
+        if (loginResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "尊敬的代理商，请输入正确的账号", "/agent/bind");
+            view.addObject("prompt", prompt);
+            view.setViewName("/agent/prompt");
+            return view;
+        }
+        agent = (Agent) loginResponse.getData();
+        agent.setWechat(wechat);
+        ResultData modifyResponse = agentService.updateAgent(agent);
+        if (modifyResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "绑定失败,请稍后重试", "/agent/bind");
+            view.addObject("prompt", prompt);
+            view.setViewName("/agent/prompt");
+            return view;
+        }
+        if (!StringUtils.isEmpty(wechat)) {
+            Subject subject = SecurityUtils.getSubject();
+            if (!subject.isAuthenticated()) {
+                subject.login(new UsernamePasswordToken(wechat, ""));
+            }
+        }
+        Prompt prompt = new Prompt(PromptCode.SUCCESS, "提示", "恭喜您,绑定成功!", "/agent/order/place");
+        view.addObject("prompt", prompt);
+        view.setViewName("/agent/prompt");
         return view;
     }
 
@@ -86,7 +126,6 @@ public class AgentController {
     @RequestMapping(method = RequestMethod.GET, value = "/order/place")
     public ModelAndView placeOrder(String code) {
         ModelAndView view = new ModelAndView();
-        logger.debug("code: " + code);
         if (!StringUtils.isEmpty(code)) {
             oauth(code);
         }
@@ -373,14 +412,14 @@ public class AgentController {
         Map<String, Object> condition = new HashMap<String, Object>();
         condition.put("agentId", user.getAgent().getAgentId());
         ResultData fetchAgentResponse = agentService.fetchAgent(condition);
-        if(fetchAgentResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
-        	return view;
+        if (fetchAgentResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            return view;
         }
-        Agent agent = ((List<Agent>)fetchAgentResponse.getData()).get(0);
-    	view.addObject("agent", agent);
+        Agent agent = ((List<Agent>) fetchAgentResponse.getData()).get(0);
+        view.addObject("agent", agent);
         ResultData fetchRefundRecordResponse = refundService.fetchRefundRecord(condition);
-        if(fetchRefundRecordResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
-        	return view;
+        if (fetchRefundRecordResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            return view;
         }
         List<RefundRecord> refundRecords = (List<RefundRecord>) fetchRefundRecordResponse.getData();
         view.addObject("refundRecords", refundRecords);
@@ -565,7 +604,6 @@ public class AgentController {
     private void oauth(String code) {
         logger.debug("enter oauth method");
         if (!StringUtils.isEmpty(code)) {
-            logger.debug("code: " + code);
             try {
                 String openId = WechatUtil.queryOauthOpenId(code);
                 logger.debug("openId: " + openId);

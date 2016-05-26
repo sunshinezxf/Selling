@@ -1,0 +1,87 @@
+<div class="weui_cells">
+    <form id="agent_bind_form">
+        <input type="hidden" name="wechat" value="${wechat}" autocomplete="off"/>
+
+        <div class="weui_cell">
+            <div class="weui_cell_hd">
+                <label class="weui_label">手机</label>
+            </div>
+            <div class="weui_cell_bd weui_cell_primary">
+                <input class="weui_input" id="agent_phone" name="phone" type="tel" placeholder="填写手机号"
+                       autocomplete="off"/>
+            </div>
+        </div>
+        <div class="weui_cell">
+            <div class="weui_cell_hd">
+                <label class="weui_label">密码</label>
+            </div>
+            <div class="weui_cell_bd weui_cell_primary">
+                <input class="weui_input" id="agent_password" name="password" type="password" placeholder="填写账户密码"
+                       autocomplete="off"/>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="weui_btn_area">
+    <div class="weui_btn_area">
+        <button type="button" class="weui_btn weui_btn_disabled weui_btn_default" id="bind_btn" disabled="disabled">
+            绑定账号
+        </button>
+    </div>
+</div>
+<script>
+    $("#bind_btn").click(function () {
+        $("#agent_bind_form").attr("action", "${path.concat('/agent/bind')}");
+        $("#agent_bind_form").attr("method", "post");
+        $("#agent_bind_form").submit();
+    });
+</script>
+<script>
+
+    $(document).ready(function () {
+        $("#agent_phone").bind("input propertychange", function () {
+            if (bind_validate()) {
+                active();
+            } else {
+                inactive();
+            }
+        })
+        $("#agent_password").bind("input propertychange", function () {
+            if (bind_validate()) {
+                active();
+            } else {
+                inactive();
+            }
+        })
+    });
+
+    function active() {
+        $("#bind_btn").removeAttr("disabled");
+        $("#bind_btn").removeClass("weui_btn_disabled");
+        $("#bind_btn").removeClass("weui_btn_default");
+        $("#bind_btn").addClass("weui_btn_primary");
+    }
+
+    function inactive() {
+        $("#bind_btn").attr("disabled", "disabled");
+        $("#bind_btn").removeClass("weui_btn_primary");
+        $("#bind_btn").addClass("weui_btn_default");
+        $("#bind_btn").addClass("weui_btn_disabled");
+    }
+
+    function bind_validate() {
+        var phone = $("#agent_phone").val();
+        var password = $("#agent_password").val();
+        if (not_null(phone) && not_null(password)) {
+            return true;
+        }
+        return false;
+    }
+
+    function not_null(item) {
+        if (item == null || item == "" || item.length <= 0) {
+            return false;
+        }
+        return true;
+    }
+</script>

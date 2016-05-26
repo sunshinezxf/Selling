@@ -41,7 +41,7 @@ public class AgentDaoImpl extends BaseDao implements AgentDao {
                 Role role = new Role();
                 role.setRoleId("ROL00000002");
                 user.setRole(role);
-                user.setAgent(new selling.sunshine.model.lite.Agent(agent.getPassword(), agent.getPassword()));
+                user.setAgent(new selling.sunshine.model.lite.Agent(agent));
                 sqlSession.insert("selling.user.insert", user);
                 result.setData(agent);
             } catch (Exception e) {

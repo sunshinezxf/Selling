@@ -3,9 +3,6 @@ package selling.sunshine.model;
 import org.springframework.util.StringUtils;
 
 
-
-
-
 /**
  * Created by sunshine on 4/7/16.
  */
@@ -27,6 +24,11 @@ public class Agent extends Entity {
         granted = false;
     }
 
+    public Agent(String phone, String password) {
+        this.phone = phone;
+        this.password = password;
+    }
+
     public Agent(String name, String gender, String phone, String address, String password) {
         this();
         this.name = name;
@@ -42,29 +44,29 @@ public class Agent extends Entity {
             this.wechat = wechat;
         }
     }
-   
-    public Agent(String agentId, String name, String gender, String phone,
-			String address, String password, String wechat, boolean granted,
-			double coffer) {
-		this(name, gender, phone, address, password, wechat);
-		this.coffer = coffer;
-	}
-    
-    public Agent(String agentId, String name, String gender, String phone,
-			String address, String password, String wechat, boolean granted,
-			double coffer,selling.sunshine.model.lite.Agent upperAgent) {
-		this(agentId,name, gender, phone, address, password, wechat,granted,coffer);
-		this.upperAgent = upperAgent;
-	}
-    
-    public Agent(String agentId, String name, String gender, String phone,
-			String address, String password, String wechat, boolean granted,
-			double coffer,selling.sunshine.model.lite.Agent upperAgent,double agentRefund) {
-		this(agentId,name, gender, phone, address, password, wechat,granted,coffer,upperAgent);
-		this.agentRefund = agentRefund;
-	}
 
-	public String getAgentId() {
+    public Agent(String agentId, String name, String gender, String phone,
+                 String address, String password, String wechat, boolean granted,
+                 double coffer) {
+        this(name, gender, phone, address, password, wechat);
+        this.coffer = coffer;
+    }
+
+    public Agent(String agentId, String name, String gender, String phone,
+                 String address, String password, String wechat, boolean granted,
+                 double coffer, selling.sunshine.model.lite.Agent upperAgent) {
+        this(agentId, name, gender, phone, address, password, wechat, granted, coffer);
+        this.upperAgent = upperAgent;
+    }
+
+    public Agent(String agentId, String name, String gender, String phone,
+                 String address, String password, String wechat, boolean granted,
+                 double coffer, selling.sunshine.model.lite.Agent upperAgent, double agentRefund) {
+        this(agentId, name, gender, phone, address, password, wechat, granted, coffer, upperAgent);
+        this.agentRefund = agentRefund;
+    }
+
+    public String getAgentId() {
         return agentId;
     }
 
@@ -128,31 +130,29 @@ public class Agent extends Entity {
         this.granted = granted;
     }
 
-	public double getCoffer() {
-		return coffer;
-	}
+    public double getCoffer() {
+        return coffer;
+    }
 
-	public void setCoffer(double coffer) {
-		this.coffer = coffer;
-	}
+    public void setCoffer(double coffer) {
+        this.coffer = coffer;
+    }
 
-	public selling.sunshine.model.lite.Agent getUpperAgent() {
-		return upperAgent;
-	}
+    public selling.sunshine.model.lite.Agent getUpperAgent() {
+        return upperAgent;
+    }
 
-	public void setUpperAgent(selling.sunshine.model.lite.Agent upperAgent) {
-		this.upperAgent = upperAgent;
-	}
+    public void setUpperAgent(selling.sunshine.model.lite.Agent upperAgent) {
+        this.upperAgent = upperAgent;
+    }
 
-	public double getAgentRefund() {
-		return agentRefund;
-	}
+    public double getAgentRefund() {
+        return agentRefund;
+    }
 
-	public void setAgentRefund(double agentRefund) {
-		this.agentRefund = agentRefund;
-	}
-	
-	
-    
-    
+    public void setAgentRefund(double agentRefund) {
+        this.agentRefund = agentRefund;
+    }
+
+
 }
