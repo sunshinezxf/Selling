@@ -375,9 +375,15 @@ CREATE TABLE IF NOT EXISTS `selling`.`refund_record` (
   `create_time` DATETIME NOT NULL,
   PRIMARY KEY (`refund_id`),
   INDEX `fk_refund_record_order_pool1_idx` (`order_pool_id` ASC),
+  INDEX `fk_refund_record_agent1_idx` (`agent_id` ASC),
   CONSTRAINT `fk_refund_record_order_pool1`
   FOREIGN KEY (`order_pool_id`)
   REFERENCES `selling`.`order_pool` (`pool_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_refund_record_agent1`
+  FOREIGN KEY (`agent_id`)
+  REFERENCES `selling`.`agent` (`agent_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
   ENGINE = InnoDB;
