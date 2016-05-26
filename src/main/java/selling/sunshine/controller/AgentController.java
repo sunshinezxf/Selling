@@ -58,7 +58,10 @@ public class AgentController {
 
     @Autowired
     private BillService billService;
-
+    
+    @Autowired
+    private RefundService refundService;
+    
     @Autowired
     private ShipmentService shipmentService;
 
@@ -358,6 +361,19 @@ public class AgentController {
         Map<String, Object> condition = new HashMap<String, Object>();
         condition.put("agentId", user.getAgent().getAgentId());
         ResultData fetchAgentResponse = agentService.fetchAgent(condition);
+        if(fetchAgentResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
+        	return view;
+        }
+        Agent agent = ((List<Agent>)fetchAgentResponse.getData()).get(0);
+    	view.addObject("agent", agent);
+        ResultData fetchOrderPoolResponse = orderService.fetchOrderPool(condition);
+        if(fetchOrderPoolResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
+        	return view;
+        }
+        OrderPool orderPool = ((List<OrderPool>)fetchOrderPoolResponse.getData()).get(0);
+        condition.clear();
+        condition.put("orderPool", orderPool);
+        ResultData fetchRefundRecordResponse = refundService.fetchRefundRecord(condition);
         view.setViewName("/agent/account/statement");
         return view;
     }

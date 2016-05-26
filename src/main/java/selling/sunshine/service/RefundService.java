@@ -13,5 +13,7 @@ public interface RefundService {
 
     ResultData fetchRefundConfig(Map<String, Object> condition);
     
-    public ResultData refundRecord();
+    ResultData refundRecord();
+    
+    ResultData fetchRefundRecord(Map<String, Object> condition);
 }
