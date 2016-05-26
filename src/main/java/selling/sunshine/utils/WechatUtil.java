@@ -48,8 +48,9 @@ public class WechatUtil {
     }
 
     public static String queryOauthOpenId(String code) {
+        logger.debug("enter query oauth open id method");
         String result = "";
-        String url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + PlatformConfig.getValue("wechat_appid") + "&secret=" + PlatformConfig.getValue("wechat_appid") + "&code=" + code + "&grant_type=authorization_code";
+        String url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + PlatformConfig.getValue("wechat_appid") + "&secret=" + PlatformConfig.getValue("wechat_secret") + "&code=" + code + "&grant_type=authorization_code";
         try {
             URL address = new URL(url);
             HttpURLConnection connection = (HttpURLConnection) address.openConnection();
@@ -65,12 +66,13 @@ public class WechatUtil {
             byte[] bytes = new byte[size];
             is.read(bytes);
             String message = new String(bytes, "UTF-8");
+            logger.debug(message);
             JSONObject object = JSON.parseObject(message);
             result = object.getString("openid");
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         } finally {
             return result;
         }

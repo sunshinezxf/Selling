@@ -565,13 +565,20 @@ public class AgentController {
     }
 
     private void oauth(String code) {
+        logger.debug("enter oauth method");
         if (!StringUtils.isEmpty(code)) {
-            String openId = WechatUtil.queryOauthOpenId(code);
-            if (!StringUtils.isEmpty(openId)) {
-                Subject subject = SecurityUtils.getSubject();
-                if (!subject.isAuthenticated()) {
-                    subject.login(new UsernamePasswordToken(openId, ""));
+            logger.debug("code: " + code);
+            try {
+                String openId = WechatUtil.queryOauthOpenId(code);
+                logger.debug("openId: " + openId);
+                if (!StringUtils.isEmpty(openId)) {
+                    Subject subject = SecurityUtils.getSubject();
+                    if (!subject.isAuthenticated()) {
+                        subject.login(new UsernamePasswordToken(openId, ""));
+                    }
                 }
+            } catch (Exception e) {
+                logger.error(e.getMessage());
             }
         }
     }
