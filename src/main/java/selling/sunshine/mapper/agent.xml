@@ -96,8 +96,16 @@
             <if test="agentRefund != null and agentRefund != ''">
                 agent_refund = #{agentRefund},
             </if>
-            agent_id = #{agentId}
+
         </set>
         WHERE agent_id = #{agentId}
+    </update>
+
+    <update id="unbind">
+        UPDATE agent
+        <set>
+            agent_wechat = NULL
+        </set>
+        WHERE agent_wechat = #{wechat}
     </update>
 </mapper>

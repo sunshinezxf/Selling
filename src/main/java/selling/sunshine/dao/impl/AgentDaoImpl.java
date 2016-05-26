@@ -17,6 +17,7 @@ import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -41,7 +42,7 @@ public class AgentDaoImpl extends BaseDao implements AgentDao {
                 Role role = new Role();
                 role.setRoleId("ROL00000002");
                 user.setRole(role);
-                user.setAgent(new selling.sunshine.model.lite.Agent(agent.getPassword(), agent.getPassword()));
+                user.setAgent(new selling.sunshine.model.lite.Agent(agent));
                 sqlSession.insert("selling.user.insert", user);
                 result.setData(agent);
             } catch (Exception e) {
@@ -113,6 +114,30 @@ public class AgentDaoImpl extends BaseDao implements AgentDao {
         }
     }
 
+    @Transactional
+    @Override
+    public ResultData unbindAgent(String openId) {
+        ResultData result = new ResultData();
+        synchronized (lock) {
+            try {
+                Map<String, Object> condition = new HashMap<>();
+                condition.put("wechat", openId);
+                Agent agent = sqlSession.selectOne("selling.agent.query", condition);
+                if (agent == null) {
+                    result.setResponseCode(ResponseCode.RESPONSE_NULL);
+                }
+                sqlSession.update("selling.agent.unbind", openId);
+            } catch (Exception e) {
+                logger.error(e.getMessage());
+                result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+                result.setDescription(e.getMessage());
+            } finally {
+                return result;
+            }
+        }
+
+    }
+
     private List<Agent> queryAgentByPage(Map<String, Object> condition, int start, int length) {
         List<Agent> result = new ArrayList<>();
         try {
@@ -124,6 +149,5 @@ public class AgentDaoImpl extends BaseDao implements AgentDao {
             return result;
         }
     }
-
 
 }

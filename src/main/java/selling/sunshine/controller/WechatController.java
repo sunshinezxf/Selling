@@ -1,7 +1,6 @@
 package selling.sunshine.controller;
 
 import com.alibaba.fastjson.JSONObject;
-
 import com.thoughtworks.xstream.XStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import selling.sunshine.service.AgentService;
 import selling.sunshine.service.FollowerService;
 import selling.sunshine.utils.Encryption;
 import selling.sunshine.utils.PlatformConfig;
@@ -36,6 +36,9 @@ public class WechatController {
 
     @Autowired
     private FollowerService followerService;
+
+    @Autowired
+    private AgentService agentService;
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/wechat")
@@ -66,6 +69,7 @@ public class WechatController {
         try {
             ServletInputStream stream = request.getInputStream();
             String input = WechatUtil.inputStream2String(stream);
+            logger.debug(input);
             XStream content = XStreamFactory.init(false);
             content.alias("xml", InMessage.class);
             final InMessage message = (InMessage) content.fromXML(input);
@@ -97,6 +101,14 @@ public class WechatController {
                         };
                         thread.start();
                         return "";
+                    } else if (message.getEvent().equalsIgnoreCase("click")) {
+                        TextOutMessage result = new TextOutMessage();
+                        result.setFromUserName(message.getToUserName());
+                        result.setToUserName(message.getFromUserName());
+                        result.setCreateTime(new Date().getTime());
+                        result.setContent("回复'解绑'即可完成操作");
+                        String xml = content.toXML(result);
+                        return xml;
                     }
                     break;
             }

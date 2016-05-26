@@ -12,6 +12,7 @@ import selling.sunshine.utils.Encryption;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +25,29 @@ public class AgentServiceImpl implements AgentService {
 
     @Autowired
     private AgentDao agentDao;
+
+    @Override
+    public ResultData login(Agent agent) {
+        ResultData result = new ResultData();
+        Map<String, Object> condition = new HashMap<>();
+        agent.setPassword(Encryption.md5(agent.getPassword()));
+        condition.put("phone", agent.getPhone());
+        ResultData queryResponse = agentDao.queryAgent(condition);
+        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            if (((List<Agent>) queryResponse.getData()).size() == 0) {
+                result.setResponseCode(ResponseCode.RESPONSE_NULL);
+                return result;
+            }
+        }
+        Agent target = ((List<Agent>) queryResponse.getData()).get(0);
+        if (agent.getPhone().equals(target.getPhone()) && agent.getPassword().equals(target.getPassword())) {
+            result.setResponseCode(ResponseCode.RESPONSE_OK);
+            result.setData(target);
+            return result;
+        }
+        result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+        return result;
+    }
 
     @Override
     public ResultData fetchAgent(Map<String, Object> condition) {
@@ -101,6 +125,17 @@ public class AgentServiceImpl implements AgentService {
             result.setData(updateResponse.getData());
         } else {
             result.setDescription(updateResponse.getDescription());
+        }
+        return result;
+    }
+
+    @Override
+    public ResultData unbindAgent(String openId) {
+        ResultData result = new ResultData();
+        ResultData unbindResponse = agentDao.unbindAgent(openId);
+        result.setResponseCode(unbindResponse.getResponseCode());
+        if (unbindResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            result.setDescription(unbindResponse.getDescription());
         }
         return result;
     }
