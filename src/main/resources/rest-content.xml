@@ -51,11 +51,16 @@
         <property name="cacheManagerConfigFile" value="classpath:encache-shiro.xml"/>
     </bean>
 
-    <bean id="shiroRealm" class="selling.sunshine.security.ShiroRealm">
-    </bean>
+    <bean id="shiroRealm" class="selling.sunshine.security.ShiroRealm"></bean>
+    <bean id="oAuthRealm" class="selling.sunshine.security.OAuthRealm"></bean>
 
     <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
-        <property name="realm" ref="shiroRealm"/>
+        <property name="realms">
+            <list>
+                <ref bean="shiroRealm"></ref>
+                <ref bean="oAuthRealm"></ref>
+            </list>
+        </property>
         <property name="cacheManager" ref="shiroEhcacheManager"/>
     </bean>
 
@@ -80,7 +85,7 @@
                 /agent/grant = roles[admin]
                 /agent/overview = roles[admin]
 
-                /agent/** = roles[agent]
+                /agent/** = anon
 
                 /bill/inform = anon
 

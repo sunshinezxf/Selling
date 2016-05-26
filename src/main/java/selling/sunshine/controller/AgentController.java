@@ -22,10 +22,7 @@ import selling.sunshine.model.*;
 import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.*;
-import selling.sunshine.utils.Prompt;
-import selling.sunshine.utils.PromptCode;
-import selling.sunshine.utils.ResponseCode;
-import selling.sunshine.utils.ResultData;
+import selling.sunshine.utils.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -87,11 +84,26 @@ public class AgentController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/order/place")
-    public ModelAndView placeOrder() {
+    public ModelAndView placeOrder(String code) {
         ModelAndView view = new ModelAndView();
+        logger.debug("code: " + code);
+        if (!StringUtils.isEmpty(code)) {
+            oauth(code);
+        }
         //获取当前登录的用户
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
+        if (user == null) {
+            if (!StringUtils.isEmpty(code)) {
+                Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "尊敬的代理商，你尚未绑定账号！", "/agent/login");
+                view.addObject("prompt", prompt);
+                view.setViewName("/agent/prompt");
+                return view;
+            } else {
+                view.setViewName("/agent/login");
+                return view;
+            }
+        }
         //创建查询的删选条件集合
         Map<String, Object> condition = new HashMap<>();
         //查询商品信息
@@ -550,5 +562,17 @@ public class AgentController {
             response.setStatus(500);
         }
         return resultData;
+    }
+
+    private void oauth(String code) {
+        if (!StringUtils.isEmpty(code)) {
+            String openId = WechatUtil.queryOauthOpenId(code);
+            if (!StringUtils.isEmpty(openId)) {
+                Subject subject = SecurityUtils.getSubject();
+                if (!subject.isAuthenticated()) {
+                    subject.login(new UsernamePasswordToken(openId, ""));
+                }
+            }
+        }
     }
 }

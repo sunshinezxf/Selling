@@ -47,6 +47,35 @@ public class WechatUtil {
         }
     }
 
+    public static String queryOauthOpenId(String code) {
+        String result = "";
+        String url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + PlatformConfig.getValue("wechat_appid") + "&secret=" + PlatformConfig.getValue("wechat_appid") + "&code=" + code + "&grant_type=authorization_code";
+        try {
+            URL address = new URL(url);
+            HttpURLConnection connection = (HttpURLConnection) address.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            connection.setDoOutput(true);
+            connection.setDoInput(true);
+            System.setProperty("sun.net.client.defaultConnectTimeout", "30000");
+            System.setProperty("sun.net.client.defaultReadTimeout", "30000");
+            connection.connect();
+            InputStream is = connection.getInputStream();
+            int size = is.available();
+            byte[] bytes = new byte[size];
+            is.read(bytes);
+            String message = new String(bytes, "UTF-8");
+            JSONObject object = JSON.parseObject(message);
+            result = object.getString("openid");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            return result;
+        }
+    }
+
     public static Follower queryUserInfo(String openId, String token) {
         String url = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=" + token + "&openid=" + openId + "&lang=zh_CN";
         try {
