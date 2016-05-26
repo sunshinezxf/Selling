@@ -70,13 +70,13 @@ public class RefundServiceImpl implements RefundService {
 	@Override
 	public ResultData fetchRefundRecord(Map<String, Object> condition) {
 		ResultData resultData = new ResultData();
-//		ResultData queryResponse = 
-//		resultData.setResponseCode(queryResponse.getResponseCode());
-//		if(queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK){
-//			resultData.setData(queryResponse.getData());
-//		} else {
-//			resultData.setDescription(queryResponse.getDescription());
-//		}
+		ResultData queryResponse = refundDao.queryRefundRecord(condition);
+		resultData.setResponseCode(queryResponse.getResponseCode());
+		if(queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK){
+			resultData.setData(queryResponse.getData());
+		} else {
+			resultData.setDescription(queryResponse.getDescription());
+		}
 		return resultData;
 	}
 }

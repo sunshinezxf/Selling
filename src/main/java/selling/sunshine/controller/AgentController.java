@@ -378,14 +378,14 @@ public class AgentController {
         }
         Agent agent = ((List<Agent>)fetchAgentResponse.getData()).get(0);
     	view.addObject("agent", agent);
-        ResultData fetchOrderPoolResponse = orderService.fetchOrderPool(condition);
-        if(fetchOrderPoolResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
+        condition.clear();
+        condition.put("agent", agent);
+        ResultData fetchRefundRecordResponse = refundService.fetchRefundRecord(condition);
+        if(fetchRefundRecordResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
         	return view;
         }
-        OrderPool orderPool = ((List<OrderPool>)fetchOrderPoolResponse.getData()).get(0);
-        condition.clear();
-        condition.put("orderPool", orderPool);
-        ResultData fetchRefundRecordResponse = refundService.fetchRefundRecord(condition);
+        List<RefundRecord> refundRecords = (List<RefundRecord>) fetchRefundRecordResponse.getData();
+        view.addObject("refundRecords", refundRecords);
         view.setViewName("/agent/account/statement");
         return view;
     }
