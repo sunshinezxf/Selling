@@ -17,7 +17,7 @@
         <association property="upperAgent" column="agentId = upper_agent_id" select="agentLiteQuery"></association>
     </resultMap>
 
-	<resultMap id="agentLiteVo" type="selling.sunshine.model.lite.Agent">
+    <resultMap id="agentLiteVo" type="selling.sunshine.model.lite.Agent">
         <result property="agentId" column="agent_id"></result>
         <result property="name" column="agent_name"></result>
         <result property="phone" column="agent_phone"></result>
@@ -27,7 +27,7 @@
         INSERT INTO agent(agent_id, agent_name, agent_gender, agent_phone, agent_address, agent_password, agent_wechat, agent_granted, agent_refund, block_flag, create_time,agent_coffer)
         VALUES (#{agentId}, #{name}, #{gender}, #{phone}, #{address}, #{password}, #{wechat}, #{granted}, #{agentRefund}, #{blockFlag}, #{createAt},#{coffer})
     </insert>
-    
+
     <select id="agentLiteQuery" parameterType="java.util.Map" resultMap="agentLiteVo">
         SELECT agent_id, agent_name, agent_phone
         FROM agent
@@ -35,7 +35,8 @@
     </select>
 
     <select id="query" parameterType="java.util.Map" resultMap="agentVo">
-        SELECT agent_id, upper_agent_id,agent_coffer, agent_name, agent_gender, agent_phone, agent_address, agent_password,
+        SELECT agent_id, upper_agent_id,agent_coffer, agent_name, agent_gender, agent_phone, agent_address,
+        agent_password,
         agent_wechat, agent_refund, agent_granted, block_flag, create_time
         FROM agent
         WHERE 1 = 1
@@ -55,12 +56,15 @@
             AND agent_phone = #{phone}
         </if>
         <if test="agentRefund != null">
-        	AND agent_refund = #{agentRefund}
+            AND agent_refund = #{agentRefund}
+        </if>
+        <if test="wechat != null and wechat != ''">
+            AND agent_wechat = #{wechat}
         </if>
         <if test="granted != null">
             AND agent_granted = #{granted}
         </if>
-        <if test="blockFlag != null and blockFlag != ''">
+        <if test="blockFlag != null">
             AND block_flag = #{blockFlag}
         </if>
         <if test="rule != null and rule != ''">
