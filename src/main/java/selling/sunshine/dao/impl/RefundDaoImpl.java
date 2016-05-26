@@ -69,6 +69,21 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
         }
         return result;
     }
+    
+    @Override
+	public ResultData queryRefundRecord(Map<String, Object> condition) {
+    	 ResultData result = new ResultData();
+         condition = handle(condition);
+         try {
+             List<RefundConfig> list = sqlSession.selectList("selling.refund.record.query", condition);
+             result.setData(list);
+         } catch (Exception e) {
+             logger.error(e.getMessage());
+             result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+             result.setDescription(e.getMessage());
+         }
+         return result;
+	}
 
 	@Override
 	public ResultData refundRecord() {                 
@@ -172,4 +187,6 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
 		
 		return result;					
 	}
+
+	
 }

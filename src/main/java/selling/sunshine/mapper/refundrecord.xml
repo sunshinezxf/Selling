@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="selling.refund.record">
-   
+	<resultMap id="refundRecordVo" type="selling.sunshine.model.RefundRecord">
+		<result property="refundRecordId" column="refund_id"></result>
+		<result property="agentId" column="agent_id"></result>
+		<result property="refundName" column="refund_name"></result>
+		<result property="refundPercent" column="refund_percent"></result>
+		<result property="refundAmount" column="refund_amount"></result>
+		<result property="refundDescription" column="refund_description"></result>
+		<association property="orderPool" column="orderPoolId = order_pool_id" select=""></association>
+	</resultMap>
+	
     <insert id="insert" parameterType="selling.sunshine.model.RefundRecord"
 		useGeneratedKeys="false">
 		INSERT INTO refund_record
@@ -27,4 +36,5 @@
 		</set>
     </insert>
 
+	
 </mapper>

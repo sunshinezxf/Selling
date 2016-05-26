@@ -13,5 +13,7 @@ public interface RefundDao {
 
     ResultData queryRefundConfig(Map<String, Object> condition);
     
+    ResultData queryRefundRecord(Map<String, Object> condition);
+    
     ResultData refundRecord();
 }
