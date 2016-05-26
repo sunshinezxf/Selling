@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import selling.sunshine.dao.OrderDao;
+import selling.sunshine.dao.OrderPoolDao;
 import selling.sunshine.model.Order;
 import selling.sunshine.pagination.MobilePageParam;
 import selling.sunshine.service.OrderService;
@@ -19,6 +20,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private OrderDao orderDao;
+    
+    @Autowired
+    private OrderPoolDao orderPoolDao;
 
     @Override
     public ResultData placeOrder(Order order) {
@@ -94,6 +98,19 @@ public class OrderServiceImpl implements OrderService {
             result.setData(sumResponse.getData());
         } else {
             result.setDescription(sumResponse.getDescription());
+        }
+        return result;
+    }
+    
+    @Override
+	public ResultData fetchOrderPool(Map<String, Object> condition) {
+    	ResultData result = new ResultData();
+        ResultData fetchResponse = orderPoolDao.queryOrderPool(condition);
+        result.setResponseCode(fetchResponse.getResponseCode());
+        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(fetchResponse.getData());
+        } else {
+            result.setDescription(fetchResponse.getDescription());
         }
         return result;
     }
