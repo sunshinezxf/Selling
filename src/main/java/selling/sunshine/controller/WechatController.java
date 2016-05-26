@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import selling.sunshine.service.AgentService;
 import selling.sunshine.service.FollowerService;
-import selling.sunshine.utils.*;
+import selling.sunshine.utils.Encryption;
+import selling.sunshine.utils.PlatformConfig;
+import selling.sunshine.utils.WechatUtil;
 import selling.wechat.model.Follower;
 import selling.wechat.model.InMessage;
 import selling.wechat.model.TextOutMessage;
@@ -100,18 +102,11 @@ public class WechatController {
                         thread.start();
                         return "";
                     } else if (message.getEvent().equalsIgnoreCase("click")) {
-                        String openId = message.getFromUserName();
-                        ResultData unbindResponse = agentService.unbindAgent(openId);
-                        content.alias("xml", TextOutMessage.class);
                         TextOutMessage result = new TextOutMessage();
                         result.setFromUserName(message.getToUserName());
                         result.setToUserName(message.getFromUserName());
                         result.setCreateTime(new Date().getTime());
-                        if (unbindResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-                            result.setContent("解绑成功");
-                        } else {
-                            result.setContent("您尚未绑定任何账户!");
-                        }
+                        result.setContent("回复'解绑'即可完成操作");
                         String xml = content.toXML(result);
                         return xml;
                     }

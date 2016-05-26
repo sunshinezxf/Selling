@@ -1,9 +1,5 @@
 package selling.sunshine.controller;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
@@ -11,25 +7,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
 import selling.sunshine.form.AdminForm;
-import selling.sunshine.form.CustomerForm;
 import selling.sunshine.model.Admin;
-import selling.sunshine.model.Agent;
-import selling.sunshine.model.Customer;
-import selling.sunshine.model.User;
 import selling.sunshine.service.AdminService;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by sunshine on 4/10/16.
@@ -96,14 +85,14 @@ public class PlatformController {
             return view;
         }
         try {
-        	Map<String, Object> condition=new HashMap<>();
-        	condition.put("username", form.getUsername());
-        	ResultData queryResult=adminService.fetchAdmin(condition);
-        	if (((List<Admin>)queryResult.getData()).size()!=0) {
-        		view.setViewName("redirect:/register");			 
-	            return view;
-			}
-        	Admin admin = new Admin(form.getUsername(), form.getPassword());
+            Map<String, Object> condition = new HashMap<>();
+            condition.put("username", form.getUsername());
+            ResultData queryResult = adminService.fetchAdmin(condition);
+            if (((List<Admin>) queryResult.getData()).size() != 0) {
+                view.setViewName("redirect:/register");
+                return view;
+            }
+            Admin admin = new Admin(form.getUsername(), form.getPassword());
             ResultData resultData = adminService.createAdmin(admin);
             if (resultData.getResponseCode() == ResponseCode.RESPONSE_OK) {
                 view.setViewName("redirect:/manage");
@@ -118,76 +107,77 @@ public class PlatformController {
         }
 
     }
-    
+
     @RequestMapping(method = RequestMethod.GET, value = "/admin/{adminId}")
     public ModelAndView fetchAdmin(@PathVariable("adminId") String adminId) {
         ModelAndView view = new ModelAndView();
         ResultData result = new ResultData();
         Map<String, Object> condition = new HashMap<>();
         condition.put("adminId", adminId);
-        result=adminService.fetchAdmin(condition);
+        result = adminService.fetchAdmin(condition);
         if (result.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
-        	view.setViewName("/backend/admin/admin_management");
+            view.setViewName("/backend/admin/admin_management");
             return view;
-		}
-        Admin admin=((List<Admin>)result.getData()).get(0);
+        }
+        Admin admin = ((List<Admin>) result.getData()).get(0);
         view.addObject("admin", admin);
         view.setViewName("/backend/admin/admin_update");
         return view;
     }
-    
+
 
     @RequestMapping(method = RequestMethod.POST, value = "/modify/{adminId}")
     public ModelAndView updateAdmin(@PathVariable("adminId") String adminId, @Valid AdminForm adminForm, BindingResult result) {
         ResultData response = new ResultData();
         ModelAndView view = new ModelAndView();
 
-        
+
         if (result.hasErrors()) {
             view.setViewName("redirect:/manage");
             return view;
         }
-        Admin admin=new Admin(adminForm.getUsername(), adminForm.getPassword());
+        Admin admin = new Admin(adminForm.getUsername(), adminForm.getPassword());
         admin.setAdminId(adminId);
-        response=adminService.updateAdmin(admin);
-        if (response.getResponseCode()==ResponseCode.RESPONSE_OK) {
-        	 view.setViewName("redirect:/manage");
-             return view;
-		}else {
-			view.setViewName("redirect:/manage");
-	        return view;
-		}
+        response = adminService.updateAdmin(admin);
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            view.setViewName("redirect:/manage");
+            return view;
+        } else {
+            view.setViewName("redirect:/manage");
+            return view;
+        }
     }
-    
+
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/delete/{adminId}")
     public ResultData deleteAdmin(@PathVariable("adminId") String adminId) {
         ResultData response = new ResultData();
         ModelAndView view = new ModelAndView();
-        
+
         Map<String, Object> condition = new HashMap<>();
-        response=adminService.fetchAdmin(condition);
+        response = adminService.fetchAdmin(condition);
         //当只有一个admin时不允许删除
-        if (((List<Admin>)response.getData()).size()==1) {
-        	response.setResponseCode(ResponseCode.RESPONSE_NULL);;
-			return response;
-		}
-        
-        Admin admin=new Admin();
+        if (((List<Admin>) response.getData()).size() == 1) {
+            response.setResponseCode(ResponseCode.RESPONSE_NULL);
+            ;
+            return response;
+        }
+
+        Admin admin = new Admin();
         admin.setAdminId(adminId);
-        response=adminService.deleteAdmin(admin);
+        response = adminService.deleteAdmin(admin);
         return response;
     }
-    
+
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/admin/overview")
     public ResultData overview() {
-    	ResultData result=new ResultData();
-        Map<String, Object> condition=new HashMap<>();
-        result=adminService.fetchAdmin(condition);
+        ResultData result = new ResultData();
+        Map<String, Object> condition = new HashMap<>();
+        result = adminService.fetchAdmin(condition);
         return result;
     }
-    
+
     @RequestMapping(method = RequestMethod.GET, value = "/manage")
     public ModelAndView manage() {
         ModelAndView view = new ModelAndView();
@@ -203,9 +193,8 @@ public class PlatformController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/logout")
-    public ModelAndView logout(HttpSession session) {
+    public ModelAndView logout() {
         ModelAndView view = new ModelAndView();
-        session.removeAttribute("current");
         Subject subject = SecurityUtils.getSubject();
         if (subject != null) {
             subject.logout();
