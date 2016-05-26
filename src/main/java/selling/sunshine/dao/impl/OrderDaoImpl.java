@@ -117,57 +117,55 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
 	                }
 	                List<OrderItem> primary = target.getOrderItems();
 	                List<OrderItem> now = order.getOrderItems();
-	                List<OrderItem> toDelete = new ArrayList<>();
+	                List<OrderItem> toDelete = new ArrayList<OrderItem>();
+	                List<OrderItem> toAdd = new ArrayList<OrderItem>();
+	                List<OrderItem> toModify = new ArrayList<OrderItem>();
 	                if (primary.size() == 0) {
 	                    for (OrderItem item : now) {
 	                        item.setOrderItemId(IDGenerator.generate("ORI"));
+	                        Order temp = new Order();
+	                		temp.setOrderId(order.getOrderId());
+	                		item.setOrder(temp);
 	                    }
 	                    sqlSession.insert("selling.order.item.insertBatch", now);
 	                }
 	                if (now.size() == 0) {
 	                    toDelete.addAll(primary);
-	                    sqlSession.delete("selling.orderItem.delete", toDelete);
+	                    sqlSession.delete("selling.order.item.delete", toDelete);
 	                }
-	                OrderItem primaryItem = primary.get(0);
-	                OrderItem nowItem = now.get(0);
-	                for (int i = 0; i < now.size(); i++) {
-	                    if (StringUtils.isEmpty(nowItem.getOrderItemId())) {
-	                        toDelete.addAll(primary);
-	                        sqlSession.delete("selling.order.item.delete", toDelete);
-	                        sqlSession.insert("selling.order.item.insert", now);
-	                    }
-	                    if (primaryItem.getOrderItemId().equals(nowItem.getOrderItemId())) {
-	                        sqlSession.update("selling.order.item.update", nowItem);
-	                        primary.remove(primaryItem);
-	                        now.remove(nowItem);
-	                        if (primary.size() == 0) {
-	                            break;
-	                        }
-	                        if (now.size() == 0) {
-	                            toDelete.addAll(primary);
-	                            break;
-	                        }
-	                        primaryItem = primary.get(0);
-	                        nowItem = now.get(0);
-	                        i--;
-	                        continue;
-	                    }
-	                    toDelete.add(primaryItem);
-	                    primary.remove(primaryItem);
-	                    if(primary.isEmpty())break;
-	                    primaryItem = primary.get(0);
+	                if(primary.size() != 0 && now.size() != 0){
+		                for (OrderItem nowItem : now) {
+		                	boolean isMatch = false;
+		                	for(OrderItem primaryItem : primary){
+		                		if(nowItem.getOrderItemId().equals(primaryItem.getOrderItemId())){
+		                			toModify.add(nowItem);
+		                			primary.remove(primaryItem);
+		                			isMatch = true;
+		                			break;
+		                		}
+		                	}
+		                	if(!isMatch){
+		                		toAdd.add(nowItem);
+		                	}
+		                }
 	                }
+	                toDelete.addAll(primary);
 	                if (toDelete.size() > 0) {
 	                    sqlSession.delete("selling.order.item.delete", toDelete);
 	                }
-	                if (now.size() > 0) {
-	                	for(OrderItem item : now) {
+	                if (toAdd.size() > 0) {
+	                	for(OrderItem item : toAdd) {
 	                		item.setOrderItemId(IDGenerator.generate("ORI"));
 	                		Order temp = new Order();
 	                		temp.setOrderId(order.getOrderId());
 	                		item.setOrder(temp);
 	                	}
-	                    sqlSession.insert("selling.order.item.insertBatch", now);
+	                    sqlSession.insert("selling.order.item.insertBatch", toAdd);
+	                }
+	                if (toModify.size() > 0){
+	                	for(OrderItem item : toModify){
+	                		sqlSession.update("selling.order.item.update", item);
+	                	}
 	                }
 	                result.setData(order);
 	            } catch (Exception e) {

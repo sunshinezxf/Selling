@@ -21,7 +21,7 @@
                     <div class="weui_cells weui_cells_access clear-margin-top">
                         <div class="weui_cell" >
                             <div class="weui_cell_bd weui_cell_primary">
-                                <a id="add_order_btn" class="weui_btn weui_btn_primary">添加订货单</a>
+                                <a id="add_order_btn" class="weui_btn weui_btn_plain_primary">添加订货单</a>
                             </div>
                         </div>
                     </div>
@@ -58,6 +58,17 @@
     $("#add_order_item").hide();
     $("#add_order_btn").click(function () {
     	isAdd = true;
+    	//判断是否选择过商品，如果没有就给个默认的
+    	if(typeof goods_id == "undefined"){
+    		var goods_dom = $("#goods_option").children(".goods").eq(0);
+    		if(goods_dom != null){
+    			goods_id = goods_dom.attr("id");
+    			goods_name = goods_dom.find(".weui_cell_bd span").html();
+    			goods_price = goods_dom.find(".weui_cell_ft span:first-child").html();
+    			$("#goods").find(".weui_cell_bd").html("<p>" + goods_name + "</p>");
+	        	$("#price").html("单价：" + goods_price + "元");
+    		}
+    	}
         $("#add_order_item").fadeIn();
         $("#place_order_panel").hide();
     });
