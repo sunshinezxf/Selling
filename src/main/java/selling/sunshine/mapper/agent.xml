@@ -36,7 +36,7 @@
 
     <select id="query" parameterType="java.util.Map" resultMap="agentVo">
         SELECT agent_id, upper_agent_id,agent_coffer, agent_name, agent_gender, agent_phone, agent_address, agent_password,
-        agent_wechat, agent_granted, block_flag, create_time
+        agent_wechat, agent_refund, agent_granted, block_flag, create_time
         FROM agent
         WHERE 1 = 1
         <if test="agentId != null and agentId != ''">
