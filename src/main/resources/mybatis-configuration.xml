@@ -18,5 +18,6 @@
         <mapper resource="selling/sunshine/mapper/orderbill.xml"/>
         <mapper resource="selling/sunshine/mapper/orderpool.xml"/>
         <mapper resource="selling/sunshine/mapper/follower.xml"/>
+        <mapper resource="selling/sunshine/mapper/refundrecord.xml"/>
     </mappers>
 </configuration>
