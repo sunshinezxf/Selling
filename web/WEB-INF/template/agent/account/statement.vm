@@ -13,7 +13,7 @@
     </div>
     <div style="text-align:center;">
     	<p class="page_desc">累计返现</p>
-	    <h1 style="font-weight:normal">￥3000.0</h1>
+	    <h1 style="font-weight:normal">￥${agent.agentRefund}</h1>
 	</div>
     <div class="bd">
         <div class="weui_cells">
