@@ -128,4 +128,15 @@ public class AgentServiceImpl implements AgentService {
         }
         return result;
     }
+
+    @Override
+    public ResultData unbindAgent(String openId) {
+        ResultData result = new ResultData();
+        ResultData unbindResponse = agentDao.unbindAgent(openId);
+        result.setResponseCode(unbindResponse.getResponseCode());
+        if (unbindResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            result.setDescription(unbindResponse.getDescription());
+        }
+        return result;
+    }
 }

@@ -87,6 +87,19 @@ public class AgentController {
             view.setViewName("/agent/prompt");
             return view;
         }
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("wechat", wechat);
+        ResultData fetchResponse = agentService.fetchAgent(condition);
+        if (fetchResponse.getResponseCode() != ResponseCode.RESPONSE_NULL) {
+            Subject subject = SecurityUtils.getSubject();
+            if (!subject.isAuthenticated()) {
+                subject.login(new UsernamePasswordToken(wechat, ""));
+            }
+            Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "尊敬的代理商，您的微信已经绑定过账号", "/agent/order/place");
+            view.addObject("prompt", prompt);
+            view.setViewName("/agent/prompt");
+            return view;
+        }
         Agent agent = new Agent(form.getPhone(), form.getPassword());
         ResultData loginResponse = agentService.login(agent);
         if (loginResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {

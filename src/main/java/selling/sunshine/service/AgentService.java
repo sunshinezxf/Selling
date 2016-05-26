@@ -23,4 +23,6 @@ public interface AgentService {
     ResultData updateAgent(Agent agent);
 
     ResultData consume(Agent agent, double money);
+
+    ResultData unbindAgent(String openId);
 }

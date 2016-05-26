@@ -21,5 +21,5 @@ public interface AgentDao {
 
     ResultData updateAgent(Agent agent);
     
-    
+    ResultData unbindAgent(String openId);
 }
