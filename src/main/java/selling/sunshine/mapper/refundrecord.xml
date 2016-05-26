@@ -3,12 +3,11 @@
 <mapper namespace="selling.refund.record">
 	<resultMap id="refundRecordVo" type="selling.sunshine.model.RefundRecord">
 		<result property="refundRecordId" column="refund_id"></result>
-		<result property="agentId" column="agent_id"></result>
 		<result property="refundName" column="refund_name"></result>
 		<result property="refundPercent" column="refund_percent"></result>
 		<result property="refundAmount" column="refund_amount"></result>
 		<result property="refundDescription" column="refund_description"></result>
-		<association property="orderPool" column="orderPoolId = order_pool_id" select=""></association>
+		<association property="agent" column="agentId = agent_id" select="agentLiteQuery"></association>
 	</resultMap>
 	
     <insert id="insert" parameterType="selling.sunshine.model.RefundRecord"
@@ -31,10 +30,31 @@
 			<if test="refundAmount != null and refundAmount != ''">
 				refund_amount = #{refundAmount},
 			</if>
+			<if test="agent != null and agent != ''">
+				agent_id = #{agent.agentId},
+			</if>
 			block_flag = #{blockFlag},
 			create_time = #{createAt}
 		</set>
     </insert>
+    
+   <select id="agentLiteQuery" parameterType="java.util.Map" resultMap="agentLiteVo">
+		SELECT agent_id, agent_name, agent_phone
+		FROM agent
+		WHERE agent_id = #{agentId}
+	</select>
+	
+	<select id="query">
+	    SELECT refund_id,redund_name,refund_percent,refund_amount,refund_description,agent_id
+	    FROM refund_record
+	    WHERE 1 = 1
+        <if test="refundRecordId != null and refundRecordId != ''">
+            AND refund_id = #{refundRecordId}
+        </if>
+        <if test="agentId != null and agentId != ''">
+            AND agent_id = #{agentId}
+        </if>
+	</select>
 
 	
 </mapper>
