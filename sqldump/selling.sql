@@ -365,6 +365,7 @@ DROP TABLE IF EXISTS `selling`.`refund_record` ;
 
 CREATE TABLE IF NOT EXISTS `selling`.`refund_record` (
   `refund_id` VARCHAR(20) NOT NULL,
+  `agent_id` VARCHAR(20) NOT NULL,
   `order_pool_id` VARCHAR(45) NULL,
   `refund_name` VARCHAR(45) NOT NULL,
   `refund_description` VARCHAR(100) NOT NULL,
