@@ -138,6 +138,7 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
 							refundRecordLevel3.setRefundAmount(poolList.get(j).getPrice()*refundConfig.getLevel1Percent());
 							refundRecordLevel3.setRefundPercent(refundConfig.getLevel1Percent());
 							refundRecordLevel3.setOrderPool(poolList.get(j));
+							refundRecordLevel3.setAgent(new selling.sunshine.model.lite.Agent(agentLevel3));
 							refundRecordLevel3.setRefundName(year+"年"+month+"月"+day+"日"+"返现账单");
 							refundRecordLevel3.setRefundDescription("代理商"+agentLevel3.getName()+"作为一级代理商获得下级代理商"+agent.getName()+"购买"+poolList.get(j).getGoods().getName()+"的返现，返现"+refundRecordLevel3.getRefundAmount()+"元");
 							sqlSession.insert("selling.refund.record.insert",refundRecordLevel3);	
@@ -157,6 +158,7 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
 						}
 						refundRecordLevel2.setOrderPool(poolList.get(j));
 						refundRecordLevel2.setRefundName(year+"年"+month+"月"+day+"日"+"返现账单");
+						refundRecordLevel2.setAgent(new selling.sunshine.model.lite.Agent(agentLevel2));
 						sqlSession.insert("selling.refund.record.insert",refundRecordLevel2);	
 						//更新agentLevel2的账户余额以及返现总额
 						agentLevel2.setAgentRefund(agentLevel2.getAgentRefund()+refundRecordLevel2.getRefundAmount());
@@ -170,6 +172,7 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
 					}
 					refundRecord.setOrderPool(poolList.get(j));
 					refundRecord.setRefundName(year+"年"+month+"月"+day+"日"+"返现账单");
+					refundRecord.setAgent(new selling.sunshine.model.lite.Agent(agent));
 					sqlSession.insert("selling.refund.record.insert",refundRecord);
 					//更新agent的账户余额以及返现总额
 					agent.setAgentRefund(agent.getAgentRefund()+refundRecord.getRefundAmount());

@@ -17,6 +17,12 @@ public class Agent {
         this.name = name;
         this.phone = phone;
     }
+    
+    public Agent(selling.sunshine.model.Agent agent) {
+    	this.agentId=agent.getAgentId();
+        this.name = agent.getName();
+        this.phone = agent.getPhone();
+    }
 
     public String getAgentId() {
         return agentId;

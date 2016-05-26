@@ -1,5 +1,8 @@
 package selling.sunshine.model;
 
+import selling.sunshine.model.lite.Agent;
+
+
 public class RefundRecord extends Entity {
 
 	private String refundRecordId;
@@ -8,13 +11,14 @@ public class RefundRecord extends Entity {
 	private double refundAmount;
 	private OrderPool orderPool;
 	private String refundDescription;
+    private Agent agent;
 
 	public RefundRecord() {
 		super();
 	}
 
 	public RefundRecord(String refundRecordId, String refundName,
-			double refundPercent, int refundAmount, OrderPool orderPool,String refundDescription) {
+			double refundPercent, int refundAmount, OrderPool orderPool,String refundDescription,Agent agent) {
 		this();
 		this.refundRecordId = refundRecordId;
 		this.refundName = refundName;
@@ -22,6 +26,7 @@ public class RefundRecord extends Entity {
 		this.refundAmount = refundAmount;
 		this.orderPool = orderPool;
 		this.refundDescription=refundDescription;
+		this.agent=agent;
 	}
 
 	public String getRefundRecordId() {
@@ -70,6 +75,14 @@ public class RefundRecord extends Entity {
 
 	public void setRefundDescription(String refundDescription) {
 		this.refundDescription = refundDescription;
+	}
+
+	public Agent getAgent() {
+		return agent;
+	}
+
+	public void setAgent(Agent agent) {
+		this.agent = agent;
 	}
 	
 	

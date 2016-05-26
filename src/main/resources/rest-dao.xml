@@ -41,4 +41,7 @@
     <bean id="followerDao" class="selling.sunshine.dao.impl.FollowerDaoImpl">
         <property name="sqlSession" ref="sqlSession"></property>
     </bean>
+    <bean id="OrderPoolDao" class="selling.sunshine.dao.impl.OrderPoolDaoImpl">
+        <property name="sqlSession" ref="sqlSession"></property>
+    </bean>
 </beans>
