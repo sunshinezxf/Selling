@@ -13,6 +13,9 @@
 			<if test="refundName != null and refundName != ''">
 				refund_name = #{refundName},
 			</if>
+			<if test="refundDescription != null and refundDescription != ''">
+				refund_description = #{refundDescription},
+			</if>
 			<if test="refundPercent != null and refundPercent != ''">
 				refund_percent = #{refundPercent},
 			</if>

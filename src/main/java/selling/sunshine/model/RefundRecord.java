@@ -7,19 +7,21 @@ public class RefundRecord extends Entity {
 	private double refundPercent;
 	private double refundAmount;
 	private OrderPool orderPool;
+	private String refundDescription;
 
 	public RefundRecord() {
 		super();
 	}
 
 	public RefundRecord(String refundRecordId, String refundName,
-			double refundPercent, int refundAmount, OrderPool orderPool) {
+			double refundPercent, int refundAmount, OrderPool orderPool,String refundDescription) {
 		this();
 		this.refundRecordId = refundRecordId;
 		this.refundName = refundName;
 		this.refundPercent = refundPercent;
 		this.refundAmount = refundAmount;
 		this.orderPool = orderPool;
+		this.refundDescription=refundDescription;
 	}
 
 	public String getRefundRecordId() {
@@ -61,5 +63,15 @@ public class RefundRecord extends Entity {
 	public void setOrderPool(OrderPool orderPool) {
 		this.orderPool = orderPool;
 	}
+
+	public String getRefundDescription() {
+		return refundDescription;
+	}
+
+	public void setRefundDescription(String refundDescription) {
+		this.refundDescription = refundDescription;
+	}
+	
+	
 
 }

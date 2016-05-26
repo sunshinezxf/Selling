@@ -70,8 +70,9 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
     }
 
 	@Override
-	public ResultData refund() {                 
+	public ResultData refundRecord() {                 
 		ResultData result = new ResultData();
+		try{
 		Map<String, Object> con=new HashMap<>();
 		List<Map<String, String>> agentGoodsList=sqlSession.selectList("selling.order.pool.queryAgentGoods", con);
 		for (int i = 0; i < agentGoodsList.size(); i++) {
@@ -81,6 +82,10 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
 			//按时间顺序从前往后排好的list
 			List<OrderPool> poolList=sqlSession.selectList("selling.order.pool.query", condition);
 			for (int j = 0; j < poolList.size();j++) {
+				//首先判断月数有没有三个月
+				if ((poolList.size()-j)<3) {
+					break;
+				}
 				//当当前月和后两个月都达到了返现标准，那么就在返现记录里插上当前月的返现记录
 				if ((!poolList.get(j).isBlockFlag())&&(!poolList.get(j+1).isBlockFlag())&&(!poolList.get(j+2).isBlockFlag())) {
 					RefundConfig refundConfig= poolList.get(j).getRefundConfig();
@@ -151,6 +156,12 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
 				}
 			}
 		}
+		 result.setResponseCode(ResponseCode.RESPONSE_OK);
+		} catch (Exception e) {
+            logger.error(e.getMessage());
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription(e.getMessage());
+        }
 		
 		return result;					
 	}

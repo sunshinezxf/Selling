@@ -19,38 +19,51 @@ import java.util.Map;
 @Service
 public class RefundServiceImpl implements RefundService {
 
-    private Logger logger = LoggerFactory.getLogger(RefundServiceImpl.class);
+	private Logger logger = LoggerFactory.getLogger(RefundServiceImpl.class);
 
-    @Autowired
-    private RefundDao refundDao;
+	@Autowired
+	private RefundDao refundDao;
 
-    @Override
-    public ResultData createRefundConfig(RefundConfig config) {
-        ResultData result = new ResultData();
-        ResultData insertResponse = refundDao.insertRefundConfig(config);
-        result.setResponseCode(insertResponse.getResponseCode());
-        if (insertResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            result.setData(insertResponse.getData());
-        } else {
-            result.setDescription(insertResponse.getDescription());
-        }
-        return result;
-    }
+	@Override
+	public ResultData createRefundConfig(RefundConfig config) {
+		ResultData result = new ResultData();
+		ResultData insertResponse = refundDao.insertRefundConfig(config);
+		result.setResponseCode(insertResponse.getResponseCode());
+		if (insertResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+			result.setData(insertResponse.getData());
+		} else {
+			result.setDescription(insertResponse.getDescription());
+		}
+		return result;
+	}
 
-    @Override
-    public ResultData fetchRefundConfig(Map<String, Object> condition) {
-        ResultData result = new ResultData();
-        ResultData queryResponse = refundDao.queryRefundConfig(condition);
-        result.setResponseCode(queryResponse.getResponseCode());
-        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            if (((List<RefundConfig>) queryResponse.getData()).size() == 0) {
-                result.setResponseCode(ResponseCode.RESPONSE_NULL);
-            } else {
-                result.setData(queryResponse.getData());
-            }
-        } else {
-            result.setDescription(queryResponse.getDescription());
-        }
-        return result;
-    }
+	@Override
+	public ResultData fetchRefundConfig(Map<String, Object> condition) {
+		ResultData result = new ResultData();
+		ResultData queryResponse = refundDao.queryRefundConfig(condition);
+		result.setResponseCode(queryResponse.getResponseCode());
+		if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+			if (((List<RefundConfig>) queryResponse.getData()).size() == 0) {
+				result.setResponseCode(ResponseCode.RESPONSE_NULL);
+			} else {
+				result.setData(queryResponse.getData());
+			}
+		} else {
+			result.setDescription(queryResponse.getDescription());
+		}
+		return result;
+	}
+
+	@Override
+	public ResultData refundRecord() {
+		ResultData result = new ResultData();
+		ResultData refundResponse = refundDao.refundRecord();
+		result.setResponseCode(refundResponse.getResponseCode());
+		if (refundResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+			result.setData(refundResponse.getData());
+		} else {
+			result.setDescription(refundResponse.getDescription());
+		}
+		return result;
+	}
 }

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
 import selling.sunshine.form.RefundConfigForm;
 import selling.sunshine.model.Goods;
 import selling.sunshine.model.RefundConfig;
@@ -14,6 +15,7 @@ import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
 import javax.validation.Valid;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -69,4 +71,11 @@ public class RefundController {
         }
         return result;
     }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/record")
+    public ResultData refundRecord() {
+		ResultData resultData=new ResultData();
+		resultData=refundService.refundRecord();
+		return resultData;
+	}
 }

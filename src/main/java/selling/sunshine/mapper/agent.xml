@@ -13,6 +13,7 @@
         <result property="granted" column="agent_granted"></result>
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
+        <result property="agentRefund" column="agent_refund"></result>
         <association property="upperAgent" column="agentId = upper_agent_id" select="agentLiteQuery"></association>
     </resultMap>
 
