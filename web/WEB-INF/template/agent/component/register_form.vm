@@ -1,6 +1,9 @@
 <div id="agent_register_area">
     <div class="weui_cells">
         <form id="agent_register_form">
+            <input type="hidden" name="wechat" value="${wechat}"
+                   autocomplete="off"/>
+
             <div class="weui_cell">
                 <div class="weui_cell_hd">
                     <label class="weui_label">姓名</label>
@@ -47,15 +50,6 @@
                 <div class="weui_cell_bd weui_cell_primary">
                     <input class="weui_input" id="agent_password" name="password" type="password"
                            placeholder="请设置账户密码" autocomplete="off"/>
-                </div>
-            </div>
-            <div class="weui_cell">
-                <div class="weui_cell_hd">
-                    <label class="weui_label">微信号</label>
-                </div>
-                <div class="weui_cell_bd weui_cell_primary">
-                    <input class="weui_input" id="agent_wechat" name="wechat" type="text" placeholder="请填写微信号"
-                           autocomplete="off"/>
                 </div>
             </div>
         </form>

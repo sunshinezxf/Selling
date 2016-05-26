@@ -28,7 +28,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.sql.Timestamp;
 import java.util.*;
 
 /**
@@ -440,31 +439,35 @@ public class AgentController {
         view.setViewName("/agent/account/statement");
         return view;
     }
-    
+
     @RequestMapping(method = RequestMethod.GET, value = "/refundConfig")
-    public ModelAndView refundConfig(){
-    	ModelAndView view = new ModelAndView();
-    	Map<String, Object> condition = new HashMap<String, Object>();
-    	ResultData fetchRefundData = refundService.fetchRefundConfig(condition);
-    	if(fetchRefundData.getResponseCode() != ResponseCode.RESPONSE_OK){
-    		return view;
-    	}
-    	List<RefundConfig> configs = (List<RefundConfig>)fetchRefundData.getData();
-    	
-    	view.setViewName("/agent/etc/refund_config");
-    	return view;
+    public ModelAndView refundConfig() {
+        ModelAndView view = new ModelAndView();
+        Map<String, Object> condition = new HashMap<String, Object>();
+        ResultData fetchRefundData = refundService.fetchRefundConfig(condition);
+        if (fetchRefundData.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            return view;
+        }
+        List<RefundConfig> configs = (List<RefundConfig>) fetchRefundData.getData();
+
+        view.setViewName("/agent/etc/refund_config");
+        return view;
     }
-    
+
     @RequestMapping(method = RequestMethod.GET, value = "/contact")
-    public ModelAndView contact(){
-    	ModelAndView view = new ModelAndView();
-    	view.setViewName("/agent/etc/contact");
-    	return view;
+    public ModelAndView contact() {
+        ModelAndView view = new ModelAndView();
+        view.setViewName("/agent/etc/contact");
+        return view;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/register")
-    public ModelAndView register() {
+    public ModelAndView register(String code) {
         ModelAndView view = new ModelAndView();
+        if (!StringUtils.isEmpty(code)) {
+            String openId = WechatUtil.queryOauthOpenId(code);
+            view.addObject("wechat", openId);
+        }
         view.setViewName("/agent/register");
         return view;
     }
