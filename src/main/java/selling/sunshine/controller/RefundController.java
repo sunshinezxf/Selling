@@ -91,6 +91,7 @@ public class RefundController {
             return result;
         }
         Map<String, Object> condition = new HashMap<>();
+        
         ResultData fetchResponse = refundService.fetchRefundRecordByPage(condition, param);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             result = (DataTablePage<RefundRecord>) fetchResponse.getData();

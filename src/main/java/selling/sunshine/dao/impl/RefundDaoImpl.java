@@ -1,9 +1,11 @@
 package selling.sunshine.dao.impl;
 
 import org.apache.ibatis.session.RowBounds;
+import org.quartz.impl.jdbcjobstore.HSQLDBDelegate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import com.alibaba.fastjson.JSONObject;
 
@@ -139,14 +141,14 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
 							//
 							refundRecordLevel2.setRefundAmount(poolList.get(j).getPrice()*refundConfig.getLevel2Percent());
 							refundRecordLevel2.setRefundPercent(refundConfig.getLevel2Percent());
-							refundRecordLevel2.setRefundDescription("代理商"+agentLevel2.getName()+"作为二级代理商获得下级代理商"+agent.getName()+"购买"+poolList.get(j).getGoods().getName()+"的返现，返现"+refundRecordLevel2.getRefundAmount()+"元");
+							refundRecordLevel2.setRefundDescription("代理商"+agentLevel2.getName()+"作为二级代理商获得下级代理商"+agent.getName()+"在"+poolList.get(j).getPoolDate()+"购买"+poolList.get(j).getGoods().getName()+"的返现，返现"+refundRecordLevel2.getRefundAmount()+"元");
 							//
 							refundRecordLevel3.setRefundAmount(poolList.get(j).getPrice()*refundConfig.getLevel1Percent());
 							refundRecordLevel3.setRefundPercent(refundConfig.getLevel1Percent());
 							refundRecordLevel3.setOrderPool(poolList.get(j));
 							refundRecordLevel3.setAgent(new selling.sunshine.model.lite.Agent(agentLevel3));
 							refundRecordLevel3.setRefundName(year+"年"+month+"月"+day+"日"+"返现账单");
-							refundRecordLevel3.setRefundDescription("代理商"+agentLevel3.getName()+"作为一级代理商获得下级代理商"+agent.getName()+"购买"+poolList.get(j).getGoods().getName()+"的返现，返现"+refundRecordLevel3.getRefundAmount()+"元");
+							refundRecordLevel3.setRefundDescription("代理商"+agentLevel3.getName()+"作为一级代理商获得下级代理商"+agent.getName()+"在"+poolList.get(j).getPoolDate()+"购买"+poolList.get(j).getGoods().getName()+"的返现，返现"+refundRecordLevel3.getRefundAmount()+"元");
 							sqlSession.insert("selling.refund.record.insert",refundRecordLevel3);	
 							//更新agentLevel3的账户余额以及返现总额
 							agentLevel3.setAgentRefund(agentLevel3.getAgentRefund()+refundRecordLevel3.getRefundAmount());
@@ -160,7 +162,7 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
 							//
 							refundRecordLevel2.setRefundAmount(poolList.get(j).getPrice()*refundConfig.getLevel1Percent());
 							refundRecordLevel2.setRefundPercent(refundConfig.getLevel1Percent());
-							refundRecordLevel2.setRefundDescription("代理商"+agentLevel2.getName()+"作为一级代理商获得下级代理商"+agent.getName()+"购买"+poolList.get(j).getGoods().getName()+"的返现，返现"+refundRecordLevel2.getRefundAmount()+"元");							
+							refundRecordLevel2.setRefundDescription("代理商"+agentLevel2.getName()+"作为一级代理商获得下级代理商"+agent.getName()+"在"+poolList.get(j).getPoolDate()+"购买"+poolList.get(j).getGoods().getName()+"的返现，返现"+refundRecordLevel2.getRefundAmount()+"元");							
 						}
 						refundRecordLevel2.setOrderPool(poolList.get(j));
 						refundRecordLevel2.setRefundName(year+"年"+month+"月"+day+"日"+"返现账单");
@@ -204,6 +206,11 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
         DataTablePage<RefundRecord> page = new DataTablePage<RefundRecord>();
         page.setsEcho(param.getsEcho());
         logger.debug(JSONObject.toJSONString(condition));
+        
+        if (!StringUtils.isEmpty(param.getsSearch())) {      	 
+        	 condition.put("refundDescription", "%"+param.getsSearch()+"%");
+		}
+        
         ResultData total = queryRefundRecord(condition);
         if (total.getResponseCode() != ResponseCode.RESPONSE_OK) {
             result.setResponseCode(ResponseCode.RESPONSE_ERROR);
