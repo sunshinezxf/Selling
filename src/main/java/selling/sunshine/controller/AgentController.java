@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.*;
 
 /**
@@ -63,9 +64,9 @@ public class AgentController {
     private ShipmentService shipmentService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/bind")
-    public ModelAndView bind(String code) {
+    public ModelAndView bind(String code, String state) {
         ModelAndView view = new ModelAndView();
-        if (StringUtils.isEmpty(code)) {
+        if (StringUtils.isEmpty(code) || StringUtils.isEmpty(state)) {
             Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "尊敬的代理商,请通过服务号内菜单入口进入绑定页面", "/agent/bind");
             view.addObject("prompt", prompt);
             view.setViewName("/agent/prompt");
@@ -73,6 +74,16 @@ public class AgentController {
         }
         String openId = WechatUtil.queryOauthOpenId(code);
         view.addObject("wechat", openId);
+        String url = PlatformConfig.getValue("server_url") + "/agent/bind";
+        String configUrl = url + "?code=" + code + "&state=" + state;
+        try {
+            String shareLink = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + PlatformConfig.getValue("wechat_appid") + "&redirect_uri=" + URLEncoder.encode(url, "utf-8") + "&response_type=code&scope=snsapi_base&state=view#wechat_redirect";
+            Configuration configuration = WechatConfig.config(configUrl);
+            configuration.setShareLink(shareLink);
+            view.addObject("configuration", configuration);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
         view.setViewName("/agent/wechat/bind");
         return view;
     }
@@ -220,8 +231,8 @@ public class AgentController {
         //获取当前登陆的用户
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
-        if(user == null){
-        	view.setViewName("/agent/login");
+        if (user == null) {
+            view.setViewName("/agent/login");
             return view;
         }
         Map<String, Object> condition = new HashMap<>();
@@ -274,8 +285,8 @@ public class AgentController {
         }
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
-        if(user == null){
-        	view.setViewName("/agent/login");
+        if (user == null) {
+            view.setViewName("/agent/login");
             return view;
         }
         List<OrderItem> orderItems = new ArrayList<OrderItem>();
@@ -357,9 +368,9 @@ public class AgentController {
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         ResultData result = new ResultData();
-        if(user == null){
-        	result.setResponseCode(ResponseCode.RESPONSE_ERROR);
-        	result.setDescription("您需要重新登录");
+        if (user == null) {
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription("您需要重新登录");
             return result;
         }
         List<SortRule> orderBy = new ArrayList<SortRule>();
@@ -384,8 +395,8 @@ public class AgentController {
         ModelAndView view = new ModelAndView();
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
-        if(user == null){
-        	view.setViewName("/agent/login");
+        if (user == null) {
+            view.setViewName("/agent/login");
             return view;
         }
         Map<String, Object> condition = new HashMap<String, Object>();
@@ -405,8 +416,8 @@ public class AgentController {
         ModelAndView view = new ModelAndView();
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
-        if(user == null){
-        	view.setViewName("/agent/login");
+        if (user == null) {
+            view.setViewName("/agent/login");
             return view;
         }
         //获取Agent详细信息
@@ -428,9 +439,9 @@ public class AgentController {
         ResultData result = new ResultData();
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
-        if(user == null){
-        	result.setResponseCode(ResponseCode.RESPONSE_ERROR);
-        	result.setDescription("您需要重新登录");
+        if (user == null) {
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription("您需要重新登录");
             return result;
         }
         Map<String, Object> condition = new HashMap<>();
@@ -451,8 +462,8 @@ public class AgentController {
         ModelAndView view = new ModelAndView();
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
-        if(user == null){
-        	view.setViewName("/agent/login");
+        if (user == null) {
+            view.setViewName("/agent/login");
             return view;
         }
         Map<String, Object> condition = new HashMap<String, Object>();
