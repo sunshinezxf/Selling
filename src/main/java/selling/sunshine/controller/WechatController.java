@@ -2,6 +2,8 @@ package selling.sunshine.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.thoughtworks.xstream.XStream;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -122,6 +124,10 @@ public class WechatController {
                         result.setToUserName(message.getFromUserName());
                         result.setCreateTime(new Date().getTime());
                         if (unbindResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                            Subject subject = SecurityUtils.getSubject();
+                            if (subject != null) {
+                                subject.logout();
+                            }
                             result.setContent("解绑成功");
                         } else {
                             result.setContent("您当前尚未绑定任何账户");
