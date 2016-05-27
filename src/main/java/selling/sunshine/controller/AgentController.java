@@ -220,6 +220,10 @@ public class AgentController {
         //获取当前登陆的用户
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
+        if(user == null){
+        	view.setViewName("/agent/login");
+            return view;
+        }
         Map<String, Object> condition = new HashMap<>();
         //获取商品列表
         condition.put("blockFlag", false);
@@ -269,10 +273,14 @@ public class AgentController {
             return view;
         }
         Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        if(user == null){
+        	view.setViewName("/agent/login");
+            return view;
+        }
         List<OrderItem> orderItems = new ArrayList<OrderItem>();
         int length = form.getCustomerId().length;
         Order order = new Order();
-        User user = (User) subject.getPrincipal();
         order.setAgent(user.getAgent());
         //创建订单和订单项
         double order_price = 0;
@@ -349,6 +357,11 @@ public class AgentController {
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         ResultData result = new ResultData();
+        if(user == null){
+        	result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+        	result.setDescription("您需要重新登录");
+            return result;
+        }
         List<SortRule> orderBy = new ArrayList<SortRule>();
         orderBy.add(new SortRule("create_time", "desc"));
         Map<String, Object> condition = new HashMap<String, Object>();
@@ -371,6 +384,10 @@ public class AgentController {
         ModelAndView view = new ModelAndView();
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
+        if(user == null){
+        	view.setViewName("/agent/login");
+            return view;
+        }
         Map<String, Object> condition = new HashMap<String, Object>();
         condition.put("agentId", user.getAgent().getAgentId());
         condition.put("orderId", orderId);
@@ -388,6 +405,10 @@ public class AgentController {
         ModelAndView view = new ModelAndView();
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
+        if(user == null){
+        	view.setViewName("/agent/login");
+            return view;
+        }
         //获取Agent详细信息
         Map<String, Object> condition = new HashMap<>();
         condition.put("agentId", user.getAgent().getAgentId());
@@ -407,6 +428,11 @@ public class AgentController {
         ResultData result = new ResultData();
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
+        if(user == null){
+        	result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+        	result.setDescription("您需要重新登录");
+            return result;
+        }
         Map<String, Object> condition = new HashMap<>();
         condition.put("agentId", user.getAgent().getAgentId());
         condition.put("blockFlag", false);
@@ -425,6 +451,10 @@ public class AgentController {
         ModelAndView view = new ModelAndView();
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
+        if(user == null){
+        	view.setViewName("/agent/login");
+            return view;
+        }
         Map<String, Object> condition = new HashMap<String, Object>();
         condition.put("agentId", user.getAgent().getAgentId());
         ResultData fetchAgentResponse = agentService.fetchAgent(condition);

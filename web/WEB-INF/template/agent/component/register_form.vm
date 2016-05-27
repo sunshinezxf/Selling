@@ -59,6 +59,7 @@
                 disabled="disabled">
             提交注册申请
         </button>
+        <a href="${path.concat('/agent/login')}" class="weui_btn weui_btn_mini weui_btn_default">登录</a>
     </div>
 </div>
 #parse("/agent/component/gender_list.vm")
