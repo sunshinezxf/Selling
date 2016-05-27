@@ -78,6 +78,10 @@
     $.get_order = function(type){
     	var url = "${path.concat('/agent/order/list')}/" + type;
     	$.getJSON(url, function(data){
+    		if(data.description == "您需要重新登录"){
+    			window.location="${path.concat('/agent/login')}"; 
+    			return;
+    		}
     		var list = data.data;
     		$("#order_list").empty();
     		$.each(list, function(i, val){

@@ -46,6 +46,10 @@
     window.onload = function () {
         var url = "${path.concat('/agent/customer/list')}";
         $.post(url, function (result) {
+        	if(result.description == "您需要重新登录 "){
+        		window.location="${path.concat('/agent/login')}";
+        		return;
+        	}
             var list = result.data;
             for (var i = 0; i < list.length; i++) {
                 var item = list[i];

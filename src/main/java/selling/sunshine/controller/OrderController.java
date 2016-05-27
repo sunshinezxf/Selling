@@ -368,6 +368,9 @@ public class OrderController {
         Subject subject = SecurityUtils.getSubject();
         String clientIp = toolService.getIP(request);
         User user = (User) subject.getPrincipal();
+        if(user == null){
+        	return null;
+        }
         Map<String, Object> condition = new HashMap<String, Object>();
         condition.put("orderId", String.valueOf(params.get("order_id")));
         ResultData orderData = orderService.fetchOrder(condition);
