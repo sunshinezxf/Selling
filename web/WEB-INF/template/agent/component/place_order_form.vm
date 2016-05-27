@@ -51,6 +51,16 @@
     </div>
 </div>
 </form>
+<div class="weui_dialog_alert" id="address_dialog" style="display: none;">
+	    <div class="weui_mask"></div>
+	    <div class="weui_dialog">
+	        <div class="weui_dialog_hd"><strong class="weui_dialog_title">消息</strong></div>
+	        <div class="weui_dialog_bd"></div>
+	        <div class="weui_dialog_ft">
+	            <a href="javascript:;" class="weui_btn_dialog primary">确定</a>
+	        </div>
+	    </div>
+</div>
 #parse("/agent/order/add_order_item.vm")
 <script>
 	//立了一个flag，判断是新增还是修改订单
@@ -139,4 +149,13 @@
 			$(val).children().eq(1).find(".weui_cell_ft").html($.utf8Substr(address,25));
 		});
 	}
+	
+	$.showAddress = function(){
+		$("#address_dialog").find(".weui_dialog_title").html($(this).data("address"));
+		$("#address_dialog").fadeIn();
+	}
+
+	$("#address_dialog").find(".weui_btn_dialog.primary").click(function(){
+    	$("#address_dialog").hide();
+    });
 </script>
