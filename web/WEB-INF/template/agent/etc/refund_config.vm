@@ -1,0 +1,19 @@
+#parse("/common/util.vm")
+<html lang="zh_CN">
+<head>
+    #parse("/agent/component/init.vm")
+    <title>返现规则</title>
+</head>
+<body ontouchstart>
+<div class="container">
+    <div class="hd">
+    	<h1 class="page_title">返现规则</h1>
+    </div>
+    <article class="weui_article">
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;代理商当月下单件数达到目标数量，可以获得一定比例的返现，直接打入代理商账户余额中同时上级代理商和上上级代理商也能获得一定比例的返现。</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;代理商每连续3个月下单达到目标数量，可以获得第1个月的返现，例如代理商2月，3月，4月，5月下单均大到目标数量，那么该代理商4月可以获得2月份的返现，5月可以获得3月份的返现</p>
+    </article>
+    #parse("/agent/component/navigate.vm")
+</div>
+</body>
+</html>

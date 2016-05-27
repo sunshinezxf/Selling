@@ -65,6 +65,7 @@
 		WHERE agent_id = #{agentId}
 	</select>
 	
+
 	<select id="orderPoolQuery" parameterType="java.util.Map" resultMap="orderPoolVo">
 		SELECT pool_id,goods_id,pool_date
 		FROM order_pool
