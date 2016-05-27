@@ -7,6 +7,7 @@
 		<result property="refundPercent" column="refund_percent"></result>
 		<result property="refundAmount" column="refund_amount"></result>
 		<result property="refundDescription" column="refund_description"></result>
+		<result property="createAt" column="create_time"></result>
 		<association property="agent" column="agentId = agent_id" select="agentLiteQuery"></association>
 		<association property="orderPool" column="orderPoolId = order_pool_id" select="orderPoolQuery"></association>
 	</resultMap>
@@ -79,7 +80,7 @@
 	
 	
 	<select id="query" parameterType="java.util.Map" resultMap="refundRecordVo">
-	    SELECT refund_id,order_pool_id,refund_name,refund_percent,refund_amount,refund_description,agent_id
+	    SELECT refund_id,order_pool_id,refund_name,refund_percent,refund_amount,refund_description,agent_id,create_time
 	    FROM refund_record
 	    WHERE 1 = 1
         <if test="refundRecordId != null and refundRecordId != ''">
@@ -87,6 +88,9 @@
         </if>
         <if test="agentId != null and agentId != ''">
             AND agent_id = #{agentId}
+        </if>
+        <if test="createAt !=null and createAt != ''">
+            AND create_time LIKE #{createAt}
         </if>
         <if test="refundDescription !=null and refundDescription != ''">
             AND refund_description LIKE #{refundDescription}

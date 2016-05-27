@@ -210,6 +210,9 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
         if (!StringUtils.isEmpty(param.getsSearch())) {      	 
         	 condition.put("refundDescription", "%"+param.getsSearch()+"%");
 		}
+//        if (!StringUtils.isEmpty(condition.get("createAt"))) {      
+//        	
+//        }  
         
         ResultData total = queryRefundRecord(condition);
         if (total.getResponseCode() != ResponseCode.RESPONSE_OK) {

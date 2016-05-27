@@ -21,6 +21,10 @@ import selling.sunshine.utils.ResultData;
 
 import javax.validation.Valid;
 
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -91,6 +95,32 @@ public class RefundController {
             return result;
         }
         Map<String, Object> condition = new HashMap<>();
+        
+        ResultData fetchResponse = refundService.fetchRefundRecordByPage(condition, param);
+        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result = (DataTablePage<RefundRecord>) fetchResponse.getData();
+        }
+        return result;
+	}
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/record/month")
+    public ModelAndView refundRecordMonth() {
+    	ModelAndView view = new ModelAndView();
+        view.setViewName("/backend/refund/refund_record_month");
+        return view;
+	}
+    
+    @RequestMapping(method = RequestMethod.POST, value = "/record/month")
+    public DataTablePage<RefundRecord> refundRecordMonth(DataTableParam param) {
+        DataTablePage<RefundRecord> result = new DataTablePage<>(param);
+        if (StringUtils.isEmpty(param)) {
+            return result;
+        }
+        Map<String, Object> condition = new HashMap<>();
+		Timestamp timestamp= new Timestamp(System.currentTimeMillis());
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM");
+		String date = dateFormat.format(timestamp);
+        condition.put("createAt", date + "%");
         
         ResultData fetchResponse = refundService.fetchRefundRecordByPage(condition, param);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {

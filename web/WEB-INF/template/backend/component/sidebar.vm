@@ -50,7 +50,7 @@
                     class="fa fa-book"></i> 返现管理<i
                     class="pull-right fa fa-caret-down"></i></a>
                 <ul id="statement-management" class="nav nav-collapse collapse">
-                    <li><a class="sub-nav" href="${path.concat('/')}"><i class="fa fa-edit"></i>
+                    <li><a class="sub-nav" href="${path.concat('/refund/record/month')}"><i class="fa fa-edit"></i>
                         当月返现</a>
                     </li>
                     <li><a class="sub-nav" href="${path.concat('/refund/record/overview')}"><i class="fa fa-tasks"></i>
