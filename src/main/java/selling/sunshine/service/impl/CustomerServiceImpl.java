@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import selling.sunshine.dao.CustomerDao;
 import selling.sunshine.model.Agent;
 import selling.sunshine.model.Customer;
@@ -89,5 +90,18 @@ public class CustomerServiceImpl implements CustomerService {
         }
         return result;
     }
+
+	@Override
+	public ResultData fetchCustomerPhone(Map<String, Object> condition) {
+        ResultData result = new ResultData();
+        ResultData queryResponse = customerDao.queryCustomerPhone(condition);
+        result.setResponseCode(queryResponse.getResponseCode());
+        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(queryResponse.getData());
+        } else if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
+            result.setDescription(queryResponse.getDescription());
+        }
+        return result;
+	}
 
 }

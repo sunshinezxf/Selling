@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
 import selling.sunshine.dao.BaseDao;
 import selling.sunshine.dao.CustomerDao;
 import selling.sunshine.model.Customer;
@@ -164,6 +165,23 @@ public class CustomerDaoImpl extends BaseDao implements CustomerDao {
 					new RowBounds(start, length));
 		} catch (Exception e) {
 			logger.error(e.getMessage());
+		} finally {
+			return result;
+		}
+	}
+
+	@Override
+	public ResultData queryCustomerPhone(Map<String, Object> condition) {
+		ResultData result = new ResultData();
+		try {
+			List<CustomerPhone> list = sqlSession.selectList(
+					"selling.customer.phoneQuery", condition);
+			result.setData(list);
+			result.setResponseCode(ResponseCode.RESPONSE_OK);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+			result.setDescription(e.getMessage());
 		} finally {
 			return result;
 		}

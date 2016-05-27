@@ -76,14 +76,20 @@
     		$("#dialog").fadeIn();
     		$("#customer_phone_new").val(customer.phone.phone);     
         } else{
-    	    $("#update_customer_form").hide();
-            $("#customer_panel").fadeIn();
             $.post(url, {customerId: customerId, name: name, phone: phone, address: address}, function (result) {
-            var newCustomer = result.data;
-            var node = "<a class='weui_cell' onclick='updateCustomer(this)' id='" + newCustomer.customerId + "'><div class='weui_cell_bd weui_cell_primary'><p>" + name + "</p></div><div class='weui_cell_ft'>" + phone + "</div></a>";
-            $("#customer_list").append(node);
-            $("#" + customerId).remove();          
-        });
+               if (result.responseCode == "RESPONSE_OK") {
+                  var newCustomer = result.data;
+                  var node = "<a class='weui_cell' onclick='updateCustomer(this)' id='" + newCustomer.customerId + "'><div class='weui_cell_bd weui_cell_primary'><p>" + name + "</p></div><div class='weui_cell_ft'>" + phone + "</div></a>";
+                  $("#customer_list").append(node);
+                  $("#" + customerId).remove();    
+                  $("#update_customer_form").hide();
+                  $("#customer_panel").fadeIn();  
+               }else{
+                  $("#dialog").find(".weui_dialog_bd").html("您新填入的手机号已经有其他人正在使用，请检查是否输入错误！");
+    		      $("#dialog").fadeIn();
+               }
+                  
+            });
     	
     	}
        

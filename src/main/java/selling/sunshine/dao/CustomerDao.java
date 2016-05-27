@@ -19,4 +19,6 @@ public interface CustomerDao {
     ResultData queryCustomer(Map<String, Object> condition);
 
     ResultData queryCustomerByPage(Map<String, Object> condition, DataTableParam param);
+    
+    ResultData queryCustomerPhone(Map<String, Object> condition);
 }

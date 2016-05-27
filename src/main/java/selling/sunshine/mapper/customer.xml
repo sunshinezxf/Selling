@@ -72,8 +72,14 @@
     <select id="phoneQuery" parameterType="java.util.Map" resultMap="phoneVo">
         SELECT customer_phone_id, phone, block_flag, create_time
         FROM customer_phone
-        WHERE customer_id = #{customerId}
-        AND block_flag = 0
+        WHERE 1=1
+        <if test="customerId != null and customerId != ''">
+          AND customer_id = #{customerId}
+        </if>
+        <if test="phone != null and phone != ''">
+          AND phone = #{phone}
+        </if>
+          AND block_flag = 0
     </select>
 
     <select id="agentLiteQuery" parameterType="java.util.Map" resultMap="agentLiteVo">

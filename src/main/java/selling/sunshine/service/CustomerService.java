@@ -19,4 +19,6 @@ public interface CustomerService {
     ResultData fetchCustomer(Map<String, Object> condition);
 
     ResultData fetchCustomer(Map<String, Object> condition, DataTableParam param);
+    
+    ResultData fetchCustomerPhone(Map<String, Object> condition);
 }

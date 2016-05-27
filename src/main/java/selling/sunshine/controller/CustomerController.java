@@ -9,9 +9,11 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
 import selling.sunshine.form.CustomerForm;
 import selling.sunshine.model.Agent;
 import selling.sunshine.model.Customer;
+import selling.sunshine.model.CustomerPhone;
 import selling.sunshine.model.User;
 import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
@@ -20,6 +22,7 @@ import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
 import javax.validation.Valid;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,7 +60,7 @@ public class CustomerController {
         return result;
     }
 
-    @ResponseBody
+	@ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/add")
     public ResultData addCustomer(@Valid CustomerForm customerForm,
                                   BindingResult result) {
@@ -66,6 +69,13 @@ public class CustomerController {
             resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
             return resultData;
         }
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("phone", customerForm.getPhone());
+        resultData = customerService.fetchCustomerPhone(condition);
+        if (((List<CustomerPhone>)resultData.getData()).size()!=0) {
+        	 resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
+        	 return resultData;
+		}
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         selling.sunshine.model.lite.Agent agent = user.getAgent();
@@ -83,6 +93,13 @@ public class CustomerController {
             response.setResponseCode(ResponseCode.RESPONSE_ERROR);
             return response;
         }
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("phone", customerForm.getPhone());
+        response = customerService.fetchCustomerPhone(condition);
+        if (((List<CustomerPhone>)response.getData()).size()!=0) {
+        	 response.setResponseCode(ResponseCode.RESPONSE_ERROR);
+        	 return response;
+		}
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         selling.sunshine.model.lite.Agent agent = user.getAgent();
