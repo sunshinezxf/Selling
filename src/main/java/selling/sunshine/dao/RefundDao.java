@@ -1,6 +1,7 @@
 package selling.sunshine.dao;
 
 import selling.sunshine.model.RefundConfig;
+import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.utils.ResultData;
 
 import java.util.Map;
@@ -14,6 +15,8 @@ public interface RefundDao {
     ResultData queryRefundConfig(Map<String, Object> condition);
     
     ResultData queryRefundRecord(Map<String, Object> condition);
+    
+    ResultData queryRefundRecordByPage(Map<String, Object> condition,DataTableParam param);
     
     ResultData refundRecord();
 }

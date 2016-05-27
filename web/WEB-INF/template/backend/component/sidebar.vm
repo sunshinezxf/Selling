@@ -53,7 +53,7 @@
                     <li><a class="sub-nav" href="${path.concat('/')}"><i class="fa fa-edit"></i>
                         当月返现</a>
                     </li>
-                    <li><a class="sub-nav" href="${path.concat('/')}"><i class="fa fa-tasks"></i>
+                    <li><a class="sub-nav" href="${path.concat('/refund/record/overview')}"><i class="fa fa-tasks"></i>
                         返现记录</a>
                     </li>
                 </ul>
