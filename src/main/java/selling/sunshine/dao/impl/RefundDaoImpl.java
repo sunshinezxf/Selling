@@ -1,8 +1,11 @@
 package selling.sunshine.dao.impl;
 
+import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.alibaba.fastjson.JSONObject;
 
 import selling.sunshine.dao.BaseDao;
 import selling.sunshine.dao.RefundDao;
@@ -10,10 +13,13 @@ import selling.sunshine.model.Agent;
 import selling.sunshine.model.OrderPool;
 import selling.sunshine.model.RefundConfig;
 import selling.sunshine.model.RefundRecord;
+import selling.sunshine.pagination.DataTablePage;
+import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.utils.IDGenerator;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -190,6 +196,41 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
 		
 		return result;					
 	}
+
+	@Override
+	public ResultData queryRefundRecordByPage(Map<String, Object> condition,
+			DataTableParam param) {
+        ResultData result = new ResultData();
+        DataTablePage<RefundRecord> page = new DataTablePage<RefundRecord>();
+        page.setsEcho(param.getsEcho());
+        logger.debug(JSONObject.toJSONString(condition));
+        ResultData total = queryRefundRecord(condition);
+        if (total.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription(total.getDescription());
+            return result;
+        }
+        page.setiTotalRecords(((List<RefundRecord>) total.getData()).size());
+        page.setiTotalDisplayRecords(((List<RefundRecord>) total.getData()).size());
+        List<RefundRecord> current = queryRefundRecordByPage(condition, param.getiDisplayStart(), param.getiDisplayLength());
+        if (current.size() == 0) {
+            result.setResponseCode(ResponseCode.RESPONSE_NULL);
+        }
+        page.setData(current);
+        result.setData(page);
+        return result;
+	}
+	
+    private List<RefundRecord> queryRefundRecordByPage(Map<String, Object> condition, int start, int length) {
+        List<RefundRecord> result = new ArrayList<>();
+        try {
+            result = sqlSession.selectList("selling.refund.record.query", condition, new RowBounds(start, length));
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        } finally {
+            return result;
+        }
+    }
 
 	
 }

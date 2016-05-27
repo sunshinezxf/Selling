@@ -3,13 +3,14 @@
 <head>
     #parse("/backend/component/init.vm")
     #parse("/backend/component/init_datatable.vm")
-    <title>账号管理</title>
+    <title>返现管理</title>
 </head>
 <body>
     #parse("/backend/component/navigate_with_login.vm")
     <div class="container-fluid">
         #parse("/backend/component/sidebar.vm")
-        #parse("/backend/admin/component/admin_management_table.vm")
+        #parse("/backend/refund/component/refund_record_table.vm")
+       
     </div>
 </body>
 </html>

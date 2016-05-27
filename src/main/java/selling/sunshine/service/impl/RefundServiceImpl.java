@@ -4,8 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import selling.sunshine.dao.RefundDao;
 import selling.sunshine.model.RefundConfig;
+import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.RefundService;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
@@ -71,6 +73,20 @@ public class RefundServiceImpl implements RefundService {
 	public ResultData fetchRefundRecord(Map<String, Object> condition) {
 		ResultData resultData = new ResultData();
 		ResultData queryResponse = refundDao.queryRefundRecord(condition);
+		resultData.setResponseCode(queryResponse.getResponseCode());
+		if(queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK){
+			resultData.setData(queryResponse.getData());
+		} else {
+			resultData.setDescription(queryResponse.getDescription());
+		}
+		return resultData;
+	}
+
+	@Override
+	public ResultData fetchRefundRecordByPage(Map<String, Object> condition,
+			DataTableParam param) {
+		ResultData resultData = new ResultData();
+		ResultData queryResponse = refundDao.queryRefundRecordByPage(condition,param);
 		resultData.setResponseCode(queryResponse.getResponseCode());
 		if(queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK){
 			resultData.setData(queryResponse.getData());

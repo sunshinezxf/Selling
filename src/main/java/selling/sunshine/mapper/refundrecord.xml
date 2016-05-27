@@ -8,12 +8,27 @@
 		<result property="refundAmount" column="refund_amount"></result>
 		<result property="refundDescription" column="refund_description"></result>
 		<association property="agent" column="agentId = agent_id" select="agentLiteQuery"></association>
+		<association property="orderPool" column="orderPoolId = order_pool_id" select="orderPoolQuery"></association>
 	</resultMap>
 	
 	  <resultMap id="agentLiteVo" type="selling.sunshine.model.lite.Agent">
         <result property="agentId" column="agent_id"></result>
         <result property="name" column="agent_name"></result>
         <result property="phone" column="agent_phone"></result>
+    </resultMap>
+    
+    <resultMap id="goodsVo" type="selling.sunshine.model.Goods">
+		<result property="goodsId" column="goods_id"></result>
+		<result property="name" column="goods_name"></result>
+		<result property="price" column="goods_price"></result>
+		<result property="description" column="goods_description"></result>
+	</resultMap>
+    
+    <resultMap id="orderPoolVo" type="selling.sunshine.model.OrderPool">
+       <result property="orderPoolId" column="pool_id"></result>
+       <result property="poolDate" column="pool_date"></result>
+       <association property="goods" column="goodsId = goods_id"
+			select="goodsQuery"></association>
     </resultMap>
 	
     <insert id="insert" parameterType="selling.sunshine.model.RefundRecord"
@@ -50,8 +65,21 @@
 		WHERE agent_id = #{agentId}
 	</select>
 	
-	<select id="query" parameterType="java.util.Map" resultMap="refundRecordVo">
-	    SELECT refund_id,refund_name,refund_percent,refund_amount,refund_description,agent_id
+
+	<select id="orderPoolQuery" parameterType="java.util.Map" resultMap="orderPoolVo">
+		SELECT pool_id,goods_id,pool_date
+		FROM order_pool
+		WHERE 1 = 1 
+		<if test="orderPoolId != null and orderPoolId != ''">
+            AND pool_id	 = #{orderPoolId}
+        </if>
+        ORDER BY pool_date
+	</select>
+	
+	
+	
+	<select id="query">
+	    SELECT refund_id,order_pool_id,refund_name,refund_percent,refund_amount,refund_description,agent_id
 	    FROM refund_record
 	    WHERE 1 = 1
         <if test="refundRecordId != null and refundRecordId != ''">
@@ -60,6 +88,12 @@
         <if test="agentId != null and agentId != ''">
             AND agent_id = #{agentId}
         </if>
+	</select>
+	
+	<select id="goodsQuery" parameterType="java.util.Map" resultMap="goodsVo">
+		SELECT goods_id, goods_name, goods_price, goods_description
+		FROM goods
+		WHERE goods_id = #{goodsId}
 	</select>
 
 	

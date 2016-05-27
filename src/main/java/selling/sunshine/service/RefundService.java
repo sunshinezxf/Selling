@@ -1,6 +1,7 @@
 package selling.sunshine.service;
 
 import selling.sunshine.model.RefundConfig;
+import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.utils.ResultData;
 
 import java.util.Map;
@@ -16,4 +17,6 @@ public interface RefundService {
     ResultData refundRecord();
     
     ResultData fetchRefundRecord(Map<String, Object> condition);
+    
+    ResultData fetchRefundRecordByPage(Map<String, Object> condition,DataTableParam param);
 }
