@@ -19,7 +19,7 @@
 <script>
     $(document).ready(function () {
         $("#refund_record_table").DataTable({
-            searching: false,
+            searching: true,
             ordering: false,
             paging: true,
             "sPaginationType": "full_numbers",
@@ -53,7 +53,11 @@
                 {title: "编号", "mData": "refundRecordId"},
                 {title: "代理商", "mData": "agent.name"},
                 {title: "商品", "mData": "orderPool.goods.name"},
-                {title: "日期", "mData": "orderPool.poolDate"},
+                {
+                    title: "日期", "mRender": function (data, type, full) {
+                    return ((new Date(full.createAt)).format("yyyy/MM/dd"));
+                }
+                },
                 {title: "返现金额", "mData": "refundAmount"},
                 {title: "返现比例", "mData": "refundPercent"},
                 {title: "内容", "mData": "refundDescription"}                  

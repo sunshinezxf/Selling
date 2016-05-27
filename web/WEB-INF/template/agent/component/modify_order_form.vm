@@ -91,6 +91,16 @@
 </div>
 <input type="hidden" name="orderId" value="${order.orderId}"/>
 </form>
+<div class="weui_dialog_alert" id="address_dialog" style="display: none;">
+	    <div class="weui_mask"></div>
+	    <div class="weui_dialog">
+	        <div class="weui_dialog_hd"><strong class="weui_dialog_title">消息</strong></div>
+	        <div class="weui_dialog_bd"></div>
+	        <div class="weui_dialog_ft">
+	            <a href="javascript:;" class="weui_btn_dialog primary">确定</a>
+	        </div>
+	    </div>
+</div>
 #if(${status} == "SAVED" && ${operation} == "MODIFY")
 #parse("/agent/order/add_order_item.vm")
 #end
@@ -100,6 +110,12 @@
 	$(document).ready(function(){
 		$("#add_order_item").hide();
 		$.calculate();
+		
+		//将地址数据存入dom节点中,并添加显示函数，必须放在地址字符串截取前
+		$.each($(".address"), function(i, val){
+			$(val).parent(".weui_cell").data("address", $(val).html());
+			$(val).parent(".weui_cell").bind("click",$.showAddress);
+		});
 		
 		//地址字符串截取
 		$.addressBeautify();
@@ -238,5 +254,14 @@
 			$(val).children().eq(1).find(".weui_cell_ft").html($.utf8Substr(address,25));
 		});
 	}
+	
+	$.showAddress = function(){
+		$("#address_dialog").find(".weui_dialog_title").html($(this).data("address"));
+		$("#address_dialog").fadeIn();
+	}
+
+	$("#address_dialog").find(".weui_btn_dialog.primary").click(function(){
+    	$("#address_dialog").hide();
+    });
     
 </script>

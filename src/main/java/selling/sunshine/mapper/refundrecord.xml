@@ -78,7 +78,7 @@
 	
 	
 	
-	<select id="query">
+	<select id="query" parameterType="java.util.Map" resultMap="refundRecordVo">
 	    SELECT refund_id,order_pool_id,refund_name,refund_percent,refund_amount,refund_description,agent_id
 	    FROM refund_record
 	    WHERE 1 = 1
@@ -88,6 +88,13 @@
         <if test="agentId != null and agentId != ''">
             AND agent_id = #{agentId}
         </if>
+        <if test="refundDescription !=null and refundDescription != ''">
+            AND refund_description LIKE #{refundDescription}
+        </if>
+        <if test="agentId != null and agentId != ''">
+            GROUP BY agent_id
+        </if>
+        ORDER BY create_time
 	</select>
 	
 	<select id="goodsQuery" parameterType="java.util.Map" resultMap="goodsVo">

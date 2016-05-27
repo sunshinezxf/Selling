@@ -71,7 +71,7 @@
             ORDER BY ${rule}
         </if>
     </select>
-
+   
     <update id="update" parameterType="selling.sunshine.model.Agent" useGeneratedKeys="false">
         UPDATE agent
         <set>

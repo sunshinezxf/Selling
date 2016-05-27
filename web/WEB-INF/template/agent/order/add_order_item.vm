@@ -134,6 +134,12 @@
     		$(this).closest(".weui_cells.weui_cells_access").remove();
     		$.calculate();
         });
+        
+        //将地址数据存入dom节点中,并添加显示函数，必须放在地址字符串截取前
+        var address_cell = $(order_item_list).eq(0).find(".address").parent(".weui_cell");
+		address_cell.data("address", address_cell.find(".address").html());
+		address_cell.bind("click",$.showAddress);
+		
         //地址字符串截取长度
         $.addressBeautify();
         

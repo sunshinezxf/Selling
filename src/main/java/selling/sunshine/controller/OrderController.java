@@ -149,15 +149,19 @@ public class OrderController {
     	ModelAndView view = new ModelAndView();
     	Subject subject = SecurityUtils.getSubject();
     	User user = (User) subject.getPrincipal();
+    	if(user == null){
+    		view.setViewName("/agent/login");
+            return view;
+        }
     	Map<String, Object> condition = new HashMap<String, Object>();
     	condition.put("agentId", user.getAgent().getAgentId());
     	condition.put("orderId", orderId);
     	ResultData orderFetchData = orderService.fetchOrder(condition);
     	if(orderFetchData.getResponseCode() != ResponseCode.RESPONSE_OK){
-    		 Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "取消失败", "/agent/order/manage/0");
-    		 attr.addFlashAttribute("prompt", prompt);
-             view.setViewName("redirect:/agent/prompt");
-             return view;
+    		Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "取消失败", "/agent/order/manage/0");
+    		attr.addFlashAttribute("prompt", prompt);
+    		view.setViewName("redirect:/agent/prompt");
+            return view;
     	}
     	Order order = ((List<Order>)orderFetchData.getData()).get(0);
 		order.setBlockFlag(true);
@@ -181,11 +185,15 @@ public class OrderController {
             view.setViewName("redirect:/order/list/0");
             return view;
         }
-        Subject subject = SecurityUtils.getSubject();
+        Subject subject = SecurityUtils.getSubject(); 
+        User user = (User) subject.getPrincipal();
+        if(user == null){
+        	view.setViewName("/agent/login");
+            return view;
+        }
         List<OrderItem> orderItems = new ArrayList<OrderItem>();
         int length = form.getCustomerId().length;
         Order order = new Order();
-        User user = (User) subject.getPrincipal();
         order.setAgent(user.getAgent());
         //构造订单和订单项
         double total_price = 0;
@@ -256,6 +264,10 @@ public class OrderController {
         ModelAndView view = new ModelAndView();
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
+        if(user == null){
+        	view.setViewName("/agent/login");
+            return view;
+        }
         Map<String, Object> condition = new HashMap<String, Object>();
         condition.put("agentId", user.getAgent().getAgentId());
         condition.put("blockFlag", false);
@@ -297,6 +309,10 @@ public class OrderController {
         String orderId = form.getOrderId();
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
+        if(user == null){
+        	view.setViewName("/agent/login");
+            return view;
+        }
         Map<String, Object> condition = new HashMap<String, Object>();
         condition.put("agentId", user.getAgent().getAgentId());
         condition.put("orderId", orderId);
