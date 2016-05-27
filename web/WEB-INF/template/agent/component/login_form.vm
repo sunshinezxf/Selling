@@ -17,6 +17,9 @@
                 <input class="weui_input" id="agent_password" name="password" type="password" placeholder="填写账户密码"
                        autocomplete="off"/>
             </div>
+            <div class="weui_cell_ft weui_cell_primary">
+                <a class="page_desc" href="${path.concat('/agent/lethe')}">忘记密码?</a>
+            </div>
         </div>
     </form>
 </div>
@@ -24,7 +27,9 @@
     <button type="button" class="weui_btn weui_btn_disabled weui_btn_default" id="lg_btn" disabled="disabled">
         登录
     </button>
+    <a href="${path.concat('/agent/register')}" class="weui_btn weui_btn_mini weui_btn_default">注册</a>
 </div>
+
 <script>
     $("#lg_btn").click(function () {
         $("#agent_login_form").attr("action", "${path.concat('/agent/login')}");
