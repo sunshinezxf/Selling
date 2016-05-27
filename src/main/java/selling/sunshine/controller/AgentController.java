@@ -167,6 +167,7 @@ public class AgentController {
         //查询代理商的客户列表
         condition.clear();
         condition.put("agentId", user.getAgent().getAgentId());
+        condition.put("blockFlag", false);
         ResultData fetchCustomerResponse = customerService.fetchCustomer(condition);
         if (fetchCustomerResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             view.addObject("customer", fetchCustomerResponse.getData());
@@ -229,6 +230,7 @@ public class AgentController {
         //获取当前代理的客户列表
         condition.clear();
         condition.put("agentId", user.getAgent().getAgentId());
+        condition.put("blockFlag", false);
         ResultData fetchCustomerResponse = customerService.fetchCustomer(condition);
         if (fetchCustomerResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             view.addObject("customer", fetchCustomerResponse.getData());
@@ -407,6 +409,7 @@ public class AgentController {
         User user = (User) subject.getPrincipal();
         Map<String, Object> condition = new HashMap<>();
         condition.put("agentId", user.getAgent().getAgentId());
+        condition.put("blockFlag", false);
         ResultData fetchResponse = customerService.fetchCustomer(condition);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             result.setData(fetchResponse.getData());
