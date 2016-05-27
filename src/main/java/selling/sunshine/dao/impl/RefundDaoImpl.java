@@ -75,7 +75,7 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
     	 ResultData result = new ResultData();
          condition = handle(condition);
          try {
-             List<RefundConfig> list = sqlSession.selectList("selling.refund.record.query", condition);
+             List<RefundRecord> list = sqlSession.selectList("selling.refund.record.query", condition);
              result.setData(list);
          } catch (Exception e) {
              logger.error(e.getMessage());

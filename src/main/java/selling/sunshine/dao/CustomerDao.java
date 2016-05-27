@@ -13,6 +13,8 @@ public interface CustomerDao {
     ResultData insertCustomer(Customer customer);
 
     ResultData updateCustomer(Customer customer);
+    
+    ResultData deleteCustomer(Customer customer);
 
     ResultData queryCustomer(Map<String, Object> condition);
 

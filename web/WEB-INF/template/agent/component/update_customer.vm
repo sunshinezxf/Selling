@@ -21,6 +21,7 @@
     </div>
     <div class="weui_btn_area">
         <button type="button" class="weui_btn weui_btn_primary" id="update_confirm_btn">确认修改</button>
+        <button type="button" class="weui_btn weui_btn_warn" id="update_delete_btn">删除客户</a>
         <button type="button" class="weui_btn weui_btn_default" id="update_cancel_btn">取消</button>
     </div>  
 </div>
@@ -77,12 +78,22 @@
        
        
     });
+	
+	$("#update_delete_btn").click(function(){
+    	var url = "${path.concat('/customer/delete/')}" + customerId;
+    	$.post(url,{},function(result){
+    		$("#" + customerId).remove();
+    		$("#update_customer_form").hide();
+    		$("#customer_panel").fadeIn();
+    	});
+    });
 
     $("#update_cancel_btn").click(function () {
         $("#update_customer_form").hide();
         $("#customer_panel").fadeIn();
     });
-
+    
+    
     var customerId;
     var customer;
     function updateCustomer(obj) {

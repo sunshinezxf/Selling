@@ -10,12 +10,12 @@
         <div class="bd">
             <div class="weui_panel">
                 <div class="weui_cells weui_cells_access clear-margin-top">
-                    <a class="weui_cell" id="add_customer_btn">
+                    <div class="weui_cell" id="add_customer_btn">
                         <div class="weui_cell_bd weui_cell_primary">
-                            <p>新增客户</p>
+                            <a id="add_customer_btn" class="weui_btn weui_btn_plain_primary">新增客户</a>
                         </div>
                         <div class="weui_cell_ft"></div>
-                    </a>
+                    </div>
                 </div>
                 <div class="list-cell">
                     <div class="weui_cells weui_cells_access" id="customer_list">

@@ -98,9 +98,23 @@ public class CustomerDaoImpl extends BaseDao implements CustomerDao {
 		} finally {
 			return result;
 		}
-
 	}
-
+	
+	@Transactional
+	@Override
+	public ResultData deleteCustomer(Customer customer) {
+		ResultData result = new ResultData();
+		try{
+			sqlSession.update("selling.customer.delete",customer);
+			result.setData(customer);
+		} catch (Exception e){
+			logger.error(e.getMessage());
+			result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+		} finally {
+			return result;
+		}
+	}
+	
 	@Override
 	public ResultData queryCustomer(Map<String, Object> condition) {
 		ResultData result = new ResultData();
@@ -154,4 +168,5 @@ public class CustomerDaoImpl extends BaseDao implements CustomerDao {
 			return result;
 		}
 	}
+
 }

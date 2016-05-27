@@ -13,6 +13,8 @@ public interface CustomerService {
     ResultData createCustomer(Customer customer);
 
     ResultData updateCustomer(Customer customer);
+    
+    ResultData deleteCustomer(Customer customer);
 
     ResultData fetchCustomer(Map<String, Object> condition);
 

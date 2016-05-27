@@ -41,7 +41,7 @@
         <if test="name != null and name != ''">
             AND customer_name = #{name}
         </if>
-        <if test="blockFlag != null and blockFlag != ''">
+        <if test="blockFlag != null">
             AND block_flag = #{blockFlag}
         </if>
         <if test="agentId != null and agentId != ''">
@@ -53,6 +53,14 @@
         INSERT INTO customer(customer_id, customer_name, agent_id, block_flag, create_time)
         VALUES (#{customerId}, #{name}, #{agent.agentId}, #{blockFlag}, #{createAt})
     </insert>
+    
+    <update id="delete" parameterType="selling.sunshine.model.Customer">
+    	UPDATE customer
+    	<set>
+    		block_flag = 1 
+    	</set>
+    	WHERE customer_id = #{customerId} AND agent_id = #{agent.agentId}
+    </update>
 
     <select id="addressQuery" parameterType="java.util.Map" resultMap="addressVo">
         SELECT customer_address_id, address, block_flag, create_time

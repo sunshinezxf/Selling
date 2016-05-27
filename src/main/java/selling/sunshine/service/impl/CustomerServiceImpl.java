@@ -50,6 +50,19 @@ public class CustomerServiceImpl implements CustomerService {
         }
         return result;
     }
+    
+    @Override
+	public ResultData deleteCustomer(Customer customer) {
+    	 ResultData result = new ResultData();
+         ResultData deleteResponse = customerDao.deleteCustomer(customer);
+         result.setResponseCode(deleteResponse.getResponseCode());
+         if (deleteResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+             result.setData(deleteResponse.getData());
+         } else {
+             result.setDescription(deleteResponse.getDescription());
+         }
+         return result;
+	}
 
     @Override
     public ResultData fetchCustomer(Map<String, Object> condition) {
@@ -76,4 +89,5 @@ public class CustomerServiceImpl implements CustomerService {
         }
         return result;
     }
+
 }

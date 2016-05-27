@@ -98,6 +98,32 @@ public class CustomerController {
         }
         return response;
     }
+    
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value = "/delete/{customerId}")
+    public ResultData deleteCustomer(@PathVariable String customerId){
+    	ResultData response = new ResultData();
+    	Subject subject = SecurityUtils.getSubject();
+    	User user = (User) subject.getPrincipal();
+    	Map<String, Object> condition = new HashMap<String, Object>();
+    	condition.put("agentId", user.getAgent().getAgentId());
+    	condition.put("customerId", customerId);
+    	ResultData fetchCustomerResponse = customerService.fetchCustomer(condition);
+    	if(fetchCustomerResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
+    		response.setResponseCode(fetchCustomerResponse.getResponseCode());
+    		response.setDescription(fetchCustomerResponse.getDescription());
+    		return response;
+    	}
+    	Customer customer = ((List<Customer>)fetchCustomerResponse.getData()).get(0);
+    	ResultData updateResponse = customerService.deleteCustomer(customer);
+    	if(updateResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
+    		response.setResponseCode(updateResponse.getResponseCode());
+    		response.setDescription(updateResponse.getDescription());
+    		return response;
+    	}
+    	response.setData(updateResponse.getData());
+    	return response;
+    }
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/{customerId}")
@@ -105,6 +131,7 @@ public class CustomerController {
         ResultData result = new ResultData();
         Map<String, Object> condition = new HashMap<>();
         condition.put("customerId", customerId);
+        condition.put("blockFlag", false);
         ResultData fetchResponse = customerService.fetchCustomer(condition);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             result.setData(((List<Customer>) fetchResponse.getData()).get(0));
