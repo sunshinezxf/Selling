@@ -21,7 +21,6 @@ public class WechatConfig {
         String timestamp = createTimestamp();
         String signature = "";
         String jsapiTicket = getJsapiTicket();
-        logger.debug("jsapi ticket: " + jsapiTicket);
         StringBuffer sb = new StringBuffer();
         sb.append("jsapi_ticket=").append(jsapiTicket).append("&noncestr=")
                 .append(nonceStr).append("&timestamp=").append(timestamp).append("&url=").append(url);

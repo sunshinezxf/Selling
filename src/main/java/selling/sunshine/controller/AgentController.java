@@ -80,12 +80,48 @@ public class AgentController {
             String shareLink = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + PlatformConfig.getValue("wechat_appid") + "&redirect_uri=" + URLEncoder.encode(url, "utf-8") + "&response_type=code&scope=snsapi_base&state=view#wechat_redirect";
             Configuration configuration = WechatConfig.config(configUrl);
             configuration.setShareLink(shareLink);
-            logger.debug(JSONObject.toJSONString(configuration));
             view.addObject("configuration", configuration);
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
         view.setViewName("/agent/wechat/bind");
+        return view;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/login")
+    public ModelAndView login() {
+        ModelAndView view = new ModelAndView();
+        String url = "http://" + PlatformConfig.getValue("server_url") + "/agent/login";
+        String configUrl = url + "";
+        Configuration configuration = WechatConfig.config(configUrl);
+        configuration.setShareLink(url);
+        view.addObject("configuration", configuration);
+        view.setViewName("/agent/login");
+        return view;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/register")
+    public ModelAndView register(String code, String state) {
+        ModelAndView view = new ModelAndView();
+        String url = "http://" + PlatformConfig.getValue("server_url") + "/agent/register";
+        String configUrl;
+        if (!StringUtils.isEmpty(code) && !StringUtils.isEmpty(code)) {
+            String openId = WechatUtil.queryOauthOpenId(code);
+            configUrl = url + "?code=" + code + "&state=" + state;
+            view.addObject("wechat", openId);
+        } else {
+            configUrl = url + "";
+        }
+        try {
+            String shareLink = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + PlatformConfig.getValue("wechat_appid") + "&redirect_uri=" + URLEncoder.encode(url, "utf-8") + "&response_type=code&scope=snsapi_base&state=view#wechat_redirect";
+            Configuration configuration = WechatConfig.config(configUrl);
+            configuration.setShareLink(shareLink);
+            view.addObject("configuration", configuration);
+            logger.debug(JSONObject.toJSONString(configuration));
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        view.setViewName("/agent/register");
         return view;
     }
 
@@ -189,32 +225,32 @@ public class AgentController {
         ResultData fetchShipmentResponse = shipmentService.fetchShipmentConfig(condition);
         if (fetchShipmentResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             List<ShipConfig> shipmentList = (List<ShipConfig>) fetchShipmentResponse.getData();
-            if(shipmentList.isEmpty()){
-            	//如果没有配置shipment
-            	view.addObject("hasConfig", false);
+            if (shipmentList.isEmpty()) {
+                //如果没有配置shipment
+                view.addObject("hasConfig", false);
             } else {
-	            int currentDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
-	            shipmentList.sort(new Comparator<ShipConfig>() {
-	                @Override
-	                public int compare(ShipConfig ship1, ShipConfig ship2) {
-	                    return Integer.valueOf(ship1.getDate()).compareTo(Integer.valueOf(ship2.getDate()));
-	                }
-	            });
-	            int shipDay = 0;
-	            boolean isNextMonth = false;
-	            for (ShipConfig ship : shipmentList) {
-	                if (ship.getDate() > currentDay) {
-	                    shipDay = ship.getDate();
-	                    break;
-	                }
-	            }
-	            if (shipDay == 0) {
-	                shipDay = shipmentList.get(0).getDate();
-	                isNextMonth = true;
-	            }
-	            view.addObject("hasConfig", true);
-	            view.addObject("shipDay", shipDay);
-	            view.addObject("isNextMonth", isNextMonth);
+                int currentDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+                shipmentList.sort(new Comparator<ShipConfig>() {
+                    @Override
+                    public int compare(ShipConfig ship1, ShipConfig ship2) {
+                        return Integer.valueOf(ship1.getDate()).compareTo(Integer.valueOf(ship2.getDate()));
+                    }
+                });
+                int shipDay = 0;
+                boolean isNextMonth = false;
+                for (ShipConfig ship : shipmentList) {
+                    if (ship.getDate() > currentDay) {
+                        shipDay = ship.getDate();
+                        break;
+                    }
+                }
+                if (shipDay == 0) {
+                    shipDay = shipmentList.get(0).getDate();
+                    isNextMonth = true;
+                }
+                view.addObject("hasConfig", true);
+                view.addObject("shipDay", shipDay);
+                view.addObject("isNextMonth", isNextMonth);
             }
         }
         //根据代理商的ID查询代理商的详细信息
@@ -512,17 +548,6 @@ public class AgentController {
         return view;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/register")
-    public ModelAndView register(String code) {
-        ModelAndView view = new ModelAndView();
-        if (!StringUtils.isEmpty(code)) {
-            String openId = WechatUtil.queryOauthOpenId(code);
-            view.addObject("wechat", openId);
-        }
-        view.setViewName("/agent/register");
-        return view;
-    }
-
     @RequestMapping(method = RequestMethod.POST, value = "/register")
     public ModelAndView register(@Valid AgentForm form, BindingResult result, RedirectAttributes attr) {
         ModelAndView view = new ModelAndView();
@@ -548,12 +573,6 @@ public class AgentController {
         }
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/login")
-    public ModelAndView login() {
-        ModelAndView view = new ModelAndView();
-        view.setViewName("/agent/login");
-        return view;
-    }
 
     @RequestMapping(method = RequestMethod.POST, value = "/login")
     public ModelAndView login(@Valid AgentLoginForm form, BindingResult result) {
@@ -576,12 +595,12 @@ public class AgentController {
         view.setViewName("redirect:/agent/order/place");
         return view;
     }
-    
-    @RequestMapping(method = RequestMethod.GET, value="/modifypassword")
-    public ModelAndView modifyPassword(){
-    	ModelAndView view = new ModelAndView();
-    	view.setViewName("redirect:/etc/modify_password");
-    	return view;
+
+    @RequestMapping(method = RequestMethod.GET, value = "/modifypassword")
+    public ModelAndView modifyPassword() {
+        ModelAndView view = new ModelAndView();
+        view.setViewName("redirect:/etc/modify_password");
+        return view;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/prompt")
