@@ -40,6 +40,12 @@
                         </div>
                         <p class="weui_grid_label">联系我们</p>
                     </a>
+                    <a class="weui_grid" href="${path.concat('/agent/contact')}">
+                        <div class="weui_grid_icon">
+                            <i class="icon icon_progress"></i>
+                        </div>
+                        <p class="weui_grid_label">修改密码</p>
+                    </a>
                 </div>
             </div>
         </div>

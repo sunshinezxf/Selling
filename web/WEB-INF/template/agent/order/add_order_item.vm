@@ -59,46 +59,54 @@
     	//添加一栏
         $("#add_order_item").hide();
         var place_order_item = 
-        	"<div class='weui_cells weui_cells_access'>" +
-        	"<a class='weui_cell'>" + 
-	       	"<div class='weui_cell_bd weui_cell_primary'>" +
-	        "<p>客户姓名</p>" + 
-	        "</div>" +
-	        "<div class='weui_cell_ft'><span>" + customer_name + "</span>(<span>" + customer_phone + "</span>)</div>" +
-	    	"</a>" +
-	    	"<a class='weui_cell'>" + 
-	       	"<div class='weui_cell_bd weui_cell_primary'>" +
-	        "<p>收货地址</p>" + 
-	        "</div>" +
-	        "<div class='weui_cell_ft address'>" + customer_address + "</div>" +
-	    	"</a>" +
-	        "<a class='weui_cell'>" + 
-	        "<div class='weui_cell_bd weui_cell_primary'>" + 
-	        "<p>商品名称</p>" + 
-	        "</div>" +
-	        "<div class='weui_cell_ft'>" + goods_name + "</div>" + 
-	    	"</a>" +
-	    	"<a class='weui_cell'>" + 
-	        "<div class='weui_cell_bd weui_cell_primary quantity'>" + 
-	        "<p>数量</p>" + 
-	        "</div>" + 
-	        "<div class='weui_cell_ft quantity'>" + $("#goods_quantity").val() + "</div>" + 
-	        "</a>" +
-	    	"<div class='weui_cell weui_cells_tips clear-margin-top'>" + 
-	        "金额:" + goods_price * $("#goods_quantity").val() + "元" + 
-	    	"</div>" + 
-	    	"<div class='weui_cells_tips delete'>删除</div>" + 
-	    	"<input class='goods_quantity' type='hidden' name='goodsQuantity' value='" + $("#goods_quantity").val() + "'/>" + 
-	    	"<input class='goods_id' type='hidden' name='goodsId' value='" + goods_id + "'/>" + 
-	    	"<input class='order_item_price' type='hidden' name='orderItemPrice' value='" + goods_price + "'/>" + 
-	    	"<input class='customer_id' type='hidden' name='customerId' value='" + customer_id + "'/>" + 
-	    	"<input class='order_item_id' type='hidden' name='orderItemId' value='0'/>" +
-			"</div>";
+        	"<div class='weui_cells weui_cells_access'> \
+        		<div class='weui_cell order_item_head'>" + customer_name + "</div> \
+        		<div class='order_item_body'> \
+		        	<a class='weui_cell'> \
+				       	<div class='weui_cell_bd weui_cell_primary'> \
+				        <p>客户姓名</p> \
+				        </div> \
+				        <div class='weui_cell_ft'><span>" + customer_name + "</span>(<span>" + customer_phone + "</span>)</div> \
+			    	</a> \
+			    	<a class='weui_cell'> \
+				       	<div class='weui_cell_bd weui_cell_primary'> \
+				        <p>收货地址</p> \
+				        </div> \
+				        <div class='weui_cell_ft address'>" + customer_address + "</div> \
+			    	</a> \
+			        <a class='weui_cell'> \
+				        <div class='weui_cell_bd weui_cell_primary'> \
+				        <p>商品名称</p> \
+			    	    </div> \
+			        	<div class='weui_cell_ft'>" + goods_name + "</div> \
+			    	</a> \
+			    	<a class='weui_cell'> \
+				        <div class='weui_cell_bd weui_cell_primary quantity'> \
+				        <p>数量</p> \
+				        </div> \
+				        <div class='weui_cell_ft quantity'>" + $("#goods_quantity").val() + "</div> \
+			        </a> \
+			    	<div class='weui_cell weui_cells_tips clear-margin-top'> \
+			     	金额:" + goods_price * $("#goods_quantity").val() + "元 \
+			    	</div> \
+			    	<div class='weui_cells_tips delete'>删除</div> \
+			    	<input class='goods_quantity' type='hidden' name='goodsQuantity' value='" + $("#goods_quantity").val() + "'/> \
+			    	<input class='goods_id' type='hidden' name='goodsId' value='" + goods_id + "'/> \
+			    	<input class='order_item_price' type='hidden' name='orderItemPrice' value='" + goods_price + "'/> \
+			    	<input class='customer_id' type='hidden' name='customerId' value='" + customer_id + "'/> \
+			    	<input class='order_item_id' type='hidden' name='orderItemId' value='0'/> \
+		    	</div> \
+			</div>";
         $("#order_item_list").prepend(place_order_item);
-        
         //添加修改事件
         var order_item_list = $("#order_item_list").children();
-    	$(order_item_list).eq(0).children().eq(0).on("click", function(){
+        //添加窗口滑动事件
+        $(order_item_list).eq(0).children(".order_item_head").on("click",function(){
+        	$(order_item_list).eq(0).children(".order_item_body").slideToggle();
+        });
+         
+        //客户修改事件
+    	$(order_item_list).eq(0).children(".order_item_body").children().eq(0).on("click", function(){
     		isAdd = false;
     		current_modify_dom = this;
     		customer_id = $(this).parent(".weui_cells.weui_cells_access").find(".customer_id").val();
@@ -108,7 +116,7 @@
     		$("#customer_option").fadeIn();
     	});
     	//商品修改事件
-    	$(order_item_list).eq(0).children().eq(2).on("click", function(){
+    	$(order_item_list).eq(0).children(".order_item_body").children().eq(2).on("click", function(){
     		isAdd = false;
     		current_modify_dom = this;
     		goods_id = $(this).parent(".weui_cells.weui_cells_access").find(".goods_id").val();
@@ -118,7 +126,7 @@
     		$("#goods_option").fadeIn();
     	});
     	//数量修改事件
-    	$(order_item_list).eq(0).children().eq(3).on("click",function(){
+    	$(order_item_list).eq(0).children(".order_item_body").children().eq(3).on("click",function(){
     		current_modify_dom = this;
     		goods_id = $(this).parent(".weui_cells.weui_cells_access").find(".goods_id").val();
     		goods_name = $(this).find(".weui_cell_ft").html();
