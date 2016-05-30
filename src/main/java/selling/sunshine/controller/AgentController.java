@@ -80,6 +80,7 @@ public class AgentController {
             String shareLink = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + PlatformConfig.getValue("wechat_appid") + "&redirect_uri=" + URLEncoder.encode(url, "utf-8") + "&response_type=code&scope=snsapi_base&state=view#wechat_redirect";
             Configuration configuration = WechatConfig.config(configUrl);
             configuration.setShareLink(shareLink);
+            logger.debug(JSONObject.toJSONString(configuration));
             view.addObject("configuration", configuration);
         } catch (Exception e) {
             logger.error(e.getMessage());
