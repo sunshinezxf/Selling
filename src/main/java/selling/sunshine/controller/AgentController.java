@@ -189,27 +189,33 @@ public class AgentController {
         ResultData fetchShipmentResponse = shipmentService.fetchShipmentConfig(condition);
         if (fetchShipmentResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             List<ShipConfig> shipmentList = (List<ShipConfig>) fetchShipmentResponse.getData();
-            int currentDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
-            shipmentList.sort(new Comparator<ShipConfig>() {
-                @Override
-                public int compare(ShipConfig ship1, ShipConfig ship2) {
-                    return Integer.valueOf(ship1.getDate()).compareTo(Integer.valueOf(ship2.getDate()));
-                }
-            });
-            int shipDay = 0;
-            boolean isNextMonth = false;
-            for (ShipConfig ship : shipmentList) {
-                if (ship.getDate() > currentDay) {
-                    shipDay = ship.getDate();
-                    break;
-                }
+            if(shipmentList.isEmpty()){
+            	//如果没有配置shipment
+            	view.addObject("hasConfig", false);
+            } else {
+	            int currentDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+	            shipmentList.sort(new Comparator<ShipConfig>() {
+	                @Override
+	                public int compare(ShipConfig ship1, ShipConfig ship2) {
+	                    return Integer.valueOf(ship1.getDate()).compareTo(Integer.valueOf(ship2.getDate()));
+	                }
+	            });
+	            int shipDay = 0;
+	            boolean isNextMonth = false;
+	            for (ShipConfig ship : shipmentList) {
+	                if (ship.getDate() > currentDay) {
+	                    shipDay = ship.getDate();
+	                    break;
+	                }
+	            }
+	            if (shipDay == 0) {
+	                shipDay = shipmentList.get(0).getDate();
+	                isNextMonth = true;
+	            }
+	            view.addObject("hasConfig", true);
+	            view.addObject("shipDay", shipDay);
+	            view.addObject("isNextMonth", isNextMonth);
             }
-            if (shipDay == 0) {
-                shipDay = shipmentList.get(0).getDate();
-                isNextMonth = true;
-            }
-            view.addObject("shipDay", shipDay);
-            view.addObject("isNextMonth", isNextMonth);
         }
         //根据代理商的ID查询代理商的详细信息
         condition.clear();
@@ -569,6 +575,13 @@ public class AgentController {
         }
         view.setViewName("redirect:/agent/order/place");
         return view;
+    }
+    
+    @RequestMapping(method = RequestMethod.GET, value="/modifypassword")
+    public ModelAndView modifyPassword(){
+    	ModelAndView view = new ModelAndView();
+    	view.setViewName("redirect:/etc/modify_password");
+    	return view;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/prompt")

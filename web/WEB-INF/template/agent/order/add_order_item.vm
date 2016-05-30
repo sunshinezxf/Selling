@@ -171,12 +171,12 @@
     });
     
     $.check = function(){
-    	if(typeof customer_name == "undefined" || customer_name == "") {
+    	if(typeof customer_name == "undefined" || customer_name == "" || typeof customer_id == "undefined") {
     		$("#dialog").find(".weui_dialog_bd").html("没有选择客户");
     		$("#dialog").fadeIn();
     		return false;
     	}
-    	if(typeof goods_name == "undefined" || customer_name == "") {
+    	if(typeof goods_name == "undefined" || customer_name == "" || typeof goods_id == "undefined") {
     		$("#dialog").find(".weui_dialog_bd").html("没有选择商品");
     		$("#dialog").fadeIn();
     		return false;

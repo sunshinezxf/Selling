@@ -4,16 +4,18 @@
         <div class="panel">
            <div class="hd">
                 <h1 class="page_title">代客下单</h1>
-                 #if(!${isNextMonth})
-                 	#set($payDay = $shipDay - 1)
-                 	<p class="page_desc">本月${payDay}号之前下单，将在${shipDay}号发货</p>
-                 #else
-                 	#if($shipDay == 1)
-                 		<p class="page_desc">月底前下单，将在下月1号发货</p>
-                 	#else
-                 		#set($payDay = $shipDay - 1)
-                 		<p class="page_desc">下月${payDay}号之前下单,将在下月${shipDay}号发货</p>
-                 	#end
+                #if(${hasConfig})
+					 #if(!${isNextMonth})
+					 	#set($payDay = $shipDay - 1)
+					 	<p class="page_desc">本月${payDay}号之前下单，将在${shipDay}号发货</p>
+					 #else
+					 	#if($shipDay == 1)
+					 		<p class="page_desc">月底前下单，将在下月1号发货</p>
+					 	#else
+					 		#set($payDay = $shipDay - 1)
+					 		<p class="page_desc">下月${payDay}号之前下单,将在下月${shipDay}号发货</p>
+					 	#end
+					 #end
                  #end
             </div>
             <div class="bd">
