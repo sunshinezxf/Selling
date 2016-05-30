@@ -12,6 +12,8 @@ public class PlatformConfig {
 
     private static String accessToken;
 
+    private static String jsapiTicket;
+
     private static Properties props = new Properties();
 
     static {
@@ -32,6 +34,17 @@ public class PlatformConfig {
             accessToken = WechatUtil.queryAccessToken();
         }
         return accessToken;
+    }
+
+    public static String getJsapiTicket() {
+        if (StringUtils.isEmpty(jsapiTicket)) {
+            getAccessToken();
+        }
+        return jsapiTicket;
+    }
+
+    public static void setJsapiTicket(String jsapiTicket) {
+        PlatformConfig.jsapiTicket = jsapiTicket;
     }
 
     public static void setAccessToken(String token) {

@@ -6,11 +6,34 @@ import com.alibaba.fastjson.JSONObject;
  * Created by sunshine on 5/27/16.
  */
 public class Configuration {
+    private String appId;
+    private String jsapiTicket;
     private String nonceStr;
     private String timestamp;
     private String signature;
     private String url;
     private String shareLink;
+
+    public Configuration() {
+        super();
+        this.appId = PlatformConfig.getValue("wechat_appid");
+    }
+
+    public String getAppId() {
+        return appId;
+    }
+
+    public void setAppId(String appId) {
+        this.appId = appId;
+    }
+
+    public String getJsapiTicket() {
+        return jsapiTicket;
+    }
+
+    public void setJsapiTicket(String jsapiTicket) {
+        this.jsapiTicket = jsapiTicket;
+    }
 
     public String getNonceStr() {
         return nonceStr;

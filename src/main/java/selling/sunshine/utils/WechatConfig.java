@@ -1,5 +1,8 @@
 package selling.sunshine.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -10,14 +13,17 @@ import java.util.UUID;
  * Created by sunshine on 5/27/16.
  */
 public class WechatConfig {
+    private static Logger logger = LoggerFactory.getLogger(WechatConfig.class);
+
     public static Configuration config(String url) {
         Configuration result = new Configuration();
         String nonceStr = createNonceStr();
         String timestamp = createTimestamp();
         String signature = "";
-
+        String jsapiTicket = getJsapiTicket();
+        logger.debug("jsapi ticket: " + jsapiTicket);
         StringBuffer sb = new StringBuffer();
-        sb.append("&noncestr=")
+        sb.append("jsapi_ticket=").append(jsapiTicket).append("&noncestr=")
                 .append(nonceStr).append("&timestamp=").append(timestamp).append("&url=").append(url);
         try {
             MessageDigest crypt = MessageDigest.getInstance("SHA-1");
@@ -29,11 +35,16 @@ public class WechatConfig {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+        result.setJsapiTicket(jsapiTicket);
         result.setNonceStr(nonceStr);
         result.setSignature(signature);
         result.setTimestamp(timestamp);
         result.setUrl(url);
         return result;
+    }
+
+    private static String getJsapiTicket() {
+        return PlatformConfig.getJsapiTicket();
     }
 
     private static String createNonceStr() {

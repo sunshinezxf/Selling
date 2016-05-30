@@ -38,6 +38,7 @@ public class WechatUtil {
             String message = new String(bytes, "UTF-8");
             JSONObject object = JSON.parseObject(message);
             result = object.getString("access_token");
+            PlatformConfig.setJsapiTicket(queryJsApiTicket(result));
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -100,6 +101,33 @@ public class WechatUtil {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static String queryJsApiTicket(String token) {
+        String url = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=" + token + "&type=jsapi";
+        String result = "";
+        try {
+            URL address = new URL(url);
+            HttpURLConnection connection = (HttpURLConnection) address.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            connection.setDoOutput(true);
+            connection.setDoInput(true);
+            System.setProperty("sun.net.client.defaultConnectTimeout", "30000");
+            System.setProperty("sun.net.client.defaultReadTimeout", "30000");
+            connection.connect();
+            InputStream is = connection.getInputStream();
+            int size = is.available();
+            byte[] bytes = new byte[size];
+            is.read(bytes);
+            String message = new String(bytes, "UTF-8");
+            JSONObject object = JSON.parseObject(message);
+            result = object.getString("ticket");
+        } catch (MalformedURLException e) {
+        } catch (IOException e) {
+        } finally {
+            return result;
+        }
     }
 
     public static final String inputStream2String(InputStream in) throws IOException {

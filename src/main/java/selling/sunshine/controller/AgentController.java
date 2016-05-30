@@ -74,7 +74,7 @@ public class AgentController {
         }
         String openId = WechatUtil.queryOauthOpenId(code);
         view.addObject("wechat", openId);
-        String url = PlatformConfig.getValue("server_url") + "/agent/bind";
+        String url = "http://" + PlatformConfig.getValue("server_url") + "/agent/bind";
         String configUrl = url + "?code=" + code + "&state=" + state;
         try {
             String shareLink = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + PlatformConfig.getValue("wechat_appid") + "&redirect_uri=" + URLEncoder.encode(url, "utf-8") + "&response_type=code&scope=snsapi_base&state=view#wechat_redirect";
