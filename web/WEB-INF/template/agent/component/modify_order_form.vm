@@ -82,9 +82,11 @@
             		</div>		
             		<p id="total_goods_price" >共计:0元<p>
             	</div>
+            	#if(${status} == "SAVED" || ${status} == "SUBMITTED")
             	<div class="weui_cell_ft">
             		<a class="weui_btn weui_btn_primary" id="place_order_btn">&nbsp&nbsp&nbsp下单&nbsp&nbsp&nbsp</a>
             	</div>
+            	#end
             </div>
         </div>
     </div>

@@ -19,14 +19,10 @@
                  #end
             </div>
             <div class="bd">
+                <div class="bd spacing" >
+                   <a id="add_order_btn" class="weui_btn weui_btn_plain_primary">添加订货单</a>
+                </div>
                 <div class="weui_panel">
-                    <div class="weui_cells weui_cells_access clear-margin-top">
-                        <div class="weui_cell" >
-                            <div class="weui_cell_bd weui_cell_primary">
-                                <a id="add_order_btn" class="weui_btn weui_btn_plain_primary">添加订货单</a>
-                            </div>
-                        </div>
-                    </div>
                     <div class="list-cell" id="order_item_list">
                        <!-- 改成了动态添加 -->
                     </div>
