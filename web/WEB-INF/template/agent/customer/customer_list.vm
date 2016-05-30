@@ -8,15 +8,10 @@
             <p class="page_desc">电话: ${agent.getPhone()} </p>
         </div>
         <div class="bd">
+            <div class="bd spacing">
+                <button id="add_customer_btn" class="weui_btn weui_btn_plain_primary">新增客户</a>
+            </div>
             <div class="weui_panel">
-                <div class="weui_cells weui_cells_access clear-margin-top">
-                    <div class="weui_cell" id="add_customer_btn">
-                        <div class="weui_cell_bd weui_cell_primary">
-                            <a id="add_customer_btn" class="weui_btn weui_btn_plain_primary">新增客户</a>
-                        </div>
-                        <div class="weui_cell_ft"></div>
-                    </div>
-                </div>
                 <div class="list-cell">
                     <div class="weui_cells weui_cells_access" id="customer_list">
                     #*

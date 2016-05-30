@@ -530,12 +530,12 @@ public class AgentController {
     @RequestMapping(method = RequestMethod.GET, value = "/refundConfig")
     public ModelAndView refundConfig() {
         ModelAndView view = new ModelAndView();
-        Map<String, Object> condition = new HashMap<String, Object>();
-        ResultData fetchRefundData = refundService.fetchRefundConfig(condition);
-        if (fetchRefundData.getResponseCode() != ResponseCode.RESPONSE_OK) {
-            return view;
-        }
-        List<RefundConfig> configs = (List<RefundConfig>) fetchRefundData.getData();
+//        Map<String, Object> condition = new HashMap<String, Object>();
+//        ResultData fetchRefundData = refundService.fetchRefundConfig(condition);
+//        if (fetchRefundData.getResponseCode() != ResponseCode.RESPONSE_OK) {
+//            return view;
+//        }
+//        List<RefundConfig> configs = (List<RefundConfig>) fetchRefundData.getData();
 
         view.setViewName("/agent/etc/refund_config");
         return view;

@@ -19,14 +19,10 @@
                  #end
             </div>
             <div class="bd">
+                <div class="bd spacing" >
+                   <a id="add_order_btn" class="weui_btn weui_btn_plain_primary">添加订货单</a>
+                </div>
                 <div class="weui_panel">
-                    <div class="weui_cells weui_cells_access clear-margin-top">
-                        <div class="weui_cell" >
-                            <div class="weui_cell_bd weui_cell_primary">
-                                <a id="add_order_btn" class="weui_btn weui_btn_plain_primary">添加订货单</a>
-                            </div>
-                        </div>
-                    </div>
                     <div class="list-cell" id="order_item_list">
                        <!-- 改成了动态添加 -->
                     </div>
@@ -115,9 +111,9 @@
     	var order_info_list = new Object();
         var order_item_list = $("#order_item_list").children();
         $.each(order_item_list, function(i, val){
-        	var name = $(val).children().eq(2).find(".weui_cell_ft").text();
-        	var quantity = $(val).children().eq(3).find(".weui_cell_ft").text();
-        	var price = $(val).children().eq(8).val();
+        	var name = $(val).children(".order_item_body").children().eq(2).find(".weui_cell_ft").text();
+        	var quantity = $(val).children(".order_item_body").children().eq(3).find(".weui_cell_ft").text();
+        	var price = $(val).children(".order_item_body").children().eq(8).val();
         	if(order_info_list[name] == undefined) {
         		order_info_list[name] = new Object();
         		order_info_list[name]['quantity'] = parseInt(quantity);
@@ -147,8 +143,8 @@
     $.addressBeautify = function(){
    		var order_item_list = $("#order_item_list").children();
     	$.each(order_item_list,function(i, val){
-			var address = $(val).children().eq(1).find(".weui_cell_ft").html();
-			$(val).children().eq(1).find(".weui_cell_ft").html($.utf8Substr(address,25));
+			var address = $(val).children(".order_item_body").children().eq(1).find(".weui_cell_ft").html();
+			$(val).children(".order_item_body").children().eq(1).find(".weui_cell_ft").html($.utf8Substr(address,25));
 		});
 	}
 	

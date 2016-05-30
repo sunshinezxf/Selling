@@ -4,5 +4,4 @@
 <link rel="stylesheet" href="${path.concat('/plugins/weui/weui.css')}"/>
 <link rel="stylesheet" href="${path.concat('/material/css/agent/custom.css')}"/>
 <script type="text/javascript" src="${path.concat('/plugins/jquery/jquery-1.12.3.min.js')}"></script>
-<script type="text/javascript" src="${path.concat('/plugins/vconsole/vconsole.min.js')}"></script>
 <script type="text/javascript" src="${path.concat('/material/js/frontend/common.js')}"></script>
