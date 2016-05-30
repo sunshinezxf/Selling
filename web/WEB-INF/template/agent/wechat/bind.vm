@@ -18,4 +18,9 @@
     </div>
 </div>
 </body>
+<script>
+    var title = "账号绑定";
+    var description = "成功绑定账号后,无需登录,即可从微信进入";
+</script>
+    #parse("/agent/wechat/component/validation.vm")
 </html>

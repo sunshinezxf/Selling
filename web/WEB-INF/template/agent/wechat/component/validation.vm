@@ -1,8 +1,9 @@
 #if(${configuration})
-<script type="javascript">
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script>
     wx.config({
         debug: true,
-        appId: '${appId}',
+        appId: '${configuration.appId}',
         timestamp: '${configuration.timestamp}',
         nonceStr: '${configuration.nonceStr}',
         signature: '${configuration.signature}',
@@ -15,8 +16,8 @@
     // 2.1 监听“分享给朋友”，按钮点击、自定义分享内容及分享结果接口
     wx.ready(function () {
         wx.onMenuShareAppMessage({
-            title: '云草纲目,岂止与养生', // 分享标题
-            desc: '', // 分享描述
+            title: title, // 分享标题
+            desc: description, // 分享描述
             link: '${configuration.shareLink}', // 分享链接
             imgUrl: '', // 分享图标
             type: '', // 分享类型,music、video或link，不填默认为link
@@ -28,7 +29,7 @@
         });
         // 2.2 监听“分享到朋友圈”按钮点击、自定义分享内容及分享结果接口
         wx.onMenuShareTimeline({
-            title: '云草纲目,岂止与养生',
+            title: title,
             link: '${configuration.shareLink}',
             imgUrl: '',
             trigger: function (res) {
