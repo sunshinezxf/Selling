@@ -71,8 +71,8 @@
     		var goods_dom = $("#goods_option").children(".goods").eq(0);
     		if(goods_dom != null){
     			goods_id = goods_dom.attr("id");
-    			goods_name = goods_dom.find(".weui_cell_bd span").html();
-    			goods_price = goods_dom.find(".weui_cell_ft span:first-child").html();
+    			goods_name = goods_dom.find(".weui_cell_bd").children("span").eq(0).html();
+	        	goods_price = goods_dom.find(".weui_cell_bd").children("span").eq(1).html();
     			$("#goods").find(".weui_cell_bd").html("<p>" + goods_name + "</p>");
 	        	$("#price").html("单价：" + goods_price + "元");
     		}

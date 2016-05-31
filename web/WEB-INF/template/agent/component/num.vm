@@ -21,6 +21,7 @@
 		$(current_modify_dom).find(".weui_cell_ft").html(quantity);
 		$(current_modify_dom).parents(".weui_cells.weui_cells_access").find(".goods_quantity").val(quantity);
 		$(current_modify_dom).parents(".weui_cells.weui_cells_access").find(".weui_cell.weui_cells_tips.clear-margin-top").html("金额:" + goods_price * parseInt(quantity) + "元");
+		$(current_modify_dom).parents(".weui_cells.weui_cells_access").children(".order_item_head").children(".weui_cell_ft").children("span").eq(1).html(quantity);
 		$.calculate();
 		$("#quantity_modify").hide();
 		$("#place_order_panel").fadeIn();  

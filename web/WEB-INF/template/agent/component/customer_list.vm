@@ -2,10 +2,13 @@
     #foreach($elem in $customer)
     <label class="weui_cell customer" id="${elem.customerId}">
         <div class="weui_cell_bd weui_cell_primary">
-            <span>${elem.name}</span>
+            <span>${elem.name}</span>(<span>${elem.phone.phone}</span>)
+        </div>
+        <div class="weui_cell_ft">
+        	<input type="radio" class="weui_check" >
+        	<span id="radio${elem.customerId}" class="weui_icon_checked"></span>
         </div>
         <input id="customer_phone${elem.customerId}" type="hidden" value="${elem.phone.phone}"/>
-        <div class="weui_cell_ft">${elem.phone.phone}</div>
         <div style="display:none;" id="customer_address${elem.customerId}">${elem.address.address}</div>
     </label>
     #end
@@ -16,14 +19,22 @@
 #parse("/agent/component/add_customer_in_order.vm")
 <script>
 	$(document).ready(function(){
-		$(".weui_cell.customer").click($.customer_choose_click);
+		$(".weui_cell.customer").find(".weui_check").click($.customer_choose_click);
 	});
+	
+	//进入这个页面之前先初始化该页面
+	$.init_customer_list = function(){
+		$(".weui_check").next().removeClass("weui_icon_checked");
+		if(!isAdd){
+			$("#radio" + customer_id).addClass("weui_icon_checked");
+		}
+	}
     
     $.customer_choose_click = function(){
     	if(isAdd){
-		    var id_value = $(this).attr("id");
+		    var id_value = $(this).closest(".customer").attr("id");
 		    customer_id = id_value;
-		    customer_name = $(this).find(".weui_cell_bd span").html();
+		    customer_name = $(this).closest(".customer").find(".weui_cell_bd span").html();
 		    customer_phone = $("#customer_phone"+customer_id).val();
 		    customer_address = $("#customer_address" + customer_id).html();
 	        $("#customer").find(".weui_cell_bd").html("<p>" + customer_name + "</p>");
@@ -33,14 +44,15 @@
         } else {
         	isAdd = true;
         	var pre_customer_id = customer_id;
-        	var id_value = $(this).attr("id");
+        	var id_value = $(this).closest(".customer").attr("id");
         	customer_id = id_value;
-		    customer_name = $(this).find(".weui_cell_bd span").html();
+		    customer_name = $(this).closest(".customer").find(".weui_cell_bd span").html();
 		    customer_phone = $("#customer_phone"+customer_id).val();
 		    customer_address = $("#customer_address" + customer_id).html();
         	$(current_modify_dom).find(".weui_cell_ft").html("<span>" + customer_name+ "</span>(<span>" + customer_phone + "</span>)");
         	$(current_modify_dom).parents(".weui_cells.weui_cells_access").find(".customer_id").val(customer_id);
         	$(current_modify_dom).parents(".weui_cells.weui_cells_access").find(".address").html($.utf8Substr(customer_address,25));
+        	$(current_modify_dom).parents(".weui_cells.weui_cells_access").children(".order_item_head").children(".weui_cell_bd").html(customer_name);
         	$("#customer_option").hide();
         	$("#place_order_panel").fadeIn();  
         }
