@@ -14,10 +14,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import selling.sunshine.form.AgentForm;
-import selling.sunshine.form.AgentLoginForm;
-import selling.sunshine.form.OrderItemForm;
-import selling.sunshine.form.SortRule;
+import selling.sunshine.form.*;
 import selling.sunshine.model.*;
 import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
@@ -88,6 +85,11 @@ public class AgentController {
         return view;
     }
 
+    /**
+     * 获取密码找回的表单页面
+     *
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/lethe")
     public ModelAndView lethe() {
         ModelAndView view = new ModelAndView();
@@ -103,6 +105,40 @@ public class AgentController {
         }
         view.setViewName("/agent/lethe");
         return view;
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/lethe")
+    public ModelAndView lethe(@Valid AgentLetheForm form, BindingResult result) {
+        ModelAndView view = new ModelAndView();
+        if (result.hasErrors()) {
+            Prompt prompt = new Prompt(PromptCode.DANGER, "信息错误", "请您正确填写个人信息", "/agent/lethe");
+            view.addObject("prompt", prompt);
+            view.setViewName("/agent/prompt");
+            return view;
+        }
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("name", form.getName());
+        condition.put("phone", form.getPhone());
+        ResultData fetchResponse = agentService.fetchAgent(condition);
+        if (fetchResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "查不到对应信息的代理商", "/agent/lethe");
+            view.addObject("prompt", prompt);
+            view.setViewName("/agent/prompt");
+            return view;
+        }
+        Agent agent = ((List<Agent>) fetchResponse.getData()).get(0);
+        ResultData resetResponse = agentService.resetPassword(agent);
+        if (resetResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            Prompt prompt = new Prompt(PromptCode.SUCCESS, "提示", "密码重置成功,将通过短信发送到您的手机", "/agent/login");
+            view.addObject("prompt", prompt);
+            view.setViewName("/agent/prompt");
+            return view;
+        } else {
+            Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "重置操作出现问题,请重新尝试", "/agent/lethe");
+            view.addObject("prompt", prompt);
+            view.setViewName("/agent/prompt");
+            return view;
+        }
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/login")

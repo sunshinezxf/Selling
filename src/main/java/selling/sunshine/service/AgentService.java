@@ -25,4 +25,6 @@ public interface AgentService {
     ResultData consume(Agent agent, double money);
 
     ResultData unbindAgent(String openId);
+
+    ResultData resetPassword(Agent agent);
 }

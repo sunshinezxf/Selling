@@ -103,6 +103,10 @@ public class AgentDaoImpl extends BaseDao implements AgentDao {
         synchronized (lock) {
             try {
                 sqlSession.update("selling.agent.update", agent);
+                User user = new User(agent.getPhone(), agent.getPassword());
+                user.setAgent(new selling.sunshine.model.lite.Agent(agent));
+                sqlSession.update("selling.user.update", user);
+                result.setData(agent);
                 result.setData(agent);
             } catch (Exception e) {
                 logger.debug(e.getMessage());

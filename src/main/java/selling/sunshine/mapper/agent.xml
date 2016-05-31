@@ -71,7 +71,7 @@
             ORDER BY ${rule}
         </if>
     </select>
-   
+
     <update id="update" parameterType="selling.sunshine.model.Agent" useGeneratedKeys="false">
         UPDATE agent
         <set>
@@ -80,6 +80,9 @@
             </if>
             <if test="phone != null and phone != ''">
                 agent_phone = #{phone},
+            </if>
+            <if test="password != null and password != ''">
+                agent_password = #{password},
             </if>
             <if test="address != null and address != ''">
                 agent_address = #{address},
@@ -96,7 +99,7 @@
             <if test="agentRefund != null and agentRefund != ''">
                 agent_refund = #{agentRefund},
             </if>
-
+            agent_id = #{agentId}
         </set>
         WHERE agent_id = #{agentId}
     </update>

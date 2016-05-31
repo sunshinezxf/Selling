@@ -51,6 +51,14 @@
         </set>
     </insert>
 
+    <update id="update" parameterType="selling.sunshine.model.User">
+        UPDATE user
+        <set>
+            password = #{password}
+        </set>
+        WHERE agent_id = #{agent.agentId} OR manager_id = #{admin.adminId}
+    </update>
+
     <select id="query" parameterType="java.util.Map" resultMap="userVo">
         SELECT user_id, username, password, role_id, manager_id, agent_id,
         block_flag, create_time
