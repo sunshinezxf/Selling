@@ -8,7 +8,7 @@
 <div class="container">
     <div class="tabbar">
         <div class="weui_tab_bd">
-            #parse("/agent/me/menu.vm")
+            #parse("/agent/me/component/menu.vm")
         </div>
         #parse("/agent/component/navigate.vm")
     </div>
