@@ -1,0 +1,82 @@
+<div class="weui_cells">
+    <form id="agent_lethe_form">
+        <div class="weui_cell">
+            <div class="weui_cell_hd">
+                <label class="weui_label">姓名</label>
+            </div>
+            <div class="weui_cell_bd weui_cell_primary">
+                <input class="weui_input" id="agent_name" name="name" type="text" placeholder="填写代理商姓名"
+                       autocomplete="off"/>
+            </div>
+        </div>
+        <div class="weui_cell">
+            <div class="weui_cell_bd">
+                <label class="weui_label">手机</label>
+            </div>
+            <div class="weui_cell_bd weui_cell_primary">
+                <input class="weui_input" id="agent_phone" name="phone" type="tel" placeholder="填写手机号"
+                       autocomplete="off"/>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="weui_btn_area">
+    <button type="button" class="weui_btn weui_btn_disabled weui_btn_default" id="lethe_btn" disabled="disabled">
+        找回密码
+    </button>
+</div>
+<script>
+    $("#lethe_btn").click(function () {
+        $("#agent_lethe_form").attr("action", "${path.concat('/agent/lethe')}");
+        $("#agent_lethe_form").attr("method", "post");
+        $("#agent_lethe_form").submit();
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $("#agent_phone").bind("input propertychange", function () {
+            if (input_validate()) {
+                active();
+            } else {
+                inactive();
+            }
+        })
+        $("#agent_name").bind("input propertychange", function () {
+            if (input_validate()) {
+                active();
+            } else {
+                inactive();
+            }
+        })
+    });
+
+    function active() {
+        $("#lethe_btn").removeAttr("disabled");
+        $("#lethe_btn").removeClass("weui_btn_disabled");
+        $("#lethe_btn").removeClass("weui_btn_default");
+        $("#lethe_btn").addClass("weui_btn_primary");
+    }
+
+    function inactive() {
+        $("#lethe_btn").attr("disabled", "disabled");
+        $("#lethe_btn").removeClass("weui_btn_primary");
+        $("#lethe_btn").addClass("weui_btn_default");
+        $("#lethe_btn").addClass("weui_btn_disabled");
+    }
+
+    function input_validate() {
+        var phone = $("#agent_phone").val();
+        var name = $("#agent_name").val();
+        if (not_null(phone) && not_null(name)) {
+            return true;
+        }
+        return false;
+    }
+
+    function not_null(item) {
+        if (item == null || item == "" || item.length <= 0) {
+            return false;
+        }
+        return true;
+    }
+</script>

@@ -1,0 +1,26 @@
+#parse("/common/util.vm")
+<html lang="zh_CN">
+<head>
+    #parse("/agent/component/init.vm")
+    <title>密码找回</title>
+</head>
+<body ontouchstart>
+<div class="container">
+    <div class="hd">
+        <h1 class="page_title">
+            密码找回
+        </h1>
+
+        <p class="page_desc">填写您的基本信息,方便我们帮您找回密码</p>
+    </div>
+    <div class="bd">
+        #parse("/agent/component/lethe_form.vm")
+    </div>
+</div>
+</body>
+<script>
+    var title = "密码找回";
+    var description = "填写您的基本信息,方便我们帮您找回密码";
+</script>
+    #parse("/agent/wechat/component/validation.vm")
+</html>

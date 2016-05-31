@@ -88,6 +88,23 @@ public class AgentController {
         return view;
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/lethe")
+    public ModelAndView lethe() {
+        ModelAndView view = new ModelAndView();
+        String url = "http://" + PlatformConfig.getValue("server_url") + "/agent/lethe";
+        String configUrl = url;
+        try {
+            String shareLink = url;
+            Configuration configuration = WechatConfig.config(configUrl);
+            configuration.setShareLink(shareLink);
+            view.addObject("configuration", configuration);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        view.setViewName("/agent/lethe");
+        return view;
+    }
+
     @RequestMapping(method = RequestMethod.GET, value = "/login")
     public ModelAndView login() {
         ModelAndView view = new ModelAndView();
@@ -117,7 +134,6 @@ public class AgentController {
             Configuration configuration = WechatConfig.config(configUrl);
             configuration.setShareLink(shareLink);
             view.addObject("configuration", configuration);
-            logger.debug(JSONObject.toJSONString(configuration));
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
