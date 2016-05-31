@@ -16,4 +16,9 @@
     </div>
 </div>
 </body>
+<script>
+    var title = "代理商注册";
+    var description = "填写个人信息,提交代理商注册申请";
+</script>
+    #parse("/agent/wechat/component/validation.vm")
 </html>
