@@ -651,7 +651,7 @@ public class AgentController {
     @RequestMapping(method = RequestMethod.GET, value = "/modifypassword")
     public ModelAndView modifyPassword() {
         ModelAndView view = new ModelAndView();
-        view.setViewName("redirect:/etc/modify_password");
+        view.setViewName("/agent/etc/modify_password");
         return view;
     }
 
