@@ -19,10 +19,10 @@
                     #end
                     <div class="list-cell" id="order_item_list">
                     	#foreach($orderItem in ${order.orderItems})
-                		<div class="weui_cells weui_cells_access">
+                		<div class="weui_cells_access">
 			        		<div class="weui_cell order_item_head">
 			        			<div class="weui_cell_bd weui_cell_primary">${orderItem.customer.name}</div>
-			        			<div class="weui_cell_ft"><span>${orderItem.goods.name}</span>&nbsp;x<span>${orderItem.goodsQuantity}</span></div>
+			        			<div class="weui_cell_ft"><span>${orderItem.goods.name}</span>&nbsp;x<span>${orderItem.goodsQuantity}</span>&nbsp;(<span>${orderItem.orderItemPrice}</span>元)&nbsp;</div>
 			        		</div>
 			        		<div class="order_item_body" style="display:none;">
 				        		<a class="weui_cell">
@@ -63,17 +63,12 @@
                     	#end
                     </div>
                 </div>
-                #if(${status} == "SAVED" && ${operation} == "MODIFY")
-                <div class="weui_btn_area">
-                    <a class="weui_btn weui_btn_plain_primary" id="save_order_btn">保存订单</a>
-                </div>
-                #elseif(${status} == "SUBMITTED" && ${operation} == "VIEW")
+              	#if(${status} == "SUBMITTED" && ${operation} == "VIEW")
                 <div class="weui_btn_area">
                     <a class="weui_btn weui_btn_warn" id="cancel_order_btn">取消订单</a>
                 </div>
                 #elseif(${status} == "SAVED" && ${operation} == "VIEW")
                 <div class="weui_btn_area">
-                    <a class="weui_btn weui_btn_plain_primary" id="modify_order_btn">修改订单</a>
                     <a class="weui_btn weui_btn_warn" id="cancel_order_btn">取消订单</a>
                 </div>
                 #end
@@ -88,9 +83,21 @@
             		</div>		
             		<p id="total_goods_price" >共计:0元<p>
             	</div>
+            	#if(${status} == "SAVED" && ${operation} == "MODIFY")
+                <div class="weui_cell_ft">
+                    <a class="weui_btn weui_btn_mini weui_btn_plain_primary" id="save_order_btn">&nbsp&nbsp&nbsp保存&nbsp&nbsp&nbsp</a>
+                </div>
+                &nbsp
+                #end
+            	#if(${status} == "SAVED" && ${operation} == "VIEW")
+                <div class="weui_cell_ft">
+                    <a class="weui_btn weui_btn_mini weui_btn_plain_primary" id="modify_order_btn">&nbsp&nbsp&nbsp修改&nbsp&nbsp&nbsp</a>
+                </div>
+                &nbsp
+                #end
             	#if(${status} == "SAVED" || ${status} == "SUBMITTED")
             	<div class="weui_cell_ft">
-            		<a class="weui_btn weui_btn_primary" id="place_order_btn">&nbsp&nbsp&nbsp下单&nbsp&nbsp&nbsp</a>
+            		<a class="weui_btn weui_btn_mini weui_btn_primary" id="place_order_btn">&nbsp&nbsp&nbsp下单&nbsp&nbsp&nbsp</a>
             	</div>
             	#end
             </div>
@@ -125,6 +132,11 @@
 			$(val).parent(".weui_cell").bind("click",$.showAddress);
 		});
 		
+		//添加窗口滑动事件
+        $(".order_item_head").on("click",function(){
+        	$(this).next().slideToggle();
+        });
+				
 		//地址字符串截取
 		$.addressBeautify();
 		
@@ -133,7 +145,7 @@
 			var order_item_list = $("#order_item_list").children();
 			$.each(order_item_list, function(i, val){
 				//客户修改事件
-				$(val).children().eq(0).on("click", function(){
+				$(val).children(".order_item_body").children().eq(0).on("click", function(){
 		    		isAdd = false;
 		    		current_modify_dom = this;
 		    		customer_id = $(this).parent(".order_item_body").find(".customer_id").val();
@@ -144,7 +156,7 @@
 		    		$("#customer_option").fadeIn();
 		    	});
 		    	//商品修改事件
-		    	$(val).children().eq(2).on("click", function(){
+		    	$(val).children(".order_item_body").children().eq(2).on("click", function(){
 		    		isAdd = false;
 		    		current_modify_dom = this;
 		    		goods_id = $(this).parent(".order_item_body").find(".goods_id").val();
@@ -155,7 +167,7 @@
 		    		$("#goods_option").fadeIn();
 		    	});
 		    	//数量修改事件
-		    	$(val).children().eq(3).on("click",function(){
+		    	$(val).children(".order_item_body").children().eq(3).on("click",function(){
 		    		current_modify_dom = this;
 		    		goods_id = $(this).parent(".order_item_body").find(".goods_id").val();
     				goods_name = $(this).find(".weui_cell_ft").html();
@@ -166,13 +178,9 @@
 		    		$("#quantity_modify").fadeIn();
 		    	});
 		    	 //添加删除事件
-		        $(val).children().eq(5).on("click",function(){
-		    		$(this).closest(".weui_cells.weui_cells_access").remove();
+		        $(val).children(".order_item_body").children().eq(5).on("click",function(){
+		    		$(this).closest(".weui_cells_access").remove();
 		    		$.calculate();
-		        });
-		        //添加窗口滑动事件
-		        $(val).children().children(".order_item_head").on("click",function(){
-		        	$(this).next().slideToggle();
 		        });
 			});
 		#end
@@ -232,8 +240,8 @@
         var order_item_list = $("#order_item_list").children();
         $.each(order_item_list, function(i, val){
         	var name = $(val).children(".order_item_body").children().eq(2).find(".weui_cell_ft").text();
-        	var quantity = $(val).children(".order_item_body").children().eq(3).find(".weui_cell_ft").text();
-        	var price = $(val).children(".order_item_body").children().eq(8).val();
+        	var quantity = $(val).children(".order_item_body").find(".goods_quantity").val();
+        	var price = $(val).children(".order_item_body").find(".order_item_price").val();
         	if(order_info_list[name] == undefined) {
         		order_info_list[name] = new Object();
         		order_info_list[name]['quantity'] = parseInt(quantity);
@@ -263,8 +271,8 @@
     $.addressBeautify = function(){
    		var order_item_list = $("#order_item_list").children();
     	$.each(order_item_list,function(i, val){
-			var address = $(val).children().eq(1).find(".weui_cell_ft").html();
-			$(val).children().eq(1).find(".weui_cell_ft").html($.utf8Substr(address,25));
+			var address = $(val).children(".order_item_body").children().eq(1).find(".weui_cell_ft").html();
+			$(val).children(".order_item_body").children().eq(1).find(".weui_cell_ft").html($.utf8Substr(address,25));
 		});
 	}
 	

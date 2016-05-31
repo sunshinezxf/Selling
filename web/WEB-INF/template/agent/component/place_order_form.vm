@@ -28,7 +28,6 @@
                     </div>
                 </div>
                 <div class="weui_btn_area">
-                    <a class="weui_btn weui_btn_plain_primary" style="display:none" id="save_order_btn">保存订单</a>
                 </div>
             </div>
         </div>
@@ -42,7 +41,10 @@
             		<p id="total_goods_price" >共计:0元<p>
             	</div>
             	<div class="weui_cell_ft">
-            		<a class="weui_btn weui_btn_primary" id="place_order_btn">&nbsp&nbsp&nbsp下单&nbsp&nbsp&nbsp</a>
+            		<a class="weui_btn weui_btn_mini weui_btn_plain_primary" style="display:none;" id="save_order_btn">&nbsp&nbsp&nbsp保存&nbsp&nbsp&nbsp</a>
+            	</div>&nbsp;
+            	<div class="weui_cell_ft">
+            		<a class="weui_btn weui_btn_mini weui_btn_primary" id="place_order_btn">&nbsp&nbsp&nbsp下单&nbsp&nbsp&nbsp</a>
             	</div>
             </div>
         </div>

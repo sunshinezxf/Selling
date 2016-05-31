@@ -39,12 +39,13 @@
 	        //修改了js的商品名称，那当然要修改默认的添加商品为该商品啦
 	        $("#goods").find(".weui_cell_ft").html(goods_name);
 	        goods_price = $(this).closest(".goods").find(".weui_cell_bd").children("span").eq(1).html();
-	        var quantity = parseInt($(current_modify_dom).parents(".weui_cells.weui_cells_access").find(".weui_cell_ft.quantity").html());
+	        var quantity = parseInt($(current_modify_dom).parents(".weui_cells_access").find(".weui_cell_ft.quantity").html());
 	        $(current_modify_dom).find(".weui_cell_ft").html(goods_name);
-        	$(current_modify_dom).parents(".weui_cells.weui_cells_access").find(".goods_id").val(goods_id);
-        	$(current_modify_dom).parents(".weui_cells.weui_cells_access").find(".order_item_price").val(goods_price);
-        	$(current_modify_dom).parents(".weui_cells.weui_cells_access").find(".weui_cell.weui_cells_tips.clear-margin-top").html("金额:" + goods_price * quantity + "元");
-        	$(current_modify_dom).parents(".weui_cells.weui_cells_access").children(".order_item_head").children(".weui_cell_ft").children("span").eq(0).html(goods_name);
+        	$(current_modify_dom).parents(".weui_cells_access").find(".goods_id").val(goods_id);
+        	$(current_modify_dom).parents(".weui_cells_access").find(".order_item_price").val(goods_price);
+        	$(current_modify_dom).parents(".weui_cells_access").find(".weui_cell.weui_cells_tips.clear-margin-top").html("金额:" + goods_price * quantity + "元");
+        	$(current_modify_dom).parents(".weui_cells_access").children(".order_item_head").children(".weui_cell_ft").children("span").eq(0).html(goods_name);
+        	$(current_modify_dom).parents(".weui_cells_access").children(".order_item_head").children(".weui_cell_ft").children("span").eq(2).html(goods_price * quantity);
         	$.calculate();
         	$("#goods_option").hide();
         	$("#place_order_panel").fadeIn();  

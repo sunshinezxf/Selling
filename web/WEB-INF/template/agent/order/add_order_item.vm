@@ -59,10 +59,10 @@
     	//添加一栏
         $("#add_order_item").hide();
         var place_order_item = 
-        	"<div class='weui_cells weui_cells_access'> \
+        	"<div class='weui_cells_access'> \
         		<div class='weui_cell order_item_head'> \
         			<div class='weui_cell_bd weui_cell_primary'>" + customer_name + "</div> \
-        			<div class='weui_cell_ft'><span>" + goods_name + "</span>&nbsp;x<span>" + $("#goods_quantity").val() + "</span></div> \
+        			<div class='weui_cell_ft'><span>" + goods_name + "</span>&nbsp;x<span>" + $("#goods_quantity").val() + "</span>&nbsp;(<span>" +  goods_price* parseInt($("#goods_quantity").val())+ "</span>元)&nbsp;</div> \
         		</div> \
         		<div class='order_item_body' style='display:none;'> \
 		        	<a class='weui_cell'> \
@@ -144,7 +144,7 @@
         
         //添加删除事件
         $(order_item_list).eq(0).find(".weui_cells_tips.delete").on("click",function(){
-    		$(this).closest(".weui_cells.weui_cells_access").remove();
+    		$(this).closest(".weui_cells_access").remove();
     		$.calculate();
         });
         
