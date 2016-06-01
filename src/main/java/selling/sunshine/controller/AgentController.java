@@ -26,8 +26,8 @@ import java.util.*;
 /**
  * Created by sunshine on 4/8/16.
  */
-@RequestMapping("/agent")
 @RestController
+@RequestMapping("/agent")
 public class AgentController {
     private Logger logger = LoggerFactory.getLogger(AgentController.class);
 
@@ -55,6 +55,13 @@ public class AgentController {
     @Autowired
     private ShipmentService shipmentService;
 
+    /**
+     * 根据微信服务号的菜单入口传參,获取当前微信用户,并返回绑定账号页面
+     *
+     * @param code
+     * @param state
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/bind")
     public ModelAndView bind(String code, String state) {
         ModelAndView view = new ModelAndView();
@@ -77,6 +84,66 @@ public class AgentController {
             logger.error(e.getMessage());
         }
         view.setViewName("/agent/wechat/bind");
+        return view;
+    }
+
+
+    /**
+     * 根据用户提交的绑定账号信息进行查询,并绑定微信号
+     *
+     * @param wechat
+     * @param form
+     * @param result
+     * @return
+     */
+    @RequestMapping(method = RequestMethod.POST, value = "/bind")
+    public ModelAndView bind(String wechat, @Valid AgentLoginForm form, BindingResult result) {
+        ModelAndView view = new ModelAndView();
+        if (result.hasErrors() || StringUtils.isEmpty(wechat)) {
+            Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "尊敬的代理商，请输入正确的账号", "/agent/bind");
+            view.addObject("prompt", prompt);
+            view.setViewName("/agent/prompt");
+            return view;
+        }
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("wechat", wechat);
+        ResultData fetchResponse = agentService.fetchAgent(condition);
+        if (fetchResponse.getResponseCode() != ResponseCode.RESPONSE_NULL) {
+            Subject subject = SecurityUtils.getSubject();
+            if (!subject.isAuthenticated()) {
+                subject.login(new UsernamePasswordToken(wechat, ""));
+            }
+            Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "尊敬的代理商，您的微信已经绑定过账号", "/agent/order/place");
+            view.addObject("prompt", prompt);
+            view.setViewName("/agent/prompt");
+            return view;
+        }
+        Agent agent = new Agent(form.getPhone(), form.getPassword());
+        ResultData loginResponse = agentService.login(agent);
+        if (loginResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "尊敬的代理商，请输入正确的账号", "/agent/bind");
+            view.addObject("prompt", prompt);
+            view.setViewName("/agent/prompt");
+            return view;
+        }
+        agent = (Agent) loginResponse.getData();
+        agent.setWechat(wechat);
+        ResultData modifyResponse = agentService.updateAgent(agent);
+        if (modifyResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "绑定失败,请稍后重试", "/agent/bind");
+            view.addObject("prompt", prompt);
+            view.setViewName("/agent/prompt");
+            return view;
+        }
+        if (!StringUtils.isEmpty(wechat)) {
+            Subject subject = SecurityUtils.getSubject();
+            if (!subject.isAuthenticated()) {
+                subject.login(new UsernamePasswordToken(wechat, ""));
+            }
+        }
+        Prompt prompt = new Prompt(PromptCode.SUCCESS, "提示", "恭喜您,绑定成功!", "/agent/order/place");
+        view.addObject("prompt", prompt);
+        view.setViewName("/agent/prompt");
         return view;
     }
 
@@ -169,58 +236,6 @@ public class AgentController {
             logger.error(e.getMessage());
         }
         view.setViewName("/agent/register");
-        return view;
-    }
-
-
-    @RequestMapping(method = RequestMethod.POST, value = "/bind")
-    public ModelAndView bind(String wechat, @Valid AgentLoginForm form, BindingResult result) {
-        ModelAndView view = new ModelAndView();
-        if (result.hasErrors() || StringUtils.isEmpty(wechat)) {
-            Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "尊敬的代理商，请输入正确的账号", "/agent/bind");
-            view.addObject("prompt", prompt);
-            view.setViewName("/agent/prompt");
-            return view;
-        }
-        Map<String, Object> condition = new HashMap<>();
-        condition.put("wechat", wechat);
-        ResultData fetchResponse = agentService.fetchAgent(condition);
-        if (fetchResponse.getResponseCode() != ResponseCode.RESPONSE_NULL) {
-            Subject subject = SecurityUtils.getSubject();
-            if (!subject.isAuthenticated()) {
-                subject.login(new UsernamePasswordToken(wechat, ""));
-            }
-            Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "尊敬的代理商，您的微信已经绑定过账号", "/agent/order/place");
-            view.addObject("prompt", prompt);
-            view.setViewName("/agent/prompt");
-            return view;
-        }
-        Agent agent = new Agent(form.getPhone(), form.getPassword());
-        ResultData loginResponse = agentService.login(agent);
-        if (loginResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
-            Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "尊敬的代理商，请输入正确的账号", "/agent/bind");
-            view.addObject("prompt", prompt);
-            view.setViewName("/agent/prompt");
-            return view;
-        }
-        agent = (Agent) loginResponse.getData();
-        agent.setWechat(wechat);
-        ResultData modifyResponse = agentService.updateAgent(agent);
-        if (modifyResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
-            Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "绑定失败,请稍后重试", "/agent/bind");
-            view.addObject("prompt", prompt);
-            view.setViewName("/agent/prompt");
-            return view;
-        }
-        if (!StringUtils.isEmpty(wechat)) {
-            Subject subject = SecurityUtils.getSubject();
-            if (!subject.isAuthenticated()) {
-                subject.login(new UsernamePasswordToken(wechat, ""));
-            }
-        }
-        Prompt prompt = new Prompt(PromptCode.SUCCESS, "提示", "恭喜您,绑定成功!", "/agent/order/place");
-        view.addObject("prompt", prompt);
-        view.setViewName("/agent/prompt");
         return view;
     }
 
