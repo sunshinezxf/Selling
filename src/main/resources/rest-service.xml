@@ -22,4 +22,6 @@
     <bean id="refundService" class="selling.sunshine.service.impl.RefundServiceImpl"></bean>
 
     <bean id="followerService" class="selling.sunshine.service.impl.FollowerServiceImpl"></bean>
+
+    <bean id="messageService" class="selling.sunshine.service.impl.MessageServiceImpl"></bean>
 </beans>

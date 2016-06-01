@@ -590,7 +590,9 @@ input.weui_btn_plain_default {
 
 .weui_label {
     display: block;
-    width: 3em;
+    width: 4em;
+    word-wrap: break-word;
+    word-break: break-all;
 }
 
 .weui_input {

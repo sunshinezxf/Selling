@@ -183,6 +183,12 @@
             <artifactId>xstream</artifactId>
             <version>1.4.8</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-bundle</artifactId>
+            <version>1.19.1</version>
+        </dependency>
     </dependencies>
 
     <build>

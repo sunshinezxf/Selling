@@ -27,4 +27,6 @@ public interface AgentService {
     ResultData unbindAgent(String openId);
 
     ResultData resetPassword(Agent agent);
+
+    ResultData modifyPassword(Agent agent, String password);
 }

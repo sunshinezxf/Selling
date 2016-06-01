@@ -40,6 +40,7 @@
 	        $("#customer").find(".weui_cell_bd").html("<p>" + customer_name + "</p>");
 	        $("#phone").find(".weui_cell_bd").html("<p>" + customer_phone + "</p>");
 	        $("#customer_option").hide();
+	        $.init_add_order_item();
         	$("#add_order_item").fadeIn();
         } else {
         	isAdd = true;
@@ -50,9 +51,9 @@
 		    customer_phone = $("#customer_phone"+customer_id).val();
 		    customer_address = $("#customer_address" + customer_id).html();
         	$(current_modify_dom).find(".weui_cell_ft").html("<span>" + customer_name+ "</span>(<span>" + customer_phone + "</span>)");
-        	$(current_modify_dom).parents(".weui_cells.weui_cells_access").find(".customer_id").val(customer_id);
-        	$(current_modify_dom).parents(".weui_cells.weui_cells_access").find(".address").html($.utf8Substr(customer_address,25));
-        	$(current_modify_dom).parents(".weui_cells.weui_cells_access").children(".order_item_head").children(".weui_cell_bd").html(customer_name);
+        	$(current_modify_dom).parents(".weui_cells_access").find(".customer_id").val(customer_id);
+        	$(current_modify_dom).parents(".weui_cells_access").find(".address").html($.utf8Substr(customer_address,25));
+        	$(current_modify_dom).parents(".weui_cells_access").children(".order_item_head").children(".weui_cell_bd").html(customer_name);
         	$("#customer_option").hide();
         	$("#place_order_panel").fadeIn();  
         }
