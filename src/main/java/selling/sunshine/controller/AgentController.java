@@ -653,10 +653,36 @@ public class AgentController {
     @RequestMapping(method = RequestMethod.POST, value = "modifypassword")
     public ModelAndView modifyPassword(@Valid PasswordForm form, BindingResult result) {
         ModelAndView view = new ModelAndView();
-        if (result.hasErrors()) {
-
+        if (result.hasErrors() || StringUtils.isEmpty(form.getPassword()) || !form.getPassword().equals(form.getPassword2())) {
+            Prompt prompt = new Prompt(PromptCode.WARNING, "提示信息", "尊敬的代理商，您输入的密码有误,请重新尝试", "/agent/modifypassword");
+            view.addObject("prompt", prompt);
+            view.setViewName("/agent/prompt");
+            return view;
         }
-        return view;
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        Map<String, Object> condition = new HashMap<>();
+        if (user != null) {
+            selling.sunshine.model.lite.Agent agent = user.getAgent();
+            condition.put("agentId", agent.getAgentId());
+            condition.put("blockFlag", false);
+            Agent target = ((List<Agent>) agentService.fetchAgent(condition).getData()).get(0);
+            ResultData modiPassResponse = agentService.modifyPassword(target, form.getPassword());
+            if (modiPassResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+                Prompt prompt = new Prompt(PromptCode.WARNING, "提示信息", "修改密码失败,请重新尝试", "/agent/modifypassword");
+                view.addObject("prompt", prompt);
+                view.setViewName("/agent/prompt");
+                return view;
+            }
+            subject.logout();
+            Prompt prompt = new Prompt(PromptCode.SUCCESS, "提示信息", "恭喜您,密码修改成功,请重新登录", "/agent/login");
+            view.addObject("prompt", prompt);
+            view.setViewName("/agent/prompt");
+            return view;
+        } else {
+            view.setViewName("/agent/login");
+            return view;
+        }
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/prompt")
