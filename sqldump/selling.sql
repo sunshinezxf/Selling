@@ -420,6 +420,28 @@ CREATE TABLE IF NOT EXISTS `selling`.`follower` (
   ENGINE = InnoDB;
 
 
+-- -----------------------------------------------------
+-- Table `selling`.`credit_info`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `selling`.`credit_info` ;
+
+CREATE TABLE IF NOT EXISTS `selling`.`credit_info` (
+  `credit_id` VARCHAR(20) NOT NULL,
+  `agent_id` VARCHAR(20) NOT NULL,
+  `credit_front` VARCHAR(50) NOT NULL,
+  `credit_back` VARCHAR(50) NOT NULL,
+  `block_flag` TINYINT(1) NOT NULL,
+  `create_time` DATETIME NOT NULL,
+  PRIMARY KEY (`credit_id`),
+  INDEX `fk_credit_info_agent1_idx` (`agent_id` ASC),
+  CONSTRAINT `fk_credit_info_agent1`
+  FOREIGN KEY (`agent_id`)
+  REFERENCES `selling`.`agent` (`agent_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+  ENGINE = InnoDB;
+
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
