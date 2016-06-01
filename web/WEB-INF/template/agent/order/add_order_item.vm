@@ -23,10 +23,9 @@
                 <p>数量:&nbsp</p>
             </div>
             <div class="weui_cell_bd weui_cell_primary">
-            	<input class="weui_input" id="goods_quantity" type="tel" pattern="[0-9]*" placeholder="请输入数量" value="1">
+            	<input class="weui_input" id="goods_quantity" list="num_list" type="tel" pattern="[0-9]*" placeholder="请输入数量" readonly="readonly" value="1">
             </div>
         </a>
-
         <div id="price" class="weui_cell weui_cells_tips clear-margin-top">
             金额:元
         </div>
@@ -34,6 +33,20 @@
     <div class="weui_btn_area">
         <button type="button" class="weui_btn weui_btn_primary" id="add_confirm_btn">确认添加</button>
         <button type="button" class="weui_btn weui_btn_default" id="add_cancel_btn">取消</button>
+    </div>
+</div>
+<div id="actionSheet_wrap">
+    <div class="weui_mask_transition" id="mask" style="display: none;"></div>
+    <div class="weui_actionsheet" id="weui_actionsheet">
+        <div class="weui_actionsheet_menu">
+            <div class="weui_actionsheet_cell" id="actionsheet_1">1</div>
+            <div class="weui_actionsheet_cell" id="actionsheet_2">2</div>
+            <div class="weui_actionsheet_cell" id="actionsheet_3">3</div>
+            <div class="weui_actionsheet_cell" id="actionsheet_4">4</div>
+        </div>
+        <div class="weui_actionsheet_action">
+            <div class="weui_actionsheet_cell" id="actionsheet_cancel">其他</div>
+        </div>
     </div>
 </div>
 #parse("/agent/component/customer_list.vm")
@@ -59,10 +72,10 @@
     	//添加一栏
         $("#add_order_item").hide();
         var place_order_item = 
-        	"<div class='weui_cells weui_cells_access'> \
+        	"<div class='weui_cells_access'> \
         		<div class='weui_cell order_item_head'> \
         			<div class='weui_cell_bd weui_cell_primary'>" + customer_name + "</div> \
-        			<div class='weui_cell_ft'><span>" + goods_name + "</span>&nbsp;x<span>" + $("#goods_quantity").val() + "</span></div> \
+        			<div class='weui_cell_ft'><span>" + goods_name + "</span>&nbsp;x<span>" + $("#goods_quantity").val() + "</span>&nbsp;(<span>" +  goods_price* parseInt($("#goods_quantity").val())+ "</span>元)&nbsp;</div> \
         		</div> \
         		<div class='order_item_body' style='display:none;'> \
 		        	<a class='weui_cell'> \
@@ -139,12 +152,13 @@
 			var goods_quantity = $(this).find(".weui_cell_ft").html();
     		$("#quantity_modify").find(".weui_input").val(goods_quantity);
     		$("#place_order_panel").hide();
+    		$.init_quantity_modify();
     		$("#quantity_modify").fadeIn();
     	});
         
         //添加删除事件
         $(order_item_list).eq(0).find(".weui_cells_tips.delete").on("click",function(){
-    		$(this).closest(".weui_cells.weui_cells_access").remove();
+    		$(this).closest(".weui_cells_access").remove();
     		$.calculate();
         });
         
@@ -207,4 +221,53 @@
     $("#dialog").find(".weui_btn_dialog.primary").click(function(){
     	$("#dialog").hide();
     });
+    
+    $.init_add_order_item = function(){
+    	$("#goods_quantity").on("focusin",$.toggleNumSheet);
+    	$('#goods_quantity').attr('readonly','readonly');
+    }
+    //弹数量sheet
+    $.toggleNumSheet = function(){
+   		var mask = $('#mask');
+            var weuiActionsheet = $('#weui_actionsheet');
+            weuiActionsheet.addClass('weui_actionsheet_toggle');
+            mask.show()
+                .focus()//加focus是为了触发一次页面的重排(reflow or layout thrashing),使mask的transition动画得以正常触发
+                .addClass('weui_fade_toggle').one('click', function () {
+                hideActionSheet(weuiActionsheet, mask);
+            });
+            $('#actionsheet_1').one('click',function(){
+            	$('#goods_quantity').val(1);
+            	hideActionSheet(weuiActionsheet, mask);
+            });
+            $('#actionsheet_2').one('click',function(){
+            	$('#goods_quantity').val(2);
+            	hideActionSheet(weuiActionsheet, mask);
+            });
+            $('#actionsheet_3').one('click',function(){
+            	$('#goods_quantity').val(3);
+            	hideActionSheet(weuiActionsheet, mask);
+            });
+            $('#actionsheet_4').one('click',function(){
+            	$('#goods_quantity').val(4);
+            	hideActionSheet(weuiActionsheet, mask);
+            });
+            $('#actionsheet_cancel').one('click', function () {
+                hideActionSheet(weuiActionsheet, mask);
+                $('#goods_quantity').removeAttr('readonly');
+                $("#goods_quantity").unbind("focusin",$.toggleNumSheet);
+                $("#goods_quantity").focus();
+            });
+            mask.unbind('transitionend').unbind('webkitTransitionEnd');
+
+            function hideActionSheet(weuiActionsheet, mask) {
+                weuiActionsheet.removeClass('weui_actionsheet_toggle');
+                mask.removeClass('weui_fade_toggle');
+                mask.on('transitionend', function () {
+                    mask.hide();
+                }).on('webkitTransitionEnd', function () {
+                    mask.hide();
+                })
+            }
+    }
 </script>
