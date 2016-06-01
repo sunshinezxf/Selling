@@ -8,7 +8,9 @@ import selling.sunshine.dao.AgentDao;
 import selling.sunshine.model.Agent;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.AgentService;
+import selling.sunshine.service.MessageService;
 import selling.sunshine.utils.Encryption;
+import selling.sunshine.utils.PasswordGenerator;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
@@ -25,6 +27,9 @@ public class AgentServiceImpl implements AgentService {
 
     @Autowired
     private AgentDao agentDao;
+
+    @Autowired
+    private MessageService messageService;
 
     @Override
     public ResultData login(Agent agent) {
@@ -143,7 +148,9 @@ public class AgentServiceImpl implements AgentService {
     @Override
     public ResultData resetPassword(Agent agent) {
         ResultData result = new ResultData();
-        agent.setPassword(Encryption.md5("000000"));
+        String password = PasswordGenerator.generate();
+        messageService.send(agent.getPhone(), "尊敬的代理商您好,您的账户密码已经重置为:" + password + ",请尽快登录并及时修改您的密码.【云草纲目】");
+        agent.setPassword(Encryption.md5(password));
         ResultData updateResponse = agentDao.updateAgent(agent);
         result.setResponseCode(updateResponse.getResponseCode());
         if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {

@@ -1,5 +1,6 @@
 package selling.sunshine.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
@@ -7,9 +8,11 @@ import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import selling.sunshine.service.MessageService;
 import selling.sunshine.utils.PlatformConfig;
+import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
 import javax.ws.rs.core.MediaType;
@@ -33,6 +36,12 @@ public class MessageServiceImpl implements MessageService {
         formData.add("message", message);
         ClientResponse response = webResource.type(MediaType.APPLICATION_FORM_URLENCODED).
                 post(ClientResponse.class, formData);
+        int status = response.getStatus();
+        if (status != HttpStatus.OK.value()) {
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription(JSONObject.toJSONString(response));
+            logger.error(JSONObject.toJSONString(response));
+        }
         return result;
     }
 }
