@@ -153,4 +153,18 @@ public class AgentServiceImpl implements AgentService {
         }
         return result;
     }
+
+    @Override
+    public ResultData modifyPassword(Agent agent, String password) {
+        ResultData result = new ResultData();
+        agent.setPassword(Encryption.md5(password));
+        ResultData updateResponse = agentDao.updateAgent(agent);
+        result.setResponseCode(updateResponse.getResponseCode());
+        if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(updateResponse.getData());
+        } else {
+            result.setDescription(updateResponse.getDescription());
+        }
+        return result;
+    }
 }

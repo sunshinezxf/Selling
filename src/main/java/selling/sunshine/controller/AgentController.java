@@ -1,8 +1,6 @@
 package selling.sunshine.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.pingplusplus.model.Event;
-import com.pingplusplus.model.Webhooks;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
@@ -21,10 +19,7 @@ import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.*;
 import selling.sunshine.utils.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.*;
 
@@ -655,6 +650,41 @@ public class AgentController {
         return view;
     }
 
+    @RequestMapping(method = RequestMethod.POST, value = "modifypassword")
+    public ModelAndView modifyPassword(@Valid PasswordForm form, BindingResult result) {
+        ModelAndView view = new ModelAndView();
+        if (result.hasErrors() || StringUtils.isEmpty(form.getPassword()) || !form.getPassword().equals(form.getPassword2())) {
+            Prompt prompt = new Prompt(PromptCode.WARNING, "提示信息", "尊敬的代理商，您输入的密码有误,请重新尝试", "/agent/modifypassword");
+            view.addObject("prompt", prompt);
+            view.setViewName("/agent/prompt");
+            return view;
+        }
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        Map<String, Object> condition = new HashMap<>();
+        if (user != null) {
+            selling.sunshine.model.lite.Agent agent = user.getAgent();
+            condition.put("agentId", agent.getAgentId());
+            condition.put("blockFlag", false);
+            Agent target = ((List<Agent>) agentService.fetchAgent(condition).getData()).get(0);
+            ResultData modiPassResponse = agentService.modifyPassword(target, form.getPassword());
+            if (modiPassResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+                Prompt prompt = new Prompt(PromptCode.WARNING, "提示信息", "修改密码失败,请重新尝试", "/agent/modifypassword");
+                view.addObject("prompt", prompt);
+                view.setViewName("/agent/prompt");
+                return view;
+            }
+            subject.logout();
+            Prompt prompt = new Prompt(PromptCode.SUCCESS, "提示信息", "恭喜您,密码修改成功,请重新登录", "/agent/login");
+            view.addObject("prompt", prompt);
+            view.setViewName("/agent/prompt");
+            return view;
+        } else {
+            view.setViewName("/agent/login");
+            return view;
+        }
+    }
+
     @RequestMapping(method = RequestMethod.GET, value = "/prompt")
     public ModelAndView prompt() {
         ModelAndView view = new ModelAndView();
@@ -730,50 +760,15 @@ public class AgentController {
         return result;
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/reward")
-    @ResponseBody
-    public ResultData reward(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-        ResultData resultData = new ResultData();
-        JSONObject webhooks = toolService.getParams(request);
-        logger.debug("webhooks info == " + webhooks);
-        JSONObject charge = webhooks.getJSONObject("data").getJSONObject("object");
-        logger.debug("charge info == " + charge);
-        String dealId = charge.getString("order_no");
-        logger.debug("deal id: " + dealId);
-
-
-        Map<String, Object> condition = new HashMap<String, Object>();
-        condition.put("billId", dealId);
-        resultData = billService.fetchDepositBill(condition);
-        DepositBill depositBill = ((List<DepositBill>) resultData.getData()).get(0);
-        //获取代理商信息
-        condition.clear();
-        condition.put("agentId", depositBill.getAgent().getAgentId());
-        condition.put("blockFlag", false);
-        ResultData fetchAgentResponse = agentService.fetchAgent(condition);
-        Agent agent = ((List<Agent>) fetchAgentResponse.getData()).get(0);
-        agent.setCoffer(agent.getCoffer() + depositBill.getBillAmount());
-        agentService.updateAgent(agent);
-        billService.updateDepositBill(depositBill);
-
-        Event event = Webhooks.eventParse(webhooks.toString());
-        if ("charge.succeeded".equals(event.getType())) {
-            response.setStatus(200);
-        } else if ("refund.succeeded".equals(event.getType())) {
-            response.setStatus(200);
-        } else {
-            response.setStatus(500);
-        }
-        return resultData;
-    }
-
+    /**
+     * 根据code做OAuth鉴权,并登录用户
+     *
+     * @param code
+     */
     private void oauth(String code) {
-        logger.debug("enter oauth method");
         if (!StringUtils.isEmpty(code)) {
             try {
                 String openId = WechatUtil.queryOauthOpenId(code);
-                logger.debug("openId: " + openId);
                 if (!StringUtils.isEmpty(openId)) {
                     Subject subject = SecurityUtils.getSubject();
                     if (!subject.isAuthenticated()) {
