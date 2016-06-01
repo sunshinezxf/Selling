@@ -442,6 +442,34 @@ CREATE TABLE IF NOT EXISTS `selling`.`credit_info` (
   ENGINE = InnoDB;
 
 
+-- -----------------------------------------------------
+-- Table `selling`.`express`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `selling`.`express` ;
+
+CREATE TABLE IF NOT EXISTS `selling`.`express` (
+  `express_id` VARCHAR(20) NOT NULL,
+  `order_item_id` VARCHAR(20) NOT NULL,
+  `express_no` VARCHAR(45) NOT NULL,
+  `sender_name` VARCHAR(45) NOT NULL,
+  `sender_phone` VARCHAR(45) NOT NULL,
+  `sender_address` VARCHAR(50) NOT NULL,
+  `receiver_name` VARCHAR(45) NOT NULL,
+  `receiver_phone` VARCHAR(45) NOT NULL,
+  `receiver_address` VARCHAR(50) NOT NULL,
+  `goods_name` VARCHAR(45) NULL,
+  `blockFlag` TINYINT(1) NOT NULL DEFAULT 0,
+  `create_time` DATETIME NULL,
+  PRIMARY KEY (`express_id`),
+  INDEX `fk_express_order_item1_idx` (`order_item_id` ASC),
+  CONSTRAINT `fk_express_order_item1`
+  FOREIGN KEY (`order_item_id`)
+  REFERENCES `selling`.`order_item` (`order_item_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+  ENGINE = InnoDB;
+
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
