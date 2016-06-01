@@ -29,6 +29,7 @@
 	        $("#goods").find(".weui_cell_bd").html("<p>" + goods_name + "</p>");
 	        $("#price").html("单价：" + goods_price + "元");
 	        $("#goods_option").hide();
+	        $.init_add_order_item();
 	        $("#add_order_item").fadeIn();
         } else {
         	isAdd = true;

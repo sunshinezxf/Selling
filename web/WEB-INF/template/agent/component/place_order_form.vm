@@ -79,6 +79,7 @@
 	        	$("#price").html("单价：" + goods_price + "元");
     		}
     	}
+    	$.init_add_order_item();
         $("#add_order_item").fadeIn();
         $("#place_order_panel").hide();
     });

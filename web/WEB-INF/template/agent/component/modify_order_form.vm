@@ -116,6 +116,17 @@
 	        </div>
 	    </div>
 </div>
+<div class="weui_dialog_confirm" id="delete_dialog" style="display:none;">
+    <div class="weui_mask"></div>
+    <div class="weui_dialog">
+        <div class="weui_dialog_hd"><strong class="weui_dialog_title">取消订单</strong></div>
+        <div class="weui_dialog_bd" style="text-align:center;">真的要取消吗</div>
+        <div class="weui_dialog_ft">
+            <a href="javascript:;" class="weui_btn_dialog default">返回</a>
+            <a href="javascript:;" class="weui_btn_dialog primary">确定</a>
+        <iframe id="tmp_downloadhelper_iframe" style="display: none;"></iframe></div>
+	</div>
+</div>
 #if(${status} == "SAVED" && ${operation} == "MODIFY")
 #parse("/agent/order/add_order_item.vm")
 #end
@@ -175,6 +186,7 @@
 					var goods_quantity = $(this).find(".weui_cell_ft").html();
     				$("#quantity_modify").find(".weui_input").val(goods_quantity);
 		    		$("#place_order_panel").hide();
+		    		$.init_quantity_modify();
 		    		$("#quantity_modify").fadeIn();
 		    	});
 		    	 //添加删除事件
@@ -199,6 +211,7 @@
 	        	$("#price").html("单价：" + goods_price + "元");
     		}
     	}
+    	$.init_add_order_item();
         $("#add_order_item").fadeIn();
         $("#place_order_panel").hide();
     });
@@ -216,6 +229,14 @@
 	});
     #end
     $("#cancel_order_btn").click(function(){
+    	$("#delete_dialog").fadeIn();
+    	
+    });
+    $("#delete_dialog").find(".weui_btn_dialog.default").click(function(){
+    	$("#delete_dialog").hide();
+    });
+    
+    $("#delete_dialog").find(".weui_btn_dialog.primary").click(function(){
     	window.location = "${path.concat('/order/cancel/')}" + "${order.orderId}";
     });
     $("#save_order_btn").click(function(){

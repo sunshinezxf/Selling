@@ -40,6 +40,7 @@
 	        $("#customer").find(".weui_cell_bd").html("<p>" + customer_name + "</p>");
 	        $("#phone").find(".weui_cell_bd").html("<p>" + customer_phone + "</p>");
 	        $("#customer_option").hide();
+	        $.init_add_order_item();
         	$("#add_order_item").fadeIn();
         } else {
         	isAdd = true;
