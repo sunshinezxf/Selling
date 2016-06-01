@@ -100,15 +100,42 @@
         </if>
     </select>
 
+    <select id="queryOrder" parameterType="java.util.Map" resultMap="orderVo">
+        SELECT order_id, order_status, order_price, agent_id, block_flag, create_time
+        FROM `order`
+        WHERE 1 = 1
+        <if test="orderId != null and orderId != ''">
+            AND order_id = #{orderId}
+        </if>
+        <if test="status != null and status != ''">
+            AND order_status IN 
+            <foreach collection="status" item="mode" index="index" open="(" close=")" separator=",">
+                #{mode}
+            </foreach>
+        </if>
+        <if test="agentId != null and agentId !=''">
+            AND agent_id = #{agentId}
+        </if>
+        <if test="blockFlag != null">
+            AND block_flag = #{blockFlag}
+        </if>
+        <if test="createAt != null and createAt != ''">
+            AND create_time = #{createAt}
+        </if>
+        <if test="rule != null and rule != ''">
+            ORDER BY ${rule}
+        </if>
+    </select>
+
     <update id="update" parameterType="selling.sunshine.model.Order">
         UPDATE `order`
         <set>
             <if test="status != null and status != ''">
                 order_status = #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler},
             </if>
-        	<if test="blockFlag != null and blockFlag != ''">
-        		block_flag = #{blockFlag}
-        	</if>
+            <if test="blockFlag != null and blockFlag != ''">
+                block_flag = #{blockFlag}
+            </if>
         </set>
         WHERE order_id = #{orderId}
     </update>
