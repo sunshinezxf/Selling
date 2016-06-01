@@ -24,6 +24,7 @@ import java.net.URLEncoder;
 import java.util.*;
 
 /**
+ * 代理商的信息相关的所有请求入口
  * Created by sunshine on 4/8/16.
  */
 @RestController
