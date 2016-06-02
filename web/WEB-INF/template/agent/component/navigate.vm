@@ -24,12 +24,20 @@
         var current_id = current.attr("id");
         var target_id = $(this).attr("id");
         if (current_id != target_id) {
+        	var URL = "";
             if (target_id == "place_order") {
-                window.location.href = "${path.concat('/agent/order/place')}";
+                URL = "${path.concat('/agent/order/place')}";
             } else if (target_id == "view_customer") {
-                window.location.href = "${path.concat('/agent/customer/manage')}";
+                URL = "${path.concat('/agent/customer/manage')}";
             } else if (target_id == "info_me") {
-                window.location.href = "${path.concat('/agent/me/index')}";
+                URL = "${path.concat('/agent/me/index')}";
+            }
+            if(typeof $.check_order_leave == "function"){
+            	if($.check_order_leave(URL)){
+            		window.location = URL;
+            	}
+            } else {
+            	window.location = URL;
             }
         }
     });
