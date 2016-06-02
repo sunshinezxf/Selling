@@ -109,7 +109,7 @@ public class OrderController {
 		}
 		return result;
 	}
-	
+
 	@RequestMapping(method = RequestMethod.GET, value = "/express/{orderId}")
 	public ModelAndView express(@PathVariable("orderId") String orderId) {
 		ModelAndView view = new ModelAndView();
@@ -125,9 +125,9 @@ public class OrderController {
 		for (OrderItem item : orderItems) {
 			if (item.getOrderItemPrice() != (item.getGoodsQuantity() * item
 					.getGoods().getPrice())) {
-				
 
-			} 
+
+			}
 		}
 		Date expressDate=new Date(System.currentTimeMillis());
 		List<Express> expressList=new ArrayList<>();
@@ -161,7 +161,7 @@ public class OrderController {
 		for (OrderItem item : orderItems) {
 			if (item.getOrderItemPrice() != (item.getGoodsQuantity() * item
 					.getGoods().getPrice())) {
-				
+
 
 			} else {
 				item.setStatus(OrderItemStatus.SHIPPED);
