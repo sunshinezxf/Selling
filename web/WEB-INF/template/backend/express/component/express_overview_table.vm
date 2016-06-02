@@ -1,0 +1,60 @@
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id-target="order-management">
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+            <h1><i class="fa fa-home"></i> 快递单 </h1>
+            <ol class="breadcrumb">
+                <li><a href="${path.concat('/dashboard')}">首页</a></li>
+                <li><a data-toggle="collapse" data-parent="#accordion" href="#order-management">订单管理</a></li>
+                <li class="active">快递单</li>
+            </ol>
+        </div>
+    </div>
+        <div class="row">
+        <div class="col-md-12 col-lg-12">
+           <div class="">
+               
+           </div>
+           <br>
+              <div class="">
+                 <div id="basic-express-info" class="table bs-callout">
+                    <div class="row">
+                        <div class="col-xs-2 col-md-2 col-lg-2">快递单号</div>
+                        <div class="col-xs-5 col-md-5 col-lg-5">${express.expressNumber}</div>
+                        <div class="col-xs-2 col-md-2 col-lg-2">日期</div>
+                        <div class="col-xs-3 col-md-3 col-lg-3">$!date.format('yyyy-MM-dd',$!expressItem.createAt)</div>
+                    </div>
+                 </div>
+                 <div class="table bs-callout">
+                    <div class="row">
+                        <div class="col-xs-2 col-md-2 col-lg-2">寄件人</div>
+                        <div class="col-xs-5 col-md-5 col-lg-5">${express.senderName}</div>
+                        <div class="col-xs-2 col-md-2 col-lg-2">联系方式</div>
+                        <div class="col-xs-3 col-md-3 col-lg-3">${express.senderPhone}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-2 col-md-2 col-lg-2">地址</div>
+                        <div class="col-xs-5 col-md-5 col-lg-5">${express.senderAddress}</div>
+                    </div>
+                </div>
+                <div class="table bs-callout">
+                    <div class="row">
+                        <div class="col-xs-2 col-md-2 col-lg-2">收件人</div>
+                        <div class="col-xs-5 col-md-5 col-lg-5">${express.receiverName}</div>
+                        <div class="col-xs-2 col-md-2 col-lg-2">联系方式</div>
+                        <div class="col-xs-3 col-md-3 col-lg-3">${express.receiverPhone}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-2 col-md-2 col-lg-2">地址</div>
+                        <div class="col-xs-5 col-md-5 col-lg-5">${express.receiverAddress}</div>
+                    </div>
+                </div>
+                <div class="table bs-callout">
+                    <div class="row">
+                        <div class="col-xs-3 col-md-3 col-lg-3">品名</div>
+                        <div class="col-xs-9 col-md-9 col-lg-9" style="height:50px;">${express.goodsName}</div>
+                    </div>
+                </div>
+             </div>
+        </div>
+    </div>
+</div>

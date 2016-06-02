@@ -1,5 +1,9 @@
 package selling.sunshine.dao.impl;
 
+import java.util.List;
+
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,7 +17,7 @@ import selling.sunshine.utils.ResultData;
 
 public class ExpressDaoImpl extends BaseDao implements ExpressDao {
 
-    private Logger logger = LoggerFactory.getLogger(OrderDaoImpl.class);
+    private Logger logger = LoggerFactory.getLogger(ExpressDaoImpl.class);
 
     private Object lock = new Object();
 
@@ -35,6 +39,21 @@ public class ExpressDaoImpl extends BaseDao implements ExpressDao {
                  return result;
              }
          }
+	}
+
+	@Override
+	public ResultData queryExpress(Map<String, Object> condition) {
+		 ResultData result = new ResultData();
+	        try {
+	            List<Express> list = sqlSession.selectList("selling.express.query",condition);
+	            result.setData(list);
+	        } catch (Exception e) {
+	            logger.error(e.getMessage());
+	            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+	            result.setDescription(e.getMessage());
+	        } finally {
+	            return result;
+	        }
 	}
 
 }
