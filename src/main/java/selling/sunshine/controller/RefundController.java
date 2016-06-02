@@ -129,10 +129,5 @@ public class RefundController {
         return result;
 	}
     
-    @RequestMapping(method = RequestMethod.GET, value = "/record")
-    public ResultData refundRecord() {
-		ResultData resultData=new ResultData();
-		resultData=refundService.refundRecord();
-		return resultData;
-	}
+
 }
