@@ -25,12 +25,17 @@ public class AdminDaoImpl extends BaseDao implements AdminDao {
 
     private Object lock = new Object();
 
+    /**
+     * 根据查询的条件查找符合条件的管理员列表
+     *
+     * @param condition
+     * @return
+     */
     @Override
     public ResultData queryAdmin(Map<String, Object> condition) {
         ResultData result = new ResultData();
         try {
-            List<Admin> list = sqlSession.selectList("selling.admin.query",
-                    condition);
+            List<Admin> list = sqlSession.selectList("selling.admin.query", condition);
             result.setData(list);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -41,6 +46,12 @@ public class AdminDaoImpl extends BaseDao implements AdminDao {
         }
     }
 
+    /**
+     * 添加管理员记录,同时添加用户表中的相应记录
+     *
+     * @param admin
+     * @return
+     */
     @Transactional
     @Override
     public ResultData insertAdmin(Admin admin) {
@@ -67,6 +78,12 @@ public class AdminDaoImpl extends BaseDao implements AdminDao {
         }
     }
 
+    /**
+     * 更新管理员记录,同时更新用户表
+     *
+     * @param admin
+     * @return
+     */
     @Transactional
     @Override
     public ResultData updateAdmin(Admin admin) {
@@ -88,6 +105,12 @@ public class AdminDaoImpl extends BaseDao implements AdminDao {
         }
     }
 
+    /**
+     * 删除管理员账户信息
+     *
+     * @param admin
+     * @return
+     */
     @Transactional
     @Override
     public ResultData deleteAdmin(Admin admin) {
