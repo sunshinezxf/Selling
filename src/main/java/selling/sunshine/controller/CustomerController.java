@@ -12,6 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import selling.sunshine.form.CustomerAddressForm;
 import selling.sunshine.form.CustomerForm;
+import selling.sunshine.form.SortRule;
 import selling.sunshine.model.Agent;
 import selling.sunshine.model.Customer;
 import selling.sunshine.model.CustomerAddress;
@@ -25,6 +26,7 @@ import selling.sunshine.utils.ResultData;
 
 import javax.validation.Valid;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -191,13 +193,18 @@ public class CustomerController {
     	ResultData result = new ResultData();
     	Map<String, Object> condition = new HashMap<String, Object>();
     	condition.put("customerId", customerId);
+    	List<SortRule> rule = new ArrayList<SortRule>();
+    	rule.add(new SortRule("create_time","desc"));
+    	condition.put("sort", rule);
     	ResultData fetchResponse = customerService.fetchCustomerAddress(condition);
     	if(fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK){
-    		result.setData((List<CustomerAddress>) fetchResponse.getData());
+    		List<CustomerAddress> addressList = (List<CustomerAddress>) fetchResponse.getData();
+    		result.setData(addressList.subList(0, 5));
     	} else {
-    		fetchResponse.setResponseCode(fetchResponse.getResponseCode());
-    		fetchResponse.setDescription(fetchResponse.getDescription());
+    		result.setResponseCode(fetchResponse.getResponseCode());
+    		result.setDescription(fetchResponse.getDescription());
     	}
+    	
     	return result;
     }
     

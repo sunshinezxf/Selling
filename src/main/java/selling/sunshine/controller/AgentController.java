@@ -502,6 +502,7 @@ public class AgentController {
         for (int i = 0; i < length; i++) {
             String goodsId = form.getGoodsId()[i];//商品ID
             String customerId = form.getCustomerId()[i];//顾客ID
+            String address = form.getAddress()[i];
             int goodsQuantity = Integer.parseInt(form.getGoodsQuantity()[i]);//商品数量
             double orderItemPrice = 0;//OrderItem总价
             Map<String, Object> goodsCondition = new HashMap<String, Object>();//查询商品价格
@@ -525,7 +526,7 @@ public class AgentController {
             }
             orderItemPrice = goods.getPrice() * goodsQuantity;//得到一个OrderItem的总价
             order_price += orderItemPrice;//累加Order总价
-            OrderItem orderItem = new OrderItem(customerId, goodsId, goodsQuantity, orderItemPrice);//构造OrderItem
+            OrderItem orderItem = new OrderItem(customerId, goodsId, goodsQuantity, orderItemPrice,address);//构造OrderItem
             orderItems.add(orderItem);
         }
         order.setOrderItems(orderItems);//构造Order

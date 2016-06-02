@@ -35,10 +35,10 @@
 					       			<div class="weui_cell_bd weui_cell_primary">
 					        			<p>收货地址</p>
 					        		</div>
-					        		<div class="weui_cell_ft address">${orderItem.customer.address.address}</div>
+					        		<div class="weui_cell_ft address">${orderItem.receiveAddress}</div>
 					    		</a>
-					        	<a class="weui_cell"> 
-					        		<div class="weui_cell_bd weui_cell_primary"> 
+					        	<a class="weui_cell">
+					        		<div class="weui_cell_bd weui_cell_primary">
 					        			<p>商品名称</p> 
 					        		</div>
 					     			<div class="weui_cell_ft">${orderItem.goods.name}</div> 
@@ -58,6 +58,7 @@
 					    		<input class="order_item_price" type="hidden" name="orderItemPrice" value="${orderItem.goods.price}"/> 
 					    		<input class="customer_id" type="hidden" name="customerId" value="${orderItem.customer.customerId}"/>
 					    		<input class="order_item_id" type="hidden" name="orderItemId" value="${orderItem.orderItemId}"/>
+					    		<input class="order_item_address" type="hidden" name="address" value="${orderItem.receiveAddress}">
 					    	</div>
 						</div>
                     	#end

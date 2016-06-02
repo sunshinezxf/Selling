@@ -222,6 +222,7 @@ public class CustomerDaoImpl extends BaseDao implements CustomerDao {
 	public ResultData queryCustomerAddress(Map<String, Object> condition) {
 		ResultData result = new ResultData();
 		try {
+			condition = handle(condition);
 			List<CustomerAddress> list = sqlSession.selectList(
 					"selling.customer.address.query", condition);
 			result.setData(list);

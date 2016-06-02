@@ -112,6 +112,7 @@
 			    	<input class='order_item_price' type='hidden' name='orderItemPrice' value='" + goods_price + "'/> \
 			    	<input class='customer_id' type='hidden' name='customerId' value='" + customer_id + "'/> \
 			    	<input class='order_item_id' type='hidden' name='orderItemId' value='0'/> \
+			    	<input class='order_item_address' type='hidden' name='address' value='" +customer_address + "'> \
 		    	</div> \
 			</div>";
         $("#order_item_list").prepend(place_order_item);

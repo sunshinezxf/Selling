@@ -8,7 +8,7 @@ public class OrderItem extends Entity {
     private OrderItemStatus status;
     private int goodsQuantity;
     private double orderItemPrice;
-    private String receiveAdress;
+    private String receiveAddress;
     private Customer customer;
     private Goods goods;
     private Order order;
@@ -28,9 +28,9 @@ public class OrderItem extends Entity {
         this.orderItemPrice = orderItemPrice;
     }
 
-    public OrderItem(String customerId, String goodsId, int goodsQuantity, double orderItemPrice, String receiveAdress) {
+    public OrderItem(String customerId, String goodsId, int goodsQuantity, double orderItemPrice, String receiveAddress) {
         this(customerId, goodsId, goodsQuantity, orderItemPrice);
-        this.receiveAdress = receiveAdress;
+        this.receiveAddress = receiveAddress;
     }
 
     public String getOrderItemId() {
@@ -89,11 +89,11 @@ public class OrderItem extends Entity {
         this.customer = customer;
     }
 
-    public String getReceiveAdress() {
-        return receiveAdress;
+    public String getReceiveAddress() {
+        return receiveAddress;
     }
 
-    public void setReceiveAdress(String receiveAdress) {
-        this.receiveAdress = receiveAdress;
+    public void setReceiveAddress(String receiveAddress) {
+        this.receiveAddress = receiveAddress;
     }
 }
