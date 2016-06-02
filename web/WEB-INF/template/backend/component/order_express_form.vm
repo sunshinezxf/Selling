@@ -85,8 +85,9 @@
         </div>
     </div>
 </div>
-<object id="LODOP" classid="clsid:2105C259-1E0C-4534-8141-A753534CB4CA" width=0 height=0></object>
+
 <script>
+   var LODOP = getLodop();; //声明为全局变量  
    $("#setExpressNumber").click(function(){
     	 $("#express_modal").modal('show');          
     });
@@ -118,7 +119,7 @@
         LODOP.PRINT_INITA(0,0,387,725,"中通");
         LODOP.SET_PRINT_PAGESIZE(1,"100mm","180mm","");//设置纸张高度
         LODOP.ADD_PRINT_TEXT(58,7,183,25,expressNumber);
-        LODOP.ADD_PRINT_TEXT(46,214,73,35,expressDate);
+        LODOP.ADD_PRINT_TEXT(46,214,73,35,(new Date(expressDate)).format("yyyy/MM/dd"));
         LODOP.ADD_PRINT_TEXT(81,63,50,25,senderName);
         LODOP.ADD_PRINT_TEXT(85,157,127,25,senderPhone);
         LODOP.ADD_PRINT_TEXT(104,56,230,30,senderAddress);
