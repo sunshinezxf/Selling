@@ -74,11 +74,13 @@ public class OrderController {
 			return result;
 		}
 		Map<String, Object> condition = new HashMap<>();
-		condition.put("status", OrderStatus.PAYED.getCode());
+		List<Integer> status=new ArrayList<>();
+		status.add(2);
+		condition.put("status", status);
 		List<SortRule> rule = new ArrayList<SortRule>();
 		rule.add(new SortRule("create_time", "asc"));
 		condition.put("sort", rule);
-		ResultData fetchResponse = orderService.fetchOrder(condition, param);
+		ResultData fetchResponse = orderService.fetchOrder2(condition, param);
 		if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
 			result = (MobilePage<Order>) fetchResponse.getData();
 		}
@@ -107,6 +109,41 @@ public class OrderController {
 		}
 		return result;
 	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/express/{orderId}")
+	public ModelAndView express(@PathVariable("orderId") String orderId) {
+		ModelAndView view = new ModelAndView();
+
+		Map<String, Object> condition = new HashMap<>();
+		condition.put("orderId", orderId);
+		ResultData orderData = orderService.fetchOrder(condition);
+		Order order = ((List<Order>) orderData.getData()).get(0);
+		// 验证order的每一项orderItem购买的商品的数量与相应的价格是否一致
+		// 若不一致，则将不一致的那一项删除，并且把钱退回给代理商并告知他
+		// 同时，根据不同情况修改order的状态和orderItem的状态
+		List<OrderItem> orderItems = order.getOrderItems();
+		for (OrderItem item : orderItems) {
+			if (item.getOrderItemPrice() != (item.getGoodsQuantity() * item
+					.getGoods().getPrice())) {
+				
+
+			} 
+		}
+		Date expressDate=new Date(System.currentTimeMillis());
+		List<Express> expressList=new ArrayList<>();
+		for (int i = 0; i < orderItems.size(); i++) {
+			Express express = new Express("代填", expressDate, "云草纲目",
+					"18000000000", "云南", orderItems.get(i).getCustomer()
+							.getName(), orderItems.get(i).getCustomer()
+							.getPhone().getPhone(), orderItems.get(i)
+							.getCustomer().getAddress().getAddress(), orderItems.get(i).getGoods().getName());
+			express.setExpressId("expressNumber"+i);
+			expressList.add(express);
+		}
+		view.addObject("expressList", expressList);
+		view.setViewName("/backend/order/express");
+		return view;
+	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/express/{orderId}/{expressNumber}")
 	public ModelAndView express(@PathVariable("orderId") String orderId,
@@ -124,6 +161,7 @@ public class OrderController {
 		for (OrderItem item : orderItems) {
 			if (item.getOrderItemPrice() != (item.getGoodsQuantity() * item
 					.getGoods().getPrice())) {
+				
 
 			} else {
 				item.setStatus(OrderItemStatus.SHIPPED);
@@ -134,13 +172,15 @@ public class OrderController {
 		orderService.modifyOrder(order);
 		Date expressDate=new Date(System.currentTimeMillis());
 		List<Express> expressList=new ArrayList<>();
+		Long number=Long.parseLong(expressNumber);
 		for (int i = 0; i < orderItems.size(); i++) {
-			Express express = new Express(expressNumber, expressDate, "云草纲目",
+			Express express = new Express(String.valueOf(number), expressDate, "云草纲目",
 					"18000000000", "云南", orderItems.get(i).getCustomer()
 							.getName(), orderItems.get(i).getCustomer()
 							.getPhone().getPhone(), orderItems.get(i)
 							.getCustomer().getAddress().getAddress(), orderItems.get(i).getGoods().getName());
 			expressList.add(express);
+			number++;
 		}
 		view.addObject("expressList", expressList);
 		view.setViewName("/backend/order/express");

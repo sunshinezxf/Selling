@@ -10,72 +10,122 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-12 col-lg-12">
-
-            <div class="" id="express-form">
-                <div id="basic-sender-info" class="table bs-callout">
+        <div class="col-md-12 col-lg-12" id="main">
+           <div class="">
+               <button type="button" class="btn btn-success" id="setExpressNumber">设置快递单号</button>
+           </div>
+           <br>
+            #foreach($expressItem in ${expressList})
+              <div class="" id="express-form">
+                 <div id="basic-express-info" class="table bs-callout">
                     <div class="row">
-                        <div class="col-xs-2 col-md-2 col-lg-2">寄件
-                            <small>单位名称</small>
-                        </div>
-                        <div class="col-xs-5 col-md-5 col-lg-5">xxx公司</div>
-                        <div class="col-xs-2 col-md-2 col-lg-2">
-                            <small>寄件人</small>
-                        </div>
-                        <div class="col-xs-3 col-md-3 col-lg-3">xxx</div>
+                        <div class="col-xs-2 col-md-2 col-lg-2">快递单号</div>
+                        <div class="col-xs-5 col-md-5 col-lg-5" id=$expressItem.expressId>$expressItem.expressNumber</div>
+                        <div class="col-xs-2 col-md-2 col-lg-2">日期</div>
+                        <div class="col-xs-3 col-md-3 col-lg-3">$expressItem.expressDate</div>
+                    </div>
+                 </div>
+                 <div id="basic-sender-info" class="table bs-callout">
+                    <div class="row">
+                        <div class="col-xs-2 col-md-2 col-lg-2">寄件人</div>
+                        <div class="col-xs-5 col-md-5 col-lg-5">$expressItem.senderName</div>
+                        <div class="col-xs-2 col-md-2 col-lg-2">联系方式</div>
+                        <div class="col-xs-3 col-md-3 col-lg-3">$expressItem.senderPhone</div>
                     </div>
                     <div class="row">
                         <div class="col-xs-2 col-md-2 col-lg-2">地址</div>
-                        <div class="col-xs-10 col-md-10 col-lg-10">江苏省南京市鼓楼区汉口路22号</div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-2 col-md-2 col-lg-2">联系电话</div>
-                        <div class="col-xs-10 col-md-10 col-lg-10">18066668888</div>
+                        <div class="col-xs-5 col-md-5 col-lg-5">$expressItem.senderAddress</div>
                     </div>
                 </div>
                 <div id="basic-receiver-info" class="table bs-callout">
                     <div class="row">
-                        <div class="col-xs-2 col-md-2 col-lg-2">收件
-                            <small>单位名称</small>
-                        </div>
-                        <div class="col-xs-5 col-md-5 col-lg-5">xxx公司</div>
-                        <div class="col-xs-2 col-md-2 col-lg-2">
-                            <small>收件人</small>
-                        </div>
-                        <div class="col-xs-3 col-md-3 col-lg-3">xxx</div>
+                        <div class="col-xs-2 col-md-2 col-lg-2">收件人</div>
+                        <div class="col-xs-5 col-md-5 col-lg-5">$expressItem.receiverName</div>
+                        <div class="col-xs-2 col-md-2 col-lg-2">联系方式</div>
+                        <div class="col-xs-3 col-md-3 col-lg-3">$expressItem.receiverPhone</div>
                     </div>
                     <div class="row">
                         <div class="col-xs-2 col-md-2 col-lg-2">地址</div>
-                        <div class="col-xs-1 col-md-1 col-lg-1">xx</div>
-                        <div class="col-xs-1 col-md-1 col-lg-1">省</div>
-                        <div class="col-xs-1 col-md-1 col-lg-1">xx</div>
-                        <div class="col-xs-1 col-md-1 col-lg-1">市</div>
-                        <div class="col-xs-1 col-md-1 col-lg-1">xx</div>
-                        <div class="col-xs-2 col-md-2 col-lg-2">区(县)</div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-12 col-md-12 col-lg-12">江苏省南京市鼓楼区汉口路111号</div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-2 col-md-2 col-lg-2">联系电话</div>
-                        <div class="col-xs-10 col-md-10 col-lg-10">13980806666</div>
+                        <div class="col-xs-5 col-md-5 col-lg-5">$expressItem.receiverAddress</div>
                     </div>
                 </div>
                 <div id="basic-goods-info" class="table bs-callout">
                     <div class="row">
-                        <div class="col-xs-3 col-md-3 col-lg-3">托寄物详细资料</div>
-                        <div class="col-xs-9 col-md-9 col-lg-9" style="height:50px;"></div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-3 col-md-3 col-lg-3"></div>
-                        <div class="col-xs-2 col-md-2 col-lg-2">数量</div>
-                        <div class="col-xs-2 col-md-2 col-lg-2">xxx</div>
-                        <div class="col-xs-2 col-md-2 col-lg-2">声明价值</div>
-                        <div class="col-xs-2 col-md-2 col-lg-2">xxx</div>
-                        <div class="col-xs-1 col-md-1 col-lg-1">元</div>
+                        <div class="col-xs-3 col-md-3 col-lg-3">品名</div>
+                        <div class="col-xs-9 col-md-9 col-lg-9" style="height:50px;">$expressItem.goodsName</div>
                     </div>
                 </div>
+             </div>
+             <br>
+           #end
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="express_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">x</button>
+                <h4 class="modal-title">设置起始快递单号</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" id="express_form">
+                    <p class="form-group">
+                        <label class="col-sm-4 col-md-4 col-lg-3">起始快递单号:</label>&nbsp;&nbsp;
+                        <input type="number" id="expressId" name="expressId" autocomplete="off"/>
+                    </p>
+                    <p class="form-group">
+                        <label class="col-sm-12 col-md-12 col-lg-12">*说明文字</label>
+                    </p>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="express_confirm">确定</button>
             </div>
         </div>
     </div>
 </div>
+<object id="LODOP" classid="clsid:2105C259-1E0C-4534-8141-A753534CB4CA" width=0 height=0></object>
+<script>
+   $("#setExpressNumber").click(function(){
+    	 $("#express_modal").modal('show');          
+    });
+    
+   $("#express_modal").find("#express_confirm").click(function(){
+    	   
+    	  var expressNumber=$("#expressId").val();
+          $("#express_modal").modal('hide');
+          for(var i=0;i<${expressList}.length;i++){
+              document.getElementById("expressNumber"+i).innerHTML = (parseFloat(expressNumber)+i);
+          }
+          if(!document.getElementById("print")) {
+              var node="<div class=''><button type='button' class='btn btn-success' id='print' onclick=print()>打印</button></div>";
+              $("#main").append(node);
+          }   
+
+
+    });
+    
+    function print(){
+    	for(var i=0;i<${expressList}.length;i++){
+    	    createPrintPage(document.getElementById("expressNumber"+i).innerHTML,${expressList}[i].expressDate,${expressList}[i].senderName,${expressList}[i].senderPhone,${expressList}[i].senderAddress,${expressList}[i].receiverName,${expressList}[i].receiverPhone,${expressList}[i].receiverAddress,${expressList}[i].goodsName);
+    	    LODOP.PREVIEW();
+    	}     
+    }
+    
+    function createPrintPage(expressNumber,expressDate,senderName,senderPhone,senderAddress,receiverName,receiverPhone,receiverAddress,goodsName){
+        alert((new Date(expressDate)).format("yyyy/MM/dd"));
+        LODOP.PRINT_INITA(0,0,387,725,"中通");
+        LODOP.SET_PRINT_PAGESIZE(1,"100mm","180mm","");//设置纸张高度
+        LODOP.ADD_PRINT_TEXT(58,7,183,25,expressNumber);
+        LODOP.ADD_PRINT_TEXT(46,214,73,35,expressDate);
+        LODOP.ADD_PRINT_TEXT(81,63,50,25,senderName);
+        LODOP.ADD_PRINT_TEXT(85,157,127,25,senderPhone);
+        LODOP.ADD_PRINT_TEXT(104,56,230,30,senderAddress);
+        LODOP.ADD_PRINT_TEXT(138,66,65,20,receiverName);
+        LODOP.ADD_PRINT_TEXT(139,167,130,25,receiverPhone);
+        LODOP.ADD_PRINT_TEXT(160,53,328,30,receiverAddress);
+        LODOP.ADD_PRINT_TEXT(191,55,154,35,goodsName);
+    }
+    
+</script>
