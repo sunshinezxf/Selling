@@ -76,7 +76,7 @@ public class AdminDaoImpl extends BaseDao implements AdminDao {
                 sqlSession.update("selling.admin.update", admin);
                 User user = new User(admin.getUsername(), admin.getPassword());
                 user.setAdmin(admin);
-                sqlSession.update("selling.user.update", admin);
+                sqlSession.update("selling.user.update", user);
                 result.setData(admin);
             } catch (Exception e) {
                 logger.debug(e.getMessage());
