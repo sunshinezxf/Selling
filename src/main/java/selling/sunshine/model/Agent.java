@@ -17,11 +17,13 @@ public class Agent extends Entity {
     private boolean granted;
     private double coffer;
     private double agentRefund;
+    private int claimScale;
     private selling.sunshine.model.lite.Agent upperAgent;
 
     public Agent() {
         super();
         granted = false;
+        claimScale = 0;
     }
 
     public Agent(String phone, String password) {
@@ -45,25 +47,9 @@ public class Agent extends Entity {
         }
     }
 
-    public Agent(String agentId, String name, String gender, String phone,
-                 String address, String password, String wechat, boolean granted,
-                 double coffer) {
+    public Agent(String name, String gender, String phone, String address, String password, String wechat, int claimScale) {
         this(name, gender, phone, address, password, wechat);
-        this.coffer = coffer;
-    }
-
-    public Agent(String agentId, String name, String gender, String phone,
-                 String address, String password, String wechat, boolean granted,
-                 double coffer, selling.sunshine.model.lite.Agent upperAgent) {
-        this(agentId, name, gender, phone, address, password, wechat, granted, coffer);
-        this.upperAgent = upperAgent;
-    }
-
-    public Agent(String agentId, String name, String gender, String phone,
-                 String address, String password, String wechat, boolean granted,
-                 double coffer, selling.sunshine.model.lite.Agent upperAgent, double agentRefund) {
-        this(agentId, name, gender, phone, address, password, wechat, granted, coffer, upperAgent);
-        this.agentRefund = agentRefund;
+        this.claimScale = claimScale;
     }
 
     public String getAgentId() {
@@ -154,5 +140,11 @@ public class Agent extends Entity {
         this.agentRefund = agentRefund;
     }
 
+    public int getClaimScale() {
+        return claimScale;
+    }
 
+    public void setClaimScale(int claimScale) {
+        this.claimScale = claimScale;
+    }
 }
