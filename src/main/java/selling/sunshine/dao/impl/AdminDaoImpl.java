@@ -103,7 +103,6 @@ public class AdminDaoImpl extends BaseDao implements AdminDao {
             } catch (Exception e) {
                 logger.error(e.getMessage());
                 result.setResponseCode(ResponseCode.RESPONSE_ERROR);
-                result = insertAdmin(admin);
             } finally {
                 return result;
             }
