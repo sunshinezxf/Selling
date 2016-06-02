@@ -59,7 +59,7 @@
                         <i class="weui_icon_checked"></i>
                     </div>
                     <div class="weui_cell_bd weui_cell_primary problock">
-                        <p>我同意</p><a href="..\material\protocol\protocol.pdf">《云草纲目公司销售协议》</a>
+                        <p>我同意</p><a href="${path.concat('/material/protocol/protocol.pdf')}">《云草纲目公司销售协议》</a>
                     </div>
                 </label>
             </div>
