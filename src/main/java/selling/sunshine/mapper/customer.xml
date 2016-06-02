@@ -81,7 +81,7 @@
         </if>
           AND block_flag = 0
     </select>
-
+    
     <select id="agentLiteQuery" parameterType="java.util.Map" resultMap="agentLiteVo">
         SELECT agent_id, agent_name, agent_phone
         FROM agent

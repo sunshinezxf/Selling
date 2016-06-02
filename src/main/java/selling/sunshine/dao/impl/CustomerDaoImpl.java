@@ -101,6 +101,37 @@ public class CustomerDaoImpl extends BaseDao implements CustomerDao {
 		}
 	}
 	
+	@Override
+	public ResultData updateCustomerAddress(Customer customer) {
+		ResultData result = new ResultData();
+		try{
+			customer.getAddress().setAddressId(IDGenerator.generate("ADD"));
+			Map<String, Object> condition = new HashMap<String, Object>();
+			condition.put("customerId", customer.getCustomerId());
+			ResultData resultData = queryCustomer(condition);
+
+			CustomerAddress address = customer.getAddress();
+			
+			address.setCustomer(customer);
+
+			sqlSession.insert("selling.customer.address.insert", address);
+			Customer customer2 = ((List<Customer>) resultData.getData()).get(0);
+
+			sqlSession.update("selling.customer.address.block",
+					customer2.getAddress());
+
+			customer= ((List<Customer>)queryCustomer(condition).getData()).get(0);
+			result.setData(customer);
+			result.setResponseCode(ResponseCode.RESPONSE_OK);
+
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+		} finally {
+			return result;
+		}
+	}
+	
 	@Transactional
 	@Override
 	public ResultData deleteCustomer(Customer customer) {
@@ -187,4 +218,22 @@ public class CustomerDaoImpl extends BaseDao implements CustomerDao {
 		}
 	}
 
+	@Override
+	public ResultData queryCustomerAddress(Map<String, Object> condition) {
+		ResultData result = new ResultData();
+		try {
+			List<CustomerAddress> list = sqlSession.selectList(
+					"selling.customer.address.query", condition);
+			result.setData(list);
+			result.setResponseCode(ResponseCode.RESPONSE_OK);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+			result.setDescription(e.getMessage());
+		} finally {
+			return result;
+		}
+	}
+
+	
 }
