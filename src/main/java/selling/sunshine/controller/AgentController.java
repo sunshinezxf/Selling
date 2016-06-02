@@ -25,6 +25,7 @@ import java.util.*;
 
 /**
  * 代理商的信息相关的所有请求入口
+ * 参数列表中的code, state为通过微信Oauth2.0鉴权所携带的参数
  * Created by sunshine on 4/8/16.
  */
 @RestController
@@ -228,6 +229,44 @@ public class AgentController {
         return view;
     }
 
+    /**
+     * 代理商通过用户名,密码登录提交表单
+     *
+     * @param form
+     * @param result
+     * @return
+     */
+    @RequestMapping(method = RequestMethod.POST, value = "/login")
+    public ModelAndView login(@Valid AgentLoginForm form, BindingResult result) {
+        ModelAndView view = new ModelAndView();
+        //判断代理商填写的用户名和密码是否符合要求
+        if (result.hasErrors()) {
+            view.setViewName("redirect:/agent/login");
+            return view;
+        }
+        try {
+            Subject subject = SecurityUtils.getSubject();
+            if (subject.isAuthenticated()) {
+                view.setViewName("redirect:/agent/order/place");
+                return view;
+            }
+            subject.login(new UsernamePasswordToken(form.getPhone(), form.getPassword()));
+        } catch (Exception e) {
+            view.setViewName("redirect:/agent/login");
+            return view;
+        }
+        //成功验证代理商的身份后,跳转代理商登录后的第一操作面板,即代客下单
+        view.setViewName("redirect:/agent/order/place");
+        return view;
+    }
+
+    /**
+     * 获取代理商注册申请页面
+     *
+     * @param code
+     * @param state
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/register")
     public ModelAndView register(String code, String state) {
         ModelAndView view = new ModelAndView();
@@ -252,9 +291,61 @@ public class AgentController {
         return view;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/me/index")
+    /**
+     * 代理商提交注册申请表单
+     *
+     * @param form
+     * @param result
+     * @param attr
+     * @return
+     */
+    @RequestMapping(method = RequestMethod.POST, value = "/register")
+    public ModelAndView register(@Valid AgentForm form, BindingResult result, RedirectAttributes attr) {
+        ModelAndView view = new ModelAndView();
+        //验证表单信息是否符合限制要求
+        if (result.hasErrors()) {
+            view.setViewName("redirect:/agent/register");
+            return view;
+        }
+        try {
+            //根据用户提交的表单构造代理信息
+            Agent agent = new Agent(form.getName(), form.getGender(), form.getPhone(), form.getAddress(), form.getPassword(), form.getWechat());
+            ResultData createResponse = agentService.createAgent(agent);
+            if (createResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                Prompt prompt = new Prompt("提示", "您已成功提交申请,待审核通过后即可使用", "/agent/login");
+                view.addObject("prompt", prompt);
+                view.setViewName("/agent/prompt");
+                return view;
+            } else {
+                view.setViewName("redirect:/agent/register");
+                return view;
+            }
+        } catch (Exception e) {
+            view.setViewName("redirect:/agent/register");
+            return view;
+        }
+    }
+
+    /**
+     * 获取代理商的个人信息菜单页面
+     *
+     * @return
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "/me")
     public ModelAndView index() {
         ModelAndView view = new ModelAndView();
+        //判断当前请求用户是否完成登录验证并具有相应的权限
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        if (user == null || user.getAgent() == null) {
+            view.setViewName("/agent/login");
+            return view;
+        }
+        String url = "http://" + PlatformConfig.getValue("server_url") + "/agent/me";
+        String configUrl = url + "";
+        Configuration configuration = WechatConfig.config(configUrl);
+        configuration.setShareLink(url);
+        view.addObject("configuration", configuration);
         view.setViewName("/agent/me/index");
         return view;
     }
@@ -620,54 +711,6 @@ public class AgentController {
     public ModelAndView contact() {
         ModelAndView view = new ModelAndView();
         view.setViewName("/agent/etc/contact");
-        return view;
-    }
-
-    @RequestMapping(method = RequestMethod.POST, value = "/register")
-    public ModelAndView register(@Valid AgentForm form, BindingResult result, RedirectAttributes attr) {
-        ModelAndView view = new ModelAndView();
-        if (result.hasErrors()) {
-            view.setViewName("redirect:/agent/register");
-            return view;
-        }
-        try {
-            Agent agent = new Agent(form.getName(), form.getGender(), form.getPhone(), form.getAddress(), form.getPassword(), form.getWechat());
-            ResultData createResponse = agentService.createAgent(agent);
-            if (createResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-                Prompt prompt = new Prompt("提示", "您已成功提交申请,待审核后即可使用", "/agent/login");
-                attr.addFlashAttribute("prompt", prompt);
-                view.setViewName("redirect:/agent/prompt");
-                return view;
-            } else {
-                view.setViewName("redirect:/agent/register");
-                return view;
-            }
-        } catch (Exception e) {
-            view.setViewName("redirect:/agent/register");
-            return view;
-        }
-    }
-
-
-    @RequestMapping(method = RequestMethod.POST, value = "/login")
-    public ModelAndView login(@Valid AgentLoginForm form, BindingResult result) {
-        ModelAndView view = new ModelAndView();
-        if (result.hasErrors()) {
-            view.setViewName("redirect:/agent/login");
-            return view;
-        }
-        try {
-            Subject subject = SecurityUtils.getSubject();
-            if (subject.isAuthenticated()) {
-                view.setViewName("redirect:/agent/order/place");
-                return view;
-            }
-            subject.login(new UsernamePasswordToken(form.getPhone(), form.getPassword()));
-        } catch (Exception e) {
-            view.setViewName("redirect:/agent/login");
-            return view;
-        }
-        view.setViewName("redirect:/agent/order/place");
         return view;
     }
 
