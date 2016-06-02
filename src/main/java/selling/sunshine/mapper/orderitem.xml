@@ -46,7 +46,7 @@
             (#{element.orderItemId}, #{element.status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler},
             #{element.order.orderId},
             #{element.customer.customerId},#{element.goods.goodsId},#{element.goodsQuantity},#{element.orderItemPrice},
-            #{receiveAddress}, #{element.blockFlag},
+            #{element.receiveAddress}, #{element.blockFlag},
             #{element.createAt})
         </foreach>
     </insert>
