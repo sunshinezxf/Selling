@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import selling.sunshine.dao.OrderDao;
 import selling.sunshine.dao.OrderPoolDao;
 import selling.sunshine.model.Order;
@@ -124,6 +125,20 @@ public class OrderServiceImpl implements OrderService {
             result.setData(cancelResponse.getData());
         } else {
             result.setDescription(cancelResponse.getDescription());
+        }
+        return result;
+	}
+
+	@Override
+	public ResultData fetchOrder2(Map<String, Object> condition,
+			MobilePageParam param) {
+        ResultData result = new ResultData();
+        ResultData queryResponse = orderDao.queryOrderByPage2(condition, param);
+        result.setResponseCode(queryResponse.getResponseCode());
+        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(queryResponse.getData());
+        } else {
+            result.setDescription(queryResponse.getDescription());
         }
         return result;
 	}

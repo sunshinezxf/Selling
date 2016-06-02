@@ -17,6 +17,8 @@ public interface OrderService {
 
 	ResultData fetchOrder(Map<String, Object> condition, MobilePageParam param);
 	
+	ResultData fetchOrder2(Map<String, Object> condition, MobilePageParam param);
+	
 	ResultData fetchOrderPool(Map<String, Object> condition);
 
 	ResultData poolOrder();
