@@ -47,6 +47,9 @@
         <if test="agentId != null and agentId != ''">
             AND agent_id = #{agentId}
         </if>
+        <if test="rule != null and rule != ''">
+            ORDER BY ${rule}
+        </if>
     </select>
 
     <insert id="insert" parameterType="selling.sunshine.model.Customer" useGeneratedKeys="false">

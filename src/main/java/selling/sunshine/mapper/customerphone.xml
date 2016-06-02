@@ -29,6 +29,9 @@
         <if test="blockFlag != null and blockFlag != ''">
             AND block_flag = #{blockFlag}
         </if>
+        <if test="rule != null and rule != ''">
+            ORDER BY ${rule}
+        </if>
     </select>
 
     <select id="customerQuery" parameterType="java.util.Map" resultMap="customerVo">

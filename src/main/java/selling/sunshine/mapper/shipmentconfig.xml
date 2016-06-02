@@ -31,6 +31,9 @@
         <if test="block_flag != null">
             AND block_flag = #{blockFlag}
         </if>
+        <if test="rule != null and rule != ''">
+            ORDER BY ${rule}
+        </if>
     </select>
 
     <delete id="delete">

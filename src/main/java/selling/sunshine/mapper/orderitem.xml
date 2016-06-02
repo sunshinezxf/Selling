@@ -77,6 +77,9 @@
         <if test="blockFlag != null and blockFlag != ''">
             AND block_flag = #{blockFlag}
         </if>
+        <if test="rule != null and rule != ''">
+            ORDER BY ${rule}
+        </if>
     </select>
 
     <update id="update" parameterType="selling.sunshine.model.OrderItem" useGeneratedKeys="false">
