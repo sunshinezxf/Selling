@@ -74,6 +74,7 @@ public class AdminDaoImpl extends BaseDao implements AdminDao {
         synchronized (lock) {
             try {
                 sqlSession.update("selling.admin.update", admin);
+                
                 result.setData(admin);
             } catch (Exception e) {
                 logger.debug(e.getMessage());
