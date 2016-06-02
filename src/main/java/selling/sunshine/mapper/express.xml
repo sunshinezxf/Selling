@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="selling.express">
+
+  <insert id="insert" parameterType="selling.sunshine.model.Express" useGeneratedKeys="false">
+      INSERT INTO express(express_id,order_item_id,express_no,sender_name,sender_phone,sender_address,receiver_name,receiver_phone,receiver_address,goods_name,blockFlag, create_time)
+      VALUES (#{expressId},#{orderItem.orderItemId},#{expressNumber},#{senderName},#{senderPhone},#{senderAddress},#{receiverName},#{receiverPhone},#{receiverAddress},#{goodsName},#{blockFlag},#{createAt})
+  </insert>
+</mapper>
