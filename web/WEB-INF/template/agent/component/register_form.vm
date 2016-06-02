@@ -52,6 +52,17 @@
                            placeholder="请设置账户密码" autocomplete="off"/>
                 </div>
             </div>
+            <div class="weui_cells weui_cells_checkbox protocol">
+                <label class="weui_cell weui_check_label">
+                    <div class="weui_cell_hd procheckbox">
+                        <input type="checkbox" class="weui_check" name="checkbox" checked="checked">
+                        <i class="weui_icon_checked"></i>
+                    </div>
+                    <div class="weui_cell_bd weui_cell_primary problock">
+                        <p>我同意</p><a href="${path.concat('/material/protocol/protocol.pdf')}">《云草纲目公司销售协议》</a>
+                    </div>
+                </label>
+            </div>
         </form>
     </div>
     <div class="weui_btn_area">

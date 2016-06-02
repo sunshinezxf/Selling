@@ -318,3 +318,23 @@ body {
     bottom: 0;
     flex: 1;
 }
+
+.protocol{
+	margin-top:0em;
+}
+
+.procheckbox{
+	margin-left:0.375em;
+	margin-right:0.9375em;
+}
+.problock{
+	padding-top:0.2em;
+}
+.problock p{
+	display:inline;
+	font-size:0.795em;
+}
+.problock a{
+	font-size:0.75em;
+	text-decoration:underline;
+}
