@@ -53,6 +53,19 @@ public class CustomerServiceImpl implements CustomerService {
     }
     
     @Override
+	public ResultData updateCustomerAddress(Customer customer) {
+    	 ResultData result = new ResultData();
+         ResultData updateResponse = customerDao.updateCustomerAddress(customer);
+         result.setResponseCode(updateResponse.getResponseCode());
+         if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+             result.setData(updateResponse.getData());
+         } else {
+             result.setDescription(updateResponse.getDescription());
+         }
+         return result;
+	}
+    
+    @Override
 	public ResultData deleteCustomer(Customer customer) {
     	 ResultData result = new ResultData();
          ResultData deleteResponse = customerDao.deleteCustomer(customer);
@@ -103,5 +116,19 @@ public class CustomerServiceImpl implements CustomerService {
         }
         return result;
 	}
+
+	@Override
+	public ResultData fetchCustomerAddress(Map<String, Object> condition) {
+		ResultData result = new ResultData();
+        ResultData queryResponse = customerDao.queryCustomerAddress(condition);
+        result.setResponseCode(queryResponse.getResponseCode());
+        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(queryResponse.getData());
+        } else if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
+            result.setDescription(queryResponse.getDescription());
+        }
+        return result;
+	}
+
 
 }

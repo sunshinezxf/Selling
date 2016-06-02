@@ -29,6 +29,7 @@
                 typeHandler="selling.sunshine.handler.mybatis.order.OrderItemStatusHandler"></result>
         <result property="goodsQuantity" column="goods_quantity"></result>
         <result property="orderItemPrice" column="order_item_price"></result>
+        <result property="receiveAddress" column="receive_address"></result>
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
         <association property="customer" column="customerId = customer_id" select="customerQuery"></association>
@@ -38,27 +39,29 @@
 
     <insert id="insertBatch" parameterType="java.util.List" useGeneratedKeys="false">
         INSERT INTO order_item(order_item_id, order_item_status, order_id, customer_id, goods_id, goods_quantity,
-        order_item_price,
+        order_item_price, receive_address,
         block_flag, create_time)
         VALUES
         <foreach collection="list" item="element" index="index" separator=",">
             (#{element.orderItemId}, #{element.status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler},
             #{element.order.orderId},
-            #{element.customer.customerId},#{element.goods.goodsId},#{element.goodsQuantity},#{element.orderItemPrice},#{element.blockFlag},
+            #{element.customer.customerId},#{element.goods.goodsId},#{element.goodsQuantity},#{element.orderItemPrice},
+            #{element.receiveAddress}, #{element.blockFlag},
             #{element.createAt})
         </foreach>
     </insert>
 
     <insert id="insert" parameterType="selling.sunshine.model.OrderItem" useGeneratedKeys="false">
-        INSERT INTO order_item(order_item_id, order_item_status, order_id, customer_id, goods_id, goods_quantity, order_item_price, block_flag, create_time)
-        VALUES (#{orderItemId}, #{status}, #{order.orderId}, #{customer.customerId}, #{goods.goodsId}, #{goodsQuantity}, #{orderItemPrice}, #{blockFlag}, #{createAt})
+        INSERT INTO order_item(order_item_id, order_item_status, order_id, customer_id, goods_id, goods_quantity, order_item_price, receive_address, block_flag, create_time)
+        VALUES (#{orderItemId}, #{status}, #{order.orderId}, #{customer.customerId}, #{goods.goodsId}, #{goodsQuantity}, #{orderItemPrice}, #{receiveAddress}, #{blockFlag}, #{createAt})
     </insert>
 
     <select id="query" parameterType="java.util.Map" resultMap="orderItemVo">
-        SELECT order_item_id, order_item_status, goods_quantity, order_item_price, customer_id, goods_id, order_id,
+        SELECT order_item_id, order_item_status, goods_quantity, order_item_price, receive_address, customer_id,
+        goods_id, order_id,
         block_flag, create_time
         FROM order_item
-        WHERE 1 = 1 
+        WHERE 1 = 1
         <if test="orderItemId != null and orderItemId != ''">
             AND order_item_id = #{orderItemId}
         </if>
@@ -73,6 +76,9 @@
         </if>
         <if test="blockFlag != null and blockFlag != ''">
             AND block_flag = #{blockFlag}
+        </if>
+        <if test="rule != null and rule != ''">
+            ORDER BY ${rule}
         </if>
     </select>
 
@@ -93,6 +99,9 @@
             </if>
             <if test="goods != null and goods.goodsId != null and goods.goodsId != ''">
                 goods_id = #{goods.goodsId},
+            </if>
+            <if test="receiveAddress != null and receiveAddress != ''">
+                receive_address = #{receiveAddress},
             </if>
             <if test="blockFlag != null and blockFlag != ''">
                 block_flag = #{blockFlag},
@@ -132,7 +141,4 @@
         FROM customer
         WHERE customer_id = #{customerId}
     </select>
-    
-    
-
 </mapper>

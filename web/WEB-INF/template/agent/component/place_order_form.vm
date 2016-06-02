@@ -32,7 +32,7 @@
             </div>
         </div>
     </div>
-    <div class="order_summary">
+    <div class="order_summary" id="order_summary" style="display:none">
         <div class="weui_panel">
             <div class="weui_cell">
             	<div class="weui_cell_bd weui_cell_primary">
@@ -51,15 +51,17 @@
     </div>
 </div>
 </form>
-<div class="weui_dialog_alert" id="address_dialog" style="display: none;">
-	    <div class="weui_mask"></div>
-	    <div class="weui_dialog">
-	        <div class="weui_dialog_hd"><strong class="weui_dialog_title">消息</strong></div>
-	        <div class="weui_dialog_bd"></div>
-	        <div class="weui_dialog_ft">
-	            <a href="javascript:;" class="weui_btn_dialog primary">确定</a>
-	        </div>
-	    </div>
+<div class="weui_dialog_confirm" id="address_dialog" style="display: none;">
+    <div class="weui_mask"></div>
+    <div class="weui_dialog">
+        <div class="weui_dialog_hd"><strong class="weui_dialog_title">消息</strong></div>
+        <div class="weui_dialog_bd"></div>
+        <div class="weui_dialog_ft">
+            <a href="javascript:;" class="weui_btn_dialog default">修改</a>
+        	<a href="javascript:;" class="weui_btn_dialog primary">确定</a>
+    	<iframe id="tmp_downloadhelper_iframe" style="display: none;"></iframe>
+        </div>
+    </div>
 </div>
 <div class="weui_dialog_confirm" id="leave_dialog" style="display:none;">
     <div class="weui_mask"></div>
@@ -146,11 +148,13 @@
  				"件, 共" + order_info_list[order_info]['order_item_price'] + "元</p>")
         }
         $("#total_goods_price").html("共计:" + total_price + "元");
-        //判断是否总价是0，决定显示保存按钮与否
+        //判断是否总价是0，决定显示保存和下单按钮与否
         if(total_price == 0){
         	$("#save_order_btn").hide();
+        	$("#order_summary").hide();
         } else {
         	$("#save_order_btn").fadeIn();
+        	$("#order_summary").fadeIn();
         }
     }
     //地址美化长度
@@ -164,12 +168,19 @@
 	
 	$.showAddress = function(){
 		$("#address_dialog").find(".weui_dialog_title").html($(this).data("address"));
+		address_dom = this;
 		$("#address_dialog").fadeIn();
 	}
 
 	$("#address_dialog").find(".weui_btn_dialog.primary").click(function(){
     	$("#address_dialog").hide();
     });
+    
+    $("#address_dialog").find(".weui_btn_dialog.default").click(function(){
+    	$("#address_dialog").hide();
+    	$("#place_order_panel").hide();
+    	$.show_address_modify();
+	});
     
     $.check_order_leave = function(URL){
     	if($("#order_item_list").children().size() != 0) {

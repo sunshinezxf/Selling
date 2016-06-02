@@ -51,6 +51,7 @@
 </div>
 #parse("/agent/component/customer_list.vm")
 #parse("/agent/component/good_list.vm")
+#parse("/agent/component/address_list.vm")
 #parse("/agent/component/num.vm")
 #parse("/agent/component/navigate.vm")
 <div class="weui_dialog_alert" id="dialog" style="display: none;">
@@ -111,6 +112,7 @@
 			    	<input class='order_item_price' type='hidden' name='orderItemPrice' value='" + goods_price + "'/> \
 			    	<input class='customer_id' type='hidden' name='customerId' value='" + customer_id + "'/> \
 			    	<input class='order_item_id' type='hidden' name='orderItemId' value='0'/> \
+			    	<input class='order_item_address' type='hidden' name='address' value='" +customer_address + "'> \
 		    	</div> \
 			</div>";
         $("#order_item_list").prepend(place_order_item);
@@ -165,6 +167,7 @@
         //将地址数据存入dom节点中,并添加显示函数，必须放在地址字符串截取前
         var address_cell = $(order_item_list).eq(0).find(".address").parent(".weui_cell");
 		address_cell.data("address", address_cell.find(".address").html());
+		address_cell.data("customerId", $(address_cell).closest(".order_item_body").find(".customer_id").val());
 		address_cell.bind("click",$.showAddress);
 		
         //地址字符串截取长度

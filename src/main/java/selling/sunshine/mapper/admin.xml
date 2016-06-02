@@ -17,13 +17,16 @@
         <if test="username != null and username != ''">
             AND manager_username = #{username}
         </if>
+        <if test="rule != null and rule != ''">
+            ORDER BY ${rule}
+        </if>
     </select>
-    
+
     <insert id="insert" parameterType="selling.sunshine.model.Admin" useGeneratedKeys="false">
         INSERT INTO manager(manager_id, manager_username, manager_password)
         VALUES (#{adminId}, #{username}, #{password})
     </insert>
-    
+
     <update id="update" parameterType="selling.sunshine.model.Admin" useGeneratedKeys="false">
         UPDATE manager
         <set>
@@ -33,12 +36,12 @@
         </set>
         WHERE manager_id = #{adminId}
     </update>
-    
-    <delete id="delete" parameterType="selling.sunshine.model.Admin" >
-       DELETE FROM manager
-       WHERE 1=1
-       <if test="adminId != null and adminId != ''">
+
+    <delete id="delete" parameterType="selling.sunshine.model.Admin">
+        DELETE FROM manager
+        WHERE 1=1
+        <if test="adminId != null and adminId != ''">
             AND manager_id = #{adminId}
-       </if>
+        </if>
     </delete>
 </mapper>

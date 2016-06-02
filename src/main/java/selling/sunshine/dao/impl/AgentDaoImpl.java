@@ -1,6 +1,5 @@
 package selling.sunshine.dao.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,7 +77,6 @@ public class AgentDaoImpl extends BaseDao implements AgentDao {
         DataTablePage<Agent> page = new DataTablePage<Agent>();
         page.setsEcho(param.getsEcho());
         condition = handle(condition);
-        logger.debug(JSONObject.toJSONString(condition));
         ResultData total = queryAgent(condition);
         if (total.getResponseCode() != ResponseCode.RESPONSE_OK) {
             result.setResponseCode(ResponseCode.RESPONSE_ERROR);
@@ -145,7 +143,6 @@ public class AgentDaoImpl extends BaseDao implements AgentDao {
     private List<Agent> queryAgentByPage(Map<String, Object> condition, int start, int length) {
         List<Agent> result = new ArrayList<>();
         try {
-            condition = handle(condition);
             result = sqlSession.selectList("selling.agent.query", condition, new RowBounds(start, length));
         } catch (Exception e) {
             logger.error(e.getMessage());

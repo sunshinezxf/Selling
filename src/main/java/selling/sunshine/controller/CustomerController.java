@@ -10,9 +10,12 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import selling.sunshine.form.CustomerAddressForm;
 import selling.sunshine.form.CustomerForm;
+import selling.sunshine.form.SortRule;
 import selling.sunshine.model.Agent;
 import selling.sunshine.model.Customer;
+import selling.sunshine.model.CustomerAddress;
 import selling.sunshine.model.CustomerPhone;
 import selling.sunshine.model.User;
 import selling.sunshine.pagination.DataTablePage;
@@ -23,6 +26,7 @@ import selling.sunshine.utils.ResultData;
 
 import javax.validation.Valid;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -88,7 +92,7 @@ public class CustomerController {
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/modify/{customerId}")
     public ResultData updateCustomer(@PathVariable("customerId") String customerId, @Valid CustomerForm customerForm, BindingResult result) {
-        ResultData response = new ResultData();
+    	ResultData response = new ResultData();
         if (result.hasErrors()) {
             response.setResponseCode(ResponseCode.RESPONSE_ERROR);
             return response;
@@ -107,6 +111,30 @@ public class CustomerController {
                 customerForm.getAddress(), customerForm.getPhone(), agent);
         customer.setCustomerId(customerId);
         ResultData updateResponse = customerService.updateCustomer(customer);
+        if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            response.setData(updateResponse.getData());
+        } else {
+            response.setResponseCode(updateResponse.getResponseCode());
+            response.setDescription(updateResponse.getDescription());
+        }
+        return response;
+    }
+    
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value = "/modifyAddress/{customerId}")
+    public ResultData updateCustomerAddress(@PathVariable("customerId") String customerId, @Valid CustomerAddressForm customerAddressForm, BindingResult result) {
+    	ResultData response = new ResultData();
+        if (result.hasErrors()) {
+            response.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            return response;
+        }
+        Map<String, Object> condition = new HashMap<>();
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        selling.sunshine.model.lite.Agent agent = user.getAgent();
+        Customer customer = new Customer("",customerAddressForm.getAddress(), "", agent);
+        customer.setCustomerId(customerId);
+        ResultData updateResponse = customerService.updateCustomerAddress(customer);
         if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             response.setData(updateResponse.getData());
         } else {
@@ -158,4 +186,27 @@ public class CustomerController {
         }
         return result;
     }
+    
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.GET, value="/address/{customerId}")
+    public ResultData fetchCustomerAddress(@PathVariable("customerId") String customerId){
+    	ResultData result = new ResultData();
+    	Map<String, Object> condition = new HashMap<String, Object>();
+    	condition.put("customerId", customerId);
+    	List<SortRule> rule = new ArrayList<SortRule>();
+    	rule.add(new SortRule("create_time","desc"));
+    	condition.put("sort", rule);
+    	ResultData fetchResponse = customerService.fetchCustomerAddress(condition);
+    	if(fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK){
+    		List<CustomerAddress> addressList = (List<CustomerAddress>) fetchResponse.getData();
+    		result.setData(addressList.subList(0, 5));
+    	} else {
+    		result.setResponseCode(fetchResponse.getResponseCode());
+    		result.setDescription(fetchResponse.getDescription());
+    	}
+    	
+    	return result;
+    }
+    
+    
 }

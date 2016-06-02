@@ -9,10 +9,13 @@ import selling.sunshine.dao.BaseDao;
 import selling.sunshine.model.Admin;
 import selling.sunshine.model.Role;
 import selling.sunshine.model.User;
+import selling.sunshine.pagination.DataTablePage;
+import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.utils.IDGenerator;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -47,6 +50,35 @@ public class AdminDaoImpl extends BaseDao implements AdminDao {
     }
 
     /**
+     * 分页根据查询的条件查找符合条件的管理员的账号信息
+     *
+     * @param condition
+     * @param param
+     * @return
+     */
+    @Override
+    public ResultData queryAdminByPage(Map<String, Object> condition, DataTableParam param) {
+        ResultData result = new ResultData();
+        DataTablePage<Admin> page = new DataTablePage<>(param);
+        condition = handle(condition);
+        ResultData total = queryAdmin(condition);
+        if (total.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription(total.getDescription());
+            return result;
+        }
+        page.setiTotalRecords(((List<Admin>) total.getData()).size());
+        page.setiTotalDisplayRecords(((List<Admin>) total.getData()).size());
+        List<Admin> current = queryAdminByPage(condition, param.getiDisplayStart(), param.getiDisplayLength());
+        if (current.isEmpty()) {
+            result.setResponseCode(ResponseCode.RESPONSE_NULL);
+        }
+        page.setData(current);
+        result.setData(page);
+        return result;
+    }
+
+    /**
      * 添加管理员记录,同时添加用户表中的相应记录
      *
      * @param admin
@@ -71,7 +103,6 @@ public class AdminDaoImpl extends BaseDao implements AdminDao {
             } catch (Exception e) {
                 logger.error(e.getMessage());
                 result.setResponseCode(ResponseCode.RESPONSE_ERROR);
-                result = insertAdmin(admin);
             } finally {
                 return result;
             }
@@ -128,6 +159,17 @@ public class AdminDaoImpl extends BaseDao implements AdminDao {
             } finally {
                 return result;
             }
+        }
+    }
+
+    private List<Admin> queryAdminByPage(Map<String, Object> condition, int start, int length) {
+        List<Admin> result = new ArrayList<>();
+        try {
+            result = sqlSession.selectList("selling.admin.query", condition);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        } finally {
+            return result;
         }
     }
 }

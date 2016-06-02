@@ -35,10 +35,10 @@
 					       			<div class="weui_cell_bd weui_cell_primary">
 					        			<p>收货地址</p>
 					        		</div>
-					        		<div class="weui_cell_ft address">${orderItem.customer.address.address}</div>
+					        		<div class="weui_cell_ft address">${orderItem.receiveAddress}</div>
 					    		</a>
-					        	<a class="weui_cell"> 
-					        		<div class="weui_cell_bd weui_cell_primary"> 
+					        	<a class="weui_cell">
+					        		<div class="weui_cell_bd weui_cell_primary">
 					        			<p>商品名称</p> 
 					        		</div>
 					     			<div class="weui_cell_ft">${orderItem.goods.name}</div> 
@@ -58,6 +58,7 @@
 					    		<input class="order_item_price" type="hidden" name="orderItemPrice" value="${orderItem.goods.price}"/> 
 					    		<input class="customer_id" type="hidden" name="customerId" value="${orderItem.customer.customerId}"/>
 					    		<input class="order_item_id" type="hidden" name="orderItemId" value="${orderItem.orderItemId}"/>
+					    		<input class="order_item_address" type="hidden" name="address" value="${orderItem.receiveAddress}">
 					    	</div>
 						</div>
                     	#end
@@ -75,7 +76,7 @@
             </div>
         </div>
     </div>
-   <div class="order_summary">
+   <div class="order_summary" id="order_summary" style="display:none">
         <div class="weui_panel">
             <div class="weui_cell">
             	<div class="weui_cell_bd weui_cell_primary">
@@ -106,15 +107,17 @@
 </div>
 <input type="hidden" name="orderId" value="${order.orderId}"/>
 </form>
-<div class="weui_dialog_alert" id="address_dialog" style="display: none;">
-	    <div class="weui_mask"></div>
-	    <div class="weui_dialog">
-	        <div class="weui_dialog_hd"><strong class="weui_dialog_title">消息</strong></div>
-	        <div class="weui_dialog_bd"></div>
-	        <div class="weui_dialog_ft">
-	            <a href="javascript:;" class="weui_btn_dialog primary">确定</a>
-	        </div>
-	    </div>
+<div class="weui_dialog_confirm" id="address_dialog" style="display: none;">
+    <div class="weui_mask"></div>
+    <div class="weui_dialog">
+        <div class="weui_dialog_hd"><strong class="weui_dialog_title">消息</strong></div>
+        <div class="weui_dialog_bd"></div>
+        <div class="weui_dialog_ft">
+            <a href="javascript:;" class="weui_btn_dialog default" style="display:none">修改</a>
+        	<a href="javascript:;" class="weui_btn_dialog primary">确定</a>
+    	<iframe id="tmp_downloadhelper_iframe" style="display: none;"></iframe>
+        </div>
+    </div>
 </div>
 <div class="weui_dialog_confirm" id="delete_dialog" style="display:none;">
     <div class="weui_mask"></div>
@@ -137,9 +140,10 @@
 		$("#add_order_item").hide();
 		$.calculate();
 		
-		//将地址数据存入dom节点中,并添加显示函数，必须放在地址字符串截取前
+		//将地址数据和客户ID存入dom节点中,并添加显示函数，必须放在地址字符串截取前
 		$.each($(".address"), function(i, val){
 			$(val).parent(".weui_cell").data("address", $(val).html());
+			$(val).parent(".weui_cell").data("customerId", $(val).closest(".order_item_body").find(".customer_id").val());
 			$(val).parent(".weui_cell").bind("click",$.showAddress);
 		});
 		
@@ -153,6 +157,9 @@
 		
 		#if(${status} == "SAVED" && ${operation} == "MODIFY")
 			//添加事件
+			//地址修改事件
+			$("#address_dialog").find(".weui_btn_dialog.default").show();
+			
 			var order_item_list = $("#order_item_list").children();
 			$.each(order_item_list, function(i, val){
 				//客户修改事件
@@ -205,8 +212,8 @@
     		var goods_dom = $("#goods_option").children(".goods").eq(0);
     		if(goods_dom != null){
     			goods_id = goods_dom.attr("id");
-    			goods_name = goods_dom.find(".weui_cell_bd span").html();
-    			goods_price = goods_dom.find(".weui_cell_ft span:first-child").html();
+    			goods_name = goods_dom.find(".weui_cell_bd").children("span").eq(0).html();
+	        	goods_price = goods_dom.find(".weui_cell_bd").children("span").eq(1).html();
     			$("#goods").find(".weui_cell_bd").html("<p>" + goods_name + "</p>");
 	        	$("#price").html("单价：" + goods_price + "元");
     		}
@@ -284,8 +291,10 @@
          //判断是否总价是0，决定显示保存按钮与否
         if(total_price == 0){
         	$("#save_order_btn").hide();
+        	$("#order_summary").hide();
         } else {
         	$("#save_order_btn").fadeIn();
+        	$("#order_summary").fadeIn();
         }
     }
     //地址美化长度
@@ -299,11 +308,18 @@
 	
 	$.showAddress = function(){
 		$("#address_dialog").find(".weui_dialog_title").html($(this).data("address"));
+		address_dom = this;
 		$("#address_dialog").fadeIn();
 	}
 
 	$("#address_dialog").find(".weui_btn_dialog.primary").click(function(){
     	$("#address_dialog").hide();
     });
+    
+    $("#address_dialog").find(".weui_btn_dialog.default").click(function(){
+    	$("#address_dialog").hide();
+    	$("#place_order_panel").hide();
+    	$.show_address_modify();
+	});
     
 </script>

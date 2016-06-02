@@ -24,6 +24,8 @@
     <bean id="followerService" class="selling.sunshine.service.impl.FollowerServiceImpl"></bean>
 
     <bean id="messageService" class="selling.sunshine.service.impl.MessageServiceImpl"></bean>
-    
+
     <bean id="expressService" class="selling.sunshine.service.impl.ExpressServiceImpl"></bean>
+
+    <bean id="uploadService" class="selling.sunshine.service.impl.UploadServiceImpl"></bean>
 </beans>

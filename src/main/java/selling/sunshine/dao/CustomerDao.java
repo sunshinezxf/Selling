@@ -11,8 +11,10 @@ import java.util.Map;
  */
 public interface CustomerDao {
     ResultData insertCustomer(Customer customer);
-
+    
     ResultData updateCustomer(Customer customer);
+    
+    ResultData updateCustomerAddress(Customer customer);
     
     ResultData deleteCustomer(Customer customer);
 
@@ -21,4 +23,6 @@ public interface CustomerDao {
     ResultData queryCustomerByPage(Map<String, Object> condition, DataTableParam param);
     
     ResultData queryCustomerPhone(Map<String, Object> condition);
+    
+    ResultData queryCustomerAddress(Map<String, Object> condition);
 }

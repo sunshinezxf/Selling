@@ -20,14 +20,20 @@
         SELECT customer_address_id, customer_id, address, block_flag, create_time
         FROM customer_address
         WHERE 1 = 1
+        <if test="customerId != null and customerId != ''">
+        	AND customer_id = #{customerId}
+        </if>
         <if test="addressId != null and addressId != ''">
             AND customer_address_id = #{addressId}
         </if>
         <if test="address != null and address != ''">
             AND address = #{address}
         </if>
-        <if test="blockFlag != null and blockFlag != ''">
+        <if test="blockFlag != null">
             AND block_flag = #{blockFlag}
+        </if>
+        <if test="rule != null and rule != ''">
+            ORDER BY ${rule}
         </if>
     </select>
 

@@ -47,6 +47,9 @@
         <if test="agentId != null and agentId != ''">
             AND agent_id = #{agentId}
         </if>
+        <if test="rule != null and rule != ''">
+            ORDER BY ${rule}
+        </if>
     </select>
 
     <insert id="insert" parameterType="selling.sunshine.model.Customer" useGeneratedKeys="false">
@@ -81,7 +84,7 @@
         </if>
           AND block_flag = 0
     </select>
-
+    
     <select id="agentLiteQuery" parameterType="java.util.Map" resultMap="agentLiteVo">
         SELECT agent_id, agent_name, agent_phone
         FROM agent
