@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -58,6 +59,9 @@ public class OrderController {
 
 	@Autowired
 	private ToolService toolService;
+	
+	@Autowired
+	private ExpressService expressService;
 
 	@RequestMapping(method = RequestMethod.GET, value = "/check")
 	public ModelAndView handle() {
@@ -109,7 +113,7 @@ public class OrderController {
 		}
 		return result;
 	}
-
+	
 	@RequestMapping(method = RequestMethod.GET, value = "/express/{orderId}")
 	public ModelAndView express(@PathVariable("orderId") String orderId) {
 		ModelAndView view = new ModelAndView();
@@ -125,22 +129,22 @@ public class OrderController {
 		for (OrderItem item : orderItems) {
 			if (item.getOrderItemPrice() != (item.getGoodsQuantity() * item
 					.getGoods().getPrice())) {
-
-
-			}
+				
+			} 
 		}
-		Date expressDate=new Date(System.currentTimeMillis());
+		Timestamp expressDate=new Timestamp(System.currentTimeMillis());
 		List<Express> expressList=new ArrayList<>();
 		for (int i = 0; i < orderItems.size(); i++) {
-			Express express = new Express("代填", expressDate, "云草纲目",
+			Express express = new Express("代填", "云草纲目",
 					"18000000000", "云南", orderItems.get(i).getCustomer()
 							.getName(), orderItems.get(i).getCustomer()
 							.getPhone().getPhone(), orderItems.get(i)
-							.getCustomer().getAddress().getAddress(), orderItems.get(i).getGoods().getName());
+							.getCustomer().getAddress().getAddress(), orderItems.get(i).getGoods().getName(),expressDate);
 			express.setExpressId("expressNumber"+i);
 			expressList.add(express);
 		}
 		view.addObject("expressList", expressList);
+		view.addObject("order", order);
 		view.setViewName("/backend/order/express");
 		return view;
 	}
@@ -154,36 +158,27 @@ public class OrderController {
 		condition.put("orderId", orderId);
 		ResultData orderData = orderService.fetchOrder(condition);
 		Order order = ((List<Order>) orderData.getData()).get(0);
-		// 验证order的每一项orderItem购买的商品的数量与相应的价格是否一致
-		// 若不一致，则将不一致的那一项删除，并且把钱退回给代理商并告知他
-		// 同时，根据不同情况修改order的状态和orderItem的状态
 		List<OrderItem> orderItems = order.getOrderItems();
 		for (OrderItem item : orderItems) {
-			if (item.getOrderItemPrice() != (item.getGoodsQuantity() * item
-					.getGoods().getPrice())) {
-
-
-			} else {
 				item.setStatus(OrderItemStatus.SHIPPED);
-			}
 		}
 		order.setOrderItems(orderItems);
 		order.setStatus(OrderStatus.FULLY_SHIPMENT);
 		orderService.modifyOrder(order);
-		Date expressDate=new Date(System.currentTimeMillis());
-		List<Express> expressList=new ArrayList<>();
-		Long number=Long.parseLong(expressNumber);
+		Timestamp expressDate=new Timestamp(System.currentTimeMillis());
+		Long num=Long.parseLong(expressNumber);
 		for (int i = 0; i < orderItems.size(); i++) {
-			Express express = new Express(String.valueOf(number), expressDate, "云草纲目",
+			Express express = new Express(String.valueOf(num), "云草纲目",
 					"18000000000", "云南", orderItems.get(i).getCustomer()
 							.getName(), orderItems.get(i).getCustomer()
 							.getPhone().getPhone(), orderItems.get(i)
-							.getCustomer().getAddress().getAddress(), orderItems.get(i).getGoods().getName());
-			expressList.add(express);
-			number++;
+							.getCustomer().getAddress().getAddress(), orderItems.get(i).getGoods().getName(),expressDate);
+			express.setOrderItem(orderItems.get(i));
+			expressService.createExpress(express);
+			num++;
 		}
-		view.addObject("expressList", expressList);
-		view.setViewName("/backend/order/express");
+		
+		view.setViewName("redirect:/order/overview");
 		return view;
 	}
 

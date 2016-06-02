@@ -44,4 +44,7 @@
     <bean id="OrderPoolDao" class="selling.sunshine.dao.impl.OrderPoolDaoImpl">
         <property name="sqlSession" ref="sqlSession"></property>
     </bean>
+    <bean id="ExpressDao" class="selling.sunshine.dao.impl.ExpressDaoImpl">
+        <property name="sqlSession" ref="sqlSession"></property>
+    </bean>
 </beans>

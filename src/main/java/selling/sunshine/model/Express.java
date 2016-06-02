@@ -1,12 +1,12 @@
 package selling.sunshine.model;
 
-import java.sql.Date;
+
+import java.sql.Timestamp;
 
 public class Express extends Entity{
 	
 	private String expressId;
 	private String expressNumber;//快递单号
-	private Date expressDate;
 	private String senderName;
 	private String senderPhone;
 	private String senderAddress;
@@ -20,12 +20,11 @@ public class Express extends Entity{
 		super();
 	}
 
-	public Express(String expressNumber, Date expressDate, String senderName,
+	public Express(String expressNumber, String senderName,
 			String senderPhone, String senderAddress, String receiverName,
-			String receiverPhone, String receiverAddress, String goodsName) {
+			String receiverPhone, String receiverAddress, String goodsName,Timestamp createAt) {
 		super();
 		this.expressNumber = expressNumber;
-		this.expressDate = expressDate;
 		this.senderName = senderName;
 		this.senderPhone = senderPhone;
 		this.senderAddress = senderAddress;
@@ -33,6 +32,7 @@ public class Express extends Entity{
 		this.receiverPhone = receiverPhone;
 		this.receiverAddress = receiverAddress;
 		this.goodsName = goodsName;
+		this.setCreateAt(createAt);
 	}
 
 	public String getExpressId() {
@@ -49,14 +49,6 @@ public class Express extends Entity{
 
 	public void setExpressNumber(String expressNumber) {
 		this.expressNumber = expressNumber;
-	}
-
-	public Date getExpressDate() {
-		return expressDate;
-	}
-
-	public void setExpressDate(Date expressDate) {
-		this.expressDate = expressDate;
 	}
 
 	public String getSenderName() {
