@@ -34,12 +34,12 @@ public class ExpressController {
 		condition.put("orderItemId", orderItemId);
 		ResultData resultData=expressService.fetchExpress(condition);
 		if (resultData.getResponseCode()!=ResponseCode.RESPONSE_OK) {
-			view.setViewName("");
+			view.setViewName("/backend/express/express_overview");
 			return view;		
 		}
 		Express express=((List<Express>)resultData.getData()).get(0);
 		view.addObject("express", express);
-		view.setViewName("");
+		view.setViewName("/backend/express/express_overview");
 		return view;		
 	}
 
