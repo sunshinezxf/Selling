@@ -10,6 +10,12 @@ import java.util.Properties;
  */
 public class PlatformConfig {
 
+    public final static String SERVER_URL = getValue("server_url");
+
+    public final static String WECHAT_APPID = getValue("wechat_appid");
+
+    public final static String WECHAT_SECRET = getValue("wechat_secret");
+
     private static String accessToken;
 
     private static String jsapiTicket;

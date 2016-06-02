@@ -78,7 +78,7 @@ public class AgentController {
         String url = "http://" + PlatformConfig.getValue("server_url") + "/agent/bind";
         String configUrl = url + "?code=" + code + "&state=" + state;
         try {
-            String shareLink = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + PlatformConfig.getValue("wechat_appid") + "&redirect_uri=" + URLEncoder.encode(url, "utf-8") + "&response_type=code&scope=snsapi_base&state=view#wechat_redirect";
+            String shareLink = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + PlatformConfig.WECHAT_APPID + "&redirect_uri=" + URLEncoder.encode(url, "utf-8") + "&response_type=code&scope=snsapi_base&state=view#wechat_redirect";
             Configuration configuration = WechatConfig.config(configUrl);
             configuration.setShareLink(shareLink);
             view.addObject("configuration", configuration);
@@ -157,7 +157,7 @@ public class AgentController {
     @RequestMapping(method = RequestMethod.GET, value = "/lethe")
     public ModelAndView lethe() {
         ModelAndView view = new ModelAndView();
-        String url = "http://" + PlatformConfig.getValue("server_url") + "/agent/lethe";
+        String url = "http://" + PlatformConfig.SERVER_URL + "/agent/lethe";
         String configUrl = url;
         try {
             String shareLink = url;
@@ -220,7 +220,7 @@ public class AgentController {
     @RequestMapping(method = RequestMethod.GET, value = "/login")
     public ModelAndView login() {
         ModelAndView view = new ModelAndView();
-        String url = "http://" + PlatformConfig.getValue("server_url") + "/agent/login";
+        String url = "http://" + PlatformConfig.SERVER_URL + "/agent/login";
         String configUrl = url + "";
         Configuration configuration = WechatConfig.config(configUrl);
         configuration.setShareLink(url);
@@ -270,7 +270,7 @@ public class AgentController {
     @RequestMapping(method = RequestMethod.GET, value = "/register")
     public ModelAndView register(String code, String state) {
         ModelAndView view = new ModelAndView();
-        String url = "http://" + PlatformConfig.getValue("server_url") + "/agent/register";
+        String url = "http://" + PlatformConfig.SERVER_URL + "/agent/register";
         String configUrl;
         if (!StringUtils.isEmpty(code) && !StringUtils.isEmpty(code)) {
             String openId = WechatUtil.queryOauthOpenId(code);
@@ -280,7 +280,7 @@ public class AgentController {
             configUrl = url + "";
         }
         try {
-            String shareLink = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + PlatformConfig.getValue("wechat_appid") + "&redirect_uri=" + URLEncoder.encode(url, "utf-8") + "&response_type=code&scope=snsapi_base&state=view#wechat_redirect";
+            String shareLink = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + PlatformConfig.WECHAT_APPID + "&redirect_uri=" + URLEncoder.encode(url, "utf-8") + "&response_type=code&scope=snsapi_base&state=view#wechat_redirect";
             Configuration configuration = WechatConfig.config(configUrl);
             configuration.setShareLink(shareLink);
             view.addObject("configuration", configuration);
@@ -341,7 +341,7 @@ public class AgentController {
             view.setViewName("/agent/login");
             return view;
         }
-        String url = "http://" + PlatformConfig.getValue("server_url") + "/agent/me";
+        String url = "http://" + PlatformConfig.SERVER_URL + "/agent/me";
         String configUrl = url + "";
         Configuration configuration = WechatConfig.config(configUrl);
         configuration.setShareLink(url);
