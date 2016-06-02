@@ -22,6 +22,7 @@ import java.util.Map;
 @Repository
 public class AdminDaoImpl extends BaseDao implements AdminDao {
     private Logger logger = LoggerFactory.getLogger(AdminDaoImpl.class);
+
     private Object lock = new Object();
 
     @Override
@@ -54,7 +55,6 @@ public class AdminDaoImpl extends BaseDao implements AdminDao {
                 role.setRoleId("ROL00000001");
                 user.setRole(role);
                 user.setAdmin(admin);
-                ;
                 sqlSession.insert("selling.user.insert", user);
                 result.setData(admin);
             } catch (Exception e) {
@@ -74,7 +74,9 @@ public class AdminDaoImpl extends BaseDao implements AdminDao {
         synchronized (lock) {
             try {
                 sqlSession.update("selling.admin.update", admin);
-                
+                User user = new User(admin.getUsername(), admin.getPassword());
+                user.setAdmin(admin);
+                sqlSession.update("selling.user.update", user);
                 result.setData(admin);
             } catch (Exception e) {
                 logger.debug(e.getMessage());
