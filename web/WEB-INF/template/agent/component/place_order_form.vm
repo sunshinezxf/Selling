@@ -61,6 +61,17 @@
 	        </div>
 	    </div>
 </div>
+<div class="weui_dialog_confirm" id="leave_dialog" style="display:none;">
+    <div class="weui_mask"></div>
+    <div class="weui_dialog">
+        <div class="weui_dialog_hd"><strong class="weui_dialog_title"></strong>噢！您的订单还没有保存</div>
+        <div class="weui_dialog_bd" style="text-align:center;">需要保存吗？</div>
+        <div class="weui_dialog_ft">
+            <a href="javascript:;" class="weui_btn_dialog default">离开</a>
+            <a href="javascript:;" class="weui_btn_dialog primary">保存</a>
+        <iframe id="tmp_downloadhelper_iframe" style="display: none;"></iframe></div>
+	</div>
+</div>
 #parse("/agent/order/add_order_item.vm")
 <script>
 	//立了一个flag，判断是新增还是修改订单
@@ -158,5 +169,33 @@
 
 	$("#address_dialog").find(".weui_btn_dialog.primary").click(function(){
     	$("#address_dialog").hide();
+    });
+    
+    $.check_order_leave = function(URL){
+    	if($("#order_item_list").children().size() != 0) {
+    		targetURL = URL;
+    		$("#leave_dialog").fadeIn();
+    		return false;
+    	}
+    	return true;
+    }
+    
+    $("#leave_dialog").find(".weui_btn_dialog.default").click(function(){
+    	$("#leave_dialog").hide(function(){
+    		if(typeof targetURL != "undefined"){
+    			window.location.href = targetURL;
+    		} else {
+    			window.location.href = "${path.concat('/agent/me/index')}";
+    		}
+    	});
+    });
+    
+    $("#leave_dialog").find(".weui_btn_dialog.primary").click(function(){
+    	if(!$.check_order()){
+    		return;
+    	}
+    	$("#place_order_form").attr("action", "${path.concat('/agent/order/place/save')}");
+    	$("#place_order_form").attr("method","post");
+    	$("#place_order_form").submit();
     });
 </script>

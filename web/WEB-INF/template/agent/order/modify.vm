@@ -18,5 +18,5 @@
 </body>
 </html>
 <script>
-	$("#place_order").addClass("weui_bar_item_on");
+	$("#info_me").addClass("weui_bar_item_on");
 </script>

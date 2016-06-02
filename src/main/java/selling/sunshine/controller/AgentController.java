@@ -24,6 +24,7 @@ import java.net.URLEncoder;
 import java.util.*;
 
 /**
+ * 代理商的信息相关的所有请求入口
  * Created by sunshine on 4/8/16.
  */
 @RestController
@@ -169,6 +170,13 @@ public class AgentController {
         return view;
     }
 
+    /**
+     * 代理商提交忘记密码表单,验证输入信息并帮代理商重置密码
+     *
+     * @param form
+     * @param result
+     * @return
+     */
     @RequestMapping(method = RequestMethod.POST, value = "/lethe")
     public ModelAndView lethe(@Valid AgentLetheForm form, BindingResult result) {
         ModelAndView view = new ModelAndView();
@@ -203,6 +211,11 @@ public class AgentController {
         }
     }
 
+    /**
+     * 获取代理商登录页面
+     *
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/login")
     public ModelAndView login() {
         ModelAndView view = new ModelAndView();
