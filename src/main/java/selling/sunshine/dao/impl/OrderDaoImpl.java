@@ -23,11 +23,17 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
 
     private Object lock = new Object();
 
+    /**
+     * 添加订单,在order表中添加记录,并将所有的订单项添加到order item中
+     *
+     * @param order
+     * @return
+     */
     @Transactional
     @Override
     public ResultData insertOrder(Order order) {
-        List<OrderItem> orderItems = order.getOrderItems();
         ResultData result = new ResultData();
+        List<OrderItem> orderItems = order.getOrderItems();
         synchronized (lock) {
             try {
                 order.setOrderId(IDGenerator.generate("ODR"));
@@ -39,23 +45,30 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
                 sqlSession.insert("selling.order.item.insertBatch", orderItems);
                 order.setOrderItems(orderItems);
                 result.setData(order);
+                sqlSession.commit();
             } catch (Exception e) {
+                sqlSession.rollback();
                 logger.error(e.getMessage());
                 result.setResponseCode(ResponseCode.RESPONSE_ERROR);
-                result = insertOrder(order);
+                result.setDescription(e.getMessage());
             } finally {
                 return result;
             }
         }
     }
 
+    /**
+     * 查询符合查询条件的订单列表
+     *
+     * @param condition
+     * @return
+     */
     @Override
     public ResultData queryOrder(Map<String, Object> condition) {
         ResultData result = new ResultData();
         try {
             condition = handle(condition);
-            List<Order> list = sqlSession.selectList("selling.order.query",
-                    condition);
+            List<Order> list = sqlSession.selectList("selling.order.query", condition);
             result.setData(list);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -84,8 +97,7 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
     }
 
     @Override
-    public ResultData queryOrderByPage(Map<String, Object> condition,
-                                       MobilePageParam param) {
+    public ResultData queryOrderByPage(Map<String, Object> condition, MobilePageParam param) {
         ResultData result = new ResultData();
         MobilePage<Order> page = new MobilePage<>();
         ResultData total = queryOrder(condition);
