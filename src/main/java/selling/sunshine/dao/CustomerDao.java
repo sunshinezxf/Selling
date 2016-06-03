@@ -14,8 +14,6 @@ public interface CustomerDao {
     
     ResultData updateCustomer(Customer customer);
     
-    ResultData updateCustomerAddress(Customer customer);
-    
     ResultData deleteCustomer(Customer customer);
 
     ResultData queryCustomer(Map<String, Object> condition);

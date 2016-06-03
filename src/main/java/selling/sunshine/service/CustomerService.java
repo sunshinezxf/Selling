@@ -14,8 +14,6 @@ public interface CustomerService {
 
     ResultData updateCustomer(Customer customer);
     
-    ResultData updateCustomerAddress(Customer customer);
-    
     ResultData deleteCustomer(Customer customer);
 
     ResultData fetchCustomer(Map<String, Object> condition);

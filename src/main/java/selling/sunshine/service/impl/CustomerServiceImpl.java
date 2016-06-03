@@ -4,16 +4,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import selling.sunshine.dao.CustomerDao;
-import selling.sunshine.model.Agent;
 import selling.sunshine.model.Customer;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.CustomerService;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -51,32 +48,19 @@ public class CustomerServiceImpl implements CustomerService {
         }
         return result;
     }
-    
+
     @Override
-	public ResultData updateCustomerAddress(Customer customer) {
-    	 ResultData result = new ResultData();
-         ResultData updateResponse = customerDao.updateCustomerAddress(customer);
-         result.setResponseCode(updateResponse.getResponseCode());
-         if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-             result.setData(updateResponse.getData());
-         } else {
-             result.setDescription(updateResponse.getDescription());
-         }
-         return result;
-	}
-    
-    @Override
-	public ResultData deleteCustomer(Customer customer) {
-    	 ResultData result = new ResultData();
-         ResultData deleteResponse = customerDao.deleteCustomer(customer);
-         result.setResponseCode(deleteResponse.getResponseCode());
-         if (deleteResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-             result.setData(deleteResponse.getData());
-         } else {
-             result.setDescription(deleteResponse.getDescription());
-         }
-         return result;
-	}
+    public ResultData deleteCustomer(Customer customer) {
+        ResultData result = new ResultData();
+        ResultData deleteResponse = customerDao.deleteCustomer(customer);
+        result.setResponseCode(deleteResponse.getResponseCode());
+        if (deleteResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(deleteResponse.getData());
+        } else {
+            result.setDescription(deleteResponse.getDescription());
+        }
+        return result;
+    }
 
     @Override
     public ResultData fetchCustomer(Map<String, Object> condition) {
@@ -104,8 +88,8 @@ public class CustomerServiceImpl implements CustomerService {
         return result;
     }
 
-	@Override
-	public ResultData fetchCustomerPhone(Map<String, Object> condition) {
+    @Override
+    public ResultData fetchCustomerPhone(Map<String, Object> condition) {
         ResultData result = new ResultData();
         ResultData queryResponse = customerDao.queryCustomerPhone(condition);
         result.setResponseCode(queryResponse.getResponseCode());
@@ -115,11 +99,11 @@ public class CustomerServiceImpl implements CustomerService {
             result.setDescription(queryResponse.getDescription());
         }
         return result;
-	}
+    }
 
-	@Override
-	public ResultData fetchCustomerAddress(Map<String, Object> condition) {
-		ResultData result = new ResultData();
+    @Override
+    public ResultData fetchCustomerAddress(Map<String, Object> condition) {
+        ResultData result = new ResultData();
         ResultData queryResponse = customerDao.queryCustomerAddress(condition);
         result.setResponseCode(queryResponse.getResponseCode());
         if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
@@ -128,7 +112,7 @@ public class CustomerServiceImpl implements CustomerService {
             result.setDescription(queryResponse.getDescription());
         }
         return result;
-	}
+    }
 
 
 }
