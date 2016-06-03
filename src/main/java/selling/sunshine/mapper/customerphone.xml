@@ -26,7 +26,7 @@
         <if test="phone != null and phone != ''">
             AND phone = #{phone}
         </if>
-        <if test="blockFlag != null and blockFlag != ''">
+        <if test="blockFlag != null">
             AND block_flag = #{blockFlag}
         </if>
         <if test="rule != null and rule != ''">
