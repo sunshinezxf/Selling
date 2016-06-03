@@ -91,16 +91,20 @@ public class CustomerDaoImpl extends BaseDao implements CustomerDao {
                 //如果新的电话号码与数据库中最新使用的号码不同,则弃用原来的号码并新增一条记录
                 CustomerPhone phone = customer.getPhone();
                 CustomerPhone currentPhone = sqlSession.selectOne("selling.customer.phone.query", condition);
-                if (currentPhone == null || !currentPhone.getPhone().equals(phone.getPhone())) {
-                    sqlSession.update("selling.customer.phone.block", currentPhone);
-                    phone.setPhoneId(IDGenerator.generate("PNW"));
+                if (phone != null || (currentPhone != null && !phone.getPhone().equals(currentPhone.getPhone()))) {
+                    if (currentPhone != null) {
+                        sqlSession.update("selling.customer.phone.block", currentPhone);
+                    }
+                    phone.setPhoneId(IDGenerator.generate("PNM"));
                     phone.setCustomer(customer);
                     sqlSession.insert("selling.customer.phone.insert", phone);
                 }
                 CustomerAddress address = customer.getAddress();
                 CustomerAddress currentAddress = sqlSession.selectOne("selling.customer.address.query", condition);
-                if (currentAddress == null || !currentAddress.getAddress().equals(address.getAddress())) {
-                    sqlSession.update("selling.customer.address.block", currentAddress);
+                if (address != null || (currentAddress != null && !address.getAddress().equals(currentAddress.getAddress()))) {
+                    if (currentAddress != null) {
+                        sqlSession.update("selling.customer.address.block", currentAddress);
+                    }
                     address.setAddressId(IDGenerator.generate("ADR"));
                     address.setCustomer(customer);
                     sqlSession.insert("selling.customer.address.insert", address);
