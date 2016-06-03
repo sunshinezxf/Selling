@@ -73,6 +73,9 @@
                     <a class="weui_btn weui_btn_warn" id="cancel_order_btn">取消订单</a>
                 </div>
                 #end
+                <div class="weui_btn_area">
+                	<a class="weui_btn weui_btn_default" id="return_order_btn">返回</a>
+                </div>
             </div>
         </div>
     </div>
@@ -237,7 +240,17 @@
     #end
     $("#cancel_order_btn").click(function(){
     	$("#delete_dialog").fadeIn();
-    	
+    });
+    $("#return_order_btn").click(function(){
+    	#if(${status} == "SAVED" && ${operation} == "VIEW")
+    		window.location = "${path.concat('/agent//order/manage/0')}";
+    	#elseif(${status} == "SUBMITTED" && ${operation} == "VIEW")
+    		window.location = "${path.concat('/agent//order/manage/1')}";
+    	#elseif(${status} == "FINISHIED" && ${operation} == "VIEW")
+    		window.location = "${path.concat('/agent//order/manage/3')}";
+    	#else
+    		window.location = "${path.concat('/agent//order/manage/2')}";
+    	#end
     });
     $("#delete_dialog").find(".weui_btn_dialog.default").click(function(){
     	$("#delete_dialog").hide();
