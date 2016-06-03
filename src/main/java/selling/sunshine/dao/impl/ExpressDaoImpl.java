@@ -35,9 +35,7 @@ public class ExpressDaoImpl extends BaseDao implements ExpressDao {
                 express.setExpressId(IDGenerator.generate("EXP"));
                 sqlSession.insert("selling.express.insert", express);
                 result.setData(express);
-                sqlSession.commit();
             } catch (Exception e) {
-                sqlSession.rollback();
                 result.setResponseCode(ResponseCode.RESPONSE_ERROR);
                 logger.error(e.getMessage());
                 result = insertExpress(express);

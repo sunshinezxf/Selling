@@ -32,9 +32,7 @@ public class FollowerDaoImpl extends BaseDao implements FollowerDao {
             try {
                 sqlSession.insert("selling.wechat.insert", follower);
                 result.setData(follower);
-                sqlSession.commit();
             } catch (Exception e) {
-                sqlSession.rollback();
                 logger.error(e.getMessage());
                 result.setResponseCode(ResponseCode.RESPONSE_ERROR);
                 result.setDescription(e.getMessage());
@@ -56,9 +54,7 @@ public class FollowerDaoImpl extends BaseDao implements FollowerDao {
         synchronized (lock) {
             try {
                 sqlSession.update("selling.wechat.block", openId);
-                sqlSession.commit();
             } catch (Exception e) {
-                sqlSession.rollback();
                 logger.error(e.getMessage());
                 result.setResponseCode(ResponseCode.RESPONSE_ERROR);
                 result.setDescription(e.getMessage());
