@@ -51,9 +51,7 @@ public class AgentDaoImpl extends BaseDao implements AgentDao {
                 user.setAgent(new selling.sunshine.model.lite.Agent(agent));
                 sqlSession.insert("selling.user.insert", user);
                 result.setData(agent);
-                sqlSession.commit();
             } catch (Exception e) {
-                sqlSession.rollback();
                 logger.error(e.getMessage());
                 result.setResponseCode(ResponseCode.RESPONSE_ERROR);
                 result.setDescription(e.getMessage());
@@ -131,9 +129,7 @@ public class AgentDaoImpl extends BaseDao implements AgentDao {
                 user.setAgent(new selling.sunshine.model.lite.Agent(agent));
                 sqlSession.update("selling.user.update", user);
                 result.setData(agent);
-                sqlSession.commit();
             } catch (Exception e) {
-                sqlSession.rollback();
                 logger.debug(e.getMessage());
                 result.setResponseCode(ResponseCode.RESPONSE_ERROR);
                 result.setDescription(e.getMessage());
@@ -162,13 +158,11 @@ public class AgentDaoImpl extends BaseDao implements AgentDao {
                     result.setResponseCode(ResponseCode.RESPONSE_NULL);
                 }
                 sqlSession.update("selling.agent.unbind", openId);
-                sqlSession.commit();
                 condition.clear();
                 condition.put("agentId", agent.getAgentId());
                 agent = sqlSession.selectOne("selling.agent.query", condition);
                 result.setData(agent);
             } catch (Exception e) {
-                sqlSession.rollback();
                 logger.error(e.getMessage());
                 result.setResponseCode(ResponseCode.RESPONSE_ERROR);
                 result.setDescription(e.getMessage());

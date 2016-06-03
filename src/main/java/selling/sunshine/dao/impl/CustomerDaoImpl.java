@@ -56,14 +56,12 @@ public class CustomerDaoImpl extends BaseDao implements CustomerDao {
                 address.setAddressId(IDGenerator.generate("ADR"));
                 address.setCustomer(customer);
                 sqlSession.insert("selling.customer.address.insert", address);
-                sqlSession.commit();
                 //从数据库中获取刚插入的记录
                 Map<String, Object> condition = new HashMap<>();
                 condition.put("customerId", customer.getCustomerId());
                 customer = sqlSession.selectOne("selling.customer.query", condition);
                 result.setData(customer);
             } catch (Exception e) {
-                sqlSession.rollback();
                 logger.error(e.getMessage());
                 result.setResponseCode(ResponseCode.RESPONSE_ERROR);
                 result.setDescription(e.getMessage());
@@ -113,9 +111,7 @@ public class CustomerDaoImpl extends BaseDao implements CustomerDao {
                 condition.remove("blockFlag");
                 customer = sqlSession.selectOne("selling.customer.query", condition);
                 result.setData(customer);
-                sqlSession.commit();
             } catch (Exception e) {
-                sqlSession.rollback();
                 logger.error(e.getMessage());
                 result.setResponseCode(ResponseCode.RESPONSE_ERROR);
                 result.setDescription(e.getMessage());
@@ -138,9 +134,7 @@ public class CustomerDaoImpl extends BaseDao implements CustomerDao {
         synchronized (lock) {
             try {
                 sqlSession.update("selling.customer.delete", customer);
-                sqlSession.commit();
             } catch (Exception e) {
-                sqlSession.rollback();
                 logger.error(e.getMessage());
                 result.setResponseCode(ResponseCode.RESPONSE_ERROR);
                 result.setDescription(e.getMessage());

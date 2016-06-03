@@ -43,9 +43,7 @@ public class BillDaoImpl extends BaseDao implements BillDao {
                 bill.setBillId(IDGenerator.generate("DPB"));
                 sqlSession.insert("selling.bill.deposit.insert", bill);
                 result.setData(bill);
-                sqlSession.commit();
             } catch (Exception e) {
-                sqlSession.rollback();
                 logger.error(e.getMessage());
                 result.setResponseCode(ResponseCode.RESPONSE_ERROR);
                 result.setDescription(e.getMessage());
@@ -90,9 +88,7 @@ public class BillDaoImpl extends BaseDao implements BillDao {
             try {
                 sqlSession.update("selling.bill.deposit.update", bill);
                 result.setData(bill);
-                sqlSession.commit();
             } catch (Exception e) {
-                sqlSession.rollback();
                 logger.error(e.getMessage());
                 result.setResponseCode(ResponseCode.RESPONSE_ERROR);
                 result.setDescription(e.getMessage());
@@ -141,9 +137,7 @@ public class BillDaoImpl extends BaseDao implements BillDao {
                 }
                 sqlSession.insert("selling.bill.order.insert", bill);
                 result.setData(bill);
-                sqlSession.commit();
             } catch (Exception e) {
-                sqlSession.rollback();
                 logger.error(e.getMessage());
                 result.setResponseCode(ResponseCode.RESPONSE_ERROR);
                 result.setDescription(e.getMessage());
@@ -166,13 +160,11 @@ public class BillDaoImpl extends BaseDao implements BillDao {
         synchronized (lock) {
             try {
                 sqlSession.update("selling.bill.order.update", bill);
-                sqlSession.commit();
                 Map<String, Object> condition = new HashMap<>();
                 condition.put("billId", bill.getBillId());
                 bill = sqlSession.selectOne("selling.bill.order.query", condition);
                 result.setData(bill);
             } catch (Exception e) {
-                sqlSession.rollback();
                 logger.error(e.getMessage());
                 result.setResponseCode(ResponseCode.RESPONSE_ERROR);
                 result.setDescription(e.getMessage());

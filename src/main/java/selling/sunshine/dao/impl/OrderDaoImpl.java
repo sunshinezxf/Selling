@@ -45,9 +45,7 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
                 sqlSession.insert("selling.order.item.insertBatch", orderItems);
                 order.setOrderItems(orderItems);
                 result.setData(order);
-                sqlSession.commit();
             } catch (Exception e) {
-                sqlSession.rollback();
                 logger.error(e.getMessage());
                 result.setResponseCode(ResponseCode.RESPONSE_ERROR);
                 result.setDescription(e.getMessage());

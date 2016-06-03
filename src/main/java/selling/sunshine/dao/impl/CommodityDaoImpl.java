@@ -41,9 +41,7 @@ public class CommodityDaoImpl extends BaseDao implements CommodityDao {
                 goods.setGoodsId(IDGenerator.generate("COM"));
                 sqlSession.insert("selling.goods.insert", goods);
                 result.setData(goods);
-                sqlSession.commit();
             } catch (Exception e) {
-                sqlSession.rollback();
                 logger.error(e.getMessage());
                 result.setResponseCode(ResponseCode.RESPONSE_ERROR);
             } finally {
@@ -65,9 +63,7 @@ public class CommodityDaoImpl extends BaseDao implements CommodityDao {
             try {
                 sqlSession.update("selling.goods.update", goods);
                 result.setData(goods);
-                sqlSession.commit();
             } catch (Exception e) {
-                sqlSession.rollback();
                 logger.error(e.getMessage());
                 result.setResponseCode(ResponseCode.RESPONSE_ERROR);
                 result.setDescription(e.getMessage());

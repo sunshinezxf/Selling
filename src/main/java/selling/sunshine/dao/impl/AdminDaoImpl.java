@@ -102,9 +102,7 @@ public class AdminDaoImpl extends BaseDao implements AdminDao {
                 user.setAdmin(admin);
                 sqlSession.insert("selling.user.insert", user);
                 result.setData(admin);
-                sqlSession.commit();
             } catch (Exception e) {
-                sqlSession.rollback();
                 logger.error(e.getMessage());
                 result.setResponseCode(ResponseCode.RESPONSE_ERROR);
                 result.setDescription(e.getMessage());
@@ -131,9 +129,7 @@ public class AdminDaoImpl extends BaseDao implements AdminDao {
                 user.setAdmin(admin);
                 sqlSession.update("selling.user.update", user);
                 result.setData(admin);
-                sqlSession.commit();
             } catch (Exception e) {
-                sqlSession.rollback();
                 logger.debug(e.getMessage());
                 result.setResponseCode(ResponseCode.RESPONSE_ERROR);
                 result.setDescription(e.getMessage());
@@ -159,9 +155,7 @@ public class AdminDaoImpl extends BaseDao implements AdminDao {
                 sqlSession.delete("selling.user.delete", user);
                 sqlSession.delete("selling.admin.delete", admin);
                 result.setData(admin);
-                sqlSession.commit();
             } catch (Exception e) {
-                sqlSession.rollback();
                 logger.debug(e.getMessage());
                 result.setResponseCode(ResponseCode.RESPONSE_ERROR);
                 result.setDescription(e.getMessage());
