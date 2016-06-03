@@ -38,7 +38,6 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
             try {
                 order.setOrderId(IDGenerator.generate("ODR"));
                 sqlSession.insert("selling.order.insert", order);
-                sqlSession.commit();
                 for (OrderItem orderItem : orderItems) {
                     orderItem.setOrderItemId(IDGenerator.generate("ORI"));
                     orderItem.setOrder(order);
