@@ -26,7 +26,7 @@
         <property name="maxActive" value="100"/>
         <property name="maxIdle" value="30"/>
         <property name="maxWait" value="500"/>
-        <property name="defaultAutoCommit" value="true"/>
+        <property name="defaultAutoCommit" value="false"/>
     </bean>
 
     <bean id="transactionManager"

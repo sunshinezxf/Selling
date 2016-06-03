@@ -1,5 +1,6 @@
 package selling.sunshine.dao.impl;
 
+import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -100,9 +101,12 @@ public class AdminDaoImpl extends BaseDao implements AdminDao {
                 user.setAdmin(admin);
                 sqlSession.insert("selling.user.insert", user);
                 result.setData(admin);
+                sqlSession.commit();
             } catch (Exception e) {
+                sqlSession.rollback();
                 logger.error(e.getMessage());
                 result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+                result.setDescription(e.getMessage());
             } finally {
                 return result;
             }
@@ -126,7 +130,9 @@ public class AdminDaoImpl extends BaseDao implements AdminDao {
                 user.setAdmin(admin);
                 sqlSession.update("selling.user.update", user);
                 result.setData(admin);
+                sqlSession.commit();
             } catch (Exception e) {
+                sqlSession.rollback();
                 logger.debug(e.getMessage());
                 result.setResponseCode(ResponseCode.RESPONSE_ERROR);
                 result.setDescription(e.getMessage());
@@ -152,7 +158,9 @@ public class AdminDaoImpl extends BaseDao implements AdminDao {
                 sqlSession.delete("selling.user.delete", user);
                 sqlSession.delete("selling.admin.delete", admin);
                 result.setData(admin);
+                sqlSession.commit();
             } catch (Exception e) {
+                sqlSession.rollback();
                 logger.debug(e.getMessage());
                 result.setResponseCode(ResponseCode.RESPONSE_ERROR);
                 result.setDescription(e.getMessage());
@@ -162,10 +170,18 @@ public class AdminDaoImpl extends BaseDao implements AdminDao {
         }
     }
 
+    /**
+     * 查询某一页的管理员信息
+     *
+     * @param condition
+     * @param start
+     * @param length
+     * @return
+     */
     private List<Admin> queryAdminByPage(Map<String, Object> condition, int start, int length) {
         List<Admin> result = new ArrayList<>();
         try {
-            result = sqlSession.selectList("selling.admin.query", condition);
+            result = sqlSession.selectList("selling.admin.query", condition, new RowBounds(start, length));
         } catch (Exception e) {
             logger.error(e.getMessage());
         } finally {
