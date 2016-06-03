@@ -185,6 +185,12 @@
 			<artifactId>jersey-bundle</artifactId>
 			<version>1.19.1</version>
 		</dependency>
+		
+	<dependency>
+            <groupId>net.sourceforge.jexcelapi</groupId>
+            <artifactId>jxl</artifactId>
+            <version>2.6.12</version>
+        </dependency>
 	</dependencies>
 
 	<build>
@@ -219,4 +225,5 @@
 			</resource>
 		</resources>
 	</build>
+
 </project>
