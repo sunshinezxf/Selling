@@ -10,15 +10,21 @@ import selling.sunshine.utils.ResultData;
 import selling.wechat.model.Follower;
 
 /**
+ * 微信服务号关注用户与持久层交互接口
  * Created by sunshine on 5/25/16.
  */
 @Repository
 public class FollowerDaoImpl extends BaseDao implements FollowerDao {
-
     private Logger logger = LoggerFactory.getLogger(FollowerDaoImpl.class);
 
     private Object lock = new Object();
 
+    /**
+     * 添加关注用户信息记录
+     *
+     * @param follower
+     * @return
+     */
     @Override
     public ResultData insertFollower(Follower follower) {
         ResultData result = new ResultData();
@@ -26,7 +32,9 @@ public class FollowerDaoImpl extends BaseDao implements FollowerDao {
             try {
                 sqlSession.insert("selling.wechat.insert", follower);
                 result.setData(follower);
+                sqlSession.commit();
             } catch (Exception e) {
+                sqlSession.rollback();
                 logger.error(e.getMessage());
                 result.setResponseCode(ResponseCode.RESPONSE_ERROR);
                 result.setDescription(e.getMessage());
@@ -36,13 +44,21 @@ public class FollowerDaoImpl extends BaseDao implements FollowerDao {
         }
     }
 
+    /**
+     * 用户取消关注时,删除用户信息(标记删除)
+     *
+     * @param openId
+     * @return
+     */
     @Override
     public ResultData blockFollower(String openId) {
         ResultData result = new ResultData();
         synchronized (lock) {
             try {
                 sqlSession.update("selling.wechat.block", openId);
+                sqlSession.commit();
             } catch (Exception e) {
+                sqlSession.rollback();
                 logger.error(e.getMessage());
                 result.setResponseCode(ResponseCode.RESPONSE_ERROR);
                 result.setDescription(e.getMessage());
