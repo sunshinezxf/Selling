@@ -20,6 +20,9 @@
         SELECT customer_phone_id, customer_id, phone, block_flag, create_time
         FROM customer_phone
         WHERE 1 = 1
+        <if test="customerId != null and customerId != ''">
+        	AND customer_id = #{customerId}
+        </if>
         <if test="phoneId != null and phoneId != ''">
             AND customer_phone_id = #{phoneId}
         </if>

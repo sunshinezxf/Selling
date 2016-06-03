@@ -297,8 +297,8 @@
         for(var order_info in order_info_list) {
         	total_price += order_info_list[order_info]['order_item_price'];
         	$("#total_goods").prepend("<p class='weui_media_text'>" 
-        		+ order_info + ": " + order_info_list[order_info]['quantity'] +
- 				"件, 共" + order_info_list[order_info]['order_item_price'] + "元</p>")
+        		+ order_info + ":" + order_info_list[order_info]['quantity'] +
+ 				"件, " + order_info_list[order_info]['order_item_price'] + "元</p>")
         }
         $("#total_goods_price").html("共计:" + total_price + "元");
          //判断是否总价是0，决定显示保存按钮与否

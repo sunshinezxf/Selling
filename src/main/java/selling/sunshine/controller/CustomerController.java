@@ -196,7 +196,8 @@ public class CustomerController {
         ResultData fetchResponse = customerService.fetchCustomerAddress(condition);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             List<CustomerAddress> addressList = (List<CustomerAddress>) fetchResponse.getData();
-            result.setData(addressList.subList(0, 5));
+            int size = addressList.size() > 5 ? 5 : addressList.size(); 
+            result.setData(addressList.subList(0, size));
         } else {
             result.setResponseCode(fetchResponse.getResponseCode());
             result.setDescription(fetchResponse.getDescription());

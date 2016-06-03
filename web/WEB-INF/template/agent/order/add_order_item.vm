@@ -43,8 +43,6 @@
             <div class="weui_actionsheet_cell" id="actionsheet_2">2</div>
             <div class="weui_actionsheet_cell" id="actionsheet_3">3</div>
             <div class="weui_actionsheet_cell" id="actionsheet_4">4</div>
-        </div>
-        <div class="weui_actionsheet_action">
             <div class="weui_actionsheet_cell" id="actionsheet_cancel">其他</div>
         </div>
     </div>

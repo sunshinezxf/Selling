@@ -48,13 +48,17 @@
                 var node = 
                 	"<label class='weui_cell customer' id='" + item.customerId + "'>" +
 					"<div class='weui_cell_bd weui_cell_primary'>" +
-					"<span>" + item.name + "</span>" +
+					"<span>" + item.name + "</span>(<span>" + item.phone.phone + "</span>)" + 
 					"</div>" + 
+					" <div class='weui_cell_ft'>" + 
+					"<input type='radio' class='weui_check'>" + 
+					"<span id='radio'" + item.customerId + " class='weui_ico_checked'>" +
+					"</div>" +
 					"<input id='customer_phone" + item.customerId + "' type='hidden' value='" + item.phone.phone  + "'/>" +
-					"<div class='weui_cell_ft'>" + item.phone.phone + "</div>" +
 					"<div style='display:none;' id='customer_address" + item.customerId + "'> " + item.address.address + "</div>" +
 					"</label>";
                 $("#customer_option").prepend(node);
+                
                 
                 //新增node添加事件
                 $("#customer_option").children().eq(0).click($.customer_choose_click);
