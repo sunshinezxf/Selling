@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import selling.sunshine.dao.BaseDao;
 import selling.sunshine.dao.BillDao;
 import selling.sunshine.model.BillStatus;
@@ -18,15 +19,21 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 账号与持久层交互接口,包括充值账单和订单支付账单
  * Created by sunshine on 5/10/16.
  */
 @Repository
 public class BillDaoImpl extends BaseDao implements BillDao {
-
     private Logger logger = LoggerFactory.getLogger(BillDaoImpl.class);
 
     private Object lock = new Object();
 
+    /**
+     * 添加充值账单记录
+     *
+     * @param bill
+     * @return
+     */
     @Transactional
     @Override
     public ResultData insertDepositBill(DepositBill bill) {
@@ -36,7 +43,9 @@ public class BillDaoImpl extends BaseDao implements BillDao {
                 bill.setBillId(IDGenerator.generate("DPB"));
                 sqlSession.insert("selling.bill.deposit.insert", bill);
                 result.setData(bill);
+                sqlSession.commit();
             } catch (Exception e) {
+                sqlSession.rollback();
                 logger.error(e.getMessage());
                 result.setResponseCode(ResponseCode.RESPONSE_ERROR);
                 result.setDescription(e.getMessage());
@@ -46,6 +55,12 @@ public class BillDaoImpl extends BaseDao implements BillDao {
         }
     }
 
+    /**
+     * 查询代理商的充值账单记录
+     *
+     * @param condition
+     * @return
+     */
     @Override
     public ResultData queryDepositBill(Map<String, Object> condition) {
         ResultData result = new ResultData();
@@ -61,6 +76,12 @@ public class BillDaoImpl extends BaseDao implements BillDao {
         }
     }
 
+    /**
+     * 更新充值账单记录
+     *
+     * @param bill
+     * @return
+     */
     @Transactional
     @Override
     public ResultData updateDepositBill(DepositBill bill) {
@@ -69,7 +90,9 @@ public class BillDaoImpl extends BaseDao implements BillDao {
             try {
                 sqlSession.update("selling.bill.deposit.update", bill);
                 result.setData(bill);
+                sqlSession.commit();
             } catch (Exception e) {
+                sqlSession.rollback();
                 logger.error(e.getMessage());
                 result.setResponseCode(ResponseCode.RESPONSE_ERROR);
                 result.setDescription(e.getMessage());
@@ -79,6 +102,12 @@ public class BillDaoImpl extends BaseDao implements BillDao {
         }
     }
 
+    /**
+     * 查询订单支付账单记录
+     *
+     * @param condition
+     * @return
+     */
     @Override
     public ResultData queryOrderBill(Map<String, Object> condition) {
         ResultData result = new ResultData();
@@ -94,6 +123,12 @@ public class BillDaoImpl extends BaseDao implements BillDao {
         }
     }
 
+    /**
+     * 插入订单支付账单记录,如果是使用账户余额付款,则订单的支付状态直接修改为已付款
+     *
+     * @param bill
+     * @return
+     */
     @Transactional
     @Override
     public ResultData insertOrderBill(OrderBill bill) {
@@ -101,12 +136,14 @@ public class BillDaoImpl extends BaseDao implements BillDao {
         synchronized (lock) {
             try {
                 bill.setBillId(IDGenerator.generate("ODB"));
-                if (bill.getChannel().equals("coffer")) {
+                if (!StringUtils.isEmpty(bill.getChannel()) && bill.getChannel().equals("coffer")) {
                     bill.setStatus(BillStatus.PAYED);
                 }
                 sqlSession.insert("selling.bill.order.insert", bill);
                 result.setData(bill);
+                sqlSession.commit();
             } catch (Exception e) {
+                sqlSession.rollback();
                 logger.error(e.getMessage());
                 result.setResponseCode(ResponseCode.RESPONSE_ERROR);
                 result.setDescription(e.getMessage());
@@ -116,6 +153,12 @@ public class BillDaoImpl extends BaseDao implements BillDao {
         }
     }
 
+    /**
+     * 更新订单账单信息
+     *
+     * @param bill
+     * @return
+     */
     @Transactional
     @Override
     public ResultData updateOrderBill(OrderBill bill) {
@@ -123,11 +166,13 @@ public class BillDaoImpl extends BaseDao implements BillDao {
         synchronized (lock) {
             try {
                 sqlSession.update("selling.bill.order.update", bill);
+                sqlSession.commit();
                 Map<String, Object> condition = new HashMap<>();
                 condition.put("billId", bill.getBillId());
                 bill = sqlSession.selectOne("selling.bill.order.query", condition);
                 result.setData(bill);
             } catch (Exception e) {
+                sqlSession.rollback();
                 logger.error(e.getMessage());
                 result.setResponseCode(ResponseCode.RESPONSE_ERROR);
                 result.setDescription(e.getMessage());
