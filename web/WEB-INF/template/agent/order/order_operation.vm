@@ -55,7 +55,7 @@
 	});
 
     $(".weui_navbar_item").click(function () {
-        var current = $(".weui_bar_item_on");
+        var current = $(".weui_navbar").find(".weui_bar_item_on");
         var current_id = current.attr("id");
         var target_id = $(this).attr("id");
         if (current_id != target_id) {
