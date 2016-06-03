@@ -125,29 +125,43 @@ public class CustomerDaoImpl extends BaseDao implements CustomerDao {
         }
     }
 
+    /**
+     * 删除顾客信息(标记删除)
+     *
+     * @param customer
+     * @return
+     */
     @Transactional
     @Override
     public ResultData deleteCustomer(Customer customer) {
         ResultData result = new ResultData();
-        try {
-            sqlSession.update("selling.customer.delete", customer);
-            result.setData(customer);
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
-        } finally {
-            return result;
+        synchronized (lock) {
+            try {
+                sqlSession.update("selling.customer.delete", customer);
+                sqlSession.commit();
+            } catch (Exception e) {
+                sqlSession.rollback();
+                logger.error(e.getMessage());
+                result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+                result.setDescription(e.getMessage());
+            } finally {
+                return result;
+            }
         }
     }
 
+    /**
+     * 查询符合查询条件的顾客列表
+     *
+     * @param condition
+     * @return
+     */
     @Override
     public ResultData queryCustomer(Map<String, Object> condition) {
         ResultData result = new ResultData();
         try {
-            List<Customer> list = sqlSession.selectList(
-                    "selling.customer.query", condition);
+            List<Customer> list = sqlSession.selectList("selling.customer.query", condition);
             result.setData(list);
-            result.setResponseCode(ResponseCode.RESPONSE_OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
             result.setResponseCode(ResponseCode.RESPONSE_ERROR);
@@ -157,22 +171,27 @@ public class CustomerDaoImpl extends BaseDao implements CustomerDao {
         }
     }
 
+    /**
+     * Data table分页查询顾客信息列表
+     *
+     * @param condition
+     * @param param
+     * @return
+     */
     @Override
-    public ResultData queryCustomerByPage(Map<String, Object> condition,
-                                          DataTableParam param) {
+    public ResultData queryCustomerByPage(Map<String, Object> condition, DataTableParam param) {
         ResultData result = new ResultData();
-        DataTablePage<Customer> page = new DataTablePage<Customer>();
+        DataTablePage<Customer> page = new DataTablePage<>();
         page.setsEcho(param.getsEcho());
         ResultData total = queryCustomer(condition);
         if (total.getResponseCode() != ResponseCode.RESPONSE_OK) {
             result.setResponseCode(ResponseCode.RESPONSE_ERROR);
             result.setDescription(total.getDescription());
-            logger.error(result.getDescription());
+            return result;
         }
         page.setiTotalRecords(((List<Customer>) total.getData()).size());
         page.setiTotalDisplayRecords(((List<Customer>) total.getData()).size());
-        List<Customer> current = queryCustomerByPage(condition,
-                param.getiDisplayStart(), param.getiDisplayLength());
+        List<Customer> current = queryCustomerByPage(condition, param.getiDisplayStart(), param.getiDisplayLength());
         if (current.size() == 0) {
             result.setResponseCode(ResponseCode.RESPONSE_NULL);
         }
@@ -181,12 +200,18 @@ public class CustomerDaoImpl extends BaseDao implements CustomerDao {
         return result;
     }
 
-    private List<Customer> queryCustomerByPage(Map<String, Object> condition,
-                                               int start, int length) {
-        List<Customer> result = new ArrayList<Customer>();
+    /**
+     * 查询某一页的顾客列表
+     *
+     * @param condition
+     * @param start
+     * @param length
+     * @return
+     */
+    private List<Customer> queryCustomerByPage(Map<String, Object> condition, int start, int length) {
+        List<Customer> result = new ArrayList<>();
         try {
-            result = sqlSession.selectList("selling.customer.query", condition,
-                    new RowBounds(start, length));
+            result = sqlSession.selectList("selling.customer.query", condition, new RowBounds(start, length));
         } catch (Exception e) {
             logger.error(e.getMessage());
         } finally {
