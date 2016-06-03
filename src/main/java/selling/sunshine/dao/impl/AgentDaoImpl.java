@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 代理商与持久层交互实现类
  * Created by sunshine on 4/8/16.
  */
 public class AgentDaoImpl extends BaseDao implements AgentDao {
@@ -28,6 +29,12 @@ public class AgentDaoImpl extends BaseDao implements AgentDao {
 
     private Object lock = new Object();
 
+    /**
+     * 插入代理商记录,同时在user表中也需要添加相应记录
+     *
+     * @param agent
+     * @return
+     */
     @Transactional
     @Override
     public ResultData insertAgent(Agent agent) {
@@ -44,16 +51,24 @@ public class AgentDaoImpl extends BaseDao implements AgentDao {
                 user.setAgent(new selling.sunshine.model.lite.Agent(agent));
                 sqlSession.insert("selling.user.insert", user);
                 result.setData(agent);
+                sqlSession.commit();
             } catch (Exception e) {
+                sqlSession.rollback();
                 logger.error(e.getMessage());
                 result.setResponseCode(ResponseCode.RESPONSE_ERROR);
-                result = insertAgent(agent);
+                result.setDescription(e.getMessage());
             } finally {
                 return result;
             }
         }
     }
 
+    /**
+     * 根据条件查询符合条件的代理商列表
+     *
+     * @param condition
+     * @return
+     */
     @Override
     public ResultData queryAgent(Map<String, Object> condition) {
         ResultData result = new ResultData();
@@ -70,12 +85,17 @@ public class AgentDaoImpl extends BaseDao implements AgentDao {
         }
     }
 
-
+    /**
+     * 后台分页查询代理商列表
+     *
+     * @param condition
+     * @param param
+     * @return
+     */
     @Override
     public ResultData queryAgentByPage(Map<String, Object> condition, DataTableParam param) {
         ResultData result = new ResultData();
-        DataTablePage<Agent> page = new DataTablePage<Agent>();
-        page.setsEcho(param.getsEcho());
+        DataTablePage<Agent> page = new DataTablePage<>(param);
         condition = handle(condition);
         ResultData total = queryAgent(condition);
         if (total.getResponseCode() != ResponseCode.RESPONSE_OK) {
@@ -94,6 +114,12 @@ public class AgentDaoImpl extends BaseDao implements AgentDao {
         return result;
     }
 
+    /**
+     * 更新代理商信息,同时更新相应user表中的必要信息
+     *
+     * @param agent
+     * @return
+     */
     @Transactional
     @Override
     public ResultData updateAgent(Agent agent) {
@@ -105,8 +131,9 @@ public class AgentDaoImpl extends BaseDao implements AgentDao {
                 user.setAgent(new selling.sunshine.model.lite.Agent(agent));
                 sqlSession.update("selling.user.update", user);
                 result.setData(agent);
-                result.setData(agent);
+                sqlSession.commit();
             } catch (Exception e) {
+                sqlSession.rollback();
                 logger.debug(e.getMessage());
                 result.setResponseCode(ResponseCode.RESPONSE_ERROR);
                 result.setDescription(e.getMessage());
@@ -116,6 +143,12 @@ public class AgentDaoImpl extends BaseDao implements AgentDao {
         }
     }
 
+    /**
+     * 根据微信的openId解绑代理商账号
+     *
+     * @param openId
+     * @return
+     */
     @Transactional
     @Override
     public ResultData unbindAgent(String openId) {
@@ -129,7 +162,13 @@ public class AgentDaoImpl extends BaseDao implements AgentDao {
                     result.setResponseCode(ResponseCode.RESPONSE_NULL);
                 }
                 sqlSession.update("selling.agent.unbind", openId);
+                sqlSession.commit();
+                condition.clear();
+                condition.put("agentId", agent.getAgentId());
+                agent = sqlSession.selectOne("selling.agent.query", condition);
+                result.setData(agent);
             } catch (Exception e) {
+                sqlSession.rollback();
                 logger.error(e.getMessage());
                 result.setResponseCode(ResponseCode.RESPONSE_ERROR);
                 result.setDescription(e.getMessage());
@@ -140,6 +179,14 @@ public class AgentDaoImpl extends BaseDao implements AgentDao {
 
     }
 
+    /**
+     * 查询某一页的代理商的列表信息
+     *
+     * @param condition
+     * @param start
+     * @param length
+     * @return
+     */
     private List<Agent> queryAgentByPage(Map<String, Object> condition, int start, int length) {
         List<Agent> result = new ArrayList<>();
         try {

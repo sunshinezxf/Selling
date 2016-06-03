@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 管理员与持久层交互接口实现类
  * Created by sunshine on 4/21/16.
  */
 @Repository
