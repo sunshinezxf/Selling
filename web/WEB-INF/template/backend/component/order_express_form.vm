@@ -110,11 +110,25 @@
     });
     
     function print(){
+        #*
     	for(var i=0;i<${expressList}.length;i++){
     	    createPrintPage(document.getElementById("expressNumber"+i).innerHTML,${expressList}[i].createAt,${expressList}[i].senderName,${expressList}[i].senderPhone,${expressList}[i].senderAddress,${expressList}[i].receiverName,${expressList}[i].receiverPhone,${expressList}[i].receiverAddress,${expressList}[i].goodsName);
     	    LODOP.PREVIEW();
     	}
-    	window.location.href = "${path.concat('/order/express/')}"+${order}.orderId+"/"+$("#expressId").val();     
+    	*#
+    	var expressData=new Array();
+    	var data={"expressList":${expressList},"expressNumber":$("#expressId").val()};
+    	expressData.push(data);
+    	$.ajax({ 
+            type:"POST", 
+            url:"${path.concat('/order/expressData')}", 
+            dataType:"json",      
+            contentType:"application/json",               
+            data:JSON.stringify(expressData), 
+            success:function(data){ 
+                                       
+            } 
+         });  
     }
     
     function createPrintPage(expressNumber,expressDate,senderName,senderPhone,senderAddress,receiverName,receiverPhone,receiverAddress,goodsName){

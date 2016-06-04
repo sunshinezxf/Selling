@@ -10,35 +10,12 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-12 col-lg-12" id="check_order_table">
-            <p id="total" class="lead text-info"></p>       
+        <div class="col-md-12 col-lg-12" id="check_order_table">          
+              <p id="total" class="lead text-info"></p>       
         </div>
     </div>
 </div>
-<div class="modal fade" id="express_modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">x</button>
-                <h4 class="modal-title">设置起始快递单号</h4>
-            </div>
-            <div class="modal-body">
-                <form class="form-horizontal" id="express_form">
-                    <p class="form-group">
-                        <label class="col-sm-4 col-md-4 col-lg-3">起始快递单号:</label>&nbsp;&nbsp;
-                        <input  id="expressId" name="expressId" autocomplete="off"/>
-                    </p>
-                    <p class="form-group">
-                        <label class="col-sm-12 col-md-12 col-lg-12">*说明文字</label>
-                    </p>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal" id="express_confirm">确定</button>
-            </div>
-        </div>
-    </div>
-</div>
+
 <script>
 
 
@@ -111,22 +88,20 @@
     var parentId;
     function express(obj){
       parentId= obj.parentElement.id 
-       window.location.href = "${path.concat('/order/express/')}"+parentId;
-       #*
-      $("#express_modal").modal('show');   
+      var turnForm = document.createElement("form");       
+      document.body.appendChild(turnForm);
+      turnForm.method = 'post';
+      turnForm.action = '${path.concat('/order/express')}';
+      var newElement = document.createElement("input");
+      newElement.setAttribute("name","orderId");
+      newElement.setAttribute("type","hidden");
+      newElement.setAttribute("value",parentId);
+      turnForm.appendChild(newElement);
+      turnForm.submit();
+      #*
+      window.location.href = "${path.concat('/order/express/')}"+parentId;
       *#
     }
-    
-    $("#express_modal").find("#express_confirm").click(function(){
-    	   
-    	  var expressNumber=$("#expressId").val();
-    	  window.location.href = "${path.concat('/order/express/')}"+parentId;
-    	  #*
-          window.location.href = "${path.concat('/order/express/')}"+parentId+"/"+expressNumber;
-          *#
-    	  $("#express_modal").modal('hide');
-
-    });
     
     function loadTable(obj){
             $("#loadMore").remove();  

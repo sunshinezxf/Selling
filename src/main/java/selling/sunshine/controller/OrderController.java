@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import selling.sunshine.form.ExpressForm;
 import selling.sunshine.form.OrderItemForm;
 import selling.sunshine.form.PayForm;
 import selling.sunshine.form.SortRule;
@@ -29,10 +30,8 @@ import selling.sunshine.utils.ResultData;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -114,12 +113,15 @@ public class OrderController {
 		return result;
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value = "/express/{orderId}")
-	public ModelAndView express(@PathVariable("orderId") String orderId) {
+	@RequestMapping(method = RequestMethod.POST, value = "/express")
+	public ModelAndView express(HttpServletRequest request) {
 		ModelAndView view = new ModelAndView();
-
+        if(request.getParameter("orderId")==null){
+        	view.setViewName("/backend/order/express");
+        	return view;
+        }
 		Map<String, Object> condition = new HashMap<>();
-		condition.put("orderId", orderId);
+		condition.put("orderId", request.getParameter("orderId"));
 		ResultData orderData = orderService.fetchOrder(condition);
 		Order order = ((List<Order>) orderData.getData()).get(0);
 		// 验证order的每一项orderItem购买的商品的数量与相应的价格是否一致
@@ -141,45 +143,29 @@ public class OrderController {
 							.getPhone().getPhone(), orderItems.get(i)
 							.getCustomer().getAddress().getAddress(), orderItems.get(i).getGoods().getName(),expressDate);
 			express.setExpressId("expressNumber"+i);
+			express.setOrderItem(orderItems.get(i));
 			expressList.add(express);
 		}
 		view.addObject("expressList", expressList);
-		view.addObject("order", order);
 		view.setViewName("/backend/order/express");
 		return view;
 	}
-
-	@RequestMapping(method = RequestMethod.GET, value = "/express/{orderId}/{expressNumber}")
-	public ModelAndView express(@PathVariable("orderId") String orderId,
-			@PathVariable("expressNumber") String expressNumber) {
-		ModelAndView view = new ModelAndView();
-
-		Map<String, Object> condition = new HashMap<>();
-		condition.put("orderId", orderId);
-		ResultData orderData = orderService.fetchOrder(condition);
-		Order order = ((List<Order>) orderData.getData()).get(0);
-		List<OrderItem> orderItems = order.getOrderItems();
-		for (OrderItem item : orderItems) {
-				item.setStatus(OrderItemStatus.SHIPPED);
-		}
-		order.setOrderItems(orderItems);
-		order.setStatus(OrderStatus.FULLY_SHIPMENT);
-		orderService.modifyOrder(order);
-		Timestamp expressDate=new Timestamp(System.currentTimeMillis());
+	
+	@RequestMapping(method = RequestMethod.POST, value = "/expressData")
+	@ResponseBody
+	public ResultData express(@RequestBody List<ExpressForm> expressData) {
+		ResultData resultData=new ResultData();
+		List<Express> expressList=expressData.get(0).getExpressList();
+		String expressNumber=expressData.get(0).getExpressNumber();
 		Long num=Long.parseLong(expressNumber);
-		for (int i = 0; i < orderItems.size(); i++) {
-			Express express = new Express(String.valueOf(num), "云草纲目",
-					"18000000000", "云南", orderItems.get(i).getCustomer()
-							.getName(), orderItems.get(i).getCustomer()
-							.getPhone().getPhone(), orderItems.get(i)
-							.getCustomer().getAddress().getAddress(), orderItems.get(i).getGoods().getName(),expressDate);
-			express.setOrderItem(orderItems.get(i));
-			expressService.createExpress(express);
-			num++;
+		for (Express express:expressList) {
+            express.setExpressNumber(String.valueOf(num));
+            num++;
+            expressService.createExpress(express);
 		}
 		
-		view.setViewName("redirect:/order/overview");
-		return view;
+		return resultData;
+		
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/orderItem/{orderId}")
