@@ -1,17 +1,14 @@
 package selling.sunshine.controller;
 
-import java.io.File;
-import java.io.FileInputStream;
+
 import java.io.FileNotFoundException;
-import java.io.IOException;
+
 import java.io.InputStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
 
 import jxl.Cell;
 import jxl.Sheet;
@@ -20,18 +17,15 @@ import jxl.Workbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import selling.sunshine.model.Express;
-import selling.sunshine.model.Order;
 import selling.sunshine.model.OrderItem;
 import selling.sunshine.service.ExpressService;
 import selling.sunshine.service.OrderService;
@@ -81,6 +75,7 @@ public class ExpressController {
 			view.setViewName("/backend/express/express_upload");
 			return view;
 		}
+		System.out.println(".............test");
 		// 创建一个list 用来存储读取的内容
 		List<Object> list = new ArrayList<Object>();
 		Workbook rwb = null;
@@ -117,13 +112,13 @@ public class ExpressController {
 			String[] str = (String[]) list.get(i);
 			Express express = new Express("代填", str[0],str[1], str[2], str[3], str[4],str[5], str[6],expressDate);
 			express.setExpressId("expressNumber"+(i-1));
-			System.err.println("..........--------------test");
-			System.err.println(str[0]);
 			if (str[7]!=null&&!str[7].equals("")) {
 				Map<String, Object> condition=new HashMap<>();
 				condition.put("orderItemId", str[7]);
-				OrderItem item=((List<OrderItem>)orderService.fetchOrderItem(condition).getData()).get(0);
-				express.setOrderItem(item);
+				if (orderService.fetchOrderItem(condition).getResponseCode()==ResponseCode.RESPONSE_OK) {
+					OrderItem item=((List<OrderItem>)orderService.fetchOrderItem(condition).getData()).get(0);
+					express.setOrderItem(item);
+				}
 			}
 			expressList.add(express);
 		}
