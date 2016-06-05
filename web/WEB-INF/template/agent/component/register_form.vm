@@ -73,20 +73,23 @@
                 </div>
             </label>
         </div>
-        <div id="identity_verification" class="weui_uploader register_hide">
-            <div class="weui_uploader_hd weui_cell">
-                <div class="weui_cell_bd weui_cell_primary">上传身份证照片（正反面）</div>
-                <div id="photos" class="weui_cell_ft">0/2</div>
-            </div>
-            <div class="weui_uploader_bd">
-                <div id="wrp1" class="weui_uploader_input_wrp">
-                    <input id="input_id1" class="file" type="file" accept="image/jpg,image/jpeg,image/png,image/gif" multiple>
+        <form id="agent_identity_form">
+            <div id="identity_verification" class="weui_uploader register_hide">
+                <div class="weui_uploader_hd weui_cell">
+                    <div class="weui_cell_bd weui_cell_primary">上传身份证照片（正反面）</div>
+                    <div id="photos" class="weui_cell_ft">0/2</div>
                 </div>
-				<div id="wrp2" class="weui_uploader_input_wrp">
-                    <input id="input_id2"  type="file" accept="image/jpg,image/jpeg,image/png,image/gif" multiple>
+                <div class="weui_uploader_bd">
+                    <div id="wrp1" class="weui_uploader_input_wrp">
+                        <input id="input_id1" class="file" type="file" accept="image/jpg,image/jpeg,image/png,image/gif" multiple data-max-file-count="2">
+                    </div>
+				    <div id="wrp2" class="weui_uploader_input_wrp">
+                        <input id="input_id2" class="file" type="file" accept="image/jpg,image/jpeg,image/png,image/gif" multiple data-max-file-count="2">
+                    </div>
                 </div>
             </div>
-        </div>
+        </form>
+        
     </div>
     <div id="next_div" class="next_step">
         <button type="button" class="weui_btn weui_btn_disabled weui_btn_default" id="next_btn" disabled="disabled">下一步</a>
@@ -118,6 +121,9 @@
         $("#agent_register_form").attr("action", "${path.concat('/agent/register')}");
         $("#agent_register_form").attr("method", "post");
         $("#agent_register_form").submit();
+        $("#agent_identity_form").attr("action", "${path.concat('/agent/register')}");
+        $("#agent_identity_form").attr("method", "post");
+        $("#agent_identity_form").submit();
     })
 </script>
 <script>
