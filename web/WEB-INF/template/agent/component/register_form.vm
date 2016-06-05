@@ -62,6 +62,17 @@
                 </div>
             </div> 
         </form>
+        <div id="protocol" class="weui_cells weui_cells_checkbox protocol" >
+            <label class="weui_cell weui_check_label">
+                <div class="weui_cell_hd procheckbox">
+                    <input id="checkbox" type="checkbox" class="weui_check" name="checkbox">
+                    <i class="weui_icon_checked"></i>
+                </div>
+                <div class="weui_cell_bd weui_cell_primary problock">
+                    <p>我同意</p><a id="read_pro" href="${path.concat('/material/protocol/protocol.pdf')}">《云草纲目公司销售协议》</a>
+                </div>
+            </label>
+        </div>
         <div id="identity_verification" class="weui_uploader register_hide">
             <div class="weui_uploader_hd weui_cell">
                 <div class="weui_cell_bd weui_cell_primary">上传身份证照片（正反面）</div>
@@ -76,23 +87,9 @@
                 </div>
             </div>
         </div>
-		<div id="protocol" class="weui_cells weui_cells_checkbox protocol register_hide" >
-            <label class="weui_cell weui_check_label">
-                <div class="weui_cell_hd procheckbox">
-                    <input id="checkbox" type="checkbox" class="weui_check" name="checkbox">
-                    <i class="weui_icon_checked"></i>
-                </div>
-                <div class="weui_cell_bd weui_cell_primary problock">
-                    <p>我同意</p><a href="${path.concat('/material/protocol/protocol.pdf')}">《云草纲目公司销售协议》</a>
-                </div>
-            </label>
-        </div>
     </div>
-    <div id="next_div1" class="next_step">
-        <button type="button" class="weui_btn weui_btn_disabled weui_btn_default" id="next_btn1" disabled="disabled">下一步</a>
-    </div>
-	<div id="next_div2" class="next_step register_hide">
-        <button type="button" class="weui_btn weui_btn_disabled weui_btn_default" id="next_btn2" disabled="disabled">下一步</a>
+    <div id="next_div" class="next_step">
+        <button type="button" class="weui_btn weui_btn_disabled weui_btn_default" id="next_btn" disabled="disabled">下一步</a>
     </div>
     <div id="register" class="weui_btn_area  register_hide">
         <button type="button" class="weui_btn weui_btn_disabled weui_btn_default" id="register_pay_btn" disabled="disabled">
@@ -109,18 +106,12 @@
         $("#gender_option").show();
     });
     
-    $("#next_btn1").click(function () {
+    $("#next_btn").click(function () {
         $("#agent_register_form").hide();
+        $("#protocol").hide();
         $("#identity_verification").show();
-		$("#next_div1").hide();
-		$("#next_div2").show();
-    });
-	
-	$("#next_btn2").click(function () {
-        $("#identity_verification").hide();
-		$("#next_div2").hide();
-		$("#protocol").show();
-		$("#register").show();
+		$("#next_div").hide();
+        $("#register").show();
     });
 
     $("#register_pay_btn").click(function () {
@@ -175,6 +166,17 @@
                 first_inactive();
             }
         });
+		$("#checkbox").change(function(){
+		    checkbox_count++;
+			if(information_validate()){
+			    first_active();
+	        } else{
+			    first_inactive();
+		    }
+		});
+		$("#read_pro").click(function(){
+		    $("#checkbox").removeAttr("checked");
+		});
 		
 		$("#input_id1").change(function(){
 		    photo_num++;
@@ -197,30 +199,21 @@
 			    second_inactive();
 			}
 		});
-	
-		$("#checkbox").change(function(){
-		    checkbox_count++;
-			if(protocol_validate()){
-			    last_active();
-	        } else{
-			    last_inactive();
-		    }
-		});
 		
     });
 
     function first_active() {
-        $("#next_btn1").removeAttr("disabled");
-        $("#next_btn1").removeClass("weui_btn_disabled");
-        $("#next_btn1").removeClass("weui_btn_default");
-        $("#next_btn1").addClass("weui_btn_primary");
+        $("#next_btn").removeAttr("disabled");
+        $("#next_btn").removeClass("weui_btn_disabled");
+        $("#next_btn").removeClass("weui_btn_default");
+        $("#next_btn").addClass("weui_btn_primary");
     }
 
     function first_inactive() {
-        $("#next_btn1").attr("disabled", "disabled");
-        $("#next_btn1").removeClass("weui_btn_primary");
-        $("#next_btn1").addClass("weui_btn_disabled");
-        $("#next_btn1").addClass("weui_btn_default");
+        $("#next_btn").attr("disabled", "disabled");
+        $("#next_btn").removeClass("weui_btn_primary");
+        $("#next_btn").addClass("weui_btn_disabled");
+        $("#next_btn").addClass("weui_btn_default");
     }
 
     function information_validate() {
@@ -230,50 +223,30 @@
         var address = $("#agent_addr").val();
         var password = $("#agent_password").val();
         var number=$("#num_member").val();
-        if (not_null(name) && not_null(gender) && not_null(phone) && not_null(address) && not_null(password)&& not_null(number)) {
+        if (not_null(name) && not_null(gender) && not_null(phone) && not_null(address) && not_null(password)&& not_null(number)&&checkbox_count%2==1) {
             return true;
         }
         return false;
     }
 	
 	function second_active() {
-        $("#next_btn2").removeAttr("disabled");
-        $("#next_btn2").removeClass("weui_btn_disabled");
-        $("#next_btn2").removeClass("weui_btn_default");
-        $("#next_btn2").addClass("weui_btn_primary");
-    }
-
-    function second_inactive() {
-        $("#next_btn2").attr("disabled", "disabled");
-        $("#next_btn2").removeClass("weui_btn_primary");
-        $("#next_btn2").addClass("weui_btn_disabled");
-        $("#next_btn2").addClass("weui_btn_default");
-    }
-
-    function identity_validate() {
-        if(photo_num==2)
-		    return true;
-	    return false;
-    }
-	
-	function last_active() {
         $("#register_pay_btn").removeAttr("disabled");
         $("#register_pay_btn").removeClass("weui_btn_disabled");
         $("#register_pay_btn").removeClass("weui_btn_default");
         $("#register_pay_btn").addClass("weui_btn_primary");
     }
 
-    function last_inactive() {
+    function second_inactive() {
         $("#register_pay_btn").attr("disabled", "disabled");
         $("#register_pay_btn").removeClass("weui_btn_primary");
         $("#register_pay_btn").addClass("weui_btn_disabled");
         $("#register_pay_btn").addClass("weui_btn_default");
     }
-	
-	function protocol_validate() {
-        if(checkbox_count%2==0)
-		    return false;
-	    return true;
+
+    function identity_validate() {
+        if(photo_num==2)
+		    return true;
+	    return false;
     }
 	
     function not_null(item) {
