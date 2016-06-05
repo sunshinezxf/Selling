@@ -338,3 +338,49 @@ body {
 	font-size:0.75em;
 	text-decoration:underline;
 }
+
+.next_step{	
+    background-color: #fbf9fe;
+    margin-top:3%;
+    margin-bottom:3%;
+    margin-right:37%;
+    margin-left:35%;
+}
+
+.register_hide,.hidden-xs,.kv-upload-progress,.file-zoom-dialog,.fileinput-remove,.file-thumbnail-footer{
+	display:none;
+}
+
+.file-input,.btn-file,.weui_uploader_input_wrp{
+	float: left;
+    position: relative;
+    margin-right: 15px;
+    margin-bottom: 15px;
+    width: 95px;
+    height: 95px;
+    border: 1px solid #D9D9D9;
+}
+
+.file-preview{
+	padding: 0px;
+    margin-bottom:15px;
+}
+
+.file-preview-frame{
+    margin:0px;
+    padding:0px;
+    height:100%;
+}
+
+.file-live-thumbs{
+	width: 97px;
+    height: 95px;
+}
+.kv-file-content{
+	width: 95px;
+    height: 95px;
+}
+.file-preview-image{
+	width: 100%;
+	height: 100%;
+}
