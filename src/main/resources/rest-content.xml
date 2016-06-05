@@ -104,6 +104,8 @@
 
                 /wechat = anon
 
+                /material/protocol/** = anon
+
                 /** = authc
             </value>
         </property>
