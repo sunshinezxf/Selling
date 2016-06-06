@@ -27,10 +27,10 @@ public class AgentForm {
     private String memberNum;
     
     @NotNull
-    private String frontPath;
+    private String front;
     
     @NotNull
-    private String backPath;
+    private String back;
 
     public String getName() {
         return name;
@@ -88,21 +88,23 @@ public class AgentForm {
 		this.memberNum = memberNum;
 	}
 
-	public String getFrontPath() {
-		return frontPath;
+	public String getFront() {
+		return front;
 	}
 
-	public void setFrontPath(String frontPath) {
-		this.frontPath = frontPath;
+	public void setFront(String front) {
+		this.front = front;
 	}
 
-	public String getBackPath() {
-		return backPath;
+	public String getBack() {
+		return back;
 	}
 
-	public void setBackPath(String backPath) {
-		this.backPath = backPath;
+	public void setBack(String back) {
+		this.back = back;
 	}
+
+
     
     
 }
