@@ -59,19 +59,18 @@
         <div class="weui_dialog_ft">
             <a href="javascript:;" class="weui_btn_dialog default">修改</a>
         	<a href="javascript:;" class="weui_btn_dialog primary">确定</a>
-    	<iframe id="tmp_downloadhelper_iframe" style="display: none;"></iframe>
         </div>
     </div>
 </div>
 <div class="weui_dialog_confirm" id="leave_dialog" style="display:none;">
     <div class="weui_mask"></div>
     <div class="weui_dialog">
-        <div class="weui_dialog_hd"><strong class="weui_dialog_title"></strong>噢！您的订单还没有保存</div>
+        <div class="weui_dialog_hd"><strong class="weui_dialog_title">噢！您的订单还没有保存</strong></div>
         <div class="weui_dialog_bd" style="text-align:center;">需要保存吗？</div>
         <div class="weui_dialog_ft">
             <a href="javascript:;" class="weui_btn_dialog default">离开</a>
             <a href="javascript:;" class="weui_btn_dialog primary">保存</a>
-        <iframe id="tmp_downloadhelper_iframe" style="display: none;"></iframe></div>
+        </div>
 	</div>
 </div>
 #parse("/agent/order/add_order_item.vm")
