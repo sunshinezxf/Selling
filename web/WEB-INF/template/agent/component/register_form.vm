@@ -318,7 +318,7 @@
     }).on("filebatchselected", function(event, files) {
             $(this).fileinput("upload");
         })
-        .on("fileuploaded", function(event, data) {
+        .on("fileuploaded", function(result) {
         if(result.responseCode == "ResponseCode.RESPONSE_OK") {
         	$("#back").val(result.data);
         }else{
@@ -328,4 +328,10 @@
         }
     });
 	
+	$("#wrp1").delegate("img","click",function(){
+	    $("#input_id1").click();
+	});
+	$("#wrp2").delegate("img","click",function(){
+	    $("#input_id2").click();
+	});
 </script>
