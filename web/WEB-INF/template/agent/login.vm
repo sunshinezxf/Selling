@@ -10,8 +10,11 @@
         <h1 class="page_title">
             登录
         </h1>
-
+	#if(!${warn})
         <p class="page_desc">欢迎加入销售代理商</p>
+    #else
+    	<p class="page_desc" style="color:#E64340;">${warn}</p>
+    #end
     </div>
     <div class="bd">
         #parse("/agent/component/login_form.vm")

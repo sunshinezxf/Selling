@@ -221,7 +221,7 @@ public class AgentController {
      * @return
      */
     @RequestMapping(method = RequestMethod.GET, value = "/login")
-    public ModelAndView login() {
+    public ModelAndView login(String warn) {
         ModelAndView view = new ModelAndView();
         String url = "http://" + PlatformConfig.getValue("server_url") + "/agent/login";
         String configUrl = url + "";
@@ -240,10 +240,11 @@ public class AgentController {
      * @return
      */
     @RequestMapping(method = RequestMethod.POST, value = "/login")
-    public ModelAndView login(@Valid AgentLoginForm form, BindingResult result) {
+    public ModelAndView login(@Valid AgentLoginForm form, BindingResult result,RedirectAttributes attr) {
         ModelAndView view = new ModelAndView();
         //判断代理商填写的用户名和密码是否符合要求
         if (result.hasErrors()) {
+        	attr.addFlashAttribute("warn", "您的手机号或密码错误");
             view.setViewName("redirect:/agent/login");
             return view;
         }
@@ -255,6 +256,7 @@ public class AgentController {
             }
             subject.login(new UsernamePasswordToken(form.getPhone(), form.getPassword()));
         } catch (Exception e) {
+        	attr.addFlashAttribute("warn", "您的手机号或密码错误");
             view.setViewName("redirect:/agent/login");
             return view;
         }

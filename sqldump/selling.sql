@@ -25,7 +25,6 @@ DROP TABLE IF EXISTS `selling`.`agent` ;
 CREATE TABLE IF NOT EXISTS `selling`.`agent` (
   `agent_id` VARCHAR(20) NOT NULL,
   `upper_agent_id` VARCHAR(20) NULL,
-  `expect_scale` INT NOT NULL DEFAULT 0,
   `agent_coffer` DOUBLE NOT NULL DEFAULT 0,
   `agent_refund` DOUBLE NOT NULL DEFAULT 0,
   `agent_name` VARCHAR(45) NOT NULL,
@@ -114,7 +113,6 @@ CREATE TABLE IF NOT EXISTS `selling`.`order_item` (
   `goods_quantity` INT NOT NULL DEFAULT 1,
   `order_item_price` DOUBLE NOT NULL,
   `customer_id` VARCHAR(20) NOT NULL,
-  `receive_address` VARCHAR(100) NOT NULL,
   `block_flag` TINYINT(1) NOT NULL DEFAULT 0,
   `create_time` DATETIME NOT NULL,
   PRIMARY KEY (`order_item_id`),
@@ -451,7 +449,7 @@ DROP TABLE IF EXISTS `selling`.`express` ;
 
 CREATE TABLE IF NOT EXISTS `selling`.`express` (
   `express_id` VARCHAR(20) NOT NULL,
-  `order_item_id` VARCHAR(20) NOT NULL,
+  `order_item_id` VARCHAR(20) NULL,
   `express_no` VARCHAR(45) NOT NULL,
   `sender_name` VARCHAR(45) NOT NULL,
   `sender_phone` VARCHAR(45) NOT NULL,
@@ -472,6 +470,50 @@ CREATE TABLE IF NOT EXISTS `selling`.`express` (
   ENGINE = InnoDB;
 
 
+-- -----------------------------------------------------
+-- Table `selling`.`withdraw_record`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `selling`.`withdraw_record` ;
+
+CREATE TABLE IF NOT EXISTS `selling`.`withdraw_record` (
+  `withdraw_id` VARCHAR(20) NOT NULL,
+  `agent_id` VARCHAR(20) NULL,
+  `withdraw_amount` DOUBLE NOT NULL DEFAULT 0,
+  `withdraw_status` TINYINT(1) NOT NULL DEFAULT 0,
+  `block_flag` TINYINT(1) NOT NULL DEFAULT 0,
+  `create_time` DATETIME NOT NULL,
+  PRIMARY KEY (`withdraw_id`),
+  INDEX `fk_withdraw_record_agent1_idx` (`agent_id` ASC),
+  CONSTRAINT `fk_withdraw_record_agent1`
+  FOREIGN KEY (`agent_id`)
+  REFERENCES `selling`.`agent` (`agent_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+  ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `selling`.`bank_card`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `selling`.`bank_card` ;
+
+CREATE TABLE IF NOT EXISTS `selling`.`bank_card` (
+  `bank_card_id` VARCHAR(20) NOT NULL,
+  `bank_card_no` VARCHAR(25) NOT NULL,
+  `agent_id` VARCHAR(20) NOT NULL,
+  `preferred` TINYINT(1) NOT NULL DEFAULT 0,
+  `block_flag` TINYINT(1) NOT NULL,
+  `create_time` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`bank_card_id`),
+  INDEX `fk_bank_card_agent1_idx` (`agent_id` ASC),
+  CONSTRAINT `fk_bank_card_agent1`
+  FOREIGN KEY (`agent_id`)
+  REFERENCES `selling`.`agent` (`agent_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+  ENGINE = InnoDB;
+
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
@@ -481,8 +523,8 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `selling`;
-INSERT INTO `selling`.`agent` (`agent_id`, `upper_agent_id`, `expect_scale`, `agent_coffer`, `agent_refund`, `agent_name`, `agent_gender`, `agent_phone`, `agent_address`, `agent_password`, `agent_wechat`, `agent_level`, `agent_granted`, `block_flag`, `create_time`) VALUES ('AGTvlorff50', NULL, DEFAULT, DEFAULT, DEFAULT, '王旻', 'M', '18000000000', '江苏省南京市鼓楼区汉口路22号', 'e10adc3949ba59abbe56e057f20f883e', NULL, NULL, 0, 0, '2016-05-09 16:13:10');
-INSERT INTO `selling`.`agent` (`agent_id`, `upper_agent_id`, `expect_scale`, `agent_coffer`, `agent_refund`, `agent_name`, `agent_gender`, `agent_phone`, `agent_address`, `agent_password`, `agent_wechat`, `agent_level`, `agent_granted`, `block_flag`, `create_time`) VALUES ('AGTyoewlw97', NULL, DEFAULT, DEFAULT, DEFAULT, '王晓迪', 'M', '18100000000', '江苏省南京市鼓楼区汉口路22号', 'e10adc3949ba59abbe56e057f20f883e', NULL, NULL, 0, 0, '2016-05-09 16:14:15');
+INSERT INTO `selling`.`agent` (`agent_id`, `upper_agent_id`, `agent_coffer`, `agent_refund`, `agent_name`, `agent_gender`, `agent_phone`, `agent_address`, `agent_password`, `agent_wechat`, `agent_level`, `agent_granted`, `block_flag`, `create_time`) VALUES ('AGTvlorff50', NULL, DEFAULT, DEFAULT, '王旻', 'M', '18000000000', '江苏省南京市鼓楼区汉口路22号', 'e10adc3949ba59abbe56e057f20f883e', NULL, NULL, 0, 0, '2016-05-09 16:13:10');
+INSERT INTO `selling`.`agent` (`agent_id`, `upper_agent_id`, `agent_coffer`, `agent_refund`, `agent_name`, `agent_gender`, `agent_phone`, `agent_address`, `agent_password`, `agent_wechat`, `agent_level`, `agent_granted`, `block_flag`, `create_time`) VALUES ('AGTyoewlw97', NULL, DEFAULT, DEFAULT, '王晓迪', 'M', '18100000000', '江苏省南京市鼓楼区汉口路22号', 'e10adc3949ba59abbe56e057f20f883e', NULL, NULL, 0, 0, '2016-05-09 16:14:15');
 
 COMMIT;
 
