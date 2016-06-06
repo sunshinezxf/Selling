@@ -1,9 +1,9 @@
 package selling.sunshine.dao.impl;
 
 import org.slf4j.Logger;
-
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
+
 import selling.sunshine.dao.BaseDao;
 import selling.sunshine.dao.OrderItemDao;
 import selling.sunshine.model.OrderItem;
@@ -54,4 +54,22 @@ public class OrderItemDaoImpl extends BaseDao implements OrderItemDao {
             return result;
         }
     }
+
+	@Override
+	public ResultData updateOrderItem(OrderItem orderItem) {
+		ResultData result = new ResultData();
+        synchronized (lock) {
+            try {
+                sqlSession.update("selling.order.item.update", orderItem);
+                result.setData(orderItem);
+            } catch (Exception e) {
+                logger.error(e.getMessage());
+                result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+                result.setDescription(e.getMessage());
+            } finally {
+                result.setResponseCode(ResponseCode.RESPONSE_OK);
+                return result;
+            }
+        }
+	}
 }

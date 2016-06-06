@@ -1,6 +1,7 @@
 package selling.sunshine.service.impl;
 
 import org.slf4j.Logger;
+
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,6 +10,7 @@ import selling.sunshine.dao.OrderDao;
 import selling.sunshine.dao.OrderItemDao;
 import selling.sunshine.dao.OrderPoolDao;
 import selling.sunshine.model.Order;
+import selling.sunshine.model.OrderItem;
 import selling.sunshine.pagination.MobilePageParam;
 import selling.sunshine.service.OrderService;
 import selling.sunshine.utils.ResponseCode;
@@ -156,6 +158,19 @@ public class OrderServiceImpl implements OrderService {
             result.setData(fetchResponse.getData());
         } else {
             result.setDescription(fetchResponse.getDescription());
+        }
+        return result;
+	}
+
+	@Override
+	public ResultData updateOrderItem(OrderItem orderItem) {
+		ResultData result = new ResultData();
+        ResultData updateResponse = orderItemDao.updateOrderItem(orderItem);
+        result.setResponseCode(updateResponse.getResponseCode());
+        if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(updateResponse.getData());
+        } else {
+            result.setDescription(updateResponse.getDescription());
         }
         return result;
 	}

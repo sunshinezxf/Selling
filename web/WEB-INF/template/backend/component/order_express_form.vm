@@ -110,12 +110,12 @@
     });
     
     function print(){
-        #*
+      
     	for(var i=0;i<${expressList}.length;i++){
     	    createPrintPage(document.getElementById("expressNumber"+i).innerHTML,${expressList}[i].createAt,${expressList}[i].senderName,${expressList}[i].senderPhone,${expressList}[i].senderAddress,${expressList}[i].receiverName,${expressList}[i].receiverPhone,${expressList}[i].receiverAddress,${expressList}[i].goodsName);
     	    LODOP.PREVIEW();
     	}
-    	*#
+    
     	var expressData=new Array();
     	var data={"expressList":${expressList},"expressNumber":$("#expressId").val()};
     	expressData.push(data);
@@ -126,7 +126,7 @@
             contentType:"application/json",               
             data:JSON.stringify(expressData), 
             success:function(data){ 
-                                       
+                 window.location.href = "${path.concat('/order/check')}";  
             } 
          });  
     }
@@ -145,5 +145,6 @@
         LODOP.ADD_PRINT_TEXT(160,53,328,30,receiverAddress);
         LODOP.ADD_PRINT_TEXT(191,55,154,35,goodsName);
     }
+    
     
 </script>

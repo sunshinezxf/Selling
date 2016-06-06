@@ -18,6 +18,7 @@ import selling.sunshine.form.ExpressForm;
 import selling.sunshine.form.OrderItemForm;
 import selling.sunshine.form.PayForm;
 import selling.sunshine.form.SortRule;
+import selling.sunshine.handler.mybatis.order.OrderStatusHandler;
 import selling.sunshine.model.*;
 import selling.sunshine.pagination.MobilePage;
 import selling.sunshine.pagination.MobilePageParam;
@@ -162,8 +163,20 @@ public class OrderController {
             express.setExpressNumber(String.valueOf(num));
             num++;
             expressService.createExpress(express);
+            if (express.getOrderItem()!=null) {
+				express.getOrderItem().setStatus(OrderItemStatus.SHIPPED);
+				orderService.updateOrderItem(express.getOrderItem());
+				Map<String, Object> condition=new HashMap<>();
+				condition.put("orderItemId", express.getOrderItem().getOrderItemId());
+				OrderItem item=((List<OrderItem>)orderService.fetchOrderItem(condition).getData()).get(0);
+				if (item.getOrder().getStatus()!=OrderStatus.FULLY_SHIPMENT) {
+					item.getOrder().setStatus(OrderStatus.FULLY_SHIPMENT);
+					orderService.modifyOrder(item.getOrder());
+				}			
+			}
 		}
-		
+		resultData.setResponseCode(ResponseCode.RESPONSE_OK);
+		System.err.println("test");
 		return resultData;
 		
 	}
