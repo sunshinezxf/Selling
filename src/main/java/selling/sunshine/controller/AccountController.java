@@ -55,6 +55,10 @@ public class AccountController {
         ModelAndView view = new ModelAndView();
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
+        if (user == null) {
+            view.setViewName("/agent/login");
+            return view;
+        }
         //获取agent的详细信息
         Map<String, Object> condition = new HashMap<>();
         condition.put("agentId", user.getAgent().getAgentId());
@@ -63,6 +67,18 @@ public class AccountController {
         view.addObject("agent", target);
         view.setViewName("/agent/account/info");
         return view;
+    }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/withdraw")
+    public ModelAndView withdraw(){
+    	ModelAndView view = new ModelAndView();
+    	Subject subject = SecurityUtils.getSubject();
+    	User user = (User) subject.getPrincipal();
+    	if (user == null) {
+            view.setViewName("/agent/login");
+            return view;
+        }
+    	return view;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/deposit")
@@ -88,7 +104,7 @@ public class AccountController {
         }
         return charge;
     }
-
+    
     @RequestMapping(method = RequestMethod.GET, value = "/charge/{billId}/prompt")
     public ModelAndView prompt(@PathVariable("billId") String billId,
                                String result) {

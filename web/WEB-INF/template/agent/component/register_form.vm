@@ -74,7 +74,7 @@
                     <i class="weui_icon_checked"></i>
                 </div>
                 <div class="weui_cell_bd weui_cell_primary problock">
-                    <p>我同意</p><a id="read_pro" href="${path.concat('/material/protocol/protocol.pdf')}">《云草纲目公司销售协议》</a>
+                    <p>我同意</p><a href="${path.concat('/material/protocol/protocol.pdf')}">《云草纲目公司销售协议》</a>
                 </div>
             </label>
         </div>
@@ -145,7 +145,6 @@
 </script>
 <script>
     var photo_num=0;
-	var checkbox_count=0;
     $(document).ready(function () {
         $("#agent_name").bind("input propertychange", function () {
             if (information_validate()) {
@@ -190,15 +189,11 @@
             }
         });
 		$("#checkbox").change(function(){
-		    checkbox_count++;
 			if(information_validate()){
 			    first_active();
 	        } else{
 			    first_inactive();
 		    }
-		});
-		$("#read_pro").click(function(){
-		    $("#checkbox").removeAttr("checked");
 		});
 		
 		$("#input_id1").change(function(){
@@ -246,7 +241,8 @@
         var address = $("#agent_addr").val();
         var password = $("#agent_password").val();
         var number=$("#num_member").val();
-        if (not_null(name) && not_null(gender) && not_null(phone) && not_null(address) && not_null(password)&& not_null(number)&&checkbox_count%2==1) {
+        var isConfirm = $("#checkbox").prop("checked");
+        if (not_null(name) && not_null(gender) && not_null(phone) && not_null(address) && not_null(password)&& not_null(number)&&isConfirm) {
             return true;
         }
         return false;
