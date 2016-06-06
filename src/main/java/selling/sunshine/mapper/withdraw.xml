@@ -33,4 +33,18 @@
             ORDER BY ${rule}
         </if>
     </select>
+
+    <update id="update" parameterType="selling.sunshine.model.WithdrawRecord">
+        UPDATE withdraw_record
+        <set>
+            <if test="status != null and status != ''">
+                withdraw_status = #{status},
+            </if>
+            <if test="blockFlag != null">
+                block_flag = #{blockFlag},
+            </if>
+            withdraw_id = #{withdrawId}
+        </set>
+        WHERE withdraw_id = #{withdrawId}
+    </update>
 </mapper>

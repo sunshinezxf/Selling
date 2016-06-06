@@ -3,6 +3,7 @@ package selling.sunshine.dao.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import selling.sunshine.dao.BaseDao;
 import selling.sunshine.dao.WithdrawDao;
 import selling.sunshine.model.WithdrawRecord;
@@ -22,6 +23,7 @@ public class WithdrawDaoImpl extends BaseDao implements WithdrawDao {
 
     private Object lock = new Object();
 
+    @Transactional
     @Override
     public ResultData insertWithdraw(WithdrawRecord record) {
         ResultData result = new ResultData();
@@ -53,6 +55,24 @@ public class WithdrawDaoImpl extends BaseDao implements WithdrawDao {
             result.setDescription(e.getMessage());
         } finally {
             return result;
+        }
+    }
+
+    @Transactional
+    @Override
+    public ResultData updateWithdraw(WithdrawRecord record) {
+        ResultData result = new ResultData();
+        synchronized (lock) {
+            try {
+                sqlSession.update("selling.agent.update", record);
+                result.setData(record);
+            } catch (Exception e) {
+                logger.error(e.getMessage());
+                result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+                result.setDescription(e.getMessage());
+            } finally {
+                return result;
+            }
         }
     }
 }

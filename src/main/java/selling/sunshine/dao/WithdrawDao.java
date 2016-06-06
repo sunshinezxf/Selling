@@ -12,4 +12,6 @@ public interface WithdrawDao {
     ResultData insertWithdraw(WithdrawRecord record);
 
     ResultData queryWithdraw(Map<String, Object> condition);
+
+    ResultData updateWithdraw(WithdrawRecord record);
 }
