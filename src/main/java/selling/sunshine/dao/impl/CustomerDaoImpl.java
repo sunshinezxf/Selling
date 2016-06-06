@@ -90,25 +90,25 @@ public class CustomerDaoImpl extends BaseDao implements CustomerDao {
                 CustomerPhone phone = customer.getPhone();
                 CustomerPhone currentPhone = sqlSession.selectOne("selling.customer.phone.query", condition);
                 if (phone != null) {
-                	if (currentPhone == null || (currentPhone != null && currentPhone.getPhone().equals(phone.getPhone()))){
+                	if (currentPhone == null || (currentPhone != null && !currentPhone.getPhone().equals(phone.getPhone()))){
                 		phone.setPhoneId(IDGenerator.generate("PNM"));
                         phone.setCustomer(customer);
                         sqlSession.insert("selling.customer.phone.insert", phone);
-                	}
-                	if(currentPhone != null){
-                		sqlSession.update("selling.customer.phone.block", currentPhone);
+                        if(currentPhone != null){
+                    		sqlSession.update("selling.customer.phone.block", currentPhone);
+                    	}
                 	}
                 }
                 CustomerAddress address = customer.getAddress();
                 CustomerAddress currentAddress = sqlSession.selectOne("selling.customer.address.query", condition);
                 if(address != null){
-	                if (currentAddress == null || (currentAddress != null && address.getAddress().equals(currentAddress.getAddress()))) {
+	                if (currentAddress == null || (currentAddress != null && !address.getAddress().equals(currentAddress.getAddress()))) {
 	                    address.setAddressId(IDGenerator.generate("ADR"));
 	                    address.setCustomer(customer);
 	                    sqlSession.insert("selling.customer.address.insert", address);
-	                }
-	                if (currentAddress != null) {
-	                    sqlSession.update("selling.customer.address.block", currentAddress);
+	                    if (currentAddress != null) {
+		                    sqlSession.update("selling.customer.address.block", currentAddress);
+		                }
 	                }
                 }
                 //查询当前持久化的客户信息
@@ -222,7 +222,7 @@ public class CustomerDaoImpl extends BaseDao implements CustomerDao {
         ResultData result = new ResultData();
         try {
             List<CustomerPhone> list = sqlSession.selectList(
-                    "selling.customer.phoneQuery", condition);
+                    "selling.customer.phone.query", condition);
             result.setData(list);
             result.setResponseCode(ResponseCode.RESPONSE_OK);
         } catch (Exception e) {

@@ -19,8 +19,12 @@ public class Customer extends Entity {
     public Customer(String name, String address, String phone) {
         super();
         this.name = name;
-        this.phone = new CustomerPhone(phone);
-        this.address = new CustomerAddress(address);
+        if(phone != null){
+        	this.phone = new CustomerPhone(phone);
+        }
+        if(address != null){
+        	this.address = new CustomerAddress(address);
+        }
     }
 
     public Customer(String name, String address, String phone, Agent agent) {
