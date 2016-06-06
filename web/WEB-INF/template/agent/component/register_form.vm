@@ -291,12 +291,9 @@
     }).on("filebatchselected", function(event, files) {
             $(this).fileinput("upload");
         })
-        .on("fileuploaded", function(result) {
-        alert(JSON.stringify(result));
-        
-        if(result.responseCode == "RESPONSE_OK") {
-            alert(result);
-        	$("#front").val(result.data);
+        .on("fileuploaded", function(event,result) {      
+        if(result.response.responseCode == "RESPONSE_OK") {
+        	$("#front").val(result.response.data);
         }else{
             $(this).fileinput({
                 showPreview:false,
@@ -317,9 +314,9 @@
     }).on("filebatchselected", function(event, files) {
             $(this).fileinput("upload");
         })
-        .on("fileuploaded", function(result) {
-        if(result.responseCode == "RESPONSE_OK") {
-        	$("#back").val(result.data);
+        .on("fileuploaded", function(event,result) {
+        if(result.response.responseCode == "RESPONSE_OK") {
+        	$("#back").val(result.response.data);
         }else{
             $(this).fileinput({
                 showPreview:false,
