@@ -93,6 +93,9 @@
     <div id="next_div" class="next_step">
         <button type="button" class="weui_btn weui_btn_disabled weui_btn_default" id="next_btn" disabled="disabled">下一步</button>
     </div>
+    <div id="login_btn" class="weui_btn_area">
+        <a href="${path.concat('/agent/login')}" class="weui_btn weui_btn_mini weui_btn_default">登录</a>
+    </div>
     <div id="pre_div" class="weui_btn_area register_hide">
         <button type="button" class="weui_btn weui_btn_plain_primary" id="pre_btn">上一步</button>
     </div>
@@ -100,7 +103,7 @@
         <button type="button" class="weui_btn weui_btn_disabled weui_btn_default" id="register_pay_btn" disabled="disabled">
             提交注册申请
         </button>
-        <a href="${path.concat('/agent/login')}" class="weui_btn weui_btn_mini weui_btn_default">登录</a>
+        
     </div>
 </div>
 #parse("/agent/component/gender_list.vm")
@@ -116,6 +119,7 @@
         $("#protocol").hide();
         $("#identity_verification").show();
 		$("#next_div").hide();
+		$("#login_btn").hide();
 		$("#pre_div").show();
         $("#register").show();
     });
@@ -125,6 +129,7 @@
         $("#protocol").show();
         $("#identity_verification").hide();
 		$("#next_div").show();
+		$("#login_btn").show();
 		$("#pre_div").hide();
         $("#register").hide();
     });
@@ -278,15 +283,20 @@
         showUpload:false,
         showCaption:false,
         showCancel:false,
-        uploadAsync:true,
+        showRemove: false,
+        showUploadedThumbs: false,
         dropZoneEnabled:false,
         maxFileCount: 1,
         maxFileSize : 0,
         allowedFileExtensions : [ 'jpg', 'jpeg' , 'png', 'gif' ],
-    }).on("fileuploaded", function(event, data) {
+    }).on("filebatchselected", function(event, files) {
+            $(this).fileinput("upload");
+        })
+        .on("fileuploaded", function(event, data) {
+        
         if(data.response)
         {
-            alert('处理成功');
+            console.log('处理成功');
         }
     });
     $("#input_id2").fileinput({
