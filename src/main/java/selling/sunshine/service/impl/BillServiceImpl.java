@@ -27,7 +27,7 @@ public class BillServiceImpl implements BillService {
     private Logger logger = LoggerFactory.getLogger(BillServiceImpl.class);
 
     {
-        Pingpp.apiKey = "sk_test_Xf5mr95mrz5S8yLCG040mvrH";
+        Pingpp.apiKey = PlatformConfig.getValue("pingxx_appid");
     }
 
     @Autowired
