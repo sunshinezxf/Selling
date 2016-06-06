@@ -364,6 +364,7 @@ body {
 .file-preview{
 	padding: 0px;
     margin-bottom:15px;
+    border: 0;
 }
 
 .file-preview-frame{
