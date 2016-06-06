@@ -4,6 +4,8 @@ import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+
 import selling.sunshine.dao.AgentDao;
 import selling.sunshine.dao.BaseDao;
 import selling.sunshine.model.Agent;
@@ -125,9 +127,11 @@ public class AgentDaoImpl extends BaseDao implements AgentDao {
         synchronized (lock) {
             try {
                 sqlSession.update("selling.agent.update", agent);
-                User user = new User(agent.getPhone(), agent.getPassword());
-                user.setAgent(new selling.sunshine.model.lite.Agent(agent));
-                sqlSession.update("selling.user.update", user);
+                if (!StringUtils.isEmpty(agent.getPassword())) {
+                	  User user = new User(agent.getPhone(), agent.getPassword());
+                      user.setAgent(new selling.sunshine.model.lite.Agent(agent));
+                      sqlSession.update("selling.user.update", user);
+				}            
                 result.setData(agent);
             } catch (Exception e) {
                 logger.debug(e.getMessage());

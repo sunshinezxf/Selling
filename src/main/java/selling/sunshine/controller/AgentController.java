@@ -1,6 +1,7 @@
 package selling.sunshine.controller;
 
 import com.alibaba.fastjson.JSONObject;
+
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
@@ -12,6 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import selling.sunshine.form.*;
 import selling.sunshine.model.*;
 import selling.sunshine.pagination.DataTablePage;
@@ -20,6 +22,7 @@ import selling.sunshine.service.*;
 import selling.sunshine.utils.*;
 
 import javax.validation.Valid;
+
 import java.net.URLEncoder;
 import java.util.*;
 
@@ -786,7 +789,7 @@ public class AgentController {
     public ModelAndView grant(String agentId) {
         ModelAndView view = new ModelAndView();
         if (StringUtils.isEmpty(agentId)) {
-            view.setViewName("redirect:/agent/check");
+            view.setViewName("redirect:/agent/overview");
             return view;
         }
         Agent agent = new Agent();
@@ -794,10 +797,29 @@ public class AgentController {
         agent.setGranted(true);
         ResultData updateResponse = agentService.updateAgent(agent);
         if (updateResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
-            view.setViewName("redirect:/agent/check");
+            view.setViewName("redirect:/agent/overview");
             return view;
         }
-        view.setViewName("redirect:/agent/check");
+        view.setViewName("redirect:/agent/overview");
+        return view;
+    }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/forbid/{agentId}")
+    public ModelAndView forbid(@PathVariable("agentId")String agentId) {
+        ModelAndView view = new ModelAndView();
+        if (StringUtils.isEmpty(agentId)) {
+            view.setViewName("redirect:/agent/overview");
+            return view;
+        }
+        Agent agent = new Agent();
+        agent.setAgentId(agentId);
+        agent.setGranted(false);	
+        ResultData updateResponse = agentService.updateAgent(agent);
+        if (updateResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            view.setViewName("redirect:/agent/overview");
+            return view;
+        }
+        view.setViewName("redirect:/agent/overview");
         return view;
     }
 
