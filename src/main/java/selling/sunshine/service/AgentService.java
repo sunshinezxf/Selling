@@ -1,6 +1,7 @@
 package selling.sunshine.service;
 
 import selling.sunshine.model.Agent;
+import selling.sunshine.model.Credit;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.utils.ResultData;
 
@@ -29,4 +30,8 @@ public interface AgentService {
     ResultData resetPassword(Agent agent);
 
     ResultData modifyPassword(Agent agent, String password);
+    
+    ResultData fetchCredit(Map<String, Object> condition);
+    
+    ResultData createCredit(Credit credit);
 }

@@ -22,6 +22,15 @@ public class AgentForm {
     private String password;
 
     private String wechat;
+    
+    @NotNull
+    private String memberNum;
+    
+    @NotNull
+    private String frontPath;
+    
+    @NotNull
+    private String backPath;
 
     public String getName() {
         return name;
@@ -70,4 +79,30 @@ public class AgentForm {
     public void setWechat(String wechat) {
         this.wechat = wechat;
     }
+
+	public String getMemberNum() {
+		return memberNum;
+	}
+
+	public void setMemberNum(String memberNum) {
+		this.memberNum = memberNum;
+	}
+
+	public String getFrontPath() {
+		return frontPath;
+	}
+
+	public void setFrontPath(String frontPath) {
+		this.frontPath = frontPath;
+	}
+
+	public String getBackPath() {
+		return backPath;
+	}
+
+	public void setBackPath(String backPath) {
+		this.backPath = backPath;
+	}
+    
+    
 }

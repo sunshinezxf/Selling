@@ -314,6 +314,8 @@ public class AgentController {
             //根据用户提交的表单构造代理信息
             Agent agent = new Agent(form.getName(), form.getGender(), form.getPhone(), form.getAddress(), form.getPassword(), form.getWechat());
             ResultData createResponse = agentService.createAgent(agent);
+            Credit credit=new Credit(form.getFrontPath(), form.getBackPath(), new selling.sunshine.model.lite.Agent(agent));
+            agentService.createCredit(credit);
             if (createResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
                 Prompt prompt = new Prompt("提示", "您已成功提交申请,待审核通过后即可使用", "/agent/login");
                 view.addObject("prompt", prompt);
@@ -822,6 +824,26 @@ public class AgentController {
         view.setViewName("redirect:/agent/overview");
         return view;
     }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/credit/{agentId}")
+    public ModelAndView credit(@PathVariable("agentId")String agentId) {
+        ModelAndView view = new ModelAndView();
+        if (StringUtils.isEmpty(agentId)) {
+            view.setViewName("redirect:/agent/overview");
+            return view;
+        }
+        Agent agent = new Agent();
+        agent.setAgentId(agentId);
+        agent.setGranted(false);	
+        ResultData updateResponse = agentService.updateAgent(agent);
+        if (updateResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            view.setViewName("redirect:/agent/overview");
+            return view;
+        }
+        view.setViewName("redirect:/agent/overview");
+        return view;
+    }
+
 
     @RequestMapping(method = RequestMethod.GET, value = "/overview")
     public ModelAndView overview() {
