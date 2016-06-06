@@ -300,7 +300,7 @@ public class AgentController {
      * @return
      */
     @RequestMapping(method = RequestMethod.POST, value = "/register")
-    public ModelAndView register(@Valid AgentForm form, BindingResult result, RedirectAttributes attr) {
+    public ModelAndView register(@Valid AgentForm form, BindingResult result) {
         ModelAndView view = new ModelAndView();
         //验证表单信息是否符合限制要求
         if (result.hasErrors()) {
@@ -526,7 +526,7 @@ public class AgentController {
             }
             orderItemPrice = goods.getPrice() * goodsQuantity;//得到一个OrderItem的总价
             order_price += orderItemPrice;//累加Order总价
-            OrderItem orderItem = new OrderItem(customerId, goodsId, goodsQuantity, orderItemPrice,address);//构造OrderItem
+            OrderItem orderItem = new OrderItem(customerId, goodsId, goodsQuantity, orderItemPrice, address);//构造OrderItem
             orderItems.add(orderItem);
         }
         order.setOrderItems(orderItems);//构造Order
