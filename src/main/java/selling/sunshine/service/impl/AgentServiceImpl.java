@@ -1,11 +1,14 @@
 package selling.sunshine.service.impl;
 
 import org.slf4j.Logger;
+
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import selling.sunshine.dao.AgentDao;
 import selling.sunshine.model.Agent;
+import selling.sunshine.model.Credit;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.AgentService;
 import selling.sunshine.service.MessageService;
@@ -174,4 +177,33 @@ public class AgentServiceImpl implements AgentService {
         }
         return result;
     }
+
+	@Override
+	public ResultData fetchCredit(Map<String, Object> condition) {
+		ResultData result = new ResultData();
+        ResultData queryResponse = agentDao.queryCredit(condition);
+        result.setResponseCode(queryResponse.getResponseCode());
+        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            if (((List<Agent>) queryResponse.getData()).size() == 0) {
+                result.setResponseCode(ResponseCode.RESPONSE_NULL);
+            }
+            result.setData(queryResponse.getData());
+        } else if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
+            result.setDescription(queryResponse.getDescription());
+        }
+        return result;
+	}
+
+	@Override
+	public ResultData createCredit(Credit credit) {
+		ResultData result = new ResultData();
+        ResultData insertResponse =agentDao.insertCredit(credit);
+        result.setResponseCode(insertResponse.getResponseCode());
+        if (insertResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(insertResponse.getData());
+        } else {
+            result.setDescription(insertResponse.getDescription());
+        }
+        return result;
+	}
 }

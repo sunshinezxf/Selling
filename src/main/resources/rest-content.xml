@@ -104,6 +104,11 @@
                 /customer/add = roles[agent]
                 /customer/modify = roles[agent]
 
+                /goods/create = roles[admin]
+                /goods/edit/** = roles[admin]
+                /goods/overview = roles[admin]
+                /goods/** = anon
+
                 /wechat = anon
 
                 /material/css/** = anon

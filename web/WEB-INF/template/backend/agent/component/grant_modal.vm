@@ -21,6 +21,9 @@
                 <p>当前状态:&nbsp;&nbsp;
                     <text id="to_confirm_agent_granted"></text>
                 </p>
+                <p>身份证正反面照片
+                </p>
+                
                 <p>
                     <strong>*审核通过后,代理账户将可以正常使用</strong>
                 </p>

@@ -58,11 +58,11 @@
                         <label class="weui_label">群规模</label>
                     </div>
                     <div class="weui_cell_bd weui_cell_primary">
-                        <input class="weui_input" id="num_member" name="num_member" type="tel"
+                        <input class="weui_input" id="num_member" name="memberNum" type="tel"
                                placeholder="请设置群人数" autocomplete="off"/>
                     </div>
                 </div>
-                <input type="hidden" id="front" name = "front" value/>
+                <input type="hidden" id="front" name="front" value/>
                 <input type="hidden" id="back" name="back" value/>
             </div>
             
@@ -85,15 +85,15 @@
             </div>
             <div class="weui_uploader_bd">
                 <div id="wrp1" class="weui_uploader_input_wrp">
-                    <input id="input_id1" class="file" type="file" accept="image/jpg,image/jpeg,image/png,image/gif"/>
+                    <input id="input_id1" class="file" type="file" name="credit" accept="image/jpg,image/jpeg,image/png,image/gif"/>
                 </div>
 				<div id="wrp2" class="weui_uploader_input_wrp">
-                    <input id="input_id2" class="file" type="file" accept="image/jpg,image/jpeg,image/png,image/gif"/>
+                    <input id="input_id2" class="file" type="file" name="credit" accept="image/jpg,image/jpeg,image/png,image/gif"/>
                 </div>
             </div>
        </div>    
     </div>
-    <div id="next_div" class="next_step">
+    <div id="next_div" class="weui_btn_area">
         <button type="button" class="weui_btn weui_btn_disabled weui_btn_default" id="next_btn" disabled="disabled">下一步</button>
     </div>
     <div id="login_btn" class="weui_btn_area">
