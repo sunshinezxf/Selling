@@ -296,7 +296,10 @@
             $(this).fileinput("upload");
         })
         .on("fileuploaded", function(result) {
-        if(result.responseCode == "ResponseCode.RESPONSE_OK") {
+        alert(JSON.stringify(result));
+        
+        if(result.responseCode == "RESPONSE_OK") {
+            alert(result);
         	$("#front").val(result.data);
         }else{
             $(this).fileinput({
@@ -319,7 +322,7 @@
             $(this).fileinput("upload");
         })
         .on("fileuploaded", function(result) {
-        if(result.responseCode == "ResponseCode.RESPONSE_OK") {
+        if(result.responseCode == "RESPONSE_OK") {
         	$("#back").val(result.data);
         }else{
             $(this).fileinput({
