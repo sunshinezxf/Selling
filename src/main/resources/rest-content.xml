@@ -104,7 +104,10 @@
 
                 /wechat = anon
 
+                /material/css/** = anon
                 /material/protocol/** = anon
+                /material/images/** = anon
+                /material/js/** = anon
 
                 /** = authc
             </value>
