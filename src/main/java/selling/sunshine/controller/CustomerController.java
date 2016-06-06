@@ -96,10 +96,14 @@ public class CustomerController {
         }
         Map<String, Object> condition = new HashMap<>();
         condition.put("phone", customerForm.getPhone());
+        condition.put("blockFlag", false);
         response = customerService.fetchCustomerPhone(condition);
         if (((List<CustomerPhone>) response.getData()).size() != 0) {
-            response.setResponseCode(ResponseCode.RESPONSE_ERROR);
-            return response;
+    		CustomerPhone target = ((List<CustomerPhone>) response.getData()).get(0);
+    		if(!target.getCustomer().getCustomerId().equals(customerId)){
+        		response.setResponseCode(ResponseCode.RESPONSE_ERROR);
+        		return response;
+        	}
         }
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
@@ -129,7 +133,7 @@ public class CustomerController {
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         selling.sunshine.model.lite.Agent agent = user.getAgent();
-        Customer customer = new Customer("", customerAddressForm.getAddress(), "", agent);
+        Customer customer = new Customer(null, customerAddressForm.getAddress(), null, agent);
         customer.setCustomerId(customerId);
         ResultData updateResponse = customerService.updateCustomer(customer);
         if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {

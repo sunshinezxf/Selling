@@ -3,6 +3,7 @@ package selling.sunshine.service;
 import java.util.Map;
 
 import selling.sunshine.model.Order;
+import selling.sunshine.model.OrderItem;
 import selling.sunshine.pagination.MobilePageParam;
 import selling.sunshine.utils.ResultData;
 
@@ -26,4 +27,6 @@ public interface OrderService {
 	ResultData cancel(Order order);
 	
 	ResultData fetchOrderItem(Map<String, Object> condition);
+	
+	ResultData updateOrderItem(OrderItem orderItem);
 }
