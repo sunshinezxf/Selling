@@ -99,9 +99,13 @@
                 </div>
                 &nbsp
                 #end
-            	#if(${status} == "SAVED" || ${status} == "SUBMITTED")
+            	#if(${status} == "SAVED")
             	<div class="weui_cell_ft">
             		<a class="weui_btn weui_btn_mini weui_btn_primary" id="place_order_btn">&nbsp&nbsp&nbsp下单&nbsp&nbsp&nbsp</a>
+            	</div>
+            	#elseif(${status} == "SUBMITTED")
+            	<div class="weui_cell_ft">
+            		<a class="weui_btn weui_btn_mini weui_btn_primary" id="place_order_btn">&nbsp&nbsp&nbsp付款&nbsp&nbsp&nbsp</a>
             	</div>
             	#end
             </div>
