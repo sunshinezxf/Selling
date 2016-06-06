@@ -129,7 +129,7 @@ public class CustomerController {
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         selling.sunshine.model.lite.Agent agent = user.getAgent();
-        Customer customer = new Customer("", customerAddressForm.getAddress(), "", agent);
+        Customer customer = new Customer(null, customerAddressForm.getAddress(), null, agent);
         customer.setCustomerId(customerId);
         ResultData updateResponse = customerService.updateCustomer(customer);
         if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
