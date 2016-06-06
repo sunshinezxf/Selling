@@ -339,14 +339,6 @@ body {
 	text-decoration:underline;
 }
 
-.next_step{	
-    background-color: #fbf9fe;
-    margin-top:3%;
-    margin-bottom:3%;
-    margin-right:37%;
-    margin-left:35%;
-}
-
 .register_hide,.hidden-xs,.kv-upload-progress,.file-zoom-dialog,.fileinput-remove,.file-thumbnail-footer{
 	display:none;
 }
