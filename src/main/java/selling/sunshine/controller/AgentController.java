@@ -316,7 +316,7 @@ public class AgentController {
             //根据用户提交的表单构造代理信息
             Agent agent = new Agent(form.getName(), form.getGender(), form.getPhone(), form.getAddress(), form.getPassword(), form.getWechat());
             ResultData createResponse = agentService.createAgent(agent);
-            Credit credit=new Credit(form.getFrontPath(), form.getBackPath(), new selling.sunshine.model.lite.Agent(agent));
+            Credit credit=new Credit(form.getFront(), form.getBack(), new selling.sunshine.model.lite.Agent(agent));
             agentService.createCredit(credit);
             if (createResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
                 Prompt prompt = new Prompt("提示", "您已成功提交申请,待审核通过后即可使用", "/agent/login");
