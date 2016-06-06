@@ -41,10 +41,10 @@
             <bean class="org.apache.ibatis.transaction.managed.ManagedTransactionFactory"/>
         </property>
     </bean>
-    
-   <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
-     
-   </bean>
+
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+
+    </bean>
 
     <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate" scope="prototype">
         <constructor-arg index="0" ref="sqlSessionFactory"/>
@@ -97,6 +97,8 @@
 
                 /commodity/create = roles[admin]
                 /commodity/overview = roles[admin]
+
+                /credit/upload = anon
 
                 /customer/overview = roles[admin]
                 /customer/add = roles[agent]
