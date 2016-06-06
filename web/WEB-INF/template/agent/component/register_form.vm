@@ -70,10 +70,10 @@
                 </div>
                 <div class="weui_uploader_bd">
                     <div id="wrp1" class="weui_uploader_input_wrp">
-                        <input id="input_id1" class="file" type="file" accept="image/jpg,image/jpeg,image/png,image/gif" multiple data-max-file-count="2">
+                        <input id="input_id1" class="file" type="file" accept="image/jpg,image/jpeg,image/png,image/gif"/>
                     </div>
 				    <div id="wrp2" class="weui_uploader_input_wrp">
-                        <input id="input_id2" class="file" type="file" accept="image/jpg,image/jpeg,image/png,image/gif" multiple data-max-file-count="2">
+                        <input id="input_id2" class="file" type="file" accept="image/jpg,image/jpeg,image/png,image/gif"/>
                     </div>
                 </div>
             </div> 
@@ -81,7 +81,7 @@
         <div id="protocol" class="weui_cells weui_cells_checkbox protocol" >
             <label class="weui_cell weui_check_label">
                 <div class="weui_cell_hd procheckbox">
-                    <input id="checkbox" type="checkbox" class="weui_check" name="checkbox">
+                    <input id="checkbox" type="checkbox" class="weui_check" name="checkbox"/>
                     <i class="weui_icon_checked"></i>
                 </div>
                 <div class="weui_cell_bd weui_cell_primary problock">
@@ -91,10 +91,10 @@
         </div>   
     </div>
     <div id="next_div" class="next_step">
-        <button type="button" class="weui_btn weui_btn_disabled weui_btn_default" id="next_btn" disabled="disabled">下一步</a>
+        <button type="button" class="weui_btn weui_btn_disabled weui_btn_default" id="next_btn" disabled="disabled">下一步</button>
     </div>
     <div id="pre_div" class="weui_btn_area register_hide">
-        <button type="button" class="weui_btn weui_btn_plain_primary" id="pre_btn">上一步</a>
+        <button type="button" class="weui_btn weui_btn_plain_primary" id="pre_btn">上一步</button>
     </div>
     <div id="register" class="weui_btn_area  register_hide">
         <button type="button" class="weui_btn weui_btn_disabled weui_btn_default" id="register_pay_btn" disabled="disabled">
@@ -272,7 +272,39 @@
     }
 </script>
 <script>
-    $("#input_id1").fileinput({'language':'zh','showUpload':false,'showCaption': false,'showCancel':false,'maxFileCount': 1});
-	$("#input_id2").fileinput({'language':'zh','showUpload':false,'showCaption': false,'showCancel':false,'maxFileCount': 1});
+    $("#input_id1").fileinput({
+        uploadUrl:'${path.concat('/credit/upload')}',
+        language:'zh',
+        showUpload:false,
+        showCaption:false,
+        showCancel:false,
+        uploadAsync:true,
+        dropZoneEnabled:false,
+        maxFileCount: 1,
+        maxFileSize : 0,
+        allowedFileExtensions : [ 'jpg', 'jpeg' , 'png', 'gif' ],
+    }).on("fileuploaded", function(event, data) {
+        if(data.response)
+        {
+            alert('处理成功');
+        }
+    });
+    $("#input_id2").fileinput({
+        uploadUrl:'${path.concat('/credit/upload')}',
+        language:'zh',
+        showUpload:false,
+        showCaption:false,
+        showCancel:false,
+        uploadAsync:true,
+        dropZoneEnabled:false,
+        maxFileCount: 1,
+        maxFileSize : 0,
+        allowedFileExtensions : [ 'jpg', 'jpeg' , 'png', 'gif' ],
+    }).on("fileuploaded", function(event, data) {
+        if(data.response)
+        {
+            alert('处理成功');
+        }
+    });
 	
 </script>
