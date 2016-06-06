@@ -90,7 +90,7 @@
             <if test="wechat != null and wechat != ''">
                 agent_wechat = #{wechat},
             </if>
-            <if test="granted != null and granted != ''">
+            <if test="granted != null">
                 agent_granted = #{granted},
             </if>
             <if test="coffer != null and coffer != ''">

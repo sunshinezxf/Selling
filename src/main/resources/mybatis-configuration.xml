@@ -20,5 +20,6 @@
         <mapper resource="selling/sunshine/mapper/follower.xml"/>
         <mapper resource="selling/sunshine/mapper/refundrecord.xml"/>
         <mapper resource="selling/sunshine/mapper/express.xml"/>
+        <mapper resource="selling/sunshine/mapper/credit.xml"/>
     </mappers>
 </configuration>

@@ -33,6 +33,7 @@
         <property name="suffix" value=".vm"/>
         <property name="requestContextAttribute" value="request"/>
         <property name="contentType" value="text/html;charset=utf-8"/>
+        <property name="toolboxConfigLocation" value="/WEB-INF/toolbox.xml" />
     </bean>
 
     <bean id="velocityConfigurer"
