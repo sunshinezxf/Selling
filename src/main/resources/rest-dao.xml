@@ -41,10 +41,16 @@
     <bean id="followerDao" class="selling.sunshine.dao.impl.FollowerDaoImpl">
         <property name="sqlSession" ref="sqlSession"></property>
     </bean>
+
     <bean id="OrderPoolDao" class="selling.sunshine.dao.impl.OrderPoolDaoImpl">
         <property name="sqlSession" ref="sqlSession"></property>
     </bean>
-    <bean id="ExpressDao" class="selling.sunshine.dao.impl.ExpressDaoImpl">
+
+    <bean id="expressDao" class="selling.sunshine.dao.impl.ExpressDaoImpl">
+        <property name="sqlSession" ref="sqlSession"></property>
+    </bean>
+
+    <bean id="withdrawDao" class="selling.sunshine.dao.impl.WithdrawDaoImpl">
         <property name="sqlSession" ref="sqlSession"></property>
     </bean>
 </beans>

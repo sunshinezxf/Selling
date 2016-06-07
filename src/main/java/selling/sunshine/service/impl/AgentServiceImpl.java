@@ -1,14 +1,14 @@
 package selling.sunshine.service.impl;
 
 import org.slf4j.Logger;
-
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import selling.sunshine.dao.AgentDao;
+import selling.sunshine.dao.WithdrawDao;
 import selling.sunshine.model.Agent;
 import selling.sunshine.model.Credit;
+import selling.sunshine.model.WithdrawRecord;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.AgentService;
 import selling.sunshine.service.MessageService;
@@ -30,6 +30,9 @@ public class AgentServiceImpl implements AgentService {
 
     @Autowired
     private AgentDao agentDao;
+
+    @Autowired
+    private WithdrawDao withdrawDao;
 
     @Autowired
     private MessageService messageService;
@@ -178,9 +181,9 @@ public class AgentServiceImpl implements AgentService {
         return result;
     }
 
-	@Override
-	public ResultData fetchCredit(Map<String, Object> condition) {
-		ResultData result = new ResultData();
+    @Override
+    public ResultData fetchCredit(Map<String, Object> condition) {
+        ResultData result = new ResultData();
         ResultData queryResponse = agentDao.queryCredit(condition);
         result.setResponseCode(queryResponse.getResponseCode());
         if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
@@ -192,12 +195,12 @@ public class AgentServiceImpl implements AgentService {
             result.setDescription(queryResponse.getDescription());
         }
         return result;
-	}
+    }
 
-	@Override
-	public ResultData createCredit(Credit credit) {
-		ResultData result = new ResultData();
-        ResultData insertResponse =agentDao.insertCredit(credit);
+    @Override
+    public ResultData createCredit(Credit credit) {
+        ResultData result = new ResultData();
+        ResultData insertResponse = agentDao.insertCredit(credit);
         result.setResponseCode(insertResponse.getResponseCode());
         if (insertResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             result.setData(insertResponse.getData());
@@ -205,5 +208,18 @@ public class AgentServiceImpl implements AgentService {
             result.setDescription(insertResponse.getDescription());
         }
         return result;
-	}
+    }
+
+    @Override
+    public ResultData applyWithdraw(WithdrawRecord record) {
+        ResultData result = new ResultData();
+        ResultData response = withdrawDao.insertWithdraw(record);
+        result.setResponseCode(response.getResponseCode());
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(response.getData());
+        } else {
+            result.setDescription(response.getDescription());
+        }
+        return result;
+    }
 }
