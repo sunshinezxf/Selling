@@ -17,6 +17,11 @@ public class BankCard extends Entity {
         this.agent = agent;
     }
 
+    public BankCard(String bankCardNo, Agent agent, boolean preferred) {
+        this(bankCardNo, agent);
+        this.preferred = preferred;
+    }
+
     public String getBankCardId() {
         return bankCardId;
     }
