@@ -478,6 +478,7 @@ DROP TABLE IF EXISTS `selling`.`withdraw_record` ;
 CREATE TABLE IF NOT EXISTS `selling`.`withdraw_record` (
   `withdraw_id` VARCHAR(20) NOT NULL,
   `agent_id` VARCHAR(20) NULL,
+  `current_coffer` DOUBLE NOT NULL DEFAULT 0,
   `withdraw_amount` DOUBLE NOT NULL DEFAULT 0,
   `withdraw_status` TINYINT(1) NOT NULL DEFAULT 0,
   `block_flag` TINYINT(1) NOT NULL DEFAULT 0,
