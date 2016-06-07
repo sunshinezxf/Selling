@@ -1,5 +1,7 @@
 package selling.sunshine.model;
 
+import selling.sunshine.model.lite.Agent;
+
 public class BankCard extends Entity {
     private String bankCardId;
     private String bankCardNo;
@@ -15,6 +17,11 @@ public class BankCard extends Entity {
         this();
         this.bankCardNo = bankCardNo;
         this.agent = agent;
+    }
+
+    public BankCard(String bankCardNo, Agent agent, boolean preferred) {
+        this(bankCardNo, agent);
+        this.preferred = preferred;
     }
 
     public String getBankCardId() {
