@@ -28,7 +28,7 @@
         <if test="creditId != null and creditId != ''">
             AND credit_id = #{creditId}
         </if>
-        <if test="agentid != null and agentId != ''">
+        <if test="agentId != null and agentId != ''">
             AND agent_id = #{agentId}
         </if>
         <if test="blockFlag != null">
