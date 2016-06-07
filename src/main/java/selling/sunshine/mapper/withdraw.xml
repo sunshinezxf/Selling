@@ -3,6 +3,7 @@
 <mapper namespace="selling.agent.withdraw">
     <resultMap id="withdrawVo" type="selling.sunshine.model.WithdrawRecord">
         <result property="withdrawId" column="withdraw_id"></result>
+        <result property="wealth" column="current_coffer"></result>
         <result property="amount" column="withdraw_amount"></result>
         <result property="status" column="withdraw_status"
                 typeHandler="selling.sunshine.handler.mybatis.withdraw.WithdrawStatusHandler"></result>
@@ -12,12 +13,12 @@
     </resultMap>
 
     <insert id="insert" parameterType="selling.sunshine.model.WithdrawRecord" useGeneratedKeys="false">
-        INSERT INTO withdraw_record(withdraw_id, withdraw_amount, withdraw_status, block_flag, create_time, agent_id)
-        VALUES (#{withdrawId}, #{amount}, #{status}, #{blockFlag}, #{createAt}, #{agent.agentId})
+        INSERT INTO withdraw_record(withdraw_id, current_coffer, withdraw_amount, withdraw_status, block_flag, create_time, agent_id)
+        VALUES (#{withdrawId}, #{wealth}, #{amount}, #{status}, #{blockFlag}, #{createAt}, #{agent.agentId})
     </insert>
 
     <select id="query" parameterType="java.util.Map" resultMap="withdrawVo">
-        SELECT withdraw_id, withdraw_amount, withdraw_status, block_flag, create_time, agent_id
+        SELECT withdraw_id, current_coffer, withdraw_amount, withdraw_status, block_flag, create_time, agent_id
         FROM withdraw_record
         WHERE 1 = 1
         <if test="withdrawId != null and withdrawId != ''">

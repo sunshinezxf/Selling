@@ -1,9 +1,40 @@
 #parse("/common/util.vm")
 <html lang="zh_CN">
 <head>
-    <title></title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="stylesheet" href="${path.concat('/plugins/unslider/css/unslider.css')}"/>
+    <link rel="stylesheet" href="${path.concat('/material/css/customer/goods_detail.css')}"/>
+	<script type="text/javascript" src="${path.concat('/plugins/jquery/jquery-1.12.3.min.js')}"></script>
+	<script type="text/javascript" src="${path.concat('/plugins/unslider/js/unslider-min.js')}"></script>
+    <title>商品详情</title>
 </head>
 <body>
+    <div class="fading-slider">
+        <ul>
+            <li><img src="${path.concat('/material/goods_img/1.jpg')}" alt="详情图1"></li>
+            <li><img src="${path.concat('/material/goods_img/2.jpg')}" alt="详情图2"></li>
+            <li><img src="${path.concat('/material/goods_img/3.jpg')}" alt="详情图3"></li>
+        </ul>
+    </div>
+    <div class="goods_information">
+        <div class="price">
+            <div class="pre_price">￥300</div>
+            <div class="now_price">200</div>
+        </div>
+        <div class="agent">代理商:<p>刘嘉</p></div>
+        <div class="goods_name">三七粉</div>
+    </div>
 
 </body>
+<script>
+    $(function() {
+        $('.fading-slider').unslider({
+            animation: 'fade', 
+            autoplay: true, 
+            arrows: false
+        });
+    });
+
+</script>
 </html>
