@@ -1,0 +1,69 @@
+<form id="withdraw_form">
+	<div class="weui_cell">
+		<div class="weui_cell_hd"><label class="weui_label">金额:&nbsp</label></div>
+		<div class="weui_cell_bd weui_cell_primary">
+			<input class="weui_input" id="money_input" name="money" type="tel" pattern="[0-9]*" placeholder="请输入提现金额">
+		</div>
+	</div>
+	<input id="cardId" type="hidden" name="cardId">
+	<div class="weui_btn_area">
+		<a class="weui_btn weui_btn_default" disabled="disabled" id="withdraw_confirm">申请</a>
+	</div>
+</form>
+<script>
+	agentCoffer = parseFloat(${agent.coffer});
+	$("#withdraw_confirm").on("click", function(){
+		if($.checkMoney() != 0){
+			return;
+		}		
+		$("#cardId").val($("#cardId_head").html());
+		$("#withdraw_form").attr("action","${path.concat('/account/withdraw')}")
+		$("#withdraw_form").attr("method","post");
+		$("#withdraw_form").submit();
+	});
+	
+	$.checkMoney = function(){
+		var money_input = parseFloat($("#money_input").val());
+		if($("#money_input").val() == ""){
+			return -1;
+		}
+		var reNum = /^([1-9][\d]{0,10}|0)(\.[\d]{1,10})?$/;
+		if(!reNum.test($("#money_input").val())){
+			return 2;
+		}
+		if(money_input > agentCoffer){
+			return 1;
+		}
+		return 0;
+	}
+	
+	$("#money_input").on("input",function(){
+		var checkFlag = $.checkMoney();
+		switch(checkFlag){
+		case -1:
+			$("#withdraw_confirm").removeClass("weui_btn_primary");
+			$("#withdraw_confirm").addClass("weui_btn_default");
+			$("#withdraw_confirm").attr("disabled","disabled");
+			$("#withdraw_confirm").html("申请");
+			break;
+		case 0: 
+			$("#withdraw_confirm").removeClass("weui_btn_default");
+			$("#withdraw_confirm").addClass("weui_btn_primary");
+			$("#withdraw_confirm").removeAttr("disabled");
+			$("#withdraw_confirm").html("申请");
+			break;
+		case 1:
+			$("#withdraw_confirm").removeClass("weui_btn_primary");
+			$("#withdraw_confirm").addClass("weui_btn_default");
+			$("#withdraw_confirm").attr("disabled","disabled");
+			$("#withdraw_confirm").html("账户余额不足");
+			break;
+		case 2:
+			$("#withdraw_confirm").removeClass("weui_btn_primary");
+			$("#withdraw_confirm").addClass("weui_btn_default");
+			$("#withdraw_confirm").attr("disabled","disabled");
+			$("#withdraw_confirm").html("金额格式不正确");
+			break;
+		}
+	});
+</script>

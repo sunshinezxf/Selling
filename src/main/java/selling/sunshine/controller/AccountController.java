@@ -9,16 +9,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+
+import selling.sunshine.form.WithdrawForm;
 import selling.sunshine.model.Agent;
+import selling.sunshine.model.BankCard;
 import selling.sunshine.model.DepositBill;
 import selling.sunshine.model.Order;
 import selling.sunshine.model.OrderBill;
 import selling.sunshine.model.User;
+import selling.sunshine.model.WithdrawRecord;
 import selling.sunshine.service.AgentService;
 import selling.sunshine.service.BillService;
 import selling.sunshine.service.ToolService;
@@ -28,6 +33,8 @@ import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,7 +85,91 @@ public class AccountController {
             view.setViewName("/agent/login");
             return view;
         }
+    	Map<String, Object> condition = new HashMap<String, Object>();
+    	condition.put("agentId", user.getAgent().getAgentId());
+    	ResultData fetchAgentResponse = agentService.fetchAgent(condition);
+    	if(fetchAgentResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
+    		Prompt prompt = new Prompt("失败", "代理商不存在", "/account/info");
+            view.addObject("prompt", prompt);
+            view.setViewName("/agent/prompt");
+    		return view;
+    	}
+    	Agent agent = ((List<Agent>)fetchAgentResponse.getData()).get(0);
+    	
+    	ResultData fetchBankCardResponse = agentService.fetchBankCard(condition);
+    	if(fetchBankCardResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
+    		Prompt prompt = new Prompt("失败", "银行卡错误", "/account/info");
+            view.addObject("prompt", prompt);
+            view.setViewName("/agent/prompt");
+            return view;
+    	}
+    	List<BankCard> bankCardList = (List<BankCard>) fetchBankCardResponse.getData();
+    	view.addObject("bankCards", bankCardList);
+    	view.addObject("agent", agent);
+    	view.setViewName("/agent/account/withdraw");
     	return view;
+    }
+    
+    @RequestMapping(method = RequestMethod.POST, value="/withdraw")
+    public ModelAndView withdraw(@Valid WithdrawForm form, BindingResult result){
+    	ModelAndView view = new ModelAndView();
+    	Subject subject = SecurityUtils.getSubject();
+    	User user = (User) subject.getPrincipal();
+    	if (user == null) {
+            view.setViewName("/agent/login");
+            return view;
+        }
+    	Map<String, Object> condition = new HashMap<String, Object>();
+    	condition.put("agentId", user.getAgent().getAgentId());
+    	ResultData fetchAgentResponse = agentService.fetchAgent(condition);
+    	if(fetchAgentResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
+    		Prompt prompt = new Prompt("失败", "代理商不存在", "/account/info");
+            view.addObject("prompt", prompt);
+            view.setViewName("/agent/prompt");
+    		return view;
+    	}
+    	Agent agent = ((List<Agent>)fetchAgentResponse.getData()).get(0);
+
+    	String bankCardNo = form.getBankCardNo();
+    	double money = form.getMoney();
+    	condition.clear();
+    	condition.put("bankCardNo", bankCardNo);
+    	ResultData bankCardData = agentService.fetchBankCard(condition);
+    	if(bankCardData.getResponseCode() != ResponseCode.RESPONSE_OK || ((List<BankCard>)bankCardData.getData()).isEmpty() ){
+    		Prompt prompt = new Prompt("失败", "银行卡号不存在", "/account/info");
+            view.addObject("prompt", prompt);
+            view.setViewName("/agent/prompt");
+            return view;
+    	}
+    	
+    	if(money > agent.getCoffer()){
+    		Prompt prompt = new Prompt("提示", "您的的提现金额超过余额", "/account/info");
+            view.addObject("prompt", prompt);
+            view.setViewName("/agent/prompt");
+            return view;
+    	}
+    	
+    	WithdrawRecord record = new WithdrawRecord();
+    	ResultData withdrawData =  agentService.applyWithdraw(record);
+    	if(withdrawData.getResponseCode() != ResponseCode.RESPONSE_OK){
+    		Prompt prompt = new Prompt("失败", "申请提现失败", "/account/info");
+            view.addObject("prompt", prompt);
+            view.setViewName("/agent/prompt");
+    		return view;
+    	}
+    	
+    	ResultData consumeData = agentService.consume(agent, money);
+    	if(consumeData.getResponseCode() != ResponseCode.RESPONSE_OK){
+    		Prompt prompt = new Prompt("失败", "余额不足", "/account/info");
+            view.addObject("prompt", prompt);
+            view.setViewName("/agent/prompt");
+    		return view;
+    	}
+    	
+    	Prompt prompt = new Prompt("提示", "申请提现成功，预计2日内到账", "/account/info");
+        view.addObject("prompt", prompt);
+        view.setViewName("/agent/prompt");
+		return view;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/deposit")

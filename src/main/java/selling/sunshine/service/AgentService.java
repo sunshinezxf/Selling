@@ -33,6 +33,8 @@ public interface AgentService {
     ResultData modifyPassword(Agent agent, String password);
 
     ResultData fetchCredit(Map<String, Object> condition);
+    
+    ResultData fetchBankCard(Map<String, Object> condition);
 
     ResultData createCredit(Credit credit);
 
