@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import selling.sunshine.dao.AgentDao;
 import selling.sunshine.dao.WithdrawDao;
 import selling.sunshine.model.Agent;
+import selling.sunshine.model.BankCard;
 import selling.sunshine.model.Credit;
 import selling.sunshine.model.WithdrawRecord;
 import selling.sunshine.pagination.DataTableParam;
@@ -17,6 +18,7 @@ import selling.sunshine.utils.PasswordGenerator;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -187,7 +189,7 @@ public class AgentServiceImpl implements AgentService {
         ResultData queryResponse = agentDao.queryCredit(condition);
         result.setResponseCode(queryResponse.getResponseCode());
         if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            if (((List<Agent>) queryResponse.getData()).size() == 0) {
+            if (((List<Credit>) queryResponse.getData()).size() == 0) {
                 result.setResponseCode(ResponseCode.RESPONSE_NULL);
             }
             result.setData(queryResponse.getData());
@@ -196,6 +198,27 @@ public class AgentServiceImpl implements AgentService {
         }
         return result;
     }
+    
+    @Override
+	public ResultData fetchBankCard(Map<String, Object> condition) {
+    	ResultData result = new ResultData();
+    	Agent agent = new Agent();
+		BankCard bc1 = new BankCard("6222022312237584938",agent);
+		bc1.setBankCardId("BK131231");
+		BankCard bc2 = new BankCard("6222022312237584938",agent);
+		bc2.setBankCardId("BK213123");
+		if(condition.containsKey("bankCardNo")){
+			List<BankCard> bankCardList = new ArrayList<BankCard>();
+			bankCardList.add(bc1);
+			result.setData(bankCardList);
+		} else {
+			List<BankCard> bankCardList = new ArrayList<BankCard>();
+			bankCardList.add(bc1);
+			bankCardList.add(bc2);
+			result.setData(bankCardList);
+		}
+		return result;
+	}
 
     @Override
     public ResultData createCredit(Credit credit) {
@@ -209,6 +232,7 @@ public class AgentServiceImpl implements AgentService {
         }
         return result;
     }
+    
 
     @Override
     public ResultData applyWithdraw(WithdrawRecord record) {

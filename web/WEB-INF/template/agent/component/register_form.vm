@@ -274,6 +274,16 @@
         }
         return true;
     }
+    
+    $("#wrp1").delegate("img","click",function(){
+        photo_num--;
+	    $("#input_id1").click();
+	});
+	$("#wrp2").delegate("img","click",function(){
+	    photo_num--;
+	    $("#input_id2").click();
+	});
+	
 </script>
 <script>
     $("#input_id1").fileinput({
@@ -306,7 +316,8 @@
         showUpload:false,
         showCaption:false,
         showCancel:false,
-        uploadAsync:true,
+        showRemove: false,
+        showUploadedThumbs: false,
         dropZoneEnabled:false,
         maxFileCount: 1,
         maxFileSize : 0,
@@ -324,10 +335,4 @@
         }
     });
 	
-	$("#wrp1").delegate("img","click",function(){
-	    $("#input_id1").click();
-	});
-	$("#wrp2").delegate("img","click",function(){
-	    $("#input_id2").click();
-	});
 </script>

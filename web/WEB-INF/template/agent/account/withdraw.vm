@@ -1,0 +1,47 @@
+#parse("/common/util.vm")
+<html lang="zh_CN">
+<head>
+    #parse("/agent/component/init.vm")
+    <title>提现</title>
+</head>
+<body ontouchstart>
+<div class="container">
+	<div id="withdraw_panel">
+	    <div class="hd">
+	        <h1 class="page_title">
+	            提现
+	        </h1>
+	    </div>
+	    <div style="text-align:center;">
+	    	<p class="page_desc">卡号</p>
+		    <a id="cardNo_btn"><h2 style="font-weight:normal" id="cardNo_head">123123</h2></a>
+		</div>
+	    <div class="bd">
+	        <div class="weui_cells">
+	            #parse("/agent/account/component/withdraw_form.vm")
+	        </div>
+	    </div>
+    </div>
+    #parse("/agent/account/component/bankCard.vm")
+    #parse("/agent/component/navigate.vm")
+</div>
+</body>
+<script>
+	$(document).ready(function(){
+		$.each($("#bankCard_panel").children(),function(i, val){
+			if($(val).find(".weui_check").prop("checked")){
+				$("cardNo_head").html($(val).find(".bankCardNo").html());
+				$("cardNo_head").data($(val).attr("id"))
+			}
+		});
+		if($("cardId_head").html() == ""){
+			$("cardNo_head").html("点击绑定银行卡");
+		}
+	});
+	
+	$("#cardNo_btn").on("click",function(){
+		$("#withdraw_panel").hide();
+		$("#bankCard_panel").fadeIn();
+	});
+</script>
+</html>

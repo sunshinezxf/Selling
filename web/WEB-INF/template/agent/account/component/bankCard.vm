@@ -1,0 +1,30 @@
+<div id="bankCard_panel" style="display:none;">
+	#foreach($bankCard in $bankCards)
+		<label class="weui_cell bankCard" id="${bankCard.bankCardId}">
+        <div class="weui_cell_bd weui_cell_primary">
+            <span class="bankCardNo" >${bankCard.bankCardNo}</span>
+        </div>
+        <div class="weui_cell_ft">
+        	#if($bankCard.preferred == 1)
+        	<input type="radio" class="weui_check" checked="checked">
+        	#else
+        	<input type="radio" class="weui_check" >
+        	#end
+        	<span class="weui_icon_checked"></span>
+        </div>
+    </label>
+	#end
+	<div class="weui_btn_area">
+    	<button type="button" class="weui_btn weui_btn_primary" id="add_customer">新增银行卡</a>
+    	<button type="button" class="weui_btn weui_btn_warn" id="delete_customer">解绑银行卡</a>
+    </div>
+</div>
+<script>
+	$(".weui_cell.bankCard").find(".weui_check").on("click",function(){
+		$(cardNo_head).html($(this).closest(".weui_cell.bankCard").find(".bankCardNo").html());
+		$(cardNo_head).data("bankCardId",$(this).closest(".weui_cell.bankCard").attr("id"));
+		
+		$("#bankCard_panel").hide();
+		$("#withdraw_panel").fadeIn();
+	});
+</script>
