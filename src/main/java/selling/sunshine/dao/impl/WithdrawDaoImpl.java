@@ -1,5 +1,6 @@
 package selling.sunshine.dao.impl;
 
+import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -7,10 +8,13 @@ import org.springframework.transaction.annotation.Transactional;
 import selling.sunshine.dao.BaseDao;
 import selling.sunshine.dao.WithdrawDao;
 import selling.sunshine.model.WithdrawRecord;
+import selling.sunshine.pagination.DataTablePage;
+import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.utils.IDGenerator;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -64,7 +68,7 @@ public class WithdrawDaoImpl extends BaseDao implements WithdrawDao {
         ResultData result = new ResultData();
         synchronized (lock) {
             try {
-                sqlSession.update("selling.agent.update", record);
+                sqlSession.update("selling.agent.withdraw.update", record);
                 result.setData(record);
             } catch (Exception e) {
                 logger.error(e.getMessage());
@@ -73,6 +77,39 @@ public class WithdrawDaoImpl extends BaseDao implements WithdrawDao {
             } finally {
                 return result;
             }
+        }
+    }
+
+    @Override
+    public ResultData queryWithdrawByPage(Map<String, Object> condition, DataTableParam param) {
+        ResultData result = new ResultData();
+        DataTablePage<WithdrawRecord> page = new DataTablePage<>(param);
+        condition = handle(condition);
+        ResultData total = queryWithdraw(condition);
+        if (total.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription(total.getDescription());
+            return result;
+        }
+        page.setiTotalRecords(((List<WithdrawRecord>) total).size());
+        page.setiTotalDisplayRecords(((List<WithdrawRecord>) total).size());
+        List<WithdrawRecord> current = queryWithdrawByPage(condition, param.getiDisplayStart(), param.getiDisplayLength());
+        if (current.isEmpty()) {
+            result.setResponseCode(ResponseCode.RESPONSE_NULL);
+        }
+        page.setData(current);
+        result.setData(page);
+        return result;
+    }
+
+    private List<WithdrawRecord> queryWithdrawByPage(Map<String, Object> condition, int start, int length) {
+        List<WithdrawRecord> result = new ArrayList<>();
+        try {
+            result = sqlSession.selectList("selling.agent.withdraw.query", condition, new RowBounds(start, length));
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        } finally {
+            return result;
         }
     }
 }

@@ -142,7 +142,7 @@
     </update>
 
     <select id="orderItemQuery" parameterType="java.util.Map" resultMap="orderItemVo">
-    	SELECT order_item_id, customer_id, goods_id, goods_quantity, order_item_price, order_id, order_item_status, receive_address
+    	SELECT order_item_id, customer_id, goods_id, goods_quantity, order_item_price, order_id, order_item_status
     	from order_item
     	where order_id = #{orderId}
     </select>

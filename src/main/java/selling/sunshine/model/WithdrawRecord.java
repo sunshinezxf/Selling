@@ -8,6 +8,7 @@ import selling.sunshine.model.lite.Agent;
 public class WithdrawRecord extends Entity {
     private String withdrawId;
     private Agent agent;
+    private double wealth;
     private double amount;
     private WithdrawStatus status;
 
