@@ -796,13 +796,13 @@ public class AgentController {
 		}
         Agent agent=((List<Agent>)agentService.fetchAgent(condition).getData()).get(0);
         
-        Map<String, Object> condition2 = new HashMap<String, Object>();
-        condition2.put("agentId", agentId);
-        if (agentService.fetchCredit(condition2).getResponseCode()!=ResponseCode.RESPONSE_OK) {
-        	view.setViewName("/backend/agent/check");
+        if (agentService.fetchCredit(condition).getResponseCode()!=ResponseCode.RESPONSE_OK) {
+        	view.setViewName("/backend/agent/grant");
+        	 view.addObject("agent", agent);
+             view.addObject("credit", "");
             return view;
 		}
-        Credit credit=((List<Credit>)agentService.fetchCredit(condition2).getData()).get(0);
+        Credit credit=((List<Credit>)agentService.fetchCredit(condition).getData()).get(0);
         view.setViewName("/backend/agent/grant");
         view.addObject("agent", agent);
         view.addObject("credit", credit);
