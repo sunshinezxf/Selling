@@ -782,7 +782,7 @@ public class AgentController {
     
     @RequestMapping(method = RequestMethod.GET, value = "/check/{agentId}")
     public ModelAndView check(@PathVariable String agentId) {
-    	System.err.println(agentId);
+
         ModelAndView view = new ModelAndView();
         if (StringUtils.isEmpty(agentId)) {
             view.setViewName("/backend/agent/check");
