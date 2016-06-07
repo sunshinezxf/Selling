@@ -39,4 +39,6 @@ public interface AgentService {
     ResultData createCredit(Credit credit);
 
     ResultData applyWithdraw(WithdrawRecord record);
+
+    ResultData queryWithdraw(Map<String, Object> condition);
 }

@@ -62,25 +62,17 @@
                     title: "操作", "mRender": function (data, type, full) {
                     var operation = "";
                     if (!full.granted) {
-                        var verification_button = "<button type='button' id='" + full.agentId + "' class='btn btn-info btn-group-sm grant' data-toggle='modal' data-target='#grant_modal'>授权</button>&nbsp;"
+                        var verification_button = "<button type='button' id='" + full.agentId + "' class='btn btn-info btn-group-sm grant' >授权</button>&nbsp;"
                         operation += verification_button;
                     }
                     $("#" + full.agentId).on('click', function () {
-                        var agent_name = full.name;
-                        var agent_phone = full.phone;
-                        var agent_address = full.address;
-                        var agent_granted = (full.granted == true) ? "已授权" : "待审核";
-                        $("#to_confirm_agent_id").val(full.agentId);
-                        $("#to_confirm_agent_name").text(agent_name);
-                        $("#to_confirm_agent_phone").text(agent_phone);
-                        $("#to_confirm_agent_address").text(agent_address);
-                        $("#to_confirm_agent_granted").text(agent_granted);
+                        window.location.href = "${path.concat('/agent/check/')}"+full.agentId;  
                     })
                     var limit_button = "<button type='button' class='btn btn-warning btn-group-sm'>禁用</button>&nbsp;"
                     operation += limit_button;
                     return operation;
-                }
-                }
+                  }
+                }	
             ],
             "language": {
                 "processing": "正在加载中",
