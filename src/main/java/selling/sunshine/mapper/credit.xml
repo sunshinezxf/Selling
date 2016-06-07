@@ -7,7 +7,13 @@
         <result property="backPath" column="credit_back"></result>
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
-        <association property="agent" column="agentId = agent_id"></association>
+        <association property="agent" column="agentId = agent_id" select="agentLiteQuery"></association>
+    </resultMap>
+    
+    <resultMap id="agentLiteVo" type="selling.sunshine.model.lite.Agent">
+        <result property="agentId" column="agent_id"></result>
+        <result property="name" column="agent_name"></result>
+        <result property="phone" column="agent_phone"></result>
     </resultMap>
 
     <insert id="insert" parameterType="selling.sunshine.model.Credit" useGeneratedKeys="false">
@@ -31,5 +37,11 @@
         <if test="rule != null and rule !=''">
             ORDER BY ${rule}
         </if>
+    </select>
+    
+   <select id="agentLiteQuery" parameterType="java.util.Map" resultMap="agentLiteVo">
+        SELECT agent_id, agent_name, agent_phone
+        FROM agent
+        WHERE agent_id = #{agentId}
     </select>
 </mapper>

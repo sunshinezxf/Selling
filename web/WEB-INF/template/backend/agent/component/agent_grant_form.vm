@@ -1,0 +1,53 @@
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id-target="agent-management">
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+            <h1><i class="fa fa-home"></i> 代理授权 </h1>
+            <ol class="breadcrumb">
+                <li><a href="${path.concat('/dashboard')}">首页</a></li>
+                <li><a data-toggle="collapse" data-parent="#accordion" href="#agent-management">代理管理</a></li>
+                <li class="active">代理授权</li>
+            </ol>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+           <form id="confirm_check_form">
+                    <input type="hidden" name="agentId" value=${agent.agentId} />
+           </form>
+           <p>代理姓名:&nbsp;&nbsp;
+                <text>${agent.name}</text>
+           </p>
+          <p>联系方式:&nbsp;&nbsp;
+                    <text>${agent.phone}</text>
+          </p>
+          <p>联系地址:&nbsp;&nbsp;
+                    <text>${agent.address}</text>
+          </p>
+          <p>当前状态:&nbsp;&nbsp;
+                    <text>未授权</text>
+          </p>
+        </div>
+        <div class="col-md-12 col-lg-12">
+          <p>身份证正反面照片：</p>
+          <div class="col-xs-6 col-md-6 col-lg-6">
+                 <img src = ${path.concat('/')}${credit.frontPath} class="img-rounded" style="width:441px;height:358px;">   
+          </div>
+          <div class="col-xs-6 col-md-6 col-lg-6">
+                <img src = ${path.concat('/')}${credit.backPath} class="img-rounded" style="width:441px;height:358px;">  
+          </div>
+        </div>
+        <div class="col-md-12 col-lg-12">
+            <br/>
+            <button type="button" class="btn btn-primary" id="check_confirm">确认授权</button>
+        </div>
+    </div>
+</div>
+<script>
+
+
+    $("#check_confirm").click(function () {
+        $("#confirm_check_form").attr("action", "${path.concat('/agent/grant')}");
+        $("#confirm_check_form").attr("method", "post");
+        $("#confirm_check_form").submit();
+    });
+</script>
