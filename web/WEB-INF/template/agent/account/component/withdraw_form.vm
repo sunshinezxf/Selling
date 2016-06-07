@@ -5,7 +5,7 @@
 			<input class="weui_input" id="money_input" name="money" type="tel" pattern="[0-9]*" placeholder="请输入提现金额">
 		</div>
 	</div>
-	<input id="cardId" type="hidden" name="cardId">
+	<input id="bankCardNo" type="hidden" name="bankCardNo">
 	<div class="weui_btn_area">
 		<a class="weui_btn weui_btn_default" disabled="disabled" id="withdraw_confirm">申请</a>
 	</div>
@@ -16,7 +16,7 @@
 		if($.checkMoney() != 0){
 			return;
 		}		
-		$("#cardId").val($("#cardId_head").html());
+		$("#bankCardNo").val($("#cardNo_head").html());
 		$("#withdraw_form").attr("action","${path.concat('/account/withdraw')}")
 		$("#withdraw_form").attr("method","post");
 		$("#withdraw_form").submit();

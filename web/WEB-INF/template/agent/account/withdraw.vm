@@ -14,7 +14,7 @@
 	    </div>
 	    <div style="text-align:center;">
 	    	<p class="page_desc">卡号</p>
-		    <a id="cardNo_btn"><h2 style="font-weight:normal" id="cardNo_head">123123</h2></a>
+		    <a id="cardNo_btn"><h2 style="font-weight:normal" id="cardNo_head"></h2></a>
 		</div>
 	    <div class="bd">
 	        <div class="weui_cells">
@@ -28,15 +28,14 @@
 </body>
 <script>
 	$(document).ready(function(){
-		$.each($("#bankCard_panel").children(),function(i, val){
-			if($(val).find(".weui_check").prop("checked")){
-				$("cardNo_head").html($(val).find(".bankCardNo").html());
-				$("cardNo_head").data($(val).attr("id"))
-			}
-		});
-		if($("cardId_head").html() == ""){
+		#if(${bankCard} == "empty")
 			$("cardNo_head").html("点击绑定银行卡");
-		}
+		#else
+			bankCardNo = "${bankCard.bankCardNo}";
+			bankCardId = "${bankCard.bankCardId}";
+			$("#cardNo_head").html(bankCardNo);
+			$("#modify_bankCard").val(bankCardNo);
+		#end
 	});
 	
 	$("#cardNo_btn").on("click",function(){

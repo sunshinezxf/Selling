@@ -104,7 +104,11 @@ public class AccountController {
             return view;
     	}
     	List<BankCard> bankCardList = (List<BankCard>) fetchBankCardResponse.getData();
-    	view.addObject("bankCards", bankCardList);
+    	if(bankCardList.isEmpty()){
+    		view.addObject("bankCard","empty");
+    	}else{
+    		view.addObject("bankCard", bankCardList.get(0));
+    	}
     	view.addObject("agent", agent);
     	view.setViewName("/agent/account/withdraw");
     	return view;
@@ -150,6 +154,10 @@ public class AccountController {
     	}
     	
     	WithdrawRecord record = new WithdrawRecord();
+    	record.setAgent(user.getAgent());
+    	record.setAmount(money);
+    	record.setBankCardNo(bankCardNo);
+    	record.setWealth(agent.getCoffer());
     	ResultData withdrawData =  agentService.applyWithdraw(record);
     	if(withdrawData.getResponseCode() != ResponseCode.RESPONSE_OK){
     		Prompt prompt = new Prompt("失败", "申请提现失败", "/account/info");

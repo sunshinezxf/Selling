@@ -15,7 +15,7 @@
 
     <insert id="insert" parameterType="selling.sunshine.model.WithdrawRecord" useGeneratedKeys="false">
         INSERT INTO withdraw_record(withdraw_id, bank_no, current_coffer, withdraw_amount, withdraw_status, block_flag, create_time, agent_id)
-        VALUES (#{withdrawId}, #{wealth}, #{amount}, #{status}, #{blockFlag}, #{createAt}, #{agent.agentId})
+        VALUES (#{withdrawId}, #{bankCardNo} ,#{wealth}, #{amount}, #{status,typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler}, #{blockFlag}, #{createAt}, #{agent.agentId})
     </insert>
 
     <select id="query" parameterType="java.util.Map" resultMap="withdrawVo">
@@ -29,7 +29,7 @@
             AND bank_no = #{bankCardNo}
         </if>
         <if test="status != null and status != ''">
-            AND withdraw_status = #{status}
+            AND withdraw_status = #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler}
         </if>
         <if test="agentId != null and agentId != ''">
             AND agent_id = #{agentId}
@@ -43,7 +43,7 @@
         UPDATE withdraw_record
         <set>
             <if test="status != null and status != ''">
-                withdraw_status = #{status},
+                withdraw_status = #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler},
             </if>
             <if test="blockFlag != null">
                 block_flag = #{blockFlag},

@@ -1,29 +1,24 @@
 <div id="bankCard_panel" style="display:none;">
-	#foreach($bankCard in $bankCards)
-		<label class="weui_cell bankCard" id="${bankCard.bankCardId}">
+	<div class="weui_cell">
+        <div class="weui_cell_hd"><label class="weui_label">卡号：</label></div>
         <div class="weui_cell_bd weui_cell_primary">
-            <span class="bankCardNo" >${bankCard.bankCardNo}</span>
+           <input id="modify_bankCard" class="weui_input" type="tel" pattern="[0-9]*" placeholder="请输入银行卡号">
         </div>
-        <div class="weui_cell_ft">
-        	#if($bankCard.preferred == 1)
-        	<input type="radio" class="weui_check" checked="checked">
-        	#else
-        	<input type="radio" class="weui_check" >
-        	#end
-        	<span class="weui_icon_checked"></span>
-        </div>
-    </label>
-	#end
+    </div>
 	<div class="weui_btn_area">
-    	<button type="button" class="weui_btn weui_btn_primary" id="add_customer">新增银行卡</a>
-    	<button type="button" class="weui_btn weui_btn_warn" id="delete_customer">解绑银行卡</a>
+    	<button type="button" class="weui_btn weui_btn_primary" id="confirm_modify">确认</a>
+    	<button type="button" class="weui_btn weui_btn_default" id="return_modify">返回</a>
     </div>
 </div>
 <script>
-	$(".weui_cell.bankCard").find(".weui_check").on("click",function(){
-		$(cardNo_head).html($(this).closest(".weui_cell.bankCard").find(".bankCardNo").html());
-		$(cardNo_head).data("bankCardId",$(this).closest(".weui_cell.bankCard").attr("id"));
-		
+	$("#confirm_modify").on("click",function(){
+		var cardNo = $("#modify_bankCard").val();
+		$("#cardNo_head").html(cardNo);
+		$("#bankCard_panel").hide();
+		$("#withdraw_panel").fadeIn();
+	});
+	
+	$("#return_modify").on("click",function(){
 		$("#bankCard_panel").hide();
 		$("#withdraw_panel").fadeIn();
 	});
