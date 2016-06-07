@@ -60,7 +60,7 @@
   </select>
   
   <select id="orderItemQuery" parameterType="java.util.Map" resultMap="orderItemVo">
-        SELECT order_item_id, order_item_status, goods_quantity, order_item_price,
+        SELECT order_item_id, order_item_status, goods_quantity, order_item_price,order_id,
         block_flag, create_time
         FROM order_item
         WHERE 1 = 1
