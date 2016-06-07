@@ -110,6 +110,7 @@ CREATE TABLE IF NOT EXISTS `selling`.`order_item` (
   `order_id` VARCHAR(20) NOT NULL,
   `goods_id` VARCHAR(20) NOT NULL,
   `order_item_status` INT NULL,
+  `receive_address` VARCHAR(100) NOT NULL,
   `goods_quantity` INT NOT NULL DEFAULT 1,
   `order_item_price` DOUBLE NOT NULL,
   `customer_id` VARCHAR(20) NOT NULL,
