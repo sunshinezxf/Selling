@@ -21,5 +21,6 @@
         <mapper resource="selling/sunshine/mapper/refundrecord.xml"/>
         <mapper resource="selling/sunshine/mapper/express.xml"/>
         <mapper resource="selling/sunshine/mapper/credit.xml"/>
+        <mapper resource="selling/sunshine/mapper/withdraw.xml"/>
     </mappers>
 </configuration>
