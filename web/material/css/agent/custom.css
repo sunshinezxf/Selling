@@ -24,7 +24,7 @@ body {
 
 .page_title {
     text-align: center;
-    font-size: 34px;
+    font-size: 2.125em;
     color: #3cc51f;
     font-weight: 400;
     margin: 0 15%
@@ -33,15 +33,15 @@ body {
 .page_desc {
     text-align: center;
     color: #888;
-    font-size: 14px
+    font-size: 0.875em;
 }
 
 .bd.spacing {
-    padding: 0 15px
+    padding: 0 0.9375em;
 }
 
 .home {
-    padding-bottom: 30px
+    padding-bottom: 1.875em;
 }
 
 .button .page_title {
@@ -49,11 +49,11 @@ body {
 }
 
 .button .bd {
-    padding: 0 15px
+    padding: 0 0.9375em;
 }
 
 .button .button_sp_area {
-    padding: 10px 0;
+    padding: 0.625em 0;
     width: 60%;
     margin: 0 auto;
     text-align: justify;
@@ -77,11 +77,11 @@ body {
 }
 
 .cell .bd {
-    padding-bottom: 30px
+    padding-bottom: 1.875em;
 }
 
 .dialog .bd, .toast .bd {
-    padding: 120px 15px 0
+    padding: 7.5em 0.9375em 0
 }
 
 .msg {
@@ -89,7 +89,7 @@ body {
 }
 
 .panel .bd {
-    padding-bottom: 20px
+    padding-bottom: 1.25em;
 }
 
 .article {
@@ -110,17 +110,17 @@ body {
 }
 
 .icons .bd {
-    padding: 30px 0;
+    padding: 1.875em 0;
     text-align: center
 }
 
 .icons .icon_sp_area {
-    padding: 10px 20px;
+    padding: 0.625em 1.25em;
     text-align: left
 }
 
 .icons i {
-    margin: 0 5px 10px
+    margin: 0 0.3125em 0.625em;
 }
 
 .tabbar {
@@ -130,79 +130,79 @@ body {
 .search_show {
     display: none;
     margin-top: 0;
-    font-size: 14px
+    font-size: 0.875em;
 }
 
 .search_show .weui_cell_bd {
-    padding: 2px 0 2px 20px;
+    padding: 0.125em 0 0.125em 1.25em;
     color: #666
 }
 
 .icon {
     display: inline-block;
-    width: 28px;
-    height: 28px;
+    width: 1.75em;
+    height: 1.75em;
     vertical-align: middle
 }
 
 .icon_button {
     background: url(../../images/icon_nav_button.png) no-repeat;
-    background-size: 28px 28px
+    background-size: 1.75em 1.75em
 }
 
 .icon_cell {
     background: url(../../images/icon_nav_cell.png) no-repeat;
-    background-size: 28px 28px
+    background-size: 1.75em 1.75em
 }
 
 .icon_toast {
     background: url(../../images/icon_nav_toast.png) no-repeat;
-    background-size: 28px 28px
+    background-size: 1.75em 1.75em
 }
 
 .icon_dialog {
     background: url(../../images/icon_nav_dialog.png) no-repeat;
-    background-size: 28px 28px
+    background-size: 1.75em 1.75em
 }
 
 .icon_progress {
     background: url(../../images/icon_nav_progress.png) no-repeat;
-    background-size: 28px 28px
+    background-size: 1.75em 1.75em
 }
 
 .icon_msg {
     background: url(../../images/icon_nav_msg.png) no-repeat;
-    background-size: 28px 28px
+    background-size: 1.75em 1.75em
 }
 
 .icon_article {
     background: url(../../images/icon_nav_article.png) no-repeat;
-    background-size: 28px 28px
+    background-size: 1.75em 1.75em
 }
 
 .icon_actionSheet {
     background: url(../../images/icon_nav_actionSheet.png) no-repeat;
-    background-size: 28px 28px
+    background-size: 1.75em 1.75em
 }
 
 .icon_icons {
     background: url(../../images/icon_nav_icons.png) no-repeat;
-    background-size: 28px 28px
+    background-size: 1.75em 1.75em
 }
 
 .icon_panel {
     background: url(../../images/icon_nav_panel.png) no-repeat;
-    background-size: 28px 28px
+    background-size: 1.75em 1.75em
 }
 
 .icon_tab {
     background: url(../../images/icon_nav_tab.png) no-repeat;
-    background-size: 28px 28px
+    background-size: 1.75em 1.75em
 }
 
 .icon_search_bar {
     background: url(../../images/icon_nav_search_bar.png) no-repeat;
-    background-size: 28px 28px
+    background-size: 1.75em 1.75em
 }
 
 @-webkit-keyframes a {
@@ -292,7 +292,7 @@ body {
     box-sizing: border-box;
     height: 100%;
     overflow: auto;
-    padding-bottom: 130px;
+    padding-bottom: 8.125em;
     -webkit-overflow-scrolling: touch;
 }
 
@@ -302,8 +302,8 @@ body {
     left: 0;
     top: 0;
     width: 100%;
-    height: 1px;
-    border-top: 1px solid #979797;
+    height: 0.0625em;
+    border-top: 0.0625em solid #979797;
     color: #979797;
     -webkit-transform-origin: 0 0;
     transform-origin: 0 0;
@@ -314,7 +314,7 @@ body {
 .order_summary {
     position: absolute;
     width: 100%;
-    padding-bottom: 50px;
+    padding-bottom: 3.125em;
     bottom: 0;
     flex: 1;
 }
@@ -346,32 +346,32 @@ body {
 .file-input,.btn-file,.weui_uploader_input_wrp{
 	float: left;
     position: relative;
-    margin-right: 15px;
-    margin-bottom: 15px;
-    width: 95px;
-    height: 95px;
-    border: 1px solid #D9D9D9;
+    margin-right: 0.9375em;
+    margin-bottom: 0.9375em;
+    width: 5.9375em;
+    height: 5.9375em;
+    border: 0.0625em solid #D9D9D9;
 }
 
 .file-preview{
-	padding: 0px;
-    margin-bottom:15px;
+	padding: 0;
+    margin-bottom:0.9375em;
     border: 0;
 }
 
 .file-preview-frame{
-    margin:0px;
-    padding:0px;
+    margin:0;
+    padding:0;
     height:100%;
 }
 
 .file-live-thumbs{
-	width: 97px;
-    height: 95px;
+	width: 6.0625em;
+    height: 5.9375em;
 }
 .kv-file-content{
-	width: 95px;
-    height: 95px;
+	width: 5.9375em;
+    height: 5.9375em;
 }
 .file-preview-image{
 	width: 100%;
