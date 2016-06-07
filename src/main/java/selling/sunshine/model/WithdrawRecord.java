@@ -8,6 +8,7 @@ import selling.sunshine.model.lite.Agent;
 public class WithdrawRecord extends Entity {
     private String withdrawId;
     private Agent agent;
+    private String bankCardNo;
     private double wealth;
     private double amount;
     private WithdrawStatus status;
@@ -63,4 +64,20 @@ public class WithdrawRecord extends Entity {
     public void setStatus(WithdrawStatus status) {
         this.status = status;
     }
+
+	public String getBankCardNo() {
+		return bankCardNo;
+	}
+
+	public void setBankCardNo(String bankCardNo) {
+		this.bankCardNo = bankCardNo;
+	}
+
+	public double getWealth() {
+		return wealth;
+	}
+
+	public void setWealth(double wealth) {
+		this.wealth = wealth;
+	}
 }
