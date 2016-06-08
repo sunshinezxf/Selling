@@ -91,8 +91,8 @@ public class WithdrawDaoImpl extends BaseDao implements WithdrawDao {
             result.setDescription(total.getDescription());
             return result;
         }
-        page.setiTotalRecords(((List<WithdrawRecord>) total).size());
-        page.setiTotalDisplayRecords(((List<WithdrawRecord>) total).size());
+        page.setiTotalRecords(((List<WithdrawRecord>) total.getData()).size());
+        page.setiTotalDisplayRecords(((List<WithdrawRecord>) total.getData()).size());
         List<WithdrawRecord> current = queryWithdrawByPage(condition, param.getiDisplayStart(), param.getiDisplayLength());
         if (current.isEmpty()) {
             result.setResponseCode(ResponseCode.RESPONSE_NULL);
