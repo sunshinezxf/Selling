@@ -176,7 +176,7 @@
 </script>
 <script>
     var photo_num=0;
-    $(document).ready(function () {
+    $(document).ready(function () {        
         $("#agent_name").on("input propertychange", function () {
             if (information_validate()) {
                 first_active();
@@ -210,6 +210,14 @@
                 first_active();
             } else {
                 first_inactive();
+            }
+        });
+        $("#num_member").blur(function(){
+            if(isNaN($("#num_member").val())){
+                $("#dialog").find(".weui_dialog_bd").html("群规模请填写数字！");
+    		    $("#dialog").fadeIn();
+    		    $("#num_member").val("");
+    		    first_inactive();
             }
         });
         $("#num_member").on("input propertychange", function () {
