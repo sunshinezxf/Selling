@@ -10,9 +10,9 @@
             <input id="amount" type="tel" class="weui_input" name="amount" placeholder="请输入充值金额"/>
         </div>
     </div>
-    <div class="weui_btn_area">
-        <a id="confirm" class="weui_btn weui_btn_primary">确认金额</a>
-    </div>
+</div>
+<div class="weui_btn_area">
+    <a id="confirm" class="weui_btn weui_btn_primary">确认金额</a>
 </div>
 <script type="text/javascript" src="${path.concat('/plugins/pingxx/pingpp_one.js')}"></script>
 <script>
