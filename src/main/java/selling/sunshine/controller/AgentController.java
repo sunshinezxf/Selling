@@ -59,6 +59,9 @@ public class AgentController {
 
     @Autowired
     private ShipmentService shipmentService;
+    
+    @Autowired
+    private MessageService messageService;
 
     /**
      * 根据微信服务号的菜单入口传參,获取当前微信用户,并返回绑定账号页面
@@ -322,6 +325,7 @@ public class AgentController {
 			}
             //根据用户提交的表单构造代理信息
             Agent agent = new Agent(form.getName(), form.getGender(), form.getPhone(), form.getAddress(), form.getPassword(), form.getWechat());
+            System.err.println(form.getWechat());
             ResultData createResponse = agentService.createAgent(agent);
             Credit credit=new Credit(form.getFront(), form.getBack(), new selling.sunshine.model.lite.Agent(agent));
             agentService.createCredit(credit);
@@ -836,6 +840,9 @@ public class AgentController {
         agent.setAgentId(agentId);
         agent.setGranted(true);
         ResultData updateResponse = agentService.updateAgent(agent);
+        Map<String, Object> condition=new HashMap<String, Object>();
+        Agent targetAgent = ((List<Agent>)agentService.fetchAgent(condition)).get(0);
+        messageService.send(targetAgent.getPhone(), "尊敬的代理商您好,您的账户已经被审核通过,现在可以登录下单.【云草纲目】");
         if (updateResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
             view.setViewName("redirect:/agent/overview");
             return view;
