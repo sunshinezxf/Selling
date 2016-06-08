@@ -12,7 +12,7 @@
             </div>
             <div class="weui_panel">
                 <div class="list-cell">
-                    <div class="weui_cells weui_cells_access" id="customer_list">
+                    <div class="weui_cells weui_cells_access" id="customer_list" style="margin-top:0;">
                     </div>
                 </div>
             </div>
