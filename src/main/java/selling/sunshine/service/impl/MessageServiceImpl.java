@@ -36,6 +36,7 @@ public class MessageServiceImpl implements MessageService {
         formData.add("message", message);
         ClientResponse response = webResource.type(MediaType.APPLICATION_FORM_URLENCODED).
                 post(ClientResponse.class, formData);
+        logger.debug(JSONObject.toJSONString(response));
         int status = response.getStatus();
         if (status != HttpStatus.OK.value()) {
             result.setResponseCode(ResponseCode.RESPONSE_ERROR);
