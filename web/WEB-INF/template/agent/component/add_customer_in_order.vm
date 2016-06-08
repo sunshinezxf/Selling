@@ -85,6 +85,9 @@
                 
                 $("#add_customer_form").hide();
                 $("#customer_option").fadeIn();
+                  $("#customer_name").val("");
+                  $("#customer_phone").val("");
+                  $("#customer_address").val("");
             } else {
 				$("#add_customer_dialog").find(".weui_dialog_bd").html("该手机号码已经有其他人正在使用，请检查是否输入错误！");
     		    $("#add_customer_dialog").fadeIn();            

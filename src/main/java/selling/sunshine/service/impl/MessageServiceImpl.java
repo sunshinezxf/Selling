@@ -27,22 +27,30 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public ResultData send(String phone, String message) {
         ResultData result = new ResultData();
-        Client client = Client.create();
-        client.addFilter(new HTTPBasicAuthFilter("api", PlatformConfig.getValue("message_api_key")));
-        WebResource webResource = client.resource(
-                "http://sms-api.luosimao.com/v1/send.json");
-        MultivaluedMapImpl formData = new MultivaluedMapImpl();
-        formData.add("mobile", phone);
-        formData.add("message", message);
-        logger.debug(message);
-        ClientResponse response = webResource.type(MediaType.APPLICATION_FORM_URLENCODED).
-                post(ClientResponse.class, formData);
-        logger.debug(JSONObject.toJSONString(response));
-        int status = response.getStatus();
-        if (status != HttpStatus.OK.value()) {
-            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
-            result.setDescription(JSONObject.toJSONString(response));
-            logger.error(JSONObject.toJSONString(response));
+        try {
+            Thread thread = new Thread() {
+                @Override
+                public void run() {
+                    Client client = Client.create();
+                    client.addFilter(new HTTPBasicAuthFilter("api", PlatformConfig.getValue("message_api_key")));
+                    WebResource webResource = client.resource(
+                            "http://sms-api.luosimao.com/v1/send.json");
+                    MultivaluedMapImpl formData = new MultivaluedMapImpl();
+                    formData.add("mobile", phone);
+                    formData.add("message", message);
+                    ClientResponse response = webResource.type(MediaType.APPLICATION_FORM_URLENCODED).
+                            post(ClientResponse.class, formData);
+                    int status = response.getStatus();
+                    if (status != HttpStatus.OK.value()) {
+                        result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+                        result.setDescription(JSONObject.toJSONString(response));
+                        logger.error(JSONObject.toJSONString(response));
+                    }
+                }
+            };
+            thread.start();
+        } catch (Exception e) {
+            logger.error(e.getMessage());
         }
         return result;
     }
