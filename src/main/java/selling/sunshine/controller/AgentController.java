@@ -295,6 +295,17 @@ public class AgentController {
         view.setViewName("/agent/register");
         return view;
     }
+    
+    @RequestMapping(method = RequestMethod.POST, value = "/validate/{phone}")
+    @ResponseBody
+    public ResultData validate(@PathVariable String phone) {
+    	ResultData resultData=new ResultData();
+        //验证有没有相同号码的用户注册过
+        Map<String, Object> condition = new HashMap<String, Object>();
+        condition.put("phone", phone);
+        resultData=agentService.fetchAgent(condition);
+    	return resultData;
+    }
 
     /**
      * 代理商提交注册申请表单

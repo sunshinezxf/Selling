@@ -110,6 +110,16 @@
     </div>
 </div>
 #parse("/agent/component/gender_list.vm")
+<div class="weui_dialog_alert" id="dialog" style="display: none;">
+	    <div class="weui_mask"></div>
+	    <div class="weui_dialog">
+	        <div class="weui_dialog_hd"><strong class="weui_dialog_title">消息</strong></div>
+	        <div class="weui_dialog_bd"></div>
+	        <div class="weui_dialog_ft">
+	            <a href="javascript:;" class="weui_btn_dialog primary">确定</a>
+	        </div>
+	    </div>
+</div>
 <script>
 
     $("#gender_selection").click(function () {
@@ -118,13 +128,34 @@
     });
     
     $("#next_btn").click(function () {
-        $("#information").hide();
-        $("#protocol").hide();
-        $("#identity_verification").show();
-		$("#next_div").hide();
-		$("#login_btn").hide();
-		$("#pre_div").show();
-        $("#register").show();
+        var phone = $("#agent_tel").val();
+        if(!(/^1[3|4|5|7|8]\d{9}$/.test(phone))){    
+            $("#dialog").find(".weui_dialog_bd").html("手机号码有误，请重填！");
+    		$("#dialog").fadeIn();
+    		$("#agent_tel").val("");
+    		first_inactive();
+        }else{
+            var url = "${path.concat('/agent/validate/')}" + phone;
+            $.post(url,function (result) {
+               if (result.responseCode == "RESPONSE_OK") {
+                  $("#dialog").find(".weui_dialog_bd").html("您填入的手机号已经有其他人正在使用，请检查是否输入错误！");
+    		      $("#dialog").fadeIn();
+    		      $("#agent_tel").val("");
+    		      first_inactive();
+               }else{
+                  $("#information").hide();
+                  $("#protocol").hide();
+                  $("#identity_verification").show();
+		          $("#next_div").hide();
+		          $("#login_btn").hide();  
+		          $("#pre_div").show();
+                  $("#register").show();
+               }
+            
+            });
+
+        }
+
     });
     
     $("#pre_btn").click(function () {
@@ -162,7 +193,7 @@
 		});
         $("#agent_tel").on("input propertychange", function () {
             if (information_validate()) {
-                first_active();
+                  first_active();       
             } else {
                 first_inactive();
             }
@@ -333,6 +364,10 @@
                 showPreview:false,
             });
         }
+    });
+    
+    $("#dialog").find(".weui_btn_dialog.primary").click(function(){
+    	$("#dialog").hide();
     });
 	
 </script>
