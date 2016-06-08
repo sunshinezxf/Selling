@@ -28,4 +28,6 @@
     <bean id="expressService" class="selling.sunshine.service.impl.ExpressServiceImpl"></bean>
 
     <bean id="uploadService" class="selling.sunshine.service.impl.UploadServiceImpl"></bean>
+
+    <bean id="withdrawService" class="selling.sunshine.service.impl.WithdrawServiceImpl"></bean>
 </beans>
