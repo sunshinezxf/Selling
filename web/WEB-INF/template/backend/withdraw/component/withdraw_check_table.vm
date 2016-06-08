@@ -59,7 +59,11 @@
                 {title: "申请提现金额", "mData": "amount"},
                 {
                     title: "操作", "mRender": function (data, type, full) {
+                    var operation = "";
+                    if (full.status == "APPLY") {
 
+                    }
+                    return "";
                 }
                 }
             ],
