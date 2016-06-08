@@ -1,0 +1,11 @@
+#parse("/common/util.vm")
+<html lang="zh_CN">
+<head>
+    #parse("/backend/component/init.vm")
+    #parse("/backend/component/init_datatable.vm")
+    <title>提现概览</title>
+</head>
+<body>
+
+</body>
+</html>

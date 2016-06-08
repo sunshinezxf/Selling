@@ -1,7 +1,6 @@
 package selling.sunshine.controller;
 
 import com.alibaba.fastjson.JSONObject;
-
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
@@ -13,7 +12,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import selling.sunshine.form.*;
 import selling.sunshine.model.*;
 import selling.sunshine.pagination.DataTablePage;
@@ -22,7 +20,6 @@ import selling.sunshine.service.*;
 import selling.sunshine.utils.*;
 
 import javax.validation.Valid;
-
 import java.net.URLEncoder;
 import java.util.*;
 
@@ -59,7 +56,7 @@ public class AgentController {
 
     @Autowired
     private ShipmentService shipmentService;
-    
+
     @Autowired
     private MessageService messageService;
 
@@ -243,11 +240,11 @@ public class AgentController {
      * @return
      */
     @RequestMapping(method = RequestMethod.POST, value = "/login")
-    public ModelAndView login(@Valid AgentLoginForm form, BindingResult result,RedirectAttributes attr) {
+    public ModelAndView login(@Valid AgentLoginForm form, BindingResult result, RedirectAttributes attr) {
         ModelAndView view = new ModelAndView();
         //判断代理商填写的用户名和密码是否符合要求
         if (result.hasErrors()) {
-        	attr.addFlashAttribute("warn", "您的手机号或密码错误");
+            attr.addFlashAttribute("warn", "您的手机号或密码错误");
             view.setViewName("redirect:/agent/login");
             return view;
         }
@@ -259,7 +256,7 @@ public class AgentController {
             }
             subject.login(new UsernamePasswordToken(form.getPhone(), form.getPassword()));
         } catch (Exception e) {
-        	attr.addFlashAttribute("warn", "您的手机号或密码错误");
+            attr.addFlashAttribute("warn", "您的手机号或密码错误");
             view.setViewName("redirect:/agent/login");
             return view;
         }
@@ -316,18 +313,18 @@ public class AgentController {
             return view;
         }
         try {
-        	//验证有没有相同号码的用户注册过
-        	Map<String,Object > condition=new HashMap<String, Object>();
-        	condition.put("phone", form.getPhone());
-        	if (agentService.fetchAgent(condition).getResponseCode() == ResponseCode.RESPONSE_OK) {
-        		view.setViewName("redirect:/agent/register");
+            //验证有没有相同号码的用户注册过
+            Map<String, Object> condition = new HashMap<String, Object>();
+            condition.put("phone", form.getPhone());
+            if (agentService.fetchAgent(condition).getResponseCode() == ResponseCode.RESPONSE_OK) {
+                view.setViewName("redirect:/agent/register");
                 return view;
-			}
+            }
             //根据用户提交的表单构造代理信息
             Agent agent = new Agent(form.getName(), form.getGender(), form.getPhone(), form.getAddress(), form.getPassword(), form.getWechat());
             System.err.println(form.getWechat());
             ResultData createResponse = agentService.createAgent(agent);
-            Credit credit=new Credit(form.getFront(), form.getBack(), new selling.sunshine.model.lite.Agent(agent));
+            Credit credit = new Credit(form.getFront(), form.getBack(), new selling.sunshine.model.lite.Agent(agent));
             agentService.createCredit(credit);
             if (createResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
                 Prompt prompt = new Prompt("提示", "您已成功提交申请,待审核通过后即可使用", "/agent/login");
@@ -783,7 +780,7 @@ public class AgentController {
         view.setViewName("/backend/agent/check");
         return view;
     }
-    
+
     @RequestMapping(method = RequestMethod.GET, value = "/check/{agentId}")
     public ModelAndView check(@PathVariable String agentId) {
 
@@ -794,19 +791,19 @@ public class AgentController {
         }
         Map<String, Object> condition = new HashMap<String, Object>();
         condition.put("agentId", agentId);
-        if (agentService.fetchAgent(condition).getResponseCode()!=ResponseCode.RESPONSE_OK) {
-        	view.setViewName("/backend/agent/check");
+        if (agentService.fetchAgent(condition).getResponseCode() != ResponseCode.RESPONSE_OK) {
+            view.setViewName("/backend/agent/check");
             return view;
-		}
-        Agent agent=((List<Agent>)agentService.fetchAgent(condition).getData()).get(0);
-        
-        if (agentService.fetchCredit(condition).getResponseCode()!=ResponseCode.RESPONSE_OK) {
-        	view.setViewName("/backend/agent/grant");
-        	 view.addObject("agent", agent);
-             view.addObject("credit", "");
+        }
+        Agent agent = ((List<Agent>) agentService.fetchAgent(condition).getData()).get(0);
+
+        if (agentService.fetchCredit(condition).getResponseCode() != ResponseCode.RESPONSE_OK) {
+            view.setViewName("/backend/agent/grant");
+            view.addObject("agent", agent);
+            view.addObject("credit", "");
             return view;
-		}
-        Credit credit=((List<Credit>)agentService.fetchCredit(condition).getData()).get(0);
+        }
+        Credit credit = ((List<Credit>) agentService.fetchCredit(condition).getData()).get(0);
         view.setViewName("/backend/agent/grant");
         view.addObject("agent", agent);
         view.addObject("credit", credit);
@@ -840,19 +837,19 @@ public class AgentController {
         agent.setAgentId(agentId);
         agent.setGranted(true);
         ResultData updateResponse = agentService.updateAgent(agent);
-        Map<String, Object> condition=new HashMap<String, Object>();
-        Agent targetAgent = ((List<Agent>)agentService.fetchAgent(condition)).get(0);
-        messageService.send(targetAgent.getPhone(), "尊敬的代理商您好,您的账户已经被审核通过,现在可以登录下单.【云草纲目】");
         if (updateResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
             view.setViewName("redirect:/agent/overview");
             return view;
         }
+        Map<String, Object> condition = new HashMap<String, Object>();
+        Agent targetAgent = ((List<Agent>) agentService.fetchAgent(condition)).get(0);
+        messageService.send(targetAgent.getPhone(), "尊敬的代理商" + targetAgent.getName() + ",您提交的申请信息已经审核通过,欢迎您的加入.【云草纲目】");
         view.setViewName("redirect:/agent/overview");
         return view;
     }
-    
+
     @RequestMapping(method = RequestMethod.GET, value = "/forbid/{agentId}")
-    public ModelAndView forbid(@PathVariable("agentId")String agentId) {
+    public ModelAndView forbid(@PathVariable("agentId") String agentId) {
         ModelAndView view = new ModelAndView();
         if (StringUtils.isEmpty(agentId)) {
             view.setViewName("redirect:/agent/overview");
@@ -860,7 +857,7 @@ public class AgentController {
         }
         Agent agent = new Agent();
         agent.setAgentId(agentId);
-        agent.setGranted(false);	
+        agent.setGranted(false);
         ResultData updateResponse = agentService.updateAgent(agent);
         if (updateResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
             view.setViewName("redirect:/agent/overview");
@@ -869,9 +866,9 @@ public class AgentController {
         view.setViewName("redirect:/agent/overview");
         return view;
     }
-    
+
     @RequestMapping(method = RequestMethod.GET, value = "/credit/{agentId}")
-    public ModelAndView credit(@PathVariable("agentId")String agentId) {
+    public ModelAndView credit(@PathVariable("agentId") String agentId) {
         ModelAndView view = new ModelAndView();
         if (StringUtils.isEmpty(agentId)) {
             view.setViewName("redirect:/agent/overview");
@@ -879,7 +876,7 @@ public class AgentController {
         }
         Agent agent = new Agent();
         agent.setAgentId(agentId);
-        agent.setGranted(false);	
+        agent.setGranted(false);
         ResultData updateResponse = agentService.updateAgent(agent);
         if (updateResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
             view.setViewName("redirect:/agent/overview");
