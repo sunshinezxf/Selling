@@ -3,9 +3,8 @@
         <div class="hd">
             <h1 class="page_title">我的客户</h1>
 
-            <p class="page_desc">代理商:${agent.getName()}</p>
+            <p class="page_desc">管理客户信息</p>
 
-            <p class="page_desc">电话: ${agent.getPhone()} </p>
         </div>
         <div class="bd">
             <div class="bd spacing">
