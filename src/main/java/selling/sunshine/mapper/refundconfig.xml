@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="selling.refund.config">
+    <resultMap id="refundConfigVo" type="selling.sunshine.model.RefundConfig">
+        <result property="refundConfigId" column="refund_config_id"></result>
+        <result property="amountTrigger" column="refund_trigger_amount"></result>
+        <result property="level1Percent" column="level_1_percent"></result>
+        <result property="level2Percent" column="level_2_percent"></result>
+        <result property="level3Percent" column="level_3_percent"></result>
+        <result property="blockFlag" column="block_flag"></result>
+        <result property="createAt" column="create_time"></result>
+        <association property="goods" column="goodsId = goods_id" select="goodsQuery"></association>
+    </resultMap>
+
+    <resultMap id="goodsVo" type="selling.sunshine.model.Goods">
+        <result property="goodsId" column="goods_id"></result>
+        <result property="name" column="goods_name"></result>
+        <result property="price" column="goods_price"></result>
+        <result property="description" column="goods_description"></result>
+        <result property="blockFlag" column="block_flag"></result>
+        <result property="createAt" column="create_time"></result>
+    </resultMap>
+
+    <insert id="insert" parameterType="selling.sunshine.model.RefundConfig" useGeneratedKeys="false">
+        INSERT INTO refund_config(refund_config_id, goods_id, refund_trigger_amount, level_1_percent,level_2_percent,level_3_percent, block_flag, create_time)
+        VALUES (#{refundConfigId}, #{goods.goodsId}, #{amountTrigger}, #{level1Percent},#{level2Percent},#{level3Percent}, #{blockFlag}, #{createAt})
+    </insert>
+
+    <select id="query" parameterType="java.util.Map" resultMap="refundConfigVo">
+        SELECT refund_config_id, goods_id, refund_trigger_amount, level_1_percent,level_2_percent,level_3_percent, block_flag, create_time
+        FROM refund_config
+        WHERE 1 = 1
+        <if test="refundConfigId != null and refundConfigId != ''">
+            AND refund_config_id = #{refundConfigId}
+        </if>
+        <if test="goodsId != null and goodsId != ''">
+            AND goods_id = #{goodsId}
+        </if>
+        <if test="blockFlag != null">
+            AND block_flag = #{blockFlag}
+        </if>
+        <if test="rule != null and rule != ''">
+            ORDER BY ${rule}
+        </if>
+    </select>
+
+    <update id="block" parameterType="selling.sunshine.model.RefundConfig">
+        UPDATE refund_config
+        <set>
+            block_flag = #{blockFlag}
+        </set>
+        WHERE goods_id = #{goods.goodsId}
+    </update>
+
+    <select id="goodsQuery" parameterType="java.util.Map" resultMap="goodsVo">
+        SELECT goods_id, goods_name, goods_price, goods_description, block_flag, create_time
+        FROM goods
+        WHERE goods_id = #{goodsId}
+    </select>
+</mapper>
