@@ -73,40 +73,66 @@ body {
 	cursor: default;
 	opacity: 1;
 }
- .goods_information{
+
+.goods_information{
     position:relative;
-    height:60%;
+    height:80%;
     width:100%;
- }
+}
+
+.price{
+	margin-top:-1em;;
+}
  
- .pre_price{
+.pre_price{
     float:left;
-    font-size:1.8em;
+    font-size:1.7em;
     text-decoration:line-through;
- }
+}
  
- .now_price{
+.now_price{
     float:left;
     margin-left:0.2em;
     margin-top:0.2em;
-    font-size:2.2em;
+    font-size:2.0em;
     color:#ff0000;
- }
+}
  
- .agent{
+.agent{
+	margin-top:0.25em;
     float:right;
     font-size:1.2em;
- }
+}
  
- .agent p{
+.agent p{
+	display:inline-block;
     text-align:right;
     margin-top:0;
- }
- 
- .goods_name{
-    position:absolute;
-    top:15%;
-    left:0;
-    font-size:2em;
- }
+}
 
+.goods_introduction{
+    position:absolute;
+    width:100%;
+    top:10%;
+    left:0;
+}
+
+.goods_introduction h2{
+	font-size:1em;
+}
+
+.goods_introduction p{
+	display:inline-block;
+}
+ 
+.agent_id{
+    position:relative;
+    height:10%;
+    width:100%;
+}
+
+.buy_area{
+    position:relative;
+    height:10%;
+    width:100%;
+ }
