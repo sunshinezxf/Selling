@@ -1,37 +1,37 @@
 <div id="bankCard_panel" style="display:none;">
-	<div class="weui_cell">
+    <div class="weui_cell">
         <div class="weui_cell_hd"><label class="weui_label">卡号：</label></div>
         <div class="weui_cell_bd weui_cell_primary">
-           <input id="modify_bankCard" class="weui_input" type="tel" pattern="[0-9]*" placeholder="请输入银行卡号">
+            <input id="modify_bankCard" class="weui_input" type="tel" pattern="[0-9]*" placeholder="请输入银行卡号">
         </div>
     </div>
-	<div class="weui_btn_area">
-    	<button type="button" class="weui_btn weui_btn_primary" id="confirm_modify">确认</a>
-    	<button type="button" class="weui_btn weui_btn_default" id="return_modify">返回</a>
+    <div class="weui_btn_area">
+        <button type="button" class="weui_btn weui_btn_primary" id="confirm_modify">确认</a>
+            <button type="button" class="weui_btn weui_btn_default" id="return_modify">返回</a>
     </div>
 </div>
 <script>
-	$("#confirm_modify").on("click",function(){
-		var cardNo = $("#modify_bankCard").val();
-		var url = "${path.concat('/account/bankCardModify')}";
-		var param = {bankCardNo:cardNo};
-		$.post(url, param, function(data){
-			if(data.description == "您需要重新登录"){
-    			window.location="${path.concat('/agent/login')}"; 
-    			return;
-    		}
-    		if(data.responseCode == "RESPONSE_OK"){
-				$("#cardNo_head").html(cardNo);
-				$("#bankCard_panel").hide();
-				$("#withdraw_panel").fadeIn();
-			}else{
-				console.debug(data);
-			}
-		});
-	});
-	
-	$("#return_modify").on("click",function(){
-		$("#bankCard_panel").hide();
-		$("#withdraw_panel").fadeIn();
-	});
+    $("#confirm_modify").on("click", function () {
+        var cardNo = $("#modify_bankCard").val();
+        var url = "${path.concat('/account/bankCardModify')}";
+        var param = {bankCardNo: cardNo};
+        $.post(url, param, function (data) {
+            if (data.description == "您需要重新登录") {
+                window.location = "${path.concat('/agent/login')}";
+                return;
+            }
+            if (data.responseCode == "RESPONSE_OK") {
+                $("#cardNo_head").html(cardNo);
+                $("#bankCard_panel").hide();
+                $("#withdraw_panel").fadeIn();
+            } else {
+                console.debug(data);
+            }
+        });
+    });
+
+    $("#return_modify").on("click", function () {
+        $("#bankCard_panel").hide();
+        $("#withdraw_panel").fadeIn();
+    });
 </script>

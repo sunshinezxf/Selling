@@ -127,7 +127,7 @@ public class AgentServiceImpl implements AgentService {
         ResultData result = new ResultData();
         if (agent.getCoffer() < money) {
             result.setResponseCode(ResponseCode.RESPONSE_ERROR);
-            result.setDescription("璐︽埛浣欓涓嶈冻");
+            result.setDescription("账户余额不足");
             return result;
         }
         agent.setCoffer(agent.getCoffer() - money);
@@ -155,7 +155,7 @@ public class AgentServiceImpl implements AgentService {
     public ResultData resetPassword(Agent agent) {
         ResultData result = new ResultData();
         String password = PasswordGenerator.generate();
-        messageService.send(agent.getPhone(), "灏婃暚鐨勪唬鐞嗗晢鎮ㄥソ,鎮ㄧ殑璐︽埛瀵嗙爜宸茬粡閲嶇疆涓�:" + password + ",璇峰敖蹇櫥褰曞苟鍙婃椂淇敼鎮ㄧ殑瀵嗙爜.銆愪簯鑽夌翰鐩��");
+        messageService.send(agent.getPhone(), "尊敬的代理商您好,您的账户密码已经重置为:" + password + ",请尽快登录并及时修改您的密码.【云草纲目】");
         agent.setPassword(Encryption.md5(password));
         ResultData updateResponse = agentDao.updateAgent(agent);
         result.setResponseCode(updateResponse.getResponseCode());
