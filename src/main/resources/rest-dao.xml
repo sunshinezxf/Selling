@@ -53,4 +53,8 @@
     <bean id="withdrawDao" class="selling.sunshine.dao.impl.WithdrawDaoImpl">
         <property name="sqlSession" ref="sqlSession"></property>
     </bean>
+
+    <bean id="bankCardDao" class="selling.sunshine.dao.impl.BankCardDaoImpl">
+        <property name="sqlSession" ref="sqlSession"></property>
+    </bean>
 </beans>
