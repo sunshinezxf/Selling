@@ -6,6 +6,10 @@
     <title>提现概览</title>
 </head>
 <body>
-
+    #parse("/backend/component/navigate_with_login.vm")
+<div>
+    #parse("/backend/component/sidebar.vm")
+    #parse("/backend/withdraw/component/withdraw_overview_table.vm")
+</div>
 </body>
 </html>

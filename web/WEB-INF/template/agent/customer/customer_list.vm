@@ -13,16 +13,6 @@
             <div class="weui_panel">
                 <div class="list-cell">
                     <div class="weui_cells weui_cells_access" id="customer_list">
-                    #*
-                      <a class='weui_cell' id="test">                     
-                          <div class='weui_cell_bd weui_cell_primary'>
-                             <p> ${agent.getName()} </p>
-                          </div>
-                          <div class='weui_cell_ft'>
-                             ${agent.getPhone()} 
-                          </div> 
-                      </a>
-                      *#
                     </div>
                 </div>
             </div>

@@ -1,0 +1,90 @@
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id-target="withdraw-management">
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+            <h1><i class="fa fa-home"></i> 提现概览 </h1>
+            <ol class="breadcrumb">
+                <li><a href="${path.concat('/dashboard')}">首页</a></li>
+                <li><a data-toggle="collapse" data-parent="#accordion" href="#withdraw-management">提现管理</a></li>
+                <li class="active">提现审核</li>
+            </ol>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+            <table id="overview_withdraw_table" class="table table-striped table-bordered" cellspacing="0" width="100%">
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $("#overview_withdraw_table").DataTable({
+            searching: false,
+            ordering: false,
+            paging: true,
+            "sPaginationType": "full_numbers",
+            "bPaginate": false,
+            "bLengthChange": true,
+            "bSort": false,
+            "bDeferRender": true,
+            "bProcessing": true,
+            "bServerSide": true,
+            "bInfoFiltered": false,
+            "sAjaxSource": '${path.concat('/withdraw/overview')}',
+            "infoFiltered": false,
+            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                $(nRow).removeClass('dataTable');
+                $(nRow).css("text-align", "left");
+            },
+            "fnInitComplete": function () {
+                $("#overview_withdraw_table").removeClass('no-footer');
+            },
+            "fnServerData": function (sSource, aoData, fnCallback) {
+                $.ajax({
+                    "dataType": "json",
+                    "type": "POST",
+                    "url": sSource,
+                    "data": aoData,
+                    "success": fnCallback
+                })
+            },
+            columns: [
+                {
+                    title: "申请时间", "mRender": function (data, type, full) {
+                    return ((new Date(full.createAt)).format("yyyy/MM/dd hh:mm"));
+                }
+                },
+                {title: "代理商姓名", "mData": "agent.name"},
+                {title: "申请时账户余额", "mData": "wealth"},
+                {title: "申请提现金额", "mData": "amount"},
+                {
+                    title: "状态", "mRender": function (data, type, full) {
+                    var status = "";
+                    if (full.status == "APPLY") {
+                        status = "未处理";
+                    } else {
+                        status = "已处理";
+                    }
+                    return status;
+                }
+                }
+            ],
+            "language": {
+                "processing": "正在加载中",
+                "lengthMenu": "每页显示 _MENU_ 条记录",
+                "zeroRecords": "抱歉， 没有找到",
+                "info": "从 _START_ 到 _END_, 共 _TOTAL_ 条数据",
+                "infoEmpty": "暂无数据",
+                "infoFiltered": "数据表中共 _MAX_ 条记录)",
+                "zeroRecords": "当前没有提现记录",
+                "search": "搜索:",
+                "paginate": {
+                    "first": "首页",
+                    "previous": "上一页",
+                    "next": "下一页",
+                    "last": "尾页"
+                }
+            }
+        });
+    });
+</script>
