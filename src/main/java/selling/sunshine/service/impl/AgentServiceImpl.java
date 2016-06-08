@@ -154,7 +154,7 @@ public class AgentServiceImpl implements AgentService {
     public ResultData resetPassword(Agent agent) {
         ResultData result = new ResultData();
         String password = PasswordGenerator.generate();
-        messageService.send(agent.getPhone(), "尊敬的代理商您好,您的账户密码已经重置为:" + password + ",请尽快登录并及时修改您的密码.【云草纲目】");
+        messageService.send(agent.getPhone(), "尊敬的代理商" + agent.getName() + ",您的账户密码已经重置为:" + password + ",请尽快登录并及时修改您的密码.【云草纲目】");
         agent.setPassword(Encryption.md5(password));
         ResultData updateResponse = agentDao.updateAgent(agent);
         result.setResponseCode(updateResponse.getResponseCode());
