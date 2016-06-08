@@ -25,24 +25,59 @@
             <div class="pre_price">￥300</div>
             <div class="now_price">200</div>
         </div>
-        <div class="agent">代理商:<p>刘嘉</p></div>
-        <div class="goods_name">三七粉</div>
+        <div class="agent">由<p>刘嘉</p>推广</div>
+        <div class="goods_introduction">
+            <h2>[<p>三七粉</p>]</h2>
+            <p>三七粉功效卓著！</p>
+        </div>
+        <div class="goods_details">
+            <h2 class="details_title">商品详情</h2>
+            <p class="details_hd">商品名称</p>
+            <p class="details_bd"></p>
+            <p class="details_hd">品牌</p>
+            <p class="details_bd"></p>
+            <p class="details_hd">功效</p>
+            <p class="details_bd"></p>
+            <p class="details_hd">产品包装</p>
+            <p class="details_bd"></p>
+            <p class="details_hd">适用人群</p>
+            <p class="details_bd"></p>
+            <p class="details_hd">产品规格</p>
+            <p class="details_bd"></p>
+            <p class="details_hd">保质期限</p>
+            <p class="details_bd"></p>
+            <p class="details_hd">原产地</p>
+            <p class="details_bd"></p>
+            <p class="details_hd">特别说明</p>
+            <p class="details_bd"></p>
+        </div>
+    </div>
+    <div class="agent_id">
+        <input/>
+    </div>
+    <div class="buy_area">
+        <div class="btn_area">
+            <button>购买</button>
+        </div>
+        <div class="shopping_cart_area">
+            <button>购物车</button>
+        </div>
     </div>
 
 </body>
 <script>
     $(function() {
-        $('.fading-slider').unslider({
+        var slidey=$('.fading-slider').unslider({
             animation: 'fade', 
             autoplay: true, 
-            arrows: false
+            arrows: false,
+            fluid: false
         });
-        var slides = jQuery('.fading-slider'),
-            i=0;
-        slides.on('swipeleft', function(e) {
-            unslider.prev();
+        var data = slidey.data('unslider');
+        $('.fading-slider').on('swipeleft', function(e) {
+            data.next();
         }).on('swiperight', function(e) {
-            unslider.next();
+            data.prev();
         });
     });
 

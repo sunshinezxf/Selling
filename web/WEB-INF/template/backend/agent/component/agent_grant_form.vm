@@ -31,10 +31,10 @@
            <div class="col-md-12 col-lg-12">
                <p>身份证正反面照片：</p>
                <div class="col-xs-6 col-md-6 col-lg-6">
-                    <img src = ${path.concat('/')}${credit.frontPath} class="img-rounded" style="width:441px;height:358px;">   
+                    <img src = ${path.concat('')}${credit.frontPath} class="img-rounded" style="width:441px;height:358px;">
                </div>
                <div class="col-xs-6 col-md-6 col-lg-6">
-                    <img src = ${path.concat('/')}${credit.backPath} class="img-rounded" style="width:441px;height:358px;">  
+                    <img src = ${path.concat('')}${credit.backPath} class="img-rounded" style="width:441px;height:358px;">
                </div>
             </div>
         #else
