@@ -9,7 +9,7 @@
         <div class="weui_cell">
             <div class="weui_cell_hd weui_cell_primary">手机</div>
             <div class="weui_cell_bd ">
-                <input id="customer_phone_new" class="weui_input" type="number" pattern="1[0-9]{10}"/>
+                <input id="customer_phone_new" class="weui_input" type="tel" pattern="1[0-9]{10}"/>
             </div>
         </div>
         <div class="weui_cell">
