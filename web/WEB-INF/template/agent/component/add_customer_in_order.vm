@@ -32,6 +32,16 @@
         <button type="button" class="weui_btn weui_btn_default" id="add_customer_cancel_btn">取消</button>
     </div>
 </div>
+<div class="weui_dialog_alert" id="add_customer_dialog" style="display: none;">
+	    <div class="weui_mask"></div>
+	    <div class="weui_dialog">
+	        <div class="weui_dialog_hd"><strong class="weui_dialog_title">消息</strong></div>
+	        <div class="weui_dialog_bd"></div>
+	        <div class="weui_dialog_ft">
+	            <a href="javascript:;" class="weui_btn_dialog primary">确定</a>
+	        </div>
+	    </div>
+</div>
 <script>
     $("#add_customer_confirm_btn").click(function () {
         var url = "${path.concat('/customer/add')}";
@@ -65,6 +75,9 @@
                 
                 $("#add_customer_form").hide();
                 $("#customer_option").fadeIn();
+            } else {
+				$("#add_customer_dialog").find(".weui_dialog_bd").html("该手机号码已经有其他人正在使用，请检查是否输入错误！");
+    		    $("#add_customer_dialog").fadeIn();            
             }
         });
     });
@@ -72,5 +85,9 @@
     $("#add_customer_cancel_btn").click(function () {
         $("#add_customer_form").hide();
         $("#customer_option").fadeIn();
+    });
+    
+    $("#add_customer_dialog").find(".weui_btn_dialog.primary").click(function(){
+    	$("#add_customer_dialog").hide();
     });
 </script>
