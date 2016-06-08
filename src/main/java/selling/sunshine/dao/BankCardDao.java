@@ -12,4 +12,6 @@ public interface BankCardDao {
     ResultData createBankCard(BankCard card);
 
     ResultData queryBankCard(Map<String, Object> condition);
+
+    ResultData updateBankCard(BankCard card);
 }

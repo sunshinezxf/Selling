@@ -14,6 +14,7 @@
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
         <result property="agentRefund" column="agent_refund"></result>
+        <result property="claimScale" column="scale"></result>
         <association property="upperAgent" column="agentId = upper_agent_id" select="agentLiteQuery"></association>
     </resultMap>
 
@@ -24,8 +25,8 @@
     </resultMap>
 
     <insert id="insert" parameterType="selling.sunshine.model.Agent" useGeneratedKeys="false">
-        INSERT INTO agent(agent_id, agent_name, agent_gender, agent_phone, agent_address, agent_password, agent_wechat, agent_granted, agent_refund, block_flag, create_time,agent_coffer)
-        VALUES (#{agentId}, #{name}, #{gender}, #{phone}, #{address}, #{password}, #{wechat}, #{granted}, #{agentRefund}, #{blockFlag}, #{createAt},#{coffer})
+        INSERT INTO agent(agent_id, agent_name, agent_gender, agent_phone, agent_address, agent_password, agent_wechat, agent_granted, scale, agent_refund, block_flag, create_time,agent_coffer)
+        VALUES (#{agentId}, #{name}, #{gender}, #{phone}, #{address}, #{password}, #{wechat}, #{granted}, #{claimScale}, #{agentRefund}, #{blockFlag}, #{createAt},#{coffer})
     </insert>
 
     <select id="agentLiteQuery" parameterType="java.util.Map" resultMap="agentLiteVo">
@@ -37,7 +38,7 @@
     <select id="query" parameterType="java.util.Map" resultMap="agentVo">
         SELECT agent_id, upper_agent_id,agent_coffer, agent_name, agent_gender, agent_phone, agent_address,
         agent_password,
-        agent_wechat, agent_refund, agent_granted, block_flag, create_time
+        agent_wechat, agent_refund, agent_granted, block_flag, create_time,scale
         FROM agent
         WHERE 1 = 1
         <if test="agentId != null and agentId != ''">
@@ -98,6 +99,9 @@
             </if>
             <if test="agentRefund != null and agentRefund != ''">
                 agent_refund = #{agentRefund},
+            </if>
+            <if test="claimScale != null and claimScale != ''">
+                scale = #{claimScale},
             </if>
             agent_id = #{agentId}
         </set>

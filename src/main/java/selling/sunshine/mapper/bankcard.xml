@@ -45,12 +45,15 @@
         </if>
     </select>
 
-    <update id="canceldefault" parameterType="selling.sunshine.model.BankCard">
+    <update id="update" parameterType="selling.sunshine.model.BankCard">
         UPDATE bank_card
         <set>
-            preferred = FALSE
+            preferred = #{preferred}
         </set>
         WHERE bank_card_id = #{bankCardId}
+        <if test="agentId != null and agentId != ''">
+            AND agent_id = #{agentId}
+        </if>
     </update>
 
     <select id="agentLiteQuery" parameterType="java.util.Map" resultMap="agentLiteVo">

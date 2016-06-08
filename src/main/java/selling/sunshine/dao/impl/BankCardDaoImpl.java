@@ -11,6 +11,7 @@ import selling.sunshine.utils.IDGenerator;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -55,6 +56,45 @@ public class BankCardDaoImpl extends BaseDao implements BankCardDao {
             result.setDescription(e.getMessage());
         } finally {
             return result;
+        }
+    }
+
+    @Transactional
+    @Override
+    public ResultData updateBankCard(BankCard card) {
+        ResultData result = new ResultData();
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("agentId", card.getAgent().getAgentId());
+        List<BankCard> list = sqlSession.selectList("selling.agent.bankcard.query", condition);
+        condition.put("preferred", true);
+        BankCard preferCard = sqlSession.selectOne("selling.agent.bankcard.query", condition);
+        synchronized (lock) {
+            try {
+                if (preferCard != null) {
+                    if (preferCard.getBankCardNo().equals(card.getBankCardNo())) {
+                        result.setData(preferCard);
+                        return result;
+                    }
+                    preferCard.setPreferred(false);
+                    sqlSession.update("selling.agent.bankcard.update", preferCard);
+                }
+                for (BankCard item : list) {
+                    if (item.getBankCardNo().equals(card.getBankCardNo())) {
+                        item.setPreferred(true);
+                        sqlSession.update("selling.agent.bankcard.update", item);
+                        result.setData(item);
+                        return result;
+                    }
+                }
+                sqlSession.insert("selling.agent.bankcard.insert", card);
+                result.setData(card);
+            } catch (Exception e) {
+                logger.error(e.getMessage());
+                result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+                result.setDescription(e.getMessage());
+            } finally {
+                return result;
+            }
         }
     }
 }
