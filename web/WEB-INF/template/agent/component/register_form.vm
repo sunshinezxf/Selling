@@ -2,7 +2,7 @@
     <div class="weui_cells">
         <form id="agent_register_form">
             <div id="information">
-                <input type="hidden" name="wechat" value="${wechat}"
+                <input type="hidden" name="wechat" value="$!{wechat}"
                        autocomplete="off"/>
 
                 <div class="weui_cell">
