@@ -42,6 +42,14 @@
         FROM customer
         WHERE customer_id = #{customerId}
     </select>
+    
+    <update id="delete" parameterType="selling.sunshine.model.Customer">
+    	UPDATE customer_phone
+    	<set>
+    		block_flag = 1 
+    	</set>
+    	WHERE customer_id = #{customerId}
+    </update>
 
     <insert id="insert" parameterType="selling.sunshine.model.CustomerAddress" useGeneratedKeys="false">
         INSERT INTO customer_address(customer_address_id, customer_id, address, block_flag, create_time)

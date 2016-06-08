@@ -47,6 +47,14 @@
         INSERT INTO customer_phone(customer_phone_id, customer_id, phone, block_flag, create_time)
         VALUES (#{phoneId}, #{customer.customerId}, #{phone}, #{blockFlag}, #{createAt})
     </insert>
+    
+    <update id="delete" parameterType="selling.sunshine.model.Customer">
+    	UPDATE customer_phone
+    	<set>
+    		block_flag = 1 
+    	</set>
+    	WHERE customer_id = #{customerId}
+    </update>
 
     <update id="block" parameterType="selling.sunshine.model.CustomerPhone">
         UPDATE customer_phone
