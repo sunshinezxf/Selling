@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS `selling`.`agent` (
   `agent_id` VARCHAR(20) NOT NULL,
   `upper_agent_id` VARCHAR(20) NULL,
   `agent_coffer` DOUBLE NOT NULL DEFAULT 0,
+  `scale` INT NOT NULL DEFAULT 0,
   `agent_refund` DOUBLE NOT NULL DEFAULT 0,
   `agent_name` VARCHAR(45) NOT NULL,
   `agent_gender` VARCHAR(10) NOT NULL,
@@ -526,8 +527,8 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `selling`;
-INSERT INTO `selling`.`agent` (`agent_id`, `upper_agent_id`, `agent_coffer`, `agent_refund`, `agent_name`, `agent_gender`, `agent_phone`, `agent_address`, `agent_password`, `agent_wechat`, `agent_level`, `agent_granted`, `block_flag`, `create_time`) VALUES ('AGTvlorff50', NULL, DEFAULT, DEFAULT, '王旻', 'M', '18000000000', '江苏省南京市鼓楼区汉口路22号', 'e10adc3949ba59abbe56e057f20f883e', NULL, NULL, 0, 0, '2016-05-09 16:13:10');
-INSERT INTO `selling`.`agent` (`agent_id`, `upper_agent_id`, `agent_coffer`, `agent_refund`, `agent_name`, `agent_gender`, `agent_phone`, `agent_address`, `agent_password`, `agent_wechat`, `agent_level`, `agent_granted`, `block_flag`, `create_time`) VALUES ('AGTyoewlw97', NULL, DEFAULT, DEFAULT, '王晓迪', 'M', '18100000000', '江苏省南京市鼓楼区汉口路22号', 'e10adc3949ba59abbe56e057f20f883e', NULL, NULL, 0, 0, '2016-05-09 16:14:15');
+INSERT INTO `selling`.`agent` (`agent_id`, `upper_agent_id`, `agent_coffer`, `scale`, `agent_refund`, `agent_name`, `agent_gender`, `agent_phone`, `agent_address`, `agent_password`, `agent_wechat`, `agent_level`, `agent_granted`, `block_flag`, `create_time`) VALUES ('AGTvlorff50', NULL, DEFAULT, DEFAULT, DEFAULT, '王旻', 'M', '18000000000', '江苏省南京市鼓楼区汉口路22号', 'e10adc3949ba59abbe56e057f20f883e', NULL, NULL, 0, 0, '2016-05-09 16:13:10');
+INSERT INTO `selling`.`agent` (`agent_id`, `upper_agent_id`, `agent_coffer`, `scale`, `agent_refund`, `agent_name`, `agent_gender`, `agent_phone`, `agent_address`, `agent_password`, `agent_wechat`, `agent_level`, `agent_granted`, `block_flag`, `create_time`) VALUES ('AGTyoewlw97', NULL, DEFAULT, DEFAULT, DEFAULT, '王晓迪', 'M', '18100000000', '江苏省南京市鼓楼区汉口路22号', 'e10adc3949ba59abbe56e057f20f883e', NULL, NULL, 0, 0, '2016-05-09 16:14:15');
 
 COMMIT;
 
