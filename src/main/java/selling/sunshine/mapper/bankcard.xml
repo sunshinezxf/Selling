@@ -18,7 +18,7 @@
 
     <insert id="insert" parameterType="selling.sunshine.model.BankCard" useGeneratedKeys="false">
         INSERT INTO bank_card(bank_card_id, bank_card_no, preferred, block_flag, create_time, agent_id)
-        VALUES (#{bankCardId}, #{bankCardNo}, #{preferred}, #{blockFlag}, #{creatAt}, #{agent.agengId})
+        VALUES (#{bankCardId}, #{bankCardNo}, #{preferred}, #{blockFlag}, #{createAt}, #{agent.agentId})
     </insert>
 
     <select id="query" parameterType="java.util.Map" resultMap="bankcardVo">
@@ -51,8 +51,8 @@
             preferred = #{preferred}
         </set>
         WHERE bank_card_id = #{bankCardId}
-        <if test="agentId != null and agentId != ''">
-            AND agent_id = #{agentId}
+        <if test="agent.agentId != null and agent.agentId != ''">
+            AND agent_id = #{agent.agentId}
         </if>
     </update>
 

@@ -86,6 +86,7 @@ public class BankCardDaoImpl extends BaseDao implements BankCardDao {
                         return result;
                     }
                 }
+                card.setBankCardId(IDGenerator.generate("BKC"));
                 sqlSession.insert("selling.agent.bankcard.insert", card);
                 result.setData(card);
             } catch (Exception e) {

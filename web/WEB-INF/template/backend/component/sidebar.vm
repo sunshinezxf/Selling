@@ -66,10 +66,10 @@
                     class="fa fa-book"></i> 提现管理<i
                     class="pull-right fa fa-caret-down"></i></a>
                 <ul id="withdraw-management" class="nav nav-collapse collapse">
-                    <li><a class="sub-nav" href="${path.concat('')}"><i class="fa fa-edit"></i>
+                    <li><a class="sub-nav" href="${path.concat('/withdraw/check')}"><i class="fa fa-edit"></i>
                         提现申请</a>
                     </li>
-                    <li><a class="sub-nav" href="${path.concat('')}"><i class="fa fa-tasks"></i>
+                    <li><a class="sub-nav" href="${path.concat('/withdraw/overview')}"><i class="fa fa-tasks"></i>
                         提现概览</a>
                     </li>
                 </ul>

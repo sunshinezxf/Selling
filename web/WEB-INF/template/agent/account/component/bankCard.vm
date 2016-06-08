@@ -13,13 +13,20 @@
 <script>
 	$("#confirm_modify").on("click",function(){
 		var cardNo = $("#modify_bankCard").val();
-		var url = ${path.concat('/account/bankCardModify')};
+		var url = "${path.concat('/account/bankCardModify')}";
 		var param = {bankCardNo:cardNo};
-		$.post(url, param, function(result){
-			
-			$("#cardNo_head").html(cardNo);
-			$("#bankCard_panel").hide();
-			$("#withdraw_panel").fadeIn();
+		$.post(url, param, function(data){
+			if(data.description == "您需要重新登录"){
+    			window.location="${path.concat('/agent/login')}"; 
+    			return;
+    		}
+    		if(data.responseCode == "RESPONSE_OK"){
+				$("#cardNo_head").html(cardNo);
+				$("#bankCard_panel").hide();
+				$("#withdraw_panel").fadeIn();
+			}else{
+				console.debug(data);
+			}
 		});
 	});
 	
