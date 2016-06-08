@@ -15,7 +15,7 @@
                 <label class="weui_label">手机</label>
             </div>
             <div class="weui_cell_bd weui_cell_primary">
-                <input id="customer_phone" class="weui_input" type="number" pattern="1[0-9]{10}" placeholder="请填写客户手机"/>
+                <input id="customer_phone" class="weui_input" type="tel" pattern="1[0-9]{10}" placeholder="请填写客户手机"/>
             </div>
         </div>
         <div class="weui_cell">
