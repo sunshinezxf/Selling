@@ -107,6 +107,14 @@
         </set>
         WHERE agent_id = #{agentId}
     </update>
+	
+	<update id="updateCoffer" parameterType="selling.sunshine.model.Agent" useGeneratedKeys="false">
+        UPDATE agent
+        <set>
+            agent_coffer = #{coffer}
+        </set>
+        WHERE agent_id = #{agentId}
+    </update>
 
     <update id="unbind">
         UPDATE agent

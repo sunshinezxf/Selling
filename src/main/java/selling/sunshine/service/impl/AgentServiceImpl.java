@@ -131,7 +131,7 @@ public class AgentServiceImpl implements AgentService {
             return result;
         }
         agent.setCoffer(agent.getCoffer() - money);
-        ResultData updateResponse = updateAgent(agent);
+        ResultData updateResponse = agentDao.updateAgentCoffer(agent);
         if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             result.setData(updateResponse.getData());
         } else {
