@@ -144,6 +144,29 @@ public class AgentDaoImpl extends BaseDao implements AgentDao {
             }
         }
     }
+    
+
+	@Override
+	public ResultData updateAgentCoffer(Agent agent) {
+		 ResultData result = new ResultData();
+	        synchronized (lock) {
+	            try {
+	                sqlSession.update("selling.agent.updateCoffer", agent);
+	                if (!StringUtils.isEmpty(agent.getPassword())) {
+	                	  User user = new User(agent.getPhone(), agent.getPassword());
+	                      user.setAgent(new selling.sunshine.model.lite.Agent(agent));
+	                      sqlSession.update("selling.user.update", user);
+					}            
+	                result.setData(agent);
+	            } catch (Exception e) {
+	                logger.debug(e.getMessage());
+	                result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+	                result.setDescription(e.getMessage());
+	            } finally {
+	                return result;
+	            }
+	        }
+	}
 
     /**
      * 根据微信的openId解绑代理商账号
@@ -230,5 +253,6 @@ public class AgentDaoImpl extends BaseDao implements AgentDao {
 	            }
 	        }
 	}
+
 
 }

@@ -20,6 +20,8 @@ public interface AgentDao {
 
     ResultData updateAgent(Agent agent);
     
+    ResultData updateAgentCoffer(Agent agent);
+    
     ResultData unbindAgent(String openId);
     
     ResultData queryCredit(Map<String, Object> condition);
