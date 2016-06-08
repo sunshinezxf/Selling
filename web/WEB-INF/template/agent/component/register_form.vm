@@ -177,42 +177,42 @@
 <script>
     var photo_num=0;
     $(document).ready(function () {
-        $("#agent_name").bind("input propertychange", function () {
+        $("#agent_name").on("input propertychange", function () {
             if (information_validate()) {
                 first_active();
             } else {
                 first_inactive();
             }
         });
-        $("#gender").bind("input propertychange", function () {
+        $("#gender").on("input propertychange", function () {
             if (information_validate()) {
                 first_active();
             } else {
                 first_inactive();
             }
 		});
-        $("#agent_tel").bind("input propertychange", function () {
+        $("#agent_tel").on("input propertychange", function () {
             if (information_validate()) {
                   first_active();       
             } else {
                 first_inactive();
             }
         });
-        $("#agent_addr").bind("input propertychange", function () {
+        $("#agent_addr").on("input propertychange", function () {
             if (information_validate()) {
                 first_active();
             } else {
                 first_inactive();
             }
         });
-        $("#agent_assword").bind("input propertychange", function () {
+        $("#agent_assword").on("input propertychange", function () {
             if (information_validate()) {
                 first_active();
             } else {
                 first_inactive();
             }
         });
-        $("#num_member").bind("input propertychange", function () {
+        $("#num_member").on("input propertychange", function () {
             if (information_validate()) {
                 first_active();
             } else {
@@ -227,29 +227,29 @@
 		    }
 		});
 		
-		$("#front").change(function(){
-		    photo_num++;
-			$("#wrp1").removeClass("weui_uploader_input_wrp");
-			$("#photos").text("1/2");
-		    if(identity_validate()){
-			    second_active();
-			} else{
-			    second_inactive();
-			}
-		    
-		});
-		$("#back").change(function(){
-		    photo_num++;
-			$("#wrp2").removeClass("weui_uploader_input_wrp");
-			$("#photos").text("2/2");
-		    if(identity_validate()){
-			    second_active();
-			} else{
-			    second_inactive();
-			}
-		});
-		
     });
+    
+    function checkFront(){
+	    photo_num++;
+	    $("#wrp1").removeClass("weui_uploader_input_wrp");
+		$("#photos").text("1/2");
+		if(identity_validate()){
+			second_active();
+	    } else{
+			second_inactive();
+		}    
+	}
+		
+	function checkBack(){
+		photo_num++;
+		$("#wrp2").removeClass("weui_uploader_input_wrp");
+		$("#photos").text("2/2");
+		if(identity_validate()){
+			second_active();
+		} else{
+			second_inactive();
+		}
+    }
 
     function first_active() {
         $("#next_btn").removeAttr("disabled");
@@ -315,8 +315,6 @@
 	    $("#input_id2").click();
 	});
 	
-</script>
-<script>
     $("#input_id1").fileinput({
         uploadUrl:'${path.concat('/credit/upload')}',
         language:'zh',
@@ -335,6 +333,7 @@
         .on("fileuploaded", function(event,result) {      
         if(result.response.responseCode == "RESPONSE_OK") {
         	$("#front").val(result.response.data);
+        	checkFront();
         }else{
             $(this).fileinput({
                 showPreview:false,
@@ -359,6 +358,7 @@
         .on("fileuploaded", function(event,result) {
         if(result.response.responseCode == "RESPONSE_OK") {
         	$("#back").val(result.response.data);
+        	checkBack();
         }else{
             $(this).fileinput({
                 showPreview:false,

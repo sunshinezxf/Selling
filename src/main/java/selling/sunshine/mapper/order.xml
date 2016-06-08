@@ -132,7 +132,7 @@
         UPDATE `order`
         <set>
             <if test="status != null and status != ''">
-                order_status = #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler}
+                order_status = #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler},
             </if>
             <if test="blockFlag != null and blockFlag != ''">
                 block_flag = #{blockFlag}

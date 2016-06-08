@@ -853,7 +853,7 @@ public class AgentController {
             return view;
         }
         Map<String, Object> condition = new HashMap<String, Object>();
-        Agent targetAgent = ((List<Agent>) agentService.fetchAgent(condition)).get(0);
+        Agent targetAgent = ((List<Agent>) agentService.fetchAgent(condition).getData()).get(0);
         messageService.send(targetAgent.getPhone(), "尊敬的代理商" + targetAgent.getName() + ",您提交的申请信息已经审核通过,欢迎您的加入.【云草纲目】");
         view.setViewName("redirect:/agent/overview");
         return view;

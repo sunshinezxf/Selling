@@ -69,6 +69,7 @@
             <if test="status != null and status != ''">
                 bill_status = #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler},
             </if>
+            bill_id = #{billId}
         </set>
         WHERE bill_id = #{billId}
     </update>
