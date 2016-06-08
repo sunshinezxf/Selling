@@ -98,7 +98,7 @@
     //异步获取已保存
     $.get_order = function(type){
     	$("#loadingToast").show();
-    	setTimeout(function(){$("#loadingToast").hide()},300);
+    	$("#order_list").empty();
     	var url = "${path.concat('/agent/order/list')}/" + type;
     	$.getJSON(url, function(data){
     		if(data.description == "您需要重新登录"){
@@ -106,7 +106,6 @@
     			return;
     		}
     		var list = data.data;
-    		$("#order_list").empty();
     		$.each(list, function(i, val){
     			var	timeString = (new Date(val.createAt)).format("yyyy MM dd");
     			var time = timeString.split(" ");
@@ -125,7 +124,7 @@
     				window.location = "${path.concat('/agent/order/detail/" + val.orderId + "')}";
     			});
     		});
-    		//$("#loadingToast").hide();
+    		$("#loadingToast").hide();
     	});
     }
         

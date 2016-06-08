@@ -367,6 +367,7 @@ public class AgentController {
             view.setViewName("/agent/login");
             return view;
         }
+        view.addObject("agent", user.getAgent());
         view.setViewName("/agent/me/index");
         return view;
     }

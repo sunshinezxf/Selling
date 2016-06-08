@@ -1,8 +1,7 @@
 <div class="panel" id="self_info_panel">
     <div class="hd">
         <h1 class="page_title">个人信息</h1>
-
-        <p class="page_desc"></p>
+		<p class="page_desc">代理商:${agent.getName()}&nbsp;欢迎您!</p>
     </div>
     <div class="bd">
         <div class="weui_panel">
