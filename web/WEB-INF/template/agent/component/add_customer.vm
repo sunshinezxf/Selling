@@ -76,6 +76,9 @@
                   $("#customer_list").append(node);
                   $("#add_customer_form").hide();
                   $("#customer_panel").fadeIn();
+                  $("#customer_name").val("");
+                  $("#customer_phone").val("");
+                  $("#customer_address").val("");
               }else{
                    $("#dialog").find(".weui_dialog_bd").html("该手机号码已经有其他人正在使用，请检查是否输入错误！");
     		       $("#dialog").fadeIn();

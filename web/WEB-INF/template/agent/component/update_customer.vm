@@ -84,6 +84,9 @@
                   $("#" + customerId).remove();    
                   $("#update_customer_form").hide();
                   $("#customer_panel").fadeIn();  
+                  $("#customer_name_new").val("");
+                  $("#customer_phone_new").val("");
+                  $("#customer_address_new").val("");
                }else{
                   $("#dialog").find(".weui_dialog_bd").html("您新填入的手机号已经有其他人正在使用，请检查是否输入错误！");
     		      $("#dialog").fadeIn();
