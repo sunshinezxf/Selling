@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="selling.agent.bankcard">
-    <resultMap id="bankcardVo" type="selling.sunshine.model.Bankcard">
+    <resultMap id="bankcardVo" type="selling.sunshine.model.BankCard">
         <result property="bankCardId" column="bank_card_id"></result>
         <result property="bankCardNo" column="bank_card_no"></result>
         <result property="preferred" column="preferred"></result>
