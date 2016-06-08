@@ -63,7 +63,7 @@ public class WithdrawController {
     }
     
     @ResponseBody
-    @RequestMapping(method = RequestMethod.POST, value = "/check")
+    @RequestMapping(method = RequestMethod.POST, value = "/overview")
     public DataTablePage<WithdrawRecord> overview(DataTableParam param) {
         DataTablePage<WithdrawRecord> result = new DataTablePage<WithdrawRecord>(param);
         if (StringUtils.isEmpty(param)) {
