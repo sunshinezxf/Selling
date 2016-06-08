@@ -17,9 +17,7 @@
 		    <a id="cardNo_btn"><h2 style="font-weight:normal" id="cardNo_head"></h2></a>
 		</div>
 	    <div class="bd">
-	        <div class="weui_cells">
 	            #parse("/agent/account/component/withdraw_form.vm")
-	        </div>
 	    </div>
     </div>
     #parse("/agent/account/component/bankCard.vm")

@@ -1,15 +1,17 @@
+<div class="weui_cells">
 <form id="withdraw_form">
 	<div class="weui_cell">
 		<div class="weui_cell_hd"><label class="weui_label">金额:&nbsp</label></div>
 		<div class="weui_cell_bd weui_cell_primary">
-			<input class="weui_input" id="money_input" name="money" type="tel" pattern="[0-9]*" placeholder="请输入提现金额">
+			<input class="weui_input" id="money_input" name="money" autocomplete="off" type="tel" pattern="[0-9]*" placeholder="请输入提现金额">
 		</div>
 	</div>
 	<input id="bankCardNo" type="hidden" name="bankCardNo">
-	<div class="weui_btn_area">
-		<a class="weui_btn weui_btn_default" disabled="disabled" id="withdraw_confirm">申请</a>
-	</div>
 </form>
+</div>
+<div class="weui_btn_area">
+	<a class="weui_btn weui_btn_default" disabled="disabled" id="withdraw_confirm">申请</a>
+</div>
 <script>
 	agentCoffer = parseFloat(${agent.coffer});
 	$("#withdraw_confirm").on("click", function(){
