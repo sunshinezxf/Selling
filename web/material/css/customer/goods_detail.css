@@ -81,7 +81,7 @@ body {
 }
 
 .price{
-	margin-top:-1em;;
+	margin-top:0;
 }
  
 .pre_price{
@@ -99,9 +99,9 @@ body {
 }
  
 .agent{
-	margin-top:0.25em;
+	margin-top:0;
     float:right;
-    font-size:1.2em;
+    font-size:1.4em;
 }
  
 .agent p{
@@ -118,13 +118,28 @@ body {
 }
 
 .goods_introduction h2{
-	font-size:1em;
+	float:left;
+	font-size:1.05em;
+	margin:0 auto;
 }
 
 .goods_introduction p{
 	display:inline-block;
+	font-size:1.05em;
+	margin:0 auto;
+}
+
+.goods_details{
+    position:absolute;
+    width:100%;
+    top:15%;
+    left:0;
 }
  
+.details_title{
+	margin:0.5em auto 0 auto;
+}
+
 .agent_id{
     position:relative;
     height:10%;
