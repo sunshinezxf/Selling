@@ -1,6 +1,7 @@
 package selling.sunshine.service;
 
 import selling.sunshine.model.Agent;
+import selling.sunshine.model.BankCard;
 import selling.sunshine.model.Credit;
 import selling.sunshine.model.WithdrawRecord;
 import selling.sunshine.pagination.DataTableParam;
@@ -20,8 +21,6 @@ public interface AgentService {
 
     ResultData fetchAgent(Map<String, Object> condition, DataTableParam param);
 
-    ResultData placeOrder(Map<String, Object> conditon);
-
     ResultData updateAgent(Agent agent);
 
     ResultData consume(Agent agent, double money);
@@ -35,6 +34,8 @@ public interface AgentService {
     ResultData fetchCredit(Map<String, Object> condition);
     
     ResultData fetchBankCard(Map<String, Object> condition);
+    
+    ResultData modifyBankCard(BankCard bankCard);
 
     ResultData createCredit(Credit credit);
 

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import selling.sunshine.form.BankCardForm;
 import selling.sunshine.form.WithdrawForm;
 import selling.sunshine.model.Agent;
 import selling.sunshine.model.BankCard;
@@ -75,7 +76,7 @@ public class AccountController {
         view.setViewName("/agent/account/info");
         return view;
     }
-    
+     
     @RequestMapping(method = RequestMethod.GET, value = "/withdraw")
     public ModelAndView withdraw(){
     	ModelAndView view = new ModelAndView();
@@ -97,21 +98,36 @@ public class AccountController {
     	Agent agent = ((List<Agent>)fetchAgentResponse.getData()).get(0);
     	
     	ResultData fetchBankCardResponse = agentService.fetchBankCard(condition);
-    	if(fetchBankCardResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
+    	if(fetchBankCardResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR){
     		Prompt prompt = new Prompt("失败", "银行卡错误", "/account/info");
             view.addObject("prompt", prompt);
             view.setViewName("/agent/prompt");
             return view;
     	}
-    	List<BankCard> bankCardList = (List<BankCard>) fetchBankCardResponse.getData();
-    	if(bankCardList.isEmpty()){
+    	if(fetchBankCardResponse.getResponseCode() == ResponseCode.RESPONSE_NULL){
     		view.addObject("bankCard","empty");
     	}else{
+    		List<BankCard> bankCardList = (List<BankCard>) fetchBankCardResponse.getData();
     		view.addObject("bankCard", bankCardList.get(0));
     	}
     	view.addObject("agent", agent);
     	view.setViewName("/agent/account/withdraw");
     	return view;
+    }
+    
+    @RequestMapping(method = RequestMethod.POST, value="/bankCardModify")
+    public ResultData bankCardModify(@Valid BankCardForm form){
+    	ResultData result = new ResultData();
+    	Subject subject = SecurityUtils.getSubject();
+    	User user = (User) subject.getPrincipal();
+    	if (user == null) {
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription("请重新登录");
+            return result;
+        }
+    	BankCard bankCard = new BankCard(form.getBankCardNo(),user.getAgent());
+    	ResultData modifyData = agentService.modifyBankCard(bankCard);
+    	return modifyData;
     }
     
     @RequestMapping(method = RequestMethod.POST, value="/withdraw")
@@ -139,7 +155,7 @@ public class AccountController {
     	condition.clear();
     	condition.put("bankCardNo", bankCardNo);
     	ResultData bankCardData = agentService.fetchBankCard(condition);
-    	if(bankCardData.getResponseCode() != ResponseCode.RESPONSE_OK || ((List<BankCard>)bankCardData.getData()).isEmpty() ){
+    	if(bankCardData.getResponseCode() != ResponseCode.RESPONSE_OK){
     		Prompt prompt = new Prompt("失败", "银行卡号不存在", "/account/info");
             view.addObject("prompt", prompt);
             view.setViewName("/agent/prompt");

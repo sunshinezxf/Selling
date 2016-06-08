@@ -13,9 +13,14 @@
 <script>
 	$("#confirm_modify").on("click",function(){
 		var cardNo = $("#modify_bankCard").val();
-		$("#cardNo_head").html(cardNo);
-		$("#bankCard_panel").hide();
-		$("#withdraw_panel").fadeIn();
+		var url = ${path.concat('/account/bankCardModify')};
+		var param = {bankCardNo:cardNo};
+		$.post(url, param, function(result){
+			
+			$("#cardNo_head").html(cardNo);
+			$("#bankCard_panel").hide();
+			$("#withdraw_panel").fadeIn();
+		});
 	});
 	
 	$("#return_modify").on("click",function(){

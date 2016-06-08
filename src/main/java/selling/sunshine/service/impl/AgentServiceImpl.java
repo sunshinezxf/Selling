@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import selling.sunshine.dao.AgentDao;
+import selling.sunshine.dao.BankCardDao;
 import selling.sunshine.dao.WithdrawDao;
 import selling.sunshine.model.Agent;
 import selling.sunshine.model.BankCard;
@@ -36,6 +37,9 @@ public class AgentServiceImpl implements AgentService {
     @Autowired
     private WithdrawDao withdrawDao;
 
+    @Autowired
+    private BankCardDao bankCardDao;
+    
     @Autowired
     private MessageService messageService;
 
@@ -106,12 +110,6 @@ public class AgentServiceImpl implements AgentService {
     }
 
     @Override
-    public ResultData placeOrder(Map<String, Object> conditon) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
     public ResultData updateAgent(Agent agent) {
         ResultData result = new ResultData();
         ResultData updateResponse = agentDao.updateAgent(agent);
@@ -129,7 +127,7 @@ public class AgentServiceImpl implements AgentService {
         ResultData result = new ResultData();
         if (agent.getCoffer() < money) {
             result.setResponseCode(ResponseCode.RESPONSE_ERROR);
-            result.setDescription("账户余额不足");
+            result.setDescription("璐︽埛浣欓涓嶈冻");
             return result;
         }
         agent.setCoffer(agent.getCoffer() - money);
@@ -157,7 +155,7 @@ public class AgentServiceImpl implements AgentService {
     public ResultData resetPassword(Agent agent) {
         ResultData result = new ResultData();
         String password = PasswordGenerator.generate();
-        messageService.send(agent.getPhone(), "尊敬的代理商您好,您的账户密码已经重置为:" + password + ",请尽快登录并及时修改您的密码.【云草纲目】");
+        messageService.send(agent.getPhone(), "灏婃暚鐨勪唬鐞嗗晢鎮ㄥソ,鎮ㄧ殑璐︽埛瀵嗙爜宸茬粡閲嶇疆涓�:" + password + ",璇峰敖蹇櫥褰曞苟鍙婃椂淇敼鎮ㄧ殑瀵嗙爜.銆愪簯鑽夌翰鐩��");
         agent.setPassword(Encryption.md5(password));
         ResultData updateResponse = agentDao.updateAgent(agent);
         result.setResponseCode(updateResponse.getResponseCode());
@@ -202,22 +200,24 @@ public class AgentServiceImpl implements AgentService {
     @Override
 	public ResultData fetchBankCard(Map<String, Object> condition) {
     	ResultData result = new ResultData();
-    	Agent agent = new Agent();
-		BankCard bc1 = new BankCard("6222022312237584938",agent);
-		bc1.setBankCardId("BK131231");
-		BankCard bc2 = new BankCard("6222022312237584938",agent);
-		bc2.setBankCardId("BK213123");
-		if(condition.containsKey("bankCardNo")){
-			List<BankCard> bankCardList = new ArrayList<BankCard>();
-			bankCardList.add(bc1);
-			result.setData(bankCardList);
-		} else {
-			List<BankCard> bankCardList = new ArrayList<BankCard>();
-			bankCardList.add(bc1);
-			bankCardList.add(bc2);
-			result.setData(bankCardList);
-		}
+    	ResultData queryResponse = bankCardDao.queryBankCard(condition);
+    	result.setResponseCode(queryResponse.getResponseCode());
+    	if(queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK){
+    		if(((List<BankCard>)queryResponse.getData()).size() == 0){
+    			result.setResponseCode(ResponseCode.RESPONSE_NULL);
+    		}
+    		result.setData(queryResponse.getData());
+    	} else if(queryResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR){
+    		result.setDescription(queryResponse.getDescription());
+    	}
 		return result;
+	}
+    
+
+	@Override
+	public ResultData modifyBankCard(BankCard bankCard) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
     @Override
@@ -259,4 +259,5 @@ public class AgentServiceImpl implements AgentService {
         }
         return result;
     }
+
 }
