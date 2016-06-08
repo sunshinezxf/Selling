@@ -2,7 +2,7 @@
     <div class="weui_cells">
         <form id="agent_register_form">
             <div id="information">
-                <input type="hidden" name="wechat" value="${wechat}"
+                <input type="hidden" name="wechat" value="$!{wechat}"
                        autocomplete="off"/>
 
                 <div class="weui_cell">
@@ -196,7 +196,7 @@
 		    }
 		});
 		
-		$("#input_id1").change(function(){
+		$("#front").change(function(){
 		    photo_num++;
 			$("#wrp1").removeClass("weui_uploader_input_wrp");
 			$("#photos").text("1/2");
@@ -207,7 +207,7 @@
 			}
 		    
 		});
-		$("#input_id2").change(function(){
+		$("#back").change(function(){
 		    photo_num++;
 			$("#wrp2").removeClass("weui_uploader_input_wrp");
 			$("#photos").text("2/2");
