@@ -216,8 +216,15 @@ public class AgentServiceImpl implements AgentService {
 
 	@Override
 	public ResultData modifyBankCard(BankCard bankCard) {
-		// TODO Auto-generated method stub
-		return null;
+		ResultData result = new ResultData();
+		ResultData modifyResponse = bankCardDao.updateBankCard(bankCard);
+		result.setResponseCode(modifyResponse.getResponseCode());
+		if(modifyResponse.getResponseCode() == ResponseCode.RESPONSE_OK){
+			result.setData(modifyResponse.getData());
+		} else {
+			result.setDescription(modifyResponse.getDescription());
+		}
+		return result;
 	}
 
     @Override

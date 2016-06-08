@@ -29,7 +29,7 @@
 <script>
 	$(document).ready(function(){
 		#if(${bankCard} == "empty")
-			$("cardNo_head").html("点击绑定银行卡");
+			$("#cardNo_head").html("点击绑定银行卡");
 		#else
 			bankCardNo = "${bankCard.bankCardNo}";
 			bankCardId = "${bankCard.bankCardId}";
