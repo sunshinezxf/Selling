@@ -1,20 +1,22 @@
-<div id="customer_option" class="weui_cells weui_cells_radio" style="display: none;">
-    #foreach($elem in $customer)
-    <label class="weui_cell customer" id="${elem.customerId}">
-        <div class="weui_cell_bd weui_cell_primary">
-            <span>${elem.name}</span>(<span>${elem.phone.phone}</span>)
-        </div>
-        <div class="weui_cell_ft">
-        	<input type="radio" class="weui_check" >
-        	<span id="radio${elem.customerId}" class="weui_icon_checked"></span>
-        </div>
-        <input id="customer_phone${elem.customerId}" type="hidden" value="${elem.phone.phone}"/>
-        <div style="display:none;" id="customer_address${elem.customerId}">${elem.address.address}</div>
-    </label>
-    #end
-    <div class="weui_btn_area">
-    	<button type="button" class="weui_btn weui_btn_primary" id="add_customer">新增客户</a>
-    </div>
+<div id="customer_option" style="display: none;">
+	<div class="weui_cells weui_cells_radio" >
+	    #foreach($elem in $customer)
+	    <label class="weui_cell customer" id="${elem.customerId}">
+	        <div class="weui_cell_bd weui_cell_primary">
+	            <span>${elem.name}</span>(<span>${elem.phone.phone}</span>)
+	        </div>
+	        <div class="weui_cell_ft">
+	        	<input type="radio" class="weui_check" >
+	        	<span id="radio${elem.customerId}" class="weui_icon_checked"></span>
+	        </div>
+	        <input id="customer_phone${elem.customerId}" type="hidden" value="${elem.phone.phone}"/>
+	        <div style="display:none;" id="customer_address${elem.customerId}">${elem.address.address}</div>
+	    </label>
+	    #end
+	</div>
+	<div class="weui_btn_area">
+	    <button type="button" class="weui_btn weui_btn_primary" id="add_customer">新增客户</a>
+	</div>
 </div>
 #parse("/agent/component/add_customer_in_order.vm")
 <script>

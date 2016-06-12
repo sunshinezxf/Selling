@@ -77,11 +77,11 @@
 					"<input id='customer_phone" + item.customerId + "' type='hidden' value='" + item.phone.phone  + "'/>" +
 					"<div style='display:none;' id='customer_address" + item.customerId + "'> " + item.address.address + "</div>" +
 					"</label>";
-                $("#customer_option").prepend(node);
+                $("#customer_option").children(".weui_cells").prepend(node);
                 
                 
                 //新增node添加事件
-                $("#customer_option").children().eq(0).click($.customer_choose_click);
+                $("#customer_option").children(".weui_cells").children().eq(0).click($.customer_choose_click);
                 
                 $("#add_customer_form").hide();
                 $("#customer_option").fadeIn();

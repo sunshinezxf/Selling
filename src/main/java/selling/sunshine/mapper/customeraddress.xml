@@ -44,7 +44,7 @@
     </select>
     
     <update id="delete" parameterType="selling.sunshine.model.Customer">
-    	UPDATE customer_phone
+    	UPDATE customer_address
     	<set>
     		block_flag = 1 
     	</set>

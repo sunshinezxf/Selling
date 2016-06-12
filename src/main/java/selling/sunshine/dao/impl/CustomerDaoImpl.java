@@ -138,8 +138,6 @@ public class CustomerDaoImpl extends BaseDao implements CustomerDao {
         synchronized (lock) {
             try {
                 sqlSession.update("selling.customer.delete", customer);
-                sqlSession.update("selling.customer.phone.delete",customer);
-                sqlSession.update("selling.customer.address.delete",customer);
             } catch (Exception e) {
                 logger.error(e.getMessage());
                 result.setResponseCode(ResponseCode.RESPONSE_ERROR);
