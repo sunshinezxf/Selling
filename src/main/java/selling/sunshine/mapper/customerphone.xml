@@ -20,9 +20,6 @@
         SELECT customer_phone.customer_phone_id, customer_phone.customer_id, customer_phone.phone,
         customer_phone.block_flag, customer_phone.create_time
         FROM customer_phone
-        <if test="customerBlockFlag != null">
-            , customer
-        </if>
         WHERE 1 = 1
         <if test="customerId != null and customerId != ''">
             AND customer_phone.customer_id = #{customerId}
@@ -30,15 +27,14 @@
         <if test="phoneId != null and phoneId != ''">
             AND customer_phone.customer_phone_id = #{phoneId}
         </if>
+        <if test="customerBlockFlag != null">
+            AND customer.customer_id IN (SELECT customer_id from customer WHERE block_flag = #{customerBlockFlag})
+        </if>
         <if test="phone != null and phone != ''">
             AND customer_phone.phone = #{phone}
         </if>
         <if test="blockFlag != null">
             AND customer_phone.block_flag = #{blockFlag}
-        </if>
-        <if test="customerBlockFlag != null">
-            AND customer.customer_id = customer_phone.customer_id
-            AND customer.block_flag = #{customerBlockFlag}
         </if>
         <if test="rule != null and rule != ''">
             ORDER BY ${rule}
