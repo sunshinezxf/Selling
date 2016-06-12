@@ -216,7 +216,7 @@
     	isAdd = true;
     	//判断是否选择过商品，如果没有就给个默认的
     	if(typeof goods_id == "undefined"){
-    		var goods_dom = $("#goods_option").children(".goods").eq(0);
+    		var goods_dom = $("#goods_option").children(".weui_cells").children(".goods").eq(0);
     		if(goods_dom != null){
     			goods_id = goods_dom.attr("id");
     			goods_name = goods_dom.find(".weui_cell_bd").children("span").eq(0).html();

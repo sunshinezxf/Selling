@@ -173,6 +173,11 @@
         //计算总价
         $.calculate();
         
+        //切换页面之前把所有展开的订单项收起来
+        $.each($(order_item_list),function(i ,val){
+        	$(val).children(".order_item_body").slideUp();
+        });
+        
         //切换页面
         $("#add_order_item").hide();
         $("#place_order_panel").fadeIn();  
@@ -181,9 +186,15 @@
         $("#customer").find(".weui_cell_bd.weui_cell_primary").html("客户姓名");
         $("#phone").find(".weui_cell_bd.weui_cell_primary").html("手机号");
         customer_name = "";
+        customer_id = null;
     });
 
     $("#add_cancel_btn").click(function () {
+     	//重置本页面
+    	$("#customer").find(".weui_cell_bd.weui_cell_primary").html("客户姓名");
+        $("#phone").find(".weui_cell_bd.weui_cell_primary").html("手机号");
+        customer_name = "";
+        customer_id = null;
         $("#add_order_item").hide();
         $("#place_order_panel").fadeIn();
     });
