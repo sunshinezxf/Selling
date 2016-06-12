@@ -17,7 +17,7 @@
     </resultMap>
 
     <select id="query" parameterType="java.util.Map" resultMap="phoneVo">
-        SELECT customer_phone_id, customer_id, phone, block_flag, create_time
+        SELECT customer_phone.customer_phone_id, customer_phone.customer_id, customer_phone.phone, customer_phone.block_flag, customer_phone.create_time
         FROM customer_phone
         <if test="customerBlockFlag != null">
             , customer
