@@ -57,7 +57,14 @@
                 },
                 {title: "姓名", "mData": "name"},
                 {title: "手机", "mData": "phone"},
-
+                {
+                    title: "上级代理", "mRender": function (data, type, full) {
+                    if (full.upperAgent == null) {
+                        return "(无)";
+                    }
+                    return full.upperAgent.name;
+                }
+                },
                 {
                     title: "操作", "mRender": function (data, type, full) {
                     var operation = "";
@@ -66,12 +73,12 @@
                         operation += verification_button;
                     }
                     $("#" + full.agentId).on('click', function () {
-                        window.location.href = "${path.concat('/agent/check/')}"+full.agentId;
+                        window.location.href = "${path.concat('/agent/check/')}" + full.agentId;
                     })
                     var limit_button = "<button type='button' class='btn btn-warning btn-group-sm'>禁用</button>&nbsp;"
                     operation += limit_button;
                     return operation;
-                  }
+                }
                 }
             ],
             "language": {
