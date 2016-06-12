@@ -16,6 +16,7 @@
 	</div>
 	<div class="weui_btn_area">
 	    <button type="button" class="weui_btn weui_btn_primary" id="add_customer">新增客户</a>
+	    <button type="button" class="weui_btn weui_btn_default" id="return_customer">返回</a>
 	</div>
 </div>
 #parse("/agent/component/add_customer_in_order.vm")
@@ -27,7 +28,7 @@
 	//进入这个页面之前先初始化该页面
 	$.init_customer_list = function(){
 		$(".weui_check").next().removeClass("weui_icon_checked");
-		if(!isAdd){
+		if(typeof customer_id != "undefined" && customer_id != null){
 			$("#radio" + customer_id).addClass("weui_icon_checked");
 		}
 	}
@@ -64,5 +65,14 @@
     $("#add_customer").click(function(){
     	$("#customer_option").hide();
     	$("#add_customer_form").fadeIn();
+    });
+    
+    $("#return_customer").click(function(){
+    	$("#customer_option").hide();
+    	if(isAdd){
+    		$("#add_order_item").fadeIn();
+    	}else{
+    		$("#place_order_panel").fadeIn();
+    	}
     });
 </script>
