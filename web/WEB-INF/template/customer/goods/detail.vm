@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="${path.concat('/plugins/unslider/css/unslider.css')}"/>
     <link rel="stylesheet" href="${path.concat('/material/css/customer/goods_detail.css')}"/>
-	<script type="text/javascript" src="${path.concat('/plugins/jquery/jquery-1.12.3.min.js')}"></script>
+    <script type="text/javascript" src="${path.concat('/plugins/jquery/jquery-1.12.3.min.js')}"></script>
 	<script type="text/javascript" src="${path.concat('/plugins/jquery/jquery.event.move.js')}"></script>
 	<script type="text/javascript" src="${path.concat('/plugins/jquery/jquery.event.swipe.js')}"></script>
 	<script type="text/javascript" src="${path.concat('/plugins/unslider/js/unslider-min.js')}"></script>

@@ -1,0 +1,91 @@
+body, html {
+    height: 100%;
+    -webkit-tap-highlight-color: transparent
+}
+
+body {
+    overflow-x: hidden;
+    background-color: #fbf9fe
+}
+
+.header{
+     position:fixed;
+     width:100%;
+     height:8%;
+     top:0;
+     bottom:auto;
+     text-align:center;
+     z-index:999;
+ }
+ 
+ .header h2{
+     font: bold 1.5em/2em Arial, sans-serif;
+     margin-top:0.18em;
+ }
+ 
+ .order_information{
+     margin-top:3.07em;
+ }
+ 
+ .head_information,.goods_information{
+     margin-top:0;
+ }
+ 
+ .agent_information{
+     float:left;
+ }
+ 
+ .modify_btn{
+     float:right;
+     margin:0.5em 0.5em;
+ }
+ 
+ .goods_summary{
+     float:left;
+ }
+ 
+ .number_choose{
+     float:right;
+     margin-top:1.2em;
+     margin-right:0.5em;
+ }
+ 
+ .num_box{
+     height:2.5em;
+     width:3em;
+     text-align:center;
+ }
+ 
+ .min,.add{
+     height:1.5em;
+     width:1.5em;
+     border:0;
+     background-color:#ffffff;
+     font-size:1.2em;
+     color:#ff8080;
+ }
+ 
+ .footer{
+     position:fixed;
+     width:100%;
+     height:10%;
+     bottom:0;
+     top:auto;
+     background-color:#ffffff;
+ }
+ 
+ .total_info{
+     float:left;
+ }
+ 
+ .sum_price{
+     display:inline-block;
+ }
+ 
+ .to_pay{
+     float:right;
+ }
+ 
+ .to_pay_btn{
+     
+ }

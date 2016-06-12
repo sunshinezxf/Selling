@@ -4,22 +4,66 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
-    <link rel="stylesheet" href="${path.concat('/material/css/customer/goods_detail.css')}"/>
-	<script type="text/javascript" src="${path.concat('/plugins/jquery/jquery-1.12.3.min.js')}"></script>
+    <link rel="stylesheet" href="${path.concat('/plugins/weui/weui.css')}"/>
+    <link rel="stylesheet" href="${path.concat('/material/css/customer/goods_purchase.css')}"/>
+    <script type="text/javascript" src="${path.concat('/plugins/jquery/jquery-1.12.3.min.js')}"></script>
     <title>商品下单</title>
 </head>
 <body>
     <div class="header">
-        
+        <h2>订单</h2>    
     </div>
-    <div class="buy_cart">
+    <div class="weui_cells order_information">
+        <div class="weui_cells weui_cells_checkbox head_information" >
+            <label class="weui_cell weui_check_label agent_information">
+                <div class="weui_cell_hd">
+                    <input type="checkbox" class="weui_check" name="checkbox"/>
+                    <i class="weui_icon_checked"></i>
+                </div>
+                <div class="weui_cell_bd weui_cell_primary">
+                    <p>代理商：刘嘉</p>
+                </div>
+            </label>
+            <div class="weui_btn_area modify_btn">
+                <button type="button" class="weui_btn weui_btn_mini weui_btn_default">编辑</button>
+            </div>
+        </div>
+        
+        <div class="weui_cells weui_cells_checkbox goods_information" >
+            <label class="weui_cell weui_check_label goods_summary">
+                <div class="weui_cell_hd">
+                    <input type="checkbox" class="weui_check" name="checkbox"/>
+                    <i class="weui_icon_checked"></i>
+                </div>
+                <div class="weui_cell_bd weui_cell_primary">
+                    <p id="goods_name">三七粉</p>
+                    <p id="per_price">￥200</p>
+                </div>
+            </label>
+            <div class="number_choose">
+                <button class="min">—</button> 
+                <input class="num_box" name="" type="text" value="1" /> 
+                <button class="add">+</button>
+            </div>
+        </div>
         
     </div>
     <div class="address">
         
     </div>
     <div class="footer">
-        
+        <div class="total_info">
+            <div class="total_money">
+                <p class="sum_price">合计：</p>
+                <p class="sum_price">200元</p>
+            </div>
+            <div class="total_num">
+                <p>共1件</p>
+            </div>
+        </div>
+        <div class="to_pay">
+            <button class="to_pay_btn">去结算</button>
+        </div>
     </div>
 </body>
 <script>
