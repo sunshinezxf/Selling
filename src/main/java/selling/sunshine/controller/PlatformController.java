@@ -55,7 +55,8 @@ public class PlatformController {
         }
         try {
             Subject subject = SecurityUtils.getSubject();
-            if (subject.isAuthenticated()) {
+            if (subject.isAuthenticated() && subject.getPrincipal() != null) {
+            	subject.logout();
                 view.setViewName("redirect:/login");
                 return view;
             }

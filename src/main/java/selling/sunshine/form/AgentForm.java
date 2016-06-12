@@ -35,7 +35,7 @@ public class AgentForm {
     @NotNull
     private String back;
 
-    private String serial;
+    private String upper;
 
     public String getName() {
         return name;
@@ -109,12 +109,12 @@ public class AgentForm {
         this.back = back;
     }
 
-    public String getSerial() {
-        return serial;
+    public String getUpper() {
+        return upper;
     }
 
-    public void setSerial(String serial) {
-        this.serial = serial;
+    public void setUpper(String upper) {
+        this.upper = upper;
     }
 
 

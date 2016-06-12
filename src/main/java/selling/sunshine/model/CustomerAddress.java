@@ -40,4 +40,17 @@ public class CustomerAddress extends Entity {
     public void setCustomer(Customer customer) {
         this.customer = customer;
     }
+    
+    @Override
+    public boolean equals(Object obj){
+    	if(obj instanceof CustomerAddress){
+    		return this.address.equals(((CustomerAddress)obj).getAddress());
+    	}
+    	return false;
+    }
+    
+    @Override
+    public int hashCode(){
+    	return address.hashCode();
+    }
 }
