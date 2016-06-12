@@ -11,6 +11,7 @@ import selling.sunshine.service.CustomerService;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -68,6 +69,9 @@ public class CustomerServiceImpl implements CustomerService {
         ResultData queryResponse = customerDao.queryCustomer(condition);
         result.setResponseCode(queryResponse.getResponseCode());
         if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            if (((List<Customer>) queryResponse.getData()).isEmpty()) {
+                result.setResponseCode(ResponseCode.RESPONSE_NULL);
+            }
             result.setData(queryResponse.getData());
         } else if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
             result.setDescription(queryResponse.getDescription());
