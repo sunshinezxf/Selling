@@ -35,7 +35,7 @@ body {
 
 .unslider-nav{
     position: absolute;
-    top: 0;
+    bottom: 0;
     width:100%;
     height:1.25em;
     z-index:999;
