@@ -1,11 +1,11 @@
 #parse("/common/util.vm")
 <html>
 <head>
-	<link rel="stylesheet"  media="all" href="${path.concat('/plugins/fileInput/css/fileinput.min.css')}"/>
+    <link rel="stylesheet" media="all" href="${path.concat('/plugins/fileInput/css/fileinput.min.css')}"/>
     #parse("/agent/component/init.vm")
-	<script type="text/javascript" src="${path.concat('/plugins/bootstrap/js/bootstrap.min.js')}"></script>
-	<script type="text/javascript" src="${path.concat('/plugins/fileInput/js/fileinput.min.js')}"></script>
-	<script type="text/javascript" src="${path.concat('/plugins/fileInput/js/fileinput_locale_zh.js')}"></script>
+    <script type="text/javascript" src="${path.concat('/plugins/bootstrap/js/bootstrap.min.js')}"></script>
+    <script type="text/javascript" src="${path.concat('/plugins/fileInput/js/fileinput.min.js')}"></script>
+    <script type="text/javascript" src="${path.concat('/plugins/fileInput/js/fileinput_locale_zh.js')}"></script>
     <title>代理商注册</title>
 </head>
 <body ontouchstart>
@@ -13,7 +13,11 @@
     <div class="hd">
         <h1 class="page_title">注册</h1>
 
-        <p class="page_desc">注册申请成为销售代理商</p>
+        #if(${upper})
+            <p class="page_desc">代理${upper.name}发出邀请注册</p>
+        #else
+            <p class="page_desc">注册申请成为销售代理商</p>
+        #end
     </div>
     <div class="bd">
         #parse("/agent/component/register_form.vm")
@@ -25,5 +29,5 @@
     var description = "填写个人信息,提交代理商注册申请";
 </script>
     #parse("/agent/wechat/component/validation.vm")
-    
+
 </html>

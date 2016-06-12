@@ -295,16 +295,47 @@ public class AgentController {
         view.setViewName("/agent/register");
         return view;
     }
-    
+
+    /**
+     * 代理商分享的推广链接
+     *
+     * @param agentId
+     * @return
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "/{agentId}/embrace")
+    public ModelAndView embrace(@PathVariable("agentId") String agentId) {
+        ModelAndView view = new ModelAndView();
+        if (!StringUtils.isEmpty(agentId)) {
+            Map<String, Object> condition = new HashMap<>();
+            condition.put("agentId", agentId);
+            condition.put("granted", true);
+            ResultData fetchResponse = agentService.fetchAgent(condition);
+            if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                Agent agent = ((List<Agent>) fetchResponse.getData()).get(0);
+                view.addObject("upper", agent);
+            }
+        }
+        String url = "http://" + PlatformConfig.getValue("server_url") + "/agent/" + agentId + "/embrace";
+        String configUrl;
+        configUrl = url + "";
+        Configuration configuration = WechatConfig.config(configUrl);
+        configuration.setShareLink(url);
+        view.addObject("configuration", configuration);
+        view.setViewName("/agent/register");
+        return view;
+    }
+
     @RequestMapping(method = RequestMethod.POST, value = "/validate/{phone}")
     @ResponseBody
     public ResultData validate(@PathVariable String phone) {
-    	ResultData resultData=new ResultData();
+        ResultData resultData = new ResultData();
         //验证有没有相同号码的用户注册过
-        Map<String, Object> condition = new HashMap<String, Object>();
+        Map<String, Object> condition = new HashMap<>();
         condition.put("phone", phone);
-        resultData=agentService.fetchAgent(condition);
-    	return resultData;
+        condition.put("blockFlag", false);
+        condition.put("customerBlockFlag", false);
+        resultData = agentService.fetchAgent(condition);
+        return resultData;
     }
 
     /**
@@ -325,15 +356,33 @@ public class AgentController {
         }
         try {
             //验证有没有相同号码的用户注册过
-            Map<String, Object> condition = new HashMap<String, Object>();
+            Map<String, Object> condition = new HashMap<>();
             condition.put("phone", form.getPhone());
             if (agentService.fetchAgent(condition).getResponseCode() == ResponseCode.RESPONSE_OK) {
                 view.setViewName("redirect:/agent/register");
                 return view;
             }
             //根据用户提交的表单构造代理信息
-            Agent agent = new Agent(form.getName(), form.getGender(), form.getPhone(), form.getAddress(), form.getPassword(), form.getWechat());
-            System.err.println(form.getWechat());
+            Agent agent = new Agent(form.getName(), form.getGender(), form.getPhone(), form.getAddress(), form.getPassword(), form.getWechat(), Integer.parseInt(form.getMemberNum()));
+            if (!StringUtils.isEmpty(form.getUpper())) {
+                condition.clear();
+                condition.put("agentId", form.getUpper());
+                condition.put("blockFlag", false);
+                ResultData agentResponse = agentService.fetchAgent(condition);
+                if (agentResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                    agent.setUpperAgent(new selling.sunshine.model.lite.Agent(((List<Agent>) agentResponse.getData()).get(0)));
+                }
+            }
+            if (agent.getUpperAgent() == null) {
+                condition.clear();
+                condition.put("phone", form.getPhone());
+                condition.put("customerBlockFlag", false);
+                ResultData fetchResponse = customerService.fetchCustomer(condition);
+                if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                    Customer customer = ((List<Customer>) fetchResponse.getData()).get(0);
+                    agent.setUpperAgent(customer.getAgent());
+                }
+            }
             ResultData createResponse = agentService.createAgent(agent);
             Credit credit = new Credit(form.getFront(), form.getBack(), new selling.sunshine.model.lite.Agent(agent));
             agentService.createCredit(credit);
@@ -857,9 +906,9 @@ public class AgentController {
         condition.put("agentId", agent.getAgentId());
         condition.put("granted", true);
         ResultData fetchResponse = agentService.fetchAgent(condition);
-        if(fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-        	Agent targetAgent = ((List<Agent>) agentService.fetchAgent(condition).getData()).get(0);
-        	messageService.send(targetAgent.getPhone(), "尊敬的代理商" + targetAgent.getName() + ",您提交的申请信息已经审核通过,欢迎您的加入.【云草纲目】");
+        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            Agent targetAgent = ((List<Agent>) agentService.fetchAgent(condition).getData()).get(0);
+            messageService.send(targetAgent.getPhone(), "尊敬的代理商" + targetAgent.getName() + ",您提交的申请信息已经审核通过,欢迎您的加入.【云草纲目】");
         }
         view.setViewName("redirect:/agent/overview");
         return view;

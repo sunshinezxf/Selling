@@ -128,6 +128,14 @@ public class CommodityController {
         return view;
     }
     
+    @RequestMapping(method = RequestMethod.GET, value = "/{goodsId}/purchase")
+    public ModelAndView purchase(@PathVariable("goodsId") String goodsId) {
+        ModelAndView view = new ModelAndView();
+        
+        view.setViewName("/customer/goods/purchase");
+        return view;
+    }
+    
     @RequestMapping(method = RequestMethod.GET, value = "/forbid/{goodsId}")
     public ModelAndView forbid(@PathVariable("goodsId") String goodsId) {
         ModelAndView view = new ModelAndView();

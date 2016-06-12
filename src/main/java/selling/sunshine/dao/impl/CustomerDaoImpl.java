@@ -221,8 +221,7 @@ public class CustomerDaoImpl extends BaseDao implements CustomerDao {
     public ResultData queryCustomerPhone(Map<String, Object> condition) {
         ResultData result = new ResultData();
         try {
-            List<CustomerPhone> list = sqlSession.selectList(
-                    "selling.customer.phone.query", condition);
+            List<CustomerPhone> list = sqlSession.selectList("selling.customer.phone.query", condition);
             result.setData(list);
             result.setResponseCode(ResponseCode.RESPONSE_OK);
         } catch (Exception e) {

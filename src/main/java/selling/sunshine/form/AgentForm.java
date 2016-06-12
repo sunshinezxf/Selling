@@ -10,11 +10,14 @@ import javax.validation.constraints.NotNull;
 public class AgentForm {
     @NotNull
     private String name;
+
     @NotNull
     private String gender;
+
     @NotNull
     @Length(min = 11, max = 11)
     private String phone;
+
     @NotNull
     private String address;
 
@@ -22,15 +25,17 @@ public class AgentForm {
     private String password;
 
     private String wechat;
-    
+
     @NotNull
     private String memberNum;
-    
+
     @NotNull
     private String front;
-    
+
     @NotNull
     private String back;
+
+    private String upper;
 
     public String getName() {
         return name;
@@ -80,31 +85,37 @@ public class AgentForm {
         this.wechat = wechat;
     }
 
-	public String getMemberNum() {
-		return memberNum;
-	}
+    public String getMemberNum() {
+        return memberNum;
+    }
 
-	public void setMemberNum(String memberNum) {
-		this.memberNum = memberNum;
-	}
+    public void setMemberNum(String memberNum) {
+        this.memberNum = memberNum;
+    }
 
-	public String getFront() {
-		return front;
-	}
+    public String getFront() {
+        return front;
+    }
 
-	public void setFront(String front) {
-		this.front = front;
-	}
+    public void setFront(String front) {
+        this.front = front;
+    }
 
-	public String getBack() {
-		return back;
-	}
+    public String getBack() {
+        return back;
+    }
 
-	public void setBack(String back) {
-		this.back = back;
-	}
+    public void setBack(String back) {
+        this.back = back;
+    }
+
+    public String getUpper() {
+        return upper;
+    }
+
+    public void setUpper(String upper) {
+        this.upper = upper;
+    }
 
 
-    
-    
 }
