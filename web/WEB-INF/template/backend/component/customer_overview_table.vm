@@ -55,7 +55,8 @@
                 {
                     title: "操作", "mRender": function (data, type, full) {
                     var operation = "";
-                    var detail_button = "<button type='button' class='btn btn-info btn-group-sm'>详情</button>&nbsp;"
+                     var detail_url = "${path.concat('/customer/detail/')}" + full.customerId;
+                    var detail_button = "<button type='button' class='btn btn-info btn-group-sm' onclick=\"javascript:location.href='" + detail_url + "'\">详情</button>&nbsp;"
                     operation += detail_button;
                     return operation;
                 }

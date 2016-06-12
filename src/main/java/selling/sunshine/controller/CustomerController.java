@@ -9,20 +9,26 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
 import selling.sunshine.form.CustomerAddressForm;
 import selling.sunshine.form.CustomerForm;
 import selling.sunshine.form.SortRule;
+import selling.sunshine.model.Agent;
 import selling.sunshine.model.Customer;
 import selling.sunshine.model.CustomerAddress;
 import selling.sunshine.model.CustomerPhone;
+import selling.sunshine.model.OrderItem;
 import selling.sunshine.model.User;
 import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
+import selling.sunshine.service.AgentService;
 import selling.sunshine.service.CustomerService;
+import selling.sunshine.service.OrderService;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
 import javax.validation.Valid;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,6 +44,12 @@ public class CustomerController {
 
     @Autowired
     private CustomerService customerService;
+    
+    @Autowired
+    private AgentService agentService;
+    
+    @Autowired
+    private OrderService orderService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/overview")
     public ModelAndView overview() {
@@ -59,6 +71,31 @@ public class CustomerController {
             result = (DataTablePage<Customer>) fetchResponse.getData();
         }
         return result;
+    }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/detail/{customerId}")
+    public ModelAndView detail(@PathVariable String customerId) {
+        ModelAndView view = new ModelAndView();
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("customerId", customerId);
+        Customer customer=((List<Customer>)customerService.fetchCustomer(condition).getData()).get(0);      
+        Map<String, Object> agentCondition = new HashMap<>();
+        agentCondition.put("agentId", customer.getAgent().getAgentId());
+        Agent agent=((List<Agent>)agentService.fetchAgent(agentCondition).getData()).get(0);
+        Map<String, Object> orderItemCondition = new HashMap<>();
+        orderItemCondition.put("customerId", customerId);
+        List<OrderItem> orderItemList=(List<OrderItem>)orderService.fetchOrderItem(orderItemCondition).getData();
+
+        List<CustomerAddress> addressList=(List<CustomerAddress>)customerService.fetchCustomerAddress(condition).getData();
+        List<CustomerPhone> phoneList=(List<CustomerPhone>)customerService.fetchCustomerPhone(condition).getData();
+        
+        view.addObject("customer",customer);
+        view.addObject("agent",agent);
+        view.addObject("orderItemList",orderItemList);	
+        view.addObject("addressList",addressList);	
+        view.addObject("phoneList",phoneList);	
+        view.setViewName("/backend/customer/detail");
+        return view;
     }
 
     @ResponseBody
