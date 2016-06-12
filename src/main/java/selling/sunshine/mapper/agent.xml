@@ -25,8 +25,25 @@
     </resultMap>
 
     <insert id="insert" parameterType="selling.sunshine.model.Agent" useGeneratedKeys="false">
-        INSERT INTO agent(agent_id, agent_name, agent_gender, agent_phone, agent_address, agent_password, agent_wechat, agent_granted, scale, agent_refund, block_flag, create_time,agent_coffer)
-        VALUES (#{agentId}, #{name}, #{gender}, #{phone}, #{address}, #{password}, #{wechat}, #{granted}, #{claimScale}, #{agentRefund}, #{blockFlag}, #{createAt},#{coffer})
+        INSERT INTO agent
+        <set>
+            <if test="upperAgent != null and upperAgent.agentId != null and upperAgent.agentId != ''">
+                upper_agent_id = #{upperAgent.agentId},
+            </if>
+            agent_id = #{agentId},
+            agent_name = #{name},
+            agent_gender = #{gender},
+            agent_phone = #{phone},
+            agent_address = #{address},
+            agent_password = #{password},
+            agent_wechat = #{wechat},
+            agent_granted = #{granted},
+            scale = #{claimScale},
+            agent_refund = #{agentRefund},
+            block_flag = #{blockFlag},
+            create_time = #{createAt},
+            agent_coffer = #{coffer}
+        </set>
     </insert>
 
     <select id="agentLiteQuery" parameterType="java.util.Map" resultMap="agentLiteVo">
@@ -107,8 +124,8 @@
         </set>
         WHERE agent_id = #{agentId}
     </update>
-	
-	<update id="updateCoffer" parameterType="selling.sunshine.model.Agent" useGeneratedKeys="false">
+
+    <update id="updateCoffer" parameterType="selling.sunshine.model.Agent" useGeneratedKeys="false">
         UPDATE agent
         <set>
             agent_coffer = #{coffer}
