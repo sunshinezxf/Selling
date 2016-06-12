@@ -77,7 +77,7 @@
         <input type=""/>
     </div>
     <div class="buy_area">
-        <button class="btn_area">购买</button>
+        <button id="purchase" class="btn_area">购买</button>
     </div>
 
 </body>
@@ -95,6 +95,10 @@
         }).on('swiperight', function(e) {
             data.prev();
         });
+    });
+    
+    $("#purchase").click(function(){
+        window.location.href +='/purchase';
     });
 
 </script>
