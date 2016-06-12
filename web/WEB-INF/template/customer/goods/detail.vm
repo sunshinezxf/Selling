@@ -16,8 +16,8 @@
     <div class="fading-slider">
         <ul>
             <li><img src="${path.concat('/material/goods_img/1.jpg')}" alt="详情图1"></li>
-            <li><img src="${path.concat('/material/goods_img/2.jpg')}" alt="详情图2"></li>
-            <li><img src="${path.concat('/material/goods_img/3.jpg')}" alt="详情图3"></li>
+            <li><img src="${path.concat('/material/goods_img/2.png')}" alt="详情图2"></li>
+            <li><img src="${path.concat('/material/goods_img/3.png')}" alt="详情图3"></li>
         </ul>
     </div>
     <div class="goods_information">
@@ -32,36 +32,52 @@
         </div>
         <div class="goods_details">
             <h2 class="details_title">商品详情</h2>
-            <p class="details_hd">商品名称</p>
-            <p class="details_bd"></p>
-            <p class="details_hd">品牌</p>
-            <p class="details_bd"></p>
-            <p class="details_hd">功效</p>
-            <p class="details_bd"></p>
-            <p class="details_hd">产品包装</p>
-            <p class="details_bd"></p>
-            <p class="details_hd">适用人群</p>
-            <p class="details_bd"></p>
-            <p class="details_hd">产品规格</p>
-            <p class="details_bd"></p>
-            <p class="details_hd">保质期限</p>
-            <p class="details_bd"></p>
-            <p class="details_hd">原产地</p>
-            <p class="details_bd"></p>
-            <p class="details_hd">特别说明</p>
-            <p class="details_bd"></p>
+            <table class="details_table">
+                <tr>
+                    <td class="details_hd">商品名称</td>
+                    <td class="details_bd">三七粉</td>
+                </tr>
+                <tr>
+                    <td class="details_hd">品牌</td>
+                    <td class="details_bd">云草纲目</td>
+                </tr>
+                <tr>
+                    <td class="details_hd">功效</td>
+                    <td class="details_bd">活血化瘀，降脂降糖，延缓衰老</td>
+                </tr>
+                <tr>
+                    <td class="details_hd">产品包装</td>
+                    <td class="details_bd"></td>
+                </tr>
+                <tr>
+                    <td class="details_hd">适用人群</td>
+                    <td class="details_bd"></td>
+                </tr>
+                <tr>
+                    <td class="details_hd">产品规格</td>
+                    <td class="details_bd"></td>
+                </tr>
+                <tr>
+                    <td class="details_hd">保质期限</td>
+                    <td class="details_bd"></td>
+                </tr>
+                <tr>
+                    <td class="details_hd">原产地</td>
+                    <td class="details_bd"></td>
+                </tr>
+                <tr>
+                    <td class="details_hd">特别说明</td>
+                    <td class="details_bd"></td>
+                </tr>
+            </table>
         </div>
     </div>
     <div class="agent_id">
-        <input/>
+                        代理商编号：
+        <input type=""/>
     </div>
     <div class="buy_area">
-        <div class="btn_area">
-            <button>购买</button>
-        </div>
-        <div class="shopping_cart_area">
-            <button>购物车</button>
-        </div>
+        <button class="btn_area">购买</button>
     </div>
 
 </body>
