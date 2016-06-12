@@ -364,11 +364,24 @@ public class AgentController {
             }
             //根据用户提交的表单构造代理信息
             Agent agent = new Agent(form.getName(), form.getGender(), form.getPhone(), form.getAddress(), form.getPassword(), form.getWechat(), Integer.parseInt(form.getMemberNum()));
-            condition.put("customerBlockFlag", false);
-            ResultData fetchResponse = customerService.fetchCustomer(condition);
-            if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-                Customer customer = ((List<Customer>) fetchResponse.getData()).get(0);
-                agent.setUpperAgent(customer.getAgent());
+            if (!StringUtils.isEmpty(form.getUpper())) {
+                condition.clear();
+                condition.put("agentId", form.getUpper());
+                condition.put("blockFlag", false);
+                ResultData agentResponse = agentService.fetchAgent(condition);
+                if (agentResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                    agent.setUpperAgent(new selling.sunshine.model.lite.Agent(((List<Agent>) agentResponse.getData()).get(0)));
+                }
+            }
+            if (agent.getUpperAgent() == null) {
+                condition.clear();
+                condition.put("phone", form.getPhone());
+                condition.put("customerBlockFlag", false);
+                ResultData fetchResponse = customerService.fetchCustomer(condition);
+                if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                    Customer customer = ((List<Customer>) fetchResponse.getData()).get(0);
+                    agent.setUpperAgent(customer.getAgent());
+                }
             }
             ResultData createResponse = agentService.createAgent(agent);
             Credit credit = new Credit(form.getFront(), form.getBack(), new selling.sunshine.model.lite.Agent(agent));
