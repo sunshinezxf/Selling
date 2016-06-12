@@ -296,12 +296,41 @@ public class AgentController {
         return view;
     }
 
+    /**
+     * 代理商分享的推广链接
+     *
+     * @param agentId
+     * @return
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "/{agentId}/embrace")
+    public ModelAndView embrace(@PathVariable("agentId") String agentId) {
+        ModelAndView view = new ModelAndView();
+        if (!StringUtils.isEmpty(agentId)) {
+            Map<String, Object> condition = new HashMap<>();
+            condition.put("agentId", agentId);
+            condition.put("granted", true);
+            ResultData fetchResponse = agentService.fetchAgent(condition);
+            if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                Agent agent = ((List<Agent>) fetchResponse.getData()).get(0);
+                view.addObject("upper", agent);
+            }
+        }
+        String url = "http://" + PlatformConfig.getValue("server_url") + "/agent/" + agentId + "/embrace";
+        String configUrl;
+        configUrl = url + "";
+        Configuration configuration = WechatConfig.config(configUrl);
+        configuration.setShareLink(url);
+        view.addObject("configuration", configuration);
+        view.setViewName("/agent/register");
+        return view;
+    }
+
     @RequestMapping(method = RequestMethod.POST, value = "/validate/{phone}")
     @ResponseBody
     public ResultData validate(@PathVariable String phone) {
         ResultData resultData = new ResultData();
         //验证有没有相同号码的用户注册过
-        Map<String, Object> condition = new HashMap<String, Object>();
+        Map<String, Object> condition = new HashMap<>();
         condition.put("phone", phone);
         condition.put("blockFlag", false);
         condition.put("customerBlockFlag", false);
