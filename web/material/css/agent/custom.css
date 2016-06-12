@@ -325,17 +325,17 @@ body {
 
 .procheckbox{
 	margin-left:0.375em;
-	margin-right:0.9375em;
+	margin-right:0.3em;
 }
 .problock{
 	padding-top:0.2em;
 }
 .problock p{
 	display:inline;
-	font-size:0.795em;
+	font-size:0.8em;
 }
 .problock a{
-	font-size:0.75em;
+	font-size:0.73em;
 	text-decoration:underline;
 }
 
