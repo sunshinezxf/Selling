@@ -98,6 +98,7 @@ public class CustomerController {
         Map<String, Object> condition = new HashMap<>();
         condition.put("phone", customerForm.getPhone());
         condition.put("blockFlag", false);
+        condition.put("customerBlockFlag", false);
         response = customerService.fetchCustomerPhone(condition);
         if (((List<CustomerPhone>) response.getData()).size() != 0) {
             CustomerPhone target = ((List<CustomerPhone>) response.getData()).get(0);
