@@ -58,10 +58,17 @@
                 {
                     title: "操作", "mRender": function (data, type, full) {
                     var operation = "";
-                    var limit_button = "<button type='button' class='btn btn-warning btn-group-sm'>禁用</button>&nbsp;"
+                    if(full.blockFlag){
+                        var enable_url = "${path.concat('/commodity/enable/')}" + full.goodsId;
+                        var enable_button = "<button type='button' class='btn btn-success btn-group-sm' onclick=\"javascript:location.href='" + enable_url + "'\">上架</button>&nbsp;"
+                        operation += enable_button;
+                    }else{
+                        var forbid_url = "${path.concat('/commodity/forbid/')}" + full.goodsId;
+                        var limit_button = "<button type='button' class='btn btn-warning btn-group-sm' onclick=\"javascript:location.href='" + forbid_url + "'\">下架</button>&nbsp;"
+                        operation += limit_button;
+                    }
                     var edit_url = "${path.concat('/commodity/edit/')}" + full.goodsId;
-                    var update_button = "<button type='button' class='btn btn-success btn-group-sm' id='test' onclick=\"javascript:location.href='" + edit_url + "'\" id='" + full.goodsId + "'>修改</button>&nbsp;"
-                    operation += limit_button;
+                    var update_button = "<button type='button' class='btn btn-success btn-group-sm' onclick=\"javascript:location.href='" + edit_url + "'\">修改</button>&nbsp;"
                     operation += update_button;
                     return operation;
                     }

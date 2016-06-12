@@ -76,7 +76,6 @@ public class CommodityController {
 
         view.setViewName("/backend/goods/update");
         return view;
-
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/edit/{goodsId}")
@@ -126,6 +125,42 @@ public class CommodityController {
         ModelAndView view = new ModelAndView();
         
         view.setViewName("/customer/goods/detail");
+        return view;
+    }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/forbid/{goodsId}")
+    public ModelAndView forbid(@PathVariable("goodsId") String goodsId) {
+        ModelAndView view = new ModelAndView();
+        Map<String, Object> condition = new HashMap<String, Object>();
+        condition.put("goodsId", goodsId);
+        ResultData resultData = commodityService.fetchCommodity(condition);
+        if (resultData.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            view.setViewName("redirect:/commodity/overview");
+            return view;
+        }
+        Goods targetGoods = ((ArrayList<Goods>) resultData.getData()).get(0);
+        targetGoods.setBlockFlag(true);
+        commodityService.updateCommodity(targetGoods);
+
+        view.setViewName("redirect:/commodity/overview");
+        return view;
+    }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/enable/{goodsId}")
+    public ModelAndView enable(@PathVariable("goodsId") String goodsId) {
+        ModelAndView view = new ModelAndView();
+        Map<String, Object> condition = new HashMap<String, Object>();
+        condition.put("goodsId", goodsId);
+        ResultData resultData = commodityService.fetchCommodity(condition);
+        if (resultData.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            view.setViewName("redirect:/commodity/overview");
+            return view;
+        }
+        Goods targetGoods = ((ArrayList<Goods>) resultData.getData()).get(0);
+        targetGoods.setBlockFlag(false);
+        commodityService.updateCommodity(targetGoods);
+
+        view.setViewName("redirect:/commodity/overview");
         return view;
     }
 
