@@ -326,7 +326,7 @@ public class AgentController {
         view.setViewName("/agent/register");
         return view;
     }
-
+    
     @RequestMapping(method = RequestMethod.POST, value = "/validate/{phone}")
     @ResponseBody
     public ResultData validate(@PathVariable String phone) {
