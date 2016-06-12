@@ -250,7 +250,8 @@ public class AgentController {
         }
         try {
             Subject subject = SecurityUtils.getSubject();
-            if (subject.isAuthenticated()) {
+            if (subject.isAuthenticated() && subject.getPrincipal() != null) {
+            	subject.logout();
                 view.setViewName("redirect:/agent/order/place");
                 return view;
             }
@@ -261,6 +262,7 @@ public class AgentController {
             return view;
         }
         //
+        Subject subject = SecurityUtils.getSubject();
         view.setViewName("redirect:/agent/order/place");
         return view;
     }
