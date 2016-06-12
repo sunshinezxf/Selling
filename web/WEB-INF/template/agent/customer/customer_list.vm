@@ -30,6 +30,7 @@
     window.onload = function () {
         var url = "${path.concat('/agent/customer/list')}";
         $.post(url, function (result) {
+          if('responseCode' in result){      
         	if(result.description == "您需要重新登录 "){
         		window.location="${path.concat('/agent/login')}";
         		return;
@@ -40,6 +41,7 @@
                 var node = "<a class='weui_cell customer' onclick='updateCustomer(this)' id='" + item.customerId + "' ><div class='weui_cell_bd weui_cell_primary'><p>" + item.name + "</p></div><div class='weui_cell_ft'>" + item.phone.phone + "</div></a>";
                 $("#customer_list").append(node);
             }
+          }
         });
     };
 </script>
