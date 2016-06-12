@@ -63,8 +63,7 @@ public class CustomerController {
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/add")
-    public ResultData addCustomer(@Valid CustomerForm customerForm,
-                                  BindingResult result) {
+    public ResultData addCustomer(@Valid CustomerForm customerForm, BindingResult result) {
         ResultData resultData = new ResultData();
         if (result.hasErrors()) {
             resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
@@ -72,6 +71,7 @@ public class CustomerController {
         }
         Map<String, Object> condition = new HashMap<>();
         condition.put("phone", customerForm.getPhone());
+        condition.put("customerBlockFlag", false);
         resultData = customerService.fetchCustomerPhone(condition);
         if (((List<CustomerPhone>) resultData.getData()).size() != 0) {
             resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
@@ -95,15 +95,15 @@ public class CustomerController {
             return response;
         }
         Map<String, Object> condition = new HashMap<>();
-        condition.put("phone", customerForm.getPhone()); 
+        condition.put("phone", customerForm.getPhone());
         condition.put("blockFlag", false);
         response = customerService.fetchCustomerPhone(condition);
         if (((List<CustomerPhone>) response.getData()).size() != 0) {
-    		CustomerPhone target = ((List<CustomerPhone>) response.getData()).get(0);
-    		if(!target.getCustomer().getCustomerId().equals(customerId)){
-        		response.setResponseCode(ResponseCode.RESPONSE_ERROR);
-        		return response;
-        	}
+            CustomerPhone target = ((List<CustomerPhone>) response.getData()).get(0);
+            if (!target.getCustomer().getCustomerId().equals(customerId)) {
+                response.setResponseCode(ResponseCode.RESPONSE_ERROR);
+                return response;
+            }
         }
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
@@ -200,7 +200,7 @@ public class CustomerController {
         ResultData fetchResponse = customerService.fetchCustomerAddress(condition);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             List<CustomerAddress> addressList = (List<CustomerAddress>) fetchResponse.getData();
-            int size = addressList.size() > 5 ? 5 : addressList.size(); 
+            int size = addressList.size() > 5 ? 5 : addressList.size();
             result.setData(addressList.subList(0, size));
         } else {
             result.setResponseCode(fetchResponse.getResponseCode());
