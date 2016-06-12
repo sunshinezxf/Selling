@@ -28,7 +28,7 @@
             AND customer_phone.customer_phone_id = #{phoneId}
         </if>
         <if test="customerBlockFlag != null">
-            AND customer.customer_id IN (SELECT customer_id from customer WHERE block_flag = #{customerBlockFlag})
+            AND customer_phone.customer_id IN (SELECT customer_id from customer WHERE block_flag = #{customerBlockFlag})
         </if>
         <if test="phone != null and phone != ''">
             AND customer_phone.phone = #{phone}
