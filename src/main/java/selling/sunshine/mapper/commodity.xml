@@ -29,7 +29,7 @@
 		<if test="name != null and name != ''">
 			AND goods_name = #{name}
 		</if>
-		<if test="blockFlag != null and blockFlag != ''">
+		<if test="blockFlag != null">
 			AND block_flag = #{blockFlag}
 		</if>
 		<if test="rule != null and rule != ''">

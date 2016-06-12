@@ -138,8 +138,6 @@ public class CustomerDaoImpl extends BaseDao implements CustomerDao {
         synchronized (lock) {
             try {
                 sqlSession.update("selling.customer.delete", customer);
-                sqlSession.update("selling.customer.phone.delete",customer);
-                sqlSession.update("selling.customer.address.delete",customer);
             } catch (Exception e) {
                 logger.error(e.getMessage());
                 result.setResponseCode(ResponseCode.RESPONSE_ERROR);
@@ -223,8 +221,7 @@ public class CustomerDaoImpl extends BaseDao implements CustomerDao {
     public ResultData queryCustomerPhone(Map<String, Object> condition) {
         ResultData result = new ResultData();
         try {
-            List<CustomerPhone> list = sqlSession.selectList(
-                    "selling.customer.phone.query", condition);
+            List<CustomerPhone> list = sqlSession.selectList("selling.customer.phone.query", condition);
             result.setData(list);
             result.setResponseCode(ResponseCode.RESPONSE_OK);
         } catch (Exception e) {

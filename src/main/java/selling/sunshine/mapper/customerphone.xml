@@ -17,20 +17,24 @@
     </resultMap>
 
     <select id="query" parameterType="java.util.Map" resultMap="phoneVo">
-        SELECT customer_phone_id, customer_id, phone, block_flag, create_time
+        SELECT customer_phone.customer_phone_id, customer_phone.customer_id, customer_phone.phone,
+        customer_phone.block_flag, customer_phone.create_time
         FROM customer_phone
         WHERE 1 = 1
         <if test="customerId != null and customerId != ''">
-        	AND customer_id = #{customerId}
+            AND customer_phone.customer_id = #{customerId}
         </if>
         <if test="phoneId != null and phoneId != ''">
-            AND customer_phone_id = #{phoneId}
+            AND customer_phone.customer_phone_id = #{phoneId}
+        </if>
+        <if test="customerBlockFlag != null">
+            AND customer_phone.customer_id IN (SELECT customer_id from customer WHERE block_flag = #{customerBlockFlag})
         </if>
         <if test="phone != null and phone != ''">
-            AND phone = #{phone}
+            AND customer_phone.phone = #{phone}
         </if>
         <if test="blockFlag != null">
-            AND block_flag = #{blockFlag}
+            AND customer_phone.block_flag = #{blockFlag}
         </if>
         <if test="rule != null and rule != ''">
             ORDER BY ${rule}
@@ -47,13 +51,13 @@
         INSERT INTO customer_phone(customer_phone_id, customer_id, phone, block_flag, create_time)
         VALUES (#{phoneId}, #{customer.customerId}, #{phone}, #{blockFlag}, #{createAt})
     </insert>
-    
+
     <update id="delete" parameterType="selling.sunshine.model.Customer">
-    	UPDATE customer_phone
-    	<set>
-    		block_flag = 1 
-    	</set>
-    	WHERE customer_id = #{customerId}
+        UPDATE customer_phone
+        <set>
+            block_flag = 1
+        </set>
+        WHERE customer_id = #{customerId}
     </update>
 
     <update id="block" parameterType="selling.sunshine.model.CustomerPhone">

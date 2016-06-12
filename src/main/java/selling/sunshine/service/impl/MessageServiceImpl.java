@@ -1,6 +1,7 @@
 package selling.sunshine.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
@@ -25,7 +26,7 @@ public class MessageServiceImpl implements MessageService {
     private Logger logger = LoggerFactory.getLogger(MessageServiceImpl.class);
 
     @Override
-    public ResultData send(String phone, String message) {
+    public ResultData send(final String phone, final String message) {
         ResultData result = new ResultData();
         try {
             Thread thread = new Thread() {
@@ -42,8 +43,6 @@ public class MessageServiceImpl implements MessageService {
                             post(ClientResponse.class, formData);
                     int status = response.getStatus();
                     if (status != HttpStatus.OK.value()) {
-                        result.setResponseCode(ResponseCode.RESPONSE_ERROR);
-                        result.setDescription(JSONObject.toJSONString(response));
                         logger.error(JSONObject.toJSONString(response));
                     }
                 }
@@ -51,6 +50,7 @@ public class MessageServiceImpl implements MessageService {
             thread.start();
         } catch (Exception e) {
             logger.error(e.getMessage());
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
         }
         return result;
     }
