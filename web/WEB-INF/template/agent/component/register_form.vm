@@ -70,11 +70,20 @@
         <div id="protocol" class="weui_cells weui_cells_checkbox protocol" >
             <label class="weui_cell weui_check_label">
                 <div class="weui_cell_hd procheckbox">
-                    <input id="checkbox" type="checkbox" class="weui_check" name="checkbox"/>
+                    <input id="checkbox1" type="checkbox" class="weui_check" name="checkbox"/>
                     <i class="weui_icon_checked"></i>
                 </div>
                 <div class="weui_cell_bd weui_cell_primary problock">
-                    <p>我同意</p><a href="${path.concat('/material/protocol/protocol.pdf')}">《云草纲目公司销售协议》</a>
+                    <p>我同意</p><a href="${path.concat('/material/protocol/云草纲目社群营销合作协议书（试行版）20160608.pdf')}">《云草纲目社群营销合作协议书（试行版）》</a>
+                </div>
+            </label>
+            <label class="weui_cell weui_check_label">
+                <div class="weui_cell_hd procheckbox">
+                    <input id="checkbox2" type="checkbox" class="weui_check" name="checkbox"/>
+                    <i class="weui_icon_checked"></i>
+                </div>
+                <div class="weui_cell_bd weui_cell_primary problock">
+                    <p>我同意</p><a href="${path.concat('/material/protocol/云草纲目社群拓展合作协议书（试行版）20160608.pdf')}">《云草纲目社群拓展合作协议书（试行版）》</a>
                 </div>
             </label>
         </div>
@@ -227,7 +236,14 @@
                 first_inactive();
             }
         });
-		$("#checkbox").change(function(){
+		$("#checkbox1").change(function(){
+			if(information_validate()){
+			    first_active();
+	        } else{
+			    first_inactive();
+		    }
+		});
+		$("#checkbox2").change(function(){
 			if(information_validate()){
 			    first_active();
 	        } else{
@@ -280,8 +296,9 @@
         var address = $("#agent_addr").val();
         var password = $("#agent_password").val();
         var number=$("#num_member").val();
-        var isConfirm = $("#checkbox").prop("checked");
-        if (not_null(name) && not_null(gender) && not_null(phone) && not_null(address) && not_null(password)&& not_null(number)&&isConfirm) {
+        var isConfirm1 = $("#checkbox1").prop("checked");
+        var isConfirm2 = $("#checkbox2").prop("checked");
+        if (not_null(name) && not_null(gender) && not_null(phone) && not_null(address) && not_null(password)&& not_null(number)&&isConfirm1&&isConfirm2) {
             return true;
         }
         return false;
