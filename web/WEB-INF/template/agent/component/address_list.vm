@@ -37,7 +37,7 @@
 				$(address_dom).find(".address").html($.utf8Substr(new_address,25));
 				$(address_dom).closest(".order_item_body").find(".order_item_address").val(new_address);
 			}
-			$("#addres_modify").hide();
+			$("#address_modify").hide();
 			$("#place_order_panel").fadeIn();
 		});
 	});

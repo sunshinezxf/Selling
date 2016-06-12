@@ -1,6 +1,7 @@
 package selling.sunshine.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;

@@ -8,7 +8,7 @@
     #parse("/backend/component/navigate_with_login.vm")
 <div class="container-fluid">
     #parse("/backend/component/sidebar.vm")
-    #parse("/backend/goods/update_goods_form.vm")
+    #parse("/backend/goods/component/update_goods_form.vm")
 </div>
 </body>
 </html>
