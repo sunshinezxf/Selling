@@ -1,0 +1,11 @@
+#parse("/common/util.vm")
+<html lang="zh_CN">
+<head>
+    #parse("/agent/component/init.vm")
+    #parse("/agent/component/init_qrcode.vm")
+    <title>注册邀请</title>
+</head>
+<body>
+
+</body>
+</html>

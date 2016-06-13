@@ -1,0 +1,1 @@
+<script type="text/javascript" src="${path.concat('/plugins/qrcode/jquery.qrcode.min.js')}"></script>
