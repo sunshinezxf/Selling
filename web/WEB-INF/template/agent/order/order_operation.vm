@@ -50,7 +50,6 @@
 </div>
 #parse("/agent/component/navigate.vm")
 <script>
- 	$("#info_me").addClass("weui_bar_item_on");
 	$(document).ready(function(){
 		$.get_order(${type});
 		switch(${type}){
