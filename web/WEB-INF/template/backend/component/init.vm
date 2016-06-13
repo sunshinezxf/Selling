@@ -12,4 +12,3 @@
 <script type="text/javascript" src="${path.concat('/plugins/bootstrap/js/bootstrap.min.js')}"></script>
 <script type="text/javascript" src="${path.concat('/plugins/bootstrap/js/bootstrap-dialog.js')}"></script>
 <script type="text/javascript" src="${path.concat('/material/js/backend/dashboard.js')}"></script>
-<script type="text/javascript" src="${path.concat('/plugins/lodop/LodopFuncs.js')}"></script>
