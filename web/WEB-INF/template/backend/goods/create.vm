@@ -2,6 +2,7 @@
 <html lang="zh_CN">
 <head>
     #parse("/backend/component/init.vm")
+    #parse("/backend/component/init_fileinput.vm")
     <title>添加商品</title>
 </head>
 <body>
