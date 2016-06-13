@@ -98,5 +98,12 @@
                 }
             }
         });
+        
+        $('#check_agent_table tbody tr').on( 'click', function () {
+            alert("test");
+            if ( $(this).hasClass('selected') ) {
+                alert("test");
+            }       
+        });
     });
 </script>
