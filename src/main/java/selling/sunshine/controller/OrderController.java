@@ -181,15 +181,15 @@ public class OrderController {
 		
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "/orderItem/{orderId}")
-	public ModelAndView overviewOrderItem(
+	@RequestMapping(method = RequestMethod.POST, value = "/orderItem/{orderId}")
+	@ResponseBody
+	public ResultData overviewOrderItem(
 			@PathVariable("orderId") String orderId) {
-		ModelAndView view = new ModelAndView();
+		ResultData resultData=new ResultData();
 		Map<String, Object> condition = new HashMap<>();
 		condition.put("orderId", orderId);
 		ResultData orderData = orderService.fetchOrder(condition);
 		Order order = ((List<Order>) orderData.getData()).get(0);
-		view.addObject("order", order);
 		double totalPrices = order.getPrice();
 		Map<String, Object> goods_quantity_Map = new HashMap<>();
 		for (OrderItem item : order.getOrderItems()) {
@@ -203,11 +203,27 @@ public class OrderController {
 				goods_quantity_Map.put(goodsName, goodsQuantity);
 			}
 		}
-		view.addObject("totalPrices", totalPrices);
-		view.addObject("goods_quantity_Map", goods_quantity_Map);
-		view.setViewName("/backend/order/orderItem");
-		return view;
+        Map<String, Object> result=new HashMap<>();
+        result.put("order", order);
+        result.put("totalPrices", totalPrices);
+        result.put("goods_quantity_Map", goods_quantity_Map);
+        resultData.setData(result);
+		return resultData;
 	}
+	
+	@RequestMapping(method = RequestMethod.POST, value = "/statistics")
+	@ResponseBody
+	public ResultData statistics(){
+		ResultData resultData=new ResultData();
+		Map<String, Object> condition = new HashMap<>();
+		List<Order> orderList=  (List<Order>)orderService.fetchOrder(condition).getData();
+		Map<String, Object> dataMap=new HashMap<>();
+		dataMap.put("orderList", orderList);
+		resultData.setData(dataMap);
+		
+		return resultData;
+	}
+
 
 	@RequestMapping(method = RequestMethod.GET, value = "/save")
 	public ModelAndView save() {
