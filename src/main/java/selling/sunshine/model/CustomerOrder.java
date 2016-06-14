@@ -8,6 +8,7 @@ public class CustomerOrder extends Entity {
     private Goods goods;
     private Agent agent;
     private int quantity;
+    private String wechat;
     private String receiverName;
     private String receiverAddress;
     private double totalPrice;
@@ -98,5 +99,13 @@ public class CustomerOrder extends Entity {
 
     public void setStatus(OrderItemStatus status) {
         this.status = status;
+    }
+
+    public String getWechat() {
+        return wechat;
+    }
+
+    public void setWechat(String wechat) {
+        this.wechat = wechat;
     }
 }
