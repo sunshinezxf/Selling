@@ -8,11 +8,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import selling.sunshine.form.GoodsForm;
-import selling.sunshine.model.Agent;
 import selling.sunshine.model.Goods;
 import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
-import selling.sunshine.service.AgentService;
 import selling.sunshine.service.CommodityService;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
@@ -20,7 +18,6 @@ import selling.sunshine.utils.ResultData;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,9 +30,6 @@ public class CommodityController {
 
     @Autowired
     private CommodityService commodityService;
-    
-    @Autowired
-    private AgentService agentService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/create")
     public ModelAndView create() {
@@ -127,33 +121,18 @@ public class CommodityController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{goodsId}")
-    public ModelAndView view(@PathVariable("goodsId") String goodsId, String agentId) {
+    public ModelAndView view(@PathVariable("goodsId") String goodsId) {
         ModelAndView view = new ModelAndView();
-        Map<String, Object> condition = new HashMap<String, Object>();
-        condition.put("goodsId", goodsId);
-        condition.put("blockFlag", false);
-        ResultData fetchCommodityData = commodityService.fetchCommodity(condition);
-        if(fetchCommodityData.getResponseCode() != ResponseCode.RESPONSE_OK){
-        	//这里需要一个错误页面!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        	return view;
-        }
-        Goods goods = ((List<Goods>)fetchCommodityData.getData()).get(0);
         
-        if(agentId != null && agentId != ""){
-	        condition.clear();
-	        condition.put("agentId", agentId);
-	        condition.put("granted", 1);
-	        condition.put("blockFlag", false);
-	        ResultData fetchAgentData = agentService.fetchAgent(condition);
-	        if(fetchAgentData.getResponseCode() != ResponseCode.RESPONSE_OK){
-	        	//这里需要一个错误页面!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	        	return view;
-	        }
-	        Agent agent = ((List<Agent>)fetchAgentData.getData()).get(0);
-	        view.addObject("agent", agent);
-        }
-        view.addObject("goods", goods);
         view.setViewName("/customer/goods/detail");
+        return view;
+    }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/{goodsId}/purchase")
+    public ModelAndView purchase(@PathVariable("goodsId") String goodsId) {
+        ModelAndView view = new ModelAndView();
+        
+        view.setViewName("/customer/goods/purchase");
         return view;
     }
     

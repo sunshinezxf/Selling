@@ -115,8 +115,6 @@
 <script>
     $(document).on('ready', function () {
         $("#goods_thumnail").fileinput({
-            minFileCount: 0,
-            uploadUrl: "${path.concat('/commodity/upload')}",
             deleteUrl: "/site/file-delete",
             browseClass: "btn btn-success",
             browseLabel: "选择图片",
@@ -128,8 +126,8 @@
             uploadLabel: "上传",
             uploadIcon: "<i class=\"glyphicon glyphicon-upload\"></i> ",
             showCaption: false,
-            showRemove: true,
-            showUpload: true,
+            showRemove: false,
+            showUpload: false,
             initialPreviewAsData: true,
             overwriteInitial: false
         });

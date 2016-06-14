@@ -50,6 +50,12 @@
             },
             columns: [
                 {title: "姓名", "mData": "name"},
+                {
+                    title: "姓名", "mRender": function (data, type, full) {
+                    var operation = "<a href='${path.concat('/agent/detail/')}" + full.agentId + "'>"+full.name+"</a>";
+                    return operation;
+                }
+                },
                 {title: "手机", "mData": "phone"},
                 {
                     title: "注册时间", "mRender": function (data, type, full) {
