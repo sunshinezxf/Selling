@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="selling.customer.order">
+    <resultMap id="customerOrderVo" type="selling.sunshine.model.CustomerOrder">
+        <result property="orderId" column="order_id"></result>
+        <result property="wechat" column="wechat"></result>
+        <result property="quantity" column="quantity"></result>
+        <result property="receiverName" column="receiver_name"></result>
+        <result property="receiverAddress" column="receiver_addr"></result>
+        <result property="totalPrice" column="total_price"></result>
+        <result property="status" column="order_status"
+                typeHandler="selling.sunshine.handler.mybatis.order.OrderItemStatusHandler"></result>
+        <association property="goods" column="goodsId = goods_id" select=""></association>
+        <association property="agent" column="agentId = agent_id" select=""></association>
+    </resultMap>
+
+    <insert id="insert" parameterType="selling.sunshine.model.CustomerOrder" useGeneratedKeys="false">
+        INSERT INTO customer_order
+        <set>
+            <if test="wechat != null and wechat != ''">
+                wechat = #{wechat},
+            </if>
+            <if test="agent != null and agent.agentId != null and agent.agentId != ''">
+                agent_id = #{agent.agentId},
+            </if>
+            order_id = #{orderId},
+            quantity = #{quantity},
+            receiver_name = #{receiverName},
+            receiver_addr = #{receiverAddress},
+            total_price = #{totalPrice},
+            ordera_status = #{status},
+            goods_id = #{goods.goodsId}
+        </set>
+    </insert>
+</mapper>
