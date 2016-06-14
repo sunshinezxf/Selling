@@ -363,7 +363,7 @@ public class AgentController {
             goodsList = (List<Goods>) fetchGoodsResponse.getData();
         }
         for(Goods goods : goodsList){
-        	String url =  "http://" + PlatformConfig.getValue("server_url") + "/" + goods.getGoodsId() + "?agentId="  +  user.getAgent().getAgentId();
+        	String url =  "http://" + PlatformConfig.getValue("server_url") + "/commodity/" + goods.getGoodsId() + "?agentId="  +  user.getAgent().getAgentId();
         	urls.add(url);
         }
 		view.addObject("goodsList", goodsList);

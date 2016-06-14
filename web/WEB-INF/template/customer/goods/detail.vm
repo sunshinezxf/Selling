@@ -38,7 +38,12 @@
             <table>
                 <tr>
                     <td class="hd">
-                        <label class="id_label"> 代理商编号：</label>
+                        <label class="id_label">
+                        	 代理商编号：
+                        	 #if(${agent})
+                        	 	<span>${agent.agentId}</span>
+                        	 #end
+                        </label>
                     </td>
                     <td class="bd">
                         <input id="agent_id" class="id_input" type="text"/>
