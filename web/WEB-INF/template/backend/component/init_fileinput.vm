@@ -1,0 +1,3 @@
+<link rel="stylesheet" href="${path.concat('/plugins/fileinput/css/fileinput.min.css')}"/>
+<script type="text/javascript" src="${path.concat('/plugins/fileinput/js/fileinput.min.js')}"></script>
+<script type="text/javascript" src="${path.concat('/plugins/fileinput/js/fileinput_locale_zh.js')}"></script>

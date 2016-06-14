@@ -1,0 +1,42 @@
+<div class="modal fade" id="order_item_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">x</button>
+                <h4 class="modal-title">订单详情</h4>
+            </div>
+            <div class="modal-body">
+                 <p class="text-info" id="model_p"></p>
+                 <table class="table table-striped" id="model_table">
+
+                </table>
+                <p class="text-info" id="model_total"></p>
+                <p class="text-info" id="model_quantity"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="confirm">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        $("#config_modal").modal({
+            show: false,
+            keyboard: true
+        });
+    });
+    
+    function expressDetail(obj){
+        window.location.href = "${path.concat('/express/')}"+obj.id;     
+    }
+    
+    $("#confirm").on('click', function () {
+      var f = document.getElementById("model_table"); 
+      var childs = f.childNodes; 
+      for(var i = childs.length - 1; i >= 0; i--) { 
+          f.removeChild(childs[i]); 
+      }
+      var p1
+   });
+</script>

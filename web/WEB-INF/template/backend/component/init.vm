@@ -1,15 +1,11 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<link rel="stylesheet" href="${path.concat('/plugins/bootstrap/css/fileinput.css')}"/>
+
 <link rel="stylesheet" href="${path.concat('/plugins/bootstrap/css/bootstrap.min.css')}"/>
 <link rel="stylesheet" href="${path.concat('/plugins/bootstrap/css/bootstrap-dialog.css')}"/>
+<link rel="stylesheet" type="text/css" href="${path.concat('/plugins/Font-Awesome/css/font-awesome.css')}"/>
 <link rel="stylesheet" href="${path.concat('/material/css/backend/custom.css')}"/>
-<link rel="stylesheet" type="text/css"
-      href="${path.concat('/plugins/Font-Awesome/css/font-awesome.css')}"/>
 <script type="text/javascript" src="${path.concat('/plugins/jquery/jquery-1.12.3.min.js')}"></script>
-<script type="text/javascript" src="${path.concat('/plugins/bootstrap/js/fileinput.js')}"></script>
-<script type="text/javascript" src="${path.concat('/plugins/bootstrap/js/locales/zh.js')}"></script>
 <script type="text/javascript" src="${path.concat('/plugins/bootstrap/js/bootstrap.min.js')}"></script>
 <script type="text/javascript" src="${path.concat('/plugins/bootstrap/js/bootstrap-dialog.js')}"></script>
 <script type="text/javascript" src="${path.concat('/material/js/backend/dashboard.js')}"></script>
-<script type="text/javascript" src="${path.concat('/plugins/lodop/LodopFuncs.js')}"></script>

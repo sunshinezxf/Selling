@@ -15,6 +15,7 @@
         </div>
     </div>
 </div>
+#parse("/backend/component/order_item_modal.vm")
 
 <script>
 
@@ -24,54 +25,80 @@
     var length= 5;
     var total=0;
 
+    var goods_quantity_list = new Object();
+    var quantity_num_list=new Object();
     $(document).ready(function () {
+        $.post("${path.concat('/order/statistics')}", function (result) {
+        for(var i=0; i<result.data.orderList.length; i++){
+                  var order= result.data.orderList[i];  
+                  var orderItems=order.orderItems;
+                  for(var j=0; j<orderItems.length; j++){
+                       var name=orderItems[j].goods.name;  
+                       var goodsQuantity= orderItems[j].goodsQuantity;                   
+                       if(goods_quantity_list[name] == undefined) {
+        		          goods_quantity_list[name] = new Object();
+        		          goods_quantity_list[name]['quantity'] = orderItems[j].goodsQuantity;        		       
+        	           } else {
+        		          goods_quantity_list[name]['quantity'] += orderItems[j].goodsQuantity;
+        	           }
+        	           if(quantity_num_list[name] == undefined){
+        	               quantity_num_list[name] = new Object();
+        	               if(quantity_num_list[name][goodsQuantity] == undefined){
+        	                   quantity_num_list[name][goodsQuantity] = new Object();
+        	                   quantity_num_list[name][goodsQuantity]['num'] = 1;     
+        	               }else {
+        		               quantity_num_list[name][goodsQuantity]['num'] += 1;
+        	               }
+        	           }else{
+        	               if(quantity_num_list[name][goodsQuantity] == undefined){
+        	                   quantity_num_list[name][goodsQuantity] = new Object();
+        	                   quantity_num_list[name][goodsQuantity]['num'] = 1;     
+        	               }else {
+        		               quantity_num_list[name][goodsQuantity]['num'] += 1;
+        	               }
+        	           }
+                  }                 
+            }
+            var node="";
+            for(var goods_quantity in goods_quantity_list){             
+                node=node+goods_quantity+"总计:&nbsp;"+goods_quantity_list[goods_quantity]['quantity']+"盒  &nbsp;";
+            }
+            node+="<br>"
+            for(var name in quantity_num_list){  
+               for(var quantity_num in quantity_num_list[name]){
+                    node=node+name+quantity_num+"盒:&nbsp;"+quantity_num_list[name][quantity_num]['num']+"个  &nbsp;";
+               }                         
+            }
+            document.getElementById("total").innerHTML="待处理订单累计：<strong>"+result.data.orderList.length+"笔</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' class='btn btn-info' onclick=expressAll()>一键发货</button><br>"+node;
+        
+        });
+       
         $.post(url, {
             start: start,
             length :length,
         }, function (result) {
             total=result.total;
-            var orderList=result.data;   
-            document.getElementById("total").innerHTML="待处理订单累计：<strong>"+total+"笔</estrong>";
+            var orderList=result.data;            
+            
             if(total<length){
                length=total;
             }
+            var node1 = "<table class='table table-striped' style='margin-bottom: 0.2em' id='order_table'><colgroup><col width='25%'></col><col width='25%'></col><col width='25%'></col><col width='25%'></col></colgroup><tr><th>订单号</th><th>代理商</th><th>总计</th><td>操作</td></tr>";
+                          
             for (var i = 0; i < length; i++) {  
-                var order= orderList[i];   
-                      
-                var node1 = "<div class='bs-callout text-success' id='" + order.orderId + "'><p>代理商"+ order.agent.name+ "订单</p></div><br/>";
-                $("#check_order_table").append(node1);
-                var orderItems=order.orderItems;
-
-                var node2 = "<table class='table table-striped' style='margin-bottom: 0.2em'><colgroup><col width='25%'></col><col width='25%'></col><col width='25%'></col><col width='25%'></col></colgroup><tr><th>客户</th><th>产品</th><th>数量</th><th>价格</th></tr>";
+                var order= orderList[i];                     
+                var orderItems=order.orderItems;           
                 var totalPrice=0;
                 var goods_quantity_list = new Object();
-                for(var j=0; j<orderItems.length; j++){
-                    var node3="<tr><td>" +orderItems[j].customer.name+ "</td><td>" +orderItems[j].goods.name+ "</td><td>" +orderItems[j].goodsQuantity+ "</td><td>" +orderItems[j].orderItemPrice+ "</td></tr>";
-                    node2=node2+node3;
+                for(var j=0; j<orderItems.length; j++){	
                     totalPrice=totalPrice+orderItems[j].orderItemPrice;
-                    var name=orderItems[j].goods.name;
-                    
-                    if(goods_quantity_list[name] == undefined) {
-        		       goods_quantity_list[name] = new Object();
-        		       goods_quantity_list[name]['quantity'] = orderItems[j].goodsQuantity;        		       
-        	        } else {
-        		       goods_quantity_list[name]['quantity'] += orderItems[j].goodsQuantity;
-        	        }
                 }
-                node2=node2+"</table>";
-                $("#"+order.orderId).append(node2);
+                var node2="<tr id='" + order.orderId + "' onclick=detail(this) data-toggle='modal' data-target='#order_item_modal'><td>" +order.orderId+ "</td><td>" +order.agent.name+ "</td><td>" +totalPrice+ "元</td><td><button type='button' class='btn btn-info' onclick=express(this)>发货</button></td></tr>";          
+                node1+=node2;
+            }            
+            node1=node1+"</table>";
+            $("#check_order_table").append(node1);
                 
-                var node4="<p>总计:&nbsp;"+ totalPrice+ "元,&nbsp;";
-                for(var goods_quantity in goods_quantity_list){
-                      node4=node4+goods_quantity+":&nbsp;"+goods_quantity_list[goods_quantity]['quantity']+"件  &nbsp;";
-                }
-                node4=node4+"</p>";
-                $("#"+order.orderId).append(node4);
-                var node5="<button type='button' class='btn btn-info' onclick=express(this)>一键发货</button>";
-                $("#"+order.orderId).append(node5);
-                
-                
-            }
             total-=length;
             if(total>0){
                  var node6="<button type='button' class='btn btn-success' id='loadMore' onclick=loadTable(this)>加载更多</button>";
@@ -85,9 +112,37 @@
     
 </script>
 <script>
-    var parentId;
+    function detail(obj){
+        $.post("${path.concat('/order/orderItem/')}"+obj.id, function (result) {
+            #*
+            alert(result.data.totalPrices);
+            alert(result.data.order);
+            alert(result.data.goods_quantity_Map);
+            *#
+            document.getElementById("model_p").innerHTML="代理商："+result.data.order.agent.name;
+
+            var node="<tr><th>客户</th><th>产品</th><th>数量</th><th>价格</th><th>快递单</th></tr>";
+            for(var i=0;i<result.data.order.orderItems.length;i++){
+               var orderItem=result.data.order.orderItems[i];
+               node+="<tr><td>"+orderItem.customer.name+"</td><td>"+orderItem.goods.name+"</td><td>"+orderItem.goodsQuantity+"</td><td>"+orderItem.orderItemPrice+"</td>";
+               if(orderItem.status=="SHIPPED"){
+                  node+="<td><button type='button' class='btn btn-success' id='" + orderItem.orderItemId + "' onclick=expressDetail(this)>快递单详情</button></td></tr>";
+               }else{
+                  node+="<td>无快递单</td></tr>";
+               }
+            }
+            $("#model_table").append(node);
+            document.getElementById("model_total").innerHTML="总计:&nbsp;"+result.data.totalPrices+"元";
+            var node1="";
+            for(var key in result.data.goods_quantity_Map){
+                node1+="商品:&nbsp;"+key+"&nbsp;&nbsp;&nbsp;&nbsp;总共:&nbsp;"+result.data.goods_quantity_Map[key]+"件<br>"
+            }
+            document.getElementById("model_quantity").innerHTML=node1;
+       });
+    }
+    
     function express(obj){
-      parentId= obj.parentElement.id 
+      var parentId= obj.parentElement.id 
       var turnForm = document.createElement("form");       
       document.body.appendChild(turnForm);
       turnForm.method = 'post';
@@ -99,8 +154,12 @@
       turnForm.appendChild(newElement);
       turnForm.submit();
       #*
-      window.location.href = "${path.concat('/order/express/')}"+parentId;
+      window.location.href = "${path.concat('/order/express/')}"+id;
       *#
+    }
+    
+    function expressAll(){
+       window.location.href = "${path.concat('/order/express')}";
     }
     
     function loadTable(obj){
@@ -114,46 +173,25 @@
                  if(total<length){	
                      length=total;		
                  }
-                 for (var i = 0; i < length; i++) {  
-                     var order= orderList[i];   
-                      
-                     var node1 = "<div class='bs-callout text-success' id='" + order.orderId + "'><p>代理商"+ order.agent.name+ "订单</p></div><br/>";
-                     $("#check_order_table").append(node1);
-                     var orderItems=order.orderItems;
-
-                     var node2 = "<table class='table table-striped' style='margin-bottom: 0.2em'><colgroup><col width='25%'></col><col width='25%'></col><col width='25%'></col><col width='25%'></col></colgroup><tr><th>客户</th><th>产品</th><th>数量</th><th>价格</th></tr>";
-                     var totalPrice=0;
-                     var goods_quantity_list = new Object();
-                     for(var j=0; j<orderItems.length; j++){
-                         var node3="<tr><td>" +orderItems[j].customer.name+ "</td><td>" +orderItems[j].goods.name+ "</td><td>" +orderItems[j].goodsQuantity+ "</td><td>" +orderItems[j].orderItemPrice+ "</td></tr>";
-                         node2=node2+node3;
-                         totalPrice=totalPrice+orderItems[j].orderItemPrice;
-                         var name=orderItems[j].goods.name;
-                    
-                         if(goods_quantity_list[name] == undefined) {
-        		            goods_quantity_list[name] = new Object();
-        		            goods_quantity_list[name]['quantity'] = orderItems[j].goodsQuantity;        		       
-        	             } else {
-        		            goods_quantity_list[name]['quantity'] += orderItems[j].goodsQuantity;
-        	              }
-                     }
-                     node2=node2+"</table>";
-                     $("#"+order.orderId).append(node2);
+            for (var i = 0; i < length; i++) {  
+                var order= orderList[i];                     
+                var orderItems=order.orderItems;           
+                var totalPrice=0;
+                var goods_quantity_list = new Object();
+                for(var j=0; j<orderItems.length; j++){	
+                    totalPrice=totalPrice+orderItems[j].orderItemPrice;
+                }
+                var node="<tr id='" + order.orderId + "' onclick=detail(this) data-toggle='modal' data-target='#order_item_modal'><td>" +order.orderId+ "</td><td>" +order.agent.name+ "</td><td>" +totalPrice+ "元</td><td><button type='button' class='btn btn-info' onclick=express(this)>发货</button></td></tr>";          
+                $("#order_table").append(node);
+            }            
+            
                 
-                     var node4="<p>总计:&nbsp;"+ totalPrice+ "元,&nbsp;";
-                     for(var goods_quantity in goods_quantity_list){
-                         node4=node4+goods_quantity+":&nbsp;"+goods_quantity_list[goods_quantity]['quantity']+"件  &nbsp;";
-                     }
-                     node4=node4+"</p>";
-                     $("#"+order.orderId).append(node4);
-                     var node5="<button type='button' class='btn btn-info' onclick=express(this)>一键发货</button>";
-                     $("#"+order.orderId).append(node5);              
-                }
-                total-=length;   
-                if(total>0){
-                   var node6="<button type='button' class='btn btn-success' id='loadMore' onclick=loadTable(this)>加载更多</button>";
-                   $("#check_order_table").append(node6);
-                }
+            total-=length;
+            if(total>0){
+                 var node6="<button type='button' class='btn btn-success' id='loadMore' onclick=loadTable(this)>加载更多</button>";
+                 $("#check_order_table").append(node6);
+            }
+                 
          });   
       }
         

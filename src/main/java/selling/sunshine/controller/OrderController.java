@@ -114,6 +114,41 @@ public class OrderController {
 		return result;
 	}
 	
+	@RequestMapping(method = RequestMethod.GET, value = "/express")
+	public ModelAndView express() {
+		ModelAndView view = new ModelAndView();
+		Map<String, Object> condition = new HashMap<>();
+		List<Order> orderList= (List<Order>)orderService.fetchOrder(condition).getData();
+		List<Express> expressList=new ArrayList<>();
+		Timestamp expressDate=new Timestamp(System.currentTimeMillis());
+		for (int j = 0; j < orderList.size(); j++) {
+			Order order = orderList.get(j);
+			// 验证order的每一项orderItem购买的商品的数量与相应的价格是否一致
+			// 若不一致，则将不一致的那一项删除，并且把钱退回给代理商并告知他
+			// 同时，根据不同情况修改order的状态和orderItem的状态
+			List<OrderItem> orderItems = order.getOrderItems();
+			for (OrderItem item : orderItems) {
+				if (item.getOrderItemPrice() != (item.getGoodsQuantity() * item
+						.getGoods().getPrice())) {
+					
+				} 
+			}			
+			for (int i = 0; i < orderItems.size(); i++) {
+				Express express = new Express("代填", "云草纲目",
+						"18000000000", "云南", orderItems.get(i).getCustomer()
+								.getName(), orderItems.get(i).getCustomer()
+								.getPhone().getPhone(), orderItems.get(i)
+								.getCustomer().getAddress().getAddress(), orderItems.get(i).getGoods().getName(),expressDate);
+				express.setExpressId("expressNumber"+i);
+				express.setOrderItem(orderItems.get(i));
+				expressList.add(express);
+			}
+		}
+		view.addObject("expressList", expressList);
+		view.setViewName("/backend/order/express");
+		return view;
+	}
+	
 	@RequestMapping(method = RequestMethod.POST, value = "/express")
 	public ModelAndView express(HttpServletRequest request) {
 		ModelAndView view = new ModelAndView();
@@ -181,15 +216,15 @@ public class OrderController {
 		
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "/orderItem/{orderId}")
-	public ModelAndView overviewOrderItem(
+	@RequestMapping(method = RequestMethod.POST, value = "/orderItem/{orderId}")
+	@ResponseBody
+	public ResultData overviewOrderItem(
 			@PathVariable("orderId") String orderId) {
-		ModelAndView view = new ModelAndView();
+		ResultData resultData=new ResultData();
 		Map<String, Object> condition = new HashMap<>();
 		condition.put("orderId", orderId);
 		ResultData orderData = orderService.fetchOrder(condition);
 		Order order = ((List<Order>) orderData.getData()).get(0);
-		view.addObject("order", order);
 		double totalPrices = order.getPrice();
 		Map<String, Object> goods_quantity_Map = new HashMap<>();
 		for (OrderItem item : order.getOrderItems()) {
@@ -203,11 +238,30 @@ public class OrderController {
 				goods_quantity_Map.put(goodsName, goodsQuantity);
 			}
 		}
-		view.addObject("totalPrices", totalPrices);
-		view.addObject("goods_quantity_Map", goods_quantity_Map);
-		view.setViewName("/backend/order/orderItem");
-		return view;
+        Map<String, Object> result=new HashMap<>();
+        result.put("order", order);
+        result.put("totalPrices", totalPrices);
+        result.put("goods_quantity_Map", goods_quantity_Map);
+        resultData.setData(result);
+		return resultData;
 	}
+	
+	/*
+	 * 返回order的一些统计数据
+	 */
+	@RequestMapping(method = RequestMethod.POST, value = "/statistics")
+	@ResponseBody
+	public ResultData statistics(){
+		ResultData resultData=new ResultData();
+		Map<String, Object> condition = new HashMap<>();
+		List<Order> orderList=  (List<Order>)orderService.fetchOrder(condition).getData();
+		Map<String, Object> dataMap=new HashMap<>();
+		dataMap.put("orderList", orderList);
+		resultData.setData(dataMap);
+		
+		return resultData;
+	}
+
 
 	@RequestMapping(method = RequestMethod.GET, value = "/save")
 	public ModelAndView save() {

@@ -64,7 +64,7 @@
                     }
                     return full.upperAgent.name;
                 }
-                },
+                },   
                 {
                     title: "操作", "mRender": function (data, type, full) {
                     var operation = "";
@@ -97,6 +97,13 @@
                     "last": "尾页"
                 }
             }
+        });
+        
+        $('#check_agent_table tbody tr').on( 'click', function () {
+            alert("test");
+            if ( $(this).hasClass('selected') ) {
+                alert("test");
+            }       
         });
     });
 </script>
