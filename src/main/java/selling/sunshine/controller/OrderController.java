@@ -114,41 +114,6 @@ public class OrderController {
 		return result;
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value = "/express")
-	public ModelAndView express() {
-		ModelAndView view = new ModelAndView();
-		Map<String, Object> condition = new HashMap<>();
-		List<Order> orderList= (List<Order>)orderService.fetchOrder(condition).getData();
-		List<Express> expressList=new ArrayList<>();
-		Timestamp expressDate=new Timestamp(System.currentTimeMillis());
-		for (int j = 0; j < orderList.size(); j++) {
-			Order order = orderList.get(j);
-			// 验证order的每一项orderItem购买的商品的数量与相应的价格是否一致
-			// 若不一致，则将不一致的那一项删除，并且把钱退回给代理商并告知他
-			// 同时，根据不同情况修改order的状态和orderItem的状态
-			List<OrderItem> orderItems = order.getOrderItems();
-			for (OrderItem item : orderItems) {
-				if (item.getOrderItemPrice() != (item.getGoodsQuantity() * item
-						.getGoods().getPrice())) {
-					
-				} 
-			}			
-			for (int i = 0; i < orderItems.size(); i++) {
-				Express express = new Express("代填", "云草纲目",
-						"18000000000", "云南", orderItems.get(i).getCustomer()
-								.getName(), orderItems.get(i).getCustomer()
-								.getPhone().getPhone(), orderItems.get(i)
-								.getCustomer().getAddress().getAddress(), orderItems.get(i).getGoods().getName(),expressDate);
-				express.setExpressId("expressNumber"+i);
-				express.setOrderItem(orderItems.get(i));
-				expressList.add(express);
-			}
-		}
-		view.addObject("expressList", expressList);
-		view.setViewName("/backend/order/express");
-		return view;
-	}
-	
 	@RequestMapping(method = RequestMethod.POST, value = "/express")
 	public ModelAndView express(HttpServletRequest request) {
 		ModelAndView view = new ModelAndView();
@@ -246,9 +211,6 @@ public class OrderController {
 		return resultData;
 	}
 	
-	/*
-	 * 返回order的一些统计数据
-	 */
 	@RequestMapping(method = RequestMethod.POST, value = "/statistics")
 	@ResponseBody
 	public ResultData statistics(){
@@ -533,7 +495,7 @@ public class OrderController {
 		}
 		return charge;
 	}
-
+	
 
 
 }

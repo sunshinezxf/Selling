@@ -14,7 +14,7 @@ public class PurchaseForm {
 	private String goodsNum;
 	
 	@NotNull
-	private String agentName;
+	private String customerName;
 	
 	@NotNull
 	@Length(min = 11, max = 11)
@@ -49,12 +49,12 @@ public class PurchaseForm {
 		this.goodsNum = goodsNum;
 	}
 
-	public String getAgentName() {
-		return agentName;
+	public String getCustomerName() {
+		return customerName;
 	}
 
-	public void setAgentName(String agentName) {
-		this.agentName = agentName;
+	public void setCustomerName(String customerName) {
+		this.customerName = customerName;
 	}
 
 	public String getPhone() {
