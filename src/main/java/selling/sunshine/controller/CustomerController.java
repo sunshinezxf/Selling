@@ -52,21 +52,23 @@ public class CustomerController {
     @Autowired
     private OrderService orderService;
 
-    @RequestMapping(method = RequestMethod.GET, value = "/overview")
-    public ModelAndView overview() {
+    @RequestMapping(method = RequestMethod.GET, value = "/overview/{agentId}")
+    public ModelAndView overview(@PathVariable String agentId) {
         ModelAndView view = new ModelAndView();
         view.setViewName("/backend/customer/overview");
+        view.addObject("agentId", agentId);
         return view;
     }
 
     @ResponseBody
-    @RequestMapping(method = RequestMethod.POST, value = "/overview")
-    public DataTablePage<Customer> overview(DataTableParam param) {
+    @RequestMapping(method = RequestMethod.POST, value = "/overview/{agentId}")
+    public DataTablePage<Customer> overview(@PathVariable String agentId,DataTableParam param) {
         DataTablePage<Customer> result = new DataTablePage<Customer>();
         if (StringUtils.isEmpty(result)) {
             return result;
         }
         Map<String, Object> condition = new HashMap<String, Object>();
+        condition.put("agentId", agentId);
         ResultData fetchResponse = customerService.fetchCustomer(condition, param);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             result = (DataTablePage<Customer>) fetchResponse.getData();

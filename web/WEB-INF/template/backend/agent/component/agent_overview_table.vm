@@ -76,7 +76,7 @@
                         url: url,
                         async: false,
                         success: function (result) {
-                            var customerNum = "<a href='#'>"+result.data.customerNum+"</a>";
+                            var customerNum = "<a href='${path.concat('/customer/overview/')}" + full.agentId + "'>"+result.data.customerNum+"</a>";
                             option += customerNum;
                         }
                     });
