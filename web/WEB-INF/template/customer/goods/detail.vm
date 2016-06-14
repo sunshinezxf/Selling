@@ -57,9 +57,9 @@
          	    <div class="number_area">
                     <p>数量</p>
                     <div class="number_choose">
-                        <button class="min">—</button> 
-                        <input class="num_box" name="" type="text" value="1" /> 
-                        <button class="add">+</button>
+                        <button id="min_btn" class="min">—</button> 
+                        <input id="goods_num" class="num_box" name="" type="text" value="1" /> 
+                        <button id="add_btn" class="add">+</button>
                     </div>
                 </div>
                 <div class="address_area">
@@ -72,7 +72,7 @@
                                          <label class="weui_label">姓名</label>
                                      </div>
                                      <div class="weui_cell_bd weui_cell_primary">
-                                         <input id="customer_name" name="name" class="weui_input" type="text" placeholder="请填写收货人姓名"
+                                         <input id="customer_name" name="customerName" class="weui_input" type="text" placeholder="请填写收货人姓名"
                                          autocomplete="off"/>
                                      </div>
                                  </div>
@@ -147,8 +147,49 @@
         }).on('swiperight', function(e) {
             data.prev();
         });
-        
+    });
+</script>
+<script>
+    $(function() {
+        var goodsNum=$('#goods_num').val();
+        if(goodsNum==1){
+            $('#min_btn').attr("disabled","disabled");
+        }
+                    
         $('#province').ProvinceCity();
+        
+        $('#customer_name').on('input propertychange',function(){
+            if(addressInfo_validate()){
+                active();
+            }else{
+                inactive();
+            }
+        });
+        
+        $('#customer_phone').on('input propertychange',function(){
+            if(addressInfo_validate()){
+                active();
+            }else{
+                inactive();
+            }
+        });
+        
+        $('#customer_address').on('input propertychange',function(){
+            if(addressInfo_validate()){
+                active();
+            }else{
+                inactive();
+            }
+        });
+        
+        $('#postcode').on('input propertychange',function(){
+            if(addressInfo_validate()){
+                active();
+            }else{
+                inactive();
+            }
+        });
+        
     });
     
     $('#purchase').click(function(){
@@ -175,6 +216,39 @@
                 number_div.hide();
             })
         }
+    }
+    
+    function addressInfo_validate(){
+        var name=$('#customer_name').val();
+        var phone=$('#customer_phone').val();
+        var address=$('#customer_address').val();
+        var postcode=$('#postcode').val();
+        if(not_null(name)&&not_null(phone)&&not_null(address)&&not_null(postcode)){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    
+    function active(){
+        $("#confirm").removeAttr("disabled");
+        $("#confirm").removeClass("weui_btn_disabled");
+        $("#confirm").removeClass("weui_btn_default");
+        $("#confirm").addClass("weui_btn_primary");
+    }
+    
+    function inactive(){
+        $("#confirm").attr("disabled", "disabled");
+        $("#confirm").removeClass("weui_btn_primary");
+        $("#confirm").addClass("weui_btn_disabled");
+        $("#confirm").addClass("weui_btn_default");
+    }
+    
+    function not_null(item) {
+        if (item == null || item == "" || item.length <= 0) {
+            return false;
+        }
+        return true;
     }
     
     $('#confirm').click(function(){
