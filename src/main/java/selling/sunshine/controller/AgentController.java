@@ -62,6 +62,9 @@ public class AgentController {
 
     @Autowired
     private MessageService messageService;
+    
+    @Autowired
+    private WithdrawService withdrawService;
 
     /**
      * 根据微信服务号的菜单入口传參,获取当前微信用户,并返回绑定账号页面
@@ -1072,4 +1075,29 @@ public class AgentController {
 		
 		return resultData;
 	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/detail/{agentId}")
+	public ModelAndView detail(@PathVariable String agentId){
+		ModelAndView view=new ModelAndView();
+		//代理商个人信息
+		Map<String, Object> condition = new HashMap<>();
+		condition.put("agentId", agentId);
+		Agent agent=((List<Agent>)agentService.fetchAgent(condition).getData()).get(0);
+		
+		//代理商订单信息
+		List<Order> orderList=(List<Order>)orderService.fetchOrder(condition).getData();
+		//代理商返现信息
+		List<RefundRecord> refundRecordList=(List<RefundRecord>)refundService.fetchRefundRecord(condition).getData();
+		//代理商提现信息
+		List<WithdrawRecord> withdrawRecordList=(List<WithdrawRecord>)withdrawService.fetchWithdrawRecord(condition).getData();
+		
+		view.setViewName("/backend/agent/detail");
+		view.addObject("agent", agent);
+		view.addObject("orderList", orderList);
+		view.addObject("refundRecordList", refundRecordList);
+		view.addObject("withdrawRecordList", withdrawRecordList);
+		return view;
+	}
+	
+
 }

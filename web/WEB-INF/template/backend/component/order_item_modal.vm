@@ -6,8 +6,8 @@
                 <h4 class="modal-title">订单详情</h4>
             </div>
             <div class="modal-body">
-                 <p class="text-info" id="model_p"></p>
-                 <table class="table table-striped" id="model_table">
+                <p class="text-info" id="model_p"></p>
+                <table class="table table-striped" id="model_table">
 
                 </table>
                 <p class="text-info" id="model_total"></p>
