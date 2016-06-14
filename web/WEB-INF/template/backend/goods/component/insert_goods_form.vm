@@ -46,11 +46,21 @@
                 </div>
                 <div class="form-group">
                     <label class="col-sm-2 col-md-2 col-lg-2 control-label" for="goods_price">
-                        商品单价
+                        商品原价
                     </label>
 
                     <div class="col-sm-8 col-md-8 col-lg-8">
                         <input type="number" class="form-control" id="goods_price" name="price" placeholder="商品价格"
+                               required="" autocomplete="off"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 col-md-2 col-lg-2 control-label" for="agent_price">
+                        代理价格
+                    </label>
+
+                    <div class="col-sm-8 col-md-8 col-lg-8">
+                        <input type="number" class="form-control" id="agent_price" name="price" placeholder="代理商价格"
                                required="" autocomplete="off"/>
                     </div>
                 </div>
@@ -115,6 +125,7 @@
 <script>
     $(document).on('ready', function () {
         $("#goods_thumnail").fileinput({
+            uploadUrl: "/dfadf",
             deleteUrl: "/site/file-delete",
             browseClass: "btn btn-success",
             browseLabel: "选择图片",
@@ -128,8 +139,10 @@
             showCaption: false,
             showRemove: false,
             showUpload: false,
+            showClose: false,
             initialPreviewAsData: true,
-            overwriteInitial: false
+            overwriteInitial: false,
+            dropZoneEnabled: false
         });
     });
 </script>

@@ -82,6 +82,10 @@
                         url: url,
                         async: false,
                         success: function (result) {
+                            if(result.data.customerNum==0){
+                               option +="无";
+                               return option;
+                            }
                             var customerNum = "<a href='${path.concat('/customer/overview/')}" + full.agentId + "'>"+result.data.customerNum+"</a>";
                             option += customerNum;
                         }
@@ -98,7 +102,11 @@
                         url: url,
                         async: false,
                         success: function (result) {
-                            var agentNum = "<a href='#'>"+result.data.agentNum+"</a>";
+                            if(result.data.agentNum==0){
+                               option +="无";
+                               return option;
+                            }
+                            var agentNum = "<a href='${path.concat('/agent/subordinate/')}" + full.agentId + "''>"+result.data.agentNum+"</a>";
                             option += agentNum;
                         }
                     });

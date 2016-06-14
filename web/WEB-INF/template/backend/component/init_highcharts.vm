@@ -1,1 +1,1 @@
-<script src="${path.concat('/plugins/highcharts/highcharts.js')}"></script>
+<script src="${path.concat('/plugins/highcharts/js/highcharts.js')}"></script>

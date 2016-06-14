@@ -1,0 +1,16 @@
+#parse("/common/util.vm")
+<html lang="zh_CN">
+<head>
+    #parse("/backend/component/init.vm")
+    #parse("/backend/component/init_datatable.vm")
+    #parse("/backend/component/init_highcharts.vm")
+    <title>代理概览</title>
+</head>
+<body>
+    #parse("/backend/component/navigate_with_login.vm")
+    <div class="container-fluid">
+        #parse("/backend/component/sidebar.vm")
+        #parse("/backend/agent/component/agent_subordinate_charts.vm")
+    </div>
+</body>
+</html>

@@ -4,8 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import selling.sunshine.dao.CustomerDao;
 import selling.sunshine.model.Customer;
+import selling.sunshine.model.CustomerPhone;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.CustomerService;
 import selling.sunshine.utils.ResponseCode;
@@ -98,6 +100,9 @@ public class CustomerServiceImpl implements CustomerService {
         ResultData queryResponse = customerDao.queryCustomerPhone(condition);
         result.setResponseCode(queryResponse.getResponseCode());
         if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+        	if(((List<CustomerPhone>)queryResponse.getData()).isEmpty()) {
+        		result.setResponseCode(ResponseCode.RESPONSE_NULL);
+        	}
             result.setData(queryResponse.getData());
         } else if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
             result.setDescription(queryResponse.getDescription());
