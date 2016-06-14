@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import selling.sunshine.dao.BillDao;
+import selling.sunshine.model.CustomerOrderBill;
 import selling.sunshine.model.DepositBill;
 import selling.sunshine.model.OrderBill;
 import selling.sunshine.service.BillService;
@@ -137,7 +138,7 @@ public class BillServiceImpl implements BillService {
         }
         return result;
     }
-
+    
     @Override
     public ResultData fetchOrderBill(Map<String, Object> condition) {
         ResultData result = new ResultData();
@@ -150,7 +151,7 @@ public class BillServiceImpl implements BillService {
         }
         return result;
     }
-
+    
     @Override
     public ResultData updateOrderBill(OrderBill bill) {
         ResultData result = new ResultData();
@@ -163,4 +164,26 @@ public class BillServiceImpl implements BillService {
         }
         return result;
     }
+    
+    @Override
+   	public ResultData createCustomerOrderBill(CustomerOrderBill bill) {
+   		// TODO Auto-generated method stub
+   		return null;
+   	}
+       
+       @Override
+   	public ResultData fetchCustomerOrderBill(Map<String, Object> condition) {
+   		// TODO Auto-generated method stub
+   		return null;
+   	}
+       
+
+	@Override
+	public ResultData updataCustomerOrderBill(CustomerOrderBill bill) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
+
 }
