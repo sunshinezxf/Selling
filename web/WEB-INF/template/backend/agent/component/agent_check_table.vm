@@ -64,7 +64,7 @@
                     }
                     return full.upperAgent.name;
                 }
-                },
+                },   
                 {
                     title: "操作", "mRender": function (data, type, full) {
                     var operation = "";

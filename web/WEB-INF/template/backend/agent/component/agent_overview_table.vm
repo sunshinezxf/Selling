@@ -68,6 +68,38 @@
                 }
                 },
                 {
+                    title: "顾客", "mRender": function (data, type, full) {
+                    var url = "${path.concat('/agent/statistics/')}" + full.agentId;
+                    var option = "";
+                    $.ajax({
+                        type: "post",
+                        url: url,
+                        async: false,
+                        success: function (result) {
+                            var customerNum = "<a href='${path.concat('/customer/overview/')}" + full.agentId + "'>"+result.data.customerNum+"</a>";
+                            option += customerNum;
+                        }
+                    });
+                    return option;
+                }
+                },
+                {
+                    title: "下级代理商", "mRender": function (data, type, full) {
+                    var url = "${path.concat('/agent/statistics/')}" + full.agentId;
+                    var option = "";
+                    $.ajax({
+                        type: "post",
+                        url: url,
+                        async: false,
+                        success: function (result) {
+                            var agentNum = "<a href='#'>"+result.data.agentNum+"</a>";
+                            option += agentNum;
+                        }
+                    });
+                    return option;
+                }
+                },
+                {
                     title: "操作", "mRender": function (data, type, full) {
                     var operation = "";
                     var url="${path.concat('/agent/forbid/')}" + full.agentId;

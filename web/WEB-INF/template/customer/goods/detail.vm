@@ -5,10 +5,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="${path.concat('/plugins/unslider/css/unslider.css')}"/>
+    <link rel="stylesheet" href="${path.concat('/plugins/weui/weui.css')}"/>
     <link rel="stylesheet" href="${path.concat('/material/css/customer/goods_detail.css')}"/>
     <script type="text/javascript" src="${path.concat('/plugins/jquery/jquery-1.12.3.min.js')}"></script>
 	<script type="text/javascript" src="${path.concat('/plugins/jquery/jquery.event.move.js')}"></script>
 	<script type="text/javascript" src="${path.concat('/plugins/jquery/jquery.event.swipe.js')}"></script>
+	<script type="text/javascript" src="${path.concat('/plugins/jquery/jquery.provincesCity.js')}"></script>
+	<script type="text/javascript" src="${path.concat('/plugins/jquery/jquery.provincesData.js')}"></script>
 	<script type="text/javascript" src="${path.concat('/plugins/unslider/js/unslider-min.js')}"></script>
     <title>商品详情</title>
 </head>
@@ -16,70 +19,119 @@
     <div class="fading-slider">
         <ul>
             <li><img src="${path.concat('/material/goods_img/1.jpg')}" alt="详情图1"></li>
-            <li><img src="${path.concat('/material/goods_img/2.png')}" alt="详情图2"></li>
-            <li><img src="${path.concat('/material/goods_img/3.png')}" alt="详情图3"></li>
+            <li><img src="${path.concat('/material/goods_img/2.jpg')}" alt="详情图2"></li>
+            <li><img src="${path.concat('/material/goods_img/3.jpg')}" alt="详情图3"></li>
         </ul>
     </div>
     <div class="goods_information">
+        <div class="goods_name">
+            <h2>三七粉</h2>
+        </div>
         <div class="price">
             <div class="pre_price">￥300</div>
             <div class="now_price">200</div>
         </div>
+    </div>
+    <div class="agent_information">
         <div class="agent">由<p>刘嘉</p>推广</div>
-        <div class="goods_introduction">
-            <h2>[<p>三七粉</p>]</h2>
-            <p>三七粉功效卓著！</p>
-        </div>
-        <div class="goods_details">
-            <h2 class="details_title">商品详情</h2>
-            <table class="details_table">
+        <div class="agent_id">
+            <table>
                 <tr>
-                    <td class="details_hd">商品名称</td>
-                    <td class="details_bd">三七粉</td>
-                </tr>
-                <tr>
-                    <td class="details_hd">品牌</td>
-                    <td class="details_bd">云草纲目</td>
-                </tr>
-                <tr>
-                    <td class="details_hd">功效</td>
-                    <td class="details_bd">活血化瘀，降脂降糖，延缓衰老</td>
-                </tr>
-                <tr>
-                    <td class="details_hd">产品包装</td>
-                    <td class="details_bd"></td>
-                </tr>
-                <tr>
-                    <td class="details_hd">适用人群</td>
-                    <td class="details_bd"></td>
-                </tr>
-                <tr>
-                    <td class="details_hd">产品规格</td>
-                    <td class="details_bd"></td>
-                </tr>
-                <tr>
-                    <td class="details_hd">保质期限</td>
-                    <td class="details_bd"></td>
-                </tr>
-                <tr>
-                    <td class="details_hd">原产地</td>
-                    <td class="details_bd"></td>
-                </tr>
-                <tr>
-                    <td class="details_hd">特别说明</td>
-                    <td class="details_bd"></td>
+                    <td class="hd">
+                        <label class="id_label"> 代理商编号：</label>
+                    </td>
+                    <td class="bd">
+                        <input id="agent_id" class="id_input" type="text"/>
+                    </td>
                 </tr>
             </table>
         </div>
     </div>
-    <div class="agent_id">
-                        代理商编号：
-        <input type=""/>
-    </div>
     <div class="buy_area">
-        <button id="purchase" class="btn_area">购买</button>
+        <button id="purchase" class="btn_area">立即购买</button>
     </div>
-
+    <div id="actionSheet_wrap">
+        <div class="weui_mask_transition" id="number_div" style="display: none;"></div>
+        <div class="weui_actionsheet" id="weui_actionsheet">
+            <div class="weui_actionsheet_menu">
+         	    <div class="number_area">
+                    <p>数量</p>
+                    <div class="number_choose">
+                        <button class="min">—</button> 
+                        <input class="num_box" name="" type="text" value="1" /> 
+                        <button class="add">+</button>
+                    </div>
+                </div>
+                <div class="address_area">
+                    <div class="address_information">
+                        <h2>填写地址</h2>
+                        <div class="weui_cells">
+                             <form id="address_form">
+                                 <div class="weui_cell">
+                                     <div class="weui_cell_hd">
+                                         <label class="weui_label">姓名</label>
+                                     </div>
+                                     <div class="weui_cell_bd weui_cell_primary">
+                                         <input id="customer_name" name="name" class="weui_input" type="text" placeholder="请填写收货人姓名"
+                                         autocomplete="off"/>
+                                     </div>
+                                 </div>
+                                 <div class="weui_cell">
+                                     <div class="weui_cell_hd">
+                                         <label class="weui_label">手机号</label>
+                                     </div>
+                                     <div class="weui_cell_bd weui_cell_primary">
+                                         <input id="customer_phone" name="phone" class="weui_input" type="tel" placeholder="请填写手机号"
+                                         autocomplete="off"/>
+                                     </div>
+                                 </div>
+                                 <div class="weui_cell">
+                                     <div class="weui_cell_hd">
+                                         <label class="weui_label">地区</label>
+                                     </div>
+                                     <div class="weui_cell_bd weui_cell_primary">
+                                         <div id="province" class="area_select"></div>
+                                     </div>
+                                 </div>
+                                 <div class="weui_cell">
+                                     <div class="weui_cell_hd">
+                                         <label class="weui_label">地址</label>
+                                     </div>
+                                     <div class="weui_cell_bd weui_cell_primary">
+                                         <input id="customer_address" name="address" class="weui_input" type="text" placeholder="请填写详细地址"
+                                         autocomplete="off"/>
+                                     </div>
+                                 </div>
+                                 <div class="weui_cell">
+                                     <div class="weui_cell_hd">
+                                         <label class="weui_label">邮政编码</label>
+                                     </div>
+                                     <div class="weui_cell_bd weui_cell_primary">
+                                         <input id="postcode" name="postcode" class="weui_input" type="tel" placeholder="请填写邮政编码"
+                                         autocomplete="off"/>
+                                     </div>
+                                 </div>
+                             </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="confirm_area">
+                    <div class="total_info">
+                        <div class="total_money">
+                            <p class="sum">合计：</p>
+                            <p class="sum_price">200元</p>
+                        </div>
+                        <div class="total_num">
+                            <p>共1件</p>
+                        </div>
+                    </div>
+                    <div class="to_pay">
+                        <button id="confirm" class="weui_btn weui_btn_disabled weui_btn_default" disabled="disabled">去结算</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 <script>
     $(function() {
@@ -95,10 +147,38 @@
         }).on('swiperight', function(e) {
             data.prev();
         });
+        
+        $('#province').ProvinceCity();
     });
     
-    $("#purchase").click(function(){
-        window.location.href +='/purchase';
+    $('#purchase').click(function(){
+        $.toggleNumModifySheet();
+    });
+    
+    $.toggleNumModifySheet = function(){
+   		var number_div = $('#number_div');
+        var weuiActionsheet = $('#weui_actionsheet');
+        weuiActionsheet.addClass('weui_actionsheet_toggle');
+        number_div.show()
+            .focus()
+            .addClass('weui_fade_toggle').one('click', function () {
+                hideActionSheet(weuiActionsheet, number_div);
+            });
+        number_div.unbind('transitionend').unbind('webkitTransitionEnd');
+
+        function hideActionSheet(weuiActionsheet, number_div) {
+            weuiActionsheet.removeClass('weui_actionsheet_toggle');
+            number_div.removeClass('weui_fade_toggle');
+            number_div.on('transitionend', function () {
+                number_div.hide();
+            }).on('webkitTransitionEnd', function () {
+                number_div.hide();
+            })
+        }
+    }
+    
+    $('#confirm').click(function(){
+        
     });
 
 </script>

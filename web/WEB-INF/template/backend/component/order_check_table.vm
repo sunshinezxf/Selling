@@ -29,7 +29,6 @@
     var quantity_num_list=new Object();
     $(document).ready(function () {
         $.post("${path.concat('/order/statistics')}", function (result) {
-        result.data.order
         for(var i=0; i<result.data.orderList.length; i++){
                   var order= result.data.orderList[i];  
                   var orderItems=order.orderItems;
@@ -70,7 +69,7 @@
                     node=node+name+quantity_num+"盒:&nbsp;"+quantity_num_list[name][quantity_num]['num']+"个  &nbsp;";
                }                         
             }
-            document.getElementById("total").innerHTML="待处理订单累计：<strong>"+total+"笔</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' class='btn btn-info' onclick=express(this)>一键发货</button><br>"+node;
+            document.getElementById("total").innerHTML="待处理订单累计：<strong>"+result.data.orderList.length+"笔</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' class='btn btn-info' onclick=expressAll()>一键发货</button><br>"+node;
         
         });
        
@@ -134,12 +133,11 @@
             }
             $("#model_table").append(node);
             document.getElementById("model_total").innerHTML="总计:&nbsp;"+result.data.totalPrices+"元";
-            var node1="<p class='text-info'>";
+            var node1="";
             for(var key in result.data.goods_quantity_Map){
                 node1+="商品:&nbsp;"+key+"&nbsp;&nbsp;&nbsp;&nbsp;总共:&nbsp;"+result.data.goods_quantity_Map[key]+"件<br>"
             }
-            node1+="</p>";
-            $(".modal-body").append(node1);
+            document.getElementById("model_quantity").innerHTML=node1;
        });
     }
     
@@ -158,6 +156,10 @@
       #*
       window.location.href = "${path.concat('/order/express/')}"+id;
       *#
+    }
+    
+    function expressAll(){
+       window.location.href = "${path.concat('/order/express')}";
     }
     
     function loadTable(obj){

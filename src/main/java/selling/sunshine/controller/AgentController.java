@@ -1,6 +1,7 @@
 package selling.sunshine.controller;
 
 import com.alibaba.fastjson.JSONObject;
+
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
@@ -12,6 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import selling.sunshine.form.*;
 import selling.sunshine.model.*;
 import selling.sunshine.pagination.DataTablePage;
@@ -20,6 +22,7 @@ import selling.sunshine.service.*;
 import selling.sunshine.utils.*;
 
 import javax.validation.Valid;
+
 import java.net.URLEncoder;
 import java.util.*;
 
@@ -1043,4 +1046,30 @@ public class AgentController {
             }
         }
     }
+    
+    /*
+     * 返回某一个代理商的统计数据
+     */
+	@RequestMapping(method = RequestMethod.POST, value = "/statistics/{agentId}")
+	@ResponseBody
+	public ResultData statistics(@PathVariable String agentId){
+		ResultData resultData=new ResultData();
+		Map<String, Object> dataMap=new HashMap<>();
+		//查询某个代理商的顾客数量
+		Map<String, Object> condition = new HashMap<>();
+		condition.put("agentId", agentId);
+		List<Customer> customerList=(List<Customer>)customerService.fetchCustomer(condition).getData();	
+		dataMap.put("customerNum", customerList.size());
+		resultData.setData(dataMap);
+		
+		//查询某个代理商的下级代理商数量
+		Map<String, Object> condition2 = new HashMap<>();
+		selling.sunshine.model.lite.Agent agent=new selling.sunshine.model.lite.Agent();
+		agent.setAgentId(agentId);
+		condition2.put("upperAgent", agent);
+		List<Agent> agentList=(List<Agent>)agentService.fetchAgent(condition2).getData();
+		dataMap.put("agentNum", agentList.size());
+		
+		return resultData;
+	}
 }
