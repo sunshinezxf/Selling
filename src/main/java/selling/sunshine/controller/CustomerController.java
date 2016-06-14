@@ -9,21 +9,29 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import selling.sunshine.form.CustomerAddressForm;
 import selling.sunshine.form.CustomerForm;
+import selling.sunshine.form.PurchaseForm;
 import selling.sunshine.form.SortRule;
 import selling.sunshine.model.Agent;
 import selling.sunshine.model.Customer;
 import selling.sunshine.model.CustomerAddress;
 import selling.sunshine.model.CustomerPhone;
+import selling.sunshine.model.Goods;
+import selling.sunshine.model.Order;
 import selling.sunshine.model.OrderItem;
+import selling.sunshine.model.OrderStatus;
 import selling.sunshine.model.User;
 import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.AgentService;
+import selling.sunshine.service.CommodityService;
 import selling.sunshine.service.CustomerService;
 import selling.sunshine.service.OrderService;
+import selling.sunshine.utils.Prompt;
+import selling.sunshine.utils.PromptCode;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
@@ -51,6 +59,9 @@ public class CustomerController {
     
     @Autowired
     private OrderService orderService;
+    
+    @Autowired
+    private CommodityService commodityService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/overview/{agentId}")
     public ModelAndView overview(@PathVariable String agentId) {
@@ -254,6 +265,123 @@ public class CustomerController {
 
         return result;
     }
+/*
+    @RequestMapping(method = RequestMethod.POST, value = "/place")
+    public ModelAndView placeOrder(@Valid PurchaseForm form, BindingResult result, RedirectAttributes attr) {
+        ModelAndView view = new ModelAndView();
+        if (result.hasErrors()) {
+            view.setViewName("redirect:/agent/order/place");
+            return view;
+        }
+        String goodsId = form.getGoodsId();
+        String agentId = form.getAgentId();
+        String customerName = form.getCustomerName();
+        int goodsQuantity = Integer.parseInt(form.getGoodsNum());
+        String phone = form.getPhone();
+        String address = form.getAddress();
+        String wechat = form.getWechat();
+        Map<String, Object> condition = new HashMap<String, Object>();
+        //判断代理商是否合法
+        Agent agent = null;
+        if(agentId != null && agentId != ""){
+	        condition.clear();
+	        condition.put("agentId", agentId);
+	        condition.put("granted", 1);
+	        condition.put("blockFlag", false);
+	        ResultData fetchAgentData = agentService.fetchAgent(condition);
+	        if(fetchAgentData.getResponseCode() == ResponseCode.RESPONSE_OK){
+	        	 agent = ((List<Agent>)fetchAgentData.getData()).get(0);
+	        }
+        }
+        //判断商品是否合法
+        condition.clear();
+        condition.put("goodsId", goodsId);
+        condition.put("blockFlag", false);
+        ResultData fetchCommodityData = commodityService.fetchCommodity(condition);
+        if(fetchCommodityData.getResponseCode() != ResponseCode.RESPONSE_OK){
+        	//这里需要一个错误页面!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        	return view;
+        }
+        Goods goods = ((List<Goods>)fetchCommodityData.getData()).get(0);
+        //判断客户是否已经存在，不存在则加入代理商客户列表，如果代理商也不存在，则加入到网络代理商的客户列表中
+        Customer customer = null;
+        if(wechat != null){
+        	condition.clear();
+        	condition.put("wechat",wechat);
+        	condition.put("blockFlag", false);
+        	ResultData fetchCustomerData = customerService.fetchCustomer(condition);
+        	if(fetchCustomerData.getResponseCode() == ResponseCode.RESPONSE_OK){
+        		customer = ((List<Customer>)fetchCustomerData.getData()).get(0);
+        	} else if(agent != null){
+        		 customer = new Customer(customerName, address, phone, new selling.sunshine.model.lite.Agent(agent));
+        	     ResultData createCustomerData = customerService.createCustomer(customer);
+        	}
+        }
+        
+        List<OrderItem> orderItems = new ArrayList<OrderItem>();
+        int length = form.getCustomerId().length;
+        Order order = new Order();
+        order.setAgent(user.getAgent());
+        //创建订单和订单项
+        double order_price = 0;
+        for (int i = 0; i < length; i++) {
+            String goodsId = form.getGoodsId()[i];//商品ID
+            String customerId = form.getCustomerId()[i];//顾客ID
+            String address = form.getAddress()[i];
+            int goodsQuantity = Integer.parseInt(form.getGoodsQuantity()[i]);//商品数量
+            double orderItemPrice = 0;//OrderItem总价
+            Map<String, Object> goodsCondition = new HashMap<String, Object>();//查询商品价格
+            goodsCondition.put("goodsId", goodsId);
+            ResultData goodsData = commodityService.fetchCommodity(goodsCondition);
+            Goods goods = null;
+            if (goodsData.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                List<Goods> goodsList = (List<Goods>) goodsData.getData();
+                if (goodsList.size() != 1) {
+                    Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "商品不唯一或未找到", "/agent/order/place");
+                    attr.addFlashAttribute("prompt", prompt);
+                    view.setViewName("redirect:/agent/prompt");
+                    return view;
+                }
+                goods = goodsList.get(0);
+            } else {
+                Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "商品信息异常", "/agent/order/place");
+                attr.addFlashAttribute("prompt", prompt);
+                view.setViewName("redirect:/agent/prompt");
+                return view;
+            }
+            orderItemPrice = goods.getPrice() * goodsQuantity;//得到一个OrderItem的总价
+            order_price += orderItemPrice;//累加Order总价
+            OrderItem orderItem = new OrderItem(customerId, goodsId, goodsQuantity, orderItemPrice, address);//构造OrderItem
+            orderItems.add(orderItem);
+        }
+        order.setOrderItems(orderItems);//构造Order
+        order.setPrice(order_price);
+        switch (type) {
+            case "save":
+                order.setStatus(OrderStatus.SAVED);
+                break;
+            case "submit":
+                order.setStatus(OrderStatus.SUBMITTED);
+                break;
+            default:
+                order.setStatus(OrderStatus.SAVED);
+        }
 
-
+        ResultData fetchResponse = orderService.placeOrder(order);
+        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            if (type.equals("save")) {
+                Prompt prompt = new Prompt("提示", "保存成功", "/agent/order/manage/0");
+                attr.addFlashAttribute("prompt", prompt);
+                view.setViewName("redirect:/agent/prompt");
+            } else if (type.equals("submit")) {
+                view.setViewName("redirect:/order/pay/" + order.getOrderId());
+            }
+            return view;
+        }
+        Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "失败", "/agent/order/manage/0");
+        attr.addFlashAttribute("prompt", prompt);
+        view.setViewName("redirect:/agent/prompt");
+        return view;
+    }
+    */
 }
