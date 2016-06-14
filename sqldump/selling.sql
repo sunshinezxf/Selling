@@ -51,6 +51,7 @@ CREATE TABLE IF NOT EXISTS `selling`.`customer` (
   `customer_id` VARCHAR(20) NOT NULL,
   `customer_name` VARCHAR(45) NOT NULL,
   `agent_id` VARCHAR(20) NOT NULL,
+  `transformed` TINYINT(1) NOT NULL DEFAULT 0,
   `block_flag` TINYINT(1) NOT NULL DEFAULT 0,
   `create_time` VARCHAR(45) NOT NULL,
   INDEX `fk_customer_agent1_idx` (`agent_id` ASC),
@@ -71,7 +72,8 @@ DROP TABLE IF EXISTS `selling`.`goods` ;
 CREATE TABLE IF NOT EXISTS `selling`.`goods` (
   `goods_id` VARCHAR(20) NOT NULL,
   `goods_name` VARCHAR(45) NOT NULL,
-  `goods_price` DOUBLE NOT NULL,
+  `primary_price` DOUBLE NOT NULL,
+  `agent_price` DOUBLE NOT NULL,
   `goods_description` VARCHAR(45) NULL,
   `block_flag` TINYINT(1) NOT NULL DEFAULT 0,
   `create_time` DATETIME NOT NULL,
@@ -559,7 +561,7 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `selling`;
-INSERT INTO `selling`.`goods` (`goods_id`, `goods_name`, `goods_price`, `goods_description`, `block_flag`, `create_time`) VALUES ('COMvlilfw91', '三七粉', 298, '卖的就是实惠', 0, '2016-05-09 16:17:43');
+INSERT INTO `selling`.`goods` (`goods_id`, `goods_name`, `primary_price`, `agent_price`, `goods_description`, `block_flag`, `create_time`) VALUES ('COMvlilfw91', '三七粉', 298, DEFAULT, '卖的就是实惠', 0, '2016-05-09 16:17:43');
 
 COMMIT;
 

@@ -4,13 +4,14 @@ body, html {
 }
 
 body {
+	margin:0.5em;
     overflow-x: hidden;
     background-color: #fbf9fe
 }
 
 .unslider{
 	position: relative;
-	height:40%;
+	height:42%;
     background: #fff;
     color: #666;
     text-align: center;
@@ -47,7 +48,6 @@ body {
     text-align: center;
 }
 
-
 .unslider-nav ol li {
     display: inline-block;
     float: none;
@@ -76,11 +76,25 @@ body {
 
 .goods_information{
     position:relative;
-    height:60%;
+    height:4%;
     width:100%;
 }
 
+.goods_name{
+    position:absolute;
+    width:100%;
+    top:0;
+    left:0;
+    margin:0.5em auto;
+}
+
+.goods_name h2{
+	font-size:1.5em;
+	margin:0 auto;
+}
+
 .price{
+	float:right;
 	margin-top:0;
 }
  
@@ -97,111 +111,216 @@ body {
     font-size:2.0em;
     color:#ff0000;
 }
- 
+
+.agent_information{
+    position:relative;
+    height:10%;
+    width:100%;
+    top:0.8em;
+}
+
 .agent{
-	margin-top:0;
-    float:right;
-    font-size:1.4em;
+	margin-top:0.7em;
+    font-size:0.85em;
 }
  
 .agent p{
 	display:inline-block;
     text-align:right;
-    margin-top:0;
-}
-
-.goods_introduction{
-    position:absolute;
-    width:100%;
-    top:12%;
-    left:0;
-    margin:0.5em auto;
-}
-
-.goods_introduction h2{
-	float:left;
-	font-size:1.05em;
-	margin:0 auto;
-}
-
-.goods_introduction p{
-	display:inline-block;
-	font-size:1.05em;
-	margin:0 auto;
-}
-
-.goods_details{
-    position:absolute;
-    width:100%;
-    top:22%;
-    left:0;
-}
- 
-.details_title{
-	margin:0.5em auto 0 auto;
-    font-size:1.05em;
-}
-
-.details_table{
-	width:100%;
-}
-
-.details_hd{
-	width:30%;
-	color:#808080;
-}
-
-.details_bd{
-	width:70%;
+    margin:0 auto;
 }
 
 .agent_id{
-    position:relative;
-    height:10%;
-    width:100%;
-    top:0.8em;
-    padding-bottom:3.125em;
+	margin-top:0.8em;
+}
+
+.agent_id table{
+	width:100%;
+}
+
+.hd{
+	width:35%;
+}
+
+.bd{
+	width:65%;
+}
+
+.id_label{
+	font-size:1.25em;
 }
 
 .agent_id input{
-    width:70%;
+	width:100%;
+	height: 2.3em;
+    outline: none;
+    border: 0.0625em solid rgb(216, 216, 216);
 }
 
 .buy_area{
-     position:fixed;
-     width:100%;
-     height:10%;
-     bottom:0;
-     top:auto;
-     margin-left:-8px;
-     text-align:center;
-     background-color:#ffffff;
- }
+    position:fixed;
+    width:100%;
+    height:10%;
+    bottom:0;
+    top:auto;
+    margin-left:-0.5em;
+    text-align:center;
+    background-color:#ffffff;
+}
  
- .btn_area{
-     position:absolute;
-     top:20%;
-     bottom:20%;
-     left:25%;
-     right:25%;
-     width:50%;
-     height:60%;
-     border:0;
-     color:#ffffff;
-     background-color:#ff8080;
-     font: bold 1em/2em Arial, sans-serif;
+.btn_area{
+    position:absolute;
+    top:20%;
+    bottom:20%;
+    left:25%;
+    right:25%;
+    width:50%;
+    height:60%;
+    border:0;
+    color:#ffffff;
+    background-color:#ff8080;
+    font: bold 1em/2em Arial, sans-serif;
      
-     -webkit-border-radius: 1.875em;
-     -moz-border-radius: 1.875em;
-     border-radius: 1.875em;
+    -webkit-border-radius: 1.875em;
+    -moz-border-radius: 1.875em;
+    border-radius: 1.875em;
  
-     -webkit-box-shadow: 0.0625em 0.0625em 0.0625em rgba(0,0,0, .29), inset 0.0625em 0.0625em 0.0625em rgba(255,255,255, .44);
-     -moz-box-shadow: 0.0625em 0.0625em 0.0625em rgba(0,0,0, .29), inset 0.0625em 0.0625em 0.0625em rgba(255,255,255, .44);
-     box-shadow: 0.0625em 0.0625em 0.0625em rgba(0,0,0, .29), inset 0.0625em 0.0625em 0.0625em rgba(255,255,255, .44);
+    -webkit-box-shadow: 0.0625em 0.0625em 0.0625em rgba(0,0,0, .29), inset 0.0625em 0.0625em 0.0625em rgba(255,255,255, .44);
+    -moz-box-shadow: 0.0625em 0.0625em 0.0625em rgba(0,0,0, .29), inset 0.0625em 0.0625em 0.0625em rgba(255,255,255, .44);
+    box-shadow: 0.0625em 0.0625em 0.0625em rgba(0,0,0, .29), inset 0.0625em 0.0625em 0.0625em rgba(255,255,255, .44);
  
-     -webkit-transition: all 0.15s ease;
-     -moz-transition: all 0.15s ease;
-     -o-transition: all 0.15s ease;
-     -ms-transition: all 0.15s ease;
-     transition: all 0.15s ease;
+    -webkit-transition: all 0.15s ease;
+    -moz-transition: all 0.15s ease;
+    -o-transition: all 0.15s ease;
+    -ms-transition: all 0.15s ease;
+    transition: all 0.15s ease;
+}
+ 
+.weui_actionsheet{
+	height:25em;
+	z-index:1000;
+}
+
+.number_area{
+	height:10%;
+	border-bottom: 0.0625em solid #D9D9D9;
+	vertical-align: middle;
  }
+ 
+.number_area p{
+    display:inline-block;
+    font-size:1.2em;
+    padding-top:0.25em;
+    margin-left:0.85em;
+}
+ 
+.number_choose{
+    float:right;
+    padding-top:0.3em;
+    margin-right:0.5em;
+}
+ 
+.num_box{
+    height:2.5em;
+    width:3em;
+    text-align:center;
+}
+ 
+.min,.add{
+    height:1.5em;
+    width:1.5em;
+    border:0;
+    background-color:#ffffff;
+    font-size:1.2em;
+    color:#ff8080;
+}
+ 
+.address_area{
+	height:68%;
+	text-align:left;
+}
+
+.address_information{
+	height:100%;
+}
+
+
+.address_area h2{
+    font-size:1.3em; 
+    padding-top:0.32em;
+    margin-left:0.7em; 
+}
+
+.weui_cells{
+	margin-top:0;
+}
+
+.weui_label{
+	width:4.5em;
+}
+
+.area_select select{
+	margin-right:1em;
+}
+
+.confirm_area{
+    position:fixed;
+    width:100%;
+    height:22%;
+    bottom:0;
+    top:auto;
+    background-color:#ffffff;
+}
+ 
+.total_info{
+    float:left;
+    height:100%;
+    margin-left:1em;
+    margin-top:0;
+}
+
+.total_num{
+    height:50%;
+    font-size:1.4em;
+}
+ 
+.sum,.sum_price{
+    display:inline-block;
+    font-size:1.4em;
+}
+ 
+.to_pay{
+    float:right;
+    width:40%;
+    height:100%;
+    text-align:center;
+    margin-top:1em;
+    margin-right:1em;
+}
+ 
+.to_pay_btn{
+    position:absolute;
+    top:20%;
+    bottom:20%;
+    right:5%;
+    width:50%;
+    height:60%;
+    border:0;
+    color:#ffffff;
+    background-color:#ff8080;
+    font: bold 1em/2em Arial, sans-serif;
+     
+    -webkit-border-radius: 1.875em;
+    -moz-border-radius: 1.875em;
+    border-radius: 1.875em;
+ 
+    -webkit-box-shadow: 0.0625em 0.0625em 0.0625em rgba(0,0,0, .29), inset 0.0625em 0.0625em 0.0625em rgba(255,255,255, .44);
+    -moz-box-shadow: 0.0625em 0.0625em 0.0625em rgba(0,0,0, .29), inset 0.0625em 0.0625em 0.0625em rgba(255,255,255, .44);
+    box-shadow: 0.0625em 0.0625em 0.0625em rgba(0,0,0, .29), inset 0.0625em 0.0625em 0.0625em rgba(255,255,255, .44);
+ 
+    -webkit-transition: all 0.15s ease;
+    -moz-transition: all 0.15s ease;
+    -o-transition: all 0.15s ease;
+    -ms-transition: all 0.15s ease;
+    transition: all 0.15s ease;
+}
