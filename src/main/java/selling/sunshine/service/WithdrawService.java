@@ -8,5 +8,7 @@ import selling.sunshine.utils.ResultData;
 public interface WithdrawService {
 	
 	ResultData fetchWithdrawRecord(Map<String, Object> condition, DataTableParam param);
+	
+	ResultData fetchWithdrawRecord(Map<String, Object> condition);
 
 }
