@@ -25,28 +25,31 @@
     </div>
     <div class="goods_information">
         <div class="goods_name">
-            <h2>三七粉</h2>
+            <h2>${goods.name}</h2>
         </div>
         <div class="price">
             <div class="pre_price">￥300</div>
-            <div class="now_price">200</div>
+            <div id="now_price" class="now_price">200</div>
         </div>
     </div>
     <div class="agent_information">
-        <div class="agent">由<p>刘嘉</p>推广</div>
+        #if(${agent})
+        <div class="agent">由<p>${agent.name}</p>推广</div>
+        #end
         <div class="agent_id">
             <table>
                 <tr>
                     <td class="hd">
                         <label class="id_label">
                         	 代理商编号：
-                        	 #if(${agent})
-                        	 	<span>${agent.agentId}</span>
-                        	 #end
                         </label>
                     </td>
                     <td class="bd">
-                        <input id="agent_id" class="id_input" type="text"/>
+                        #if(${agent})
+                        <input id="agent_id" class="id_input" type="text" value="${agent.agentId}"/>
+                        #else
+                        <input id="agent_id" class="id_input" type="text" value=""/>
+                        #end
                     </td>
                 </tr>
             </table>
@@ -71,52 +74,50 @@
                     <div class="address_information">
                         <h2>填写地址</h2>
                         <div class="weui_cells">
-                             <form id="address_form">
-                                 <div class="weui_cell">
-                                     <div class="weui_cell_hd">
-                                         <label class="weui_label">姓名</label>
-                                     </div>
-                                     <div class="weui_cell_bd weui_cell_primary">
-                                         <input id="customer_name" name="customerName" class="weui_input" type="text" placeholder="请填写收货人姓名"
+                             <div class="weui_cell">
+                                 <div class="weui_cell_hd">
+                                     <label class="weui_label">姓名</label>
+                                 </div>
+                                 <div class="weui_cell_bd weui_cell_primary">
+                                     <input id="customer_name" name="customerName" class="weui_input" type="text" placeholder="请填写收货人姓名"
                                          autocomplete="off"/>
-                                     </div>
                                  </div>
-                                 <div class="weui_cell">
-                                     <div class="weui_cell_hd">
-                                         <label class="weui_label">手机号</label>
-                                     </div>
-                                     <div class="weui_cell_bd weui_cell_primary">
-                                         <input id="customer_phone" name="phone" class="weui_input" type="tel" placeholder="请填写手机号"
+                             </div>
+                             <div class="weui_cell">
+                                 <div class="weui_cell_hd">
+                                     <label class="weui_label">手机号</label>
+                                 </div>
+                                 <div class="weui_cell_bd weui_cell_primary">
+                                     <input id="customer_phone" name="phone" class="weui_input" type="tel" placeholder="请填写手机号"
                                          autocomplete="off"/>
-                                     </div>
                                  </div>
-                                 <div class="weui_cell">
-                                     <div class="weui_cell_hd">
-                                         <label class="weui_label">地区</label>
-                                     </div>
-                                     <div class="weui_cell_bd weui_cell_primary">
-                                         <div id="province" class="area_select"></div>
-                                     </div>
+                             </div>
+                             <div class="weui_cell">
+                                 <div class="weui_cell_hd">
+                                     <label class="weui_label">地区</label>
                                  </div>
-                                 <div class="weui_cell">
-                                     <div class="weui_cell_hd">
-                                         <label class="weui_label">地址</label>
-                                     </div>
-                                     <div class="weui_cell_bd weui_cell_primary">
-                                         <input id="customer_address" name="address" class="weui_input" type="text" placeholder="请填写详细地址"
+                                 <div class="weui_cell_bd weui_cell_primary">
+                                     <div id="province" class="area_select"></div>
+                                 </div>
+                             </div>
+                             <div class="weui_cell">
+                                 <div class="weui_cell_hd">
+                                     <label class="weui_label">地址</label>
+                                 </div>
+                                 <div class="weui_cell_bd weui_cell_primary">
+                                     <input id="customer_address" name="address" class="weui_input" type="text" placeholder="请填写详细地址"
                                          autocomplete="off"/>
-                                     </div>
                                  </div>
-                                 <div class="weui_cell">
-                                     <div class="weui_cell_hd">
-                                         <label class="weui_label">邮政编码</label>
-                                     </div>
-                                     <div class="weui_cell_bd weui_cell_primary">
-                                         <input id="postcode" name="postcode" class="weui_input" type="tel" placeholder="请填写邮政编码"
+                             </div>
+                             <div class="weui_cell">
+                                 <div class="weui_cell_hd">
+                                     <label class="weui_label">邮政编码</label>
+                                 </div>
+                                 <div class="weui_cell_bd weui_cell_primary">
+                                     <input id="postcode" name="postcode" class="weui_input" type="tel" placeholder="请填写邮政编码"
                                          autocomplete="off"/>
-                                     </div>
                                  </div>
-                             </form>
+                             </div>
                         </div>
                     </div>
                 </div>
@@ -124,10 +125,10 @@
                     <div class="total_info">
                         <div class="total_money">
                             <p class="sum">合计：</p>
-                            <p class="sum_price">200元</p>
+                            <p id="total_price" class="sum_price">200元</p>
                         </div>
                         <div class="total_num">
-                            <p>共1件</p>
+                            <p>共<p id="total_num">1</p>件</p>
                         </div>
                     </div>
                     <div class="to_pay">
@@ -156,10 +157,7 @@
 </script>
 <script>
     $(function() {
-        var goodsNum=$('#goods_num').val();
-        if(goodsNum==1){
-            $('#min_btn').attr("disabled","disabled");
-        }
+        check_num();
                     
         $('#province').ProvinceCity();
         
@@ -172,6 +170,14 @@
         });
         
         $('#customer_phone').on('input propertychange',function(){
+            if(addressInfo_validate()){
+                active();
+            }else{
+                inactive();
+            }
+        });
+        
+        $("#province").children(":first").change(function(){
             if(addressInfo_validate()){
                 active();
             }else{
@@ -196,6 +202,8 @@
         });
         
     });
+</script>
+<script>
     
     $('#purchase').click(function(){
         $.toggleNumModifySheet();
@@ -223,12 +231,45 @@
         }
     }
     
+    $('#min_btn').click(function(){
+        var num=$('#goods_num').val();
+        var price=$('#now_price').text();
+        num--;
+        $('#goods_num').attr('value',num);
+        check_num();
+        $('#total_num').text(num);
+        $('#total_price').text(num*price+'元');
+    });
+    
+    $('#add_btn').click(function(){
+        var num=$('#goods_num').val();
+        var price=$('#now_price').text();
+        num++;
+        $('#goods_num').attr('value',num);
+        check_num();
+        $('#total_num').text(num);
+        $('#total_price').text(num*price+'元');
+    });
+    
+    function check_num(){
+        var goodsNum=$('#goods_num').val();
+        if(goodsNum==1){
+            $('#min_btn').attr("disabled","disabled");
+            $('#min_btn').addClass("btn_disabled");
+        }else{
+            $('#min_btn').removeAttr("disabled");
+            $('#min_btn').removeClass("btn_disabled");
+        }
+    }
+    
+    
     function addressInfo_validate(){
         var name=$('#customer_name').val();
         var phone=$('#customer_phone').val();
         var address=$('#customer_address').val();
         var postcode=$('#postcode').val();
-        if(not_null(name)&&not_null(phone)&&not_null(address)&&not_null(postcode)){
+        var area=$("#province").children(":first").val();
+        if(not_null(name)&&not_null(phone)&&not_null(address)&&not_null(postcode)&&area!=="请选择"){
             return true;
         }else{
             return false;
@@ -257,7 +298,65 @@
     }
     
     $('#confirm').click(function(){
-        
+        var url='${path.concat('/customer/place')}';
+        var goodsId="${goods.goodsId}";
+        var agentId;
+        if(${agent}){
+            agentId="${agent.agentId}";
+        }else{
+            agentId="";
+        }
+        var goodsNum=$('#goods_num').val();
+        var customerName=$('#customer_name').val();
+        var phone=$('#customer_phone').val();
+        var address=$("#province").children(":first").val()+$("#province").children(":first").next().val()+$("#province").children(":last").val()+$("#customer_address").val();
+        var param = {goodsId:goodsId , agentId:agentId ,goodsNum:goodsNum,customerName:customerName,phone:phone,address:address};
+        $.post(url, param, function(result) {
+            if (result.response.responseCode == "RESPONSE_OK") {
+                var data = result.data; 
+                pingpp_one.init({
+	                app_id: "app_DazjbTLybjHGbv9O",
+	                amount: data.totalPrice,
+	                channel: ['alipay_wap', 'wx_pub'],
+	                charge_url: "${path.concat('/order/otherpay')}",
+	                charge_param: {order_id: data.orderId},
+	                open_id: 'wxf2c47b5e41605c26',
+	                debug: false
+	            }, function (result) {
+	                //debug 模式下获取 charge_url 的返回结果
+	                if (result.debug && result.chargeUrlOutput) {
+	                    console.log(result.chargeUrlOutput);
+	                }
+	                if (!result.status) {
+	                    //处理错误
+	                    alert(result.msg);
+	                }
+	                else {
+	                    //debug 模式下调用 charge_url 后会暂停，可以调用 pingpp_one.resume 方法继续执行
+	                    if (result.debug && !result.wxSuccess) {
+	                        if (confirm('当前为 debug 模式，是否继续支付？')) {
+	                            pingpp_one.resume();
+	                        }
+	                    }
+	                    //若微信公众号渠道需要使用壹收款的支付成功页面，则在这里进行成功回调，
+	                    //调用 pingpp_one.success 方法，你也可以自己定义回调函数
+	                    //其他渠道的处理方法请见第 2 节
+	                    else pingpp_one.success(function (result) {
+	                        if (!result.status) {
+	                            alert(result.msg);
+	                        }
+	                    }, function () {
+	                        //这里处理支付成功页面点击“继续购物”按钮触发的方法，
+	                        //例如：若你需要点击“继续购物”按钮跳转到你的购买页，
+	                        //则在该方法内写入 window.location.href = "你的购买页面 url"
+	                        window.location.href = 'http://yourdomain.com/payment_succeeded';//示例
+	                    });
+	                }
+	            });
+            } else {
+                            
+            }
+        });
     });
 
 </script>
