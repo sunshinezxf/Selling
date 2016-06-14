@@ -22,5 +22,6 @@
         <mapper resource="selling/sunshine/mapper/credit.xml"/>
         <mapper resource="selling/sunshine/mapper/withdraw.xml"/>
         <mapper resource="selling/sunshine/mapper/bankcard.xml"/>
+        <mapper resource="selling/sunshine/mapper/customerorder.xml"/>
     </mappers>
 </configuration>

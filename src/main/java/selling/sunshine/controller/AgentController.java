@@ -846,7 +846,7 @@ public class AgentController {
         return view;
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "modifypassword")
+    @RequestMapping(method = RequestMethod.POST, value = "/modifypassword")
     public ModelAndView modifyPassword(@Valid PasswordForm form, BindingResult result) {
         ModelAndView view = new ModelAndView();
         if (result.hasErrors() || StringUtils.isEmpty(form.getPassword()) || !form.getPassword().equals(form.getPassword2())) {

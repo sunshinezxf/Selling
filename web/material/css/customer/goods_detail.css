@@ -234,6 +234,10 @@ body {
     font-size:1.2em;
     color:#ff8080;
 }
+
+.btn_disabled{
+	color:#D9D9D9;
+}
  
 .address_area{
 	height:68%;
@@ -282,6 +286,10 @@ body {
 .total_num{
     height:50%;
     font-size:1.4em;
+}
+
+.total_num p{
+    display:inline-block;
 }
  
 .sum,.sum_price{

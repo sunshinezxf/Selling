@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import selling.sunshine.dao.OrderDao;
 import selling.sunshine.dao.OrderItemDao;
 import selling.sunshine.dao.OrderPoolDao;
+import selling.sunshine.model.CustomerOrder;
 import selling.sunshine.model.Order;
 import selling.sunshine.model.OrderItem;
 import selling.sunshine.pagination.MobilePageParam;
@@ -45,6 +46,12 @@ public class OrderServiceImpl implements OrderService {
     }
     
     @Override
+	public ResultData placeOrder(CustomerOrder customerOrder) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+    
+    @Override
 	public ResultData payOrder(Order order) {
     	ResultData result = new ResultData();
         ResultData updateResponse = orderDao.updateOrder(order);
@@ -55,6 +62,12 @@ public class OrderServiceImpl implements OrderService {
             result.setDescription(updateResponse.getDescription());
         }
         return result;
+	}
+    
+    @Override
+	public ResultData payOrder(CustomerOrder customerOrder) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
     @Override
@@ -69,6 +82,12 @@ public class OrderServiceImpl implements OrderService {
         }
         return result;
     }
+    
+    @Override
+	public ResultData fetchCustomerOrder(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
     @Override
     public ResultData fetchOrder(Map<String, Object> condition, MobilePageParam param) {
