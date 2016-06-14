@@ -54,6 +54,7 @@ CREATE TABLE IF NOT EXISTS `selling`.`customer` (
   `transformed` TINYINT(1) NOT NULL DEFAULT 0,
   `block_flag` TINYINT(1) NOT NULL DEFAULT 0,
   `create_time` VARCHAR(45) NOT NULL,
+  `wechat` VARCHAR(45) NULL,
   INDEX `fk_customer_agent1_idx` (`agent_id` ASC),
   PRIMARY KEY (`customer_id`),
   CONSTRAINT `fk_customer_agent1`
@@ -538,6 +539,27 @@ CREATE TABLE IF NOT EXISTS `selling`.`distribute_code` (
   REFERENCES `selling`.`agent` (`agent_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
+  ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `selling`.`customer_order`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `selling`.`customer_order` ;
+
+CREATE TABLE IF NOT EXISTS `selling`.`customer_order` (
+  `order_id` VARCHAR(20) NOT NULL,
+  `goods_id` VARCHAR(20) NOT NULL,
+  `agent_id` VARCHAR(20) NULL,
+  `wechat` VARCHAR(45) NULL,
+  `quantity` INT NOT NULL DEFAULT 0,
+  `receiver_name` VARCHAR(45) NOT NULL,
+  `receiver_addr` VARCHAR(100) NOT NULL,
+  `total_price` DOUBLE NOT NULL DEFAULT 0,
+  `order_status` INT NOT NULL DEFAULT 0,
+  `block_flag` TINYINT(1) NOT NULL DEFAULT 0,
+  `create_time` DATETIME NOT NULL,
+  PRIMARY KEY (`order_id`))
   ENGINE = InnoDB;
 
 
