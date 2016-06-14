@@ -427,9 +427,12 @@ public class AgentController {
                 condition.clear();
                 condition.put("phone", form.getPhone());
                 condition.put("customerBlockFlag", false);
-                ResultData fetchResponse = customerService.fetchCustomer(condition);
+                ResultData fetchResponse = customerService.fetchCustomerPhone(condition);
                 if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-                    Customer customer = ((List<Customer>) fetchResponse.getData()).get(0);
+                    CustomerPhone phone = ((List<CustomerPhone>) fetchResponse.getData()).get(0);
+                    condition.clear();
+                    condition.put("customerId", phone.getCustomer().getCustomerId());
+                    Customer customer = ((List<Customer>) customerService.fetchCustomer(condition).getData()).get(0);
                     agent.setUpperAgent(customer.getAgent());
                 }
             }
@@ -1097,6 +1100,28 @@ public class AgentController {
 		view.addObject("refundRecordList", refundRecordList);
 		view.addObject("withdrawRecordList", withdrawRecordList);
 		return view;
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/subordinate/{agentId}")
+	public ModelAndView subordinate(@PathVariable String agentId){
+		
+		ModelAndView view=new ModelAndView();
+		
+		Map<String, Object> condition = new HashMap<>();
+		selling.sunshine.model.lite.Agent agent=new selling.sunshine.model.lite.Agent();
+		agent.setAgentId(agentId);
+		condition.put("upperAgent", agent);
+		List<Agent> agentList=(List<Agent>)agentService.fetchAgent(condition).getData();
+		
+		Map<String, Object> condition2 = new HashMap<>();
+		condition2.put("agentId", agentId);
+		Agent agent2=((List<Agent>)agentService.fetchAgent(condition2).getData()).get(0);
+		
+		view.setViewName("/backend/agent/subordinate");
+		view.addObject("agentList", agentList);
+		view.addObject("agent", agent2);
+		return view;
+		
 	}
 	
 
