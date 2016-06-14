@@ -316,12 +316,11 @@
             }
             $("#model_table").append(node);
             document.getElementById("model_total").innerHTML="总计:&nbsp;"+result.data.totalPrices+"元";
-            var node1="<p class='text-info'>";
+            var node1="";
             for(var key in result.data.goods_quantity_Map){
                 node1+="商品:&nbsp;"+key+"&nbsp;&nbsp;&nbsp;&nbsp;总共:&nbsp;"+result.data.goods_quantity_Map[key]+"件<br>"
             }
-            node1+="</p>";
-            $(".modal-body").append(node1);
+            document.getElementById("model_quantity").innerHTML=node1;
        });
     }
 </script>
