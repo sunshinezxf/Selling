@@ -4,10 +4,11 @@
     #parse("/agent/component/init.vm")
     #parse("/agent/component/init_qrcode.vm")
     <title>注册邀请</title>
+    <script type="text/javascript" src="${path.concat('/plugins/clipboard/clipboard.min.js')}"></script>
 </head>
 <body ontouchstart>
 <div class="container">
-	<div class="panel" id="self_info_panel">
+	<div class="panel weui_tab_bd" id="self_info_panel">
 	    <div class="hd">
 	        <h1 class="page_title">客户商城</h1>
 			<p class="page_desc">客户自助购买二维码</p>
@@ -21,7 +22,7 @@
 	    	<div class="weui_cells_title" style="text-align:center;font-size:18px;">
 	    		${goods.name}
 	    	</div>
-	    	<div id="link${goods.goodsId}" class="weui_cells_tips" data-clipboard-action="copy" data-clipboard-text="${urls.get(${index})}" style="text-align:center;">
+	    	<div class="weui_cells_tips linkClip" data-clipboard-action="copy" data-clipboard-text="${urls.get(${index})}" style="text-align:center;">
 	    		点击此处复制链接
 	    	</div>
 	    	<div class="weui_cells_tips" style="text-align:center;">
@@ -29,6 +30,13 @@
 	    	</div>
 	    </div>
 	    #end
+	</div>
+	<div id="toast" style="display: none;">
+	    <div class="weui_mask_transparent"></div>
+	    <div class="weui_toast">
+	        <i class="weui_icon_toast"></i>
+	        <p class="weui_toast_content">已复制到剪切板</p>
+	    </div>
 	</div>
 	#parse("/agent/component/navigate.vm")
 </div>
@@ -39,6 +47,12 @@
 			var size = $(val).parent().width() * 1;
 			$(val).next().qrcode({width:size, height:size, text:$(val).html()});
 			$.convertCanvasToImage($(val).next().children());	
+		});
+		var cl = new Clipboard(".linkClip");
+		cl.on('success',function(e){
+			$("#toast").show();
+			setTimeout(function(){$("#toast").hide();}, 2000);
+			e.clearSelection();
 		});
 	});
 	$.convertCanvasToImage = function(canvas) {

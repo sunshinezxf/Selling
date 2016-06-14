@@ -15,7 +15,7 @@
     	<p class="page_desc">累计返现</p>
 	    <h1 style="font-weight:normal">￥${agent.agentRefund}</h1>
 	</div>
-    <div class="bd">
+    <div class="bd weui_tab_bd">
         <div class="weui_cells">
             #parse("/agent/account/statement_item.vm")
         </div>
