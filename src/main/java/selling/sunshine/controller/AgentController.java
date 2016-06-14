@@ -330,6 +330,48 @@ public class AgentController {
         return view;
     }
     
+    @RequestMapping(method = RequestMethod.GET, value="/invite")
+    public ModelAndView inviteAgent(){
+    	ModelAndView view = new ModelAndView();
+		Subject subject = SecurityUtils.getSubject();
+		User user = (User) subject.getPrincipal();
+		if (user == null || user.getAgent() == null) {
+		    view.setViewName("/agent/login");
+		    return view;
+		}
+    	String url = "http://" + PlatformConfig.getValue("server_url") + "/agent/" + user.getAgent().getAgentId() + "/embrace";
+    	view.addObject("url", url);
+    	view.setViewName("/agent/link/invitation");
+    	return view;
+    }
+    
+    @RequestMapping(method = RequestMethod.GET, value="/personalsale")
+    public ModelAndView personalSale(){
+    	ModelAndView view = new ModelAndView();
+    	Subject subject = SecurityUtils.getSubject();
+		User user = (User) subject.getPrincipal();
+		if (user == null || user.getAgent() == null) {
+		    view.setViewName("/agent/login");
+		    return view;
+		}
+		List<Goods> goodsList = new ArrayList<Goods>();
+		List<String> urls = new ArrayList<String>();
+		Map<String, Object> condition = new HashMap<String, Object>();
+		condition.put("blockFlag", false);
+        ResultData fetchGoodsResponse = commodityService.fetchCommodity(condition);
+        if (fetchGoodsResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            goodsList = (List<Goods>) fetchGoodsResponse.getData();
+        }
+        for(Goods goods : goodsList){
+        	String url =  "http://" + PlatformConfig.getValue("server_url") + "/agent/" + user.getAgent().getAgentId() + "/" + goods.getGoodsId() + "/purchase";
+        	urls.add(url);
+        }
+		view.addObject("goodsList", goodsList);
+		view.addObject("urls", urls);
+		view.setViewName("/agent/link/personal_sale");
+    	return view;
+    }
+    
     @RequestMapping(method = RequestMethod.POST, value = "/validate/{phone}")
     @ResponseBody
     public ResultData validate(@PathVariable String phone) {

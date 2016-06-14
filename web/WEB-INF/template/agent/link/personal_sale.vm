@@ -1,0 +1,51 @@
+#parse("/common/util.vm")
+<html lang="zh_CN">
+<head>
+    #parse("/agent/component/init.vm")
+    #parse("/agent/component/init_qrcode.vm")
+    <title>注册邀请</title>
+</head>
+<body ontouchstart>
+<div class="container">
+	<div class="panel" id="self_info_panel">
+	    <div class="hd">
+	        <h1 class="page_title">客户商城</h1>
+			<p class="page_desc">客户自助购买二维码</p>
+	    </div>
+	    #foreach($goods in $goodsList)
+	    <div class="bd page_title">
+	    	#set($index = $velocityCount - 1)
+	    	<div class="url" style="display:none;">${urls.get(${index})}</div>
+	    	<div id="qrcode${goods.goodsId}" style="display:none;">
+	    	</div>
+	    	<div class="weui_cells_title" style="text-align:center;font-size:18px;">
+	    		${goods.name}
+	    	</div>
+	    	<div id="link${goods.goodsId}" class="weui_cells_tips" data-clipboard-action="copy" data-clipboard-text="${urls.get(${index})}" style="text-align:center;">
+	    		点击此处复制链接
+	    	</div>
+	    	<div class="weui_cells_tips" style="text-align:center;">
+	    		请把二维码或链接发送给客户
+	    	</div>
+	    </div>
+	    #end
+	</div>
+	#parse("/agent/component/navigate.vm")
+</div>
+</body>
+<script>
+	$(document).ready(function(){
+		$.each($(".url"), function(i, val){
+			var size = $(val).parent().width() * 1;
+			$(val).next().qrcode({width:size, height:size, text:$(val).html()});
+			$.convertCanvasToImage($(val).next().children());	
+		});
+	});
+	$.convertCanvasToImage = function(canvas) {
+		var image = new Image();
+		image.src = canvas[0].toDataURL("image/png");
+		$(image).insertAfter($(canvas).parent());
+		return image;
+	}
+</script>
+</html>

@@ -1,3 +1,24 @@
+<style>
+    .file-preview-frame {
+        float: left;
+        position: relative;
+    }
+
+    .file-live-thumbs {
+        width: 160px;
+        height: 160px;
+    }
+
+    .kv-file-content {
+        width: 160px;
+        height: 160px;
+    }
+
+    .file-preview-image {
+        width: 100%;
+        height: 100%;
+    }
+</style>
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id-target="goods-management">
     <div class="row">
         <div class="col-md-12 col-lg-12">
@@ -44,6 +65,14 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label class="col-sm-2 col-md-2 col-lg-2 control-label" for="goods_thumnail">商品图片</label>
+
+                    <div class="col-sm-8 col-md-8 col-lg-8">
+                        <input id="goods_thumnail" name="thumnails[]" type="file" accept="image/*" multiple
+                               class="file-loading"/>
+                    </div>
+                </div>
+                <div class="form-group">
                     <label class="col-sm-2 col-md-2 col-lg-2 control-label" for="goods_description">
                         是否上架
                     </label>
@@ -82,4 +111,27 @@
         $("#create_goods_form").attr("method", "post");
         $("#create_goods_form").submit();
     })
+</script>
+<script>
+    $(document).on('ready', function () {
+        $("#goods_thumnail").fileinput({
+            minFileCount: 0,
+            uploadUrl: "${path.concat('/commodity/upload')}",
+            deleteUrl: "/site/file-delete",
+            browseClass: "btn btn-success",
+            browseLabel: "选择图片",
+            browseIcon: "<i class=\"glyphicon glyphicon-picture\"></i> ",
+            removeClass: "btn btn-danger",
+            removeLabel: "全部删除",
+            removeIcon: "<i class=\"glyphicon glyphicon-trash\"></i> ",
+            uploadClass: "btn btn-info",
+            uploadLabel: "上传",
+            uploadIcon: "<i class=\"glyphicon glyphicon-upload\"></i> ",
+            showCaption: false,
+            showRemove: true,
+            showUpload: true,
+            initialPreviewAsData: true,
+            overwriteInitial: false
+        });
+    });
 </script>
