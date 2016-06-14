@@ -13,6 +13,9 @@
         <div class="col-md-12 col-lg-12">
             <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
         </div>
+         #foreach($key in ${agentMap.keySet()})
+             <p style="display:none;" id="P$key">${agentMap[$key]}</p>
+         #end
     </div>
 </div>
 <script>
@@ -25,8 +28,9 @@
     paddingLeft: 20,
     arrowLength: 4,
     arrowWidth: 3,
-    create: function(textVal){
+    create: function(textVal, id){
         return {
+        	id:id,
             text: textVal,
             childNodes: [],
             parentNode: null,
@@ -77,7 +81,7 @@
             },
             drow: function(renderer, colors) {
                 var x = this.left() + this.childWidth() / 2 - Node.width / 2, y = this.top();
-                renderer.label(this.text, x, y).attr({fill: colors[0], stroke: 'white','stroke-width': 3,padding: Node.paddingText, r: 2 * Node.paddingText, width: Node.width, height: Node.height}).css({color: 'white', textAlign:'center',fontWeight: 'bold',fontSize: '10px'}).add().shadow(true);
+                renderer.label(this.text, x, y).attr({fill: colors[0], stroke: 'white','stroke-width': 3,padding: Node.paddingText, r: 2 * Node.paddingText, width: Node.width, height: Node.height}).css({color: 'white', textAlign:'center',fontWeight: 'bold',fontSize: '10px'}).add().shadow(true).attr("id",id);
                 if (this.childNodes.length > 0) {
                     for(var i=0;i<this.childNodes.length;i++) {
                         this.childNodes[i].drow(renderer, colors);
@@ -90,22 +94,36 @@
 }
 var n = Node.create
 
-     var datas = n("${agent.name}");
+     var datas = n("${agent.name}","${agent.agentId}");
      var agentList=${agentList};
-     for(var i=0;i<agentList.length;i++){
-        datas.add(n(agentList[i].name));
+     for(var i=0;i<agentList.length;i++){               
+        var level2Agent=n(agentList[i].name, agentList[i].agentId);    
+        var agentId= "#P"+agentList[i].agentId;
+        if($(agentId).html()!=0){
+             level2Agent.add(n($(agentId).html()));
+        }      
+        datas.add(level2Agent);
      }
     
- 
 
 
     var chart = new Highcharts.Chart({
         chart: {
             renderTo: 'container',
-            events: {load: function () { 
+            events: {load: function () {
+            
                 datas.drow(this.renderer, Highcharts.getOptions().colors);
+                
             }}
         },
         title: {text: '代理商结构图'}
     });
+    
+    $("g").click(function(){ 
+        if(this.id != ""){
+          alert(this.id);
+        }
+        
+    });
+
 </script>

@@ -56,7 +56,7 @@ public class RefundController {
         }
         Goods goods = new Goods();
         goods.setGoodsId(goodsId);
-        RefundConfig config = new RefundConfig(goods, Integer.parseInt(form.getAmountTrigger()), Double.parseDouble(form.getLevel1Percent()) / 100,Double.parseDouble(form.getLevel2Percent()) / 100,Double.parseDouble(form.getLevel3Percent()) / 100);
+        RefundConfig config = new RefundConfig(goods, Integer.parseInt(form.getAmountTrigger()), Double.parseDouble(form.getLevel1Percent()),Double.parseDouble(form.getLevel2Percent()),Double.parseDouble(form.getLevel3Percent()));
         ResultData createResponse = refundService.createRefundConfig(config);
         if (createResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             view.setViewName("redirect:/refund/config");

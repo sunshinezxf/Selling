@@ -1106,12 +1106,20 @@ public class AgentController {
 	public ModelAndView subordinate(@PathVariable String agentId){
 		
 		ModelAndView view=new ModelAndView();
+		Map<String, Object> agentMap=new HashMap<String, Object>();
 		
 		Map<String, Object> condition = new HashMap<>();
 		selling.sunshine.model.lite.Agent agent=new selling.sunshine.model.lite.Agent();
 		agent.setAgentId(agentId);
 		condition.put("upperAgent", agent);
 		List<Agent> agentList=(List<Agent>)agentService.fetchAgent(condition).getData();
+		for(int i=0;i<agentList.size();i++){
+			condition.clear();
+			selling.sunshine.model.lite.Agent agent3=new selling.sunshine.model.lite.Agent();
+			agent3.setAgentId(agentList.get(i).getAgentId());
+			condition.put("upperAgent", agent3);
+			agentMap.put(agentList.get(i).getAgentId(), ((List<Agent>)agentService.fetchAgent(condition).getData()).size());
+		}
 		
 		Map<String, Object> condition2 = new HashMap<>();
 		condition2.put("agentId", agentId);
@@ -1120,6 +1128,7 @@ public class AgentController {
 		view.setViewName("/backend/agent/subordinate");
 		view.addObject("agentList", agentList);
 		view.addObject("agent", agent2);
+		view.addObject("agentMap", agentMap);
 		return view;
 		
 	}
