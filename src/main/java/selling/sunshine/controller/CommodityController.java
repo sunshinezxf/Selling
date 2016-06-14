@@ -6,15 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import selling.sunshine.form.GoodsForm;
 import selling.sunshine.model.Goods;
 import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.CommodityService;
-import selling.sunshine.service.UploadService;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
@@ -33,9 +30,6 @@ public class CommodityController {
 
     @Autowired
     private CommodityService commodityService;
-
-    @Autowired
-    private UploadService uploadService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/create")
     public ModelAndView create() {
@@ -129,19 +123,19 @@ public class CommodityController {
     @RequestMapping(method = RequestMethod.GET, value = "/{goodsId}")
     public ModelAndView view(@PathVariable("goodsId") String goodsId) {
         ModelAndView view = new ModelAndView();
-
+        
         view.setViewName("/customer/goods/detail");
         return view;
     }
-
+    
     @RequestMapping(method = RequestMethod.GET, value = "/{goodsId}/purchase")
     public ModelAndView purchase(@PathVariable("goodsId") String goodsId) {
         ModelAndView view = new ModelAndView();
-
+        
         view.setViewName("/customer/goods/purchase");
         return view;
     }
-
+    
     @RequestMapping(method = RequestMethod.GET, value = "/forbid/{goodsId}")
     public ModelAndView forbid(@PathVariable("goodsId") String goodsId) {
         ModelAndView view = new ModelAndView();
@@ -159,7 +153,7 @@ public class CommodityController {
         view.setViewName("redirect:/commodity/overview");
         return view;
     }
-
+    
     @RequestMapping(method = RequestMethod.GET, value = "/enable/{goodsId}")
     public ModelAndView enable(@PathVariable("goodsId") String goodsId) {
         ModelAndView view = new ModelAndView();
@@ -176,25 +170,6 @@ public class CommodityController {
 
         view.setViewName("redirect:/commodity/overview");
         return view;
-    }
-
-    @ResponseBody
-    @RequestMapping(method = RequestMethod.POST, value = "/upload")
-    public ResultData upload(MultipartHttpServletRequest request) {
-        ResultData result = new ResultData();
-        String context = request.getSession().getServletContext().getRealPath("/");
-        try {
-            MultipartFile file = request.getFile("thumbnail");
-            ResultData response = uploadService.upload(file, context);
-            if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
-                result.setData(response.getData());
-            } else {
-                result.setResponseCode(ResponseCode.RESPONSE_ERROR);
-            }
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-        }
-        return result;
     }
 
 }
