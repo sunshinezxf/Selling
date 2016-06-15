@@ -28,11 +28,11 @@
             <h2>${goods.name}</h2>
         </div>
         <div id="agent_price" class="price">
-            <div class="pre_price">￥300</div>
-            <div id="now_price" class="now_price">200</div>
+            <div class="pre_price">￥${goods.price}</div>
+            <div class="now_price">${goods.benefit}</div>
         </div>
         <div id="customer_price" class="price">
-            <div class="common_price">￥300</div>
+            <div class="common_price">￥{goods.price}</div>
         </div>
     </div>
     <div class="agent_information">
@@ -128,7 +128,7 @@
                     <div class="total_info">
                         <div class="total_money">
                             <p class="sum">合计：</p>
-                            <p id="total_price" class="sum_price">200元</p>
+                            <p id="total_price" class="sum_price">元</p>
                         </div>
                         <div class="total_num">
                             <p>共<p id="total_num">1</p>件</p>
@@ -153,6 +153,7 @@
     </div>
 </body>
 <script>
+    var goods_price;
     $(function() {
         var slidey=$('.fading-slider').unslider({
             animation: 'fade', 
@@ -185,6 +186,8 @@
             }
             check_agent();
         });
+        
+        $('#total_price').text(goods_price+'元');
         
         check_num();
                     
@@ -259,22 +262,20 @@
     
     $('#min_btn').click(function(){
         var num=$('#goods_num').val();
-        var price=$('#now_price').text();
         num--;
         $('#goods_num').attr('value',num);
         check_num();
         $('#total_num').text(num);
-        $('#total_price').text(num*price+'元');
+        $('#total_price').text(num*goods_price+'元');
     });
     
     $('#add_btn').click(function(){
         var num=$('#goods_num').val();
-        var price=$('#now_price').text();
         num++;
         $('#goods_num').attr('value',num);
         check_num();
         $('#total_num').text(num);
-        $('#total_price').text(num*price+'元');
+        $('#total_price').text(num*goods_price+'元');
     });
     
     $("#dialog").find(".weui_btn_dialog.primary").click(function () {
@@ -286,9 +287,11 @@
         if(agent){
             $('#agent_price').show();
             $('#customer_price').hide();
+            goods_price="${goods.benefit}";
         }else{
             $('#customer_price').show();
             $('#agent_price').hide();
+            goods_price="${goods.price}";
         }
     }
     
