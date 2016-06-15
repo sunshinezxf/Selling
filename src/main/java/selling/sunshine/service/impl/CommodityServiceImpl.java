@@ -6,11 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import selling.sunshine.dao.CommodityDao;
 import selling.sunshine.model.Goods;
+import selling.sunshine.model.GoodsThumbnail;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.CommodityService;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -48,21 +50,21 @@ public class CommodityServiceImpl implements CommodityService {
         return result;
     }
 
-	@Override
-	public ResultData fetchCommodity(Map<String, Object> condition) {
-		ResultData result = new ResultData();
-		ResultData queryResponse = commodityDao.queryCommodity(condition);
-		if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-			result.setData(queryResponse.getData());
-		} else if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
-			result.setDescription(queryResponse.getDescription());
-		}
-		return result;
-	}
+    @Override
+    public ResultData fetchCommodity(Map<String, Object> condition) {
+        ResultData result = new ResultData();
+        ResultData queryResponse = commodityDao.queryCommodity(condition);
+        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(queryResponse.getData());
+        } else if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
+            result.setDescription(queryResponse.getDescription());
+        }
+        return result;
+    }
 
-	@Override
-	public ResultData updateCommodity(Goods goods) {
-		ResultData result = new ResultData();
+    @Override
+    public ResultData updateCommodity(Goods goods) {
+        ResultData result = new ResultData();
         ResultData updateResponse = commodityDao.updateCommodity(goods);
         result.setResponseCode(updateResponse.getResponseCode());
         if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
@@ -71,6 +73,18 @@ public class CommodityServiceImpl implements CommodityService {
             result.setDescription(updateResponse.getDescription());
         }
         return result;
-	}
-    
+    }
+
+    @Override
+    public ResultData saveCommodityThumbnails(List<GoodsThumbnail> thumbnails) {
+        ResultData result = new ResultData();
+        ResultData insertResponse = commodityDao.insertThumbnail(thumbnails);
+        result.setResponseCode(insertResponse.getResponseCode());
+        if (insertResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(insertResponse.getData());
+        } else {
+            result.setDescription(insertResponse.getDescription());
+        }
+        return result;
+    }
 }

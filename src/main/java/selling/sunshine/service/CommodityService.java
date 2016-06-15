@@ -2,9 +2,11 @@ package selling.sunshine.service;
 
 import org.springframework.stereotype.Service;
 import selling.sunshine.model.Goods;
+import selling.sunshine.model.GoodsThumbnail;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.utils.ResultData;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,4 +21,6 @@ public interface CommodityService {
     ResultData fetchCommodity(Map<String, Object> condition);
     
     ResultData updateCommodity(Goods goods);
+
+    ResultData saveCommodityThumbnails(List<GoodsThumbnail> thumbnails);
 }

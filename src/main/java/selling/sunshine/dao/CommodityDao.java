@@ -1,9 +1,11 @@
 package selling.sunshine.dao;
 
 import selling.sunshine.model.Goods;
+import selling.sunshine.model.GoodsThumbnail;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.utils.ResultData;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -18,4 +20,5 @@ public interface CommodityDao {
     
     ResultData updateCommodity(Goods goods);
 
+    ResultData insertThumbnail(List<GoodsThumbnail> thumbnails);
 }
