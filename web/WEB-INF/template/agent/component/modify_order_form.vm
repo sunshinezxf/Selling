@@ -247,13 +247,13 @@
     });
     $("#return_order_btn").click(function(){
     	#if(${status} == "SAVED" && ${operation} == "VIEW")
-    		window.location = "${path.concat('/agent//order/manage/0')}";
+    		window.location = "${path.concat('/agent/order/manage/0')}";
     	#elseif(${status} == "SUBMITTED" && ${operation} == "VIEW")
-    		window.location = "${path.concat('/agent//order/manage/1')}";
+    		window.location = "${path.concat('/agent/order/manage/1')}";
     	#elseif(${status} == "FINISHIED" && ${operation} == "VIEW")
-    		window.location = "${path.concat('/agent//order/manage/3')}";
+    		window.location = "${path.concat('/agent/order/manage/3')}";
     	#else
-    		window.location = "${path.concat('/agent//order/manage/2')}";
+    		window.location = "${path.concat('/agent/order/manage/2')}";
     	#end
     });
     $("#delete_dialog").find(".weui_btn_dialog.default").click(function(){
