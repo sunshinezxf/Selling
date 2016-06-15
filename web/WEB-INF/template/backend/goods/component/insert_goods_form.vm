@@ -60,7 +60,7 @@
                     </label>
 
                     <div class="col-sm-8 col-md-8 col-lg-8">
-                        <input type="number" class="form-control" id="agent_price" name="price" placeholder="代理商价格"
+                        <input type="number" class="form-control" id="agent_price" name="benefit" placeholder="代理商价格"
                                required="" autocomplete="off"/>
                     </div>
                 </div>
@@ -113,6 +113,7 @@
     $("#clear_goods_content").click(function () {
         $("#goods_name").val("");
         $("#goods_price").val("");
+        $("#agent_price").val("");
         $("#goods_description").val("");
     });
 

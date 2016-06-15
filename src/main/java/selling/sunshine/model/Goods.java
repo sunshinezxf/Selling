@@ -7,25 +7,27 @@ public class Goods extends Entity {
     private String goodsId;
     private String name;
     private double price;
+    private double benefit;
     private String description;
 
     public Goods() {
         super();
     }
 
-    public Goods(String name, double price) {
+    public Goods(String name, double price, double benefit) {
         this();
         this.name = name;
         this.price = price;
+        this.benefit = benefit;
     }
 
-    public Goods(String name, double price, String description) {
-        this(name, price);
+    public Goods(String name, double price, double benefit, String description) {
+        this(name, price, benefit);
         this.description = description;
     }
 
-    public Goods(String name, double price, String description, boolean block) {
-        this(name, price, description);
+    public Goods(String name, double price, double benefit, String description, boolean block) {
+        this(name, price, benefit, description);
         this.setBlockFlag(block);
     }
 
@@ -51,6 +53,14 @@ public class Goods extends Entity {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public double getBenefit() {
+        return benefit;
+    }
+
+    public void setBenefit(double benefit) {
+        this.benefit = benefit;
     }
 
     public String getDescription() {

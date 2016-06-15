@@ -11,6 +11,8 @@ public class GoodsForm {
     @NotNull
     private String price;
     @NotNull
+    private String benefit;
+    @NotNull
     private String description;
     private boolean block;
 
@@ -28,6 +30,14 @@ public class GoodsForm {
 
     public void setPrice(String price) {
         this.price = price;
+    }
+
+    public String getBenefit() {
+        return benefit;
+    }
+
+    public void setBenefit(String benefit) {
+        this.benefit = benefit;
     }
 
     public String getDescription() {
