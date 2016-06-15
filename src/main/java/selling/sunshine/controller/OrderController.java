@@ -496,6 +496,28 @@ public class OrderController {
 		return charge;
 	}
 	
-
-
+	@RequestMapping(method = RequestMethod.POST, value = "/customerpay")
+	public Charge customerPay(HttpServletRequest request) {
+		Charge charge = new Charge();
+		JSONObject params = toolService.getParams(request);
+		Subject subject = SecurityUtils.getSubject();
+		String clientIp = toolService.getIP(request);
+		Map<String, Object> condition = new HashMap<String, Object>();
+		condition.put("orderId", String.valueOf(params.get("order_id")));
+		ResultData orderData = orderService.fetchCustomerOrder(condition);
+		CustomerOrder customerOrder = null;
+		if (orderData.getResponseCode() == ResponseCode.RESPONSE_OK
+				&& orderData.getData() != null) {
+			customerOrder = ((List<CustomerOrder>) orderData.getData()).get(0);
+		}
+		
+		CustomerOrderBill bill = new CustomerOrderBill(Double.parseDouble(String.valueOf(params
+				.get("amount"))), String.valueOf(params.get("channel")),
+				clientIp,  customerOrder);
+		ResultData createResponse = billService.createCustomerOrderBill(bill);
+		if (createResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+			charge = (Charge) createResponse.getData();
+		}
+		return charge;
+	}
 }

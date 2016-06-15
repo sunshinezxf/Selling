@@ -18,9 +18,11 @@ import selling.sunshine.form.SortRule;
 import selling.sunshine.model.Agent;
 import selling.sunshine.model.Customer;
 import selling.sunshine.model.CustomerAddress;
+import selling.sunshine.model.CustomerOrder;
 import selling.sunshine.model.CustomerPhone;
 import selling.sunshine.model.Goods;
 import selling.sunshine.model.Order;
+import selling.sunshine.model.OrderBill;
 import selling.sunshine.model.OrderItem;
 import selling.sunshine.model.OrderStatus;
 import selling.sunshine.model.User;
@@ -265,13 +267,14 @@ public class CustomerController {
 
         return result;
     }
-/*
+
     @RequestMapping(method = RequestMethod.POST, value = "/place")
-    public ModelAndView placeOrder(@Valid PurchaseForm form, BindingResult result, RedirectAttributes attr) {
-        ModelAndView view = new ModelAndView();
-        if (result.hasErrors()) {
-            view.setViewName("redirect:/agent/order/place");
-            return view;
+    public ResultData placeOrder(@Valid PurchaseForm form, BindingResult result, RedirectAttributes attr) {
+        ResultData resultData = new ResultData();
+    	if (result.hasErrors()) {
+            resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            resultData.setDescription("表单错误");
+            return resultData;
         }
         String goodsId = form.getGoodsId();
         String agentId = form.getAgentId();
@@ -299,89 +302,25 @@ public class CustomerController {
         condition.put("blockFlag", false);
         ResultData fetchCommodityData = commodityService.fetchCommodity(condition);
         if(fetchCommodityData.getResponseCode() != ResponseCode.RESPONSE_OK){
-        	//这里需要一个错误页面!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        	return view;
+        	resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            resultData.setDescription("没有找到商品");
+            return resultData;
         }
         Goods goods = ((List<Goods>)fetchCommodityData.getData()).get(0);
-        //判断客户是否已经存在，不存在则加入代理商客户列表，如果代理商也不存在，则加入到网络代理商的客户列表中
-        Customer customer = null;
-        if(wechat != null){
-        	condition.clear();
-        	condition.put("wechat",wechat);
-        	condition.put("blockFlag", false);
-        	ResultData fetchCustomerData = customerService.fetchCustomer(condition);
-        	if(fetchCustomerData.getResponseCode() == ResponseCode.RESPONSE_OK){
-        		customer = ((List<Customer>)fetchCustomerData.getData()).get(0);
-        	} else if(agent != null){
-        		 customer = new Customer(customerName, address, phone, new selling.sunshine.model.lite.Agent(agent));
-        	     ResultData createCustomerData = customerService.createCustomer(customer);
-        	}
-        }
+        double goodsPrice = agent == null ? goods.getPrice() : goods.getPrice();//！！！！！！！！！！！！！！！！！！！！！！！！
+        double totalPrice = goodsPrice * goodsQuantity;
+        CustomerOrder customerOrder = new CustomerOrder(goods, goodsQuantity, customerName, address, agent);
+        customerOrder.setTotalPrice(goodsPrice);
+        customerOrder.setWechat(wechat);
         
-        List<OrderItem> orderItems = new ArrayList<OrderItem>();
-        int length = form.getCustomerId().length;
-        Order order = new Order();
-        order.setAgent(user.getAgent());
-        //创建订单和订单项
-        double order_price = 0;
-        for (int i = 0; i < length; i++) {
-            String goodsId = form.getGoodsId()[i];//商品ID
-            String customerId = form.getCustomerId()[i];//顾客ID
-            String address = form.getAddress()[i];
-            int goodsQuantity = Integer.parseInt(form.getGoodsQuantity()[i]);//商品数量
-            double orderItemPrice = 0;//OrderItem总价
-            Map<String, Object> goodsCondition = new HashMap<String, Object>();//查询商品价格
-            goodsCondition.put("goodsId", goodsId);
-            ResultData goodsData = commodityService.fetchCommodity(goodsCondition);
-            Goods goods = null;
-            if (goodsData.getResponseCode() == ResponseCode.RESPONSE_OK) {
-                List<Goods> goodsList = (List<Goods>) goodsData.getData();
-                if (goodsList.size() != 1) {
-                    Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "商品不唯一或未找到", "/agent/order/place");
-                    attr.addFlashAttribute("prompt", prompt);
-                    view.setViewName("redirect:/agent/prompt");
-                    return view;
-                }
-                goods = goodsList.get(0);
-            } else {
-                Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "商品信息异常", "/agent/order/place");
-                attr.addFlashAttribute("prompt", prompt);
-                view.setViewName("redirect:/agent/prompt");
-                return view;
-            }
-            orderItemPrice = goods.getPrice() * goodsQuantity;//得到一个OrderItem的总价
-            order_price += orderItemPrice;//累加Order总价
-            OrderItem orderItem = new OrderItem(customerId, goodsId, goodsQuantity, orderItemPrice, address);//构造OrderItem
-            orderItems.add(orderItem);
+        ResultData fetchResponse = orderService.placeOrder(customerOrder);
+        if (fetchResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+        	resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            resultData.setDescription("下单错误");
+            return resultData;
         }
-        order.setOrderItems(orderItems);//构造Order
-        order.setPrice(order_price);
-        switch (type) {
-            case "save":
-                order.setStatus(OrderStatus.SAVED);
-                break;
-            case "submit":
-                order.setStatus(OrderStatus.SUBMITTED);
-                break;
-            default:
-                order.setStatus(OrderStatus.SAVED);
-        }
-
-        ResultData fetchResponse = orderService.placeOrder(order);
-        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            if (type.equals("save")) {
-                Prompt prompt = new Prompt("提示", "保存成功", "/agent/order/manage/0");
-                attr.addFlashAttribute("prompt", prompt);
-                view.setViewName("redirect:/agent/prompt");
-            } else if (type.equals("submit")) {
-                view.setViewName("redirect:/order/pay/" + order.getOrderId());
-            }
-            return view;
-        }
-        Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "失败", "/agent/order/manage/0");
-        attr.addFlashAttribute("prompt", prompt);
-        view.setViewName("redirect:/agent/prompt");
-        return view;
+        resultData.setData(fetchResponse.getData());
+        return resultData;
     }
-    */
+    
 }

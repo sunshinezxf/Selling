@@ -24,6 +24,8 @@ import com.pingplusplus.model.Webhooks;
 
 import selling.sunshine.model.Agent;
 import selling.sunshine.model.BillStatus;
+import selling.sunshine.model.CustomerOrder;
+import selling.sunshine.model.CustomerOrderBill;
 import selling.sunshine.model.DepositBill;
 import selling.sunshine.model.Order;
 import selling.sunshine.model.OrderBill;
@@ -131,6 +133,37 @@ public class BillController {
         			ResultData payData = orderService.payOrder(order);
         		}
             }
+		} else if(dealId.startsWith("COB")){
+			Map<String, Object> condition = new HashMap<String, Object>();
+			condition.put("billId", dealId);
+			ResultData customerOrderBillData = billService.fetchCustomerOrderBill(condition);
+			if(customerOrderBillData.getResponseCode() != ResponseCode.RESPONSE_OK || customerOrderBillData.getData() == null){
+				resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
+				resultData.setDescription("获取个人账单错误");
+				return resultData;
+			}
+			CustomerOrderBill customerOrderBill= ((List<CustomerOrderBill>)customerOrderBillData.getData()).get(0);
+			customerOrderBill.setStatus(BillStatus.PAYED);
+			resultData = billService.updataCustomerOrderBill(customerOrderBill);
+			if(resultData.getResponseCode() != ResponseCode.RESPONSE_OK){
+				return resultData;
+			}
+			condition.clear();
+			condition.put("orderId", customerOrderBill.getCustomerOrder().getOrderId());
+			ResultData customerOrderData = orderService.fetchCustomerOrder(condition);
+			if(customerOrderData.getResponseCode() != ResponseCode.RESPONSE_OK || customerOrderData.getData() == null){
+				resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
+				resultData.setDescription("获取个人订单错误");
+				return resultData;
+			}
+			CustomerOrder customerOrder = (CustomerOrder) customerOrderData.getData();
+			if(customerOrderBill.getBillAmount() >= customerOrder.getTotalPrice()){
+				customerOrder.setStatus(OrderItemStatus.PAYED);
+				ResultData payData = orderService.payOrder(customerOrder);
+				if(payData.getResponseCode() != ResponseCode.RESPONSE_OK){
+					return payData;
+				}
+			}
 		}
         
         return resultData;

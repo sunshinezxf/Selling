@@ -1,5 +1,6 @@
 package selling.sunshine.service;
 
+import selling.sunshine.model.CustomerOrderBill;
 import selling.sunshine.model.DepositBill;
 import selling.sunshine.model.OrderBill;
 import selling.sunshine.utils.ResultData;
@@ -17,8 +18,14 @@ public interface BillService {
     ResultData updateDepositBill(DepositBill bill);
 
     ResultData createOrderBill(OrderBill bill);
-
+    
     ResultData fetchOrderBill(Map<String, Object> condition);
-
+    
     ResultData updateOrderBill(OrderBill bill);
+
+    ResultData createCustomerOrderBill(CustomerOrderBill bill);
+    
+    ResultData fetchCustomerOrderBill(Map<String, Object> condition);
+    
+    ResultData updataCustomerOrderBill(CustomerOrderBill bill);
 }
