@@ -1,50 +1,45 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="selling.goods">
-	<resultMap id="goodsVo" type="selling.sunshine.model.Goods">
-		<result property="goodsId" column="goods_id"></result>
-		<result property="name" column="goods_name"></result>
-		<result property="price" column="goods_price"></result>
-		<result property="description" column="goods_description"></result>
-		<result property="blockFlag" column="block_flag"></result>
-		<result property="createAt" column="create_time"></result>
-	</resultMap>
+    <resultMap id="goodsVo" type="selling.sunshine.model.Goods">
+        <result property="goodsId" column="goods_id"></result>
+        <result property="name" column="goods_name"></result>
+        <result property="price" column="primary_price"></result>
+        <result property="benefit" column="agent_price"></result>
+        <result property="description" column="goods_description"></result>
+        <result property="blockFlag" column="block_flag"></result>
+        <result property="createAt" column="create_time"></result>
+    </resultMap>
 
-	<insert id="insert" parameterType="selling.sunshine.model.Goods"
-		useGeneratedKeys="false">
-		INSERT INTO goods(goods_id, goods_name, goods_price, goods_description,
-		block_flag, create_time)
-		VALUES (#{goodsId}, #{name}, #{price}, #{description}, #{blockFlag},
-		#{createAt})
+    <insert id="insert" parameterType="selling.sunshine.model.Goods" useGeneratedKeys="false">
+		INSERT INTO goods(goods_id, goods_name, primary_price, agent_price, goods_description, block_flag, create_time)
+		VALUES (#{goodsId}, #{name}, #{price}, #{benefit}, #{description}, #{blockFlag}, #{createAt})
 	</insert>
 
-	<select id="query" parameterType="java.util.Map" resultMap="goodsVo">
-		SELECT goods_id, goods_name, goods_price, goods_description,
-		block_flag, create_time
-		FROM goods
-		WHERE 1 = 1
-		<if test="goodsId != null and goodsId != ''">
-			AND goods_id = #{goodsId}
-		</if>
-		<if test="name != null and name != ''">
-			AND goods_name = #{name}
-		</if>
-		<if test="blockFlag != null">
-			AND block_flag = #{blockFlag}
-		</if>
-		<if test="rule != null and rule != ''">
-			ORDER BY ${rule}
-		</if>
-	</select>
+    <select id="query" parameterType="java.util.Map" resultMap="goodsVo">
+        SELECT goods_id, goods_name, primary_price, agent_price, goods_description, block_flag, create_time
+        FROM goods
+        WHERE 1 = 1
+        <if test="goodsId != null and goodsId != ''">
+            AND goods_id = #{goodsId}
+        </if>
+        <if test="name != null and name != ''">
+            AND goods_name = #{name}
+        </if>
+        <if test="blockFlag != null">
+            AND block_flag = #{blockFlag}
+        </if>
+        <if test="rule != null and rule != ''">
+            ORDER BY ${rule}
+        </if>
+    </select>
 
-	<update id="update" parameterType="selling.sunshine.model.Goods">
-		UPDATE goods
-		<set>
-			goods_name = #{name}, goods_price = #{price}, goods_description = #{description}, block_flag = #{blockFlag}  
-		</set>
-		WHERE 1 = 1
-		<if test="goodsId != null and goodsId != ''">
-			AND goods_id = #{goodsId}
-		</if>
-	</update>
+    <update id="update" parameterType="selling.sunshine.model.Goods">
+        UPDATE goods
+        <set>
+            goods_name = #{name}, primary_price = #{price}, agent_price = #{benefit}, goods_description = #{description},
+            block_flag = #{blockFlag}
+        </set>
+        WHERE goods_id = #{goodsId}
+    </update>
 </mapper>

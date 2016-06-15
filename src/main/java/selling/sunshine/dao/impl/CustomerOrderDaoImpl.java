@@ -1,11 +1,15 @@
 package selling.sunshine.dao.impl;
 
+import java.util.List;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import selling.sunshine.dao.BaseDao;
 import selling.sunshine.dao.CustomerOrderDao;
 import selling.sunshine.model.CustomerOrder;
+import selling.sunshine.model.OrderPool;
 import selling.sunshine.utils.IDGenerator;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
@@ -36,4 +40,39 @@ public class CustomerOrderDaoImpl extends BaseDao implements CustomerOrderDao {
             }
         }
     }
+
+	@Override
+	public ResultData updateOrder(CustomerOrder customerOrder) {
+		ResultData result = new ResultData();
+        synchronized (lock) {
+            try {
+                sqlSession.update("selling.customer.order.update", customerOrder);
+                result.setData(customerOrder);
+            } catch (Exception e) {
+                logger.error(e.getMessage());
+                result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+                result.setDescription(e.getMessage());
+            } finally {
+                result.setResponseCode(ResponseCode.RESPONSE_OK);
+                return result;
+            }
+        }
+	}
+
+	@Override
+	public ResultData queryOrder(Map<String, Object> condition) {
+		ResultData result = new ResultData();
+		synchronized(lock){
+			try{
+				List<OrderPool> list = sqlSession.selectList("selling.customer.order.query", condition);
+				result.setData(list);
+			}catch (Exception e) {
+	            logger.error(e.getMessage());
+	            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+	            result.setDescription(e.getMessage());
+	        } finally {
+	            return result;
+	        }
+		}
+	}
 }

@@ -52,7 +52,7 @@ public class CommodityController {
             return view;
         }
         try {
-            Goods goods = new Goods(form.getName(), Double.parseDouble(form.getPrice()), form.getDescription(), form.isBlock());
+            Goods goods = new Goods(form.getName(), Double.parseDouble(form.getPrice()), Double.parseDouble(form.getBenefit()), form.getDescription(), form.isBlock());
             ResultData createResponse = commodityService.createCommodity(goods);
             if (createResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
                 view.setViewName("redirect:/commodity/overview");
@@ -91,7 +91,7 @@ public class CommodityController {
             view.setViewName("redirect:/commodity/overview");
             return view;
         }
-        Goods previousGoods = new Goods(goodsForm.getName(), Double.parseDouble(goodsForm.getPrice()), goodsForm.getDescription(), goodsForm.isBlock());
+        Goods previousGoods = new Goods(goodsForm.getName(), Double.parseDouble(goodsForm.getPrice()), Double.parseDouble(goodsForm.getBenefit()), goodsForm.getDescription(), goodsForm.isBlock());
         previousGoods.setGoodsId(goodsId);
         ResultData resultData = commodityService.updateCommodity(previousGoods);
         if (resultData.getResponseCode() != ResponseCode.RESPONSE_OK) {

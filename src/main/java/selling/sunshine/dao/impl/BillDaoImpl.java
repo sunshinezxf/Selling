@@ -8,6 +8,7 @@ import org.springframework.util.StringUtils;
 import selling.sunshine.dao.BaseDao;
 import selling.sunshine.dao.BillDao;
 import selling.sunshine.model.BillStatus;
+import selling.sunshine.model.CustomerOrderBill;
 import selling.sunshine.model.DepositBill;
 import selling.sunshine.model.OrderBill;
 import selling.sunshine.utils.IDGenerator;
@@ -173,4 +174,57 @@ public class BillDaoImpl extends BaseDao implements BillDao {
             }
         }
     }
+
+	@Override
+	public ResultData insertCustomerOrderBill(CustomerOrderBill bill) {
+		 ResultData result = new ResultData();
+	        synchronized (lock) {
+	            try {
+	                bill.setBillId(IDGenerator.generate("COB"));
+	                sqlSession.insert("selling.bill.customerOrder.insert", bill);
+	                result.setData(bill);
+	            } catch (Exception e) {
+	                logger.error(e.getMessage());
+	                result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+	                result.setDescription(e.getMessage());
+	            } finally {
+	                return result;
+	            }
+	        }
+	}
+
+	@Override
+	public ResultData queryCustomerOrderBill(Map<String, Object> condition) {
+		ResultData result = new ResultData();
+        try {
+            List<OrderBill> list = sqlSession.selectList("selling.bill.customerOrder.query", condition);
+            result.setData(list);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription(e.getMessage());
+        } finally {
+            return result;
+        }
+	}
+
+	@Override
+	public ResultData updateCustomerOrderBill(CustomerOrderBill bill) {
+		ResultData result = new ResultData();
+        synchronized (lock) {
+            try {
+                sqlSession.update("selling.bill.customerOrder.update", bill);
+                Map<String, Object> condition = new HashMap<>();
+                condition.put("billId", bill.getBillId());
+                bill = sqlSession.selectOne("selling.bill.customerOrder.query", condition);
+                result.setData(bill);
+            } catch (Exception e) {
+                logger.error(e.getMessage());
+                result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+                result.setDescription(e.getMessage());
+            } finally {
+                return result;
+            }
+        }
+	}
 }

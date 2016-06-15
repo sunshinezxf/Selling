@@ -27,5 +27,5 @@ public interface BillService {
     
     ResultData fetchCustomerOrderBill(Map<String, Object> condition);
     
-    ResultData updataCustomerOrderBill(CustomerOrderBill bill);
+    ResultData updateCustomerOrderBill(CustomerOrderBill bill);
 }

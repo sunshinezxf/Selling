@@ -1,5 +1,7 @@
 package selling.sunshine.dao;
 
+import java.util.Map;
+
 import selling.sunshine.model.CustomerOrder;
 import selling.sunshine.utils.ResultData;
 
@@ -8,4 +10,8 @@ import selling.sunshine.utils.ResultData;
  */
 public interface CustomerOrderDao {
     ResultData insertOrder(CustomerOrder order);
+    
+    ResultData updateOrder(CustomerOrder order);
+    
+    ResultData queryOrder(Map<String, Object> condition);
 }
