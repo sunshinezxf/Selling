@@ -7,3 +7,11 @@ body {
     overflow-x: hidden;
     background-color: #fbf9fe
 }
+
+.hd{
+	text-align:center;
+}
+
+.order_status{
+	text-decoration:underline;
+}

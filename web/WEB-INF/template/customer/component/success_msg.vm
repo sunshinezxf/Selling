@@ -42,6 +42,6 @@
 	});
 	
 	$("#order").click(function(){
-	    window.location.href="/commodity/customerorder?"+"${orderId}";
+	    window.location.href="/commodity/customerorder?"+"orderId=${orderId}";
 	});
 </script>
