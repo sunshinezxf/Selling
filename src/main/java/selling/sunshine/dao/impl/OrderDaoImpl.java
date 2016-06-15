@@ -1,10 +1,10 @@
 package selling.sunshine.dao.impl;
 
 import org.apache.ibatis.session.RowBounds;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
+
 import selling.sunshine.dao.BaseDao;
 import selling.sunshine.dao.OrderDao;
 import selling.sunshine.model.*;
@@ -269,59 +269,94 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
         try {
             Map<String, Object> condition = new HashMap<>();
             condition.put("date", date + "%");
-            List<Map<String, Object>> resultList = sqlSession.selectList(
+            List<Map<String, Object>> sumOrderList = sqlSession.selectList(
                     "selling.order.pool.sumOrder", condition);
-            Map<String, Object> configCondition = new HashMap<>();
-            List<RefundConfig> configList = sqlSession.selectList("selling.refund.config.query", configCondition);
-            for (int i = 0; i < resultList.size(); i++) {
-                OrderPool pool = new OrderPool();
-                pool.setOrderPoolId(IDGenerator.generate("OPL"));
-                pool.setQuantity(Integer.parseInt(resultList.get(i)
-                        .get("quantity").toString()));
-                pool.setPrice(Double.parseDouble(resultList.get(i).get("price")
-                        .toString()));
-                pool.setPoolDate(new Date(c.getTimeInMillis()));
-                Agent agent = new Agent();
-                agent.setAgentId((String) resultList.get(i).get("agent"));
-                pool.setAgent(agent);
-                Goods goods = new Goods();
-                goods.setGoodsId((String) resultList.get(i).get("goods"));
-                pool.setGoods(goods);
-                for (RefundConfig config : configList) {
-                    if (config.getGoods().getGoodsId().equals((String) resultList.get(i).get("goods"))) {
-                        pool.setRefundConfig(config);
-                        if (Integer.parseInt(resultList.get(i).get("quantity").toString()) >= config.getAmountTrigger()) {
-                            pool.setBlockFlag(false);
-                            Map<String, Object> level1Con = new HashMap<>();
-                            level1Con.put("agentId", (String) resultList.get(i).get("agent"));
-                            Agent agentLevel1 = (Agent) sqlSession.selectList("selling.agent.query", level1Con).get(0);
-                            if (agentLevel1.getUpperAgent() != null) {
-                                Map<String, Object> level2Con = new HashMap<>();
-                                level2Con.put("agentId", agentLevel1.getUpperAgent().getAgentId());
-                                Agent agentLevel2 = (Agent) sqlSession.selectList("selling.agent.query", level2Con).get(0);
-                                if (agentLevel2.getUpperAgent() != null) {
-                                    Map<String, Object> level3Con = new HashMap<>();
-                                    level2Con.put("agentId", agentLevel2.getUpperAgent().getAgentId());
-                                    Agent agentLevel3 = (Agent) sqlSession.selectList("selling.agent.query", level3Con).get(0);
-                                    //当前agent为三级代理商
-                                    pool.setRefundAmount(Double.parseDouble(resultList.get(i).get("price").toString()) * config.getLevel3Percent());
+            List<Map<String, Object>> sumCustomerOrderList = sqlSession.selectList(
+                    "selling.customer.order.sumCustomerOrder", condition);
+            List<Map<String, Object>> resultList=new ArrayList<Map<String,Object>>();
+            if (sumOrderList.size()==0) {
+            	 resultList=sumCustomerOrderList;
+			}else if(sumCustomerOrderList.size()==0){
+				 resultList=sumOrderList;
+			}else{
+				 boolean flag=false;				 
+				 for (int i = 0; i < sumOrderList.size(); i++) {
+						for (int j = 0; j < sumCustomerOrderList.size(); j++) {
+							if ((sumOrderList.get(i).get("agent").equals(sumCustomerOrderList.get(j).get("agent")))&&(sumOrderList.get(i).get("goods").equals(sumCustomerOrderList.get(j).get("goods")))) {
+								flag=true;
+								sumCustomerOrderList.get(j).put("quantity", Integer.parseInt(sumCustomerOrderList.get(j)
+		                                 .get("quantity").toString())+Integer.parseInt(sumOrderList.get(i)
+		                                         .get("quantity").toString()));
+								sumCustomerOrderList.get(j).put("price", Double.parseDouble(sumCustomerOrderList.get(j)
+		                                 .get("price").toString())+Double.parseDouble(sumOrderList.get(i)
+		                                         .get("price").toString()));
+								break;
+							}
+						}
+						if (!flag) {
+							resultList.add(sumOrderList.get(i));
+						}else {
+							flag=false;
+						}
+			     }
+				 resultList.addAll(sumCustomerOrderList);
+			}           
+            if (resultList.size()!=0) {
+            	 Map<String, Object> configCondition = new HashMap<>();
+                 List<RefundConfig> configList = sqlSession.selectList("selling.refund.config.query", configCondition);
+                 for (int i = 0; i < resultList.size(); i++) {
+                     OrderPool pool = new OrderPool();
+                     pool.setOrderPoolId(IDGenerator.generate("OPL"));
+                     pool.setPrice(Double.parseDouble(resultList.get(i).get("price")
+                             .toString()));
+                     pool.setPoolDate(new Date(c.getTimeInMillis()));
+                     Agent agent = new Agent();
+                     agent.setAgentId((String) resultList.get(i).get("agent"));
+                     pool.setAgent(agent);
+                     Goods goods = new Goods();
+                     goods.setGoodsId((String) resultList.get(i).get("goods"));
+                     pool.setGoods(goods);
+                     Map<String, Object> customerOrderCon = new HashMap<>();
+                     customerOrderCon.put("agentId", resultList.get(i).get("agent"));
+                     customerOrderCon.put("goodsId", resultList.get(i).get("goods"));
+                     customerOrderCon.put("date", date + "%");
+                     for (RefundConfig config : configList) {
+                         if (config.getGoods().getGoodsId().equals((String) resultList.get(i).get("goods"))) {
+                             if (pool.getQuantity()>= config.getAmountTrigger()) {
+                             	pool.setRefundConfig(config);
+                                 pool.setBlockFlag(false);
+                                 Map<String, Object> level1Con = new HashMap<>();
+                                 level1Con.put("agentId", (String) resultList.get(i).get("agent"));
+                                 Agent agentLevel1 = (Agent) sqlSession.selectList("selling.agent.query", level1Con).get(0);
+                                 if (agentLevel1.getUpperAgent() != null) {
+                                     Map<String, Object> level2Con = new HashMap<>();
+                                     level2Con.put("agentId", agentLevel1.getUpperAgent().getAgentId());
+                                     Agent agentLevel2 = (Agent) sqlSession.selectList("selling.agent.query", level2Con).get(0);
+                                     if (agentLevel2.getUpperAgent() != null) {
+                                         Map<String, Object> level3Con = new HashMap<>();
+                                         level2Con.put("agentId", agentLevel2.getUpperAgent().getAgentId());
+                                         Agent agentLevel3 = (Agent) sqlSession.selectList("selling.agent.query", level3Con).get(0);
+                                         //当前agent为三级代理商
+                                         pool.setRefundAmount(Double.parseDouble(resultList.get(i).get("quantity").toString()) * config.getLevel3Percent());
 
-                                } else {
-                                    //当前agent为二级代理商
-                                    pool.setRefundAmount(Double.parseDouble(resultList.get(i).get("price").toString()) * config.getLevel2Percent());
-                                }
-                            } else {
-                                //当前agent为一级代理商
-                                pool.setRefundAmount(Double.parseDouble(resultList.get(i).get("price").toString()) * config.getLevel1Percent());
-                            }
+                                     } else {
+                                         //当前agent为二级代理商
+                                         pool.setRefundAmount(Double.parseDouble(resultList.get(i).get("quantity").toString()) * config.getLevel2Percent());
+                                     }
+                                 } else {
+                                     //当前agent为一级代理商
+                                     pool.setRefundAmount(Double.parseDouble(resultList.get(i).get("quantity").toString()) * config.getLevel1Percent());
+                                 }
 
-                        }
-                    }
-                }
-                sqlSession.insert("selling.order.pool.insert", pool);
-            }
-            result.setData(resultList);
-            result.setResponseCode(ResponseCode.RESPONSE_OK);
+                             }
+                         }
+                     }
+                     sqlSession.insert("selling.order.pool.insert", pool);
+                 }
+                 result.setData(resultList);
+                 result.setResponseCode(ResponseCode.RESPONSE_OK);
+			}
+           
         } catch (Exception e) {
             logger.error(e.getMessage());
             result.setResponseCode(ResponseCode.RESPONSE_ERROR);

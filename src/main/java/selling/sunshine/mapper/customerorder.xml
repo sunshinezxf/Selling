@@ -32,6 +32,13 @@
         <result property="createAt" column="create_time"></result>
     </resultMap>
     
+    <resultMap id="sumCustomerOrderVo" type="java.util.Map">
+        <result property="agent" column="agent_id"></result>
+        <result property="goods" column="goods_id"></result>
+        <result property="quantity" column="quantity"></result>
+        <result property="price" column="price"></result>
+    </resultMap>
+    
     <select id="query" parameterType="java.util.Map" resultMap="customerOrderVo">
     	SELECT order_id, agent_id, wechat, quantity, receiver_name, receiver_addr, total_price, order_status, goods_id, block_flag, create_time
     	FROM customer_order
@@ -42,6 +49,22 @@
     	<if test="wechat != null and wechat != ''">
     		AND wechat = #{wechat}
     	</if>
+    	<if test="agentId != null and agentId != ''">
+    		AND agent_id = #{agentId}
+    	</if>
+    	<if test="goodsId != null and goodsId != ''">
+    		AND goods_id = #{goodsId}
+    	</if>
+    </select>
+    
+    <select id="sumCustomerOrder" parameterType="java.util.Map" resultMap="sumCustomerOrderVo">
+    	SELECT agent_id, goods_id, SUM(quantity) AS quantity, SUM(total_price) AS price, 
+    	FROM customer_order
+    	WHERE 1 = 1 AND (order_status='1' OR order_status='2' OR order_status='3')
+		<if test="date != null and date != ''">
+			AND create_time LIKE #{date}
+		</if>
+		GROUP BY agent_id,goods_id
     </select>
     
     <select id="agentLiteQuery" parameterType="java.util.Map" resultMap="agentLiteVo">
