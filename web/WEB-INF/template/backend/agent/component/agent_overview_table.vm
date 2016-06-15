@@ -16,6 +16,7 @@
         </div>
     </div>
 </div>
+#parse("/backend/agent/component/agent_detail_modal.vm")
 <script>
     $(document).ready(function () {
         $("#overview_agent_table").DataTable({
@@ -49,10 +50,9 @@
                 })
             },
             columns: [
-                {title: "姓名", "mData": "name"},
                 {
                     title: "姓名", "mRender": function (data, type, full) {
-                    var operation = "<a href='${path.concat('/agent/detail/')}" + full.agentId + "'>"+full.name+"</a>";
+                    var operation = "<a id='" + full.agentId + "' onclick=detail(this) data-toggle='modal' data-target='#agent_detail_modal'>"+full.name+"</a>";
                     return operation;
                 }
                 },
@@ -141,4 +141,10 @@
             }
         });
     });
+    
+    function detail(obj){
+        $.post("${path.concat('/agent/detail/')}"+obj.id, function (result) {
+           document.getElementById("personal").innerHTML="代理商姓名： "+result.data.agent.name;
+       });
+    }
 </script>

@@ -16,6 +16,7 @@
         </div>
     </div>
 </div>
+#parse("/backend/component/customer_detail_modal.vm")
 <script>
     $(document).ready(function () {
         $("#overview_customer_table").DataTable({
@@ -55,8 +56,7 @@
                 {
                     title: "操作", "mRender": function (data, type, full) {
                     var operation = "";
-                     var detail_url = "${path.concat('/customer/detail/')}" + full.customerId;
-                    var detail_button = "<button type='button' class='btn btn-info btn-group-sm' onclick=\"javascript:location.href='" + detail_url + "'\">详情</button>&nbsp;"
+                    var detail_button = "<button type='button' class='btn btn-info btn-group-sm' id='" + full.customerId + "' onclick=detail(this) data-toggle='modal' data-target='#customer_detail_modal'>详情</button>&nbsp;"
                     operation += detail_button;
                     return operation;
                 }
@@ -80,4 +80,10 @@
             }
         });
     });
+    
+    function detail(obj){
+        $.post("${path.concat('/customer/detail/')}"+obj.id, function (result) {
+           document.getElementById("personal").innerHTML="客户姓名： "+result.data.customer.name;
+       });
+    }
 </script>

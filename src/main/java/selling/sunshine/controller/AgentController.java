@@ -1079,9 +1079,11 @@ public class AgentController {
 		return resultData;
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value = "/detail/{agentId}")
-	public ModelAndView detail(@PathVariable String agentId){
-		ModelAndView view=new ModelAndView();
+	@RequestMapping(method = RequestMethod.POST, value = "/detail/{agentId}")
+	@ResponseBody
+	public ResultData detail(@PathVariable String agentId){
+		ResultData resultData=new ResultData();
+		Map<String, Object> dataMap=new HashMap<>();
 		//代理商个人信息
 		Map<String, Object> condition = new HashMap<>();
 		condition.put("agentId", agentId);
@@ -1094,12 +1096,13 @@ public class AgentController {
 		//代理商提现信息
 		List<WithdrawRecord> withdrawRecordList=(List<WithdrawRecord>)withdrawService.fetchWithdrawRecord(condition).getData();
 		
-		view.setViewName("/backend/agent/detail");
-		view.addObject("agent", agent);
-		view.addObject("orderList", orderList);
-		view.addObject("refundRecordList", refundRecordList);
-		view.addObject("withdrawRecordList", withdrawRecordList);
-		return view;
+
+		dataMap.put("agent", agent);
+		dataMap.put("orderList", orderList);
+		dataMap.put("refundRecordList", refundRecordList);
+		dataMap.put("withdrawRecordList", withdrawRecordList);
+		resultData.setData(dataMap);
+		return resultData;
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/subordinate/{agentId}")
