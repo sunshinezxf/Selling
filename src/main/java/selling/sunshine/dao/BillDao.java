@@ -1,5 +1,6 @@
 package selling.sunshine.dao;
 
+import selling.sunshine.model.CustomerOrderBill;
 import selling.sunshine.model.DepositBill;
 import selling.sunshine.model.OrderBill;
 import selling.sunshine.utils.ResultData;
@@ -21,4 +22,10 @@ public interface BillDao {
     ResultData queryOrderBill(Map<String, Object> condition);
 
     ResultData updateOrderBill(OrderBill bill);
+    
+    ResultData insertCustomerOrderBill(CustomerOrderBill bill);
+    
+    ResultData queryCustomerOrderBill(Map<String, Object> condition);
+    
+    ResultData updateCustomerOrderBill(CustomerOrderBill bill);
 }
