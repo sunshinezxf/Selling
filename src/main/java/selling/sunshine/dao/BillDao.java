@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * Created by sunshine on 5/10/16.
  */
-public interface BillDao {
+public interface BillDao{
     ResultData insertDepositBill(DepositBill bill);
 
     ResultData queryDepositBill(Map<String, Object> condition);

@@ -1,5 +1,6 @@
 package selling.sunshine.model;
 
+import selling.sunshine.model.lite.Agent;
 /**
  * Created by sunshine on 6/14/16.
  */

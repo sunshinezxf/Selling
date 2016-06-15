@@ -10,6 +10,7 @@
         <mapper resource="selling/sunshine/mapper/orderitem.xml"/>
         <mapper resource="selling/sunshine/mapper/customer.xml"/>
         <mapper resource="selling/sunshine/mapper/customerorder.xml"/>
+        <mapper resource="selling/sunshine/mapper/customerorderbill.xml"/>
         <mapper resource="selling/sunshine/mapper/customerphone.xml"/>
         <mapper resource="selling/sunshine/mapper/customeraddress.xml"/>
         <mapper resource="selling/sunshine/mapper/depositbill.xml"/>
@@ -23,6 +24,5 @@
         <mapper resource="selling/sunshine/mapper/credit.xml"/>
         <mapper resource="selling/sunshine/mapper/withdraw.xml"/>
         <mapper resource="selling/sunshine/mapper/bankcard.xml"/>
-        <mapper resource="selling/sunshine/mapper/customerorder.xml"/>
     </mappers>
 </configuration>
