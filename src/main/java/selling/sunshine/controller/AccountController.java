@@ -249,6 +249,14 @@ public class AccountController {
 	        }
 	        view.addObject("prompt", prompt);
 	        view.setViewName("/agent/prompt");
+        } else if(billId.startsWith("COB")){
+        	if (!StringUtils.isEmpty(result) && result.equals("success")) {
+	            prompt = new Prompt("提示", "恭喜您,付款成功!", "/account/info");
+	        } else {
+	            prompt = new Prompt(PromptCode.WARNING, "提示", "对不起,您的付款已取消.", "/account/info");
+	        }
+	        view.addObject("prompt", prompt);
+	        view.setViewName("/agent/prompt");
         }
         return view;
     }

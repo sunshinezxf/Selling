@@ -51,9 +51,9 @@
     </insert>
     
     <update id="update" parameterType="selling.sunshine.model.CustomerOrderBill" useGeneratedKeys="false">
-        UPDATE order_bill
+        UPDATE customer_order_bill
         <set>
-            <if test="order.orderId != null and order.orderId != ''">
+            <if test="customerOrder.orderId != null and customerOrder.orderId != ''">
                 order_id = #{customerOrder.orderId},
             </if>
             <if test="channel != null and channel != ''">
@@ -74,10 +74,10 @@
     </update>
 
     <select id="customerOrderQuery" parameterType="java.util.Map" resultMap="customerOrderVo">
-    	SELECT order_id, agent_id, wechat, quantity, receiver_name, receive_addr, total_price, order_status, block_flag, create_time
+    	SELECT order_id, agent_id, wechat, quantity, receiver_name, receiver_addr, total_price, order_status, block_flag, create_time
     	FROM customer_order
     	WHERE 1=1
-    	<if test="order_id != null and order_id != ''">
+    	<if test="orderId != null and orderId != ''">
     		AND order_id = #{orderId}
     	</if>
     	<if test="wechat != null and wechat != ''">
