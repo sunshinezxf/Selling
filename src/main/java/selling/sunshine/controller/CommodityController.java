@@ -23,7 +23,10 @@ import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
 import javax.validation.Valid;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by sunshine on 4/8/16.
@@ -232,20 +235,20 @@ public class CommodityController {
     public ResultData upload(MultipartHttpServletRequest request) {
         ResultData result = new ResultData();
         String context = request.getSession().getServletContext().getRealPath("/");
-
         try {
-            Iterator<String> names = request.getFileNames();
-            while (names.hasNext()) {
-                String filename = names.next();
-                MultipartFile file = request.getFile(filename);
-                List<MultipartFile> list = request.getFiles(filename);
-                if (file != null) {
-                    uploadService.upload(file, context);
+            String filename = "thumbnail";
+            MultipartFile file = request.getFile(filename);
+            if (file != null) {
+                ResultData response = uploadService.upload(file, context);
+                if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                    result.setData(response.getData());
+                    return result;
                 }
             }
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
+        result.setResponseCode(ResponseCode.RESPONSE_ERROR);
         return result;
     }
 
