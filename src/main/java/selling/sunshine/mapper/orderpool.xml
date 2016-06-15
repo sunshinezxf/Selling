@@ -13,7 +13,8 @@
 	<resultMap id="goodsVo" type="selling.sunshine.model.Goods">
 		<result property="goodsId" column="goods_id"></result>
 		<result property="name" column="goods_name"></result>
-		<result property="price" column="goods_price"></result>
+		<result property="price" column="primary_price"></result>
+		<result property="benefit" column="agent_price"></result>
 		<result property="description" column="goods_description"></result>
 	</resultMap>
 	
@@ -68,7 +69,7 @@
     </resultMap>
     
     <select id="goodsQuery" parameterType="java.util.Map" resultMap="goodsVo">
-		SELECT goods_id, goods_name, goods_price, goods_description
+		SELECT goods_id, goods_name, goods_price, agent_price, goods_description
 		FROM goods
 		WHERE goods_id = #{goodsId}
 	</select>

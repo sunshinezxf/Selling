@@ -78,7 +78,7 @@
                     <label class="col-sm-2 col-md-2 col-lg-2 control-label" for="goods_thumnail">商品图片</label>
 
                     <div class="col-sm-8 col-md-8 col-lg-8">
-                        <input id="goods_thumnail" name="thumnails[]" type="file" accept="image/*" multiple
+                        <input id="goods_thumnail" name="thumnail[]" type="file" accept="image/*" multiple
                                class="file-loading"/>
                     </div>
                 </div>
@@ -126,7 +126,7 @@
 <script>
     $(document).on('ready', function () {
         $("#goods_thumnail").fileinput({
-            uploadUrl: "/dfadf",
+            uploadUrl: "${path.concat('/commodity/upload')}",
             deleteUrl: "/site/file-delete",
             browseClass: "btn btn-success",
             browseLabel: "选择图片",
@@ -139,7 +139,7 @@
             uploadIcon: "<i class=\"glyphicon glyphicon-upload\"></i> ",
             showCaption: false,
             showRemove: false,
-            showUpload: false,
+            showUpload: true,
             showClose: false,
             initialPreviewAsData: true,
             overwriteInitial: false,

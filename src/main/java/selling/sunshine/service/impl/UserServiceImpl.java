@@ -28,7 +28,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResultData login(User user) {
         ResultData result = new ResultData();
-        Map<String, Object> condition = new HashMap<String, Object>();
+        Map<String, Object> condition = new HashMap<>();
         user.setPassword(Encryption.md5(user.getPassword()));
         condition.put("username", user.getUsername());
         ResultData queryResponse = userDao.queryUser(condition);
