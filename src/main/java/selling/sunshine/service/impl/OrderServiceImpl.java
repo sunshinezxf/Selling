@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import selling.sunshine.dao.CustomerOrderDao;
 import selling.sunshine.dao.OrderDao;
 import selling.sunshine.dao.OrderItemDao;
 import selling.sunshine.dao.OrderPoolDao;
@@ -31,6 +32,9 @@ public class OrderServiceImpl implements OrderService {
     
     @Autowired
     private OrderItemDao orderItemDao;
+    
+    @Autowired
+    private CustomerOrderDao customerOrderDao;
 
     @Override
     public ResultData placeOrder(Order order) {
@@ -47,8 +51,15 @@ public class OrderServiceImpl implements OrderService {
     
     @Override
 	public ResultData placeOrder(CustomerOrder customerOrder) {
-		// TODO Auto-generated method stub
-		return null;
+		ResultData result = new ResultData();
+		ResultData insertResponse = customerOrderDao.insertOrder(customerOrder);
+		result.setResponseCode(insertResponse.getResponseCode());
+		if (insertResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(insertResponse.getData());
+        } else {
+            result.setDescription(insertResponse.getDescription());
+        }
+        return result;
 	}
     
     @Override
@@ -66,8 +77,15 @@ public class OrderServiceImpl implements OrderService {
     
     @Override
 	public ResultData payOrder(CustomerOrder customerOrder) {
-		// TODO Auto-generated method stub
-		return null;
+    	ResultData result = new ResultData();
+        ResultData updateResponse = customerOrderDao.updateOrder(customerOrder);
+        result.setResponseCode(updateResponse.getResponseCode());
+        if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(updateResponse.getData());
+        } else {
+            result.setDescription(updateResponse.getDescription());
+        }
+        return result;
 	}
 
     @Override
@@ -85,8 +103,15 @@ public class OrderServiceImpl implements OrderService {
     
     @Override
 	public ResultData fetchCustomerOrder(Map<String, Object> condition) {
-		// TODO Auto-generated method stub
-		return null;
+    	ResultData result = new ResultData();
+        ResultData queryResponse = customerOrderDao.queryOrder(condition);
+        result.setResponseCode(queryResponse.getResponseCode());
+        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(queryResponse.getData());
+        } else {
+            result.setDescription(queryResponse.getDescription());
+        }
+        return result;
 	}
 
     @Override
