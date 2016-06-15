@@ -203,7 +203,7 @@ public class BillServiceImpl implements BillService {
         return result;
    	}
        
-       @Override
+    @Override
    	public ResultData fetchCustomerOrderBill(Map<String, Object> condition) {
     	   ResultData result = new ResultData();
            ResultData queryResponse = billDao.queryCustomerOrderBill(condition);

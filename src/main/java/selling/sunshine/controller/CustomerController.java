@@ -307,9 +307,10 @@ public class CustomerController {
             return resultData;
         }
         Goods goods = ((List<Goods>)fetchCommodityData.getData()).get(0);
-        double goodsPrice = agent == null ? goods.getPrice() : goods.getPrice();//！！！！！！！！！！！！！！！！！！！！！！！！
+        double goodsPrice = agent == null ? goods.getBenefit() : goods.getPrice();
         double totalPrice = goodsPrice * goodsQuantity;
-        CustomerOrder customerOrder = new CustomerOrder(goods, goodsQuantity, customerName, address, agent);
+        selling.sunshine.model.lite.Agent agentLite = new selling.sunshine.model.lite.Agent(agent);
+        CustomerOrder customerOrder = new CustomerOrder(goods, goodsQuantity, customerName, address, agentLite);
         customerOrder.setTotalPrice(goodsPrice);
         customerOrder.setWechat(wechat);
         
@@ -321,6 +322,13 @@ public class CustomerController {
         }
         resultData.setData(fetchResponse.getData());
         return resultData;
+    }
+    
+    @RequestMapping(method = RequestMethod.GET, value="/test")
+    public ModelAndView test(){
+    	ModelAndView view = new ModelAndView();
+    	view.setViewName("/customer/test");
+    	return view;
     }
     
 }
