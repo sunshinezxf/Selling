@@ -311,31 +311,8 @@ body {
     margin-right:1em;
 }
  
-.to_pay_btn{
-    position:absolute;
-    top:20%;
-    bottom:20%;
-    right:5%;
-    width:50%;
-    height:60%;
-    border:0;
-    color:#ffffff;
+.weui_btn{
     background-color:#ff8080;
-    font: bold 1em/2em Arial, sans-serif;
-     
-    -webkit-border-radius: 1.875em;
-    -moz-border-radius: 1.875em;
-    border-radius: 1.875em;
- 
-    -webkit-box-shadow: 0.0625em 0.0625em 0.0625em rgba(0,0,0, .29), inset 0.0625em 0.0625em 0.0625em rgba(255,255,255, .44);
-    -moz-box-shadow: 0.0625em 0.0625em 0.0625em rgba(0,0,0, .29), inset 0.0625em 0.0625em 0.0625em rgba(255,255,255, .44);
-    box-shadow: 0.0625em 0.0625em 0.0625em rgba(0,0,0, .29), inset 0.0625em 0.0625em 0.0625em rgba(255,255,255, .44);
- 
-    -webkit-transition: all 0.15s ease;
-    -moz-transition: all 0.15s ease;
-    -o-transition: all 0.15s ease;
-    -ms-transition: all 0.15s ease;
-    transition: all 0.15s ease;
 }
 
 .weui_dialog{

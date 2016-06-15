@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import selling.sunshine.form.GoodsForm;
 import selling.sunshine.model.Agent;
@@ -14,14 +16,12 @@ import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.AgentService;
 import selling.sunshine.service.CommodityService;
+import selling.sunshine.service.UploadService;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by sunshine on 4/8/16.
@@ -36,7 +36,10 @@ public class CommodityController {
 
     @Autowired
     private AgentService agentService;
-    
+
+    @Autowired
+    private UploadService uploadService;
+
     @RequestMapping(method = RequestMethod.GET, value = "/create")
     public ModelAndView create() {
         ModelAndView view = new ModelAndView();
@@ -133,30 +136,30 @@ public class CommodityController {
         condition.put("goodsId", goodsId);
         condition.put("blockFlag", false);
         ResultData fetchCommodityData = commodityService.fetchCommodity(condition);
-        if(fetchCommodityData.getResponseCode() != ResponseCode.RESPONSE_OK){
-        	//这里需要一个错误页面!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        	return view;
+        if (fetchCommodityData.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            //这里需要一个错误页面!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            return view;
         }
-        Goods goods = ((List<Goods>)fetchCommodityData.getData()).get(0);
-        
-        if(agentId != null && agentId != ""){
-	        condition.clear();
-	        condition.put("agentId", agentId);
-	        condition.put("granted", 1);
-	        condition.put("blockFlag", false);
-	        ResultData fetchAgentData = agentService.fetchAgent(condition);
-	        if(fetchAgentData.getResponseCode() != ResponseCode.RESPONSE_OK){
-	        	//这里需要一个错误页面!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	        	return view;
-	        }
-	        Agent agent = ((List<Agent>)fetchAgentData.getData()).get(0);
-	        view.addObject("agent", agent);
+        Goods goods = ((List<Goods>) fetchCommodityData.getData()).get(0);
+
+        if (agentId != null && agentId != "") {
+            condition.clear();
+            condition.put("agentId", agentId);
+            condition.put("granted", 1);
+            condition.put("blockFlag", false);
+            ResultData fetchAgentData = agentService.fetchAgent(condition);
+            if (fetchAgentData.getResponseCode() != ResponseCode.RESPONSE_OK) {
+                //这里需要一个错误页面!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                return view;
+            }
+            Agent agent = ((List<Agent>) fetchAgentData.getData()).get(0);
+            view.addObject("agent", agent);
         }
         view.addObject("goods", goods);
         view.setViewName("/customer/goods/detail");
         return view;
     }
-    
+
     @RequestMapping(method = RequestMethod.GET, value = "/forbid/{goodsId}")
     public ModelAndView forbid(@PathVariable("goodsId") String goodsId) {
         ModelAndView view = new ModelAndView();
@@ -174,7 +177,7 @@ public class CommodityController {
         view.setViewName("redirect:/commodity/overview");
         return view;
     }
-    
+
     @RequestMapping(method = RequestMethod.GET, value = "/enable/{goodsId}")
     public ModelAndView enable(@PathVariable("goodsId") String goodsId) {
         ModelAndView view = new ModelAndView();
@@ -188,9 +191,30 @@ public class CommodityController {
         Goods targetGoods = ((ArrayList<Goods>) resultData.getData()).get(0);
         targetGoods.setBlockFlag(false);
         commodityService.updateCommodity(targetGoods);
-
         view.setViewName("redirect:/commodity/overview");
         return view;
+    }
+
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value = "/upload")
+    public ResultData upload(MultipartHttpServletRequest request) {
+        ResultData result = new ResultData();
+        String context = request.getSession().getServletContext().getRealPath("/");
+
+        try {
+            Iterator<String> names = request.getFileNames();
+            while (names.hasNext()) {
+                String filename = names.next();
+                MultipartFile file = request.getFile(filename);
+                List<MultipartFile> list = request.getFiles(filename);
+                if (file != null) {
+                    uploadService.upload(file, context);
+                }
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        return result;
     }
 
 }
