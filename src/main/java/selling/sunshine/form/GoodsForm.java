@@ -14,6 +14,9 @@ public class GoodsForm {
     private String benefit;
     @NotNull
     private String description;
+
+    private String[] path;
+
     private boolean block;
 
     public String getName() {
@@ -46,6 +49,14 @@ public class GoodsForm {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String[] getPath() {
+        return path;
+    }
+
+    public void setPath(String[] path) {
+        this.path = path;
     }
 
     public boolean isBlock() {

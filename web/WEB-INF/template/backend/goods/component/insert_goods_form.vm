@@ -74,11 +74,12 @@
                                placeholder="商品描述" required="" autocomplete="off"/>
                     </div>
                 </div>
+
                 <div class="form-group">
                     <label class="col-sm-2 col-md-2 col-lg-2 control-label" for="goods_thumnail">商品图片</label>
 
                     <div class="col-sm-8 col-md-8 col-lg-8">
-                        <input id="goods_thumnail" name="thumnail[]" type="file" accept="image/*" multiple
+                        <input id="goods_thumnail" name="thumbnail" type="file" accept="image/*" multiple
                                class="file-loading"/>
                     </div>
                 </div>
@@ -118,6 +119,7 @@
     });
 
     $("#confirm_create_goods").click(function () {
+        $("#goods_thumnail").attr("disabled", "disabled");
         $("#create_goods_form").attr("action", "${path.concat('/commodity/create')}");
         $("#create_goods_form").attr("method", "post");
         $("#create_goods_form").submit();
@@ -144,6 +146,16 @@
             initialPreviewAsData: true,
             overwriteInitial: false,
             dropZoneEnabled: false
+        }).on('fileuploaded', function (event, result) {
+            var response = result.response;
+            if (response.responseCode == "RESPONSE_OK") {
+                var item = document.createElement("input");
+                $(item).attr("name", "path");
+                $(item).attr("type", "hidden");
+                $(item).val(response.data);
+                alert(item);
+                $("#create_goods_form").append(item);
+            }
         });
     });
 </script>
