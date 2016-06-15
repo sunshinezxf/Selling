@@ -340,7 +340,7 @@
         }
         return true;
     }
-    
+  document.addEventListener('pingpp_one_ready', function () {
     $('#confirm').click(function(){
         var url='${path.concat('/customer/place')}';
         var goodsId="${goods.goodsId}";
@@ -396,6 +396,7 @@
                             
             }
         });
+    });
     });
 
 </script>
