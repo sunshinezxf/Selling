@@ -4,6 +4,7 @@
     #parse("/backend/component/init.vm")
     #parse("/backend/component/init_datatable.vm")
     #parse("/backend/component/init_highcharts.vm")
+    #parse("/backend/component/init_echarts.vm")
     <title>代理概览</title>
 </head>
 <body>

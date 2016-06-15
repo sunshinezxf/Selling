@@ -1066,7 +1066,7 @@ public class AgentController {
 		condition.put("agentId", agentId);
 		List<Customer> customerList=(List<Customer>)customerService.fetchCustomer(condition).getData();	
 		dataMap.put("customerNum", customerList.size());
-		resultData.setData(dataMap);
+		
 		
 		//查询某个代理商的下级代理商数量
 		Map<String, Object> condition2 = new HashMap<>();
@@ -1075,7 +1075,7 @@ public class AgentController {
 		condition2.put("upperAgent", agent);
 		List<Agent> agentList=(List<Agent>)agentService.fetchAgent(condition2).getData();
 		dataMap.put("agentNum", agentList.size());
-		
+		resultData.setData(dataMap);
 		return resultData;
 	}
 	
@@ -1132,6 +1132,7 @@ public class AgentController {
 		return view;
 		
 	}
+	
 	
 
 }

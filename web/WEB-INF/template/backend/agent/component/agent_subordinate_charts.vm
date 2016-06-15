@@ -11,7 +11,8 @@
     </div>
     <div class="row">
         <div class="col-md-12 col-lg-12">
-            <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+           <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+           <div id="main" style="width: 600px;height:400px;"></div>
         </div>
          #foreach($key in ${agentMap.keySet()})
              <p style="display:none;" id="P$key">${agentMap[$key]}</p>
@@ -19,111 +20,83 @@
     </div>
 </div>
 <script>
-	var Node = {
-    height: 20,
-    width: 60,
-    padding: 30,
-    paddingTop: 50,
-    paddingText: 5,
-    paddingLeft: 20,
-    arrowLength: 4,
-    arrowWidth: 3,
-    create: function(textVal, id){
-        return {
-        	id:id,
-            text: textVal,
-            childNodes: [],
-            parentNode: null,
-            index: null,
-            x: null,
-            y: null,
-            add: function(node) {
-            	
-                this.childNodes[node.index = this.childNodes.length] = node;
-                return node.parentNode = this;
-            },
-            leftNode: function() {
-                return this.parentNode ? (this.index > 0 ? this.parentNode.childNodes[this.index - 1] : this.parentNode.leftNode()) : null;
-            },
-            top: function() {
-                if (this.y) return this.y;
-                else return this.y = (this.parentNode ? this.parentNode.top() + Node.height + Node.padding : Node.paddingTop);
-            },
-            left: function() {
-                if (this.x) {
-                    return this.x;
-                }else{
-                    return this.x = this.leftNode() ? this.leftNode().left() + Node.padding + this.leftNode().childWidth() : Node.paddingLeft;
+     var agentList=${agentList};
+     var height=100;
+     var node={name: '${agent.name}',x: 300,y: 300};
+     var dataList=new Array();
+     var linkList=new Array();
+     dataList[0]=node;
+
+     for(var i=0;i<agentList.length;i++){    
+         var node1={name: agentList[i].name,x: 550,y: height};
+         var node2={source: '${agent.name}',target: agentList[i].name}
+         dataList[i+1]=node1;  
+         linkList[i]=node2;
+         height+=200;  
+     }
+        
+     var length=agentList.length;
+     var height2=100;    
+     for(var i=0;i<agentList.length;i++){  
+         var agentId= "#P"+agentList[i].agentId;  
+         if($(agentId).html()!=0){
+             var node3={name: $(agentId).html(),x: 800,y: height2};
+             var node4={source: agentList[i].name,target: $(agentId).html()}
+             dataList[length+1]=node3;  
+             linkList[length]=node4;
+         } 
+         height2+=200;
+     }
+     
+     
+	// 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main'));
+    // 指定图表的配置项和数据
+    option = {
+        title: {
+               text: '代理商${agent.name}的下级代理商'
+        },
+
+        animationDurationUpdate: 1500,
+        animationEasingUpdate: 'quinticInOut',
+        series : [
+        {
+            type: 'graph',
+            layout: 'none',
+            symbolSize: 50,
+            roam: true,
+            label: {
+                normal: {
+                    show: true
                 }
             },
-            childHeight: function() {
-                var h = 0;if (this.childNodes.length > 0) {for(var i=0;i<this.childNodes.length;i++) h = Math.max(h,this.childNodes[i].childHeight() + Node.padding);}
-                return (h === 0) ? Node.height : h ;
-            },
-            childWidth: function() {
-                var w = 0;if (this.childNodes.length > 0) {for(var i=0;i<this.childNodes.length;i++) w = w + this.childNodes[i].childWidth() + Node.padding;}
-                return (w === 0) ? Node.width : w - Node.padding;
-            },
-            toString: function() {
-                return this.text + '[' + this.left() + ',' + this.top() + ']' + (this.childNodes.length > 0 ? ':{' + this.childNodes + '}' : '');
-            },
-            arrowX: function () {
-                return this.left() + this.childWidth() / 2 - (this.parentNode.left() + this.parentNode.childWidth() / 2 - Node.width / 2) - Node.width / 2;
-            },
-            arrowY: function () {
-                return Node.padding - 2 * Node.paddingText;
-            },
-            arrow: function(renderer, colors) {
-                var a = Node.arrowLength, b = Node.arrowWidth, x2 = this.arrowX(), y2 = this.arrowY(),
-                    x = this.parentNode.left() + this.parentNode.childWidth() / 2 - Node.width / 2+Node.width/2 + Node.paddingText,
-                    y = this.parentNode.top() + Node.height + 2 * Node.paddingText
-                renderer.path(['M', 0, 0, 'C', 0, y2/1.8, x2, 0, x2, y2]).attr({'stroke-width': 2, stroke: colors[1]}).translate(x,y).add()
-            },
-            drow: function(renderer, colors) {
-                var x = this.left() + this.childWidth() / 2 - Node.width / 2, y = this.top();
-                renderer.label(this.text, x, y).attr({fill: colors[0], stroke: 'white','stroke-width': 3,padding: Node.paddingText, r: 2 * Node.paddingText, width: Node.width, height: Node.height}).css({color: 'white', textAlign:'center',fontWeight: 'bold',fontSize: '10px'}).add().shadow(true).attr("id",id);
-                if (this.childNodes.length > 0) {
-                    for(var i=0;i<this.childNodes.length;i++) {
-                        this.childNodes[i].drow(renderer, colors);
-                        this.childNodes[i].arrow(renderer, colors);
+            edgeSymbol: ['circle', 'arrow'],
+            edgeSymbolSize: [4, 10],
+            edgeLabel: {
+                normal: {
+                    textStyle: {
+                        fontSize: 20
                     }
                 }
+            },
+            data: dataList,
+            links: linkList,
+            lineStyle: {
+                normal: {
+                    opacity: 0.9,
+                    width: 2,
+                    curveness: 0
+                }
             }
-        };
-    }
-}
-var n = Node.create
-
-     var datas = n("${agent.name}","${agent.agentId}");
-     var agentList=${agentList};
-     for(var i=0;i<agentList.length;i++){               
-        var level2Agent=n(agentList[i].name, agentList[i].agentId);    
-        var agentId= "#P"+agentList[i].agentId;
-        if($(agentId).html()!=0){
-             level2Agent.add(n($(agentId).html()));
-        }      
-        datas.add(level2Agent);
-     }
-    
-
-
-    var chart = new Highcharts.Chart({
-        chart: {
-            renderTo: 'container',
-            events: {load: function () {
-            
-                datas.drow(this.renderer, Highcharts.getOptions().colors);
-                
-            }}
-        },
-        title: {text: '代理商结构图'}
-    });
-    
-    $("g").click(function(){ 
-        if(this.id != ""){
-          alert(this.id);
         }
-        
-    });
+    ]
+};
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+
+       myChart.on('click', function (params) {
+            alert(params.name);
+       });
 
 </script>
