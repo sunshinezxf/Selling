@@ -12,7 +12,7 @@
 <body>
     <div class="my_order">
         <div class="hd">
-            <h1 class="page_title">我的订单</h1>
+            <h1 class="page_title">我的订单${customerOrder.orderId}</h1>
         </div>
         <div class="bd">
             <div class="weui_cells">
@@ -26,7 +26,7 @@
                 </div>
                 <div class="weui_cell">
                     <div class="weui_cell_bd weui_cell_primary">
-                        <p>商品名</p>
+                        <p>商品名${customerOrder.goods.name}</p>
                     </div>
                     <div class="weui_cell_ft">
                         <p></p>

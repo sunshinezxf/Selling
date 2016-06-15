@@ -267,7 +267,6 @@ public class CustomerController {
             result.setResponseCode(fetchResponse.getResponseCode());
             result.setDescription(fetchResponse.getDescription());
         }
-
         return result;
     }
 
@@ -310,7 +309,7 @@ public class CustomerController {
             return resultData;
         }
         Goods goods = ((List<Goods>)fetchCommodityData.getData()).get(0);
-        double goodsPrice = agent == null ? goods.getBenefit() : goods.getPrice();
+        double goodsPrice = agent == null ? goods.getPrice() : goods.getBenefit();
         double totalPrice = goodsPrice * goodsQuantity;
         selling.sunshine.model.lite.Agent agentLite = new selling.sunshine.model.lite.Agent(agent);
         CustomerOrder customerOrder = new CustomerOrder(goods, goodsQuantity, customerName, address, agentLite);
