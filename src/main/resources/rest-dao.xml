@@ -21,6 +21,10 @@
     <bean id="customerDao" class="selling.sunshine.dao.impl.CustomerDaoImpl">
         <property name="sqlSession" ref="sqlSession"></property>
     </bean>
+    
+    <bean id="customerOrderDao" class="selling.sunshine.dao.impl.CustomerOrderDaoImpl">
+    	<property name="sqlSession" ref="sqlSession"></property>
+    </bean>
 
     <bean id="orderDao" class="selling.sunshine.dao.impl.OrderDaoImpl">
         <property name="sqlSession" ref="sqlSession"></property>

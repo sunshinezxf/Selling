@@ -144,7 +144,7 @@ public class BillController {
 			}
 			CustomerOrderBill customerOrderBill= ((List<CustomerOrderBill>)customerOrderBillData.getData()).get(0);
 			customerOrderBill.setStatus(BillStatus.PAYED);
-			resultData = billService.updataCustomerOrderBill(customerOrderBill);
+			resultData = billService.updateCustomerOrderBill(customerOrderBill);
 			if(resultData.getResponseCode() != ResponseCode.RESPONSE_OK){
 				return resultData;
 			}

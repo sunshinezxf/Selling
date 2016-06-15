@@ -179,7 +179,7 @@ public class BillServiceImpl implements BillService {
        
 
 	@Override
-	public ResultData updataCustomerOrderBill(CustomerOrderBill bill) {
+	public ResultData updateCustomerOrderBill(CustomerOrderBill bill) {
 		// TODO Auto-generated method stub
 		return null;
 	}
