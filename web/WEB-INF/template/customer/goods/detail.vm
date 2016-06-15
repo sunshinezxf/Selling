@@ -188,7 +188,7 @@
             check_agent();
         });
         
-        $('customer_phone').blur(function(){
+        $('#customer_phone').blur(function(){
             var phone = $("#customer_phone").val();
             if (!(/^1[3|4|5|7|8]\d{9}$/.test(phone))) {
                 $("#dialog").find(".weui_dialog_bd").html("手机号码有误，请重填！");
@@ -235,13 +235,6 @@
             }
         });
         
-        $('#postcode').on('input propertychange',function(){
-            if(addressInfo_validate()){
-                active();
-            }else{
-                inactive();
-            }
-        });
     });
 
     $('#purchase').click(function(){
@@ -322,9 +315,8 @@
         var name=$('#customer_name').val();
         var phone=$('#customer_phone').val();
         var address=$('#customer_address').val();
-        var postcode=$('#postcode').val();
         var area=$("#province").children(":first").val();
-        if(not_null(name)&&not_null(phone)&&not_null(address)&&not_null(postcode)&&area!=="请选择"){
+        if(not_null(name)&&not_null(phone)&&not_null(address)&&area!=="请选择"){
             return true;
         }else{
             return false;
