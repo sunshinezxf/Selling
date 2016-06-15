@@ -89,9 +89,12 @@ public class CustomerController {
         return result;
     }
     
-    @RequestMapping(method = RequestMethod.GET, value = "/detail/{customerId}")
-    public ModelAndView detail(@PathVariable String customerId) {
-        ModelAndView view = new ModelAndView();
+    @RequestMapping(method = RequestMethod.POST, value = "/detail/{customerId}")
+    @ResponseBody
+    public ResultData detail(@PathVariable String customerId) {
+		ResultData resultData=new ResultData();
+		Map<String, Object> dataMap=new HashMap<>();
+		
         Map<String, Object> condition = new HashMap<>();
         condition.put("customerId", customerId);
         Customer customer=((List<Customer>)customerService.fetchCustomer(condition).getData()).get(0);      
@@ -105,13 +108,13 @@ public class CustomerController {
         List<CustomerAddress> addressList=(List<CustomerAddress>)customerService.fetchCustomerAddress(condition).getData();
         List<CustomerPhone> phoneList=(List<CustomerPhone>)customerService.fetchCustomerPhone(condition).getData();
         
-        view.addObject("customer",customer);
-        view.addObject("agent",agent);
-        view.addObject("orderItemList",orderItemList);	
-        view.addObject("addressList",addressList);	
-        view.addObject("phoneList",phoneList);	
-        view.setViewName("/backend/customer/detail");
-        return view;
+        dataMap.put("customer",customer);
+        dataMap.put("agent",agent);
+        dataMap.put("orderItemList",orderItemList);	
+        dataMap.put("addressList",addressList);	
+        dataMap.put("phoneList",phoneList);	
+		resultData.setData(dataMap);
+		return resultData;
     }
 
     @ResponseBody
