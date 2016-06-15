@@ -326,11 +326,4 @@ public class CustomerController {
         return resultData;
     }
     
-    @RequestMapping(method = RequestMethod.GET, value="/test")
-    public ModelAndView test(){
-    	ModelAndView view = new ModelAndView();
-    	view.setViewName("/customer/test");
-    	return view;
-    }
-    
 }
