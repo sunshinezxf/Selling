@@ -144,7 +144,7 @@ body {
 }
 
 .hd{
-	width:35%;
+	width:30%;
 }
 
 .bd{
@@ -152,7 +152,7 @@ body {
 }
 
 .id_label{
-	font-size:1.25em;
+	font-size:1em;
 }
 
 .agent_id input{
@@ -160,6 +160,7 @@ body {
 	height: 2.3em;
     outline: none;
     border: 0.0625em solid rgb(216, 216, 216);
+    font-size:1em;
 }
 
 .buy_area{
@@ -202,12 +203,12 @@ body {
 }
  
 .weui_actionsheet{
-	height:25em;
+	height:26em;
 	z-index:1000;
 }
 
 .number_area{
-	height:10%;
+	height:11%;
 	border-bottom: 0.0625em solid #D9D9D9;
 	vertical-align: middle;
  }
@@ -215,13 +216,13 @@ body {
 .number_area p{
     display:inline-block;
     font-size:1.2em;
-    padding-top:0.25em;
+    padding-top:0.35em;
     margin-left:0.85em;
 }
  
 .number_choose{
     float:right;
-    padding-top:0.3em;
+    padding-top:0.4em;
     margin-right:0.5em;
 }
  
@@ -245,7 +246,7 @@ body {
 }
  
 .address_area{
-	height:68%;
+	height:67%;
 	text-align:left;
 }
 
@@ -269,7 +270,16 @@ body {
 }
 
 .area_select select{
+	width:6.5em;
+	height:2em;
+	font-size:0.7em;
 	margin-right:1em;
+    border: solid 0.0625em #000;
+    appearance:none;
+    -moz-appearance:none;
+    -webkit-appearance:none;
+    background: url("http://ourjs.github.io/static/2015/arrow.png") no-repeat scroll right center transparent;
+    select::-ms-expand { display: none; }
 }
 
 .confirm_area{
