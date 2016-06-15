@@ -13,6 +13,7 @@
 	<script type="text/javascript" src="${path.concat('/plugins/jquery/jquery.provincesCity.js')}"></script>
 	<script type="text/javascript" src="${path.concat('/plugins/jquery/jquery.provincesData.js')}"></script>
 	<script type="text/javascript" src="${path.concat('/plugins/unslider/js/unslider-min.js')}"></script>
+	<script type="text/javascript" src="${path.concat('/plugins/pingxx/pingpp_one.js')}"></script>
     <title>商品详情</title>
 </head>
 <body>
