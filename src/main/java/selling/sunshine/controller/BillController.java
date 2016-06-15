@@ -156,7 +156,7 @@ public class BillController {
 				resultData.setDescription("获取个人订单错误");
 				return resultData;
 			}
-			CustomerOrder customerOrder = (CustomerOrder) customerOrderData.getData();
+			CustomerOrder customerOrder = ((List<CustomerOrder>)customerOrderData.getData()).get(0);
 			if(customerOrderBill.getBillAmount() >= customerOrder.getTotalPrice()){
 				customerOrder.setStatus(OrderItemStatus.PAYED);
 				ResultData payData = orderService.payOrder(customerOrder);

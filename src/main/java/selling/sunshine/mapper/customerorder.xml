@@ -10,6 +10,8 @@
         <result property="totalPrice" column="total_price"></result>
         <result property="status" column="order_status"
                 typeHandler="selling.sunshine.handler.mybatis.order.OrderItemStatusHandler"></result>
+        <result property="blockFlag" column="block_flag"></result>
+        <result property="createAt" column="create_time"></result>
         <association property="goods" column="goodsId = goods_id" select="goodsQuery"></association>
         <association property="agent" column="agentId = agent_id" select="agentLiteQuery"></association>
     </resultMap>
@@ -23,17 +25,18 @@
     <resultMap id="goodsVo" type="selling.sunshine.model.Goods">
         <result property="goodsId" column="goods_id"></result>
         <result property="name" column="goods_name"></result>
-        <result property="price" column="goods_price"></result>
+        <result property="price" column="primary_price"></result>
+        <result property="benefit" column="agent_price"></result>
         <result property="description" column="goods_description"></result>
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
     </resultMap>
     
     <select id="query" parameterType="java.util.Map" resultMap="customerOrderVo">
-    	SELECT order_id, agent_id, wechat, quantity, receiver_name, receive_addr, total_price, order_status, goods_id
+    	SELECT order_id, agent_id, wechat, quantity, receiver_name, receiver_addr, total_price, order_status, goods_id, block_flag, create_time
     	FROM customer_order
     	WHERE 1=1
-    	<if test="order_id != null and order_id != ''">
+    	<if test="orderId != null and orderId != ''">
     		AND order_id = #{orderId}
     	</if>
     	<if test="wechat != null and wechat != ''">
@@ -48,7 +51,7 @@
     </select>
     
     <select id="goodsQuery" parameterType="java.util.Map" resultMap="goodsVo">
-        SELECT goods_id, goods_name, goods_price, goods_description, block_flag, create_time
+        SELECT goods_id, goods_name, primary_price, agent_price, goods_description, block_flag, create_time
         FROM goods
         WHERE goods_id = #{goodsId}
     </select>
@@ -68,7 +71,9 @@
             receiver_addr = #{receiverAddress},
             total_price = #{totalPrice},
             order_status = #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler},
-            goods_id = #{goods.goodsId}
+            goods_id = #{goods.goodsId},
+            block_flag = #{blockFlag},
+            create_time = #{createAt}
         </set>
     </insert>
     
@@ -89,5 +94,6 @@
             order_status = #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler},
             goods_id = #{goods.goodsId}
     	</set>
+    	WHERE order_id = #{orderId}
     </update>
 </mapper>

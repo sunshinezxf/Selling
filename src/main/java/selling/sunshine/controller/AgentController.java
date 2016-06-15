@@ -1136,6 +1136,27 @@ public class AgentController {
 		
 	}
 	
+	/*
+     * 购买商品时验证代理商是否存在
+     */
+	
+	 @RequestMapping(method = RequestMethod.POST, value = "/agentValidate/{agentId}")
+	   @ResponseBody
+	    public ResultData agentValidate(@PathVariable("agentId") String agentId) {
+		    ResultData resultData=new ResultData();
+		    Map<String, Object> condition = new HashMap<>();
+	        condition.put("agentId", agentId);
+	        condition.put("granted", true);
+	        condition.put("blockFlag", false);
+	        ResultData fetchResponse = agentService.fetchAgent(condition);
+	        if (fetchResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+	        	resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
+	            resultData.setDescription("该代理商不存在");
+	            return resultData;
+	        }
+	        resultData.setResponseCode(ResponseCode.RESPONSE_OK);
+	        return  resultData;
+	    }
 	
 
 }
