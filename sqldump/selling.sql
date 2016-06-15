@@ -624,6 +624,27 @@ CREATE TABLE IF NOT EXISTS `selling`.`customer_order_bill` (
   ENGINE = InnoDB;
 
 
+-- -----------------------------------------------------
+-- Table `selling`.`goods_thumbnail`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `selling`.`goods_thumbnail` ;
+
+CREATE TABLE IF NOT EXISTS `selling`.`goods_thumbnail` (
+  `thumbnail_id` VARCHAR(20) NOT NULL,
+  `goods_id` VARCHAR(20) NOT NULL,
+  `thumbnail_path` VARCHAR(100) NOT NULL,
+  `block_flag` TINYINT(1) NOT NULL DEFAULT 0,
+  `create_time` VARCHAR(45) NULL,
+  PRIMARY KEY (`thumbnail_id`),
+  INDEX `fk_goods_thumbnail_goods1_idx` (`goods_id` ASC),
+  CONSTRAINT `fk_goods_thumbnail_goods1`
+  FOREIGN KEY (`goods_id`)
+  REFERENCES `selling`.`goods` (`goods_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+  ENGINE = InnoDB;
+
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
@@ -633,7 +654,7 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `selling`;
-INSERT INTO `selling`.`agent` (`agent_id`, `upper_agent_id`, `agent_coffer`, `agent_refund`, `agent_name`, `agent_gender`, `agent_phone`, `agent_address`, `agent_password`, `agent_wechat`, `scale`, `agent_level`, `agent_granted`, `block_flag`, `create_time`) VALUES ('AGTvlorff50', NULL, 0, 0, '王旻', 'M', '18000000000', '江苏省南京市鼓楼区汉口路22号', 'e10adc3949ba59abbe56e057f20f883e', NULL, 0, 0, 1, 0, '2016-05-05 15:57:56');
+INSERT INTO `selling`.`agent` (`agent_id`, `upper_agent_id`, `agent_coffer`, `agent_refund`, `agent_name`, `agent_gender`, `agent_phone`, `agent_address`, `agent_password`, `agent_wechat`, `scale`, `agent_level`, `agent_granted`, `block_flag`, `create_time`) VALUES ('AGTvlorff50', NULL, 0, 0, '王旻', 'M', '18000000000', '江苏省南京市鼓楼区汉口路22号', 'e10adc3949ba59abbe56e057f20f883e', NULL, 20, 0, 1, 0, '2016-05-05 15:57:56');
 
 COMMIT;
 

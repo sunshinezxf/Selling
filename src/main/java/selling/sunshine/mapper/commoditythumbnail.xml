@@ -16,6 +16,7 @@
 
     <insert id="insertBatch" parameterType="java.util.List" useGeneratedKeys="false">
         INSERT INTO goods_thumbnail(thumbnail_id, goods_id, thumbnail_path, block_flag, create_time)
+        VALUES
         <foreach collection="list" item="item" index="index" separator=",">
             (#{item.thumbnailId}, #{item.goods.goodsId}, #{item.path}, #{item.blockFlag}, #{item.createAt})
         </foreach>

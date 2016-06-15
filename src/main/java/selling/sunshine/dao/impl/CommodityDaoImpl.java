@@ -128,11 +128,11 @@ public class CommodityDaoImpl extends BaseDao implements CommodityDao {
     public ResultData insertThumbnail(List<GoodsThumbnail> thumbnails) {
         ResultData result = new ResultData();
         for (GoodsThumbnail item : thumbnails) {
-            item.setThumbnailId("GTB");
+            item.setThumbnailId(IDGenerator.generate("GTB"));
         }
         synchronized (lock) {
             try {
-                sqlSession.insert("selling.goods.thumbnail.insert", thumbnails);
+                sqlSession.insert("selling.goods.thumbnail.insertBatch", thumbnails);
                 result.setData(thumbnails);
             } catch (Exception e) {
                 logger.error(e.getMessage());
