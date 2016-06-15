@@ -1,0 +1,9 @@
+body, html {
+    height: 100%;
+    -webkit-tap-highlight-color: transparent
+}
+
+body {
+    overflow-x: hidden;
+    background-color: #fbf9fe
+}
