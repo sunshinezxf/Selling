@@ -20,6 +20,7 @@ import selling.sunshine.form.BankCardForm;
 import selling.sunshine.form.WithdrawForm;
 import selling.sunshine.model.Agent;
 import selling.sunshine.model.BankCard;
+import selling.sunshine.model.CustomerOrderBill;
 import selling.sunshine.model.DepositBill;
 import selling.sunshine.model.Order;
 import selling.sunshine.model.OrderBill;
@@ -250,13 +251,22 @@ public class AccountController {
 	        view.addObject("prompt", prompt);
 	        view.setViewName("/agent/prompt");
         } else if(billId.startsWith("COB")){
+        	String orderId = "";
+        	Map<String, Object> condition = new HashMap<String, Object>();
+        	condition.put("billId", billId);
+        	ResultData billFetchData = billService.fetchCustomerOrderBill(condition);
+        	if(billFetchData.getResponseCode() == ResponseCode.RESPONSE_OK){
+        		CustomerOrderBill customerOrderBill = ((List<CustomerOrderBill>)billFetchData.getData()).get(0);
+        		orderId = customerOrderBill.getCustomerOrder().getOrderId();
+        	}
         	if (!StringUtils.isEmpty(result) && result.equals("success")) {
 	            prompt = new Prompt("提示", "恭喜您,付款成功!", "/account/info");
 	        } else {
 	            prompt = new Prompt(PromptCode.WARNING, "提示", "对不起,您的付款已取消.", "/account/info");
 	        }
 	        view.addObject("prompt", prompt);
-	        view.setViewName("/agent/prompt");
+	        view.addObject("orderId", orderId);
+	        view.setViewName("/customer/prompt");
         }
         return view;
     }
