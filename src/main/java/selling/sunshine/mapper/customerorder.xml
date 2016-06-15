@@ -36,7 +36,7 @@
     	SELECT order_id, agent_id, wechat, quantity, receiver_name, receiver_addr, total_price, order_status, goods_id, block_flag, create_time
     	FROM customer_order
     	WHERE 1=1
-    	<if test="order_id != null and order_id != ''">
+    	<if test="orderId != null and orderId != ''">
     		AND order_id = #{orderId}
     	</if>
     	<if test="wechat != null and wechat != ''">
@@ -94,5 +94,6 @@
             order_status = #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler},
             goods_id = #{goods.goodsId}
     	</set>
+    	WHERE order_id = #{orderId}
     </update>
 </mapper>
