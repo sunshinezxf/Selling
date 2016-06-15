@@ -11,11 +11,13 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import selling.sunshine.form.GoodsForm;
 import selling.sunshine.model.Agent;
+import selling.sunshine.model.CustomerOrder;
 import selling.sunshine.model.Goods;
 import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.AgentService;
 import selling.sunshine.service.CommodityService;
+import selling.sunshine.service.OrderService;
 import selling.sunshine.service.UploadService;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
@@ -36,6 +38,9 @@ public class CommodityController {
 
     @Autowired
     private AgentService agentService;
+    
+    @Autowired
+    private OrderService orderService;
 
     @Autowired
     private UploadService uploadService;
@@ -142,7 +147,7 @@ public class CommodityController {
         }
         Goods goods = ((List<Goods>) fetchCommodityData.getData()).get(0);
 
-        if (agentId != null && agentId != "") {
+        if (agentId != null && !agentId.equals("")) {
             condition.clear();
             condition.put("agentId", agentId);
             condition.put("granted", 1);
@@ -158,6 +163,33 @@ public class CommodityController {
         view.addObject("goods", goods);
         view.setViewName("/customer/goods/detail");
         return view;
+    }
+    
+    @RequestMapping(method = RequestMethod.GET, value="/customerorder")
+    public ModelAndView customerOrder(String wechat, String orderId){
+    	ModelAndView view = new ModelAndView();
+    	Map<String, Object> condition = new HashMap<String, Object>();
+    	if(wechat != null && !wechat.equals("")){
+    		condition.put("wechat", wechat);
+    	}
+    	if(orderId != null && !orderId.equals("")){
+    		condition.put("orderId", orderId);
+    	}
+    	if(condition.isEmpty()){
+    		//这里需要错误页面
+    		view.setViewName("/customer/order/detail");
+    		return view;
+    	}
+    	ResultData fetchCustomerOrderData = orderService.fetchCustomerOrder(condition);
+    	if(fetchCustomerOrderData.getResponseCode() != ResponseCode.RESPONSE_OK){
+    		//这里需要错误页面
+    		view.setViewName("/customer/order/detail");
+    		return view;
+    	}
+    	CustomerOrder customerOrder = ((List<CustomerOrder>)fetchCustomerOrderData.getData()).get(0);
+    	view.addObject("customerOrder", customerOrder);
+    	view.setViewName("/customer/order/detail");
+    	return view;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/forbid/{goodsId}")
