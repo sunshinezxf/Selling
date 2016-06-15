@@ -42,6 +42,15 @@
     	<if test="wechat != null and wechat != ''">
     		AND wechat = #{wechat}
     	</if>
+    	<if test="agentId != null and agentId != ''">
+    		AND agent_id = #{agentId}
+    	</if>
+    	<if test="goodsId != null and goodsId != ''">
+    		AND goods_id = #{goodsId}
+    	</if>
+		<if test="date != null and date != ''">
+			AND create_time LIKE #{date}
+		</if>
     </select>
     
     <select id="agentLiteQuery" parameterType="java.util.Map" resultMap="agentLiteVo">
