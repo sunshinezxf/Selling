@@ -276,8 +276,6 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
             for (int i = 0; i < resultList.size(); i++) {
                 OrderPool pool = new OrderPool();
                 pool.setOrderPoolId(IDGenerator.generate("OPL"));
-                pool.setQuantity(Integer.parseInt(resultList.get(i)
-                        .get("quantity").toString()));
                 pool.setPrice(Double.parseDouble(resultList.get(i).get("price")
                         .toString()));
                 pool.setPoolDate(new Date(c.getTimeInMillis()));
@@ -287,10 +285,22 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
                 Goods goods = new Goods();
                 goods.setGoodsId((String) resultList.get(i).get("goods"));
                 pool.setGoods(goods);
+                Map<String, Object> customerOrderCon = new HashMap<>();
+                customerOrderCon.put("agentId", resultList.get(i).get("agent"));
+                customerOrderCon.put("goodsId", resultList.get(i).get("goods"));
+                customerOrderCon.put("date", date + "%");
+                if (sqlSession.selectList("selling.refund.config.query",customerOrderCon).size()!=0) {
+                    CustomerOrder customerOrder=(CustomerOrder)sqlSession.selectList("selling.refund.config.query",customerOrderCon).get(0);
+                    pool.setQuantity(Integer.parseInt(resultList.get(i)
+                            .get("quantity").toString())+customerOrder.getQuantity());
+				}else {
+					 pool.setQuantity(Integer.parseInt(resultList.get(i)
+	                            .get("quantity").toString()));
+				}
                 for (RefundConfig config : configList) {
                     if (config.getGoods().getGoodsId().equals((String) resultList.get(i).get("goods"))) {
-                        pool.setRefundConfig(config);
-                        if (Integer.parseInt(resultList.get(i).get("quantity").toString()) >= config.getAmountTrigger()) {
+                        if (pool.getQuantity()>= config.getAmountTrigger()) {
+                        	pool.setRefundConfig(config);
                             pool.setBlockFlag(false);
                             Map<String, Object> level1Con = new HashMap<>();
                             level1Con.put("agentId", (String) resultList.get(i).get("agent"));
@@ -304,15 +314,15 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
                                     level2Con.put("agentId", agentLevel2.getUpperAgent().getAgentId());
                                     Agent agentLevel3 = (Agent) sqlSession.selectList("selling.agent.query", level3Con).get(0);
                                     //当前agent为三级代理商
-                                    pool.setRefundAmount(Double.parseDouble(resultList.get(i).get("price").toString()) * config.getLevel3Percent());
+                                    pool.setRefundAmount(Double.parseDouble(resultList.get(i).get("quantity").toString()) * config.getLevel3Percent());
 
                                 } else {
                                     //当前agent为二级代理商
-                                    pool.setRefundAmount(Double.parseDouble(resultList.get(i).get("price").toString()) * config.getLevel2Percent());
+                                    pool.setRefundAmount(Double.parseDouble(resultList.get(i).get("quantity").toString()) * config.getLevel2Percent());
                                 }
                             } else {
                                 //当前agent为一级代理商
-                                pool.setRefundAmount(Double.parseDouble(resultList.get(i).get("price").toString()) * config.getLevel1Percent());
+                                pool.setRefundAmount(Double.parseDouble(resultList.get(i).get("quantity").toString()) * config.getLevel1Percent());
                             }
 
                         }
