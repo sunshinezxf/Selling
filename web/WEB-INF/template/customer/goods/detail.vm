@@ -27,9 +27,12 @@
         <div class="goods_name">
             <h2>${goods.name}</h2>
         </div>
-        <div class="price">
+        <div id="agent_price" class="price">
             <div class="pre_price">￥300</div>
             <div id="now_price" class="now_price">200</div>
+        </div>
+        <div id="customer_price" class="price">
+            <div class="common_price">￥300</div>
         </div>
     </div>
     <div class="agent_information">
@@ -138,6 +141,16 @@
             </div>
         </div>
     </div>
+    <div class="weui_dialog_alert" id="dialog" style="display: none;">
+        <div class="weui_mask"></div>
+        <div class="weui_dialog">
+            <div class="weui_dialog_hd"><strong class="weui_dialog_title">消息</strong></div>
+            <div class="weui_dialog_bd"></div>
+            <div class="weui_dialog_ft">
+                <a href="javascript:;" class="weui_btn_dialog primary">确定</a>
+            </div>
+        </div>
+    </div>
 </body>
 <script>
     $(function() {
@@ -153,10 +166,26 @@
         }).on('swiperight', function(e) {
             data.prev();
         });
-    });
-</script>
-<script>
-    $(function() {
+        
+        check_agent();
+        
+        $('#agent_id').blur(function(){
+            var agentId=$('#agent_id').val();
+            if(agentId!=""){
+                var url='${path.concat('/agent/agentValidate/')}'+agentId;
+                var param = {agentId:agentId};
+                $.post(url, param, function(result) {
+                    if (result.responseCode != "RESPONSE_OK") {
+                        $("#dialog").find(".weui_dialog_bd").html("该代理商不存在！");
+                        $("#dialog").fadeIn();
+                        $("#agent_id").val("");
+                    }
+                    check_agent();
+                });   
+            }
+            check_agent();
+        });
+        
         check_num();
                     
         $('#province').ProvinceCity();
@@ -200,11 +229,8 @@
                 inactive();
             }
         });
-        
     });
-</script>
-<script>
-    
+
     $('#purchase').click(function(){
         $.toggleNumModifySheet();
     });
@@ -251,6 +277,21 @@
         $('#total_price').text(num*price+'元');
     });
     
+    $("#dialog").find(".weui_btn_dialog.primary").click(function () {
+        $("#dialog").hide();
+    });
+    
+    function check_agent(){
+        var agent=$('#agent_id').val();
+        if(agent){
+            $('#agent_price').show();
+            $('#customer_price').hide();
+        }else{
+            $('#customer_price').show();
+            $('#agent_price').hide();
+        }
+    }
+    
     function check_num(){
         var goodsNum=$('#goods_num').val();
         if(goodsNum==1){
@@ -261,7 +302,6 @@
             $('#min_btn').removeClass("btn_disabled");
         }
     }
-    
     
     function addressInfo_validate(){
         var name=$('#customer_name').val();
@@ -300,19 +340,14 @@
     $('#confirm').click(function(){
         var url='${path.concat('/customer/place')}';
         var goodsId="${goods.goodsId}";
-        var agentId;
-        if(${agent}){
-            agentId="${agent.agentId}";
-        }else{
-            agentId="";
-        }
+        var agentId=$('#agent_id').val();
         var goodsNum=$('#goods_num').val();
         var customerName=$('#customer_name').val();
         var phone=$('#customer_phone').val();
         var address=$("#province").children(":first").val()+$("#province").children(":first").next().val()+$("#province").children(":last").val()+$("#customer_address").val();
         var param = {goodsId:goodsId , agentId:agentId ,goodsNum:goodsNum,customerName:customerName,phone:phone,address:address};
         $.post(url, param, function(result) {
-            if (result.response.responseCode == "RESPONSE_OK") {
+            if (result.responseCode == "RESPONSE_OK") {
                 var data = result.data; 
                 pingpp_one.init({
 	                app_id: "app_DazjbTLybjHGbv9O",

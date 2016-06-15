@@ -97,6 +97,11 @@ body {
 	float:right;
 	margin-top:0;
 }
+
+.common_price{
+	float:left;
+    font-size:1.7em;
+}
  
 .pre_price{
     float:left;
@@ -331,4 +336,8 @@ body {
     -o-transition: all 0.15s ease;
     -ms-transition: all 0.15s ease;
     transition: all 0.15s ease;
+}
+
+.weui_dialog{
+	z-index:1001;
 }
