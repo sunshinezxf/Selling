@@ -13,6 +13,7 @@ import selling.sunshine.form.GoodsForm;
 import selling.sunshine.model.Agent;
 import selling.sunshine.model.CustomerOrder;
 import selling.sunshine.model.Goods;
+import selling.sunshine.model.GoodsThumbnail;
 import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.AgentService;
@@ -41,7 +42,7 @@ public class CommodityController {
 
     @Autowired
     private AgentService agentService;
-    
+
     @Autowired
     private OrderService orderService;
 
@@ -66,6 +67,16 @@ public class CommodityController {
             Goods goods = new Goods(form.getName(), Double.parseDouble(form.getPrice()), Double.parseDouble(form.getBenefit()), form.getDescription(), form.isBlock());
             ResultData createResponse = commodityService.createCommodity(goods);
             if (createResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                goods = (Goods) createResponse.getData();
+                String[] path = form.getPath();
+                if (!StringUtils.isEmpty(path)) {
+                    List<GoodsThumbnail> list = new ArrayList<>();
+                    for (String item : path) {
+                        GoodsThumbnail nail = new GoodsThumbnail(item, goods);
+                        list.add(nail);
+                    }
+                    commodityService.saveCommodityThumbnails(list);
+                }
                 view.setViewName("redirect:/commodity/overview");
                 return view;
             } else {
@@ -167,32 +178,32 @@ public class CommodityController {
         view.setViewName("/customer/goods/detail");
         return view;
     }
-    
-    @RequestMapping(method = RequestMethod.GET, value="/customerorder")
-    public ModelAndView customerOrder(String wechat, String orderId){
-    	ModelAndView view = new ModelAndView();
-    	Map<String, Object> condition = new HashMap<String, Object>();
-    	if(wechat != null && !wechat.equals("")){
-    		condition.put("wechat", wechat);
-    	}
-    	if(orderId != null && !orderId.equals("")){
-    		condition.put("orderId", orderId);
-    	}
-    	if(condition.isEmpty()){
-    		//这里需要错误页面
-    		view.setViewName("/customer/order/detail");
-    		return view;
-    	}
-    	ResultData fetchCustomerOrderData = orderService.fetchCustomerOrder(condition);
-    	if(fetchCustomerOrderData.getResponseCode() != ResponseCode.RESPONSE_OK){
-    		//这里需要错误页面
-    		view.setViewName("/customer/order/detail");
-    		return view;
-    	}
-    	CustomerOrder customerOrder = ((List<CustomerOrder>)fetchCustomerOrderData.getData()).get(0);
-    	view.addObject("customerOrder", customerOrder);
-    	view.setViewName("/customer/order/detail");
-    	return view;
+
+    @RequestMapping(method = RequestMethod.GET, value = "/customerorder")
+    public ModelAndView customerOrder(String wechat, String orderId) {
+        ModelAndView view = new ModelAndView();
+        Map<String, Object> condition = new HashMap<String, Object>();
+        if (wechat != null && !wechat.equals("")) {
+            condition.put("wechat", wechat);
+        }
+        if (orderId != null && !orderId.equals("")) {
+            condition.put("orderId", orderId);
+        }
+        if (condition.isEmpty()) {
+            //这里需要错误页面
+            view.setViewName("/customer/order/detail");
+            return view;
+        }
+        ResultData fetchCustomerOrderData = orderService.fetchCustomerOrder(condition);
+        if (fetchCustomerOrderData.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            //这里需要错误页面
+            view.setViewName("/customer/order/detail");
+            return view;
+        }
+        CustomerOrder customerOrder = ((List<CustomerOrder>) fetchCustomerOrderData.getData()).get(0);
+        view.addObject("customerOrder", customerOrder);
+        view.setViewName("/customer/order/detail");
+        return view;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/forbid/{goodsId}")

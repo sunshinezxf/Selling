@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import selling.sunshine.dao.BaseDao;
 import selling.sunshine.dao.CommodityDao;
 import selling.sunshine.model.Goods;
+import selling.sunshine.model.GoodsThumbnail;
 import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.utils.IDGenerator;
@@ -121,6 +122,26 @@ public class CommodityDaoImpl extends BaseDao implements CommodityDao {
         page.setData(current);
         result.setData(page);
         return result;
+    }
+
+    @Override
+    public ResultData insertThumbnail(List<GoodsThumbnail> thumbnails) {
+        ResultData result = new ResultData();
+        for (GoodsThumbnail item : thumbnails) {
+            item.setThumbnailId("GTB");
+        }
+        synchronized (lock) {
+            try {
+                sqlSession.insert("selling.goods.thumbnail.insert", thumbnails);
+                result.setData(thumbnails);
+            } catch (Exception e) {
+                logger.error(e.getMessage());
+                result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+                result.setDescription(e.getMessage());
+            } finally {
+                return result;
+            }
+        }
     }
 
     /**
