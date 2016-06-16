@@ -69,7 +69,7 @@
                         <p>手机:</p>
                     </div>
                     <div class="weui_cell_ft">
-                        <p>15850580905</p>
+                        <p>${customerOrder.receiverPhone}</p>
                     </div>
                 </div>
                 <div class="weui_cell">
