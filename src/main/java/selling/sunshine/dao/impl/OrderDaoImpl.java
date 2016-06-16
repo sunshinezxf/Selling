@@ -81,23 +81,6 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
     }
 
     @Override
-    public ResultData queryOrder2(Map<String, Object> condition) {
-        ResultData result = new ResultData();
-        try {
-            condition = handle(condition);
-            List<Order> list = sqlSession.selectList("selling.order.queryOrder",
-                    condition);
-            result.setData(list);
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
-            result.setDescription(e.getMessage());
-        } finally {
-            return result;
-        }
-    }
-
-    @Override
     public ResultData queryOrderByPage(Map<String, Object> condition, MobilePageParam param) {
         ResultData result = new ResultData();
         MobilePage<Order> page = new MobilePage<>();
@@ -108,29 +91,7 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
             return result;
         }
         page.setTotal(((List<Order>) total.getData()).size());
-        List<Order> current = queryOrderByPage(condition, param.getStart(),
-                param.getLength());
-        if (current.size() == 0) {
-            result.setResponseCode(ResponseCode.RESPONSE_NULL);
-        }
-        page.setData(current);
-        result.setData(page);
-        return result;
-    }
-
-    @Override
-    public ResultData queryOrderByPage2(Map<String, Object> condition, MobilePageParam param) {
-        ResultData result = new ResultData();
-        MobilePage<Order> page = new MobilePage<>();
-        ResultData total = queryOrder2(condition);
-        if (total.getResponseCode() != ResponseCode.RESPONSE_OK) {
-            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
-            result.setDescription(total.getDescription());
-            return result;
-        }
-        page.setTotal(((List<Order>) total.getData()).size());
-        List<Order> current = queryOrderByPage2(condition, param.getStart(),
-                param.getLength());
+        List<Order> current = queryOrderByPage(condition, param.getStart(), param.getLength());
         if (current.size() == 0) {
             result.setResponseCode(ResponseCode.RESPONSE_NULL);
         }
@@ -216,25 +177,10 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
         }
     }
 
-    private List<Order> queryOrderByPage(Map<String, Object> condition,
-                                         int start, int length) {
+    private List<Order> queryOrderByPage(Map<String, Object> condition, int start, int length) {
         List<Order> result = new ArrayList<>();
         try {
-            result = sqlSession.selectList("selling.order.query", condition,
-                    new RowBounds(start, length));
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-        } finally {
-            return result;
-        }
-    }
-
-    private List<Order> queryOrderByPage2(Map<String, Object> condition,
-                                          int start, int length) {
-        List<Order> result = new ArrayList<>();
-        try {
-            result = sqlSession.selectList("selling.order.queryOrder", condition,
-                    new RowBounds(start, length));
+            result = sqlSession.selectList("selling.order.query", condition, new RowBounds(start, length));
         } catch (Exception e) {
             logger.error(e.getMessage());
         } finally {
@@ -275,7 +221,7 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
                     "selling.order.pool.sumOrder", condition);
             List<Map<String, Object>> sumCustomerOrderList = sqlSession.selectList(
                     "selling.customer.order.sumCustomerOrder", condition);
-            List<Map<String, Object>> resultList = new ArrayList<Map<String, Object>>();
+            List<Map<String, Object>> resultList = new ArrayList<>();
             if (sumOrderList.size() == 0) {
                 resultList = sumCustomerOrderList;
             } else if (sumCustomerOrderList.size() == 0) {
@@ -318,7 +264,7 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
                     Goods4Agent goods = new Goods4Agent();
                     goods.setGoodsId((String) resultList.get(i).get("goods"));
                     pool.setGoods(goods);
-                    configCondition.put("goodsId", (String) resultList.get(i).get("goods"));
+                    configCondition.put("goodsId", resultList.get(i).get("goods"));
                     configCondition.put("blockFlag", false);
                     RefundConfig config = (RefundConfig) sqlSession.selectList("selling.refund.config.query", configCondition).get(0);
                     pool.setRefundConfig(config);

@@ -18,7 +18,6 @@ import selling.sunshine.form.PayForm;
 import selling.sunshine.form.SortRule;
 import selling.sunshine.model.*;
 import selling.sunshine.model.goods.Goods4Agent;
-import selling.sunshine.model.goods.Goods4Customer;
 import selling.sunshine.pagination.MobilePage;
 import selling.sunshine.pagination.MobilePageParam;
 import selling.sunshine.service.*;
@@ -82,10 +81,10 @@ public class OrderController {
         List<Integer> status = new ArrayList<>();
         status.add(2);
         condition.put("status", status);
-        List<SortRule> rule = new ArrayList<SortRule>();
+        List<SortRule> rule = new ArrayList<>();
         rule.add(new SortRule("create_time", "asc"));
         condition.put("sort", rule);
-        ResultData fetchResponse = orderService.fetchOrder2(condition, param);
+        ResultData fetchResponse = orderService.fetchOrder(condition, param);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             result = (MobilePage<Order>) fetchResponse.getData();
         }
@@ -107,7 +106,24 @@ public class OrderController {
             return result;
         }
         Map<String, Object> condition = new HashMap<>();
-        condition.put("status", param.getParams().get("status"));
+        List<Integer> status = new ArrayList<>();
+        switch (Integer.parseInt((String) param.getParams().get("status"))) {
+            case 0:
+                status.add(0);
+                break;
+            case 1:
+                status.add(1);
+                break;
+            case 2:
+                status.add(2);
+                status.add(3);
+                status.add(4);
+                break;
+            case 3:
+                status.add(5);
+                break;
+        }
+        condition.put("status", status);
         ResultData fetchResponse = orderService.fetchOrder(condition, param);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             result = (MobilePage<Order>) fetchResponse.getData();

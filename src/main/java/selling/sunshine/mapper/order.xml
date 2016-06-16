@@ -82,33 +82,6 @@
             AND order_id = #{orderId}
         </if>
         <if test="status != null and status != ''">
-            <if test="status == 0">AND order_status = 0</if>
-            <if test="status == 1">AND order_status = 1</if>
-            <if test="status == 2">AND (order_status = 2 || order_status = 3 || order_status = 4)</if>
-            <if test="status == 3">AND order_status = 5</if>
-        </if>
-        <if test="agentId != null and agentId !=''">
-            AND agent_id = #{agentId}
-        </if>
-        <if test="blockFlag != null">
-            AND block_flag = #{blockFlag}
-        </if>
-        <if test="createAt != null and createAt != ''">
-            AND create_time = #{createAt}
-        </if>
-        <if test="rule != null and rule != ''">
-            ORDER BY ${rule}
-        </if>
-    </select>
-
-    <select id="queryOrder" parameterType="java.util.Map" resultMap="orderVo">
-        SELECT order_id, order_status, order_price, agent_id, block_flag, create_time
-        FROM `order`
-        WHERE 1 = 1
-        <if test="orderId != null and orderId != ''">
-            AND order_id = #{orderId}
-        </if>
-        <if test="status != null and status != ''">
             AND order_status IN
             <foreach collection="status" item="mode" index="index" open="(" close=")" separator=",">
                 #{mode}

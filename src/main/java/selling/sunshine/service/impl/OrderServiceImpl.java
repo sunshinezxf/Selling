@@ -1,11 +1,9 @@
 package selling.sunshine.service.impl;
 
 import org.slf4j.Logger;
-
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import selling.sunshine.dao.CustomerOrderDao;
 import selling.sunshine.dao.OrderDao;
 import selling.sunshine.dao.OrderItemDao;
@@ -26,13 +24,13 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private OrderDao orderDao;
-    
+
     @Autowired
     private OrderPoolDao orderPoolDao;
-    
+
     @Autowired
     private OrderItemDao orderItemDao;
-    
+
     @Autowired
     private CustomerOrderDao customerOrderDao;
 
@@ -48,23 +46,23 @@ public class OrderServiceImpl implements OrderService {
         }
         return result;
     }
-    
+
     @Override
-	public ResultData placeOrder(CustomerOrder customerOrder) {
-		ResultData result = new ResultData();
-		ResultData insertResponse = customerOrderDao.insertOrder(customerOrder);
-		result.setResponseCode(insertResponse.getResponseCode());
-		if (insertResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+    public ResultData placeOrder(CustomerOrder customerOrder) {
+        ResultData result = new ResultData();
+        ResultData insertResponse = customerOrderDao.insertOrder(customerOrder);
+        result.setResponseCode(insertResponse.getResponseCode());
+        if (insertResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             result.setData(insertResponse.getData());
         } else {
             result.setDescription(insertResponse.getDescription());
         }
         return result;
-	}
-    
+    }
+
     @Override
-	public ResultData payOrder(Order order) {
-    	ResultData result = new ResultData();
+    public ResultData payOrder(Order order) {
+        ResultData result = new ResultData();
         ResultData updateResponse = orderDao.updateOrder(order);
         result.setResponseCode(updateResponse.getResponseCode());
         if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
@@ -73,11 +71,11 @@ public class OrderServiceImpl implements OrderService {
             result.setDescription(updateResponse.getDescription());
         }
         return result;
-	}
-    
+    }
+
     @Override
-	public ResultData payOrder(CustomerOrder customerOrder) {
-    	ResultData result = new ResultData();
+    public ResultData payOrder(CustomerOrder customerOrder) {
+        ResultData result = new ResultData();
         ResultData updateResponse = customerOrderDao.updateOrder(customerOrder);
         result.setResponseCode(updateResponse.getResponseCode());
         if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
@@ -86,7 +84,7 @@ public class OrderServiceImpl implements OrderService {
             result.setDescription(updateResponse.getDescription());
         }
         return result;
-	}
+    }
 
     @Override
     public ResultData fetchOrder(Map<String, Object> condition) {
@@ -100,24 +98,11 @@ public class OrderServiceImpl implements OrderService {
         }
         return result;
     }
-    
-    @Override
-	public ResultData fetchCustomerOrder(Map<String, Object> condition) {
-    	ResultData result = new ResultData();
-        ResultData queryResponse = customerOrderDao.queryOrder(condition);
-        result.setResponseCode(queryResponse.getResponseCode());
-        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            result.setData(queryResponse.getData());
-        } else {
-            result.setDescription(queryResponse.getDescription());
-        }
-        return result;
-	}
 
     @Override
-    public ResultData fetchOrder(Map<String, Object> condition, MobilePageParam param) {
+    public ResultData fetchCustomerOrder(Map<String, Object> condition) {
         ResultData result = new ResultData();
-        ResultData queryResponse = orderDao.queryOrderByPage(condition, param);
+        ResultData queryResponse = customerOrderDao.queryOrder(condition);
         result.setResponseCode(queryResponse.getResponseCode());
         if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             result.setData(queryResponse.getData());
@@ -152,10 +137,10 @@ public class OrderServiceImpl implements OrderService {
         }
         return result;
     }
-    
+
     @Override
-	public ResultData fetchOrderPool(Map<String, Object> condition) {
-    	ResultData result = new ResultData();
+    public ResultData fetchOrderPool(Map<String, Object> condition) {
+        ResultData result = new ResultData();
         ResultData fetchResponse = orderPoolDao.queryOrderPool(condition);
         result.setResponseCode(fetchResponse.getResponseCode());
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
@@ -166,9 +151,9 @@ public class OrderServiceImpl implements OrderService {
         return result;
     }
 
-	@Override
-	public ResultData cancel(Order order) {
-		ResultData result = new ResultData();
+    @Override
+    public ResultData cancel(Order order) {
+        ResultData result = new ResultData();
         ResultData cancelResponse = orderDao.cancelOrder(order);
         result.setResponseCode(cancelResponse.getResponseCode());
         if (cancelResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
@@ -177,13 +162,13 @@ public class OrderServiceImpl implements OrderService {
             result.setDescription(cancelResponse.getDescription());
         }
         return result;
-	}
+    }
 
-	@Override
-	public ResultData fetchOrder2(Map<String, Object> condition,
-			MobilePageParam param) {
+    @Override
+    public ResultData fetchOrder(Map<String, Object> condition,
+                                 MobilePageParam param) {
         ResultData result = new ResultData();
-        ResultData queryResponse = orderDao.queryOrderByPage2(condition, param);
+        ResultData queryResponse = orderDao.queryOrderByPage(condition, param);
         result.setResponseCode(queryResponse.getResponseCode());
         if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             result.setData(queryResponse.getData());
@@ -191,12 +176,12 @@ public class OrderServiceImpl implements OrderService {
             result.setDescription(queryResponse.getDescription());
         }
         return result;
-	}
+    }
 
-	@Override
-	public ResultData fetchOrderItem(Map<String, Object> condition) {
-    	ResultData result = new ResultData();
-        ResultData fetchResponse =orderItemDao.queryOrderItem(condition);
+    @Override
+    public ResultData fetchOrderItem(Map<String, Object> condition) {
+        ResultData result = new ResultData();
+        ResultData fetchResponse = orderItemDao.queryOrderItem(condition);
         result.setResponseCode(fetchResponse.getResponseCode());
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             result.setData(fetchResponse.getData());
@@ -204,11 +189,11 @@ public class OrderServiceImpl implements OrderService {
             result.setDescription(fetchResponse.getDescription());
         }
         return result;
-	}
+    }
 
-	@Override
-	public ResultData updateOrderItem(OrderItem orderItem) {
-		ResultData result = new ResultData();
+    @Override
+    public ResultData updateOrderItem(OrderItem orderItem) {
+        ResultData result = new ResultData();
         ResultData updateResponse = orderItemDao.updateOrderItem(orderItem);
         result.setResponseCode(updateResponse.getResponseCode());
         if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
@@ -217,6 +202,6 @@ public class OrderServiceImpl implements OrderService {
             result.setDescription(updateResponse.getDescription());
         }
         return result;
-	}
+    }
 
 }

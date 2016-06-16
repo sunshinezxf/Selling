@@ -705,11 +705,28 @@ public class AgentController {
             result.setDescription("您需要重新登录");
             return result;
         }
-        List<SortRule> orderBy = new ArrayList<SortRule>();
+        List<Integer> status = new ArrayList<>();
+        switch (Integer.parseInt(type)) {
+            case 0:
+                status.add(0);
+                break;
+            case 1:
+                status.add(1);
+                break;
+            case 2:
+                status.add(2);
+                status.add(3);
+                status.add(4);
+                break;
+            case 3:
+                status.add(5);
+                break;
+        }
+        List<SortRule> orderBy = new ArrayList<>();
         orderBy.add(new SortRule("create_time", "desc"));
         Map<String, Object> condition = new HashMap<>();
         condition.put("agentId", user.getAgent().getAgentId());
-        condition.put("status", type);
+        condition.put("status", status);
         condition.put("sort", orderBy);
         condition.put("blockFlag", false);
         ResultData fetchResponse = orderService.fetchOrder(condition);
