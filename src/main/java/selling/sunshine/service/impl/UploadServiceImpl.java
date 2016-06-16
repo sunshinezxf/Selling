@@ -49,13 +49,15 @@ public class UploadServiceImpl implements UploadService {
             directory.mkdirs();
         }
         String suffix = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf('.'));
-        String name = IDGenerator.generate("TH") + suffix;
+        String key = IDGenerator.generate("TH");
+        String name = key + suffix;
         String completeName = builder.append(File.separator).append(name).toString();
         File temp = new File(completeName);
         try {
             file.transferTo(temp);
             int index = temp.getPath().indexOf(SystemTeller.tellPath(PATH + "/" + time));
             result.setData(temp.getPath().substring(index));
+            result.setDescription(name);
         } catch (IOException e) {
             logger.debug(e.getMessage());
             result.setResponseCode(ResponseCode.RESPONSE_ERROR);
