@@ -632,10 +632,10 @@ DROP TABLE IF EXISTS `selling`.`goods_thumbnail` ;
 
 CREATE TABLE IF NOT EXISTS `selling`.`goods_thumbnail` (
   `thumbnail_id` VARCHAR(20) NOT NULL,
-  `goods_id` VARCHAR(20) NOT NULL,
+  `goods_id` VARCHAR(20) NULL,
   `thumbnail_path` VARCHAR(100) NOT NULL,
   `block_flag` TINYINT(1) NOT NULL DEFAULT 0,
-  `create_time` VARCHAR(45) NULL,
+  `create_time` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`thumbnail_id`),
   INDEX `fk_goods_thumbnail_goods1_idx` (`goods_id` ASC),
   CONSTRAINT `fk_goods_thumbnail_goods1`

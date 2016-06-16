@@ -23,4 +23,6 @@ public interface CommodityService {
     ResultData updateCommodity(Goods goods);
 
     ResultData saveCommodityThumbnails(List<GoodsThumbnail> thumbnails);
+
+    ResultData createThumbnail(GoodsThumbnail thumbnail);
 }
