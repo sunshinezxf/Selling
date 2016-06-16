@@ -1,0 +1,9 @@
+<nav class="navbar navbar-default navbar-fixed-bottom">
+    <div class="container">
+        <div class="row">
+            <ul class="list-inline text-center">
+                <li><a href="http://www.miitbeian.gov.cn/" target="_blank">滇ICP备16004151号-1</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
