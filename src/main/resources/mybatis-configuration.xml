@@ -4,6 +4,7 @@
     <mappers>
         <mapper resource="selling/sunshine/mapper/admin.xml"/>
         <mapper resource="selling/sunshine/mapper/commodity.xml"/>
+        <mapper resource="selling/sunshine/mapper/commoditythumbnail.xml"/>
         <mapper resource="selling/sunshine/mapper/agent.xml"/>
         <mapper resource="selling/sunshine/mapper/user.xml"/>
         <mapper resource="selling/sunshine/mapper/order.xml"/>

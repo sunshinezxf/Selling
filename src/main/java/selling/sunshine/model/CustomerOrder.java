@@ -11,6 +11,7 @@ public class CustomerOrder extends Entity {
     private int quantity;
     private String wechat;
     private String receiverName;
+    private String receiverPhone;
     private String receiverAddress;
     private double totalPrice;
     private OrderItemStatus status;
@@ -20,21 +21,22 @@ public class CustomerOrder extends Entity {
         this.status = OrderItemStatus.NOT_PAYED;
     }
 
-    public CustomerOrder(Goods goods, int quantity, String receiverName, String receiverAddress) {
+    public CustomerOrder(Goods goods, int quantity, String receiverName, String receiverPhone, String receiverAddress) {
         this();
         this.goods = goods;
         this.quantity = quantity;
         this.receiverName = receiverName;
+        this.receiverPhone = receiverPhone;
         this.receiverAddress = receiverAddress;
     }
 
-    public CustomerOrder(Goods goods, int quantity, String receiverName, String receiverAddress, Agent agent) {
-        this(goods, quantity, receiverName, receiverAddress);
+    public CustomerOrder(Goods goods, int quantity, String receiverName, String receiverPhone, String receiverAddress, Agent agent) {
+        this(goods, quantity, receiverName, receiverPhone, receiverAddress);
         this.agent = agent;
     }
 
-    public CustomerOrder(Goods goods, int quantity, String receiverName, String receiverAddress, Agent agent, OrderItemStatus status) {
-        this(goods, quantity, receiverName, receiverAddress, agent);
+    public CustomerOrder(Goods goods, int quantity, String receiverName, String receiverPhone, String receiverAddress, Agent agent, OrderItemStatus status) {
+        this(goods, quantity, receiverName, receiverPhone, receiverAddress, agent);
         this.status = status;
     }
 
@@ -76,6 +78,14 @@ public class CustomerOrder extends Entity {
 
     public void setReceiverName(String receiverName) {
         this.receiverName = receiverName;
+    }
+
+    public String getReceiverPhone() {
+        return receiverPhone;
+    }
+
+    public void setReceiverPhone(String receiverPhone) {
+        this.receiverPhone = receiverPhone;
     }
 
     public String getReceiverAddress() {

@@ -54,7 +54,7 @@
     </update>
 
     <select id="goodsQuery" parameterType="java.util.Map" resultMap="goodsVo">
-        SELECT goods_id, goods_name, goods_price, agent_price, goods_description, block_flag, create_time
+        SELECT goods_id, goods_name, primary_price, agent_price, goods_description, block_flag, create_time
         FROM goods
         WHERE goods_id = #{goodsId}
     </select>

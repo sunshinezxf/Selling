@@ -6,6 +6,7 @@
         <result property="wechat" column="wechat"></result>
         <result property="quantity" column="quantity"></result>
         <result property="receiverName" column="receiver_name"></result>
+        <result property="receiverPhone" column="receiver_phone"></result>
         <result property="receiverAddress" column="receiver_addr"></result>
         <result property="totalPrice" column="total_price"></result>
         <result property="status" column="order_status"
@@ -40,7 +41,7 @@
     </resultMap>
     
     <select id="query" parameterType="java.util.Map" resultMap="customerOrderVo">
-    	SELECT order_id, agent_id, wechat, quantity, receiver_name, receiver_addr, total_price, order_status, goods_id, block_flag, create_time
+    	SELECT order_id, agent_id, wechat, quantity, receiver_name, receiver_phone, receiver_addr, total_price, order_status, goods_id, block_flag, create_time
     	FROM customer_order
     	WHERE 1=1
     	<if test="orderId != null and orderId != ''">
@@ -91,6 +92,7 @@
             order_id = #{orderId},
             quantity = #{quantity},
             receiver_name = #{receiverName},
+            receiver_phone = #{receiverPhone},
             receiver_addr = #{receiverAddress},
             total_price = #{totalPrice},
             order_status = #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler},
@@ -112,6 +114,7 @@
             order_id = #{orderId},
             quantity = #{quantity},
             receiver_name = #{receiverName},
+            receiver_phone = #{receiverPhone},
             receiver_addr = #{receiverAddress},
             total_price = #{totalPrice},
             order_status = #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler},

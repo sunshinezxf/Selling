@@ -114,6 +114,8 @@
                 /material/images/** = anon
                 /material/js/** = anon
 
+                /payment/** = anon
+
                 /** = authc
             </value>
         </property>
