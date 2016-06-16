@@ -9,7 +9,7 @@ body {
 }
 
 .hd{
-	color:#04BE02;
+	color:#ff8080;
 	text-align:center;
 	padding-top:5%;
 }
@@ -25,6 +25,6 @@ body {
 }
 
 .order_status{
-	color:#04BE02;
+	color:#ff8080;
 	text-decoration:underline;
 }

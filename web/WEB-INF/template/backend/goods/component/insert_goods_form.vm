@@ -129,7 +129,7 @@
     $(document).on('ready', function () {
         $("#goods_thumnail").fileinput({
             uploadUrl: "${path.concat('/commodity/upload')}",
-            deleteUrl: "/site/file-delete",
+            deleteUrl: "",
             browseClass: "btn btn-success",
             browseLabel: "选择图片",
             browseIcon: "<i class=\"glyphicon glyphicon-picture\"></i> ",
@@ -141,8 +141,10 @@
             uploadIcon: "<i class=\"glyphicon glyphicon-upload\"></i> ",
             initialPreview: [
                "<img src='/material/upload/20160615/THexfflw71.jpg' class='file-preview-image' alt='Desert' title='Desert'>"
-            ],
+            removeFromPreviewOnError: true,
+            showBrowse: false,
             showCaption: false,
+            showCancel: false,
             showRemove: false,
             showUpload: true,
             showClose: false,
