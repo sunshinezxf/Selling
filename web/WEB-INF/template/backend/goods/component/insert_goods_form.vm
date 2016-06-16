@@ -139,6 +139,9 @@
             uploadClass: "btn btn-info",
             uploadLabel: "上传",
             uploadIcon: "<i class=\"glyphicon glyphicon-upload\"></i> ",
+            initialPreview: [
+               "<img src='/material/upload/20160615/THexfflw71.jpg' class='file-preview-image' alt='Desert' title='Desert'>"
+            ],
             showCaption: false,
             showRemove: false,
             showUpload: true,
