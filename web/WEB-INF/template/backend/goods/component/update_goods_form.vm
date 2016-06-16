@@ -20,17 +20,27 @@
 
                     <div class="col-sm-8 col-md-8 col-lg-8">
                         <input type="text" class="form-control" id="goods_name" name="name" value=${goods.name}
-                               required="" autocomplete="off"/>
+                                required="" autocomplete="off"/>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-2 col-md-2 col-lg-2 control-label" for="goods_price">
-                        商品单价
+                        商品原价
                     </label>
 
                     <div class="col-sm-8 col-md-8 col-lg-8">
-                        <input type="number" class="form-control" id="goods_price" name="price" value=${goods.price}
-                               required="" autocomplete="off"/>
+                        <input type="number" class="form-control" id="goods_price" name="price"
+                               value=${goods.customerPrice} required="" autocomplete="off"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 col-md-2 col-lg-2 control-label" for="goods_price">
+                        代理价格
+                    </label>
+
+                    <div class="col-sm-8 col-md-8 col-lg-8">
+                        <input type="number" class="form-control" id="agent_price" name="agentPrice"
+                               value=${goods.agentPrice} required="" autocomplete="off"/>
                     </div>
                 </div>
                 <div class="form-group">
@@ -82,11 +92,11 @@
         $("#update_goods_form").attr("method", "post");
         $("#update_goods_form").submit();
     })
-    
+
     $(document).ready(function () {
-        if(${goods.blockFlag}){
+        if (${goods.blockFlag}) {
             $("#later").attr("checked", "checked");
-        }else{           
+        } else {
             $("#immediate").attr("checked", "checked");
         }
     });

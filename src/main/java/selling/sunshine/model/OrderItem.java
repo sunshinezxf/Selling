@@ -1,5 +1,6 @@
 package selling.sunshine.model;
 
+import selling.sunshine.model.goods.Goods4Agent;
 import selling.sunshine.model.goods.Goods4Customer;
 
 /**
@@ -12,7 +13,7 @@ public class OrderItem extends Entity {
     private double orderItemPrice;
     private String receiveAddress;
     private Customer customer;
-    private Goods4Customer goods;
+    private Goods4Agent goods;
     private Order order;
 
     public OrderItem() {
@@ -75,11 +76,11 @@ public class OrderItem extends Entity {
         this.order = order;
     }
 
-    public Goods4Customer getGoods() {
+    public Goods4Agent getGoods() {
         return goods;
     }
 
-    public void setGoods(Goods4Customer goods) {
+    public void setGoods(Goods4Agent goods) {
         this.goods = goods;
     }
 

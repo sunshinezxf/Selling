@@ -74,7 +74,7 @@ public class CommodityController {
                 thumbnail.setThumbnailId(item);
             }
         }
-        Goods4Customer goods = new Goods4Customer(form.getName(), Double.parseDouble(form.getBenefit()), Double.parseDouble(form.getPrice()), form.getDescription(), list, form.isBlock());
+        Goods4Customer goods = new Goods4Customer(form.getName(), Double.parseDouble(form.getAgentPrice()), Double.parseDouble(form.getPrice()), form.getDescription(), list, form.isBlock());
         ResultData response = commodityService.createGoods4Customer(goods);
         if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
             view.setViewName("redirect:/commodity/overview");
@@ -116,9 +116,9 @@ public class CommodityController {
                 thumbnail.setThumbnailId(item);
             }
         }
-        Goods4Customer goods = new Goods4Customer(form.getName(), Double.parseDouble(form.getBenefit()), Double.parseDouble(form.getPrice()), form.getDescription(), list, form.isBlock());
+        Goods4Customer goods = new Goods4Customer(form.getName(), Double.parseDouble(form.getAgentPrice()), Double.parseDouble(form.getPrice()), form.getDescription(), list, form.isBlock());
         goods.setGoodsId(goodsId);
-        ResultData resultData = commodityService.createGoods4Customer(goods);
+        ResultData resultData = commodityService.updateGoods4Customer(goods);
         if (resultData.getResponseCode() != ResponseCode.RESPONSE_OK) {
             view.setViewName("redirect:/commodity/overview");
             return view;

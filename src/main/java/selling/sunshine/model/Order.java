@@ -1,5 +1,6 @@
 package selling.sunshine.model;
 
+import com.alibaba.fastjson.JSONObject;
 import selling.sunshine.model.lite.Agent;
 
 import java.util.List;
@@ -59,5 +60,8 @@ public class Order extends Entity {
         this.price = price;
     }
 
-
+    @Override
+    public String toString() {
+        return JSONObject.toJSONString(this);
+    }
 }

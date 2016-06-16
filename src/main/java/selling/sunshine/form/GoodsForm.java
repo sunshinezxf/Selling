@@ -11,7 +11,7 @@ public class GoodsForm {
     @NotNull
     private String price;
     @NotNull
-    private String benefit;
+    private String agentPrice;
     @NotNull
     private String description;
 
@@ -35,12 +35,12 @@ public class GoodsForm {
         this.price = price;
     }
 
-    public String getBenefit() {
-        return benefit;
+    public String getAgentPrice() {
+        return agentPrice;
     }
 
-    public void setBenefit(String benefit) {
-        this.benefit = benefit;
+    public void setAgentPrice(String agentPrice) {
+        this.agentPrice = agentPrice;
     }
 
     public String getDescription() {

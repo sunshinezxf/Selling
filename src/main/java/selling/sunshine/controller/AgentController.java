@@ -620,7 +620,7 @@ public class AgentController {
             view.setViewName("/agent/login");
             return view;
         }
-        List<OrderItem> orderItems = new ArrayList<OrderItem>();
+        List<OrderItem> orderItems = new ArrayList<>();
         int length = form.getCustomerId().length;
         Order order = new Order();
         order.setAgent(user.getAgent());

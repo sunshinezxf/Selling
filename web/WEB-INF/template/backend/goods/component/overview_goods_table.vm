@@ -51,18 +51,19 @@
             },
             columns: [
                 {title: "商品名称", "mData": "name"},
-                {title: "价格", "mData": "price"},
+                {title: "商品原价", "mData": "customerPrice"},
+                {title: "代理价格", "mData": "agentPrice"},
                 {
                     title: "描述", "mData": "description"
                 },
                 {
                     title: "操作", "mRender": function (data, type, full) {
                     var operation = "";
-                    if(full.blockFlag){
+                    if (full.blockFlag) {
                         var enable_url = "${path.concat('/commodity/enable/')}" + full.goodsId;
                         var enable_button = "<button type='button' class='btn btn-success btn-group-sm' onclick=\"javascript:location.href='" + enable_url + "'\">上架</button>&nbsp;"
                         operation += enable_button;
-                    }else{
+                    } else {
                         var forbid_url = "${path.concat('/commodity/forbid/')}" + full.goodsId;
                         var limit_button = "<button type='button' class='btn btn-warning btn-group-sm' onclick=\"javascript:location.href='" + forbid_url + "'\">下架</button>&nbsp;"
                         operation += limit_button;
@@ -71,7 +72,7 @@
                     var update_button = "<button type='button' class='btn btn-success btn-group-sm' onclick=\"javascript:location.href='" + edit_url + "'\">修改</button>&nbsp;"
                     operation += update_button;
                     return operation;
-                    }
+                }
                 }
             ],
             "language": {
