@@ -62,6 +62,9 @@ public class OrderController {
 	
 	@Autowired
 	private ExpressService expressService;
+	
+	@Autowired
+	private RefundService refundService;
 
 	@RequestMapping(method = RequestMethod.GET, value = "/check")
 	public ModelAndView handle() {
@@ -519,5 +522,19 @@ public class OrderController {
 			charge = (Charge) createResponse.getData();
 		}
 		return charge;
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/orderPool")
+	public ResultData orderPool(HttpServletRequest request) {
+		
+			ResultData resultData=orderService.poolOrder();
+			return resultData;
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/refundRecord")
+	public ResultData refundRecord(HttpServletRequest request) {
+		
+			ResultData resultData=refundService.refundRecord();;
+			return resultData;
 	}
 }

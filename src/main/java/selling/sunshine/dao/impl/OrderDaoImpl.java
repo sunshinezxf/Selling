@@ -303,12 +303,12 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
 			}           
             if (resultList.size()!=0) {
             	 Map<String, Object> configCondition = new HashMap<>();
-                 List<RefundConfig> configList = sqlSession.selectList("selling.refund.config.query", configCondition);
                  for (int i = 0; i < resultList.size(); i++) {
                      OrderPool pool = new OrderPool();
                      pool.setOrderPoolId(IDGenerator.generate("OPL"));
                      pool.setPrice(Double.parseDouble(resultList.get(i).get("price")
                              .toString()));
+                     pool.setQuantity(Integer.parseInt(resultList.get(i).get("quantity").toString()));
                      pool.setPoolDate(new Date(c.getTimeInMillis()));
                      Agent agent = new Agent();
                      agent.setAgentId((String) resultList.get(i).get("agent"));
@@ -316,14 +316,12 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
                      Goods goods = new Goods();
                      goods.setGoodsId((String) resultList.get(i).get("goods"));
                      pool.setGoods(goods);
-                     Map<String, Object> customerOrderCon = new HashMap<>();
-                     customerOrderCon.put("agentId", resultList.get(i).get("agent"));
-                     customerOrderCon.put("goodsId", resultList.get(i).get("goods"));
-                     customerOrderCon.put("date", date + "%");
-                     for (RefundConfig config : configList) {
-                         if (config.getGoods().getGoodsId().equals((String) resultList.get(i).get("goods"))) {
-                             if (pool.getQuantity()>= config.getAmountTrigger()) {
-                             	pool.setRefundConfig(config);
+                     configCondition.put("goodsId", (String) resultList.get(i).get("goods"));
+                     configCondition.put("blockFlag", false);
+                     RefundConfig config=(RefundConfig)sqlSession.selectList("selling.refund.config.query", configCondition).get(0);                     
+                     pool.setRefundConfig(config);
+                     if (pool.getQuantity()>= config.getAmountTrigger()) {
+                             	
                                  pool.setBlockFlag(false);
                                  Map<String, Object> level1Con = new HashMap<>();
                                  level1Con.put("agentId", (String) resultList.get(i).get("agent"));
@@ -348,10 +346,9 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
                                      pool.setRefundAmount(Double.parseDouble(resultList.get(i).get("quantity").toString()) * config.getLevel1Percent());
                                  }
 
-                             }
-                         }
-                     }
+                     }                                             
                      sqlSession.insert("selling.order.pool.insert", pool);
+                     configCondition.clear();
                  }
                  result.setData(resultList);
                  result.setResponseCode(ResponseCode.RESPONSE_OK);
