@@ -232,7 +232,7 @@ DROP TABLE IF EXISTS `selling`.`goods` ;
 CREATE TABLE IF NOT EXISTS `selling`.`goods` (
   `goods_id` VARCHAR(20) NOT NULL,
   `goods_name` VARCHAR(45) NOT NULL,
-  `primary_price` DOUBLE NOT NULL,
+  `prime_price` DOUBLE NOT NULL,
   `agent_price` DOUBLE NOT NULL,
   `goods_description` VARCHAR(45) NULL DEFAULT NULL,
   `block_flag` TINYINT(1) NOT NULL DEFAULT '0',
@@ -690,3 +690,4 @@ INSERT INTO `selling`.`user` (`user_id`, `username`, `password`, `role_id`, `man
 INSERT INTO `selling`.`user` (`user_id`, `username`, `password`, `role_id`, `manager_id`, `agent_id`, `block_flag`, `create_time`) VALUES ('USRflowfr67', '18000000000', 'e10adc3949ba59abbe56e057f20f883e', 'ROL00000002', NULL, 'AGTvlorff50', 0, '2016-05-09 16:13:10');
 
 COMMIT;
+
