@@ -62,6 +62,9 @@ public class OrderController {
 	
 	@Autowired
 	private ExpressService expressService;
+	
+	@Autowired
+	private RefundService refundService;
 
 	@RequestMapping(method = RequestMethod.GET, value = "/check")
 	public ModelAndView handle() {
@@ -319,7 +322,7 @@ public class OrderController {
 				view.setViewName("redirect:/agent/prompt");
 				return view;
 			}
-			orderItemPrice = goods.getPrice() * goodsQuantity;// 得到一个OrderItem的总价
+			orderItemPrice = goods.getBenefit() * goodsQuantity;// 得到一个OrderItem的总价
 			total_price += orderItemPrice;// 累加金额
 			OrderItem orderItem = new OrderItem(customerId, goodsId,
 					goodsQuantity, orderItemPrice, address);// 构造OrderItem
@@ -520,4 +523,5 @@ public class OrderController {
 		}
 		return charge;
 	}
+	
 }

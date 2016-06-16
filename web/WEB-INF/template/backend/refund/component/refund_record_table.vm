@@ -58,8 +58,8 @@
                     return ((new Date(full.createAt)).format("yyyy/MM/dd"));
                 }
                 },
-                {title: "返现金额", "mData": "refundAmount"},
-                {title: "返现比例", "mData": "refundPercent"},
+                {title: "返现金额(元)", "mData": "refundAmount"},
+                {title: "返现比例(元／件)", "mData": "refundPercent"},
                 {title: "内容", "mData": "refundDescription"}                  
             ],
             "language": {

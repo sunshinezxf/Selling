@@ -57,7 +57,7 @@ public class UploadServiceImpl implements UploadService {
             file.transferTo(temp);
             int index = temp.getPath().indexOf(SystemTeller.tellPath(PATH + "/" + time));
             result.setData(temp.getPath().substring(index));
-            result.setDescription(name);
+            
         } catch (IOException e) {
             logger.debug(e.getMessage());
             result.setResponseCode(ResponseCode.RESPONSE_ERROR);

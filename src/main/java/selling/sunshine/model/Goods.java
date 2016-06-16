@@ -1,5 +1,7 @@
 package selling.sunshine.model;
 
+import java.util.List;
+
 /**
  * Created by sunshine on 4/8/16.
  */
@@ -9,6 +11,7 @@ public class Goods extends Entity {
     private double price;
     private double benefit;
     private String description;
+    private List<GoodsThumbnail> thumbnails;
 
     public Goods() {
         super();
@@ -69,5 +72,13 @@ public class Goods extends Entity {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public List<GoodsThumbnail> getThumbnails() {
+        return thumbnails;
+    }
+
+    public void setThumbnails(List<GoodsThumbnail> thumbnails) {
+        this.thumbnails = thumbnails;
     }
 }

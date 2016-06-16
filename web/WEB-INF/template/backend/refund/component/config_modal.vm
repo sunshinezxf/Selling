@@ -23,19 +23,19 @@
                     </p>
 
                     <p class="form-group">
-                        <label class="col-sm-4 col-md-4 col-lg-3">一级:</label>&nbsp;&nbsp;
+                        <label class="col-sm-4 col-md-4 col-lg-3">自己返现:</label>&nbsp;&nbsp;
                         <input type="number" id="config_percent_1" name="level1Percent" value="0"
-                               autocomplete="off"/>&nbsp;<span>元</span>
+                               autocomplete="off"/>&nbsp;<span>元/件</span>
                     </p>
                     <p class="form-group">
-                        <label class="col-sm-4 col-md-4 col-lg-3">二级:</label>&nbsp;&nbsp;
+                        <label class="col-sm-4 col-md-4 col-lg-3">直接关联返现:</label>&nbsp;&nbsp;
                         <input type="number" id="config_percent_2" name="level2Percent" value="0"
-                               autocomplete="off"/>&nbsp;<span>元</span>
+                               autocomplete="off"/>&nbsp;<span>元/件</span>
                     </p>
                      <p class="form-group">
-                        <label class="col-sm-4 col-md-4 col-lg-3">三级:</label>&nbsp;&nbsp;
+                        <label class="col-sm-4 col-md-4 col-lg-3">间接关联返现:</label>&nbsp;&nbsp;
                         <input type="number" id="config_percent_3" name="level3Percent" value="0"
-                               autocomplete="off"/>&nbsp;<span>元</span>
+                               autocomplete="off"/>&nbsp;<span>元/件</span>
                     </p>
 
                     <p class="form-group">

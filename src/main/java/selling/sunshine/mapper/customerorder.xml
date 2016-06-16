@@ -59,7 +59,7 @@
     </select>
     
     <select id="sumCustomerOrder" parameterType="java.util.Map" resultMap="sumCustomerOrderVo">
-    	SELECT agent_id, goods_id, SUM(quantity) AS quantity, SUM(total_price) AS price, 
+    	SELECT agent_id, goods_id, SUM(quantity) AS quantity, SUM(total_price) AS price
     	FROM customer_order
     	WHERE 1 = 1 AND (order_status='1' OR order_status='2' OR order_status='3')
 		<if test="date != null and date != ''">

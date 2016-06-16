@@ -1,6 +1,8 @@
 package selling.sunshine.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
+
 import selling.sunshine.form.GoodsForm;
 import selling.sunshine.model.Agent;
 import selling.sunshine.model.CustomerOrder;
@@ -24,7 +27,10 @@ import selling.sunshine.service.UploadService;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import javax.ws.rs.core.NewCookie;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -246,24 +252,40 @@ public class CommodityController {
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/upload")
-    public ResultData upload(MultipartHttpServletRequest request) {
-        ResultData result = new ResultData();
+    public String upload(MultipartHttpServletRequest request) {
         String context = request.getSession().getServletContext().getRealPath("/");
+        JSONObject resultObject=new JSONObject();
         try {
             String filename = "thumbnail";
             MultipartFile file = request.getFile(filename);
             if (file != null) {
                 ResultData response = uploadService.upload(file, context);
                 if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
-                    result.setData(response.getData());
-                    return result;
+                	GoodsThumbnail thumbnail=new GoodsThumbnail();
+                	thumbnail.setPath(response.getData().toString());
+                	String thumbnailId=((GoodsThumbnail)commodityService.createThumbnail(thumbnail).getData()).getThumbnailId();
+                	JSONArray initialPreviewArray=new JSONArray();
+                	JSONObject initialPreviewConfigObject=new JSONObject();               	
+                	initialPreviewArray.add("/selling"+response.getData().toString());              	
+                	//initialPreviewConfigObject.put("url", "/selling/commodity/deleteThumbnail");
+                	initialPreviewConfigObject.put("key", thumbnailId);
+                	resultObject.put("initialPreview", initialPreviewArray);
+                	resultObject.put("initialPreviewConfig", initialPreviewConfigObject);
+                    return resultObject.toJSONString();
                 }
             }
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
-        result.setResponseCode(ResponseCode.RESPONSE_ERROR);
-        return result;
+        resultObject.put("error", "你不允许上传这个文件！");
+        return resultObject.toJSONString();
     }
+    
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.GET, value = "/delete/Thumbnail")
+    public String deleteThumbnail(HttpServletRequest request) {
+    	System.err.println("test");
+		return "";
+	}
 
 }

@@ -10,12 +10,20 @@
     </resultMap>
 
     <insert id="insert" parameterType="selling.sunshine.model.GoodsThumbnail" useGeneratedKeys="false">
-        INSERT INTO goods_thumbnail(thumbnail_id, goods_id, thumbnail_path, block_flag, create_time)
-        VALUES (#{thumbnailId}, #{goods.goodsId}, #{path}, #{blockFlag}, #{createAt})
+        INSERT INTO goods_thumbnail
+        <set>
+            thumbnail_id = #{thumbnailId},
+            thumbnail_path = #{path},
+            <if test="goods != null and goods.goodsId != null">
+                goods_id = #{goods.goodsId},
+            </if>
+            block_flag = #{blockFlag},
+            create_time = #{createAt}
+        </set>
     </insert>
 
-    <insert id="insertBatch" parameterType="java.util.List" useGeneratedKeys="false">
-        INSERT INTO goods_thumbnail(thumbnail_id, goods_id, thumbnail_path, block_flag, create_time)
+    <insert id="updateBatch" parameterType="java.util.List" useGeneratedKeys="false">
+        replace INTO goods_thumbnail(thumbnail_id, goods_id, thumbnail_path, block_flag, create_time)
         VALUES
         <foreach collection="list" item="item" index="index" separator=",">
             (#{item.thumbnailId}, #{item.goods.goodsId}, #{item.path}, #{item.blockFlag}, #{item.createAt})

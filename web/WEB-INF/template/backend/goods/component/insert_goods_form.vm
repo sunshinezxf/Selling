@@ -129,7 +129,6 @@
     $(document).on('ready', function () {
         $("#goods_thumnail").fileinput({
             uploadUrl: "${path.concat('/commodity/upload')}",
-            deleteUrl: "",
             browseClass: "btn btn-success",
             browseLabel: "选择图片",
             browseIcon: "<i class=\"glyphicon glyphicon-picture\"></i> ",
@@ -139,6 +138,9 @@
             uploadClass: "btn btn-info",
             uploadLabel: "上传",
             uploadIcon: "<i class=\"glyphicon glyphicon-upload\"></i> ",
+            initialPreview: [],
+            initialPreviewConfig: [],
+            deleteUrl: "${path.concat('/commodity/delete/Thumbnail')}",
             removeFromPreviewOnError: true,
             showBrowse: false,
             showCaption: false,
