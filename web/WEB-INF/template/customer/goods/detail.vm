@@ -24,15 +24,15 @@
         </ul>
     </div>
     <div class="goods_information">
-        <div class="goods_name">
-            <h2>${goods.name}</h2>
-        </div>
         <div id="agent_price" class="price">
             <div class="pre_price">￥${goods.price}</div>
             <div class="now_price">${goods.benefit}</div>
         </div>
         <div id="customer_price" class="price">
             <div class="common_price">￥${goods.price}</div>
+        </div>
+        <div class="goods_name">
+            <h2>${goods.name}</h2>
         </div>
     </div>
     <div class="agent_information">
@@ -65,12 +65,18 @@
         <div class="weui_mask_transition" id="number_div" style="display: none;"></div>
         <div class="weui_actionsheet" id="weui_actionsheet">
             <div class="weui_actionsheet_menu">
-         	    <div class="number_area">
-                    <p>数量</p>
-                    <div class="number_choose">
-                        <button id="min_btn" class="min">—</button> 
-                        <input id="goods_num" class="num_box" name="" type="text" value="1" /> 
-                        <button id="add_btn" class="add">+</button>
+                <div class=someinfo_area>
+                    <div class="per_price_area">
+                        <p class="price_label">商品单价</p>
+                        <p id="goods_per_price" class="goods_per_price"></p>
+                    </div>
+         	        <div class="number_area">
+                        <p>数量</p>
+                        <div class="number_choose">
+                            <button id="min_btn" class="min">—</button> 
+                            <input id="goods_num" class="num_box" name="" type="text" value="1" /> 
+                            <button id="add_btn" class="add">+</button>
+                        </div>
                     </div>
                 </div>
                 <div class="address_area">
@@ -184,8 +190,9 @@
                     }
                     check_agent();
                 });   
+            }else{
+                check_agent();
             }
-            check_agent();
         });
         
         $('#customer_phone').blur(function(){
@@ -238,7 +245,26 @@
     });
 
     $('#purchase').click(function(){
-        $.toggleNumModifySheet();
+        var agentId=$('#agent_id').val();
+        if(agentId!=""){
+            var url='${path.concat('/agent/agentValidate/')}'+agentId;
+            var param = {agentId:agentId};
+            $.post(url, param, function(result) {
+                if (result.responseCode != "RESPONSE_OK") {
+                    $("#dialog").find(".weui_dialog_bd").html("该代理商不存在！");
+                    $("#dialog").fadeIn();
+                    $("#agent_id").val("");
+                    check_agent();
+                }else{
+                    $.toggleNumModifySheet();
+                }
+                
+            });   
+        }else{
+            check_agent();
+            $.toggleNumModifySheet();
+        }
+        
     });
     
     $.toggleNumModifySheet = function(){
@@ -287,17 +313,18 @@
     
     function check_agent(){
         var agent=$('#agent_id').val();
+        var num=$('#goods_num').val();
         if(agent){
             $('#agent_price').show();
             $('#customer_price').hide();
             goods_price="${goods.benefit}";
-            $('#total_price').text(goods_price+'元');
         }else{
             $('#customer_price').show();
             $('#agent_price').hide();
             goods_price="${goods.price}";
-            $('#total_price').text(goods_price+'元');
         }
+        $('#goods_per_price').text(goods_price+'元');
+        $('#total_price').text(num*goods_price+'元');
     }
     
     function check_num(){

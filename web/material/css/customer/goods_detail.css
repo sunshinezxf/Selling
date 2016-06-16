@@ -6,7 +6,7 @@ body, html {
 body {
 	margin:0.5em;
     overflow-x: hidden;
-    background-color: #fbf9fe
+    background-color: #ffffff;
 }
 
 .unslider{
@@ -76,16 +76,14 @@ body {
 
 .goods_information{
     position:relative;
-    height:4%;
+    height:7%;
     width:100%;
 }
 
 .goods_name{
-    position:absolute;
-    width:100%;
-    top:0;
-    left:0;
-    margin:0.5em auto;
+	float:right;
+	margin-top:0.6em;
+	text-align:right;
 }
 
 .goods_name h2{
@@ -94,16 +92,18 @@ body {
 }
 
 .price{
-	float:right;
-	margin-top:0;
+	float:left;
+	margin-top:0.5em;
 }
 
 .common_price{
 	float:left;
     font-size:1.7em;
+    color:#fe8181;
 }
  
 .pre_price{
+	color:#808080;
     float:left;
     font-size:1.7em;
     text-decoration:line-through;
@@ -112,31 +112,34 @@ body {
 .now_price{
     float:left;
     margin-left:0.2em;
-    margin-top:0.2em;
-    font-size:2.0em;
-    color:#ff0000;
+    font-size:1.7em;
+    color:#fe8181;
 }
 
 .agent_information{
     position:relative;
     height:10%;
     width:100%;
-    top:0.8em;
 }
 
 .agent{
-	margin-top:0.7em;
+	position:absolute;
+	top:0;
+	right:0;
     font-size:0.85em;
+    text-align:right;
 }
  
 .agent p{
 	display:inline-block;
-    text-align:right;
     margin:0 auto;
 }
 
 .agent_id{
-	margin-top:0.8em;
+	position:absolute;
+	top:60%;
+	left:0;
+	width:100%;
 }
 
 .agent_id table{
@@ -144,11 +147,11 @@ body {
 }
 
 .hd{
-	width:30%;
+	width:27%;
 }
 
 .bd{
-	width:65%;
+	width:73%;
 }
 
 .id_label{
@@ -169,9 +172,11 @@ body {
     height:10%;
     bottom:0;
     top:auto;
-    margin-left:-0.5em;
+    right:0;
+    left:0;
     text-align:center;
     background-color:#ffffff;
+    border-top: 0.0625em solid #D9D9D9;
 }
  
 .btn_area{
@@ -207,29 +212,50 @@ body {
 	z-index:1000;
 }
 
-.number_area{
+.someinfo_area{
+	position:relative;
 	height:11%;
 	border-bottom: 0.0625em solid #D9D9D9;
-	vertical-align: middle;
+}
+
+.per_price_area{
+	height:100%;
+	width:52%;
+	float:left;
+}
+
+.number_area{
+	height:100%;
+	width:46%;
+	float:left;
+	border-left: 0.0625em solid #D9D9D9;
  }
  
-.number_area p{
+.per_price_area p{
     display:inline-block;
     font-size:1.2em;
     padding-top:0.35em;
     margin-left:0.85em;
 }
+
+.number_area p{
+    display:inline-block;
+    font-size:1.2em;
+    padding-top:0.35em;
+    margin-left:0.8em;
+}
  
 .number_choose{
     float:right;
     padding-top:0.4em;
-    margin-right:0.5em;
+    margin-right:0;
 }
  
 .num_box{
-    height:2.5em;
-    width:3em;
+    height:1.9em;
+    width:2.2em;
     text-align:center;
+    font-size:1.05em;
 }
  
 .min,.add{
