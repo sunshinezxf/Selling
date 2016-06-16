@@ -653,7 +653,7 @@ public class AgentController {
                 view.setViewName("redirect:/agent/prompt");
                 return view;
             }
-            orderItemPrice = goods.getPrice() * goodsQuantity;//得到一个OrderItem的总价
+            orderItemPrice = goods.getBenefit() * goodsQuantity;//得到一个OrderItem的总价
             order_price += orderItemPrice;//累加Order总价
             OrderItem orderItem = new OrderItem(customerId, goodsId, goodsQuantity, orderItemPrice, address);//构造OrderItem
             orderItems.add(orderItem);

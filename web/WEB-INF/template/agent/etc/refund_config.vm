@@ -10,8 +10,16 @@
     	<h1 class="page_title">返现规则</h1>
     </div>
     <article class="weui_article">
-    <p>&nbsp;&nbsp;&nbsp;&nbsp;代理商当月下单件数达到目标数量，可以获得一定比例的返现，直接打入代理商账户余额中同时上级代理商和上上级代理商也能获得一定比例的返现。</p>
-    <p>&nbsp;&nbsp;&nbsp;&nbsp;代理商每连续3个月下单达到目标数量，可以获得第1个月的返现，例如代理商2月，3月，4月，5月下单均大到目标数量，那么该代理商4月可以获得2月份的返现，5月可以获得3月份的返现</p>
+    		<label class="weui_cell weui_check_label">
+                <div class="weui_cell_bd weui_cell_primary problock" style="text-align:center;">
+                   <a href="${path.concat('/material/protocol/云草纲目社群营销合作协议书（试行版）20160608.pdf')}">《云草纲目社群营销合作协议书（试行版）》</a>
+                </div>
+            </label>
+            <label class="weui_cell weui_check_label">
+                <div class="weui_cell_bd weui_cell_primary problock" style="text-align:center;">
+                    <a href="${path.concat('/material/protocol/云草纲目社群拓展合作协议书（试行版）20160608.pdf')}">《云草纲目社群拓展合作协议书（试行版）》</a>
+                </div>
+            </label>
     </article>
     #parse("/agent/component/navigate.vm")
 </div>
