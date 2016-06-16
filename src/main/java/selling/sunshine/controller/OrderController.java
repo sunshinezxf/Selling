@@ -17,6 +17,8 @@ import selling.sunshine.form.OrderItemForm;
 import selling.sunshine.form.PayForm;
 import selling.sunshine.form.SortRule;
 import selling.sunshine.model.*;
+import selling.sunshine.model.goods.Goods4Agent;
+import selling.sunshine.model.goods.Goods4Customer;
 import selling.sunshine.pagination.MobilePage;
 import selling.sunshine.pagination.MobilePageParam;
 import selling.sunshine.service.*;
@@ -129,19 +131,14 @@ public class OrderController {
         // 同时，根据不同情况修改order的状态和orderItem的状态
         List<OrderItem> orderItems = order.getOrderItems();
         for (OrderItem item : orderItems) {
-            if (item.getOrderItemPrice() != (item.getGoodsQuantity() * item
-                    .getGoods().getPrice())) {
+            if (item.getOrderItemPrice() != (item.getGoodsQuantity() * item.getGoods().getAgentPrice())) {
 
             }
         }
         Timestamp expressDate = new Timestamp(System.currentTimeMillis());
         List<Express> expressList = new ArrayList<>();
         for (int i = 0; i < orderItems.size(); i++) {
-            Express express = new Express("代填", "云草纲目",
-                    "18000000000", "云南", orderItems.get(i).getCustomer()
-                    .getName(), orderItems.get(i).getCustomer()
-                    .getPhone().getPhone(), orderItems.get(i)
-                    .getCustomer().getAddress().getAddress(), orderItems.get(i).getGoods().getName(), expressDate);
+            Express express = new Express("代填", "云草纲目", "18000000000", "云南", orderItems.get(i).getCustomer().getName(), orderItems.get(i).getCustomer().getPhone().getPhone(), orderItems.get(i).getCustomer().getAddress().getAddress(), orderItems.get(i).getGoods().getName(), expressDate);
             express.setExpressId("expressNumber" + i);
             express.setOrderItem(orderItems.get(i));
             expressList.add(express);
@@ -300,9 +297,9 @@ public class OrderController {
             goodsCondition.put("goodsId", goodsId);
             ResultData goodsData = commodityService
                     .fetchGoods4Customer(goodsCondition);
-            Goods goods = null;
+            Goods4Agent goods = null;
             if (goodsData.getResponseCode() == ResponseCode.RESPONSE_OK) {
-                List<Goods> goodsList = (List<Goods>) goodsData.getData();
+                List<Goods4Agent> goodsList = (List) goodsData.getData();
                 if (goodsList.size() != 1) {
                     Prompt prompt = new Prompt(PromptCode.WARNING, "提示",
                             "商品不唯一或未找到", "/agent/order/place");
@@ -318,7 +315,7 @@ public class OrderController {
                 view.setViewName("redirect:/agent/prompt");
                 return view;
             }
-            orderItemPrice = goods.getBenefit() * goodsQuantity;// 得到一个OrderItem的总价
+            orderItemPrice = goods.getAgentPrice() * goodsQuantity;// 得到一个OrderItem的总价
             total_price += orderItemPrice;// 累加金额
             OrderItem orderItem = new OrderItem(customerId, goodsId,
                     goodsQuantity, orderItemPrice, address);// 构造OrderItem

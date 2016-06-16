@@ -1,12 +1,14 @@
 package selling.sunshine.model;
 
+import selling.sunshine.model.goods.Goods4Customer;
 import selling.sunshine.model.lite.Agent;
+
 /**
  * Created by sunshine on 6/14/16.
  */
 public class CustomerOrder extends Entity {
     private String orderId;
-    private Goods goods;
+    private Goods4Customer goods;
     private Agent agent;
     private int quantity;
     private String wechat;
@@ -21,7 +23,7 @@ public class CustomerOrder extends Entity {
         this.status = OrderItemStatus.NOT_PAYED;
     }
 
-    public CustomerOrder(Goods goods, int quantity, String receiverName, String receiverPhone, String receiverAddress) {
+    public CustomerOrder(Goods4Customer goods, int quantity, String receiverName, String receiverPhone, String receiverAddress) {
         this();
         this.goods = goods;
         this.quantity = quantity;
@@ -30,12 +32,12 @@ public class CustomerOrder extends Entity {
         this.receiverAddress = receiverAddress;
     }
 
-    public CustomerOrder(Goods goods, int quantity, String receiverName, String receiverPhone, String receiverAddress, Agent agent) {
+    public CustomerOrder(Goods4Customer goods, int quantity, String receiverName, String receiverPhone, String receiverAddress, Agent agent) {
         this(goods, quantity, receiverName, receiverPhone, receiverAddress);
         this.agent = agent;
     }
 
-    public CustomerOrder(Goods goods, int quantity, String receiverName, String receiverPhone, String receiverAddress, Agent agent, OrderItemStatus status) {
+    public CustomerOrder(Goods4Customer goods, int quantity, String receiverName, String receiverPhone, String receiverAddress, Agent agent, OrderItemStatus status) {
         this(goods, quantity, receiverName, receiverPhone, receiverAddress, agent);
         this.status = status;
     }
@@ -48,11 +50,11 @@ public class CustomerOrder extends Entity {
         this.orderId = orderId;
     }
 
-    public Goods getGoods() {
+    public Goods4Customer getGoods() {
         return goods;
     }
 
-    public void setGoods(Goods goods) {
+    public void setGoods(Goods4Customer goods) {
         this.goods = goods;
     }
 

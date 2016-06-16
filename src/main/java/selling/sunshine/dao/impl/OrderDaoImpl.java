@@ -4,10 +4,10 @@ import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
-
 import selling.sunshine.dao.BaseDao;
 import selling.sunshine.dao.OrderDao;
 import selling.sunshine.model.*;
+import selling.sunshine.model.goods.Goods4Agent;
 import selling.sunshine.pagination.MobilePage;
 import selling.sunshine.pagination.MobilePageParam;
 import selling.sunshine.utils.IDGenerator;
@@ -262,7 +262,7 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
         ResultData result = new ResultData();
         // 获取当月的前一个月的日期 xxxx年xx月
         Calendar c = Calendar.getInstance();
-       // c.add(Calendar.MONTH, -1);
+        // c.add(Calendar.MONTH, -1);
         Timestamp lastMonth = new Timestamp(c.getTimeInMillis());
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM");
         String date = dateFormat.format(lastMonth);
@@ -273,64 +273,64 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
                     "selling.order.pool.sumOrder", condition);
             List<Map<String, Object>> sumCustomerOrderList = sqlSession.selectList(
                     "selling.customer.order.sumCustomerOrder", condition);
-            List<Map<String, Object>> resultList=new ArrayList<Map<String,Object>>();
-            if (sumOrderList.size()==0) {
-            	 resultList=sumCustomerOrderList;
-			}else if(sumCustomerOrderList.size()==0){
-				 resultList=sumOrderList;
-			}else{
-				 boolean flag=false;				 
-				 for (int i = 0; i < sumOrderList.size(); i++) {
-						for (int j = 0; j < sumCustomerOrderList.size(); j++) {
-							if ((sumOrderList.get(i).get("agent").equals(sumCustomerOrderList.get(j).get("agent")))&&(sumOrderList.get(i).get("goods").equals(sumCustomerOrderList.get(j).get("goods")))) {
-								flag=true;
-								sumCustomerOrderList.get(j).put("quantity", Integer.parseInt(sumCustomerOrderList.get(j)
-		                                 .get("quantity").toString())+Integer.parseInt(sumOrderList.get(i)
-		                                         .get("quantity").toString()));
-								sumCustomerOrderList.get(j).put("price", Double.parseDouble(sumCustomerOrderList.get(j)
-		                                 .get("price").toString())+Double.parseDouble(sumOrderList.get(i)
-		                                         .get("price").toString()));
-								break;
-							}
-						}
-						if (!flag) {
-							resultList.add(sumOrderList.get(i));
-						}else {
-							flag=false;
-						}
-			     }
-				 resultList.addAll(sumCustomerOrderList);
-			}           
-            if (resultList.size()!=0) {
-            	 Map<String, Object> configCondition = new HashMap<>();
-                 for (int i = 0; i < resultList.size(); i++) {
-                     OrderPool pool = new OrderPool();
-                     pool.setOrderPoolId(IDGenerator.generate("OPL"));
-                     pool.setPrice(Double.parseDouble(resultList.get(i).get("price")
-                             .toString()));
-                     pool.setQuantity(Integer.parseInt(resultList.get(i).get("quantity").toString()));
-                     pool.setPoolDate(new Date(c.getTimeInMillis()));
-                     Agent agent = new Agent();
-                     agent.setAgentId((String) resultList.get(i).get("agent"));
-                     pool.setAgent(agent);
-                     Goods goods = new Goods();
-                     goods.setGoodsId((String) resultList.get(i).get("goods"));
-                     pool.setGoods(goods);
-                     configCondition.put("goodsId", (String) resultList.get(i).get("goods"));
-                     configCondition.put("blockFlag", false);
-                     RefundConfig config=(RefundConfig)sqlSession.selectList("selling.refund.config.query", configCondition).get(0);                     
-                     pool.setRefundConfig(config);
-                     if (pool.getQuantity()>= config.getAmountTrigger()) {                            	
-                         pool.setBlockFlag(false);
-                         pool.setRefundAmount(Double.parseDouble(resultList.get(i).get("quantity").toString()) * config.getLevel1Percent());
-                     }                                             
-                     sqlSession.insert("selling.order.pool.insert", pool);
-                     configCondition.clear();
-                 }
-                 result.setData(resultList);
-                 result.setResponseCode(ResponseCode.RESPONSE_OK);
-			}
-           
+            List<Map<String, Object>> resultList = new ArrayList<Map<String, Object>>();
+            if (sumOrderList.size() == 0) {
+                resultList = sumCustomerOrderList;
+            } else if (sumCustomerOrderList.size() == 0) {
+                resultList = sumOrderList;
+            } else {
+                boolean flag = false;
+                for (int i = 0; i < sumOrderList.size(); i++) {
+                    for (int j = 0; j < sumCustomerOrderList.size(); j++) {
+                        if ((sumOrderList.get(i).get("agent").equals(sumCustomerOrderList.get(j).get("agent"))) && (sumOrderList.get(i).get("goods").equals(sumCustomerOrderList.get(j).get("goods")))) {
+                            flag = true;
+                            sumCustomerOrderList.get(j).put("quantity", Integer.parseInt(sumCustomerOrderList.get(j)
+                                    .get("quantity").toString()) + Integer.parseInt(sumOrderList.get(i)
+                                    .get("quantity").toString()));
+                            sumCustomerOrderList.get(j).put("price", Double.parseDouble(sumCustomerOrderList.get(j)
+                                    .get("price").toString()) + Double.parseDouble(sumOrderList.get(i)
+                                    .get("price").toString()));
+                            break;
+                        }
+                    }
+                    if (!flag) {
+                        resultList.add(sumOrderList.get(i));
+                    } else {
+                        flag = false;
+                    }
+                }
+                resultList.addAll(sumCustomerOrderList);
+            }
+            if (resultList.size() != 0) {
+                Map<String, Object> configCondition = new HashMap<>();
+                for (int i = 0; i < resultList.size(); i++) {
+                    OrderPool pool = new OrderPool();
+                    pool.setOrderPoolId(IDGenerator.generate("OPL"));
+                    pool.setPrice(Double.parseDouble(resultList.get(i).get("price")
+                            .toString()));
+                    pool.setQuantity(Integer.parseInt(resultList.get(i).get("quantity").toString()));
+                    pool.setPoolDate(new Date(c.getTimeInMillis()));
+                    Agent agent = new Agent();
+                    agent.setAgentId((String) resultList.get(i).get("agent"));
+                    pool.setAgent(agent);
+                    Goods4Agent goods = new Goods4Agent();
+                    goods.setGoodsId((String) resultList.get(i).get("goods"));
+                    pool.setGoods(goods);
+                    configCondition.put("goodsId", (String) resultList.get(i).get("goods"));
+                    configCondition.put("blockFlag", false);
+                    RefundConfig config = (RefundConfig) sqlSession.selectList("selling.refund.config.query", configCondition).get(0);
+                    pool.setRefundConfig(config);
+                    if (pool.getQuantity() >= config.getAmountTrigger()) {
+                        pool.setBlockFlag(false);
+                        pool.setRefundAmount(Double.parseDouble(resultList.get(i).get("quantity").toString()) * config.getLevel1Percent());
+                    }
+                    sqlSession.insert("selling.order.pool.insert", pool);
+                    configCondition.clear();
+                }
+                result.setData(resultList);
+                result.setResponseCode(ResponseCode.RESPONSE_OK);
+            }
+
         } catch (Exception e) {
             logger.error(e.getMessage());
             result.setResponseCode(ResponseCode.RESPONSE_ERROR);

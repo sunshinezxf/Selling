@@ -1,5 +1,8 @@
 package selling.sunshine.model;
 
+import selling.sunshine.model.goods.Goods4Agent;
+import selling.sunshine.model.goods.Goods4Customer;
+
 import java.sql.Date;
 
 public class OrderPool extends Entity {
@@ -10,7 +13,7 @@ public class OrderPool extends Entity {
 	private double refundAmount;
 	private Date poolDate;
 	private Agent agent;
-	private Goods goods;
+	private Goods4Agent goods;
 	private RefundConfig refundConfig;
 
 	public OrderPool() {
@@ -18,9 +21,7 @@ public class OrderPool extends Entity {
 		this.setBlockFlag(true);
 	}
 
-	public OrderPool(String orderPoolId, int quantity, double price,
-			double refundAmount, Date poolDate, Agent agent, Goods goods,
-			RefundConfig refundConfig) {
+	public OrderPool(String orderPoolId, int quantity, double price, double refundAmount, Date poolDate, Agent agent, Goods4Customer goods, RefundConfig refundConfig) {
 		this();
 		this.orderPoolId = orderPoolId;
 		this.quantity = quantity;
@@ -80,11 +81,11 @@ public class OrderPool extends Entity {
 		this.agent = agent;
 	}
 
-	public Goods getGoods() {
+	public Goods4Agent getGoods() {
 		return goods;
 	}
 
-	public void setGoods(Goods goods) {
+	public void setGoods(Goods4Agent goods) {
 		this.goods = goods;
 	}
 

@@ -14,6 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import selling.sunshine.form.*;
 import selling.sunshine.model.*;
+import selling.sunshine.model.goods.Goods4Agent;
 import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.*;
@@ -354,15 +355,15 @@ public class AgentController {
             view.setViewName("/agent/login");
             return view;
         }
-        List<Goods> goodsList = new ArrayList<Goods>();
-        List<String> urls = new ArrayList<String>();
-        Map<String, Object> condition = new HashMap<String, Object>();
+        List<Goods4Agent> goodsList = new ArrayList<>();
+        List<String> urls = new ArrayList<>();
+        Map<String, Object> condition = new HashMap<>();
         condition.put("blockFlag", false);
         ResultData fetchGoodsResponse = commodityService.fetchGoods4Agent(condition);
         if (fetchGoodsResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            goodsList = (List<Goods>) fetchGoodsResponse.getData();
+            goodsList = (List) fetchGoodsResponse.getData();
         }
-        for (Goods goods : goodsList) {
+        for (Goods4Agent goods : goodsList) {
             String url = "http://" + PlatformConfig.getValue("server_url") + "/commodity/" + goods.getGoodsId() + "?agentId=" + user.getAgent().getAgentId();
             urls.add(url);
         }
@@ -634,9 +635,9 @@ public class AgentController {
             Map<String, Object> goodsCondition = new HashMap<>();//查询商品价格
             goodsCondition.put("goodsId", goodsId);
             ResultData goodsData = commodityService.fetchGoods4Agent(goodsCondition);
-            Goods goods = null;
+            Goods4Agent goods = null;
             if (goodsData.getResponseCode() == ResponseCode.RESPONSE_OK) {
-                List<Goods> goodsList = (List<Goods>) goodsData.getData();
+                List<Goods4Agent> goodsList = (List) goodsData.getData();
                 if (goodsList.size() != 1) {
                     Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "商品不唯一或未找到", "/agent/order/place");
                     attr.addFlashAttribute("prompt", prompt);
@@ -650,7 +651,7 @@ public class AgentController {
                 view.setViewName("redirect:/agent/prompt");
                 return view;
             }
-            orderItemPrice = goods.getBenefit() * goodsQuantity;//得到一个OrderItem的总价
+            orderItemPrice = goods.getAgentPrice() * goodsQuantity;//得到一个OrderItem的总价
             order_price += orderItemPrice;//累加Order总价
             OrderItem orderItem = new OrderItem(customerId, goodsId, goodsQuantity, orderItemPrice, address);//构造OrderItem
             orderItems.add(orderItem);

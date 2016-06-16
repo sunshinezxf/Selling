@@ -1,5 +1,7 @@
 package selling.sunshine.model;
 
+import selling.sunshine.model.goods.Goods4Customer;
+
 /**
  * Created by sunshine on 4/8/16.
  */
@@ -10,7 +12,7 @@ public class OrderItem extends Entity {
     private double orderItemPrice;
     private String receiveAddress;
     private Customer customer;
-    private Goods goods;
+    private Goods4Customer goods;
     private Order order;
 
     public OrderItem() {
@@ -22,7 +24,7 @@ public class OrderItem extends Entity {
         this();
         customer = new Customer();
         customer.setCustomerId(customerId);
-        goods = new Goods();
+        goods = new Goods4Customer();
         goods.setGoodsId(goodsId);
         this.goodsQuantity = goodsQuantity;
         this.orderItemPrice = orderItemPrice;
@@ -73,11 +75,11 @@ public class OrderItem extends Entity {
         this.order = order;
     }
 
-    public Goods getGoods() {
+    public Goods4Customer getGoods() {
         return goods;
     }
 
-    public void setGoods(Goods goods) {
+    public void setGoods(Goods4Customer goods) {
         this.goods = goods;
     }
 

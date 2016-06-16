@@ -14,7 +14,6 @@ import org.springframework.web.servlet.ModelAndView;
 import selling.sunshine.form.GoodsForm;
 import selling.sunshine.model.Agent;
 import selling.sunshine.model.CustomerOrder;
-import selling.sunshine.model.GoodsThumbnail;
 import selling.sunshine.model.goods.Goods4Customer;
 import selling.sunshine.model.goods.Thumbnail;
 import selling.sunshine.pagination.DataTablePage;
@@ -265,7 +264,7 @@ public class CommodityController {
                 if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
                     Thumbnail thumbnail = new Thumbnail((String) response.getData());
                     response = commodityService.createThumbnail(thumbnail);
-                    String thumbnailId = ((GoodsThumbnail) commodityService.createThumbnail(thumbnail).getData()).getThumbnailId();
+                    String thumbnailId = ((Thumbnail) commodityService.createThumbnail(thumbnail).getData()).getThumbnailId();
                     JSONArray initialPreviewArray = new JSONArray();
                     JSONObject initialPreviewConfigObject = new JSONObject();
                     initialPreviewArray.add("/selling" + response.getData().toString());

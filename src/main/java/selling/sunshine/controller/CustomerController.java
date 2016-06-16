@@ -10,19 +10,12 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import selling.sunshine.form.CustomerAddressForm;
 import selling.sunshine.form.CustomerForm;
 import selling.sunshine.form.PurchaseForm;
 import selling.sunshine.form.SortRule;
-import selling.sunshine.model.Agent;
-import selling.sunshine.model.Customer;
-import selling.sunshine.model.CustomerAddress;
-import selling.sunshine.model.CustomerOrder;
-import selling.sunshine.model.CustomerPhone;
-import selling.sunshine.model.Goods;
-import selling.sunshine.model.OrderItem;
-import selling.sunshine.model.User;
+import selling.sunshine.model.*;
+import selling.sunshine.model.goods.Goods4Customer;
 import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.AgentService;
@@ -33,12 +26,7 @@ import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
 import javax.validation.Valid;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by sunshine on 4/11/16.
@@ -50,13 +38,13 @@ public class CustomerController {
 
     @Autowired
     private CustomerService customerService;
-    
+
     @Autowired
     private AgentService agentService;
-    
+
     @Autowired
     private OrderService orderService;
-    
+
     @Autowired
     private CommodityService commodityService;
 
@@ -70,7 +58,7 @@ public class CustomerController {
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/overview/{agentId}")
-    public DataTablePage<Customer> overview(@PathVariable String agentId,DataTableParam param) {
+    public DataTablePage<Customer> overview(@PathVariable String agentId, DataTableParam param) {
         DataTablePage<Customer> result = new DataTablePage<Customer>();
         if (StringUtils.isEmpty(result)) {
             return result;
@@ -83,33 +71,33 @@ public class CustomerController {
         }
         return result;
     }
-    
+
     @RequestMapping(method = RequestMethod.POST, value = "/detail/{customerId}")
     @ResponseBody
     public ResultData detail(@PathVariable String customerId) {
-		ResultData resultData=new ResultData();
-		Map<String, Object> dataMap=new HashMap<>();
-		
+        ResultData resultData = new ResultData();
+        Map<String, Object> dataMap = new HashMap<>();
+
         Map<String, Object> condition = new HashMap<>();
         condition.put("customerId", customerId);
-        Customer customer=((List<Customer>)customerService.fetchCustomer(condition).getData()).get(0);      
+        Customer customer = ((List<Customer>) customerService.fetchCustomer(condition).getData()).get(0);
         Map<String, Object> agentCondition = new HashMap<>();
         agentCondition.put("agentId", customer.getAgent().getAgentId());
-        Agent agent=((List<Agent>)agentService.fetchAgent(agentCondition).getData()).get(0);
+        Agent agent = ((List<Agent>) agentService.fetchAgent(agentCondition).getData()).get(0);
         Map<String, Object> orderItemCondition = new HashMap<>();
         orderItemCondition.put("customerId", customerId);
-        List<OrderItem> orderItemList=(List<OrderItem>)orderService.fetchOrderItem(orderItemCondition).getData();
+        List<OrderItem> orderItemList = (List<OrderItem>) orderService.fetchOrderItem(orderItemCondition).getData();
 
-        List<CustomerAddress> addressList=(List<CustomerAddress>)customerService.fetchCustomerAddress(condition).getData();
-        List<CustomerPhone> phoneList=(List<CustomerPhone>)customerService.fetchCustomerPhone(condition).getData();
-        
-        dataMap.put("customer",customer);
-        dataMap.put("agent",agent);
-        dataMap.put("orderItemList",orderItemList);	
-        dataMap.put("addressList",addressList);	
-        dataMap.put("phoneList",phoneList);	
-		resultData.setData(dataMap);
-		return resultData;
+        List<CustomerAddress> addressList = (List<CustomerAddress>) customerService.fetchCustomerAddress(condition).getData();
+        List<CustomerPhone> phoneList = (List<CustomerPhone>) customerService.fetchCustomerPhone(condition).getData();
+
+        dataMap.put("customer", customer);
+        dataMap.put("agent", agent);
+        dataMap.put("orderItemList", orderItemList);
+        dataMap.put("addressList", addressList);
+        dataMap.put("phoneList", phoneList);
+        resultData.setData(dataMap);
+        return resultData;
     }
 
     @ResponseBody
@@ -268,7 +256,7 @@ public class CustomerController {
     @RequestMapping(method = RequestMethod.POST, value = "/place")
     public ResultData placeOrder(@Valid PurchaseForm form, BindingResult result, RedirectAttributes attr) {
         ResultData resultData = new ResultData();
-    	if (result.hasErrors()) {
+        if (result.hasErrors()) {
             resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
             resultData.setDescription("表单错误");
             return resultData;
@@ -280,45 +268,45 @@ public class CustomerController {
         String phone = form.getPhone();
         String address = form.getAddress();
         String wechat = form.getWechat();
-        Map<String, Object> condition = new HashMap<String, Object>();
+        Map<String, Object> condition = new HashMap<>();
         //判断代理商是否合法
         Agent agent = null;
-        if(agentId != null && agentId != ""){
-	        condition.clear();
-	        condition.put("agentId", agentId);
-	        condition.put("granted", 1);
-	        condition.put("blockFlag", false);
-	        ResultData fetchAgentData = agentService.fetchAgent(condition);
-	        if(fetchAgentData.getResponseCode() == ResponseCode.RESPONSE_OK){
-	        	 agent = ((List<Agent>)fetchAgentData.getData()).get(0);
-	        }
+        if (agentId != null && agentId != "") {
+            condition.clear();
+            condition.put("agentId", agentId);
+            condition.put("granted", 1);
+            condition.put("blockFlag", false);
+            ResultData fetchAgentData = agentService.fetchAgent(condition);
+            if (fetchAgentData.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                agent = ((List<Agent>) fetchAgentData.getData()).get(0);
+            }
         }
         //判断商品是否合法
         condition.clear();
         condition.put("goodsId", goodsId);
         condition.put("blockFlag", false);
         ResultData fetchCommodityData = commodityService.fetchGoods4Customer(condition);
-        if(fetchCommodityData.getResponseCode() != ResponseCode.RESPONSE_OK){
-        	resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
+        if (fetchCommodityData.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
             resultData.setDescription("没有找到商品");
             return resultData;
         }
-        Goods goods = ((List<Goods>)fetchCommodityData.getData()).get(0);
-        double goodsPrice = agent == null ? goods.getPrice() : goods.getBenefit();
+        Goods4Customer goods = ((List<Goods4Customer>) fetchCommodityData.getData()).get(0);
+        double goodsPrice = agent == null ? goods.getCustomerPrice() : goods.getAgentPrice();
         double totalPrice = goodsPrice * goodsQuantity;
         selling.sunshine.model.lite.Agent agentLite = new selling.sunshine.model.lite.Agent(agent);
         CustomerOrder customerOrder = new CustomerOrder(goods, goodsQuantity, customerName, phone, address, agentLite);
         customerOrder.setTotalPrice(totalPrice);
         customerOrder.setWechat(wechat);
-        
+
         ResultData fetchResponse = orderService.placeOrder(customerOrder);
         if (fetchResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
-        	resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
             resultData.setDescription("下单错误");
             return resultData;
         }
         resultData.setData(fetchResponse.getData());
         return resultData;
     }
-    
+
 }

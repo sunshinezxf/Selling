@@ -7,8 +7,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import selling.sunshine.dao.BaseDao;
 import selling.sunshine.dao.CommodityDao;
-import selling.sunshine.model.Goods;
-import selling.sunshine.model.GoodsThumbnail;
 import selling.sunshine.model.goods.Goods4Agent;
 import selling.sunshine.model.goods.Goods4Customer;
 import selling.sunshine.model.goods.Thumbnail;
@@ -55,25 +53,6 @@ public class CommodityDaoImpl extends BaseDao implements CommodityDao {
         }
     }
 
-
-    @Transactional
-    public ResultData updateCommodity(Goods goods) {
-        ResultData result = new ResultData();
-        synchronized (lock) {
-            try {
-                sqlSession.update("selling.goods.update", goods);
-                result.setData(goods);
-            } catch (Exception e) {
-                logger.error(e.getMessage());
-                result.setResponseCode(ResponseCode.RESPONSE_ERROR);
-                result.setDescription(e.getMessage());
-            } finally {
-                result.setResponseCode(ResponseCode.RESPONSE_OK);
-                return result;
-            }
-        }
-    }
-
     /**
      * 更新商品信息
      *
@@ -99,27 +78,6 @@ public class CommodityDaoImpl extends BaseDao implements CommodityDao {
     }
 
     /**
-     * 查询符合条件的商品信息列表
-     *
-     * @param condition
-     * @return
-     */
-    @Override
-    public ResultData queryCommodity(Map<String, Object> condition) {
-        ResultData result = new ResultData();
-        try {
-            List<Goods> list = sqlSession.selectList("selling.goods.query", condition);
-            result.setData(list);
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
-            result.setDescription(e.getMessage());
-        } finally {
-            return result;
-        }
-    }
-
-    /**
      * 代理商查询符合条件的商品信息列表
      *
      * @param condition
@@ -140,6 +98,12 @@ public class CommodityDaoImpl extends BaseDao implements CommodityDao {
         }
     }
 
+    /**
+     * 顾客查询符合条件的商品信息列表
+     *
+     * @param condition
+     * @return
+     */
     @Override
     public ResultData queryGoods4Customer(Map<String, Object> condition) {
         ResultData result = new ResultData();
@@ -219,17 +183,6 @@ public class CommodityDaoImpl extends BaseDao implements CommodityDao {
      * @param length
      * @return
      */
-    private List<Goods> queryCommodityByPage(Map<String, Object> condition, int start, int length) {
-        List<Goods> result = new ArrayList<>();
-        try {
-            result = sqlSession.selectList("selling.goods.query", condition, new RowBounds(start, length));
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-        } finally {
-            return result;
-        }
-    }
-
     private List<Goods4Customer> queryGoods4CustomerByPage(Map<String, Object> condition, int start, int length) {
         List<Goods4Customer> result = new ArrayList<>();
         try {

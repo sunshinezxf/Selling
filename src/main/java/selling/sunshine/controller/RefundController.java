@@ -7,12 +7,10 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
 import selling.sunshine.form.RefundConfigForm;
-import selling.sunshine.model.Agent;
-import selling.sunshine.model.Goods;
 import selling.sunshine.model.RefundConfig;
 import selling.sunshine.model.RefundRecord;
+import selling.sunshine.model.goods.Goods4Customer;
 import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.RefundService;
@@ -20,11 +18,8 @@ import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
 import javax.validation.Valid;
-
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,7 +49,7 @@ public class RefundController {
             view.setViewName("redirect:/refund/config");
             return view;
         }
-        Goods goods = new Goods();
+        Goods4Customer goods = new Goods4Customer();
         goods.setGoodsId(goodsId);
         RefundConfig config = new RefundConfig(goods, Integer.parseInt(form.getAmountTrigger()), Double.parseDouble(form.getLevel1Percent()),Double.parseDouble(form.getLevel2Percent()),Double.parseDouble(form.getLevel3Percent()));
         ResultData createResponse = refundService.createRefundConfig(config);

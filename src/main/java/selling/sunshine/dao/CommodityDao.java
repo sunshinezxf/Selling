@@ -1,7 +1,5 @@
 package selling.sunshine.dao;
 
-import selling.sunshine.model.Goods;
-import selling.sunshine.model.GoodsThumbnail;
 import selling.sunshine.model.goods.Goods4Customer;
 import selling.sunshine.model.goods.Thumbnail;
 import selling.sunshine.pagination.DataTableParam;
@@ -15,8 +13,6 @@ import java.util.Map;
  */
 public interface CommodityDao {
     ResultData insertGoods4Customer(Goods4Customer goods);
-
-    ResultData queryCommodity(Map<String, Object> condition);
 
     ResultData queryGoods4Agent(Map<String, Object> condition);
 

@@ -1,7 +1,6 @@
 package selling.sunshine.model.goods;
 
 import selling.sunshine.model.Entity;
-import selling.sunshine.model.Goods;
 
 /**
  * Created by sunshine on 6/16/16.
@@ -9,7 +8,7 @@ import selling.sunshine.model.Goods;
 public class Thumbnail extends Entity {
     private String thumbnailId;
     private String path;
-    private Goods goods;
+    private Goods4Customer goods;
 
     public Thumbnail() {
         super();
@@ -20,7 +19,7 @@ public class Thumbnail extends Entity {
         this.path = path;
     }
 
-    public Thumbnail(String path, Goods goods) {
+    public Thumbnail(String path, Goods4Customer goods) {
         this(path);
         this.goods = goods;
     }
@@ -41,11 +40,11 @@ public class Thumbnail extends Entity {
         this.path = path;
     }
 
-    public Goods getGoods() {
+    public Goods4Customer getGoods() {
         return goods;
     }
 
-    public void setGoods(Goods goods) {
+    public void setGoods(Goods4Customer goods) {
         this.goods = goods;
     }
 }
