@@ -144,6 +144,7 @@ CREATE TABLE IF NOT EXISTS `selling`.`customer_order` (
   `wechat` VARCHAR(45) NULL DEFAULT NULL,
   `quantity` INT(11) NOT NULL DEFAULT '0',
   `receiver_name` VARCHAR(45) NOT NULL,
+  `receiver_phone` VARCHAR(20) NOT NULL,
   `receiver_addr` VARCHAR(100) NOT NULL,
   `total_price` DOUBLE NOT NULL DEFAULT '0',
   `order_status` INT(11) NOT NULL DEFAULT '0',
@@ -689,4 +690,3 @@ INSERT INTO `selling`.`user` (`user_id`, `username`, `password`, `role_id`, `man
 INSERT INTO `selling`.`user` (`user_id`, `username`, `password`, `role_id`, `manager_id`, `agent_id`, `block_flag`, `create_time`) VALUES ('USRflowfr67', '18000000000', 'e10adc3949ba59abbe56e057f20f883e', 'ROL00000002', NULL, 'AGTvlorff50', 0, '2016-05-09 16:13:10');
 
 COMMIT;
-

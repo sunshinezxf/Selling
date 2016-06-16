@@ -307,7 +307,7 @@ public class CustomerController {
         double goodsPrice = agent == null ? goods.getPrice() : goods.getBenefit();
         double totalPrice = goodsPrice * goodsQuantity;
         selling.sunshine.model.lite.Agent agentLite = new selling.sunshine.model.lite.Agent(agent);
-        CustomerOrder customerOrder = new CustomerOrder(goods, goodsQuantity, customerName, address, agentLite);
+        CustomerOrder customerOrder = new CustomerOrder(goods, goodsQuantity, customerName, phone, address, agentLite);
         customerOrder.setTotalPrice(goodsPrice);
         customerOrder.setWechat(wechat);
         
