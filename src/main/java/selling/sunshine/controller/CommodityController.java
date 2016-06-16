@@ -27,6 +27,7 @@ import selling.sunshine.service.UploadService;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.ws.rs.core.NewCookie;
 
@@ -258,10 +259,14 @@ public class CommodityController {
             if (file != null) {
                 ResultData response = uploadService.upload(file, context);
                 if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                	GoodsThumbnail thumbnail=new GoodsThumbnail();
+                	thumbnail.setPath(response.getData().toString());
+                	String thumbnailId=((GoodsThumbnail)commodityService.createThumbnail(thumbnail).getData()).getThumbnailId();
                 	JSONArray initialPreviewArray=new JSONArray();
                 	JSONObject initialPreviewConfigObject=new JSONObject();               	
-                	initialPreviewArray.add("<img src="+response.getData() +"class='file-preview-image' alt='Desert' title='Desert'>");
-                	initialPreviewConfigObject.put("key", response.getDescription());
+                	initialPreviewArray.add("/selling"+response.getData().toString());              	
+                	//initialPreviewConfigObject.put("url", "/selling/commodity/deleteThumbnail");
+                	initialPreviewConfigObject.put("key", thumbnailId);
                 	resultObject.put("initialPreview", initialPreviewArray);
                 	resultObject.put("initialPreviewConfig", initialPreviewConfigObject);
                     return resultObject.toJSONString();
@@ -273,5 +278,12 @@ public class CommodityController {
         resultObject.put("error", "你不允许上传这个文件！");
         return resultObject.toJSONString();
     }
+    
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.GET, value = "/delete/Thumbnail")
+    public String deleteThumbnail(HttpServletRequest request) {
+    	System.err.println("test");
+		return "";
+	}
 
 }

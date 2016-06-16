@@ -524,17 +524,4 @@ public class OrderController {
 		return charge;
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value = "/orderPool")
-	public ResultData orderPool(HttpServletRequest request) {
-		
-			ResultData resultData=orderService.poolOrder();
-			return resultData;
-	}
-	
-	@RequestMapping(method = RequestMethod.GET, value = "/refundRecord")
-	public ResultData refundRecord(HttpServletRequest request) {
-		
-			ResultData resultData=refundService.refundRecord();;
-			return resultData;
-	}
 }
