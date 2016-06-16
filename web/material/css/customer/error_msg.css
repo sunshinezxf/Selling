@@ -1,0 +1,49 @@
+body, html {
+    height: 100%;
+    -webkit-tap-highlight-color: transparent
+}
+
+body {
+	margin:0.5em;
+    overflow-x: hidden;
+    background-color: #ffffff;
+    font-family:Georgia, Times, Verdana, Geneva, Arial, Helvetica, sans-serif; 
+}
+
+.mother{ 
+	margin:0 auto; 
+	width:100%; 
+	height:100%; 
+	position:relative; 
+}
+			
+.errorBox{ 
+	width:100%; 
+	height:90%; 
+	margin-top:5%; 
+}
+		
+.errorText{ 
+	color:#39351e; 
+	text-align:center;
+	padding-left:9%;
+}
+
+.confirm_area{
+	height:10%; 
+    width:100%; 
+	text-align:center;
+}	
+button.weui_btn, input.weui_btn{
+	width:40%;
+}
+	
+.weui_btn_primary{
+	width:40%;
+	background-color:#ff8080;
+	margin-top:5%;
+}
+			
+h1{ 
+	font-size:2.5em; 
+}

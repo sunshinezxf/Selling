@@ -157,7 +157,8 @@ public class CommodityController {
         condition.put("blockFlag", false);
         ResultData fetchCommodityData = commodityService.fetchCommodity(condition);
         if (fetchCommodityData.getResponseCode() != ResponseCode.RESPONSE_OK) {
-            //这里需要一个错误页面!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            //商品不存在错误页面!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        	view.setViewName("/customer/component/goods_error_msg");
             return view;
         }
         Goods goods = ((List<Goods>) fetchCommodityData.getData()).get(0);
@@ -169,7 +170,8 @@ public class CommodityController {
             condition.put("blockFlag", false);
             ResultData fetchAgentData = agentService.fetchAgent(condition);
             if (fetchAgentData.getResponseCode() != ResponseCode.RESPONSE_OK) {
-                //这里需要一个错误页面!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                //代理商不存在错误页面!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            	view.setViewName("/customer/component/agent_error_msg");
                 return view;
             }
             Agent agent = ((List<Agent>) fetchAgentData.getData()).get(0);
@@ -191,14 +193,14 @@ public class CommodityController {
             condition.put("orderId", orderId);
         }
         if (condition.isEmpty()) {
-            //这里需要错误页面
-            view.setViewName("/customer/order/detail");
+            //订单不存在错误页面
+            view.setViewName("/customer/component/order_error_msg");
             return view;
         }
         ResultData fetchCustomerOrderData = orderService.fetchCustomerOrder(condition);
         if (fetchCustomerOrderData.getResponseCode() != ResponseCode.RESPONSE_OK) {
-            //这里需要错误页面
-            view.setViewName("/customer/order/detail");
+            //订单不存在错误页面
+            view.setViewName("/customer/component/order_error_msg");
             return view;
         }
         CustomerOrder customerOrder = ((List<CustomerOrder>) fetchCustomerOrderData.getData()).get(0);

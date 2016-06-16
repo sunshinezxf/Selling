@@ -1,0 +1,23 @@
+#parse("/common/util.vm")
+<html lang="zh_CN">
+<head>
+    #parse("/customer/component/init.vm")
+    <link rel="stylesheet" href="${path.concat('/material/css/customer/error_msg.css')}"/>
+    <title>错误提示</title>
+</head>
+<body ontouchstart>
+    <div class="mother" id="mother">
+	    <div class="errorBox">
+	        <div class="error_img">
+	            <img src="${path.concat('/material/images/error_bg.png')}">
+	        </div>
+		    <div class="errorText">
+			    <h1>商品不存在！</h1>
+			</div>
+			<div class="confirm_area">
+				<button class="weui_btn weui_btn_primary" id="confirm">确定</button>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
