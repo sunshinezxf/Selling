@@ -3,7 +3,7 @@
 	    #foreach($elem in $goods)
 	    <label class="weui_cell goods" id="${elem.goodsId}">
 	        <div class="weui_cell_bd weui_cell_primary">
-	            <span>${elem.name}</span>(<span>${elem.benefit}</span>元)
+	            <span>${elem.name}</span>(<span>${elem.agentPrice}</span>元)
 	        </div>
 	        <div class="weui_cell_ft">
 	        	<input type="radio" class="weui_check" checked="checked">

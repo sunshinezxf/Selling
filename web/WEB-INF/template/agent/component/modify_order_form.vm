@@ -55,7 +55,7 @@
 					    		#end
 					    		<input class="goods_quantity" type="hidden" name="goodsQuantity" value="${orderItem.goodsQuantity}"/> 
 					    		<input class="goods_id" type="hidden" name="goodsId" value="${orderItem.goods.goodsId}"/> 
-					    		<input class="order_item_price" type="hidden" name="orderItemPrice" value="${orderItem.goods.benefit}"/> 
+					    		<input class="order_item_price" type="hidden" name="orderItemPrice" value="${orderItem.goods.agentPrice}"/>
 					    		<input class="customer_id" type="hidden" name="customerId" value="${orderItem.customer.customerId}"/>
 					    		<input class="order_item_id" type="hidden" name="orderItemId" value="${orderItem.orderItemId}"/>
 					    		<input class="order_item_address" type="hidden" name="address" value="${orderItem.receiveAddress}">
