@@ -145,7 +145,7 @@ public class CommodityDaoImpl extends BaseDao implements CommodityDao {
     @Override
     public ResultData insertThumbnail(GoodsThumbnail thumbnail) {
         ResultData result = new ResultData();
-        thumbnail.setThumbnailId("GTB");
+        thumbnail.setThumbnailId(IDGenerator.generate("GTB"));
         synchronized (lock) {
             try {
                 sqlSession.insert("selling.goods.thumbnail.insert", thumbnail);
