@@ -59,16 +59,16 @@ public class UploadServiceImpl implements UploadService {
         String key = IDGenerator.generate("TH");
         String name = key + suffix;
         String completeName = builder.append(File.separator).append(name).toString();
-        File temp = new File(completeName);
+        File temp = new File(name);
         try {
             file.transferTo(temp);
             GoodsThumbnail thumbnail=new GoodsThumbnail();
             thumbnail.setPath(completeName);
-            
+            String thumbnailId=((GoodsThumbnail)commodityService.createThumbnail(thumbnail).getData()).getThumbnailId();
             int index = temp.getPath().indexOf(SystemTeller.tellPath(PATH + "/" + time));
             result.setData(temp.getPath().substring(index));
-            result.setDescription(name);
-            result.setData(completeName);
+            result.setDescription(thumbnailId);
+            result.setData(name);
         } catch (IOException e) {
             logger.debug(e.getMessage());
             result.setResponseCode(ResponseCode.RESPONSE_ERROR);
