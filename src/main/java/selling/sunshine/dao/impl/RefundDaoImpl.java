@@ -21,6 +21,7 @@ import selling.sunshine.utils.IDGenerator;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -116,6 +117,8 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
 				}
 				//当当前月和后两个月都达到了返现标准，那么就在返现记录里插上当前月的返现记录
 				if ((!poolList.get(j).isBlockFlag())&&(!poolList.get(j+1).isBlockFlag())&&(!poolList.get(j+2).isBlockFlag())) {
+					SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM");
+			        String date = dateFormat.format(poolList.get(j).getPoolDate());
 					RefundConfig refundConfig= poolList.get(j).getRefundConfig();
 					Agent agent=poolList.get(j).getAgent();
 					RefundRecord refundRecord=new RefundRecord();
@@ -135,20 +138,20 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
 							RefundRecord refundRecordLevel3=new RefundRecord();
 							refundRecordLevel3.setRefundRecordId(IDGenerator.generate("RFR"));
 							//当前agent为三级代理商
-							refundRecord.setRefundAmount(poolList.get(j).getPrice()*refundConfig.getLevel3Percent());
-							refundRecord.setRefundPercent(refundConfig.getLevel3Percent());
-							refundRecord.setRefundDescription("代理商"+agent.getName()+"作为三级代理商在"+poolList.get(j).getPoolDate()+"购买"+poolList.get(j).getGoods().getName()+"达到返现标准，返现"+refundRecord.getRefundAmount()+"元");
+							refundRecord.setRefundAmount(poolList.get(j).getRefundAmount());
+							refundRecord.setRefundPercent(refundConfig.getLevel1Percent());
+							refundRecord.setRefundDescription("代理商"+agent.getName()+"在"+date+"购买"+poolList.get(j).getGoods().getName()+"达到返现标准，返现"+refundRecord.getRefundAmount()+"元");
 							//
-							refundRecordLevel2.setRefundAmount(poolList.get(j).getPrice()*refundConfig.getLevel2Percent());
+							refundRecordLevel2.setRefundAmount(poolList.get(j).getQuantity()*refundConfig.getLevel2Percent());
 							refundRecordLevel2.setRefundPercent(refundConfig.getLevel2Percent());
-							refundRecordLevel2.setRefundDescription("代理商"+agentLevel2.getName()+"作为二级代理商获得下级代理商"+agent.getName()+"在"+poolList.get(j).getPoolDate()+"购买"+poolList.get(j).getGoods().getName()+"的返现，返现"+refundRecordLevel2.getRefundAmount()+"元");
+							refundRecordLevel2.setRefundDescription("代理商"+agentLevel2.getName()+"与代理商"+agent.getName()+"直接关联，获得代理商"+agent.getName()+"在"+date+"购买"+poolList.get(j).getGoods().getName()+"的返现，返现"+refundRecordLevel2.getRefundAmount()+"元");
 							//
-							refundRecordLevel3.setRefundAmount(poolList.get(j).getPrice()*refundConfig.getLevel1Percent());
-							refundRecordLevel3.setRefundPercent(refundConfig.getLevel1Percent());
+							refundRecordLevel3.setRefundAmount(poolList.get(j).getQuantity()*refundConfig.getLevel3Percent());
+							refundRecordLevel3.setRefundPercent(refundConfig.getLevel3Percent());
 							refundRecordLevel3.setOrderPool(poolList.get(j));
 							refundRecordLevel3.setAgent(new selling.sunshine.model.lite.Agent(agentLevel3));
 							refundRecordLevel3.setRefundName(year+"年"+month+"月"+day+"日"+"返现账单");
-							refundRecordLevel3.setRefundDescription("代理商"+agentLevel3.getName()+"作为一级代理商获得下级代理商"+agent.getName()+"在"+poolList.get(j).getPoolDate()+"购买"+poolList.get(j).getGoods().getName()+"的返现，返现"+refundRecordLevel3.getRefundAmount()+"元");
+							refundRecordLevel3.setRefundDescription("代理商"+agentLevel3.getName()+"与代理商"+agent.getName()+"间接关联，获得代理商"+agent.getName()+"在"+date+"购买"+poolList.get(j).getGoods().getName()+"的返现，返现"+refundRecordLevel3.getRefundAmount()+"元");
 							sqlSession.insert("selling.refund.record.insert",refundRecordLevel3);	
 							//更新agentLevel3的账户余额以及返现总额
 							agentLevel3.setAgentRefund(agentLevel3.getAgentRefund()+refundRecordLevel3.getRefundAmount());
@@ -156,13 +159,13 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
 							sqlSession.update("selling.agent.update",agentLevel3);
 						}else{
 							//当前agent为二级代理商
-							refundRecord.setRefundAmount(poolList.get(j).getPrice()*refundConfig.getLevel2Percent());
-							refundRecord.setRefundPercent(refundConfig.getLevel2Percent());
-							refundRecord.setRefundDescription("代理商"+agent.getName()+"作为二级代理商在"+poolList.get(j).getPoolDate()+"购买"+poolList.get(j).getGoods().getName()+"达到返现标准，返现"+refundRecord.getRefundAmount()+"元");						
+							refundRecord.setRefundAmount(poolList.get(j).getRefundAmount());
+							refundRecord.setRefundPercent(refundConfig.getLevel1Percent());
+							refundRecord.setRefundDescription("代理商"+agent.getName()+"在"+date+"购买"+poolList.get(j).getGoods().getName()+"达到返现标准，返现"+refundRecord.getRefundAmount()+"元");						
 							//
-							refundRecordLevel2.setRefundAmount(poolList.get(j).getPrice()*refundConfig.getLevel1Percent());
-							refundRecordLevel2.setRefundPercent(refundConfig.getLevel1Percent());
-							refundRecordLevel2.setRefundDescription("代理商"+agentLevel2.getName()+"作为一级代理商获得下级代理商"+agent.getName()+"在"+poolList.get(j).getPoolDate()+"购买"+poolList.get(j).getGoods().getName()+"的返现，返现"+refundRecordLevel2.getRefundAmount()+"元");							
+							refundRecordLevel2.setRefundAmount(poolList.get(j).getQuantity()*refundConfig.getLevel2Percent());
+							refundRecordLevel2.setRefundPercent(refundConfig.getLevel2Percent());
+							refundRecordLevel2.setRefundDescription("代理商"+agentLevel2.getName()+"与代理商"+agent.getName()+"直接关联，获得代理商"+agent.getName()+"在"+date+"购买"+poolList.get(j).getGoods().getName()+"的返现，返现"+refundRecordLevel2.getRefundAmount()+"元");							
 						}
 						refundRecordLevel2.setOrderPool(poolList.get(j));
 						refundRecordLevel2.setRefundName(year+"年"+month+"月"+day+"日"+"返现账单");
@@ -174,9 +177,9 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
 						sqlSession.update("selling.agent.update",agentLevel2);
 					}else {
 						//当前agent为一级代理商
-						refundRecord.setRefundAmount(poolList.get(j).getPrice()*refundConfig.getLevel1Percent());
-						refundRecord.setRefundPercent(refundConfig.getLevel1Percent());					
-						refundRecord.setRefundDescription("代理商"+agent.getName()+"作为一级代理商在"+poolList.get(j).getPoolDate()+"购买"+poolList.get(j).getGoods().getName()+"达到返现标准，返现"+refundRecord.getRefundAmount()+"元");								
+						refundRecord.setRefundAmount(poolList.get(j).getRefundAmount());
+						refundRecord.setRefundPercent(refundConfig.getLevel1Percent());		
+						refundRecord.setRefundDescription("代理商"+agent.getName()+"在"+date+"购买"+poolList.get(j).getGoods().getName()+"达到返现标准，返现"+refundRecord.getRefundAmount()+"元");								
 					}
 					refundRecord.setOrderPool(poolList.get(j));
 					refundRecord.setRefundName(year+"年"+month+"月"+day+"日"+"返现账单");

@@ -262,7 +262,7 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
         ResultData result = new ResultData();
         // 获取当月的前一个月的日期 xxxx年xx月
         Calendar c = Calendar.getInstance();
-        c.add(Calendar.MONTH, -1);
+       // c.add(Calendar.MONTH, -1);
         Timestamp lastMonth = new Timestamp(c.getTimeInMillis());
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM");
         String date = dateFormat.format(lastMonth);
@@ -320,32 +320,9 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
                      configCondition.put("blockFlag", false);
                      RefundConfig config=(RefundConfig)sqlSession.selectList("selling.refund.config.query", configCondition).get(0);                     
                      pool.setRefundConfig(config);
-                     if (pool.getQuantity()>= config.getAmountTrigger()) {
-                             	
-                                 pool.setBlockFlag(false);
-                                 Map<String, Object> level1Con = new HashMap<>();
-                                 level1Con.put("agentId", (String) resultList.get(i).get("agent"));
-                                 Agent agentLevel1 = (Agent) sqlSession.selectList("selling.agent.query", level1Con).get(0);
-                                 if (agentLevel1.getUpperAgent() != null) {
-                                     Map<String, Object> level2Con = new HashMap<>();
-                                     level2Con.put("agentId", agentLevel1.getUpperAgent().getAgentId());
-                                     Agent agentLevel2 = (Agent) sqlSession.selectList("selling.agent.query", level2Con).get(0);
-                                     if (agentLevel2.getUpperAgent() != null) {
-                                         Map<String, Object> level3Con = new HashMap<>();
-                                         level2Con.put("agentId", agentLevel2.getUpperAgent().getAgentId());
-                                         Agent agentLevel3 = (Agent) sqlSession.selectList("selling.agent.query", level3Con).get(0);
-                                         //当前agent为三级代理商
-                                         pool.setRefundAmount(Double.parseDouble(resultList.get(i).get("quantity").toString()) * config.getLevel3Percent());
-
-                                     } else {
-                                         //当前agent为二级代理商
-                                         pool.setRefundAmount(Double.parseDouble(resultList.get(i).get("quantity").toString()) * config.getLevel2Percent());
-                                     }
-                                 } else {
-                                     //当前agent为一级代理商
-                                     pool.setRefundAmount(Double.parseDouble(resultList.get(i).get("quantity").toString()) * config.getLevel1Percent());
-                                 }
-
+                     if (pool.getQuantity()>= config.getAmountTrigger()) {                            	
+                         pool.setBlockFlag(false);
+                         pool.setRefundAmount(Double.parseDouble(resultList.get(i).get("quantity").toString()) * config.getLevel1Percent());
                      }                                             
                      sqlSession.insert("selling.order.pool.insert", pool);
                      configCondition.clear();
