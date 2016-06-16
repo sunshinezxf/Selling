@@ -9,6 +9,9 @@ import selling.sunshine.dao.BaseDao;
 import selling.sunshine.dao.CommodityDao;
 import selling.sunshine.model.Goods;
 import selling.sunshine.model.GoodsThumbnail;
+import selling.sunshine.model.goods.Goods4Agent;
+import selling.sunshine.model.goods.Goods4Customer;
+import selling.sunshine.model.goods.Thumbnail;
 import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.utils.IDGenerator;
@@ -29,13 +32,14 @@ public class CommodityDaoImpl extends BaseDao implements CommodityDao {
     private Object lock = new Object();
 
     /**
-     * 查询商品信息
+     * 插入商品信息
      *
      * @param goods
      * @return
      */
+    @Override
     @Transactional
-    public ResultData insertCommodity(Goods goods) {
+    public ResultData insertGoods4Customer(Goods4Customer goods) {
         ResultData result = new ResultData();
         synchronized (lock) {
             try {
@@ -51,12 +55,7 @@ public class CommodityDaoImpl extends BaseDao implements CommodityDao {
         }
     }
 
-    /**
-     * 更新商品信息
-     *
-     * @param goods
-     * @return
-     */
+
     @Transactional
     public ResultData updateCommodity(Goods goods) {
         ResultData result = new ResultData();
@@ -70,6 +69,30 @@ public class CommodityDaoImpl extends BaseDao implements CommodityDao {
                 result.setDescription(e.getMessage());
             } finally {
                 result.setResponseCode(ResponseCode.RESPONSE_OK);
+                return result;
+            }
+        }
+    }
+
+    /**
+     * 更新商品信息
+     *
+     * @param goods
+     * @return
+     */
+    @Override
+    @Transactional
+    public ResultData updateGoods4Customer(Goods4Customer goods) {
+        ResultData result = new ResultData();
+        synchronized (lock) {
+            try {
+                sqlSession.update("selling.goods.update", goods);
+                result.setData(goods);
+            } catch (Exception e) {
+                logger.error(e.getMessage());
+                result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+                result.setDescription(e.getMessage());
+            } finally {
                 return result;
             }
         }
@@ -97,25 +120,55 @@ public class CommodityDaoImpl extends BaseDao implements CommodityDao {
     }
 
     /**
-     * Data table分页查询商品信息
+     * 代理商查询符合条件的商品信息列表
      *
      * @param condition
-     * @param param
      * @return
      */
     @Override
-    public ResultData queryCommodityByPage(Map<String, Object> condition, DataTableParam param) {
+    public ResultData queryGoods4Agent(Map<String, Object> condition) {
         ResultData result = new ResultData();
-        DataTablePage<Goods> page = new DataTablePage<>(param);
-        ResultData total = queryCommodity(condition);
+        try {
+            List<Goods4Agent> list = sqlSession.selectList("selling.goods.query4Agent", condition);
+            result.setData(list);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription(e.getMessage());
+        } finally {
+            return result;
+        }
+    }
+
+    @Override
+    public ResultData queryGoods4Customer(Map<String, Object> condition) {
+        ResultData result = new ResultData();
+        try {
+            List<Goods4Agent> list = sqlSession.selectList("selling.goods.query4Customer", condition);
+            result.setData(list);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription(e.getMessage());
+        } finally {
+            return result;
+        }
+    }
+
+    @Override
+    public ResultData queryGoods4CustomerByPage(Map<String, Object> condition, DataTableParam param) {
+        ResultData result = new ResultData();
+        DataTablePage<Goods4Customer> page = new DataTablePage<>(param);
+        condition = handle(condition);
+        ResultData total = queryGoods4Customer(condition);
         if (total.getResponseCode() != ResponseCode.RESPONSE_OK) {
             result.setResponseCode(ResponseCode.RESPONSE_ERROR);
             result.setDescription(total.getDescription());
             return result;
         }
-        page.setiTotalRecords(((List<Goods>) total.getData()).size());
-        page.setiTotalDisplayRecords(((List<Goods>) total.getData()).size());
-        List<Goods> current = queryCommodityByPage(condition, param.getiDisplayStart(), param.getiDisplayLength());
+        page.setiTotalRecords(((List) total.getData()).size());
+        page.setiTotalDisplayRecords(((List) total.getData()).size());
+        List<Goods4Customer> current = queryGoods4CustomerByPage(condition, param.getiDisplayStart(), param.getiDisplayLength());
         if (current.size() == 0) {
             result.setResponseCode(ResponseCode.RESPONSE_NULL);
         }
@@ -125,7 +178,8 @@ public class CommodityDaoImpl extends BaseDao implements CommodityDao {
     }
 
     @Override
-    public ResultData updateThumbnail(List<GoodsThumbnail> thumbnails) {
+    @Transactional
+    public ResultData updateGoodsThumbnail(List<Thumbnail> thumbnails) {
         ResultData result = new ResultData();
         synchronized (lock) {
             try {
@@ -135,21 +189,18 @@ public class CommodityDaoImpl extends BaseDao implements CommodityDao {
                 logger.error(e.getMessage());
                 result.setResponseCode(ResponseCode.RESPONSE_ERROR);
                 result.setDescription(e.getMessage());
-            } finally {
-                return result;
             }
         }
+        return result;
     }
 
-    @Transactional
     @Override
-    public ResultData insertThumbnail(GoodsThumbnail thumbnail) {
+    public ResultData insertGoodsThumbnail(Thumbnail thumbnail) {
         ResultData result = new ResultData();
         thumbnail.setThumbnailId(IDGenerator.generate("GTB"));
         synchronized (lock) {
             try {
                 sqlSession.insert("selling.goods.thumbnail.insert", thumbnail);
-                result.setData(thumbnail);
             } catch (Exception e) {
                 logger.error(e.getMessage());
                 result.setResponseCode(ResponseCode.RESPONSE_ERROR);
@@ -172,6 +223,17 @@ public class CommodityDaoImpl extends BaseDao implements CommodityDao {
         List<Goods> result = new ArrayList<>();
         try {
             result = sqlSession.selectList("selling.goods.query", condition, new RowBounds(start, length));
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        } finally {
+            return result;
+        }
+    }
+
+    private List<Goods4Customer> queryGoods4CustomerByPage(Map<String, Object> condition, int start, int length) {
+        List<Goods4Customer> result = new ArrayList<>();
+        try {
+            result = sqlSession.selectList("selling.goods.query4Customer", condition, new RowBounds(start, length));
         } catch (Exception e) {
             logger.error(e.getMessage());
         } finally {

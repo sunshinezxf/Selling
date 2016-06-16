@@ -297,7 +297,7 @@ public class CustomerController {
         condition.clear();
         condition.put("goodsId", goodsId);
         condition.put("blockFlag", false);
-        ResultData fetchCommodityData = commodityService.fetchCommodity(condition);
+        ResultData fetchCommodityData = commodityService.fetchGoods4Customer(condition);
         if(fetchCommodityData.getResponseCode() != ResponseCode.RESPONSE_OK){
         	resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
             resultData.setDescription("没有找到商品");

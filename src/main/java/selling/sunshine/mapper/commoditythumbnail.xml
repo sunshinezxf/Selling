@@ -1,32 +1,52 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="selling.goods.thumbnail">
-    <resultMap id="thumbnailVo" type="selling.sunshine.model.GoodsThumbnail">
+    <resultMap id="goodsThumbnailVo" type="selling.sunshine.model.goods.Thumbnail">
         <result property="thumbnailId" column="thumbnail_id"></result>
         <result property="path" column="thumbnail_path"></result>
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
-        <association property="goods" column="goodsId = goods_id"></association>
+        <result property="goods" column="goodsId = goods_id"></result>
     </resultMap>
 
-    <insert id="insert" parameterType="selling.sunshine.model.GoodsThumbnail" useGeneratedKeys="false">
+    <!-- 添加商品图片 -->
+    <insert id="insert" parameterType="selling.sunshine.model.goods.Thumbnail" useGeneratedKeys="false">
         INSERT INTO goods_thumbnail
         <set>
-            thumbnail_id = #{thumbnailId},
-            thumbnail_path = #{path},
+            <if test="thumbnailId != null">
+                thumbnail_id = #{thumbnailId},
+            </if>
+            <if test="path != null">
+                thumbnail_path = #{path},
+            </if>
             <if test="goods != null and goods.goodsId != null">
                 goods_id = #{goods.goodsId},
             </if>
-            block_flag = #{blockFlag},
-            create_time = #{createAt}
+            <if test="blockFlag != null and blockFlag != ''">
+                block_flag = #{blockFlag},
+            </if>
+            <if test="createAt != null and createAt != ''">
+                create_time = #{createAt}
+            </if>
         </set>
     </insert>
 
-    <insert id="updateBatch" parameterType="java.util.List" useGeneratedKeys="false">
-        replace INTO goods_thumbnail(thumbnail_id, goods_id, thumbnail_path, block_flag, create_time)
-        VALUES
-        <foreach collection="list" item="item" index="index" separator=",">
-            (#{item.thumbnailId}, #{item.goods.goodsId}, #{item.path}, #{item.blockFlag}, #{item.createAt})
-        </foreach>
+    <!-- 更新商品图片信息 -->
+    <insert id="updateBatch" parameterType="selling.sunshine.model.goods.Goods4Customer" useGeneratedKeys="false">
+        UPDATE goods_thumbnail
+        set goods_id = #{goodsId}
+        WHERE thumbnail_id IN (
+        <foreach collection="thumbnails" item="item" index="index" separator=",">
+            #{item.thumbnailId}
+        </foreach>)
     </insert>
+
+    <!-- 删除商品的图片信息 -->
+    <delete id="deleteBatch" parameterType="java.util.List">
+        DELETE FROM goods_thumbnail
+        WHERE thumbnail_id IN (
+        <foreach collection="list" item="item" index="index" separator=",">
+            #{item.thumbnailId}
+        </foreach>)
+    </delete>
 </mapper>

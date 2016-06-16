@@ -5,8 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import selling.sunshine.dao.CommodityDao;
-import selling.sunshine.model.Goods;
-import selling.sunshine.model.GoodsThumbnail;
+import selling.sunshine.model.goods.Goods4Customer;
+import selling.sunshine.model.goods.Thumbnail;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.CommodityService;
 import selling.sunshine.utils.ResponseCode;
@@ -25,73 +25,79 @@ public class CommodityServiceImpl implements CommodityService {
     @Autowired
     private CommodityDao commodityDao;
 
-    public ResultData createCommodity(Goods goods) {
+    @Override
+    public ResultData createGoods4Customer(Goods4Customer goods) {
         ResultData result = new ResultData();
-        ResultData insertResponse = commodityDao.insertCommodity(goods);
-        result.setResponseCode(insertResponse.getResponseCode());
-        if (insertResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            result.setData(insertResponse.getData());
+        ResultData response = commodityDao.insertGoods4Customer(goods);
+        result.setResponseCode(response.getResponseCode());
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(response.getData());
         } else {
-            result.setDescription(insertResponse.getDescription());
+            response.setDescription(response.getDescription());
         }
         return result;
     }
 
     @Override
-    public ResultData fetchCommodity(Map<String, Object> condition, DataTableParam param) {
+    public ResultData fetchGoods4Customer(Map<String, Object> condition) {
         ResultData result = new ResultData();
-        ResultData queryResponse = commodityDao.queryCommodityByPage(condition, param);
-        result.setResponseCode(queryResponse.getResponseCode());
-        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            result.setData(queryResponse.getData());
-        } else if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
-            result.setDescription(queryResponse.getDescription());
-        }
-        return result;
-    }
-
-    @Override
-    public ResultData fetchCommodity(Map<String, Object> condition) {
-        ResultData result = new ResultData();
-        ResultData queryResponse = commodityDao.queryCommodity(condition);
-        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            result.setData(queryResponse.getData());
-        } else if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
-            result.setDescription(queryResponse.getDescription());
-        }
-        return result;
-    }
-
-    @Override
-    public ResultData updateCommodity(Goods goods) {
-        ResultData result = new ResultData();
-        ResultData updateResponse = commodityDao.updateCommodity(goods);
-        result.setResponseCode(updateResponse.getResponseCode());
-        if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            result.setData(updateResponse.getData());
+        ResultData response = commodityDao.queryGoods4Customer(condition);
+        result.setResponseCode(response.getResponseCode());
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            if (((List) response.getData()).isEmpty()) {
+                result.setResponseCode(ResponseCode.RESPONSE_NULL);
+            }
+            result.setData(response.getData());
         } else {
-            result.setDescription(updateResponse.getDescription());
+            result.setDescription(response.getDescription());
         }
         return result;
     }
 
     @Override
-    public ResultData saveCommodityThumbnails(List<GoodsThumbnail> thumbnails) {
+    public ResultData fetchGoods4Customer(Map<String, Object> condition, DataTableParam param) {
         ResultData result = new ResultData();
-        ResultData updateResponse = commodityDao.updateThumbnail(thumbnails);
-        result.setResponseCode(updateResponse.getResponseCode());
-        if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            result.setData(updateResponse.getData());
+        ResultData response = commodityDao.queryGoods4CustomerByPage(condition, param);
+        result.setResponseCode(response.getResponseCode());
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(response.getData());
         } else {
-            result.setDescription(updateResponse.getDescription());
+            response.setDescription(response.getDescription());
         }
         return result;
     }
 
     @Override
-    public ResultData createThumbnail(GoodsThumbnail thumbnail) {
+    public ResultData fetchGoods4Agent(Map<String, Object> condition) {
         ResultData result = new ResultData();
-        ResultData insertResponse = commodityDao.insertThumbnail(thumbnail);
+        ResultData response = commodityDao.queryGoods4Agent(condition);
+        result.setResponseCode(response.getResponseCode());
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            if (((List) response.getData()).isEmpty()) {
+                response.setResponseCode(ResponseCode.RESPONSE_NULL);
+            }
+            result.setData(response.getData());
+        }
+        return result;
+    }
+
+    @Override
+    public ResultData updateGoods4Customer(Goods4Customer goods) {
+        ResultData result = new ResultData();
+        ResultData response = commodityDao.updateGoods4Customer(goods);
+        response.setResponseCode(response.getResponseCode());
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(response.getData());
+        } else {
+            result.setDescription(response.getDescription());
+        }
+        return result;
+    }
+
+    @Override
+    public ResultData createThumbnail(Thumbnail thumbnail) {
+        ResultData result = new ResultData();
+        ResultData insertResponse = commodityDao.insertGoodsThumbnail(thumbnail);
         result.setResponseCode(insertResponse.getResponseCode());
         if (insertResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             result.setData(insertResponse.getData());

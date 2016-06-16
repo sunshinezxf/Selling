@@ -1,12 +1,11 @@
 package selling.sunshine.service;
 
 import org.springframework.stereotype.Service;
-import selling.sunshine.model.Goods;
-import selling.sunshine.model.GoodsThumbnail;
+import selling.sunshine.model.goods.Goods4Customer;
+import selling.sunshine.model.goods.Thumbnail;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.utils.ResultData;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -14,15 +13,16 @@ import java.util.Map;
  */
 @Service
 public interface CommodityService {
-    ResultData createCommodity(Goods goods);
 
-    ResultData fetchCommodity(Map<String, Object> condition, DataTableParam param);
-    
-    ResultData fetchCommodity(Map<String, Object> condition);
-    
-    ResultData updateCommodity(Goods goods);
+    ResultData createGoods4Customer(Goods4Customer goods);
 
-    ResultData saveCommodityThumbnails(List<GoodsThumbnail> thumbnails);
+    ResultData fetchGoods4Customer(Map<String, Object> condition);
 
-    ResultData createThumbnail(GoodsThumbnail thumbnail);
+    ResultData fetchGoods4Customer(Map<String, Object> condition, DataTableParam param);
+
+    ResultData fetchGoods4Agent(Map<String, Object> condition);
+
+    ResultData updateGoods4Customer(Goods4Customer goods);
+
+    ResultData createThumbnail(Thumbnail thumbnail);
 }

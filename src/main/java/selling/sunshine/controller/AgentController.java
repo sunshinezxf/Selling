@@ -1,7 +1,6 @@
 package selling.sunshine.controller;
 
 import com.alibaba.fastjson.JSONObject;
-
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
@@ -13,7 +12,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import selling.sunshine.form.*;
 import selling.sunshine.model.*;
 import selling.sunshine.pagination.DataTablePage;
@@ -22,7 +20,6 @@ import selling.sunshine.service.*;
 import selling.sunshine.utils.*;
 
 import javax.validation.Valid;
-
 import java.net.URLEncoder;
 import java.util.*;
 
@@ -62,7 +59,7 @@ public class AgentController {
 
     @Autowired
     private MessageService messageService;
-    
+
     @Autowired
     private WithdrawService withdrawService;
 
@@ -257,7 +254,7 @@ public class AgentController {
         try {
             Subject subject = SecurityUtils.getSubject();
             if (subject.isAuthenticated() && subject.getPrincipal() != null) {
-            	subject.logout();
+                subject.logout();
                 view.setViewName("redirect:/agent/order/place");
                 return view;
             }
@@ -332,49 +329,49 @@ public class AgentController {
         view.setViewName("/agent/register");
         return view;
     }
-    
-    @RequestMapping(method = RequestMethod.GET, value="/invite")
-    public ModelAndView inviteAgent(){
-    	ModelAndView view = new ModelAndView();
-		Subject subject = SecurityUtils.getSubject();
-		User user = (User) subject.getPrincipal();
-		if (user == null || user.getAgent() == null) {
-		    view.setViewName("/agent/login");
-		    return view;
-		}
-    	String url = "http://" + PlatformConfig.getValue("server_url") + "/agent/" + user.getAgent().getAgentId() + "/embrace";
-    	view.addObject("url", url);
-    	view.setViewName("/agent/link/invitation");
-    	return view;
+
+    @RequestMapping(method = RequestMethod.GET, value = "/invite")
+    public ModelAndView inviteAgent() {
+        ModelAndView view = new ModelAndView();
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        if (user == null || user.getAgent() == null) {
+            view.setViewName("/agent/login");
+            return view;
+        }
+        String url = "http://" + PlatformConfig.getValue("server_url") + "/agent/" + user.getAgent().getAgentId() + "/embrace";
+        view.addObject("url", url);
+        view.setViewName("/agent/link/invitation");
+        return view;
     }
-    
-    @RequestMapping(method = RequestMethod.GET, value="/personalsale")
-    public ModelAndView personalSale(){
-    	ModelAndView view = new ModelAndView();
-    	Subject subject = SecurityUtils.getSubject();
-		User user = (User) subject.getPrincipal();
-		if (user == null || user.getAgent() == null) {
-		    view.setViewName("/agent/login");
-		    return view;
-		}
-		List<Goods> goodsList = new ArrayList<Goods>();
-		List<String> urls = new ArrayList<String>();
-		Map<String, Object> condition = new HashMap<String, Object>();
-		condition.put("blockFlag", false);
-        ResultData fetchGoodsResponse = commodityService.fetchCommodity(condition);
+
+    @RequestMapping(method = RequestMethod.GET, value = "/personalsale")
+    public ModelAndView personalSale() {
+        ModelAndView view = new ModelAndView();
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        if (user == null || user.getAgent() == null) {
+            view.setViewName("/agent/login");
+            return view;
+        }
+        List<Goods> goodsList = new ArrayList<Goods>();
+        List<String> urls = new ArrayList<String>();
+        Map<String, Object> condition = new HashMap<String, Object>();
+        condition.put("blockFlag", false);
+        ResultData fetchGoodsResponse = commodityService.fetchGoods4Agent(condition);
         if (fetchGoodsResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             goodsList = (List<Goods>) fetchGoodsResponse.getData();
         }
-        for(Goods goods : goodsList){
-        	String url =  "http://" + PlatformConfig.getValue("server_url") + "/commodity/" + goods.getGoodsId() + "?agentId="  +  user.getAgent().getAgentId();
-        	urls.add(url);
+        for (Goods goods : goodsList) {
+            String url = "http://" + PlatformConfig.getValue("server_url") + "/commodity/" + goods.getGoodsId() + "?agentId=" + user.getAgent().getAgentId();
+            urls.add(url);
         }
-		view.addObject("goodsList", goodsList);
-		view.addObject("urls", urls);
-		view.setViewName("/agent/link/personal_sale");
-    	return view;
+        view.addObject("goodsList", goodsList);
+        view.addObject("urls", urls);
+        view.setViewName("/agent/link/personal_sale");
+        return view;
     }
-    
+
     @RequestMapping(method = RequestMethod.POST, value = "/validate/{phone}")
     @ResponseBody
     public ResultData validate(@PathVariable String phone) {
@@ -498,7 +495,7 @@ public class AgentController {
         Map<String, Object> condition = new HashMap<>();
         //查询商品信息
         condition.put("blockFlag", false);
-        ResultData fetchGoodsResponse = commodityService.fetchCommodity(condition);
+        ResultData fetchGoodsResponse = commodityService.fetchGoods4Agent(condition);
         if (fetchGoodsResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             view.addObject("goods", fetchGoodsResponse.getData());
         }
@@ -571,7 +568,7 @@ public class AgentController {
         Map<String, Object> condition = new HashMap<>();
         //获取商品列表
         condition.put("blockFlag", false);
-        ResultData fetchGoodsResponse = commodityService.fetchCommodity(condition);
+        ResultData fetchGoodsResponse = commodityService.fetchGoods4Agent(condition);
         if (fetchGoodsResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             view.addObject("goods", fetchGoodsResponse.getData());
         }
@@ -634,9 +631,9 @@ public class AgentController {
             String address = form.getAddress()[i];
             int goodsQuantity = Integer.parseInt(form.getGoodsQuantity()[i]);//商品数量
             double orderItemPrice = 0;//OrderItem总价
-            Map<String, Object> goodsCondition = new HashMap<String, Object>();//查询商品价格
+            Map<String, Object> goodsCondition = new HashMap<>();//查询商品价格
             goodsCondition.put("goodsId", goodsId);
-            ResultData goodsData = commodityService.fetchCommodity(goodsCondition);
+            ResultData goodsData = commodityService.fetchGoods4Agent(goodsCondition);
             Goods goods = null;
             if (goodsData.getResponseCode() == ResponseCode.RESPONSE_OK) {
                 List<Goods> goodsList = (List<Goods>) goodsData.getData();
@@ -709,7 +706,7 @@ public class AgentController {
         }
         List<SortRule> orderBy = new ArrayList<SortRule>();
         orderBy.add(new SortRule("create_time", "desc"));
-        Map<String, Object> condition = new HashMap<String, Object>();
+        Map<String, Object> condition = new HashMap<>();
         condition.put("agentId", user.getAgent().getAgentId());
         condition.put("status", type);
         condition.put("sort", orderBy);
@@ -733,7 +730,7 @@ public class AgentController {
             view.setViewName("/agent/login");
             return view;
         }
-        Map<String, Object> condition = new HashMap<String, Object>();
+        Map<String, Object> condition = new HashMap<>();
         condition.put("agentId", user.getAgent().getAgentId());
         condition.put("orderId", orderId);
         ResultData fetchOrderResponse = orderService.fetchOrder(condition);
@@ -800,7 +797,7 @@ public class AgentController {
             view.setViewName("/agent/login");
             return view;
         }
-        Map<String, Object> condition = new HashMap<String, Object>();
+        Map<String, Object> condition = new HashMap<>();
         condition.put("agentId", user.getAgent().getAgentId());
         ResultData fetchAgentResponse = agentService.fetchAgent(condition);
         if (fetchAgentResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
@@ -903,7 +900,7 @@ public class AgentController {
             view.setViewName("/backend/agent/check");
             return view;
         }
-        Map<String, Object> condition = new HashMap<String, Object>();
+        Map<String, Object> condition = new HashMap<>();
         condition.put("agentId", agentId);
         if (agentService.fetchAgent(condition).getResponseCode() != ResponseCode.RESPONSE_OK) {
             view.setViewName("/backend/agent/check");
@@ -955,7 +952,7 @@ public class AgentController {
             view.setViewName("redirect:/agent/overview");
             return view;
         }
-        Map<String, Object> condition = new HashMap<String, Object>();
+        Map<String, Object> condition = new HashMap<>();
         condition.put("agentId", agent.getAgentId());
         condition.put("granted", true);
         ResultData fetchResponse = agentService.fetchAgent(condition);
@@ -1052,111 +1049,111 @@ public class AgentController {
             }
         }
     }
-    
+
     /*
      * 返回某一个代理商的统计数据
      */
-	@RequestMapping(method = RequestMethod.POST, value = "/statistics/{agentId}")
-	@ResponseBody
-	public ResultData statistics(@PathVariable String agentId){
-		ResultData resultData=new ResultData();
-		Map<String, Object> dataMap=new HashMap<>();
-		//查询某个代理商的顾客数量
-		Map<String, Object> condition = new HashMap<>();
-		condition.put("agentId", agentId);
-		List<Customer> customerList=(List<Customer>)customerService.fetchCustomer(condition).getData();	
-		dataMap.put("customerNum", customerList.size());
-		
-		
-		//查询某个代理商的下级代理商数量
-		Map<String, Object> condition2 = new HashMap<>();
-		selling.sunshine.model.lite.Agent agent=new selling.sunshine.model.lite.Agent();
-		agent.setAgentId(agentId);
-		condition2.put("upperAgent", agent);
-		List<Agent> agentList=(List<Agent>)agentService.fetchAgent(condition2).getData();
-		dataMap.put("agentNum", agentList.size());
-		resultData.setData(dataMap);
-		return resultData;
-	}
-	
-	@RequestMapping(method = RequestMethod.POST, value = "/detail/{agentId}")
-	@ResponseBody
-	public ResultData detail(@PathVariable String agentId){
-		ResultData resultData=new ResultData();
-		Map<String, Object> dataMap=new HashMap<>();
-		//代理商个人信息
-		Map<String, Object> condition = new HashMap<>();
-		condition.put("agentId", agentId);
-		Agent agent=((List<Agent>)agentService.fetchAgent(condition).getData()).get(0);
-		
-		//代理商订单信息
-		List<Order> orderList=(List<Order>)orderService.fetchOrder(condition).getData();
-		//代理商返现信息
-		List<RefundRecord> refundRecordList=(List<RefundRecord>)refundService.fetchRefundRecord(condition).getData();
-		//代理商提现信息
-		List<WithdrawRecord> withdrawRecordList=(List<WithdrawRecord>)withdrawService.fetchWithdrawRecord(condition).getData();
-		
+    @RequestMapping(method = RequestMethod.POST, value = "/statistics/{agentId}")
+    @ResponseBody
+    public ResultData statistics(@PathVariable String agentId) {
+        ResultData resultData = new ResultData();
+        Map<String, Object> dataMap = new HashMap<>();
+        //查询某个代理商的顾客数量
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("agentId", agentId);
+        List<Customer> customerList = (List<Customer>) customerService.fetchCustomer(condition).getData();
+        dataMap.put("customerNum", customerList.size());
 
-		dataMap.put("agent", agent);
-		dataMap.put("orderList", orderList);
-		dataMap.put("refundRecordList", refundRecordList);
-		dataMap.put("withdrawRecordList", withdrawRecordList);
-		resultData.setData(dataMap);
-		return resultData;
-	}
-	
-	@RequestMapping(method = RequestMethod.GET, value = "/subordinate/{agentId}")
-	public ModelAndView subordinate(@PathVariable String agentId){
-		
-		ModelAndView view=new ModelAndView();
-		Map<String, Object> agentMap=new HashMap<String, Object>();
-		
-		Map<String, Object> condition = new HashMap<>();
-		selling.sunshine.model.lite.Agent agent=new selling.sunshine.model.lite.Agent();
-		agent.setAgentId(agentId);
-		condition.put("upperAgent", agent);
-		List<Agent> agentList=(List<Agent>)agentService.fetchAgent(condition).getData();
-		for(int i=0;i<agentList.size();i++){
-			condition.clear();
-			selling.sunshine.model.lite.Agent agent3=new selling.sunshine.model.lite.Agent();
-			agent3.setAgentId(agentList.get(i).getAgentId());
-			condition.put("upperAgent", agent3);
-			agentMap.put(agentList.get(i).getAgentId(), ((List<Agent>)agentService.fetchAgent(condition).getData()).size());
-		}
-		
-		Map<String, Object> condition2 = new HashMap<>();
-		condition2.put("agentId", agentId);
-		Agent agent2=((List<Agent>)agentService.fetchAgent(condition2).getData()).get(0);
-		
-		view.setViewName("/backend/agent/subordinate");
-		view.addObject("agentList", agentList);
-		view.addObject("agent", agent2);
-		view.addObject("agentMap", agentMap);
-		return view;
-		
-	}
-	
+
+        //查询某个代理商的下级代理商数量
+        Map<String, Object> condition2 = new HashMap<>();
+        selling.sunshine.model.lite.Agent agent = new selling.sunshine.model.lite.Agent();
+        agent.setAgentId(agentId);
+        condition2.put("upperAgent", agent);
+        List<Agent> agentList = (List<Agent>) agentService.fetchAgent(condition2).getData();
+        dataMap.put("agentNum", agentList.size());
+        resultData.setData(dataMap);
+        return resultData;
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/detail/{agentId}")
+    @ResponseBody
+    public ResultData detail(@PathVariable String agentId) {
+        ResultData resultData = new ResultData();
+        Map<String, Object> dataMap = new HashMap<>();
+        //代理商个人信息
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("agentId", agentId);
+        Agent agent = ((List<Agent>) agentService.fetchAgent(condition).getData()).get(0);
+
+        //代理商订单信息
+        List<Order> orderList = (List<Order>) orderService.fetchOrder(condition).getData();
+        //代理商返现信息
+        List<RefundRecord> refundRecordList = (List<RefundRecord>) refundService.fetchRefundRecord(condition).getData();
+        //代理商提现信息
+        List<WithdrawRecord> withdrawRecordList = (List<WithdrawRecord>) withdrawService.fetchWithdrawRecord(condition).getData();
+
+
+        dataMap.put("agent", agent);
+        dataMap.put("orderList", orderList);
+        dataMap.put("refundRecordList", refundRecordList);
+        dataMap.put("withdrawRecordList", withdrawRecordList);
+        resultData.setData(dataMap);
+        return resultData;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/subordinate/{agentId}")
+    public ModelAndView subordinate(@PathVariable String agentId) {
+
+        ModelAndView view = new ModelAndView();
+        Map<String, Object> agentMap = new HashMap<>();
+
+        Map<String, Object> condition = new HashMap<>();
+        selling.sunshine.model.lite.Agent agent = new selling.sunshine.model.lite.Agent();
+        agent.setAgentId(agentId);
+        condition.put("upperAgent", agent);
+        List<Agent> agentList = (List<Agent>) agentService.fetchAgent(condition).getData();
+        for (int i = 0; i < agentList.size(); i++) {
+            condition.clear();
+            selling.sunshine.model.lite.Agent agent3 = new selling.sunshine.model.lite.Agent();
+            agent3.setAgentId(agentList.get(i).getAgentId());
+            condition.put("upperAgent", agent3);
+            agentMap.put(agentList.get(i).getAgentId(), ((List<Agent>) agentService.fetchAgent(condition).getData()).size());
+        }
+
+        Map<String, Object> condition2 = new HashMap<>();
+        condition2.put("agentId", agentId);
+        Agent agent2 = ((List<Agent>) agentService.fetchAgent(condition2).getData()).get(0);
+
+        view.setViewName("/backend/agent/subordinate");
+        view.addObject("agentList", agentList);
+        view.addObject("agent", agent2);
+        view.addObject("agentMap", agentMap);
+        return view;
+
+    }
+
 	/*
      * 购买商品时验证代理商是否存在
      */
-	
-	 @RequestMapping(method = RequestMethod.POST, value = "/agentValidate/{agentId}")
-	   @ResponseBody
-	    public ResultData agentValidate(@PathVariable("agentId") String agentId) {
-		    ResultData resultData=new ResultData();
-		    Map<String, Object> condition = new HashMap<>();
-	        condition.put("agentId", agentId);
-	        condition.put("granted", true);
-	        condition.put("blockFlag", false);
-	        ResultData fetchResponse = agentService.fetchAgent(condition);
-	        if (fetchResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
-	        	resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
-	            resultData.setDescription("该代理商不存在");
-	            return resultData;
-	        }
-	        resultData.setResponseCode(ResponseCode.RESPONSE_OK);
-	        return  resultData;
-	    }
-	
+
+    @RequestMapping(method = RequestMethod.POST, value = "/agentValidate/{agentId}")
+    @ResponseBody
+    public ResultData agentValidate(@PathVariable("agentId") String agentId) {
+        ResultData resultData = new ResultData();
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("agentId", agentId);
+        condition.put("granted", true);
+        condition.put("blockFlag", false);
+        ResultData fetchResponse = agentService.fetchAgent(condition);
+        if (fetchResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            resultData.setDescription("该代理商不存在");
+            return resultData;
+        }
+        resultData.setResponseCode(ResponseCode.RESPONSE_OK);
+        return resultData;
+    }
+
 
 }

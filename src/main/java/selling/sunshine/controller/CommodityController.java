@@ -2,7 +2,6 @@ package selling.sunshine.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,12 +11,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
-
 import selling.sunshine.form.GoodsForm;
 import selling.sunshine.model.Agent;
 import selling.sunshine.model.CustomerOrder;
-import selling.sunshine.model.Goods;
 import selling.sunshine.model.GoodsThumbnail;
+import selling.sunshine.model.goods.Goods4Customer;
+import selling.sunshine.model.goods.Thumbnail;
 import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.AgentService;
@@ -29,8 +28,6 @@ import selling.sunshine.utils.ResultData;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import javax.ws.rs.core.NewCookie;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -70,27 +67,20 @@ public class CommodityController {
             view.setViewName("redirect:/commodity/create");
             return view;
         }
-        try {
-            Goods goods = new Goods(form.getName(), Double.parseDouble(form.getPrice()), Double.parseDouble(form.getBenefit()), form.getDescription(), form.isBlock());
-            ResultData createResponse = commodityService.createCommodity(goods);
-            if (createResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-                goods = (Goods) createResponse.getData();
-                String[] path = form.getPath();
-                if (!StringUtils.isEmpty(path)) {
-                    List<GoodsThumbnail> list = new ArrayList<>();
-                    for (String item : path) {
-                        GoodsThumbnail nail = new GoodsThumbnail(item, goods);
-                        list.add(nail);
-                    }
-                    commodityService.saveCommodityThumbnails(list);
-                }
-                view.setViewName("redirect:/commodity/overview");
-                return view;
-            } else {
-                view.setViewName("redirect:/commodity/create");
-                return view;
+        String[] path = form.getPath();
+        List<Thumbnail> list = new ArrayList<>();
+        if (!StringUtils.isEmpty(path)) {
+            for (String item : path) {
+                Thumbnail thumbnail = new Thumbnail();
+                thumbnail.setThumbnailId(item);
             }
-        } catch (Exception e) {
+        }
+        Goods4Customer goods = new Goods4Customer(form.getName(), Double.parseDouble(form.getBenefit()), Double.parseDouble(form.getPrice()), form.getDescription(), list, form.isBlock());
+        ResultData response = commodityService.createGoods4Customer(goods);
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            view.setViewName("redirect:/commodity/overview");
+            return view;
+        } else {
             view.setViewName("redirect:/commodity/create");
             return view;
         }
@@ -99,35 +89,41 @@ public class CommodityController {
     @RequestMapping(method = RequestMethod.GET, value = "/edit/{goodsId}")
     public ModelAndView edit(@PathVariable("goodsId") String goodsId) {
         ModelAndView view = new ModelAndView();
-        Map<String, Object> condition = new HashMap<String, Object>();
+        Map<String, Object> condition = new HashMap<>();
         condition.put("goodsId", goodsId);
-        ResultData resultData = commodityService.fetchCommodity(condition);
+        ResultData resultData = commodityService.fetchGoods4Customer(condition);
         if (resultData.getResponseCode() != ResponseCode.RESPONSE_OK) {
             view.setViewName("redirect:/commodity/overview");
             return view;
         }
-        Goods targetGoods = ((ArrayList<Goods>) resultData.getData()).get(0);
-        view.addObject("goods", targetGoods);
-
+        Goods4Customer target = ((ArrayList<Goods4Customer>) resultData.getData()).get(0);
+        view.addObject("goods", target);
         view.setViewName("/backend/goods/update");
         return view;
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/edit/{goodsId}")
-    public ModelAndView edit(@PathVariable("goodsId") String goodsId, @Valid GoodsForm goodsForm, BindingResult result) {
+    public ModelAndView edit(@PathVariable("goodsId") String goodsId, @Valid GoodsForm form, BindingResult result) {
         ModelAndView view = new ModelAndView();
         if (result.hasErrors()) {
             view.setViewName("redirect:/commodity/overview");
             return view;
         }
-        Goods previousGoods = new Goods(goodsForm.getName(), Double.parseDouble(goodsForm.getPrice()), Double.parseDouble(goodsForm.getBenefit()), goodsForm.getDescription(), goodsForm.isBlock());
-        previousGoods.setGoodsId(goodsId);
-        ResultData resultData = commodityService.updateCommodity(previousGoods);
+        String[] path = form.getPath();
+        List<Thumbnail> list = new ArrayList<>();
+        if (!StringUtils.isEmpty(path)) {
+            for (String item : path) {
+                Thumbnail thumbnail = new Thumbnail();
+                thumbnail.setThumbnailId(item);
+            }
+        }
+        Goods4Customer goods = new Goods4Customer(form.getName(), Double.parseDouble(form.getBenefit()), Double.parseDouble(form.getPrice()), form.getDescription(), list, form.isBlock());
+        goods.setGoodsId(goodsId);
+        ResultData resultData = commodityService.createGoods4Customer(goods);
         if (resultData.getResponseCode() != ResponseCode.RESPONSE_OK) {
             view.setViewName("redirect:/commodity/overview");
             return view;
         }
-
         view.setViewName("redirect:/commodity/overview");
         return view;
 
@@ -142,15 +138,15 @@ public class CommodityController {
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/overview")
-    public DataTablePage<Goods> overview(DataTableParam param) {
-        DataTablePage<Goods> result = new DataTablePage<Goods>(param);
+    public DataTablePage<Goods4Customer> overview(DataTableParam param) {
+        DataTablePage<Goods4Customer> result = new DataTablePage<>(param);
         if (StringUtils.isEmpty(param)) {
             return result;
         }
-        Map<String, Object> condition = new HashMap<String, Object>();
-        ResultData fetchResponse = commodityService.fetchCommodity(condition, param);
-        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            result = (DataTablePage<Goods>) fetchResponse.getData();
+        Map<String, Object> condition = new HashMap<>();
+        ResultData response = commodityService.fetchGoods4Customer(condition, param);
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result = (DataTablePage<Goods4Customer>) response.getData();
         }
         return result;
     }
@@ -158,26 +154,25 @@ public class CommodityController {
     @RequestMapping(method = RequestMethod.GET, value = "/{goodsId}")
     public ModelAndView view(@PathVariable("goodsId") String goodsId, String agentId) {
         ModelAndView view = new ModelAndView();
-        Map<String, Object> condition = new HashMap<String, Object>();
+        Map<String, Object> condition = new HashMap<>();
         condition.put("goodsId", goodsId);
         condition.put("blockFlag", false);
-        ResultData fetchCommodityData = commodityService.fetchCommodity(condition);
+        ResultData fetchCommodityData = commodityService.fetchGoods4Customer(condition);
         if (fetchCommodityData.getResponseCode() != ResponseCode.RESPONSE_OK) {
             //商品不存在错误页面!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        	view.setViewName("/customer/component/goods_error_msg");
+            view.setViewName("/customer/component/goods_error_msg");
             return view;
         }
-        Goods goods = ((List<Goods>) fetchCommodityData.getData()).get(0);
-
-        if (agentId != null && !agentId.equals("")) {
+        Goods4Customer goods = ((List<Goods4Customer>) fetchCommodityData.getData()).get(0);
+        if (!StringUtils.isEmpty(agentId)) {
             condition.clear();
             condition.put("agentId", agentId);
-            condition.put("granted", 1);
+            condition.put("granted", true);
             condition.put("blockFlag", false);
             ResultData fetchAgentData = agentService.fetchAgent(condition);
             if (fetchAgentData.getResponseCode() != ResponseCode.RESPONSE_OK) {
                 //代理商不存在错误页面!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            	view.setViewName("/customer/component/agent_error_msg");
+                view.setViewName("/customer/component/agent_error_msg");
                 return view;
             }
             Agent agent = ((List<Agent>) fetchAgentData.getData()).get(0);
@@ -191,11 +186,11 @@ public class CommodityController {
     @RequestMapping(method = RequestMethod.GET, value = "/customerorder")
     public ModelAndView customerOrder(String wechat, String orderId) {
         ModelAndView view = new ModelAndView();
-        Map<String, Object> condition = new HashMap<String, Object>();
-        if (wechat != null && !wechat.equals("")) {
+        Map<String, Object> condition = new HashMap<>();
+        if (!StringUtils.isEmpty(wechat)) {
             condition.put("wechat", wechat);
         }
-        if (orderId != null && !orderId.equals("")) {
+        if (!StringUtils.isEmpty(orderId)) {
             condition.put("orderId", orderId);
         }
         if (condition.isEmpty()) {
@@ -220,33 +215,40 @@ public class CommodityController {
         ModelAndView view = new ModelAndView();
         Map<String, Object> condition = new HashMap<String, Object>();
         condition.put("goodsId", goodsId);
-        ResultData resultData = commodityService.fetchCommodity(condition);
+        ResultData resultData = commodityService.fetchGoods4Customer(condition);
         if (resultData.getResponseCode() != ResponseCode.RESPONSE_OK) {
             view.setViewName("redirect:/commodity/overview");
             return view;
         }
-        Goods targetGoods = ((ArrayList<Goods>) resultData.getData()).get(0);
-        targetGoods.setBlockFlag(true);
-        commodityService.updateCommodity(targetGoods);
-
-        view.setViewName("redirect:/commodity/overview");
+        Goods4Customer target = ((List<Goods4Customer>) resultData.getData()).get(0);
+        target.setBlockFlag(true);
+        ResultData response = commodityService.updateGoods4Customer(target);
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            view.setViewName("redirect:/commodity/overview");
+        } else {
+            view.setViewName("redirect:/commodity/overview");
+        }
         return view;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/enable/{goodsId}")
     public ModelAndView enable(@PathVariable("goodsId") String goodsId) {
         ModelAndView view = new ModelAndView();
-        Map<String, Object> condition = new HashMap<String, Object>();
+        Map<String, Object> condition = new HashMap<>();
         condition.put("goodsId", goodsId);
-        ResultData resultData = commodityService.fetchCommodity(condition);
+        ResultData resultData = commodityService.fetchGoods4Customer(condition);
         if (resultData.getResponseCode() != ResponseCode.RESPONSE_OK) {
             view.setViewName("redirect:/commodity/overview");
             return view;
         }
-        Goods targetGoods = ((ArrayList<Goods>) resultData.getData()).get(0);
-        targetGoods.setBlockFlag(false);
-        commodityService.updateCommodity(targetGoods);
-        view.setViewName("redirect:/commodity/overview");
+        Goods4Customer target = ((List<Goods4Customer>) resultData.getData()).get(0);
+        target.setBlockFlag(false);
+        ResultData response = commodityService.updateGoods4Customer(target);
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            view.setViewName("redirect:/commodity/overview");
+        } else {
+            view.setViewName("redirect:/commodity/overview");
+        }
         return view;
     }
 
@@ -254,23 +256,23 @@ public class CommodityController {
     @RequestMapping(method = RequestMethod.POST, value = "/upload")
     public String upload(MultipartHttpServletRequest request) {
         String context = request.getSession().getServletContext().getRealPath("/");
-        JSONObject resultObject=new JSONObject();
+        JSONObject resultObject = new JSONObject();
         try {
             String filename = "thumbnail";
             MultipartFile file = request.getFile(filename);
             if (file != null) {
                 ResultData response = uploadService.upload(file, context);
                 if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
-                	GoodsThumbnail thumbnail=new GoodsThumbnail();
-                	thumbnail.setPath(response.getData().toString());
-                	String thumbnailId=((GoodsThumbnail)commodityService.createThumbnail(thumbnail).getData()).getThumbnailId();
-                	JSONArray initialPreviewArray=new JSONArray();
-                	JSONObject initialPreviewConfigObject=new JSONObject();               	
-                	initialPreviewArray.add("/selling"+response.getData().toString());              	
-                	//initialPreviewConfigObject.put("url", "/selling/commodity/deleteThumbnail");
-                	initialPreviewConfigObject.put("key", thumbnailId);
-                	resultObject.put("initialPreview", initialPreviewArray);
-                	resultObject.put("initialPreviewConfig", initialPreviewConfigObject);
+                    Thumbnail thumbnail = new Thumbnail((String) response.getData());
+                    response = commodityService.createThumbnail(thumbnail);
+                    String thumbnailId = ((GoodsThumbnail) commodityService.createThumbnail(thumbnail).getData()).getThumbnailId();
+                    JSONArray initialPreviewArray = new JSONArray();
+                    JSONObject initialPreviewConfigObject = new JSONObject();
+                    initialPreviewArray.add("/selling" + response.getData().toString());
+                    //initialPreviewConfigObject.put("url", "/selling/commodity/deleteThumbnail");
+                    initialPreviewConfigObject.put("key", thumbnailId);
+                    resultObject.put("initialPreview", initialPreviewArray);
+                    resultObject.put("initialPreviewConfig", initialPreviewConfigObject);
                     return resultObject.toJSONString();
                 }
             }
@@ -280,12 +282,12 @@ public class CommodityController {
         resultObject.put("error", "你不允许上传这个文件！");
         return resultObject.toJSONString();
     }
-    
+
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/delete/Thumbnail")
     public String deleteThumbnail(HttpServletRequest request) {
-    	System.err.println("test");
-		return "";
-	}
+        System.err.println("test");
+        return "";
+    }
 
 }

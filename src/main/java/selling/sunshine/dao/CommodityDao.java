@@ -2,6 +2,8 @@ package selling.sunshine.dao;
 
 import selling.sunshine.model.Goods;
 import selling.sunshine.model.GoodsThumbnail;
+import selling.sunshine.model.goods.Goods4Customer;
+import selling.sunshine.model.goods.Thumbnail;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.utils.ResultData;
 
@@ -12,15 +14,19 @@ import java.util.Map;
  * Created by sunshine on 4/8/16.
  */
 public interface CommodityDao {
-    ResultData insertCommodity(Goods goods);
+    ResultData insertGoods4Customer(Goods4Customer goods);
 
     ResultData queryCommodity(Map<String, Object> condition);
 
-    ResultData queryCommodityByPage(Map<String, Object> condition, DataTableParam param);
-    
-    ResultData updateCommodity(Goods goods);
+    ResultData queryGoods4Agent(Map<String, Object> condition);
 
-    ResultData updateThumbnail(List<GoodsThumbnail> thumbnails);
+    ResultData queryGoods4Customer(Map<String, Object> condition);
 
-    ResultData insertThumbnail(GoodsThumbnail thumbnail);
+    ResultData queryGoods4CustomerByPage(Map<String, Object> condition, DataTableParam param);
+
+    ResultData updateGoods4Customer(Goods4Customer goods);
+
+    ResultData updateGoodsThumbnail(List<Thumbnail> thumbnails);
+
+    ResultData insertGoodsThumbnail(Thumbnail thumbnail);
 }
