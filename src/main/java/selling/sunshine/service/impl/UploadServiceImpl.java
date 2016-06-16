@@ -2,8 +2,12 @@ package selling.sunshine.service.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import selling.sunshine.model.GoodsThumbnail;
+import selling.sunshine.service.CommodityService;
 import selling.sunshine.service.UploadService;
 import selling.sunshine.utils.IDGenerator;
 import selling.sunshine.utils.ResponseCode;
@@ -21,6 +25,9 @@ import java.util.Date;
 @Service
 public class UploadServiceImpl implements UploadService {
     private Logger logger = LoggerFactory.getLogger(UploadServiceImpl.class);
+    
+    @Autowired
+    private CommodityService commodityService;
 
     @Override
     public ResultData upload(MultipartFile file, String base) {
@@ -55,9 +62,13 @@ public class UploadServiceImpl implements UploadService {
         File temp = new File(completeName);
         try {
             file.transferTo(temp);
+            GoodsThumbnail thumbnail=new GoodsThumbnail();
+            thumbnail.setPath(completeName);
+            
             int index = temp.getPath().indexOf(SystemTeller.tellPath(PATH + "/" + time));
             result.setData(temp.getPath().substring(index));
             result.setDescription(name);
+            result.setData(completeName);
         } catch (IOException e) {
             logger.debug(e.getMessage());
             result.setResponseCode(ResponseCode.RESPONSE_ERROR);

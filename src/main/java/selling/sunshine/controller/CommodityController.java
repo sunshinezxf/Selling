@@ -260,8 +260,8 @@ public class CommodityController {
                 if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
                 	JSONArray initialPreviewArray=new JSONArray();
                 	JSONObject initialPreviewConfigObject=new JSONObject();               	
-                	initialPreviewArray.add("");
-                	initialPreviewConfigObject.put("key", "");
+                	initialPreviewArray.add("<img src="+response.getData() +"class='file-preview-image' alt='Desert' title='Desert'>");
+                	initialPreviewConfigObject.put("key", response.getDescription());
                 	resultObject.put("initialPreview", initialPreviewArray);
                 	resultObject.put("initialPreviewConfig", initialPreviewConfigObject);
                     return resultObject.toJSONString();
