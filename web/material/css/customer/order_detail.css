@@ -9,9 +9,22 @@ body {
 }
 
 .hd{
+	color:#04BE02;
 	text-align:center;
+	padding-top:5%;
+}
+
+.weui_cell_bd{
+	width:20%;
+}
+
+.weui_cell_ft{
+	width:80%;
+	text-align:left;
+	color:#000000;
 }
 
 .order_status{
+	color:#04BE02;
 	text-decoration:underline;
 }
