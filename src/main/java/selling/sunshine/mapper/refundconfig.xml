@@ -12,7 +12,7 @@
         <association property="goods" column="goodsId = goods_id" select="goods4CustomerQuery"></association>
     </resultMap>
 
-    <resultMap id="goods4CustomerVo" type="selling.sunshine.model.goods.Goods4Customer">
+    <resultMap id="goods4AgentVo" type="selling.sunshine.model.goods.Goods4Agent">
         <result property="goodsId" column="goods_id"></result>
         <result property="name" column="goods_name"></result>
         <result property="description" column="goods_description"></result>
@@ -54,7 +54,7 @@
         WHERE goods_id = #{goods.goodsId}
     </update>
 
-    <select id="goods4CustomerQuery" parameterType="java.util.Map" resultMap="goods4CustomerVo">
+    <select id="goods4AgentQuery" parameterType="java.util.Map" resultMap="goods4AgentVo">
         SELECT goods_id, goods_name, goods_description, prime_price, agent_price, block_flag, create_time
         FROM goods
         WHERE goods_id = #{goodsId}

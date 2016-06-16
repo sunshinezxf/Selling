@@ -1,5 +1,6 @@
 package selling.sunshine.model;
 
+import selling.sunshine.model.goods.Goods4Agent;
 import selling.sunshine.model.goods.Goods4Customer;
 
 /**
@@ -11,7 +12,7 @@ public class RefundConfig extends Entity {
     private double level1Percent;
     private double level2Percent;
     private double level3Percent;
-    private Goods4Customer goods;
+    private Goods4Agent goods;
 
     public RefundConfig() {
         super();
@@ -26,11 +27,11 @@ public class RefundConfig extends Entity {
         this.level3Percent = level3Percent;
     }
 
-    public Goods4Customer getGoods() {
+    public Goods4Agent getGoods() {
         return goods;
     }
 
-    public void setGoods(Goods4Customer goods) {
+    public void setGoods(Goods4Agent goods) {
         this.goods = goods;
     }
 
