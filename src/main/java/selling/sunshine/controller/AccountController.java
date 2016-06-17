@@ -19,6 +19,7 @@ import selling.sunshine.form.WithdrawForm;
 import selling.sunshine.model.*;
 import selling.sunshine.service.AgentService;
 import selling.sunshine.service.BillService;
+import selling.sunshine.service.OrderService;
 import selling.sunshine.service.ToolService;
 import selling.sunshine.utils.Configuration;
 import selling.sunshine.utils.PlatformConfig;
@@ -49,6 +50,9 @@ public class AccountController {
 
     @Autowired
     private BillService billService;
+    
+    @Autowired
+    private OrderService orderService;
 
     @Autowired
     private AgentService agentService;
@@ -216,18 +220,29 @@ public class AccountController {
         return view;
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/deposit")
-    public Charge deposit(HttpServletRequest request) {
+    
+    @RequestMapping(method = RequestMethod.POST, value = "/otherpay")
+    public Charge otherPay(HttpServletRequest request) {
         Charge charge = new Charge();
         JSONObject params = toolService.getParams(request);
         Subject subject = SecurityUtils.getSubject();
         String clientIp = toolService.getIP(request);
         User user = (User) subject.getPrincipal();
-        DepositBill bill = new DepositBill(Double.parseDouble(String
-                .valueOf(params.get("amount"))), String.valueOf(params
-                .get("channel")), clientIp, user.getAgent());
-        String openId = params.getString("open_id");
-        ResultData createResponse = billService.createDepositBill(bill, openId);
+        if (user == null) {
+            return null;
+        }
+        Map<String, Object> condition = new HashMap<String, Object>();
+        condition.put("orderId", String.valueOf(params.get("order_id")));
+        ResultData orderData = orderService.fetchOrder(condition);
+        Order order = null;
+        if (orderData.getResponseCode() == ResponseCode.RESPONSE_OK
+                && orderData.getData() != null) {
+            order = ((List<Order>) orderData.getData()).get(0);
+        }
+        OrderBill bill = new OrderBill(Double.parseDouble(String.valueOf(params
+                .get("amount"))), String.valueOf(params.get("channel")),
+                clientIp, user.getAgent(), order);
+        ResultData createResponse = billService.createOrderBill(bill, params.getString("open_id"));
         if (createResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             charge = (Charge) createResponse.getData();
         }

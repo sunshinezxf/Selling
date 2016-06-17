@@ -751,7 +751,7 @@ public class AgentController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/order/detail/{orderId}")
-    public ModelAndView viewOrder(@PathVariable("orderId") String orderId) {
+    public ModelAndView viewOrder(@PathVariable("orderId") String orderId, String code, String state) {
         ModelAndView view = new ModelAndView();
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
@@ -760,6 +760,11 @@ public class AgentController {
             view.setViewName("/agent/login");
             return view;
         }
+        if (!StringUtils.isEmpty(code) && !StringUtils.isEmpty(code)) {
+            String openId = WechatUtil.queryOauthOpenId(code);
+            view.addObject("wechat", openId);
+        } 
+        
         Map<String, Object> condition = new HashMap<>();
         condition.put("agentId", user.getAgent().getAgentId());
         condition.put("orderId", orderId);
