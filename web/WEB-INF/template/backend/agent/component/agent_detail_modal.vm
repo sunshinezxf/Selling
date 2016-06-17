@@ -46,7 +46,7 @@
 </div>
 <script>
     $(function () {
-        $("#config_modal").modal({
+        $("#agent_detail_modal").modal({
             show: false,
             keyboard: true
         });

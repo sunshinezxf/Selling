@@ -96,7 +96,7 @@
     	   
     	  var expressNumber=$("#expressId").val();
     	  if(expressNumber!=""){
-    	         $("#express_modal").modal('hide');
+    	         $("#express_modal").modal('hide');   	         
                  for(var i=0;i<${expressList}.length;i++){
                     document.getElementById("expressNumber"+i).innerHTML = (parseFloat(expressNumber)+i);
                  }
@@ -113,7 +113,13 @@
       
     	for(var i=0;i<${expressList}.length;i++){
     	    createPrintPage(document.getElementById("expressNumber"+i).innerHTML,${expressList}[i].createAt,${expressList}[i].senderName,${expressList}[i].senderPhone,${expressList}[i].senderAddress,${expressList}[i].receiverName,${expressList}[i].receiverPhone,${expressList}[i].receiverAddress,${expressList}[i].goodsName);
+    	    #*  	   
+    	      
     	    LODOP.PREVIEW();
+    	    *#
+    	    LODOP.PRINT();
+    	    
+    	   
     	}
     
     	var expressData=new Array();
@@ -137,7 +143,7 @@
         LODOP.SET_PRINT_PAGESIZE(1,"100mm","180mm","");//设置纸张高度
         LODOP.ADD_PRINT_TEXT(58,7,183,25,expressNumber);
         LODOP.ADD_PRINT_TEXT(46,214,73,35,(new Date(expressDate)).format("yyyy/MM/dd"));
-        LODOP.ADD_PRINT_TEXT(81,63,50,25,senderName);
+        LODOP.ADD_PRINT_TEXT(81,63,70,25,senderName);
         LODOP.ADD_PRINT_TEXT(85,157,127,25,senderPhone);
         LODOP.ADD_PRINT_TEXT(104,56,230,30,senderAddress);
         LODOP.ADD_PRINT_TEXT(138,66,65,20,receiverName);

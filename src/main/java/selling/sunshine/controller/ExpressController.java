@@ -2,7 +2,6 @@ package selling.sunshine.controller;
 
 
 import java.io.FileNotFoundException;
-
 import java.io.InputStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -44,20 +43,18 @@ public class ExpressController {
 	@Autowired
 	private OrderService orderService;
 
-	@RequestMapping(method = RequestMethod.GET, value = "/{orderItemId}")
-	public ModelAndView overview(@PathVariable("orderItemId") String orderItemId) {
-		ModelAndView view = new ModelAndView();
+	@RequestMapping(method = RequestMethod.POST, value = "/detail/{orderItemId}")
+	public ResultData detail(@PathVariable("orderItemId") String orderItemId) {
+		ResultData resultData=new ResultData();
+		Map<String, Object> dataMap = new HashMap<>();
 		Map<String, Object> condition = new HashMap<String, Object>();
 		condition.put("orderItemId", orderItemId);
-		ResultData resultData = expressService.fetchExpress(condition);
-		if (resultData.getResponseCode() != ResponseCode.RESPONSE_OK) {
-			view.setViewName("/backend/express/express_overview");
-			return view;
-		}
-		Express express = ((List<Express>) resultData.getData()).get(0);
-		view.addObject("express", express);
-		view.setViewName("/backend/express/express_overview");
-		return view;
+		ResultData queryResult = expressService.fetchExpress(condition);
+
+		Express express = ((List<Express>) queryResult.getData()).get(0);
+		dataMap.put("express", express);
+		resultData.setData(dataMap);
+		return resultData;
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/upload")
