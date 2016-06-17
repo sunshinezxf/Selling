@@ -24,7 +24,7 @@
                 app_id: "app_K4evXLKq50O8CuL8",
                 amount: amount,
                 channel: ['alipay_wap', 'wx_pub'],
-                charge_url: "${path.concat('/account/deposit')}",
+                charge_url: "${path.concat('/order/deposit')}",
                 charge_param: {},
                 open_id: '${wechat}',
                 debug: false

@@ -30,7 +30,7 @@
 </div>
 <script>
     $(function () {
-        $("#config_modal").modal({
+        $("#customer_detail_modal").modal({
             show: false,
             keyboard: true
         });

@@ -120,7 +120,7 @@
     				"</a>";
     			$("#order_list").append(html);
     			$("#" + val.orderId).on("click", function(){
-    				window.location = "${path.concat('/agent/order/detail/" + val.orderId + "')}";
+    				window.location = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx67fcdc4fa58f7578&redirect_uri=http%3a%2f%2fwww.yuncaogangmu.com%2fagent%2forder%2fdetail%2f" + val.orderId + "&response_type=code&scope=snsapi_base&state=view#wechat_redirect";
     			});
     		});
     		$("#loadingToast").hide();

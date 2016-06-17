@@ -16,7 +16,7 @@
     </div>
 </div>
 #parse("/backend/component/order_item_modal.vm")
-
+#parse("/backend/express/component/express_detail_modal.vm")
 <script>
 
 
@@ -120,6 +120,12 @@
             alert(result.data.goods_quantity_Map);
             *#
             document.getElementById("model_p").innerHTML="代理商："+result.data.order.agent.name;
+            
+            var f = document.getElementById("model_table");            
+            var childs = f.childNodes; 
+            for(var i = childs.length - 1; i >= 0; i--) { 
+               f.removeChild(childs[i]); 
+            }
 
             var node="<tr><th>客户</th><th>产品</th><th>数量</th><th>价格</th><th>快递单</th></tr>";
             for(var i=0;i<result.data.order.orderItems.length;i++){
@@ -142,7 +148,7 @@
     }
     
     function express(obj){
-      var parentId= obj.parentElement.id 
+      var parentId= obj.parentElement.parentElement.id 
       var turnForm = document.createElement("form");       
       document.body.appendChild(turnForm);
       turnForm.method = 'post';

@@ -1,5 +1,6 @@
 package selling.sunshine.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.pingplusplus.Pingpp;
 import com.pingplusplus.model.Charge;
 import org.slf4j.Logger;
@@ -67,6 +68,7 @@ public class BillServiceImpl implements BillService {
         params.put("body", "充值金额为:" + bill.getBillAmount() + "元");
         try {
             Charge charge = Charge.create(params);
+            logger.debug(JSON.toJSONString(charge));
             result.setData(charge);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -103,7 +105,7 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
-    public ResultData createOrderBill(OrderBill bill) {
+    public ResultData createOrderBill(OrderBill bill, String openId) {
         ResultData result = new ResultData();
         ResultData insertResponse = billDao.insertOrderBill(bill);
         if (insertResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
@@ -121,7 +123,6 @@ public class BillServiceImpl implements BillService {
         Map<String, Object> app = new HashMap<>();
         app.put("id", PlatformConfig.getValue("pingxx_app_id"));
         params.put("app", app);
-        params.put("app", app);
         params.put("channel", bill.getChannel());
         if (!StringUtils.isEmpty(bill.getChannel()) && bill.getChannel().equals("alipay_wap")) {
             Map<String, String> url = new HashMap<>();
@@ -129,12 +130,18 @@ public class BillServiceImpl implements BillService {
             url.put("cancel_url", PlatformConfig.getValue("server_url") + "/account/charge/" + bill.getBillId() + "/prompt");
             params.put("extra", url);
         }
+        if (!StringUtils.isEmpty(bill.getChannel()) && bill.getChannel().equals("wx_pub")) {
+            Map<String, String> user = new HashMap<>();
+            user.put("open_id", openId);
+            params.put("extra", user);
+        }
         params.put("currency", "cny");
         params.put("client_ip", bill.getClientIp());
         params.put("subject", "订单支付");
         params.put("body", "支付金额为:" + bill.getBillAmount() + "元");
         try {
             Charge charge = Charge.create(params);
+            logger.debug(JSON.toJSONString(charge));
             result.setData(charge);
         } catch (Exception e) {
             logger.error(e.getMessage());

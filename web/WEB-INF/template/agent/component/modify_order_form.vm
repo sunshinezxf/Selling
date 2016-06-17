@@ -113,6 +113,7 @@
     </div>
 </div>
 <input type="hidden" name="orderId" value="${order.orderId}"/>
+<input type="hidden" name="openId" value="${wechat}">
 </form>
 <div class="weui_dialog_confirm" id="address_dialog" style="display: none;">
     <div class="weui_mask"></div>

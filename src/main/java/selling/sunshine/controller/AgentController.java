@@ -751,7 +751,7 @@ public class AgentController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/order/detail/{orderId}")
-    public ModelAndView viewOrder(@PathVariable("orderId") String orderId) {
+    public ModelAndView viewOrder(@PathVariable("orderId") String orderId, String code, String state) {
         ModelAndView view = new ModelAndView();
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
@@ -760,6 +760,11 @@ public class AgentController {
             view.setViewName("/agent/login");
             return view;
         }
+        if (!StringUtils.isEmpty(code) && !StringUtils.isEmpty(code)) {
+            String openId = WechatUtil.queryOauthOpenId(code);
+            view.addObject("wechat", openId);
+        } 
+        
         Map<String, Object> condition = new HashMap<>();
         condition.put("agentId", user.getAgent().getAgentId());
         condition.put("orderId", orderId);
@@ -1148,6 +1153,18 @@ public class AgentController {
     public ModelAndView subordinate(@PathVariable String agentId) {
 
         ModelAndView view = new ModelAndView();
+        view.setViewName("/backend/agent/subordinate");
+        view.addObject("agentId", agentId);
+
+        return view;
+
+    }
+    
+    @RequestMapping(method = RequestMethod.POST, value = "/subordinateData/{agentId}")
+    public ResultData subordinateData(@PathVariable String agentId) {
+    	ResultData resultData=new ResultData();
+    	Map<String, Object> dataMap = new HashMap<>();
+       
         Map<String, Object> agentMap = new HashMap<>();
 
         Map<String, Object> condition = new HashMap<>();
@@ -1160,18 +1177,19 @@ public class AgentController {
             selling.sunshine.model.lite.Agent agent3 = new selling.sunshine.model.lite.Agent();
             agent3.setAgentId(agentList.get(i).getAgentId());
             condition.put("upperAgent", agent3);
-            agentMap.put(agentList.get(i).getAgentId(), ((List<Agent>) agentService.fetchAgent(condition).getData()).size());
+            agentMap.put(agentList.get(i).getAgentId(), (List<Agent>) agentService.fetchAgent(condition).getData());
         }
 
         Map<String, Object> condition2 = new HashMap<>();
         condition2.put("agentId", agentId);
         Agent agent2 = ((List<Agent>) agentService.fetchAgent(condition2).getData()).get(0);
 
-        view.setViewName("/backend/agent/subordinate");
-        view.addObject("agentList", agentList);
-        view.addObject("agent", agent2);
-        view.addObject("agentMap", agentMap);
-        return view;
+        
+        dataMap.put("agentList", agentList);
+        dataMap.put("agent", agent2);
+        dataMap.put("agentMap", agentMap);
+        resultData.setData(dataMap);
+        return resultData;
 
     }
 
