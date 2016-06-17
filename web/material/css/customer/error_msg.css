@@ -22,28 +22,35 @@ body {
 	height:90%; 
 	margin-top:5%; 
 }
+
+.error_img img{
+	width:100%;
+}
 		
 .errorText{ 
 	color:#39351e; 
 	text-align:center;
-	padding-left:9%;
+	margin-top:5%;
+	margin-left:0.8em;
+	width:100%;
 }
 
 .confirm_area{
 	height:10%; 
     width:100%; 
 	text-align:center;
-}	
+}
+	
 button.weui_btn, input.weui_btn{
-	width:40%;
+	width:35%;
 }
 	
 .weui_btn_primary{
-	width:40%;
+	width:35%;
 	background-color:#ff8080;
 	margin-top:5%;
 }
 			
 h1{ 
-	font-size:2.5em; 
+	font-size:2.3em; 
 }
