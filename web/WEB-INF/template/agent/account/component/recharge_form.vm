@@ -26,7 +26,7 @@
                 channel: ['alipay_wap', 'wx_pub'],
                 charge_url: "${path.concat('/account/deposit')}",
                 charge_param: {},
-                open_id: 'wx67fcdc4fa58f7578',
+                open_id: '${wechat}',
                 debug: false
             }, function (result) {
                 //debug 模式下获取 charge_url 的返回结果

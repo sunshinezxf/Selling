@@ -20,10 +20,7 @@ import selling.sunshine.model.*;
 import selling.sunshine.service.AgentService;
 import selling.sunshine.service.BillService;
 import selling.sunshine.service.ToolService;
-import selling.sunshine.utils.Prompt;
-import selling.sunshine.utils.PromptCode;
-import selling.sunshine.utils.ResponseCode;
-import selling.sunshine.utils.ResultData;
+import selling.sunshine.utils.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -188,8 +185,12 @@ public class AccountController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/deposit")
-    public ModelAndView deposit() {
+    public ModelAndView deposit(String code, String state) {
         ModelAndView view = new ModelAndView();
+        if (!StringUtils.isEmpty(code) && !StringUtils.isEmpty(code)) {
+            String openId = WechatUtil.queryOauthOpenId(code);
+            view.addObject("wechat", openId);
+        }
         view.setViewName("/agent/account/recharge");
         return view;
     }
