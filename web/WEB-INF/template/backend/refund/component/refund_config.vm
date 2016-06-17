@@ -52,7 +52,8 @@
             },
             columns: [
                 {title: "商品名称", "mData": "name"},
-                {title: "价格", "mData": "price"},
+                {title: "商品原价", "mData": "customerPrice"},
+                {title: "代理价格", "mData": "agentPrice"},
                 {
                     title: "描述", "mData": "description"
                 },
