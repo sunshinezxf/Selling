@@ -16,6 +16,7 @@ import selling.sunshine.service.OrderService;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -105,7 +106,11 @@ public class OrderServiceImpl implements OrderService {
         ResultData queryResponse = customerOrderDao.queryOrder(condition);
         result.setResponseCode(queryResponse.getResponseCode());
         if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            result.setData(queryResponse.getData());
+        	if(((List<CustomerOrder>)queryResponse.getData()).isEmpty()){
+        		result.setResponseCode(ResponseCode.RESPONSE_NULL);
+        	} else {
+        		result.setData(queryResponse.getData());
+        	}
         } else {
             result.setDescription(queryResponse.getDescription());
         }

@@ -20,4 +20,9 @@
 		</div>
 	</div>
 </body>
+<script>
+    $("#confirm").click(function(){
+        WeixinJSBridge.call('closeWindow');
+    });
+</script>
 </html>

@@ -24,6 +24,7 @@ import selling.sunshine.service.OrderService;
 import selling.sunshine.service.UploadService;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
+import selling.sunshine.utils.WechatConfig;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -159,6 +160,7 @@ public class CommodityController {
         ResultData fetchCommodityData = commodityService.fetchGoods4Customer(condition);
         if (fetchCommodityData.getResponseCode() != ResponseCode.RESPONSE_OK) {
             //商品不存在错误页面!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        	WechatConfig.oauthWechat(view, "/customer/component/goods_error_msg");
             view.setViewName("/customer/component/goods_error_msg");
             return view;
         }
@@ -171,6 +173,7 @@ public class CommodityController {
             ResultData fetchAgentData = agentService.fetchAgent(condition);
             if (fetchAgentData.getResponseCode() != ResponseCode.RESPONSE_OK) {
                 //代理商不存在错误页面!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            	WechatConfig.oauthWechat(view, "/customer/component/agent_error_msg");
                 view.setViewName("/customer/component/agent_error_msg");
                 return view;
             }
@@ -178,6 +181,7 @@ public class CommodityController {
             view.addObject("agent", agent);
         }
         view.addObject("goods", goods);
+        WechatConfig.oauthWechat(view, "/customer/goods/detail");
         view.setViewName("/customer/goods/detail");
         return view;
     }
@@ -194,17 +198,20 @@ public class CommodityController {
         }
         if (condition.isEmpty()) {
             //订单不存在错误页面
+        	WechatConfig.oauthWechat(view, "/customer/component/order_error_msg");
             view.setViewName("/customer/component/order_error_msg");
             return view;
         }
         ResultData fetchCustomerOrderData = orderService.fetchCustomerOrder(condition);
-        if (fetchCustomerOrderData.getResponseCode() != ResponseCode.RESPONSE_OK) {
+        if (fetchCustomerOrderData.getResponseCode() != ResponseCode.RESPONSE_OK || fetchCustomerOrderData.getResponseCode() != ResponseCode.RESPONSE_NULL) {
             //订单不存在错误页面
+        	WechatConfig.oauthWechat(view, "/customer/component/order_error_msg");
             view.setViewName("/customer/component/order_error_msg");
             return view;
         }
         CustomerOrder customerOrder = ((List<CustomerOrder>) fetchCustomerOrderData.getData()).get(0);
         view.addObject("customerOrder", customerOrder);
+        WechatConfig.oauthWechat(view, "/customer/order/detail");
         view.setViewName("/customer/order/detail");
         return view;
     }

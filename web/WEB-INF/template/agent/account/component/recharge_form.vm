@@ -21,12 +21,12 @@
             var amount = $("#amount").val();
             console.debug(amount);
             pingpp_one.init({
-                app_id: "app_DazjbTLybjHGbv9O",
+                app_id: "app_K4evXLKq50O8CuL8",
                 amount: amount,
                 channel: ['alipay_wap', 'wx_pub'],
                 charge_url: "${path.concat('/account/deposit')}",
                 charge_param: {},
-                open_id: 'wxf2c47b5e41605c26',
+                open_id: '${wechat}',
                 debug: false
             }, function (result) {
                 //debug 模式下获取 charge_url 的返回结果
