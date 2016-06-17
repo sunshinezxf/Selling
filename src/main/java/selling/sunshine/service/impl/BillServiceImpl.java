@@ -119,7 +119,7 @@ public class BillServiceImpl implements BillService {
         params.put("order_no", bill.getBillId());
         params.put("amount", bill.getBillAmount() * 100);
         Map<String, Object> app = new HashMap<>();
-        app.put("id", "app_DazjbTLybjHGbv9O");
+        app.put("id", PlatformConfig.getValue("pingxx_app_id"));
         params.put("app", app);
         params.put("app", app);
         params.put("channel", bill.getChannel());
