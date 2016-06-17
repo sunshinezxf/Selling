@@ -55,7 +55,7 @@
                         //这里处理支付成功页面点击“继续购物”按钮触发的方法，
                         //例如：若你需要点击“继续购物”按钮跳转到你的购买页，
                         //则在该方法内写入 window.location.href = "你的购买页面 url"
-                        window.location.href = 'http://yuncaogangmu.com/account/info';//示例
+                        window.location.href = 'http://www.yuncaogangmu.com/account/info';//示例
                     });
                 }
             });
