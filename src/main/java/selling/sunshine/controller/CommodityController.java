@@ -198,7 +198,7 @@ public class CommodityController {
             return view;
         }
         ResultData fetchCustomerOrderData = orderService.fetchCustomerOrder(condition);
-        if (fetchCustomerOrderData.getResponseCode() != ResponseCode.RESPONSE_OK) {
+        if (fetchCustomerOrderData.getResponseCode() != ResponseCode.RESPONSE_OK || fetchCustomerOrderData.getResponseCode() != ResponseCode.RESPONSE_NULL) {
             //订单不存在错误页面
             view.setViewName("/customer/component/order_error_msg");
             return view;
