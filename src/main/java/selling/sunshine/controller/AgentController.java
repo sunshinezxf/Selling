@@ -225,13 +225,9 @@ public class AgentController {
      * @return
      */
     @RequestMapping(method = RequestMethod.GET, value = "/login")
-    public ModelAndView login(String warn) {
+    public ModelAndView login() {
         ModelAndView view = new ModelAndView();
-        String url = "http://" + PlatformConfig.getValue("server_url") + "/agent/login";
-        String configUrl = url + "";
-        Configuration configuration = WechatConfig.config(configUrl);
-        configuration.setShareLink(url);
-        view.addObject("configuration", configuration);
+        WechatConfig.oauthWechat(view, "/agent/login");
         view.setViewName("/agent/login");
         return view;
     }
@@ -248,8 +244,10 @@ public class AgentController {
         ModelAndView view = new ModelAndView();
         //判断代理商填写的用户名和密码是否符合要求
         if (result.hasErrors()) {
-            attr.addFlashAttribute("warn", "您的手机号或密码错误");
-            view.setViewName("redirect:/agent/login");
+            //attr.addFlashAttribute("warn", "您的手机号或密码错误");
+        	WechatConfig.oauthWechat(view, "/agent/login");
+            view.addObject("warn", "您的手机号或密码错误");
+            view.setViewName("/agent/login");
             return view;
         }
         try {
@@ -261,13 +259,15 @@ public class AgentController {
             }
             subject.login(new UsernamePasswordToken(form.getPhone(), form.getPassword()));
         } catch (Exception e) {
-            attr.addFlashAttribute("warn", "您的手机号或密码错误");
-            view.setViewName("redirect:/agent/login");
+            //attr.addFlashAttribute("warn", "您的手机号或密码错误");
+        	WechatConfig.oauthWechat(view, "/agent/login");
+            view.addObject("warn", "您的手机号或密码错误");
+            view.setViewName("/agent/login");
             return view;
         }
         //
         Subject subject = SecurityUtils.getSubject();
-        view.setViewName("redirect:/agent/order/place");
+        view.setViewName("/agent/order/place");
         return view;
     }
 
@@ -298,6 +298,7 @@ public class AgentController {
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
+        WechatConfig.oauthWechat(view, "/agent/register");
         view.setViewName("/agent/register");
         return view;
     }
@@ -321,12 +322,7 @@ public class AgentController {
                 view.addObject("upper", agent);
             }
         }
-        String url = "http://" + PlatformConfig.getValue("server_url") + "/agent/" + agentId + "/embrace";
-        String configUrl;
-        configUrl = url + "";
-        Configuration configuration = WechatConfig.config(configUrl);
-        configuration.setShareLink(url);
-        view.addObject("configuration", configuration);
+        WechatConfig.oauthWechat(view, "/agent/" + agentId + "/embrace");
         view.setViewName("/agent/register");
         return view;
     }
@@ -337,11 +333,13 @@ public class AgentController {
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         if (user == null || user.getAgent() == null) {
+        	WechatConfig.oauthWechat(view, "/agent/login");
             view.setViewName("/agent/login");
             return view;
         }
         String url = "http://" + PlatformConfig.getValue("server_url") + "/agent/" + user.getAgent().getAgentId() + "/embrace";
         view.addObject("url", url);
+        WechatConfig.oauthWechat(view, "/agent/link/invitation");
         view.setViewName("/agent/link/invitation");
         return view;
     }
@@ -369,6 +367,7 @@ public class AgentController {
         }
         view.addObject("goodsList", goodsList);
         view.addObject("urls", urls);
+        WechatConfig.oauthWechat(view, "/agent/link/personal_sale");
         view.setViewName("/agent/link/personal_sale");
         return view;
     }
@@ -440,6 +439,7 @@ public class AgentController {
             if (createResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
                 Prompt prompt = new Prompt("提示", "您已成功提交申请,待审核通过后即可使用", "/agent/login");
                 view.addObject("prompt", prompt);
+                WechatConfig.oauthWechat(view, "/agent/prompt");
                 view.setViewName("/agent/prompt");
                 return view;
             } else {
@@ -464,10 +464,12 @@ public class AgentController {
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         if (user == null || user.getAgent() == null) {
+        	WechatConfig.oauthWechat(view, "/agent/login");
             view.setViewName("/agent/login");
             return view;
         }
         view.addObject("agent", user.getAgent());
+        WechatConfig.oauthWechat(view, "/agent/me/index");
         view.setViewName("/agent/me/index");
         return view;
     }
@@ -485,9 +487,11 @@ public class AgentController {
             if (!StringUtils.isEmpty(code)) {
                 Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "尊敬的代理商，你尚未绑定账号！", "/agent/login");
                 view.addObject("prompt", prompt);
+                WechatConfig.oauthWechat(view, "/agent/prompt");
                 view.setViewName("/agent/prompt");
                 return view;
             } else {
+            	WechatConfig.oauthWechat(view, "/agent/login");
                 view.setViewName("/agent/login");
                 return view;
             }
@@ -547,11 +551,13 @@ public class AgentController {
         ResultData queryAgentResponse = agentService.fetchAgent(condition);
         Agent agent = ((List<Agent>) queryAgentResponse.getData()).get(0);
         if (agent.isGranted()) {
+        	WechatConfig.oauthWechat(view, "/agent/order/place");
             view.setViewName("/agent/order/place");
             return view;
         }
         Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "尊敬的代理商，您的资料现在正在审核中，只有当审核通过后才能代客下单，请耐心等待！", "/agent/login");
         view.addObject("prompt", prompt);
+        WechatConfig.oauthWechat(view, "/agent/prompt");
         view.setViewName("/agent/prompt");
         return view;
     }
@@ -563,6 +569,7 @@ public class AgentController {
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         if (user == null) {
+        	WechatConfig.oauthWechat(view, "/agent/login");
             view.setViewName("/agent/login");
             return view;
         }
@@ -597,11 +604,13 @@ public class AgentController {
         ResultData fetchAgentResponse = agentService.fetchAgent(condition);
         Agent agent = ((List<Agent>) fetchAgentResponse.getData()).get(0);
         if (agent.isGranted()) {
+        	WechatConfig.oauthWechat(view, "/agent/order/modify");
             view.setViewName("/agent/order/modify");
             return view;
         }
         Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "尊敬的代理商，您的资料现在正在审核中，只有当审核通过后才能代客下单，请耐心等待！", "/agent/login");
         view.addObject("prompt", prompt);
+        WechatConfig.oauthWechat(view, "/agent/prompt");
         view.setViewName("/agent/prompt");
         return view;
     }
@@ -617,6 +626,7 @@ public class AgentController {
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         if (user == null) {
+        	WechatConfig.oauthWechat(view, "/agent/login");
             view.setViewName("/agent/login");
             return view;
         }
@@ -690,6 +700,7 @@ public class AgentController {
     public ModelAndView manageOrder(@PathVariable("type") String type) {
         ModelAndView view = new ModelAndView();
         view.addObject("type", type);
+        WechatConfig.oauthWechat(view, "/agent/order/manage");
         view.setViewName("/agent/order/manage");
         return view;
     }
@@ -745,6 +756,7 @@ public class AgentController {
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         if (user == null) {
+        	WechatConfig.oauthWechat(view, "/agent/login");
             view.setViewName("/agent/login");
             return view;
         }
@@ -756,6 +768,7 @@ public class AgentController {
         view.addObject("order", order);
         view.addObject("status", order.getStatus());
         view.addObject("operation", "VIEW");
+        WechatConfig.oauthWechat(view, "/agent/order/modify");
         view.setViewName("/agent/order/modify");
         return view;
     }
@@ -766,6 +779,7 @@ public class AgentController {
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         if (user == null) {
+        	WechatConfig.oauthWechat(view, "/agent/login");
             view.setViewName("/agent/login");
             return view;
         }
@@ -778,6 +792,7 @@ public class AgentController {
             Agent agent = ((List<Agent>) fetchResposne.getData()).get(0);
             view.addObject("agent", agent);
         }
+        WechatConfig.oauthWechat(view, "/agent/customer/manage");
         view.setViewName("/agent/customer/manage");
         return view;
     }
@@ -812,6 +827,7 @@ public class AgentController {
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         if (user == null) {
+        	WechatConfig.oauthWechat(view, "/agent/login");
             view.setViewName("/agent/login");
             return view;
         }
@@ -829,6 +845,7 @@ public class AgentController {
         }
         List<RefundRecord> refundRecords = (List<RefundRecord>) fetchRefundRecordResponse.getData();
         view.addObject("refundRecords", refundRecords);
+        WechatConfig.oauthWechat(view, "/agent/account/statement");
         view.setViewName("/agent/account/statement");
         return view;
     }
@@ -842,7 +859,7 @@ public class AgentController {
 //            return view;
 //        }
 //        List<RefundConfig> configs = (List<RefundConfig>) fetchRefundData.getData();
-
+        WechatConfig.oauthWechat(view, "/agent/etc/refund_config");
         view.setViewName("/agent/etc/refund_config");
         return view;
     }
@@ -850,6 +867,7 @@ public class AgentController {
     @RequestMapping(method = RequestMethod.GET, value = "/contact")
     public ModelAndView contact() {
         ModelAndView view = new ModelAndView();
+        WechatConfig.oauthWechat(view, "/agent/etc/contact");
         view.setViewName("/agent/etc/contact");
         return view;
     }
@@ -857,6 +875,7 @@ public class AgentController {
     @RequestMapping(method = RequestMethod.GET, value = "/modifypassword")
     public ModelAndView modifyPassword() {
         ModelAndView view = new ModelAndView();
+        WechatConfig.oauthWechat(view, "/agent/etc/modify_password");
         view.setViewName("/agent/etc/modify_password");
         return view;
     }
@@ -867,6 +886,7 @@ public class AgentController {
         if (result.hasErrors() || StringUtils.isEmpty(form.getPassword()) || !form.getPassword().equals(form.getPassword2())) {
             Prompt prompt = new Prompt(PromptCode.WARNING, "提示信息", "尊敬的代理商，您输入的密码有误,请重新尝试", "/agent/modifypassword");
             view.addObject("prompt", prompt);
+            WechatConfig.oauthWechat(view, "/agent/prompt");
             view.setViewName("/agent/prompt");
             return view;
         }
@@ -882,15 +902,18 @@ public class AgentController {
             if (modiPassResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
                 Prompt prompt = new Prompt(PromptCode.WARNING, "提示信息", "修改密码失败,请重新尝试", "/agent/modifypassword");
                 view.addObject("prompt", prompt);
+                WechatConfig.oauthWechat(view, "/agent/prompt");
                 view.setViewName("/agent/prompt");
                 return view;
             }
             subject.logout();
             Prompt prompt = new Prompt(PromptCode.SUCCESS, "提示信息", "恭喜您,密码修改成功,请重新登录", "/agent/login");
             view.addObject("prompt", prompt);
+            WechatConfig.oauthWechat(view, "/agent/prompt");
             view.setViewName("/agent/prompt");
             return view;
         } else {
+        	WechatConfig.oauthWechat(view, "/agent/login");
             view.setViewName("/agent/login");
             return view;
         }
@@ -899,6 +922,7 @@ public class AgentController {
     @RequestMapping(method = RequestMethod.GET, value = "/prompt")
     public ModelAndView prompt() {
         ModelAndView view = new ModelAndView();
+        WechatConfig.oauthWechat(view, "/agent/prompt");
         view.setViewName("/agent/prompt");
         return view;
     }
