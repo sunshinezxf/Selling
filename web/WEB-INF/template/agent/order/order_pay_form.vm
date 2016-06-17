@@ -109,12 +109,12 @@
     document.addEventListener('pingpp_one_ready', function () {
 	    $("#other_pay").click(function(){
 	        pingpp_one.init({
-	            app_id: "app_DazjbTLybjHGbv9O",
+	            app_id: "app_K4evXLKq50O8CuL8",
 	            amount: total_price,
 	            channel: ['alipay_wap', 'wx_pub'],
 	            charge_url: "${path.concat('/order/otherpay')}",
 	            charge_param: {order_id: order_id},
-	            open_id: 'wxf2c47b5e41605c26',
+	            open_id: 'wx67fcdc4fa58f7578',
 	            debug: false
 	        }, function (result) {
 	            //debug 模式下获取 charge_url 的返回结果
