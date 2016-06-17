@@ -17,7 +17,7 @@ public interface BillService {
 
     ResultData updateDepositBill(DepositBill bill);
 
-    ResultData createOrderBill(OrderBill bill);
+    ResultData createOrderBill(OrderBill bill, String openId);
     
     ResultData fetchOrderBill(Map<String, Object> condition);
     

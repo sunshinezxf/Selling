@@ -112,9 +112,9 @@
 	            app_id: "app_K4evXLKq50O8CuL8",
 	            amount: total_price,
 	            channel: ['alipay_wap', 'wx_pub'],
-	            charge_url: "${path.concat('/order/otherpay')}",
+	            charge_url: "${path.concat('/account/otherpay')}",
 	            charge_param: {order_id: order_id},
-	            open_id: 'wx67fcdc4fa58f7578',
+	            open_id: '${openId}',
 	            debug: false
 	        }, function (result) {
 	            //debug 模式下获取 charge_url 的返回结果

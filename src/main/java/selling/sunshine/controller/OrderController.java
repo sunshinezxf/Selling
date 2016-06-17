@@ -286,7 +286,7 @@ public class OrderController {
     @RequestMapping(method = RequestMethod.POST, value = "/modify/{type}")
     public ModelAndView modifyOrder(@Valid OrderItemForm form,
                                     BindingResult result, RedirectAttributes attr,
-                                    @PathVariable("type") String type) {
+                                    @PathVariable("type") String type, String openId) {
         ModelAndView view = new ModelAndView();
         if (result.hasErrors()) {
             view.setViewName("redirect:/order/list/0");
@@ -363,6 +363,7 @@ public class OrderController {
                 attr.addFlashAttribute("prompt", prompt);
                 view.setViewName("redirect:/agent/prompt");
             } else if (type.equals("submit")) {
+            	attr.addFlashAttribute("openId", openId);
                 view.setViewName("redirect:/order/pay/" + order.getOrderId());
             }
             return view;
@@ -452,7 +453,7 @@ public class OrderController {
         // 创建账单
         OrderBill orderBill = new OrderBill(totalPrice, "coffer",
                 toolService.getIP(request), user.getAgent(), order);
-        ResultData billData = billService.createOrderBill(orderBill);
+        ResultData billData = billService.createOrderBill(orderBill, null);
         // 获取代理信息
         condition.clear();
         condition.put("agentId", user.getAgent().getAgentId());
@@ -486,28 +487,18 @@ public class OrderController {
         return view;
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/otherpay")
-    public Charge otherPay(HttpServletRequest request) {
+    @RequestMapping(method = RequestMethod.POST, value = "/deposit")
+    public Charge deposit(HttpServletRequest request) {
         Charge charge = new Charge();
         JSONObject params = toolService.getParams(request);
         Subject subject = SecurityUtils.getSubject();
         String clientIp = toolService.getIP(request);
         User user = (User) subject.getPrincipal();
-        if (user == null) {
-            return null;
-        }
-        Map<String, Object> condition = new HashMap<String, Object>();
-        condition.put("orderId", String.valueOf(params.get("order_id")));
-        ResultData orderData = orderService.fetchOrder(condition);
-        Order order = null;
-        if (orderData.getResponseCode() == ResponseCode.RESPONSE_OK
-                && orderData.getData() != null) {
-            order = ((List<Order>) orderData.getData()).get(0);
-        }
-        OrderBill bill = new OrderBill(Double.parseDouble(String.valueOf(params
-                .get("amount"))), String.valueOf(params.get("channel")),
-                clientIp, user.getAgent(), order);
-        ResultData createResponse = billService.createOrderBill(bill);
+        DepositBill bill = new DepositBill(Double.parseDouble(String
+                .valueOf(params.get("amount"))), String.valueOf(params
+                .get("channel")), clientIp, user.getAgent());
+        String openId = params.getString("open_id");
+        ResultData createResponse = billService.createDepositBill(bill, openId);
         if (createResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             charge = (Charge) createResponse.getData();
         }
