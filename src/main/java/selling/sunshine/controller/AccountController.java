@@ -20,7 +20,14 @@ import selling.sunshine.model.*;
 import selling.sunshine.service.AgentService;
 import selling.sunshine.service.BillService;
 import selling.sunshine.service.ToolService;
-import selling.sunshine.utils.*;
+import selling.sunshine.utils.Configuration;
+import selling.sunshine.utils.PlatformConfig;
+import selling.sunshine.utils.Prompt;
+import selling.sunshine.utils.PromptCode;
+import selling.sunshine.utils.ResponseCode;
+import selling.sunshine.utils.ResultData;
+import selling.sunshine.utils.WechatConfig;
+import selling.sunshine.utils.WechatUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -52,6 +59,7 @@ public class AccountController {
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         if (user == null) {
+        	WechatConfig.oauthWechat(view, "/agent/login");
             view.setViewName("/agent/login");
             return view;
         }
@@ -61,6 +69,7 @@ public class AccountController {
         Agent target = ((List<Agent>) agentService.fetchAgent(condition)
                 .getData()).get(0);
         view.addObject("agent", target);
+        WechatConfig.oauthWechat(view, "/agent/account/info");
         view.setViewName("/agent/account/info");
         return view;
     }
@@ -71,6 +80,7 @@ public class AccountController {
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         if (user == null) {
+        	WechatConfig.oauthWechat(view, "/agent/login");
             view.setViewName("/agent/login");
             return view;
         }
@@ -80,6 +90,7 @@ public class AccountController {
         if (fetchAgentResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
             Prompt prompt = new Prompt("失败", "代理商不存在", "/account/info");
             view.addObject("prompt", prompt);
+            WechatConfig.oauthWechat(view, "/agent/prompt");
             view.setViewName("/agent/prompt");
             return view;
         }
@@ -89,6 +100,7 @@ public class AccountController {
         if (fetchBankCardResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
             Prompt prompt = new Prompt("失败", "银行卡错误", "/account/info");
             view.addObject("prompt", prompt);
+            WechatConfig.oauthWechat(view, "/agent/prompt");
             view.setViewName("/agent/prompt");
             return view;
         }
@@ -99,6 +111,7 @@ public class AccountController {
             view.addObject("bankCard", bankCardList.get(0));
         }
         view.addObject("agent", agent);
+        WechatConfig.oauthWechat(view, "/agent/account/withdraw");
         view.setViewName("/agent/account/withdraw");
         return view;
     }
@@ -124,6 +137,7 @@ public class AccountController {
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         if (user == null) {
+        	WechatConfig.oauthWechat(view, "/agent/login");
             view.setViewName("/agent/login");
             return view;
         }
@@ -133,6 +147,7 @@ public class AccountController {
         if (fetchAgentResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
             Prompt prompt = new Prompt("失败", "代理商不存在", "/account/info");
             view.addObject("prompt", prompt);
+            WechatConfig.oauthWechat(view, "/agent/prompt");
             view.setViewName("/agent/prompt");
             return view;
         }
@@ -146,6 +161,7 @@ public class AccountController {
         if (bankCardData.getResponseCode() != ResponseCode.RESPONSE_OK) {
             Prompt prompt = new Prompt("失败", "银行卡号不存在", "/account/info");
             view.addObject("prompt", prompt);
+            WechatConfig.oauthWechat(view, "/agent/prompt");
             view.setViewName("/agent/prompt");
             return view;
         }
@@ -153,6 +169,7 @@ public class AccountController {
         if (money > agent.getCoffer()) {
             Prompt prompt = new Prompt("提示", "您的的提现金额超过余额", "/account/info");
             view.addObject("prompt", prompt);
+            WechatConfig.oauthWechat(view, "/agent/prompt");
             view.setViewName("/agent/prompt");
             return view;
         }
@@ -166,6 +183,7 @@ public class AccountController {
         if (withdrawData.getResponseCode() != ResponseCode.RESPONSE_OK) {
             Prompt prompt = new Prompt("失败", "申请提现失败", "/account/info");
             view.addObject("prompt", prompt);
+            WechatConfig.oauthWechat(view, "/agent/prompt");
             view.setViewName("/agent/prompt");
             return view;
         }
@@ -174,12 +192,14 @@ public class AccountController {
         if (consumeData.getResponseCode() != ResponseCode.RESPONSE_OK) {
             Prompt prompt = new Prompt("失败", "余额不足", "/account/info");
             view.addObject("prompt", prompt);
+            WechatConfig.oauthWechat(view, "/agent/prompt");
             view.setViewName("/agent/prompt");
             return view;
         }
 
         Prompt prompt = new Prompt("提示", "申请提现成功，预计2日内到账", "/account/info");
         view.addObject("prompt", prompt);
+        WechatConfig.oauthWechat(view, "/agent/prompt");
         view.setViewName("/agent/prompt");
         return view;
     }
@@ -191,6 +211,7 @@ public class AccountController {
             String openId = WechatUtil.queryOauthOpenId(code);
             view.addObject("wechat", openId);
         }
+        WechatConfig.oauthWechat(view, "/agent/account/recharge");
         view.setViewName("/agent/account/recharge");
         return view;
     }
@@ -225,6 +246,7 @@ public class AccountController {
                 prompt = new Prompt(PromptCode.WARNING, "提示", "对不起,您的充值已取消.", "/account/info");
             }
             view.addObject("prompt", prompt);
+            WechatConfig.oauthWechat(view, "/agent/prompt");
             view.setViewName("/agent/prompt");
         } else if (billId.startsWith("ODB")) {
             String orderId = "";
@@ -241,6 +263,7 @@ public class AccountController {
                 prompt = new Prompt(PromptCode.WARNING, "提示", "对不起,您的付款失败了，请联系工作人员.", "/agent/order/manage/2");
             }
             view.addObject("prompt", prompt);
+            WechatConfig.oauthWechat(view, "/agent/prompt");
             view.setViewName("/agent/prompt");
         } else if (billId.startsWith("COB")) {
             String orderId = "";
@@ -258,6 +281,7 @@ public class AccountController {
             }
             view.addObject("prompt", prompt);
             view.addObject("orderId", orderId);
+            WechatConfig.oauthWechat(view, "/customer/prompt");
             view.setViewName("/customer/prompt");
         }
         return view;

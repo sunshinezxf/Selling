@@ -25,6 +25,7 @@ import selling.sunshine.utils.Prompt;
 import selling.sunshine.utils.PromptCode;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
+import selling.sunshine.utils.WechatConfig;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -251,6 +252,7 @@ public class OrderController {
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         if (user == null) {
+        	WechatConfig.oauthWechat(view, "/agent/login");
             view.setViewName("/agent/login");
             return view;
         }
@@ -293,6 +295,7 @@ public class OrderController {
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         if (user == null) {
+        	WechatConfig.oauthWechat(view, "/agent/login");
             view.setViewName("/agent/login");
             return view;
         }
@@ -377,6 +380,7 @@ public class OrderController {
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         if (user == null) {
+        	WechatConfig.oauthWechat(view, "/agent/login");
             view.setViewName("/agent/login");
             return view;
         }
@@ -413,6 +417,7 @@ public class OrderController {
         }
         view.addObject("order", order);
         view.addObject("agent", target);
+        WechatConfig.oauthWechat(view, "agent/order/pay");
         view.setViewName("agent/order/pay");
         return view;
     }
@@ -425,6 +430,7 @@ public class OrderController {
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         if (user == null) {
+        	WechatConfig.oauthWechat(view, "/agent/login");
             view.setViewName("/agent/login");
             return view;
         }
