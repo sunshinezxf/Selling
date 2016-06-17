@@ -14,16 +14,6 @@ body {
 	padding-top:5%;
 }
 
-.weui_cell_bd{
-	width:20%;
-}
-
-.weui_cell_ft{
-	width:80%;
-	text-align:left;
-	color:#000000;
-}
-
 .order_status{
 	color:#ff8080;
 	text-decoration:underline;
