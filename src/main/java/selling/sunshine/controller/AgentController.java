@@ -155,6 +155,40 @@ public class AgentController {
         view.setViewName("/agent/prompt");
         return view;
     }
+    
+    /**
+     * 检查代理商是否已经绑定微信号
+     * 
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.GET, value="/checkbinding")
+    public ResultData checkBinding(){
+    	ResultData result = new ResultData();
+    	Map<String, Object> condition = new HashMap<String, Object>();
+    	Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        if (user == null || user.getAgent() == null) {
+        	result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+        	result.setDescription("请重新登录");
+        	return result;
+        }
+        condition.put("agentId", user.getAgent().getAgentId());
+        ResultData fetchAgentResponse = agentService.fetchAgent(condition);
+        if (fetchAgentResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+        	result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+        	result.setDescription("代理商不存在");
+        	return result;
+        }
+        Agent agent = ((List<Agent>) fetchAgentResponse.getData()).get(0);
+        if(agent.getWechat() == null || agent.getWechat().equals("")){
+        	result.setResponseCode(ResponseCode.RESPONSE_NULL);
+        	result.setDescription("没有绑定微信号");
+        	return result;
+        }
+        result.setData(agent);
+        return result;
+    }
 
     /**
      * 获取密码找回的表单页面
@@ -252,9 +286,9 @@ public class AgentController {
         }
         try {
             Subject subject = SecurityUtils.getSubject();
-            if (subject.isAuthenticated() && subject.getPrincipal() != null) {
+            if (subject.isAuthenticated() && subject.getPrincipal() == null) {
                 subject.logout();
-                view.setViewName("redirect:/agent/order/place");
+                view.setViewName("redirect:/agent/login");
                 return view;
             }
             subject.login(new UsernamePasswordToken(form.getPhone(), form.getPassword()));
@@ -267,7 +301,7 @@ public class AgentController {
         }
         //
         Subject subject = SecurityUtils.getSubject();
-        view.setViewName("/agent/order/place");
+        view.setViewName("redirect:/agent/order/place");
         return view;
     }
 
@@ -751,7 +785,7 @@ public class AgentController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/order/detail/{orderId}")
-    public ModelAndView viewOrder(@PathVariable("orderId") String orderId, String code, String state) {
+    public ModelAndView viewOrder(@PathVariable("orderId") String orderId) {
         ModelAndView view = new ModelAndView();
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
@@ -760,11 +794,6 @@ public class AgentController {
             view.setViewName("/agent/login");
             return view;
         }
-        if (!StringUtils.isEmpty(code) && !StringUtils.isEmpty(code)) {
-            String openId = WechatUtil.queryOauthOpenId(code);
-            view.addObject("wechat", openId);
-        } 
-        
         Map<String, Object> condition = new HashMap<>();
         condition.put("agentId", user.getAgent().getAgentId());
         condition.put("orderId", orderId);
