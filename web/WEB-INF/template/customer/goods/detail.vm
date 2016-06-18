@@ -25,35 +25,22 @@
         <div class="now_price">${goods.agentPrice}</div>
     </div>
     <div id="customer_price" class="price">
-        <div class="common_price">￥${goods.price}</div>
+        <div class="common_price">￥${goods.customerPrice}</div>
     </div>
     <div class="goods_name">
         <h2>${goods.name}</h2>
     </div>
 </div>
-<div class="agent_information">
-    #if(${agent})
-        <div class="agent">由<p>${agent.name}</p>推广</div>
-    #end
-    <div class="agent_id">
-        <table>
-            <tr>
-                <td class="hd">
-                    <label class="id_label">
-                        代理商编号：
-                    </label>
-                </td>
-                <td class="bd">
-                    #if(${agent})
-                        <input id="agent_id" class="id_input" type="text" value="${agent.agentId}"/>
-                    #else
-                        <input id="agent_id" class="id_input" type="text" value=""/>
-                    #end
-                </td>
-            </tr>
-        </table>
-    </div>
+
+<div class="number_area">
+     <p>数量</p>
+     <div class="number_choose">
+         <button id="min_btn" class="min">—</button>
+         <input id="goods_num" class="num_box" name="" type="text" value="1"/>
+         <button id="add_btn" class="add">+</button>
+     </div>
 </div>
+
 <div class="buy_area">
     <button id="purchase" class="btn_area">立即购买</button>
 </div>
@@ -61,20 +48,22 @@
     <div class="weui_mask_transition" id="number_div" style="display: none;"></div>
     <div class="weui_actionsheet" id="weui_actionsheet">
         <div class="weui_actionsheet_menu">
-            <div class=someinfo_area>
-                <div class="per_price_area">
-                    <p class="price_label">商品单价</p>
-
-                    <p id="goods_per_price" class="goods_per_price"></p>
-                </div>
-                <div class="number_area">
-                    <p>数量</p>
-
-                    <div class="number_choose">
-                        <button id="min_btn" class="min">—</button>
-                        <input id="goods_num" class="num_box" name="" type="text" value="1"/>
-                        <button id="add_btn" class="add">+</button>
-                    </div>
+            <div class="weui_cell id">
+                <div class="agent_id">
+                    <table>
+                        <tr>
+                            <td class="hd">
+                                <label class="id_label"> 优惠码：</label>
+                            </td>
+                            <td class="bd">
+                                #if(${agent})
+                                    <input id="agent_id" class="id_input" type="text" value="${agent.agentId}"/>
+                                #else
+                                    <input id="agent_id" class="id_input" type="text" value=""/>
+                                #end
+                            </td>
+                        </tr>
+                   </table>
                 </div>
             </div>
             <div class="address_area">
@@ -146,7 +135,7 @@
                     </div>
                 </div>
                 <div class="to_pay">
-                    <button id="confirm" class="weui_btn weui_btn_disabled weui_btn_default" disabled="disabled">去结算
+                    <button id="confirm" class="weui_btn weui_btn_disabled weui_btn_default" disabled="disabled">支付
                     </button>
                 </div>
             </div>
@@ -180,11 +169,13 @@
         }).on('swiperight', function (e) {
             data.prev();
         });
-
+        
+        convert_id();
+        
         check_agent();
 
         $('#agent_id').blur(function () {
-            var agentId = $('#agent_id').val();
+            var agentId = "AGT"+$('#agent_id').val();
             if (agentId != "") {
                 var url = '${path.concat('/agent/agentValidate/')}' + agentId;
                 var param = {agentId: agentId};
@@ -251,7 +242,7 @@
     });
 
     $('#purchase').click(function () {
-        var agentId = $('#agent_id').val();
+        var agentId = "AGT"+$('#agent_id').val();
         if (agentId != "") {
             var url = '${path.concat('/agent/agentValidate/')}' + agentId;
             var param = {agentId: agentId};
@@ -316,6 +307,14 @@
     $("#dialog").find(".weui_btn_dialog.primary").click(function () {
         $("#dialog").hide();
     });
+    
+    function convert_id(){
+        var id=$('#agent_id').val();
+        if(id!=""){
+            var newId=id.slice(3);
+            $('#agent_id').val(newId);
+        }
+    }
 
     function check_agent() {
         var agent = $('#agent_id').val();

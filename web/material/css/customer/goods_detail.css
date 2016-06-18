@@ -116,29 +116,11 @@ body {
     color:#fe8181;
 }
 
-.agent_information{
-    position:relative;
-    height:10%;
-    width:100%;
-}
-
-.agent{
-	position:absolute;
-	top:0;
-	right:0;
-    font-size:0.85em;
-    text-align:right;
-}
- 
-.agent p{
-	display:inline-block;
-    margin:0 auto;
+.id{
+	border-bottom: 0.0625em solid #D9D9D9;
 }
 
 .agent_id{
-	position:absolute;
-	top:60%;
-	left:0;
 	width:100%;
 }
 
@@ -147,15 +129,15 @@ body {
 }
 
 .hd{
-	width:27%;
+	width:22%;
 }
 
 .bd{
-	width:73%;
+	width:78%;
 }
 
 .id_label{
-	font-size:1em;
+	font-size:1.04em;
 }
 
 .agent_id input{
@@ -212,30 +194,10 @@ body {
 	z-index:1000;
 }
 
-.someinfo_area{
-	position:relative;
-	height:11%;
-	border-bottom: 0.0625em solid #D9D9D9;
-}
-
-.per_price_area{
-	height:100%;
-	width:52%;
-	float:left;
-}
-
 .number_area{
-	height:100%;
-	width:46%;
+	height:50%;
+	width:100%;
 	float:left;
-	border-left: 0.0625em solid #D9D9D9;
- }
- 
-.per_price_area p{
-    display:inline-block;
-    font-size:1.2em;
-    padding-top:0.35em;
-    margin-left:0.85em;
 }
 
 .number_area p{
@@ -304,7 +266,7 @@ body {
     appearance:none;
     -moz-appearance:none;
     -webkit-appearance:none;
-    background: url("http://ourjs.github.io/static/2015/arrow.png") no-repeat scroll right center transparent;
+    background: url("../../images/arrow.png") no-repeat scroll right center transparent;
     select::-ms-expand { display: none; }
 }
 
