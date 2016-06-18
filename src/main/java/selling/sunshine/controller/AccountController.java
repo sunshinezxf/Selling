@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
-import selling.sunshine.form.BankCardForm;
 import selling.sunshine.form.WithdrawForm;
 import selling.sunshine.model.*;
 import selling.sunshine.service.*;
@@ -162,6 +161,14 @@ public class AccountController {
             view.setViewName("/agent/prompt");
             return view;
         }
+        ResultData transferResponse = withdrawService.createWithdrawRecord((WithdrawRecord) withdrawData.getData());
+        if (transferResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            Prompt prompt = new Prompt("失败", "申请提现失败", "/account/info");
+            view.addObject("prompt", prompt);
+            WechatConfig.oauthWechat(view, "/agent/prompt");
+            view.setViewName("/agent/prompt");
+            return view;
+        }
         ResultData consumeData = agentService.consume(agent, money);
         if (consumeData.getResponseCode() != ResponseCode.RESPONSE_OK) {
             Prompt prompt = new Prompt("失败", "余额不足", "/account/info");
@@ -170,7 +177,7 @@ public class AccountController {
             view.setViewName("/agent/prompt");
             return view;
         }
-        
+
         Prompt prompt = new Prompt("提示", "申请提现成功，预计2日内到账", "/account/info");
         view.addObject("prompt", prompt);
         WechatConfig.oauthWechat(view, "/agent/prompt");
