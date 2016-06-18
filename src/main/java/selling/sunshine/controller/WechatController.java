@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import selling.sunshine.model.Agent;
+import selling.sunshine.model.User;
 import selling.sunshine.service.AgentService;
 import selling.sunshine.service.FollowerService;
 import selling.sunshine.utils.*;
@@ -26,6 +29,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by sunshine on 5/24/16.
@@ -62,6 +68,7 @@ public class WechatController {
         }
         return "";
     }
+    
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/wechat", produces = "text/xml;charset=utf-8")

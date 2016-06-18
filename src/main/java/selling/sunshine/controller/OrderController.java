@@ -533,24 +533,36 @@ public class OrderController {
         view.setViewName("redirect:/agent/prompt");
         return view;
     }
-
-    @RequestMapping(method = RequestMethod.POST, value = "/deposit")
-    public Charge deposit(HttpServletRequest request) {
+    
+    @RequestMapping(method = RequestMethod.POST, value = "/otherpay")
+    public Charge otherPay(HttpServletRequest request) {
         Charge charge = new Charge();
         JSONObject params = toolService.getParams(request);
         Subject subject = SecurityUtils.getSubject();
         String clientIp = toolService.getIP(request);
         User user = (User) subject.getPrincipal();
-        DepositBill bill = new DepositBill(Double.parseDouble(String
-                .valueOf(params.get("amount"))), String.valueOf(params
-                .get("channel")), clientIp, user.getAgent());
-        String openId = params.getString("open_id");
-        ResultData createResponse = billService.createDepositBill(bill, openId);
+        if (user == null) {
+            return null;
+        }
+        Map<String, Object> condition = new HashMap<String, Object>();
+        condition.put("orderId", String.valueOf(params.get("order_id")));
+        ResultData orderData = orderService.fetchOrder(condition);
+        Order order = null;
+        if (orderData.getResponseCode() == ResponseCode.RESPONSE_OK
+                && orderData.getData() != null) {
+            order = ((List<Order>) orderData.getData()).get(0);
+        }
+        OrderBill bill = new OrderBill(Double.parseDouble(String.valueOf(params
+                .get("amount"))), String.valueOf(params.get("channel")),
+                clientIp, user.getAgent(), order);
+        ResultData createResponse = billService.createOrderBill(bill, params.getString("open_id"));
         if (createResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             charge = (Charge) createResponse.getData();
         }
         return charge;
     }
+
+   
 
     @RequestMapping(method = RequestMethod.POST, value = "/customerpay")
     public Charge customerPay(HttpServletRequest request) {
