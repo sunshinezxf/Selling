@@ -1,7 +1,9 @@
 package selling.sunshine.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
+
 import selling.sunshine.form.GoodsForm;
 import selling.sunshine.model.Agent;
 import selling.sunshine.model.CustomerOrder;
@@ -28,6 +31,7 @@ import selling.sunshine.utils.WechatConfig;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -67,15 +71,9 @@ public class CommodityController {
             view.setViewName("redirect:/commodity/create");
             return view;
         }
-        String[] path = form.getPath();
-        List<Thumbnail> list = new ArrayList<>();
-        if (!StringUtils.isEmpty(path)) {
-            for (String item : path) {
-                Thumbnail thumbnail = new Thumbnail();
-                thumbnail.setThumbnailId(item);
-            }
-        }
-        Goods4Customer goods = new Goods4Customer(form.getName(), Double.parseDouble(form.getAgentPrice()), Double.parseDouble(form.getPrice()), form.getDescription(), list, form.isBlock());
+
+        Goods4Customer goods = new Goods4Customer(form.getName(), Double.parseDouble(form.getAgentPrice()), Double.parseDouble(form.getPrice()), form.getDescription());
+        goods.setBlockFlag(form.isBlock());
         ResultData response = commodityService.createGoods4Customer(goods);
         if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
             view.setViewName("redirect:/commodity/overview");
@@ -270,30 +268,40 @@ public class CommodityController {
                 ResultData response = uploadService.upload(file, context);
                 if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
                     Thumbnail thumbnail = new Thumbnail((String) response.getData());
-                    response = commodityService.createThumbnail(thumbnail);
+                    System.err.println(commodityService.createThumbnail(thumbnail).getData());
                     String thumbnailId = ((Thumbnail) commodityService.createThumbnail(thumbnail).getData()).getThumbnailId();
                     JSONArray initialPreviewArray = new JSONArray();
+                    JSONArray initialPreviewConfigArray = new JSONArray();
                     JSONObject initialPreviewConfigObject = new JSONObject();
                     initialPreviewArray.add("/selling" + response.getData().toString());
-                    //initialPreviewConfigObject.put("url", "/selling/commodity/deleteThumbnail");
+                    initialPreviewConfigObject.put("url", "/selling/commodity/delete/Thumbnail/"+thumbnailId);
                     initialPreviewConfigObject.put("key", thumbnailId);
+                    initialPreviewConfigArray.add(initialPreviewConfigObject);
                     resultObject.put("initialPreview", initialPreviewArray);
-                    resultObject.put("initialPreviewConfig", initialPreviewConfigObject);
+                    resultObject.put("initialPreviewConfig", initialPreviewConfigArray);
                     return resultObject.toJSONString();
                 }
             }
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
-        resultObject.put("error", "你不允许上传这个文件！");
+        resultObject.put("error", "你不被允许上传这个文件！");
         return resultObject.toJSONString();
     }
 
     @ResponseBody
-    @RequestMapping(method = RequestMethod.GET, value = "/delete/Thumbnail")
-    public String deleteThumbnail(HttpServletRequest request) {
-        System.err.println("test");
-        return "";
+    @RequestMapping(method = RequestMethod.POST, value = "/delete/Thumbnail/{thumbnailId}")
+    public String deleteThumbnail(@PathVariable("thumbnailId") String thumbnailId) {
+
+        System.out.println(thumbnailId);
+        
+        JSONObject resultObject = new JSONObject();
+        JSONArray initialPreviewArray = new JSONArray();
+        JSONArray initialPreviewConfigArray = new JSONArray();
+        resultObject.put("initialPreview", initialPreviewArray);
+        resultObject.put("initialPreviewConfig", initialPreviewConfigArray);
+        
+        return resultObject.toJSONString();
     }
 
 }

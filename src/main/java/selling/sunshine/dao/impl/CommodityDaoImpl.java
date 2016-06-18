@@ -161,10 +161,11 @@ public class CommodityDaoImpl extends BaseDao implements CommodityDao {
     @Override
     public ResultData insertGoodsThumbnail(Thumbnail thumbnail) {
         ResultData result = new ResultData();
-        thumbnail.setThumbnailId(IDGenerator.generate("GTB"));
+        thumbnail.setThumbnailId(IDGenerator.generate("THB"));
         synchronized (lock) {
             try {
                 sqlSession.insert("selling.goods.thumbnail.insert", thumbnail);
+                result.setData(thumbnail);
             } catch (Exception e) {
                 logger.error(e.getMessage());
                 result.setResponseCode(ResponseCode.RESPONSE_ERROR);
@@ -193,5 +194,11 @@ public class CommodityDaoImpl extends BaseDao implements CommodityDao {
             return result;
         }
     }
+
+	@Override
+	public ResultData deleteGoodsThumbnail(Thumbnail thumbnail) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

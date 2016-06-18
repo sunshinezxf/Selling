@@ -73,7 +73,7 @@ public class WithdrawController {
             return result;
         }
         Map<String, Object> condition = new HashMap<String, Object>();
-        ResultData fetchResponse = withdrawService.fetchWithdrawRecord(condition, param);
+        ResultData fetchResponse = withdrawService.fetchWithdrawRecord(condition, param); 
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             result = (DataTablePage<WithdrawRecord>) fetchResponse.getData();
         }
