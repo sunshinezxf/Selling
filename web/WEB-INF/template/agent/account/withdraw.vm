@@ -11,11 +11,10 @@
 	        <h1 class="page_title">
 	            提现
 	        </h1>
+	        <div style="text-align:center;">
+			    <h1 style="font-weight:normal">￥${agent.coffer}</h1>
+			</div>
 	    </div>
-	    <div style="text-align:center;">
-	    	<p class="page_desc">卡号</p>
-		    <a id="cardNo_btn"><h2 style="font-weight:normal" id="cardNo_head"></h2></a>
-		</div>
 	    <div class="bd">
 	            #parse("/agent/account/component/withdraw_form.vm")
 	    </div>

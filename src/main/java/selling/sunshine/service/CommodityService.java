@@ -1,6 +1,7 @@
 package selling.sunshine.service;
 
 import org.springframework.stereotype.Service;
+
 import selling.sunshine.model.goods.Goods4Customer;
 import selling.sunshine.model.goods.Thumbnail;
 import selling.sunshine.pagination.DataTableParam;
@@ -25,4 +26,6 @@ public interface CommodityService {
     ResultData updateGoods4Customer(Goods4Customer goods);
 
     ResultData createThumbnail(Thumbnail thumbnail);
+    
+    ResultData deleteGoodsThumbnail(String thumbnailId);
 }

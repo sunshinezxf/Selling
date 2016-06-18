@@ -3,8 +3,8 @@
 <mapper namespace="selling.agent.withdraw">
     <resultMap id="withdrawVo" type="selling.sunshine.model.WithdrawRecord">
         <result property="withdrawId" column="withdraw_id"></result>
+        <result property="openId" column="wechat"></result>
         <result property="wealth" column="current_coffer"></result>
-        <result property="bankCardNo" column="bank_no"></result>
         <result property="amount" column="withdraw_amount"></result>
         <result property="status" column="withdraw_status"
                 typeHandler="selling.sunshine.handler.mybatis.withdraw.WithdrawStatusHandler"></result>
@@ -20,44 +20,67 @@
     </resultMap>
 
     <insert id="insert" parameterType="selling.sunshine.model.WithdrawRecord" useGeneratedKeys="false">
-        INSERT INTO withdraw_record(withdraw_id, bank_no, current_coffer, withdraw_amount, withdraw_status, block_flag, create_time, agent_id)
-        VALUES (#{withdrawId}, #{bankCardNo} ,#{wealth}, #{amount}, #{status,typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler}, #{blockFlag}, #{createAt}, #{agent.agentId})
-    </insert>
-
-    <select id="query" parameterType="java.util.Map" resultMap="withdrawVo">
-        SELECT withdraw_id, bank_no, current_coffer, withdraw_amount, withdraw_status, block_flag, create_time, agent_id
-        FROM withdraw_record
-        WHERE 1 = 1
-        <if test="withdrawId != null and withdrawId != ''">
-            AND withdraw_id = #{withdrawId}
-        </if>
-        <if test="bankCardNo != null and bankCardNo != ''">
-            AND bank_no = #{bankCardNo}
-        </if>
-        <if test="status != null and status != ''">
-            AND withdraw_status = #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler}
-        </if>
-        <if test="agentId != null and agentId != ''">
-            AND agent_id = #{agentId}
-        </if>
-        <if test="rule != null and rule != ''">
-            ORDER BY ${rule}
-        </if>
-    </select>
-
-    <update id="update" parameterType="selling.sunshine.model.WithdrawRecord">
-        UPDATE withdraw_record
+        INSERT INTO withdraw_record
         <set>
-            <if test="status != null and status != ''">
+            <if test="withdrawId != null">
+                withdraw_id = #{withdrawId},
+            </if>
+            <if test="openId != null">
+                wechat = #{openId},
+            </if>
+            <if test="wealth != null">
+                current_coffer = #{wealth},
+            </if>
+            <if test="amount != null">
+                withdraw_amount = #{amount},
+            </if>
+            <if test="status != null">
                 withdraw_status = #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler},
+            </if>
+            <if test="agent != null and agent.agentId != null">
+                agent_id = #{agent.agentId},
             </if>
             <if test="blockFlag != null">
                 block_flag = #{blockFlag},
             </if>
-            withdraw_id = #{withdrawId}
+            <if test="createAt != null">
+                create_time = #{createAt}
+            </if>
         </set>
+    </insert>
+
+    <update id="update" parameterType="selling.sunshine.model.WithdrawRecord">
+        UPDATE withdraw_record
+        set withdraw_status = #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler}
         WHERE withdraw_id = #{withdrawId}
     </update>
+
+    <select id="query" parameterType="java.util.Map" resultMap="withdrawVo">
+        SELECT withdraw_id, wechat, current_coffer, withdraw_amount, withdraw_status, agent_id, block_flag, create_time
+        FROM withdraw_record
+        WHERE 1 = 1
+        <if test="withdrawId != null">
+            AND withdraw_id = #{withdrawId}
+        </if>
+        <if test="openId != null">
+            AND wechat = #{openId}
+        </if>
+        <if test="status != null">
+            AND withdraw_status IN (
+            <foreach collection="status" item="item" index="index" separator=",">
+                #{item}
+            </foreach>)
+        </if>
+        <if test="blockFlag != null">
+            AND block_flag = #{blockFlag}
+        </if>
+        <if test="rule != null">
+            ORDER BY ${rule}
+        </if>
+        <if test="rule == null">
+            ORDER BY create_time DESC
+        </if>
+    </select>
 
     <select id="agentLiteQuery" parameterType="java.util.Map" resultMap="agentLiteVo">
         SELECT agent_id, agent_name, agent_phone

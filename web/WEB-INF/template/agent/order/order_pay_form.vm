@@ -29,7 +29,37 @@
         </div>
     </div>
 </div>
-<script type="text/javascript" src="${path.concat('/plugins/pingxx/pingpp_one.js')}"></script>
+<div class="weui_dialog_confirm" id="bind_dialog" style="display: none;">
+    <div class="weui_mask"></div>
+    <div class="weui_dialog">
+        <div class="weui_dialog_hd"><strong class="weui_dialog_title">您还没有绑定微信</strong></div>
+        <div class="weui_dialog_bd" style="text-align:center;">微信支付</div>
+        <div class="weui_dialog_ft">
+            <a href="javascript:;" class="weui_btn_dialog default">返回</a>
+        	<a href="javascript:;" class="weui_btn_dialog primary">绑定</a>
+        </div>
+    </div>
+</div>
+<div id="loadingToast" class="weui_loading_toast" style="display:none;">
+    <div class="weui_mask_transparent"></div>
+    <div class="weui_toast">
+        <div class="weui_loading">
+            <div class="weui_loading_leaf weui_loading_leaf_0"></div>
+            <div class="weui_loading_leaf weui_loading_leaf_1"></div>
+            <div class="weui_loading_leaf weui_loading_leaf_2"></div>
+            <div class="weui_loading_leaf weui_loading_leaf_3"></div>
+            <div class="weui_loading_leaf weui_loading_leaf_4"></div>
+            <div class="weui_loading_leaf weui_loading_leaf_5"></div>
+            <div class="weui_loading_leaf weui_loading_leaf_6"></div>
+            <div class="weui_loading_leaf weui_loading_leaf_7"></div>
+            <div class="weui_loading_leaf weui_loading_leaf_8"></div>
+            <div class="weui_loading_leaf weui_loading_leaf_9"></div>
+            <div class="weui_loading_leaf weui_loading_leaf_10"></div>
+            <div class="weui_loading_leaf weui_loading_leaf_11"></div>
+        </div>
+        <p class="weui_toast_content">加载中</p>
+    </div>
+</div>
 <script>
 	agent_coffer = parseFloat(${agent.coffer});
 	total_price = 0.0;
@@ -106,47 +136,22 @@
     	$("#pay_form").submit();
     });
     
-    document.addEventListener('pingpp_one_ready', function () {
-	    $("#other_pay").click(function(){
-	        pingpp_one.init({
-	            app_id: "app_K4evXLKq50O8CuL8",
-	            amount: total_price,
-	            channel: ['alipay_wap', 'wx_pub'],
-	            charge_url: "${path.concat('/account/otherpay')}",
-	            charge_param: {order_id: order_id},
-	            open_id: '${openId}',
-	            debug: false
-	        }, function (result) {
-	            //debug 模式下获取 charge_url 的返回结果
-	            if (result.debug && result.chargeUrlOutput) {
-	                console.log(result.chargeUrlOutput);
-	            }
-	            if (!result.status) {
-	                //处理错误
-	                alert(result.msg);
-	            }
-	            else {
-	                //debug 模式下调用 charge_url 后会暂停，可以调用 pingpp_one.resume 方法继续执行
-	                if (result.debug && !result.wxSuccess) {
-	                    if (confirm('当前为 debug 模式，是否继续支付？')) {
-	                        pingpp_one.resume();
-	                    }
-	                }
-	                //若微信公众号渠道需要使用壹收款的支付成功页面，则在这里进行成功回调，
-	                //调用 pingpp_one.success 方法，你也可以自己定义回调函数
-	                //其他渠道的处理方法请见第 2 节
-	                else pingpp_one.success(function (result) {
-	                    if (!result.status) {
-	                        alert(result.msg);
-	                    }
-	                }, function () {
-	                    //这里处理支付成功页面点击“继续购物”按钮触发的方法，
-	                    //例如：若你需要点击“继续购物”按钮跳转到你的购买页，
-	                    //则在该方法内写入 window.location.href = "你的购买页面 url"
-	                    window.location.href = 'http://yuncaogangmu.com/agent/order/manage/2';//示例
-	                });
-	            }
-	        });
-	    });
+    $("#bind_dialog").find(".weui_btn_dialog.default").click(function(){
+    	$("#bind_dialog").hide();
     });
+    
+    $("#bind_dialog").find(".weui_btn_dialog.primary").click(function(){
+    	$("#bind_dialog").hide();
+    	$("#loadingToast").show();
+    	window.location = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx67fcdc4fa58f7578&redirect_uri=http%3a%2f%2fwww.yuncaogangmu.com%2fagent%2fbind&response_type=code&scope=snsapi_base&state=view#wechat_redirect";
+    });
+    
+    function is_weixin() {
+        var ua = navigator.userAgent.toLowerCase();
+        if (ua.match(/MicroMessenger/i) == "micromessenger") {
+            return true;
+        } else {
+            return false;
+        }
+    }
 </script>

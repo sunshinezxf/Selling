@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import selling.sunshine.dao.CommodityDao;
 import selling.sunshine.model.goods.Goods4Customer;
 import selling.sunshine.model.goods.Thumbnail;
@@ -106,4 +107,17 @@ public class CommodityServiceImpl implements CommodityService {
         }
         return result;
     }
+
+	@Override
+	public ResultData deleteGoodsThumbnail(String thumbnailId) {
+		ResultData result = new ResultData();
+		ResultData deleteResponse = commodityDao.deleteGoodsThumbnail(thumbnailId);
+		result.setResponseCode(deleteResponse.getResponseCode());
+        if (deleteResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(deleteResponse.getData());
+        } else {
+            result.setDescription(deleteResponse.getDescription());
+        }
+        return result;
+	}
 }

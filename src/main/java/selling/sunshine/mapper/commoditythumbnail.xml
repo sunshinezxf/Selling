@@ -60,6 +60,12 @@
         </foreach>)
     </delete>
 
+    <!-- 删除商品的图片信息 -->
+    <delete id="delete">
+        DELETE FROM goods_thumbnail
+        WHERE thumbnail_id = #{thumbnailId}
+    </delete>
+
     <select id="goods4CustomerQuery" parameterType="java.util.Map" resultMap="goods4CustomerVo">
         SELECT goods_id, goods_name, goods_description, prime_price, agent_price, block_flag, create_time
         FROM goods

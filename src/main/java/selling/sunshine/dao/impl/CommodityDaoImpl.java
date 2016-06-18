@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
 import selling.sunshine.dao.BaseDao;
 import selling.sunshine.dao.CommodityDao;
 import selling.sunshine.model.goods.Goods4Agent;
@@ -161,10 +162,11 @@ public class CommodityDaoImpl extends BaseDao implements CommodityDao {
     @Override
     public ResultData insertGoodsThumbnail(Thumbnail thumbnail) {
         ResultData result = new ResultData();
-        thumbnail.setThumbnailId(IDGenerator.generate("GTB"));
+        thumbnail.setThumbnailId(IDGenerator.generate("THB"));
         synchronized (lock) {
             try {
                 sqlSession.insert("selling.goods.thumbnail.insert", thumbnail);
+                result.setData(thumbnail);
             } catch (Exception e) {
                 logger.error(e.getMessage());
                 result.setResponseCode(ResponseCode.RESPONSE_ERROR);
@@ -193,5 +195,22 @@ public class CommodityDaoImpl extends BaseDao implements CommodityDao {
             return result;
         }
     }
+
+	@Override
+	@Transactional
+	public ResultData deleteGoodsThumbnail(String thumbnailId) {
+		  ResultData result = new ResultData();
+	      synchronized (lock) {
+	            try {
+	                sqlSession.delete("selling.goods.thumbnail.delete", thumbnailId);
+	                result.setData(thumbnailId);
+	            } catch (Exception e) {
+	                logger.error(e.getMessage());
+	                result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+	                result.setDescription(e.getMessage());
+	            }
+	        }
+	       return result;
+	}
 
 }

@@ -14,21 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
-import selling.sunshine.form.BankCardForm;
 import selling.sunshine.form.WithdrawForm;
 import selling.sunshine.model.*;
-import selling.sunshine.service.AgentService;
-import selling.sunshine.service.BillService;
-import selling.sunshine.service.OrderService;
-import selling.sunshine.service.ToolService;
-import selling.sunshine.utils.Configuration;
-import selling.sunshine.utils.PlatformConfig;
-import selling.sunshine.utils.Prompt;
-import selling.sunshine.utils.PromptCode;
-import selling.sunshine.utils.ResponseCode;
-import selling.sunshine.utils.ResultData;
-import selling.sunshine.utils.WechatConfig;
-import selling.sunshine.utils.WechatUtil;
+import selling.sunshine.service.*;
+import selling.sunshine.utils.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -50,12 +39,15 @@ public class AccountController {
 
     @Autowired
     private BillService billService;
-    
+
     @Autowired
     private OrderService orderService;
 
     @Autowired
     private AgentService agentService;
+
+    @Autowired
+    private WithdrawService withdrawService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/info")
     public ModelAndView info() {
@@ -63,7 +55,7 @@ public class AccountController {
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         if (user == null) {
-        	WechatConfig.oauthWechat(view, "/agent/login");
+            WechatConfig.oauthWechat(view, "/agent/login");
             view.setViewName("/agent/login");
             return view;
         }
@@ -84,11 +76,11 @@ public class AccountController {
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         if (user == null) {
-        	WechatConfig.oauthWechat(view, "/agent/login");
+            WechatConfig.oauthWechat(view, "/agent/login");
             view.setViewName("/agent/login");
             return view;
         }
-        Map<String, Object> condition = new HashMap<String, Object>();
+        Map<String, Object> condition = new HashMap<>();
         condition.put("agentId", user.getAgent().getAgentId());
         ResultData fetchAgentResponse = agentService.fetchAgent(condition);
         if (fetchAgentResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
@@ -120,32 +112,21 @@ public class AccountController {
         return view;
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/bankCardModify")
-    public ResultData bankCardModify(@Valid BankCardForm form) {
-        ResultData result = new ResultData();
-        Subject subject = SecurityUtils.getSubject();
-        User user = (User) subject.getPrincipal();
-        if (user == null) {
-            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
-            result.setDescription("请重新登录");
-            return result;
-        }
-        BankCard bankCard = new BankCard(form.getBankCardNo(), user.getAgent());
-        ResultData modifyData = agentService.modifyBankCard(bankCard);
-        return modifyData;
-    }
-
     @RequestMapping(method = RequestMethod.POST, value = "/withdraw")
     public ModelAndView withdraw(@Valid WithdrawForm form, BindingResult result) {
         ModelAndView view = new ModelAndView();
+        if (result.hasErrors()) {
+            view.setViewName("redirect:/account/withdraw");
+            return view;
+        }
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         if (user == null) {
-        	WechatConfig.oauthWechat(view, "/agent/login");
+            WechatConfig.oauthWechat(view, "/agent/login");
             view.setViewName("/agent/login");
             return view;
         }
-        Map<String, Object> condition = new HashMap<String, Object>();
+        Map<String, Object> condition = new HashMap<>();
         condition.put("agentId", user.getAgent().getAgentId());
         ResultData fetchAgentResponse = agentService.fetchAgent(condition);
         if (fetchAgentResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
@@ -156,19 +137,8 @@ public class AccountController {
             return view;
         }
         Agent agent = ((List<Agent>) fetchAgentResponse.getData()).get(0);
-
-        String bankCardNo = form.getBankCardNo();
         double money = form.getMoney();
         condition.clear();
-        condition.put("bankCardNo", bankCardNo);
-        ResultData bankCardData = agentService.fetchBankCard(condition);
-        if (bankCardData.getResponseCode() != ResponseCode.RESPONSE_OK) {
-            Prompt prompt = new Prompt("失败", "银行卡号不存在", "/account/info");
-            view.addObject("prompt", prompt);
-            WechatConfig.oauthWechat(view, "/agent/prompt");
-            view.setViewName("/agent/prompt");
-            return view;
-        }
 
         if (money > agent.getCoffer()) {
             Prompt prompt = new Prompt("提示", "您的的提现金额超过余额", "/account/info");
@@ -181,7 +151,7 @@ public class AccountController {
         WithdrawRecord record = new WithdrawRecord();
         record.setAgent(user.getAgent());
         record.setAmount(money);
-        record.setBankCardNo(bankCardNo);
+        record.setOpenId(agent.getWechat());
         record.setWealth(agent.getCoffer());
         ResultData withdrawData = agentService.applyWithdraw(record);
         if (withdrawData.getResponseCode() != ResponseCode.RESPONSE_OK) {
@@ -191,7 +161,14 @@ public class AccountController {
             view.setViewName("/agent/prompt");
             return view;
         }
-
+        ResultData transferResponse = withdrawService.createWithdrawRecord((WithdrawRecord) withdrawData.getData());
+        if (transferResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            Prompt prompt = new Prompt("失败", "申请提现失败", "/account/info");
+            view.addObject("prompt", prompt);
+            WechatConfig.oauthWechat(view, "/agent/prompt");
+            view.setViewName("/agent/prompt");
+            return view;
+        }
         ResultData consumeData = agentService.consume(agent, money);
         if (consumeData.getResponseCode() != ResponseCode.RESPONSE_OK) {
             Prompt prompt = new Prompt("失败", "余额不足", "/account/info");
@@ -209,40 +186,25 @@ public class AccountController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/deposit")
-    public ModelAndView deposit(String code, String state) {
+    public ModelAndView deposit() {
         ModelAndView view = new ModelAndView();
-        if (!StringUtils.isEmpty(code) && !StringUtils.isEmpty(code)) {
-            String openId = WechatUtil.queryOauthOpenId(code);
-            view.addObject("wechat", openId);
-        }
         WechatConfig.oauthWechat(view, "/agent/account/recharge");
         view.setViewName("/agent/account/recharge");
         return view;
     }
 
-    
-    @RequestMapping(method = RequestMethod.POST, value = "/otherpay")
-    public Charge otherPay(HttpServletRequest request) {
+    @RequestMapping(method = RequestMethod.POST, value = "/deposit")
+    public Charge deposit(HttpServletRequest request) {
         Charge charge = new Charge();
         JSONObject params = toolService.getParams(request);
         Subject subject = SecurityUtils.getSubject();
         String clientIp = toolService.getIP(request);
         User user = (User) subject.getPrincipal();
-        if (user == null) {
-            return null;
-        }
-        Map<String, Object> condition = new HashMap<String, Object>();
-        condition.put("orderId", String.valueOf(params.get("order_id")));
-        ResultData orderData = orderService.fetchOrder(condition);
-        Order order = null;
-        if (orderData.getResponseCode() == ResponseCode.RESPONSE_OK
-                && orderData.getData() != null) {
-            order = ((List<Order>) orderData.getData()).get(0);
-        }
-        OrderBill bill = new OrderBill(Double.parseDouble(String.valueOf(params
-                .get("amount"))), String.valueOf(params.get("channel")),
-                clientIp, user.getAgent(), order);
-        ResultData createResponse = billService.createOrderBill(bill, params.getString("open_id"));
+        DepositBill bill = new DepositBill(Double.parseDouble(String
+                .valueOf(params.get("amount"))), String.valueOf(params
+                .get("channel")), clientIp, user.getAgent());
+        String openId = params.getString("open_id");
+        ResultData createResponse = billService.createDepositBill(bill, openId);
         if (createResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             charge = (Charge) createResponse.getData();
         }
