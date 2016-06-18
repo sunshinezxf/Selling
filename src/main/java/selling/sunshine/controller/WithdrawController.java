@@ -1,7 +1,6 @@
 package selling.sunshine.controller;
 
 import org.slf4j.Logger;
-
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
@@ -18,8 +17,12 @@ import selling.sunshine.service.WithdrawService;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Created by sunshine on 6/7/16.
@@ -75,5 +78,12 @@ public class WithdrawController {
             result = (DataTablePage<WithdrawRecord>) fetchResponse.getData();
         }
         return result;
+    }
+    
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value="/inform")
+    public ResultData inform(HttpServletRequest request, HttpServletResponse response) throws IOException{
+        ResultData resultData = new ResultData();
+        return resultData;
     }
 }
