@@ -3,7 +3,7 @@
 <script>
     if (is_weixin()) {
         wx.config({
-            debug: true,
+            debug: false,
             appId: '${configuration.appId}',
             timestamp: '${configuration.timestamp}',
             nonceStr: '${configuration.nonceStr}',

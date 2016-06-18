@@ -179,12 +179,8 @@ public class AccountController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/deposit")
-    public ModelAndView deposit(String code, String state) {
+    public ModelAndView deposit() {
         ModelAndView view = new ModelAndView();
-        if (!StringUtils.isEmpty(code) && !StringUtils.isEmpty(code)) {
-            String openId = WechatUtil.queryOauthOpenId(code);
-            view.addObject("wechat", openId);
-        }
         WechatConfig.oauthWechat(view, "/agent/account/recharge");
         view.setViewName("/agent/account/recharge");
         return view;
