@@ -4,14 +4,13 @@ body, html {
 }
 
 body {
-	margin:0.5em;
     overflow-x: hidden;
-    background-color: #ffffff;
+    background-color: #e6e6e6;
 }
 
 .unslider{
 	position: relative;
-	height:42%;
+	height:46%;
     background: #fff;
     color: #666;
     text-align: center;
@@ -76,43 +75,49 @@ body {
 
 .goods_information{
     position:relative;
-    height:7%;
+    height:6%;
     width:100%;
+    margin-top:3%;
+    background: #ffffff;
+    border-top: 0.0625em solid #e1e1e1;
+    border-bottom: 0.0625em solid #e1e1e1;
 }
 
 .goods_name{
 	float:right;
-	margin-top:0.6em;
 	text-align:right;
+	margin-top:0.8%;
+	margin-right:0.7em;
 }
 
 .goods_name h2{
-	font-size:1.5em;
+	font-size:1.1em;
 	margin:0 auto;
+	font-weight:normal;
 }
 
 .price{
 	float:left;
-	margin-top:0.5em;
+	margin-left:0.5em;
 }
 
 .common_price{
 	float:left;
-    font-size:1.7em;
+    font-size:1.3em;
     color:#fe8181;
 }
  
 .pre_price{
 	color:#808080;
     float:left;
-    font-size:1.7em;
+    font-size:1.3em;
     text-decoration:line-through;
 }
  
 .now_price{
     float:left;
     margin-left:0.2em;
-    font-size:1.7em;
+    font-size:1.3em;
     color:#fe8181;
 }
 
@@ -158,7 +163,7 @@ body {
     left:0;
     text-align:center;
     background-color:#ffffff;
-    border-top: 0.0625em solid #D9D9D9;
+    border-top: 0.0625em solid #e1e1e1;
 }
  
 .btn_area{
@@ -195,37 +200,42 @@ body {
 }
 
 .number_area{
-	height:50%;
+	height:6%;
 	width:100%;
-	float:left;
+    margin-top:2%;
+    background: #ffffff;
+    border-top: 0.0625em solid #e1e1e1;
+    border-bottom: 0.0625em solid #e1e1e1;
+	
 }
 
 .number_area p{
     display:inline-block;
-    font-size:1.2em;
+    font-size:1em;
     padding-top:0.35em;
-    margin-left:0.8em;
+    margin-left:0.7em;
 }
  
 .number_choose{
     float:right;
-    padding-top:0.4em;
-    margin-right:0;
+    margin-right:0.2em;
 }
  
 .num_box{
-    height:1.9em;
-    width:2.2em;
+    height:1.6em;
+    width:1.2em;
     text-align:center;
-    font-size:1.05em;
+    font-size:1.1em;
+    border:0;
+    padding-top:0.5em;
 }
  
 .min,.add{
-    height:1.5em;
-    width:1.5em;
+    height:1.3em;
+    width:1.3em;
     border:0;
     background-color:#ffffff;
-    font-size:1.2em;
+    font-size:1em;
     color:#ff8080;
 }
 

@@ -175,8 +175,9 @@
         check_agent();
 
         $('#agent_id').blur(function () {
-            var agentId = "AGT"+$('#agent_id').val();
+            var agentId =$('#agent_id').val();
             if (agentId != "") {
+                agentId="AGT"+agentId;
                 var url = '${path.concat('/agent/agentValidate/')}' + agentId;
                 var param = {agentId: agentId};
                 $.post(url, param, function (result) {
@@ -242,8 +243,9 @@
     });
 
     $('#purchase').click(function () {
-        var agentId = "AGT"+$('#agent_id').val();
+        var agentId =$('#agent_id').val();
         if (agentId != "") {
+            agentId="AGT"+agentId;
             var url = '${path.concat('/agent/agentValidate/')}' + agentId;
             var param = {agentId: agentId};
             $.post(url, param, function (result) {
