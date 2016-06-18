@@ -1,44 +1,38 @@
 package selling.sunshine.model;
 
-import selling.sunshine.model.lite.Agent;
-
 /**
- * Created by sunshine on 6/6/16.
+ * Created by sunshine on 6/18/16.
  */
-public class WithdrawRecord extends Entity {
+public class WithdrawRecord {
     private String withdrawId;
     private Agent agent;
-    private String bankCardNo;
+    private String openId;
     private double wealth;
     private double amount;
     private WithdrawStatus status;
 
     public WithdrawRecord() {
         super();
-        this.status = WithdrawStatus.APPLY;
     }
 
-    public WithdrawRecord(double amount) {
+    public WithdrawRecord(String openId, double wealth, double amount) {
         this();
+        this.openId = openId;
+        this.wealth = wealth;
         this.amount = amount;
     }
 
-    public WithdrawRecord(double amount, WithdrawStatus status) {
-        this(amount);
+    public WithdrawRecord(String openId, double wealth, double amount, WithdrawStatus status) {
+        this(openId, wealth, amount);
         this.status = status;
-    }
-
-    public WithdrawRecord(double amount, WithdrawStatus status, Agent agent) {
-        this(amount, status);
-        this.agent = agent;
     }
 
     public String getWithdrawId() {
         return withdrawId;
     }
 
-    public void setWithdrawId(String withdrawId) {
-        this.withdrawId = withdrawId;
+    public void setWithdrawId(String transferId) {
+        this.withdrawId = transferId;
     }
 
     public Agent getAgent() {
@@ -47,6 +41,22 @@ public class WithdrawRecord extends Entity {
 
     public void setAgent(Agent agent) {
         this.agent = agent;
+    }
+
+    public String getOpenId() {
+        return openId;
+    }
+
+    public void setOpenId(String openId) {
+        this.openId = openId;
+    }
+
+    public double getWealth() {
+        return wealth;
+    }
+
+    public void setWealth(double wealth) {
+        this.wealth = wealth;
     }
 
     public double getAmount() {
@@ -64,20 +74,4 @@ public class WithdrawRecord extends Entity {
     public void setStatus(WithdrawStatus status) {
         this.status = status;
     }
-
-	public String getBankCardNo() {
-		return bankCardNo;
-	}
-
-	public void setBankCardNo(String bankCardNo) {
-		this.bankCardNo = bankCardNo;
-	}
-
-	public double getWealth() {
-		return wealth;
-	}
-
-	public void setWealth(double wealth) {
-		this.wealth = wealth;
-	}
 }
