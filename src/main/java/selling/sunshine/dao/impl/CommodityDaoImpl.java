@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
 import selling.sunshine.dao.BaseDao;
 import selling.sunshine.dao.CommodityDao;
 import selling.sunshine.model.goods.Goods4Agent;
@@ -196,9 +197,20 @@ public class CommodityDaoImpl extends BaseDao implements CommodityDao {
     }
 
 	@Override
-	public ResultData deleteGoodsThumbnail(Thumbnail thumbnail) {
-		// TODO Auto-generated method stub
-		return null;
+	@Transactional
+	public ResultData deleteGoodsThumbnail(String thumbnailId) {
+		  ResultData result = new ResultData();
+	      synchronized (lock) {
+	            try {
+	                sqlSession.delete("selling.goods.thumbnail.delete", thumbnailId);
+	                result.setData(thumbnailId);
+	            } catch (Exception e) {
+	                logger.error(e.getMessage());
+	                result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+	                result.setDescription(e.getMessage());
+	            }
+	        }
+	       return result;
 	}
 
 }

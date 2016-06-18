@@ -61,7 +61,7 @@
     </delete>
 
     <!-- 删除商品的图片信息 -->
-    <delete id="deleteBatch">
+    <delete id="delete">
         DELETE FROM goods_thumbnail
         WHERE thumbnail_id = #{thumbnailId}
     </delete>

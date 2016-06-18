@@ -285,7 +285,7 @@ public class CommodityController {
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
-        resultObject.put("error", "你不被允许上传这个文件！");
+        resultObject.put("error", "上传此图片发生错误，请重试！");
         return resultObject.toJSONString();
     }
 
@@ -294,7 +294,8 @@ public class CommodityController {
     public String deleteThumbnail(@PathVariable("thumbnailId") String thumbnailId) {
 
         System.out.println(thumbnailId);
-        
+        ResultData resultData=commodityService.deleteGoodsThumbnail(thumbnailId);
+     
         JSONObject resultObject = new JSONObject();
         JSONArray initialPreviewArray = new JSONArray();
         JSONArray initialPreviewConfigArray = new JSONArray();
