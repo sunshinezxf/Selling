@@ -14,9 +14,6 @@
            <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
            <div id="main" style="width: 600px;height:400px;"></div>
         </div>
-         #foreach($key in ${agentMap.keySet()})
-             <p style="display:none;" id="P$key">${agentMap[$key]}</p>
-         #end
     </div>
 </div>
 #parse("/backend/agent/component/agent_detail_modal.vm")
@@ -40,41 +37,49 @@
 </div>
 </div>
 <script>
-     var agentList=${agentList};
-     var height=100;
-     var node={name: '${agent.name}',x: 300,y: 300};
-     var dataList=new Array();
-     var linkList=new Array();
-     dataList[0]=node;
-
-     for(var i=0;i<agentList.length;i++){    
-         var node1={name: agentList[i].name,x: 550,y: height};
-         var node2={source: '${agent.name}',target: agentList[i].name}
-         dataList[i+1]=node1;  
-         linkList[i]=node2;
-         height+=200;  
-     }
-        
-     var length=agentList.length;
-     var height2=100;    
-     for(var i=0;i<agentList.length;i++){  
-         var agentId= "#P"+agentList[i].agentId;  
-         if($(agentId).html()!=0){
-             var node3={name: $(agentId).html(),x: 800,y: height2};
-             var node4={source: agentList[i].name,target: $(agentId).html()}
-             dataList[length+1]=node3;  
-             linkList[length]=node4;
-         } 
-         height2+=200;
-     }
-     
-     
-	// 基于准备好的dom，初始化echarts实例
+     var agent;
+     var agentList;
+     var agentMap;
+     $(document).ready(function () {
+        $.post("${path.concat('/agent/subordinateData/')}${agentId}", function (result) {
+             agent=result.data.agent;
+             agentList=result.data.agentList;
+             var height=100;
+             var node={name: agent.name,x: 300,y: 300};
+             var dataList=new Array();
+             var linkList=new Array();
+             dataList[0]=node;
+             
+             for(var i=0;i<agentList.length;i++){    
+               var node1={name: agentList[i].name,x: 550,y: height};
+               var node2={source: agent.name,target: agentList[i].name}
+               dataList[i+1]=node1; 
+               linkList[i]=node2;
+               height+=200;  
+             }
+             agentMap=result.data.agentMap;
+             var height2=100; 
+             var length=agentList.length;
+             for(var i=0;i<agentList.length;i++){   
+                 var agentId= agentList[i].agentId; 
+                 for(var j=0;j<agentMap[agentId].length;j++){
+                     var node3={name: agentMap[agentId][j].name,x: 800,y: height2};
+                     var node4={source: agentList[i].name,target: agentMap[agentId][j].name}
+                     dataList[length+1]=node3;  
+                     alert(JSON.stringify(dataList));
+                     linkList[length]=node4;
+                     height2+=100;
+                     length++;
+                 }
+                 
+             }
+             
+             	// 基于准备好的dom，初始化echarts实例
     var myChart = echarts.init(document.getElementById('main'));
     // 指定图表的配置项和数据
     option = {
         title: {
-               text: '代理商${agent.name}的下级代理商'
+               text: '代理商'+agent.name+'的下级代理商'
         },
 
         animationDurationUpdate: 1500,
@@ -115,22 +120,29 @@
         // 使用刚指定的配置项和数据显示图表。
         myChart.setOption(option);
 
-       myChart.on('click', function (params) {
-            if(isNaN(params.name)){	
-               if(params.name=='${agent.name}'){
-                  detail('${agent.agentId}');
+       myChart.on('click', function (params) {  
+           if(params.name.indexOf(">")<=0){       
+               if(params.name==agent.name){
+                  detail(agent.agentId);
                }else{
                    for(var i=0;i<agentList.length;i++){  
                       if(params.name==agentList[i].name){
                            detail(agentList[i].agentId);
+                           break;
+                      }else{
+                         for(var j=0;i<agentMap[agentList[i].agentId].length;j++){                           
+                                 if(params.name==agentMap[agentList[i].agentId][j].name){
+                                      detail(agentMap[agentList[i].agentId][j].agentId);
+                                      break;
+                                 }                  
+                         }
+                      
                       }
+                      
                    }
                }
                $("#agent_detail_modal").modal('show');    
-            }else{
-                $("#dialog").find(".modal-body").html(params.name+"个下级代理商！");
-    		    $("#dialog").modal('show');   
-            }
+          }
            
        });
 
@@ -140,5 +152,15 @@
            document.getElementById("personal").innerHTML="代理商姓名： "+result.data.agent.name;
        });
     }
+});
+     
+});
+     
+
+        
+
+     
+     
+
 
 </script>

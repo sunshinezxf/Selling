@@ -25,6 +25,7 @@ import selling.sunshine.utils.Prompt;
 import selling.sunshine.utils.PromptCode;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
+import selling.sunshine.utils.WechatConfig;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -40,6 +41,7 @@ import java.util.Map;
 @RequestMapping("/order")
 @RestController
 public class OrderController {
+
     private Logger logger = LoggerFactory.getLogger(OrderController.class);
 
     @Autowired
@@ -129,6 +131,49 @@ public class OrderController {
             result = (MobilePage<Order>) fetchResponse.getData();
         }
         return result;
+    }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/express")
+    public ModelAndView express() {
+        ModelAndView view = new ModelAndView();
+        Map<String, Object> condition = new HashMap<>();
+        List<Integer> status = new ArrayList<>();
+        status.add(2);
+        condition.put("status", status);
+        List<Order> orderList = (List<Order>) orderService
+                .fetchOrder(condition).getData();
+        List<Express> expressList = new ArrayList<>();
+        Timestamp expressDate = new Timestamp(System.currentTimeMillis());
+        int k=0;
+        for (int j = 0; j < orderList.size(); j++) {
+            Order order = orderList.get(j);
+            // 验证order的每一项orderItem购买的商品的数量与相应的价格是否一致
+            // 若不一致，则将不一致的那一项删除，并且把钱退回给代理商并告知他
+            // 同时，根据不同情况修改order的状态和orderItem的状态
+            List<OrderItem> orderItems = order.getOrderItems();
+            for (OrderItem item : orderItems) {
+                if (item.getOrderItemPrice() != (item.getGoodsQuantity() * item
+                        .getGoods().getAgentPrice())) {
+
+                }
+            }
+            
+            for (int i = 0; i < orderItems.size(); i++) {
+                Express express = new Express("代填", "云草纲目", "18000000000",
+                        "云南", orderItems.get(i).getCustomer().getName(),
+                        orderItems.get(i).getCustomer().getPhone().getPhone(),
+                        orderItems.get(i).getCustomer().getAddress()
+                                .getAddress(), orderItems.get(i).getGoods()
+                                .getName(), expressDate);
+                express.setExpressId("expressNumber" +k);
+                k++;
+                express.setOrderItem(orderItems.get(i));
+                expressList.add(express);
+            }
+        }
+        view.addObject("expressList", expressList);
+        view.setViewName("/backend/order/express");
+        return view;
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/express")
@@ -228,6 +273,9 @@ public class OrderController {
     public ResultData statistics() {
         ResultData resultData = new ResultData();
         Map<String, Object> condition = new HashMap<>();
+        List<Integer> status = new ArrayList<>();
+        status.add(2);
+        condition.put("status", status);
         List<Order> orderList = (List<Order>) orderService.fetchOrder(condition).getData();
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("orderList", orderList);
@@ -251,6 +299,7 @@ public class OrderController {
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         if (user == null) {
+        	WechatConfig.oauthWechat(view, "/agent/login");
             view.setViewName("/agent/login");
             return view;
         }
@@ -284,7 +333,7 @@ public class OrderController {
     @RequestMapping(method = RequestMethod.POST, value = "/modify/{type}")
     public ModelAndView modifyOrder(@Valid OrderItemForm form,
                                     BindingResult result, RedirectAttributes attr,
-                                    @PathVariable("type") String type) {
+                                    @PathVariable("type") String type, String openId) {
         ModelAndView view = new ModelAndView();
         if (result.hasErrors()) {
             view.setViewName("redirect:/order/list/0");
@@ -293,6 +342,7 @@ public class OrderController {
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         if (user == null) {
+        	WechatConfig.oauthWechat(view, "/agent/login");
             view.setViewName("/agent/login");
             return view;
         }
@@ -360,6 +410,7 @@ public class OrderController {
                 attr.addFlashAttribute("prompt", prompt);
                 view.setViewName("redirect:/agent/prompt");
             } else if (type.equals("submit")) {
+            	attr.addFlashAttribute("openId", openId);
                 view.setViewName("redirect:/order/pay/" + order.getOrderId());
             }
             return view;
@@ -377,6 +428,7 @@ public class OrderController {
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         if (user == null) {
+        	WechatConfig.oauthWechat(view, "/agent/login");
             view.setViewName("/agent/login");
             return view;
         }
@@ -413,6 +465,7 @@ public class OrderController {
         }
         view.addObject("order", order);
         view.addObject("agent", target);
+        WechatConfig.oauthWechat(view, "agent/order/pay");
         view.setViewName("agent/order/pay");
         return view;
     }
@@ -425,6 +478,7 @@ public class OrderController {
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         if (user == null) {
+        	WechatConfig.oauthWechat(view, "/agent/login");
             view.setViewName("/agent/login");
             return view;
         }
@@ -446,7 +500,7 @@ public class OrderController {
         // 创建账单
         OrderBill orderBill = new OrderBill(totalPrice, "coffer",
                 toolService.getIP(request), user.getAgent(), order);
-        ResultData billData = billService.createOrderBill(orderBill);
+        ResultData billData = billService.createOrderBill(orderBill, null);
         // 获取代理信息
         condition.clear();
         condition.put("agentId", user.getAgent().getAgentId());
@@ -480,28 +534,18 @@ public class OrderController {
         return view;
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/otherpay")
-    public Charge otherPay(HttpServletRequest request) {
+    @RequestMapping(method = RequestMethod.POST, value = "/deposit")
+    public Charge deposit(HttpServletRequest request) {
         Charge charge = new Charge();
         JSONObject params = toolService.getParams(request);
         Subject subject = SecurityUtils.getSubject();
         String clientIp = toolService.getIP(request);
         User user = (User) subject.getPrincipal();
-        if (user == null) {
-            return null;
-        }
-        Map<String, Object> condition = new HashMap<String, Object>();
-        condition.put("orderId", String.valueOf(params.get("order_id")));
-        ResultData orderData = orderService.fetchOrder(condition);
-        Order order = null;
-        if (orderData.getResponseCode() == ResponseCode.RESPONSE_OK
-                && orderData.getData() != null) {
-            order = ((List<Order>) orderData.getData()).get(0);
-        }
-        OrderBill bill = new OrderBill(Double.parseDouble(String.valueOf(params
-                .get("amount"))), String.valueOf(params.get("channel")),
-                clientIp, user.getAgent(), order);
-        ResultData createResponse = billService.createOrderBill(bill);
+        DepositBill bill = new DepositBill(Double.parseDouble(String
+                .valueOf(params.get("amount"))), String.valueOf(params
+                .get("channel")), clientIp, user.getAgent());
+        String openId = params.getString("open_id");
+        ResultData createResponse = billService.createDepositBill(bill, openId);
         if (createResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             charge = (Charge) createResponse.getData();
         }
@@ -532,5 +576,6 @@ public class OrderController {
         }
         return charge;
     }
+
 
 }

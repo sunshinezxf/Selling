@@ -11,13 +11,13 @@ import java.util.Map;
  * Created by sunshine on 5/10/16.
  */
 public interface BillService {
-    ResultData createDepositBill(DepositBill bill);
+    ResultData createDepositBill(DepositBill bill,  String openId);
 
     ResultData fetchDepositBill(Map<String, Object> condition);
 
     ResultData updateDepositBill(DepositBill bill);
 
-    ResultData createOrderBill(OrderBill bill);
+    ResultData createOrderBill(OrderBill bill, String openId);
     
     ResultData fetchOrderBill(Map<String, Object> condition);
     

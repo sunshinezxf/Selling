@@ -109,12 +109,12 @@
     document.addEventListener('pingpp_one_ready', function () {
 	    $("#other_pay").click(function(){
 	        pingpp_one.init({
-	            app_id: "app_DazjbTLybjHGbv9O",
+	            app_id: "app_K4evXLKq50O8CuL8",
 	            amount: total_price,
 	            channel: ['alipay_wap', 'wx_pub'],
-	            charge_url: "${path.concat('/order/otherpay')}",
+	            charge_url: "${path.concat('/account/otherpay')}",
 	            charge_param: {order_id: order_id},
-	            open_id: 'wxf2c47b5e41605c26',
+	            open_id: '${openId}',
 	            debug: false
 	        }, function (result) {
 	            //debug 模式下获取 charge_url 的返回结果
@@ -143,7 +143,7 @@
 	                    //这里处理支付成功页面点击“继续购物”按钮触发的方法，
 	                    //例如：若你需要点击“继续购物”按钮跳转到你的购买页，
 	                    //则在该方法内写入 window.location.href = "你的购买页面 url"
-	                    window.location.href = 'http://yourdomain.com/payment_succeeded';//示例
+	                    window.location.href = 'http://yuncaogangmu.com/agent/order/manage/2';//示例
 	                });
 	            }
 	        });

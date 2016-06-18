@@ -1,5 +1,6 @@
 package selling.sunshine.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.pingplusplus.Pingpp;
 import com.pingplusplus.model.Charge;
 import org.slf4j.Logger;
@@ -28,14 +29,14 @@ public class BillServiceImpl implements BillService {
     private Logger logger = LoggerFactory.getLogger(BillServiceImpl.class);
 
     {
-        Pingpp.apiKey = PlatformConfig.getValue("pingxx_appid");
+        Pingpp.apiKey = PlatformConfig.getValue("pingxx_api_key");
     }
 
     @Autowired
     private BillDao billDao;
 
     @Override
-    public ResultData createDepositBill(DepositBill bill) {
+    public ResultData createDepositBill(DepositBill bill, String openId) {
         ResultData result = new ResultData();
         ResultData insertResponse = billDao.insertDepositBill(bill);
         if (insertResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
@@ -47,7 +48,7 @@ public class BillServiceImpl implements BillService {
         params.put("order_no", bill.getBillId());
         params.put("amount", bill.getBillAmount() * 100);
         Map<String, Object> app = new HashMap<>();
-        app.put("id", "app_DazjbTLybjHGbv9O");
+        app.put("id", PlatformConfig.getValue("pingxx_app_id"));
         params.put("app", app);
         params.put("channel", bill.getChannel());
         if (!StringUtils.isEmpty(bill.getChannel()) && bill.getChannel().equals("alipay_wap")) {
@@ -56,12 +57,18 @@ public class BillServiceImpl implements BillService {
             url.put("cancel_url", PlatformConfig.getValue("server_url") + "/account/charge/" + bill.getBillId() + "/prompt");
             params.put("extra", url);
         }
+        if (!StringUtils.isEmpty(bill.getChannel()) && bill.getChannel().equals("wx_pub")) {
+            Map<String, String> user = new HashMap<>();
+            user.put("open_id", openId);
+            params.put("extra", user);
+        }
         params.put("currency", "cny");
         params.put("client_ip", bill.getClientIp());
         params.put("subject", "代理商账户充值");
         params.put("body", "充值金额为:" + bill.getBillAmount() + "元");
         try {
             Charge charge = Charge.create(params);
+            logger.debug(JSON.toJSONString(charge));
             result.setData(charge);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -98,7 +105,7 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
-    public ResultData createOrderBill(OrderBill bill) {
+    public ResultData createOrderBill(OrderBill bill, String openId) {
         ResultData result = new ResultData();
         ResultData insertResponse = billDao.insertOrderBill(bill);
         if (insertResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
@@ -114,8 +121,7 @@ public class BillServiceImpl implements BillService {
         params.put("order_no", bill.getBillId());
         params.put("amount", bill.getBillAmount() * 100);
         Map<String, Object> app = new HashMap<>();
-        app.put("id", "app_DazjbTLybjHGbv9O");
-        params.put("app", app);
+        app.put("id", PlatformConfig.getValue("pingxx_app_id"));
         params.put("app", app);
         params.put("channel", bill.getChannel());
         if (!StringUtils.isEmpty(bill.getChannel()) && bill.getChannel().equals("alipay_wap")) {
@@ -124,12 +130,18 @@ public class BillServiceImpl implements BillService {
             url.put("cancel_url", PlatformConfig.getValue("server_url") + "/account/charge/" + bill.getBillId() + "/prompt");
             params.put("extra", url);
         }
+        if (!StringUtils.isEmpty(bill.getChannel()) && bill.getChannel().equals("wx_pub")) {
+            Map<String, String> user = new HashMap<>();
+            user.put("open_id", openId);
+            params.put("extra", user);
+        }
         params.put("currency", "cny");
         params.put("client_ip", bill.getClientIp());
         params.put("subject", "订单支付");
         params.put("body", "支付金额为:" + bill.getBillAmount() + "元");
         try {
             Charge charge = Charge.create(params);
+            logger.debug(JSON.toJSONString(charge));
             result.setData(charge);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -138,7 +150,7 @@ public class BillServiceImpl implements BillService {
         }
         return result;
     }
-    
+
     @Override
     public ResultData fetchOrderBill(Map<String, Object> condition) {
         ResultData result = new ResultData();
@@ -151,7 +163,7 @@ public class BillServiceImpl implements BillService {
         }
         return result;
     }
-    
+
     @Override
     public ResultData updateOrderBill(OrderBill bill) {
         ResultData result = new ResultData();
@@ -164,10 +176,10 @@ public class BillServiceImpl implements BillService {
         }
         return result;
     }
-    
+
     @Override
-   	public ResultData createCustomerOrderBill(CustomerOrderBill bill) {
-    	ResultData result = new ResultData();
+    public ResultData createCustomerOrderBill(CustomerOrderBill bill) {
+        ResultData result = new ResultData();
         ResultData insertResponse = billDao.insertCustomerOrderBill(bill);
         if (insertResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
             result.setResponseCode(ResponseCode.RESPONSE_ERROR);
@@ -201,25 +213,25 @@ public class BillServiceImpl implements BillService {
             result.setDescription(e.getMessage());
         }
         return result;
-   	}
-       
-    @Override
-   	public ResultData fetchCustomerOrderBill(Map<String, Object> condition) {
-    	   ResultData result = new ResultData();
-           ResultData queryResponse = billDao.queryCustomerOrderBill(condition);
-           result.setResponseCode(queryResponse.getResponseCode());
-           if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-               result.setData(queryResponse.getData());
-           } else if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
-               result.setDescription(queryResponse.getDescription());
-           }
-           return result;
-   	}
-       
+    }
 
-	@Override
-	public ResultData updateCustomerOrderBill(CustomerOrderBill bill) {
-		ResultData result = new ResultData();
+    @Override
+    public ResultData fetchCustomerOrderBill(Map<String, Object> condition) {
+        ResultData result = new ResultData();
+        ResultData queryResponse = billDao.queryCustomerOrderBill(condition);
+        result.setResponseCode(queryResponse.getResponseCode());
+        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(queryResponse.getData());
+        } else if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
+            result.setDescription(queryResponse.getDescription());
+        }
+        return result;
+    }
+
+
+    @Override
+    public ResultData updateCustomerOrderBill(CustomerOrderBill bill) {
+        ResultData result = new ResultData();
         ResultData updateResponse = billDao.updateCustomerOrderBill(bill);
         result.setResponseCode(updateResponse.getResponseCode());
         if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
@@ -228,8 +240,7 @@ public class BillServiceImpl implements BillService {
             result.setDescription(updateResponse.getDescription());
         }
         return result;
-	}
+    }
 
-	
 
 }

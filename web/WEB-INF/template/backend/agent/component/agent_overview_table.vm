@@ -145,6 +145,6 @@
     function detail(obj){
         $.post("${path.concat('/agent/detail/')}"+obj.id, function (result) {
            document.getElementById("personal").innerHTML="代理商姓名： "+result.data.agent.name;
-       });
+        });
     }
 </script>
