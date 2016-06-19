@@ -5,7 +5,7 @@ import selling.sunshine.model.lite.Agent;
 /**
  * Created by sunshine on 6/18/16.
  */
-public class WithdrawRecord {
+public class WithdrawRecord extends Entity{
     private String withdrawId;
     private Agent agent;
     private String openId;

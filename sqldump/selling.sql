@@ -585,7 +585,7 @@ CREATE TABLE IF NOT EXISTS `selling`.`withdraw_record` (
   `withdraw_id` VARCHAR(20) NOT NULL,
   `agent_id` VARCHAR(20) NULL DEFAULT NULL,
   `current_coffer` DOUBLE NOT NULL DEFAULT '0',
-  `bank_no` VARCHAR(25) NOT NULL,
+  `wechat` VARCHAR(25) NOT NULL,
   `withdraw_amount` DOUBLE NOT NULL DEFAULT '0',
   `withdraw_status` TINYINT(1) NOT NULL DEFAULT '0',
   `block_flag` TINYINT(1) NOT NULL DEFAULT '0',

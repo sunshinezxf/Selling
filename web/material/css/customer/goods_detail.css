@@ -75,19 +75,16 @@ body {
 
 .goods_information{
     position:relative;
-    height:6%;
+    height:12%;
     width:100%;
-    margin-top:3%;
     background: #ffffff;
-    border-top: 0.0625em solid #e1e1e1;
     border-bottom: 0.0625em solid #e1e1e1;
 }
 
 .goods_name{
-	float:right;
-	text-align:right;
-	margin-top:0.8%;
-	margin-right:0.7em;
+	text-align:left;
+	margin-left:0.8em;
+	padding-top:0.2em;
 }
 
 .goods_name h2{
@@ -97,7 +94,6 @@ body {
 }
 
 .price{
-	float:left;
 	margin-left:0.5em;
 }
 
@@ -113,7 +109,7 @@ body {
     font-size:1.3em;
     text-decoration:line-through;
 }
- 
+
 .now_price{
     float:left;
     margin-left:0.2em;
@@ -121,8 +117,43 @@ body {
     color:#fe8181;
 }
 
+.post{
+	float:right;
+	margin-top:1.7%;
+	margin-right:0.8em;
+}
+
+.post p{
+	font-size:0.9em;
+	color:#808080;
+}
+
+.detail_area{
+	height:21%;
+	width:100%;
+    margin-top:2%;
+    background: #ffffff;
+    border-top: 0.0625em solid #e1e1e1;
+    border-bottom: 0.0625em solid #e1e1e1;
+}
+
+.detail_area p{
+	margin-left:0.75em;
+    margin-top:0.5em;
+}
+
+.id,.pay{
+	height:8%;
+	padding-top:1.4%;
+}
+
 .id{
-	border-bottom: 0.0625em solid #D9D9D9;
+	padding-left:0.88em;
+	border-bottom: 0.0625em solid #e1e1e1;
+}
+
+.id:before,.pay:before{
+	border-top:none;
 }
 
 .agent_id{
@@ -134,20 +165,25 @@ body {
 }
 
 .hd{
-	width:22%;
+	width:17.5%;
 }
 
 .bd{
-	width:78%;
+	width:82.5%;
 }
 
-.id_label{
-	font-size:1.04em;
+.id_label,.pay_label{
+	font-weight:bold;
+	font-size:1em;
+}
+
+.pay_way{
+	font-size:1em;
 }
 
 .agent_id input{
 	width:100%;
-	height: 2.3em;
+	height: 2em;
     outline: none;
     border: 0.0625em solid rgb(216, 216, 216);
     font-size:1em;
@@ -195,7 +231,7 @@ body {
 }
  
 .weui_actionsheet{
-	height:26em;
+	height:25em;
 	z-index:1000;
 }
 
@@ -244,7 +280,7 @@ body {
 }
  
 .address_area{
-	height:67%;
+	height:58%;
 	text-align:left;
 }
 
@@ -254,9 +290,9 @@ body {
 
 
 .address_area h2{
-    font-size:1.3em; 
+    font-size:1em; 
     padding-top:0.32em;
-    margin-left:0.7em; 
+    margin-left:0.9em; 
 }
 
 .weui_cells{
@@ -265,10 +301,15 @@ body {
 
 .weui_label{
 	width:4.5em;
+	font-size:0.8em;
+}
+
+.weui_cell_bd input{
+	font-size:0.8em;
 }
 
 .area_select select{
-	width:6.5em;
+	width:28.5%;
 	height:2em;
 	font-size:0.7em;
 	margin-right:1em;
@@ -283,10 +324,11 @@ body {
 .confirm_area{
     position:fixed;
     width:100%;
-    height:22%;
+    height:18%;
     bottom:0;
     top:auto;
     background-color:#ffffff;
+    border-top: 0.0625em solid #e1e1e1;
 }
  
 .total_info{
@@ -297,25 +339,33 @@ body {
 }
 
 .total_num{
-    height:50%;
-    font-size:1.4em;
+    height:40%;
+    font-size:1.1em;
+    padding-top:0.2em;
+    font-weight:bold;
 }
 
 .total_num p{
     display:inline-block;
+    
 }
  
 .sum,.sum_price{
     display:inline-block;
-    font-size:1.4em;
+    font-size:1.1em;
+    font-weight:bold;
+}
+
+.sum_price{
+	color:#ff8080;
 }
  
 .to_pay{
     float:right;
-    width:40%;
+    width:30%;
     height:100%;
     text-align:center;
-    margin-top:1em;
+    margin-top:0.8em;
     margin-right:1em;
 }
  

@@ -20,6 +20,9 @@
     </ul>
 </div>
 <div class="goods_information">
+    <div class="goods_name">
+        <h2>${goods.name}</h2>
+    </div>
     <div id="agent_price" class="price">
         <div class="pre_price">￥${goods.customerPrice}</div>
         <div class="now_price">${goods.agentPrice}</div>
@@ -27,18 +30,22 @@
     <div id="customer_price" class="price">
         <div class="common_price">￥${goods.customerPrice}</div>
     </div>
-    <div class="goods_name">
-        <h2>${goods.name}</h2>
+    <div class="post">
+        <p>包邮</p>
     </div>
 </div>
 
 <div class="number_area">
-     <p>数量</p>
+     <p>购买数量</p>
      <div class="number_choose">
          <button id="min_btn" class="min">—</button>
          <input id="goods_num" class="num_box" name="" type="text" value="1"/>
          <button id="add_btn" class="add">+</button>
      </div>
+</div>
+
+<div class="detail_area">
+     <p>产地：云南昆明</p>
 </div>
 
 <div class="buy_area">
@@ -48,27 +55,9 @@
     <div class="weui_mask_transition" id="number_div" style="display: none;"></div>
     <div class="weui_actionsheet" id="weui_actionsheet">
         <div class="weui_actionsheet_menu">
-            <div class="weui_cell id">
-                <div class="agent_id">
-                    <table>
-                        <tr>
-                            <td class="hd">
-                                <label class="id_label"> 优惠码：</label>
-                            </td>
-                            <td class="bd">
-                                #if(${agent})
-                                    <input id="agent_id" class="id_input" type="text" value="${agent.agentId}"/>
-                                #else
-                                    <input id="agent_id" class="id_input" type="text" value=""/>
-                                #end
-                            </td>
-                        </tr>
-                   </table>
-                </div>
-            </div>
             <div class="address_area">
                 <div class="address_information">
-                    <h2>填写地址</h2>
+                    <h2>收货地址</h2>
 
                     <div class="weui_cells">
                         <div class="weui_cell">
@@ -121,17 +110,43 @@
                     </div>
                 </div>
             </div>
+            <div class="weui_cell id">
+                <div class="agent_id">
+                    <table>
+                        <tr>
+                            <td class="hd">
+                                <label class="id_label"> 优惠码</label>
+                            </td>
+                            <td class="bd">
+                                #if(${agent})
+                                    <input id="agent_id" class="id_input" type="text" value="${agent.agentId}"/>
+                                #else
+                                    <input id="agent_id" class="id_input" type="text" value=""/>
+                                #end
+                            </td>
+                        </tr>
+                   </table>
+                </div>
+            </div>
+            <div class="weui_cell pay">
+                 <div class="weui_cell_bd weui_cell_primary">
+                     <p class="pay_label">支付方式</p>
+                 </div>
+                 <div class="weui_cell_ft">
+                     <p class="pay_way">微信支付</p>
+                 </div>
+            </div>
             <div class="confirm_area">
                 <div class="total_info">
-                    <div class="total_money">
-                        <p class="sum">合计：</p>
-
-                        <p id="total_price" class="sum_price">元</p>
-                    </div>
                     <div class="total_num">
                         <p>共
+                            <p id="total_num">1</p>件
+                        </p>
+                    </div>
+                    <div class="total_money">
+                        <p class="sum">应付总额：</p>
 
-                        <p id="total_num">1</p>件</p>
+                        <p id="total_price" class="sum_price">元</p>
                     </div>
                 </div>
                 <div class="to_pay">
@@ -243,27 +258,7 @@
     });
 
     $('#purchase').click(function () {
-        var agentId =$('#agent_id').val();
-        if (agentId != "") {
-            agentId="AGT"+agentId;
-            var url = '${path.concat('/agent/agentValidate/')}' + agentId;
-            var param = {agentId: agentId};
-            $.post(url, param, function (result) {
-                if (result.responseCode != "RESPONSE_OK") {
-                    $("#dialog").find(".weui_dialog_bd").html("该代理商不存在！");
-                    $("#dialog").fadeIn();
-                    $("#agent_id").val("");
-                    check_agent();
-                } else {
-                    $.toggleNumModifySheet();
-                }
-
-            });
-        } else {
-            check_agent();
-            $.toggleNumModifySheet();
-        }
-
+        $.toggleNumModifySheet();
     });
 
     $.toggleNumModifySheet = function () {
@@ -377,69 +372,92 @@
         }
         return true;
     }
+    
+    function pay(){
+        var url = '${path.concat('/customer/place')}';
+        var goodsId = "${goods.goodsId}";
+        var agentId = $('#agent_id').val();
+        var goodsNum = $('#goods_num').val();
+        var customerName = $('#customer_name').val();
+        var phone = $('#customer_phone').val();
+        var address = $("#province").children(":first").val() + $("#province").children(":first").next().val() + $("#province").children(":last").val() + $("#customer_address").val();
+        var param = {
+            goodsId: goodsId,
+            agentId: agentId,
+            goodsNum: goodsNum,
+            customerName: customerName,
+            phone: phone,
+            address: address
+        };
+        $.post(url, param, function (result) {
+            if (result.responseCode == "RESPONSE_OK") {
+                var data = result.data;
+                pingpp_one.init({
+                    app_id: "app_DazjbTLybjHGbv9O",
+                    amount: data.totalPrice,
+                    channel: [ 'wx_pub'],
+                    charge_url: "${path.concat('/order/customerpay')}",
+                    charge_param: {order_id: data.orderId},
+                    open_id: '${wechat}',
+                    debug: false
+                }, function (result) {
+                    //debug 模式下获取 charge_url 的返回结果
+                    if (result.debug && result.chargeUrlOutput) {
+                        console.log(result.chargeUrlOutput);
+                    }
+                    if (!result.status) {
+                        //处理错误
+                        alert("网络环境较差，请重试");
+                    }
+                    else {
+                        //debug 模式下调用 charge_url 后会暂停，可以调用 pingpp_one.resume 方法继续执行
+                        if (result.debug && !result.wxSuccess) {
+                            if (confirm('当前为 debug 模式，是否继续支付？')) {
+                                pingpp_one.resume();
+                            }
+                        }
+                        //若微信公众号渠道需要使用壹收款的支付成功页面，则在这里进行成功回调，
+                        //调用 pingpp_one.success 方法，你也可以自己定义回调函数
+                        //其他渠道的处理方法请见第 2 节
+                        else pingpp_one.success(function (result) {
+                            if (!result.status) {
+                                alert("网络环境较差，请重试");
+                            }
+                        }, function () {
+                            //这里处理支付成功页面点击“继续购物”按钮触发的方法，
+                            //例如：若你需要点击“继续购物”按钮跳转到你的购买页，
+                            //则在该方法内写入 window.location.href = "你的购买页面 url"
+                            window.location.href = 'http://yourdomain.com/payment_succeeded';//示例
+                        });
+                    }
+                });
+            } else {
+
+            }
+        });
+    }
     document.addEventListener('pingpp_one_ready', function () {
         $('#confirm').click(function () {
-            var url = '${path.concat('/customer/place')}';
-            var goodsId = "${goods.goodsId}";
-            var agentId = $('#agent_id').val();
-            var goodsNum = $('#goods_num').val();
-            var customerName = $('#customer_name').val();
-            var phone = $('#customer_phone').val();
-            var address = $("#province").children(":first").val() + $("#province").children(":first").next().val() + $("#province").children(":last").val() + $("#customer_address").val();
-            var param = {
-                goodsId: goodsId,
-                agentId: agentId,
-                goodsNum: goodsNum,
-                customerName: customerName,
-                phone: phone,
-                address: address
-            };
-            $.post(url, param, function (result) {
-                if (result.responseCode == "RESPONSE_OK") {
-                    var data = result.data;
-                    pingpp_one.init({
-                        app_id: "app_DazjbTLybjHGbv9O",
-                        amount: data.totalPrice,
-                        channel: ['alipay_wap', 'wx_pub'],
-                        charge_url: "${path.concat('/order/customerpay')}",
-                        charge_param: {order_id: data.orderId},
-                        open_id: 'wxf2c47b5e41605c26',
-                        debug: false
-                    }, function (result) {
-                        //debug 模式下获取 charge_url 的返回结果
-                        if (result.debug && result.chargeUrlOutput) {
-                            console.log(result.chargeUrlOutput);
-                        }
-                        if (!result.status) {
-                            //处理错误
-                            alert(result.msg);
-                        }
-                        else {
-                            //debug 模式下调用 charge_url 后会暂停，可以调用 pingpp_one.resume 方法继续执行
-                            if (result.debug && !result.wxSuccess) {
-                                if (confirm('当前为 debug 模式，是否继续支付？')) {
-                                    pingpp_one.resume();
-                                }
-                            }
-                            //若微信公众号渠道需要使用壹收款的支付成功页面，则在这里进行成功回调，
-                            //调用 pingpp_one.success 方法，你也可以自己定义回调函数
-                            //其他渠道的处理方法请见第 2 节
-                            else pingpp_one.success(function (result) {
-                                if (!result.status) {
-                                    alert(result.msg);
-                                }
-                            }, function () {
-                                //这里处理支付成功页面点击“继续购物”按钮触发的方法，
-                                //例如：若你需要点击“继续购物”按钮跳转到你的购买页，
-                                //则在该方法内写入 window.location.href = "你的购买页面 url"
-                                window.location.href = 'http://yourdomain.com/payment_succeeded';//示例
-                            });
-                        }
-                    });
-                } else {
+            var agentId =$('#agent_id').val();
+            if (agentId != "") {
+                agentId="AGT"+agentId;
+                var url = '${path.concat('/agent/agentValidate/')}' + agentId;
+                var param = {agentId: agentId};
+                $.post(url, param, function (result) {
+                    if (result.responseCode != "RESPONSE_OK") {
+                        $("#dialog").find(".weui_dialog_bd").html("该代理商不存在！");
+                        $("#dialog").fadeIn();
+                        $("#agent_id").val("");
+                        check_agent();
+                    } else {
+                        pay();
+                    }
 
-                }
-            });
+                });
+            } else {
+                check_agent();
+                pay();
+            }
         });
     });
 

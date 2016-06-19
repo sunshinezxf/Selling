@@ -33,9 +33,6 @@
 		if(!reNum.test($("#money_input").val())){
 			return 2;
 		}
-		if(money_input < 20){
-			return -1;
-		}
 		if(money_input > agentCoffer){
 			return 1;
 		}
