@@ -167,10 +167,21 @@
         </div>
     </div>
 </div>
+<div class="weui_dialog_alert" id="fail_dialog" style="display: none;">
+    <div class="weui_mask"></div>
+    <div class="weui_dialog">
+        <div class="weui_dialog_hd"><strong class="weui_dialog_title">网络环境较差，请重试</strong></div>
+        <div class="weui_dialog_bd"></div>
+        <div class="weui_dialog_ft">
+            <a href="javascript:;" class="weui_btn_dialog primary">确定</a>
+        </div>
+    </div>
+</div>
 </body>
 <script type="text/javascript" src="${path.concat('/plugins/pingxx/pingpp_one.js')}"></script>
 <script>
     var goods_price;
+    var alertNum = 0;
     $(function () {
         var slidey = $('.fading-slider').unslider({
             animation: 'fade',
@@ -305,6 +316,10 @@
         $("#dialog").hide();
     });
     
+    $("#fail_dialog").find(".weui_btn_dialog.primary").click(function () {
+        $("#fail_dialog").hide();
+    });
+    
     function convert_id(){
         var id=$('#agent_id').val();
         if(id!=""){
@@ -376,7 +391,7 @@
     function pay(){
         var url = '${path.concat('/customer/place')}';
         var goodsId = "${goods.goodsId}";
-        var agentId = $('#agent_id').val();
+        var agentId = "AGT" + $('#agent_id').val();
         var goodsNum = $('#goods_num').val();
         var customerName = $('#customer_name').val();
         var phone = $('#customer_phone').val();
@@ -393,7 +408,7 @@
             if (result.responseCode == "RESPONSE_OK") {
                 var data = result.data;
                 pingpp_one.init({
-                    app_id: "app_DazjbTLybjHGbv9O",
+                    app_id: "app_K4evXLKq50O8CuL8",
                     amount: data.totalPrice,
                     channel: [ 'wx_pub'],
                     charge_url: "${path.concat('/order/customerpay')}",
@@ -407,7 +422,7 @@
                     }
                     if (!result.status) {
                         //处理错误
-                        alert("网络环境较差，请重试");
+                        $("#fail_dialog").show();
                     }
                     else {
                         //debug 模式下调用 charge_url 后会暂停，可以调用 pingpp_one.resume 方法继续执行
@@ -421,7 +436,7 @@
                         //其他渠道的处理方法请见第 2 节
                         else pingpp_one.success(function (result) {
                             if (!result.status) {
-                                alert("网络环境较差，请重试");
+		                        $("#fail_dialog").show();
                             }
                         }, function () {
                             //这里处理支付成功页面点击“继续购物”按钮触发的方法，

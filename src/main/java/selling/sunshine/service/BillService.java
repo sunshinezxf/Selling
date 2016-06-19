@@ -23,7 +23,7 @@ public interface BillService {
     
     ResultData updateOrderBill(OrderBill bill);
 
-    ResultData createCustomerOrderBill(CustomerOrderBill bill);
+    ResultData createCustomerOrderBill(CustomerOrderBill bill, String openId);
     
     ResultData fetchCustomerOrderBill(Map<String, Object> condition);
     

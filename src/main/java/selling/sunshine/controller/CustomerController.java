@@ -10,6 +10,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.alibaba.fastjson.JSON;
+
 import selling.sunshine.form.CustomerAddressForm;
 import selling.sunshine.form.CustomerForm;
 import selling.sunshine.form.PurchaseForm;
@@ -274,7 +277,7 @@ public class CustomerController {
         if (agentId != null && agentId != "") {
             condition.clear();
             condition.put("agentId", agentId);
-            condition.put("granted", 1);
+            condition.put("granted", true);
             condition.put("blockFlag", false);
             ResultData fetchAgentData = agentService.fetchAgent(condition);
             if (fetchAgentData.getResponseCode() == ResponseCode.RESPONSE_OK) {

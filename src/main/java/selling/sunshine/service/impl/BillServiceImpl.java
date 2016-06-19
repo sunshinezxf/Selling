@@ -178,7 +178,7 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
-    public ResultData createCustomerOrderBill(CustomerOrderBill bill) {
+    public ResultData createCustomerOrderBill(CustomerOrderBill bill, String openId) {
         ResultData result = new ResultData();
         ResultData insertResponse = billDao.insertCustomerOrderBill(bill);
         if (insertResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
@@ -190,7 +190,7 @@ public class BillServiceImpl implements BillService {
         params.put("order_no", bill.getBillId());
         params.put("amount", bill.getBillAmount() * 100);
         Map<String, Object> app = new HashMap<>();
-        app.put("id", "app_DazjbTLybjHGbv9O");
+        app.put("id", PlatformConfig.getValue("pingxx_app_id"));
         params.put("app", app);
         params.put("app", app);
         params.put("channel", bill.getChannel());
@@ -199,6 +199,11 @@ public class BillServiceImpl implements BillService {
             url.put("success_url", PlatformConfig.getValue("server_url") + "/account/charge/" + bill.getBillId() + "/prompt");
             url.put("cancel_url", PlatformConfig.getValue("server_url") + "/account/charge/" + bill.getBillId() + "/prompt");
             params.put("extra", url);
+        }
+        if (!StringUtils.isEmpty(bill.getChannel()) && bill.getChannel().equals("wx_pub")) {
+            Map<String, String> user = new HashMap<>();
+            user.put("open_id", openId);
+            params.put("extra", user);
         }
         params.put("currency", "cny");
         params.put("client_ip", bill.getClientIp());

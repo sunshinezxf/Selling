@@ -45,7 +45,7 @@
 	$(document).ready(function(){
 		$.each($(".url"), function(i, val){
 			var size = $(val).parent().width() * 1;
-			$(val).next().qrcode({width:size, height:size, text:$(val).html()});
+			$(val).next().qrcode({width:size, height:size, text:$(val).text()});
 			$.convertCanvasToImage($(val).next().children());	
 		});
 		var cl = new Clipboard(".linkClip");
