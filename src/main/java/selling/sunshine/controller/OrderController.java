@@ -582,7 +582,7 @@ public class OrderController {
         CustomerOrderBill bill = new CustomerOrderBill(Double.parseDouble(String.valueOf(params
                 .get("amount"))), String.valueOf(params.get("channel")),
                 clientIp, customerOrder);
-        ResultData createResponse = billService.createCustomerOrderBill(bill);
+        ResultData createResponse = billService.createCustomerOrderBill(bill, params.getString("open_id"));
         if (createResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             charge = (Charge) createResponse.getData();
         }

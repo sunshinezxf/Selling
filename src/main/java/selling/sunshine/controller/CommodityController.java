@@ -155,6 +155,7 @@ public class CommodityController {
     @RequestMapping(method = RequestMethod.GET, value = "/{goodsId}")
     public ModelAndView view(@PathVariable("goodsId") String goodsId, String agentId, String code, String state) {
         ModelAndView view = new ModelAndView();
+        logger.debug("oppppo" + code + "opppo" + state);
         if (StringUtils.isEmpty(code) || StringUtils.isEmpty(state)) {
         	WechatConfig.oauthWechat(view, "/customer/component/goods_error_msg");
             view.setViewName("/customer/component/goods_error_msg");
@@ -162,6 +163,8 @@ public class CommodityController {
         }
         String openId = WechatUtil.queryOauthOpenId(code);
         view.addObject("wechat", openId);
+        
+        logger.debug("oppppo" + openId);
         
         Map<String, Object> condition = new HashMap<>();
         condition.put("goodsId", goodsId);

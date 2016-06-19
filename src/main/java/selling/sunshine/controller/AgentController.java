@@ -298,8 +298,6 @@ public class AgentController {
             Subject subject = SecurityUtils.getSubject();
             if (subject.isAuthenticated() && subject.getPrincipal() == null) {
                 subject.logout();
-                view.setViewName("redirect:/agent/login");
-                return view;
             }
             subject.login(new UsernamePasswordToken(form.getPhone(), form.getPassword()));
         } catch (Exception e) {

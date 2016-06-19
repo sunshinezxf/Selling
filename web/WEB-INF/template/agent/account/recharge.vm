@@ -14,9 +14,23 @@
         #parse("/agent/account/component/recharge_form.vm")
     </div>
 </div>
+<div class="weui_dialog_alert" id="fail_dialog" style="display: none;">
+    <div class="weui_mask"></div>
+    <div class="weui_dialog">
+        <div class="weui_dialog_hd"><strong class="weui_dialog_title">网络环境较差，请重试</strong></div>
+        <div class="weui_dialog_bd"></div>
+        <div class="weui_dialog_ft">
+            <a href="javascript:;" class="weui_btn_dialog primary">确定</a>
+        </div>
+    </div>
+</div>
 </body>
 <script type="text/javascript" src="${path.concat('/plugins/pingxx/pingpp_one.js')}"></script>
 <script>
+$("#fail_dialog").find(".weui_btn_dialog.primary").click(function () {
+    $("#fail_dialog").hide();
+});
+
 document.addEventListener('pingpp_one_ready', function () {
         $("#confirm").click(function () {
         	if(!is_weixin()){
@@ -49,8 +63,7 @@ document.addEventListener('pingpp_one_ready', function () {
 		                    console.log(result.chargeUrlOutput);
 		                }
 		                if (!result.status) {
-		                    //处理错误
-		                    alert("网络环境较差，请重试");
+		                    $("#fail_dialog").show();
 		                }
 		                else {
 		                    //debug 模式下调用 charge_url 后会暂停，可以调用 pingpp_one.resume 方法继续执行
@@ -64,7 +77,7 @@ document.addEventListener('pingpp_one_ready', function () {
 		                    //其他渠道的处理方法请见第 2 节
 		                    else pingpp_one.success(function (result) {
 		                        if (!result.status) {
-		                            alert(result.msg);
+		                            $("#fail_dialog").show();
 		                        }
 		                    }, function () {
 		                        //这里处理支付成功页面点击“继续购物”按钮触发的方法，
