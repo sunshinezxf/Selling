@@ -33,7 +33,7 @@ public class WithdrawServiceImpl implements WithdrawService {
         Map<String, Object> params = new HashMap<>();
         params.put("channel", "wx_pub");//此处 wx_pub 为公众平台的支付
         params.put("order_no", record.getWithdrawId());
-        params.put("amount", record.getAmount());//订单总金额, 人民币单位：分（如订单总金额为 1 元，此处请填 100）
+        params.put("amount", record.getAmount() * 100);//订单总金额, 人民币单位：分（如订单总金额为 1 元，此处请填 100）
         params.put("type", "b2c");
         params.put("currency", "cny");
         params.put("recipient", record.getOpenId());//企业转账给指定用户的 open_id

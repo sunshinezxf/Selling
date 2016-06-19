@@ -7,6 +7,7 @@ import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,8 @@ import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.*;
 import selling.sunshine.utils.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.net.URLEncoder;
 import java.util.*;
@@ -163,7 +166,7 @@ public class AgentController {
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value="/checkbinding")
-    public ResultData checkBinding(){
+    public ResultData checkBinding(HttpServletRequest request){
     	ResultData result = new ResultData();
     	Map<String, Object> condition = new HashMap<String, Object>();
     	Subject subject = SecurityUtils.getSubject();
@@ -182,6 +185,13 @@ public class AgentController {
         }
         Agent agent = ((List<Agent>) fetchAgentResponse.getData()).get(0);
         if(agent.getWechat() == null || agent.getWechat().equals("")){
+        	HttpSession session = request.getSession();
+        	String openId = (String) session.getAttribute("openId");
+        	if(openId != null && !openId.equals("")){
+        		agent.setWechat(openId);
+        		result.setData(agent);
+        		return result;
+        	}
         	result.setResponseCode(ResponseCode.RESPONSE_NULL);
         	result.setDescription("没有绑定微信号");
         	return result;
