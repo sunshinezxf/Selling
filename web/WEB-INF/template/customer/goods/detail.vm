@@ -398,7 +398,7 @@
                     channel: [ 'wx_pub'],
                     charge_url: "${path.concat('/order/customerpay')}",
                     charge_param: {order_id: data.orderId},
-                    open_id: 'wxf2c47b5e41605c26',
+                    open_id: '${wechat}',
                     debug: false
                 }, function (result) {
                     //debug 模式下获取 charge_url 的返回结果
@@ -407,7 +407,7 @@
                     }
                     if (!result.status) {
                         //处理错误
-                        alert(result.msg);
+                        alert("网络环境较差，请重试");
                     }
                     else {
                         //debug 模式下调用 charge_url 后会暂停，可以调用 pingpp_one.resume 方法继续执行
@@ -421,7 +421,7 @@
                         //其他渠道的处理方法请见第 2 节
                         else pingpp_one.success(function (result) {
                             if (!result.status) {
-                                alert(result.msg);
+                                alert("网络环境较差，请重试");
                             }
                         }, function () {
                             //这里处理支付成功页面点击“继续购物”按钮触发的方法，

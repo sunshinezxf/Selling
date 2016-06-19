@@ -407,7 +407,12 @@ public class AgentController {
         }
         for (Goods4Agent goods : goodsList) {
             String url = "http://" + PlatformConfig.getValue("server_url") + "/commodity/" + goods.getGoodsId() + "?agentId=" + user.getAgent().getAgentId();
-            urls.add(url);
+            try{
+            	String shareURL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + PlatformConfig.getValue("wechat_appid") + "&redirect_uri=" + URLEncoder.encode(url, "utf-8") + "&response_type=code&scope=snsapi_base&state=view#wechat_redirect";
+            	urls.add(shareURL);
+            }catch(Exception e) {
+            	logger.error(e.getMessage());
+            }
         }
         view.addObject("goodsList", goodsList);
         view.addObject("urls", urls);
