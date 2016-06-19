@@ -393,7 +393,7 @@
             if (result.responseCode == "RESPONSE_OK") {
                 var data = result.data;
                 pingpp_one.init({
-                    app_id: "app_DazjbTLybjHGbv9O",
+                    app_id: "app_K4evXLKq50O8CuL8",
                     amount: data.totalPrice,
                     channel: [ 'wx_pub'],
                     charge_url: "${path.concat('/order/customerpay')}",
