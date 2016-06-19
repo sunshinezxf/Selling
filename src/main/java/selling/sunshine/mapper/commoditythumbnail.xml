@@ -40,18 +40,48 @@
             </if>
         </set>
     </insert>
+    
+    <!-- 查询商品图片信息 -->
+    <select id="query" parameterType="java.util.Map" resultMap="goodsThumbnailVo">
+        SELECT thumbnail_id,thumbnail_path,block_flag,create_time,goods_id
+        FROM goods_thumbnail
+        WHERE 1=1
+        <if test="thumbnailId != null and thumbnailId != ''">
+            AND thumbnail_id = #{thumbnailId}
+        </if>
+        <if test="path != null and path != ''">
+            AND thumbnail_path = #{path}
+        </if>
+        <if test="goodsId != null and goodsId != ''">
+            AND goods_id = #{goodsId}
+        </if>
+    </select>
+    
+    <!-- 查询goodsId为空的所有的商品图片信息 -->
+     <select id="query_Goods_NULL"  resultMap="goodsThumbnailVo">
+        SELECT thumbnail_id,thumbnail_path,block_flag,create_time,goods_id
+        FROM goods_thumbnail
+        WHERE goods_id IS NULL;
+     </select>
 
     <!-- 更新商品图片信息 -->
-    <insert id="updateBatch" parameterType="selling.sunshine.model.goods.Goods4Customer" useGeneratedKeys="false">
+    <update id="updateBatch" parameterType="selling.sunshine.model.goods.Goods4Customer" useGeneratedKeys="false">
         UPDATE goods_thumbnail
         set goods_id = #{goodsId}
         WHERE thumbnail_id IN (
         <foreach collection="thumbnails" item="item" index="index" separator=",">
             #{item.thumbnailId}
         </foreach>)
-    </insert>
+    </update>
+    
+        <!-- 更新商品图片信息 -->
+    <update id="update" parameterType="selling.sunshine.model.goods.Thumbnail" useGeneratedKeys="false">
+        UPDATE goods_thumbnail
+        set goods_id = #{goods.goodsId}
+        WHERE thumbnail_id = #{thumbnailId}
+    </update>
 
-    <!-- 删除商品的图片信息 -->
+    <!-- 批量删除商品的图片信息 -->
     <delete id="deleteBatch" parameterType="java.util.List">
         DELETE FROM goods_thumbnail
         WHERE thumbnail_id IN (

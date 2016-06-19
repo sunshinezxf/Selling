@@ -148,7 +148,9 @@ public class CommodityDaoImpl extends BaseDao implements CommodityDao {
         ResultData result = new ResultData();
         synchronized (lock) {
             try {
-                sqlSession.insert("selling.goods.thumbnail.updateBatch", thumbnails);
+            	for (Thumbnail thumbnail:thumbnails) {
+            		sqlSession.update("selling.goods.thumbnail.update", thumbnail);
+				}                
                 result.setData(thumbnails);
             } catch (Exception e) {
                 logger.error(e.getMessage());
@@ -211,6 +213,36 @@ public class CommodityDaoImpl extends BaseDao implements CommodityDao {
 	            }
 	        }
 	       return result;
+	}
+
+	@Override
+	public ResultData queryThumbnail(Map<String, Object> condition) {
+		 ResultData result = new ResultData();
+	        try {
+	            List<Thumbnail> list = sqlSession.selectList("selling.goods.thumbnail.query", condition);
+	            result.setData(list);
+	        } catch (Exception e) {
+	            logger.error(e.getMessage());
+	            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+	            result.setDescription(e.getMessage());
+	        } finally {
+	            return result;
+	        }
+	}
+
+	@Override
+	public ResultData queryThumbnail() {
+		 ResultData result = new ResultData();
+	        try {
+	            List<Thumbnail> list = sqlSession.selectList("selling.goods.thumbnail.query_Goods_NULL");
+	            result.setData(list);
+	        } catch (Exception e) {
+	            logger.error(e.getMessage());
+	            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+	            result.setDescription(e.getMessage());
+	        } finally {
+	            return result;
+	        }
 	}
 
 }

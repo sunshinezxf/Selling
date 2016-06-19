@@ -27,4 +27,8 @@ public interface CommodityDao {
     ResultData insertGoodsThumbnail(Thumbnail thumbnail);
     
     ResultData deleteGoodsThumbnail(String thumbnailId);
+    
+    ResultData queryThumbnail(Map<String, Object> condition);
+    
+    ResultData queryThumbnail();
 }
