@@ -25,9 +25,12 @@ import selling.sunshine.service.AgentService;
 import selling.sunshine.service.CommodityService;
 import selling.sunshine.service.OrderService;
 import selling.sunshine.service.UploadService;
+import selling.sunshine.utils.Prompt;
+import selling.sunshine.utils.PromptCode;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 import selling.sunshine.utils.WechatConfig;
+import selling.sunshine.utils.WechatUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -150,8 +153,16 @@ public class CommodityController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{goodsId}")
-    public ModelAndView view(@PathVariable("goodsId") String goodsId, String agentId) {
+    public ModelAndView view(@PathVariable("goodsId") String goodsId, String agentId, String code, String state) {
         ModelAndView view = new ModelAndView();
+        if (StringUtils.isEmpty(code) || StringUtils.isEmpty(state)) {
+        	WechatConfig.oauthWechat(view, "/customer/component/goods_error_msg");
+            view.setViewName("/customer/component/goods_error_msg");
+            return view;
+        }
+        String openId = WechatUtil.queryOauthOpenId(code);
+        view.addObject("wechat", openId);
+        
         Map<String, Object> condition = new HashMap<>();
         condition.put("goodsId", goodsId);
         condition.put("blockFlag", false);

@@ -14,6 +14,7 @@ import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class WithdrawServiceImpl implements WithdrawService {
@@ -33,7 +34,7 @@ public class WithdrawServiceImpl implements WithdrawService {
         Map<String, Object> params = new HashMap<>();
         params.put("channel", "wx_pub");//此处 wx_pub 为公众平台的支付
         params.put("order_no", record.getWithdrawId());
-        params.put("amount", record.getAmount());//订单总金额, 人民币单位：分（如订单总金额为 1 元，此处请填 100）
+        params.put("amount", record.getAmount() * 100);//订单总金额, 人民币单位：分（如订单总金额为 1 元，此处请填 100）
         params.put("type", "b2c");
         params.put("currency", "cny");
         params.put("recipient", record.getOpenId());//企业转账给指定用户的 open_id
@@ -73,6 +74,9 @@ public class WithdrawServiceImpl implements WithdrawService {
         ResultData queryResponse = withdrawDao.queryWithdraw(condition);
         result.setResponseCode(queryResponse.getResponseCode());
         if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            if (((List) queryResponse.getData()).isEmpty()) {
+                result.setResponseCode(ResponseCode.RESPONSE_NULL);
+            }
             result.setData(queryResponse.getData());
         } else if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
             result.setDescription(queryResponse.getDescription());
@@ -81,9 +85,15 @@ public class WithdrawServiceImpl implements WithdrawService {
     }
 
     @Override
-    public ResultData updateWithdrawRecord(Map<String, Object> condition) {
+    public ResultData updateWithdrawRecord(WithdrawRecord record) {
         ResultData result = new ResultData();
-
+        ResultData updateResponse = withdrawDao.updateWithdraw(record);
+        result.setResponseCode(updateResponse.getResponseCode());
+        if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(updateResponse.getData());
+        } else {
+            result.setDescription(updateResponse.getDescription());
+        }
         return result;
     }
 }
