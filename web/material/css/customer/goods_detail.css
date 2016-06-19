@@ -148,6 +148,7 @@ body {
 }
 
 .id{
+	padding-left:0.88em;
 	border-bottom: 0.0625em solid #e1e1e1;
 }
 
@@ -341,11 +342,12 @@ body {
     height:40%;
     font-size:1.1em;
     padding-top:0.2em;
+    font-weight:bold;
 }
 
 .total_num p{
     display:inline-block;
-    font-weight:bold;
+    
 }
  
 .sum,.sum_price{
