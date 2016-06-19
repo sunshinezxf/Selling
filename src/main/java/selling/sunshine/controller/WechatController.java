@@ -116,6 +116,16 @@ public class WechatController {
                             String xml = content.toXML(result);
                             return xml;
                         }
+                        if (message.getEventKey().equalsIgnoreCase("purchase")) {
+                            content.alias("xml", TextOutMessage.class);
+                            TextOutMessage result = new TextOutMessage();
+                            result.setFromUserName(message.getToUserName());
+                            result.setToUserName(message.getFromUserName());
+                            result.setCreateTime(new Date().getTime());
+                            result.setContent("欢迎您对云草纲目的关注,客户自助购买即将上线,敬请期待!");
+                            String xml = content.toXML(result);
+                            return xml;
+                        }
                     }
                     break;
                 case "text":
