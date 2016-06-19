@@ -13,5 +13,5 @@ public interface WithdrawService {
 	
 	ResultData fetchWithdrawRecord(Map<String, Object> condition);
 
-	ResultData updateWithdrawRecord(Map<String, Object> condition);
+	ResultData updateWithdrawRecord(WithdrawRecord record);
 }
