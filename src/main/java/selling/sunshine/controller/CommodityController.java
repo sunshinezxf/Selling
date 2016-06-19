@@ -311,6 +311,7 @@ public class CommodityController {
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/upload")
     public String upload(MultipartHttpServletRequest request) {
+    	System.err.println("test");
         String context = request.getSession().getServletContext().getRealPath("/");
         JSONObject resultObject = new JSONObject();
         try {
@@ -320,7 +321,8 @@ public class CommodityController {
                 ResultData response = uploadService.upload(file, context);
                 if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
                     Thumbnail thumbnail = new Thumbnail((String) response.getData());
-                    System.err.println(commodityService.createThumbnail(thumbnail).getData());
+     
+
                     String thumbnailId = ((Thumbnail) commodityService.createThumbnail(thumbnail).getData()).getThumbnailId();
                     JSONArray initialPreviewArray = new JSONArray();
                     JSONArray initialPreviewConfigArray = new JSONArray();
@@ -345,7 +347,6 @@ public class CommodityController {
     @RequestMapping(method = RequestMethod.POST, value = "/delete/Thumbnail/{thumbnailId}")
     public String deleteThumbnail(@PathVariable("thumbnailId") String thumbnailId) {
 
-        System.out.println(thumbnailId);
         ResultData resultData=commodityService.deleteGoodsThumbnail(thumbnailId);
      
         JSONObject resultObject = new JSONObject();
