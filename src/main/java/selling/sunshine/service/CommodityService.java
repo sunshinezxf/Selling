@@ -7,6 +7,7 @@ import selling.sunshine.model.goods.Thumbnail;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.utils.ResultData;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,4 +29,10 @@ public interface CommodityService {
     ResultData createThumbnail(Thumbnail thumbnail);
     
     ResultData deleteGoodsThumbnail(String thumbnailId);
+    
+    ResultData fetchThumbnail(Map<String, Object> condition);
+    
+    ResultData fetchThumbnail();
+    
+    public ResultData updateThumbnails(List<Thumbnail> thumbnails);
 }
