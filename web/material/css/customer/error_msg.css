@@ -50,6 +50,10 @@ button.weui_btn, input.weui_btn{
 	background-color:#ff8080;
 	margin-top:5%;
 }
+
+.weui_btn_primary:not(.weui_btn_disabled):active {
+    background-color: #ff8080;
+}
 			
 h1{ 
 	font-size:2.3em; 

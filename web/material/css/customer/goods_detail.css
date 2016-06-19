@@ -38,7 +38,7 @@ body {
     bottom: 0;
     width:100%;
     height:1.25em;
-    z-index:999;
+    z-index:2;
 }
 
 
@@ -232,7 +232,7 @@ body {
  
 .weui_actionsheet{
 	height:25em;
-	z-index:1000;
+	
 }
 
 .number_area{
@@ -373,6 +373,9 @@ body {
     background-color:#ff8080;
 }
 
+.weui_btn_primary:not(.weui_btn_disabled):active {
+    background-color: #ff8080;
+}
 .weui_dialog{
-	z-index:1001;
+	z-index:3;
 }
