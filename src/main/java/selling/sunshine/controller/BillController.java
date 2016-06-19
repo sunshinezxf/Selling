@@ -98,7 +98,12 @@ public class BillController {
             Map<String, Object> agentCondition = new HashMap<String, Object>();
             agentCondition.put("agentId", depositBill.getAgent().getAgentId());
             Agent agent = ((List<Agent>)agentService.fetchAgent(agentCondition).getData()).get(0);
-            agent.setCoffer(agent.getCoffer()+depositBill.getBillAmount());
+            logger.debug("current coffer: " + agent.getCoffer());
+            logger.debug("adding money: " + depositBill.getBillAmount());
+            int coffer100 = (int)(agent.getCoffer() * 100);
+            int amount100 = (int)(depositBill.getBillAmount() * 100);
+            double cofferNew = (coffer100 + amount100) * 1.0 / 100;
+            agent.setCoffer(cofferNew);
             resultData = agentService.updateAgent(agent);
             depositBill.setStatus(BillStatus.PAYED);
             resultData = billService.updateDepositBill(depositBill);

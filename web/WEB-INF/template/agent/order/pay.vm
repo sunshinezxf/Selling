@@ -52,7 +52,7 @@ document.addEventListener('pingpp_one_ready', function () {
 			        pingpp_one.init({
 			            app_id: "app_K4evXLKq50O8CuL8",
 			            amount: total_price,
-			            channel: ['alipay_wap', 'wx_pub'],
+			            channel: ['wx_pub'],
 			            charge_url: "${path.concat('/order/otherpay')}",
 			            charge_param: {order_id: order_id},
 			            open_id: open_id,

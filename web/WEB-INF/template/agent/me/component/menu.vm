@@ -53,12 +53,14 @@
                         </div>
                         <p class="weui_grid_label">邀请代理</p>
                     </a>
+                    <!--
                     <a class="weui_grid" href="${path.concat('/agent/personalsale')}">
                         <div class="weui_grid_icon">
                             <i class="icon icon_tab"></i>
                         </div>
                         <p class="weui_grid_label">客户商城</p>
                     </a>
+                    -->
                 </div>
             </div>
         </div>

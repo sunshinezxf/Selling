@@ -518,7 +518,7 @@ public class OrderController {
                 }
                 ResultData payData = orderService.payOrder(order);
                 if (payData.getResponseCode() == ResponseCode.RESPONSE_OK) {
-                    Prompt prompt = new Prompt(PromptCode.WARNING, "付款成功",
+                    Prompt prompt = new Prompt(PromptCode.SUCCESS, "付款成功",
                             "订单号：" + order.getOrderId() + "，请等待发货",
                             "/agent/order/manage/2");
                     attr.addFlashAttribute(prompt);

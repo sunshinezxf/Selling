@@ -129,7 +129,10 @@ public class AgentServiceImpl implements AgentService {
             result.setDescription("账户余额不足");
             return result;
         }
-        agent.setCoffer(agent.getCoffer() - money);
+        int coffer100 = (int)(agent.getCoffer() * 100);
+        int money100 = (int)(money * 100);
+        double cofferNew = (coffer100 - money100) * 1.0 / 100;
+        agent.setCoffer(cofferNew);
         ResultData updateResponse = agentDao.updateAgentCoffer(agent);
         if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             result.setData(updateResponse.getData());

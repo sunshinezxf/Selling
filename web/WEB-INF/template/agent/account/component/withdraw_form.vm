@@ -29,7 +29,7 @@
 		if($("#money_input").val() == ""){
 			return -1;
 		}
-		var reNum = /^([1-9][\d]{0,10}|0)(\.[\d]{1,10})?$/;
+		var reNum = /^([1-9][\d]{0,10}|0)?$/;
 		if(!reNum.test($("#money_input").val())){
 			return 2;
 		}
