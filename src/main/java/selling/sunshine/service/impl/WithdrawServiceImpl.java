@@ -14,6 +14,7 @@ import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class WithdrawServiceImpl implements WithdrawService {
@@ -73,6 +74,9 @@ public class WithdrawServiceImpl implements WithdrawService {
         ResultData queryResponse = withdrawDao.queryWithdraw(condition);
         result.setResponseCode(queryResponse.getResponseCode());
         if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            if (((List) queryResponse.getData()).isEmpty()) {
+                result.setResponseCode(ResponseCode.RESPONSE_NULL);
+            }
             result.setData(queryResponse.getData());
         } else if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
             result.setDescription(queryResponse.getDescription());
@@ -81,9 +85,15 @@ public class WithdrawServiceImpl implements WithdrawService {
     }
 
     @Override
-    public ResultData updateWithdrawRecord(Map<String, Object> condition) {
+    public ResultData updateWithdrawRecord(WithdrawRecord record) {
         ResultData result = new ResultData();
-
+        ResultData updateResponse = withdrawDao.updateWithdraw(record);
+        result.setResponseCode(updateResponse.getResponseCode());
+        if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(updateResponse.getData());
+        } else {
+            result.setDescription(updateResponse.getDescription());
+        }
         return result;
     }
 }
