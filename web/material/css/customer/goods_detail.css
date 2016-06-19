@@ -144,8 +144,11 @@ body {
 
 .id,.pay{
 	height:8%;
-	border-bottom: 0.0625em solid #e1e1e1;
 	padding-top:1.4%;
+}
+
+.id{
+	border-bottom: 0.0625em solid #e1e1e1;
 }
 
 .id:before,.pay:before{
@@ -305,7 +308,7 @@ body {
 }
 
 .area_select select{
-	width:6.5em;
+	width:28.5%;
 	height:2em;
 	font-size:0.7em;
 	margin-right:1em;
