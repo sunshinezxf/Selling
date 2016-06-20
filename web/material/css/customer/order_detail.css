@@ -18,3 +18,34 @@ body {
 	color:#ff8080;
 	text-decoration:underline;
 }
+
+button.weui_btn, input.weui_btn{
+	width:35%;
+}
+	
+.weui_btn_primary{
+	width:35%;
+	background-color:#ff8080;
+	margin-top:5%;
+}
+
+.weui_btn_primary:not(.weui_btn_disabled):active {
+    background-color: #ff8080;
+}
+
+.continue_btn{
+	float:right;
+	margin-right:5%;
+}
+
+.weui_btn.weui_btn_mini {
+    font-size: 1.125em;
+    padding:0.23em 0.875em;
+}
+
+.leave_btn{
+	float:left;
+	margin-top:5%;;
+	margin-left:5%;
+	color:#787878;
+}
