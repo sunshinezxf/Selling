@@ -131,7 +131,7 @@
         }, function (result) {
         
         
-         if(result.total>0){
+         if(result.data.orderList != null){
             total=result.total;
             var orderList=result.data;            
             
@@ -160,7 +160,7 @@
                  $("#check_order_table").append(node6);
             }
             
-            $("#check_order_table").fadeIn();
+ 
             
          }
             
@@ -187,10 +187,12 @@
     function select(obj){
        switch(obj.id){
             case "1": $("#li1").attr("class","active");$("#li2").attr("class","");$("#order_class1").attr("class","text-success");$("#order_class2").attr("class","text-info");
+                      $("#check_customerOrder_table").fadeOut();
                       $("#check_order_table").fadeIn();
                      break;
             case "2": $("#li2").attr("class","active");$("#li1").attr("class","");$("#order_class2").attr("class","text-success");$("#order_class1").attr("class","text-info");
                      $("#check_order_table").fadeOut();
+                      $("#check_customerOrder_table").fadeIn();
                      break;
             default:break;
        }

@@ -92,6 +92,27 @@ public class OrderController {
         }
         return result;
     }
+    
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value = "/customer/check")
+    public MobilePage<CustomerOrder> customerOrderHandle(MobilePageParam param) {
+        MobilePage<CustomerOrder> result = new MobilePage<>();
+        if (StringUtils.isEmpty(param)) {
+            return result;
+        }
+        Map<String, Object> condition = new HashMap<>();
+        List<Integer> status = new ArrayList<>();
+        status.add(1);
+        condition.put("status", status);
+        List<SortRule> rule = new ArrayList<>();
+        rule.add(new SortRule("create_time", "asc"));
+        condition.put("sort", rule);
+        ResultData fetchResponse = orderService.fetchOrder(condition, param);
+        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result = (MobilePage<CustomerOrder>) fetchResponse.getData();
+        }
+        return result;
+    }
 
     @RequestMapping(method = RequestMethod.GET, value = "/overview")
     public ModelAndView overview() {
