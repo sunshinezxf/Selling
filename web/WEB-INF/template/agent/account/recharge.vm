@@ -24,11 +24,24 @@
         </div>
     </div>
 </div>
+<div class="weui_dialog_alert" id="fail_money_dialog" style="display: none;">
+    <div class="weui_mask"></div>
+    <div class="weui_dialog">
+        <div class="weui_dialog_hd"><strong class="weui_dialog_title">充值金额格式不正确</strong></div>
+        <div class="weui_dialog_bd"></div>
+        <div class="weui_dialog_ft">
+            <a href="javascript:;" class="weui_btn_dialog primary">确定</a>
+        </div>
+    </div>
+</div>
 </body>
 <script type="text/javascript" src="${path.concat('/plugins/pingxx/pingpp_one.js')}"></script>
 <script>
 $("#fail_dialog").find(".weui_btn_dialog.primary").click(function () {
     $("#fail_dialog").hide();
+});
+$("#fail_money_dialog").find(".weui_btn_dialog.primary").click(function () {
+    $("#fail_money_dialog").hide();
 });
 
 document.addEventListener('pingpp_one_ready', function () {
@@ -46,13 +59,17 @@ document.addEventListener('pingpp_one_ready', function () {
 	    		if(result.responseCode == "RESPONSE_ERROR"){
 	    			window.location == "${path.concat('/agent/login')}";
 	    		} else {
+	    			if($.checkMoney() != 0){
+	    				$("#fail_money_dialog").show();
+	    				return;
+	    			} 
 		            var amount = $("#amount").val();
 		            var data = result.data;
 	    			var open_id = data.wechat;
 		            pingpp_one.init({
 		                app_id: "app_K4evXLKq50O8CuL8",
 		                amount: amount,
-		                channel: ['alipay_wap', 'wx_pub'],
+		                channel: ['wx_pub'],
 		                charge_url: "${path.concat('/account/deposit')}",
 		                charge_param: {},
 		                open_id: open_id,
@@ -92,6 +109,18 @@ document.addEventListener('pingpp_one_ready', function () {
         });
     });
     
+    $.checkMoney = function(){
+		var money_input = parseFloat($("#amount").val());
+		if($("#money_input").val() == ""){
+			return -1;
+		}
+		var reNum = /^([1-9][\d]{0,10}|0)(\.[\d]{1,2})?$/;
+		if(!reNum.test($("#amount").val())){
+			return 1;
+		}
+		return 0;
+	}
+	
     function is_weixin() {
         var ua = navigator.userAgent.toLowerCase();
         if (ua.match(/MicroMessenger/i) == "micromessenger") {
