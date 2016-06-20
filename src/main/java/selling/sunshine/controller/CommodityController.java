@@ -237,12 +237,9 @@ public class CommodityController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/customerorder")
-    public ModelAndView customerOrder(String wechat, String orderId) {
+    public ModelAndView customerOrder(String orderId) {
         ModelAndView view = new ModelAndView();
         Map<String, Object> condition = new HashMap<>();
-        if (!StringUtils.isEmpty(wechat)) {
-            condition.put("wechat", wechat);
-        }
         if (!StringUtils.isEmpty(orderId)) {
             condition.put("orderId", orderId);
         }
@@ -253,7 +250,7 @@ public class CommodityController {
             return view;
         }
         ResultData fetchCustomerOrderData = orderService.fetchCustomerOrder(condition);
-        if (fetchCustomerOrderData.getResponseCode() != ResponseCode.RESPONSE_OK || fetchCustomerOrderData.getResponseCode() != ResponseCode.RESPONSE_NULL) {
+        if (fetchCustomerOrderData.getResponseCode() != ResponseCode.RESPONSE_OK) {
             //订单不存在错误页面
         	WechatConfig.oauthWechat(view, "/customer/component/order_error_msg");
             view.setViewName("/customer/component/order_error_msg");

@@ -86,6 +86,12 @@
             </div>
         </div>
     </div>
+    <div>
+        <button id="continue" class="">继续购物</button>
+    </div>
+    <div>
+        <button id="leave" class="">离开</button>
+    </div>
     <div class="weui_dialog_alert" id="address_dialog" style="display: none;">
         <div class="weui_mask"></div>
         <div class="weui_dialog">
@@ -122,6 +128,14 @@
 
 	$("#address_dialog").find(".weui_btn_dialog.primary").click(function(){
     	$("#address_dialog").hide();
+    });
+    
+    $("#continue").click(function(){
+        window.location.href="/commodity/"+"${customerOrder.goods.goodsId}"+"?"+"agentId=${customerOrder.agent.agentId}";
+    });
+    
+    $("#leave").click(function(){
+        WeixinJSBridge.call('closeWindow');
     });
     
 </script>
