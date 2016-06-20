@@ -277,8 +277,18 @@ public class OrderController {
         status.add(2);
         condition.put("status", status);
         List<Order> orderList = (List<Order>) orderService.fetchOrder(condition).getData();
+        
+        
+        condition.clear();
+        status.clear();
+        status.add(1);
+        condition.put("status", status);
+        List<CustomerOrder> customerOrderList=(List<CustomerOrder>)orderService.fetchCustomerOrder(condition).getData();
+        
+        
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("orderList", orderList);
+        dataMap.put("customerOrderList", customerOrderList);
         resultData.setData(dataMap);
 
         return resultData;

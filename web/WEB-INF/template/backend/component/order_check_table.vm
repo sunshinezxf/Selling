@@ -10,9 +10,22 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-12 col-lg-12" id="check_order_table">          
-              <p id="total" class="lead text-info"></p>       
-        </div>
+         <div class="col-md-12 col-lg-12" id="main">   
+             <p id="total" class="lead text-info"></p>    
+             <div class="row">
+                <ul class="nav nav-tabs">
+                   <li class="active" id="li1"><a id="1" href="javascript:void(0);" onclick="select(this)"><h4 id="order_class1" class="text-success">代理商订单</h4></a></li>
+                  <li id="li2"><a id="2" href="javascript:void(0);" onclick="select(this)"><h4 id="order_class2" class="text-info">顾客订单</h4></a></li>
+                </ul>
+             </div>    
+             <div class="col-md-12 col-lg-12" id="check_order_table">          
+             
+            </div>
+            <div class="col-md-12 col-lg-12" id="check_customerOrder_table">          
+             
+            </div>      
+         </div>
+       
     </div>
 </div>
 #parse("/backend/component/order_item_modal.vm")
@@ -29,7 +42,13 @@
     var quantity_num_list=new Object();
     $(document).ready(function () {
         $.post("${path.concat('/order/statistics')}", function (result) {
-        for(var i=0; i<result.data.orderList.length; i++){
+        
+        var orderNum=0;
+        
+        if((result.data.orderList != null) || (result.data.customerOrderList != null)){
+          if(result.data.orderList != null){
+             orderNum+=result.data.orderList.length;
+               for(var i=0; i<result.data.orderList.length; i++){
                   var order= result.data.orderList[i];  
                   var orderItems=order.orderItems;
                   for(var j=0; j<orderItems.length; j++){
@@ -41,6 +60,7 @@
         	           } else {
         		          goods_quantity_list[name]['quantity'] += orderItems[j].goodsQuantity;
         	           }
+        	           
         	           if(quantity_num_list[name] == undefined){
         	               quantity_num_list[name] = new Object();
         	               if(quantity_num_list[name][goodsQuantity] == undefined){
@@ -58,7 +78,39 @@
         	               }
         	           }
                   }                 
-            }
+              }
+          }
+          if(result.data.customerOrderList != null){
+                 orderNum+=result.data.customerOrderList.length;
+                for(var i=0; i<result.data.customerOrderList.length; i++){
+                    var customerOrder=result.data.customerOrderList[i];
+                    var name=customerOrder.goods.name; 
+                    var goodsQuantity=customerOrder.quantity;  
+                    if(goods_quantity_list[name] == undefined) {
+        		          goods_quantity_list[name] = new Object();
+        		          goods_quantity_list[name]['quantity'] = customerOrder.quantity;        		       
+        	        } else {
+        		          goods_quantity_list[name]['quantity'] += customerOrder.quantity;
+        	        }
+        	               	               	           
+        	        if(quantity_num_list[name] == undefined){
+        	               quantity_num_list[name] = new Object();
+        	               if(quantity_num_list[name][goodsQuantity] == undefined){
+        	                   quantity_num_list[name][goodsQuantity] = new Object();
+        	                   quantity_num_list[name][goodsQuantity]['num'] = 1;     
+        	               }else {
+        		               quantity_num_list[name][goodsQuantity]['num'] += 1;
+        	               }
+        	         }else{
+        	               if(quantity_num_list[name][goodsQuantity] == undefined){
+        	                   quantity_num_list[name][goodsQuantity] = new Object();
+        	                   quantity_num_list[name][goodsQuantity]['num'] = 1;     
+        	               }else {
+        		               quantity_num_list[name][goodsQuantity]['num'] += 1;
+        	               }
+        	         }
+                }
+          }
             var node="";
             for(var goods_quantity in goods_quantity_list){             
                 node=node+goods_quantity+"总计:&nbsp;"+goods_quantity_list[goods_quantity]['quantity']+"盒  &nbsp;";
@@ -69,14 +121,17 @@
                     node=node+name+quantity_num+"盒:&nbsp;"+quantity_num_list[name][quantity_num]['num']+"个  &nbsp;";
                }                         
             }
-            document.getElementById("total").innerHTML="待处理订单累计：<strong>"+result.data.orderList.length+"笔</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' class='btn btn-info' onclick=expressAll()>一键发货</button><br>"+node;
+            document.getElementById("total").innerHTML="待处理订单累计：<strong>"+orderNum+"笔</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' class='btn btn-info' onclick=expressAll()>一键发货</button><br>"+node;
         
-        });
+       
        
         $.post(url, {
             start: start,
             length :length,
         }, function (result) {
+        
+        
+         if(result.total>0){
             total=result.total;
             var orderList=result.data;            
             
@@ -104,7 +159,23 @@
                  var node6="<button type='button' class='btn btn-success' id='loadMore' onclick=loadTable(this)>加载更多</button>";
                  $("#check_order_table").append(node6);
             }
-          
+            
+            $("#check_order_table").fadeIn();
+            
+         }
+            
+         });
+         
+        $.post(url, {
+            start: start,
+            length :length,
+        }, function (result) {
+            
+        });
+    
+        }else{
+            document.getElementById("total").innerHTML="当前没有待审核的订单！";
+        } 
         });
      
     });
@@ -112,6 +183,18 @@
     
 </script>
 <script>
+
+    function select(obj){
+       switch(obj.id){
+            case "1": $("#li1").attr("class","active");$("#li2").attr("class","");$("#order_class1").attr("class","text-success");$("#order_class2").attr("class","text-info");
+                      $("#check_order_table").fadeIn();
+                     break;
+            case "2": $("#li2").attr("class","active");$("#li1").attr("class","");$("#order_class2").attr("class","text-success");$("#order_class1").attr("class","text-info");
+                     $("#check_order_table").fadeOut();
+                     break;
+            default:break;
+       }
+    }
     function detail(obj){
         $.post("${path.concat('/order/orderItem/')}"+obj.id, function (result) {
             #*
@@ -200,6 +283,8 @@
                  
          });   
       }
+      
+      
         
 
 </script>
