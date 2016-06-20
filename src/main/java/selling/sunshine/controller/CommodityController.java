@@ -1,6 +1,7 @@
 package selling.sunshine.controller;
 
-import com.alibaba.fastjson.JSON;
+
+
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
@@ -25,14 +26,11 @@ import selling.sunshine.service.AgentService;
 import selling.sunshine.service.CommodityService;
 import selling.sunshine.service.OrderService;
 import selling.sunshine.service.UploadService;
-import selling.sunshine.utils.Prompt;
-import selling.sunshine.utils.PromptCode;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 import selling.sunshine.utils.WechatConfig;
 import selling.sunshine.utils.WechatUtil;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import java.util.ArrayList;
@@ -237,12 +235,9 @@ public class CommodityController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/customerorder")
-    public ModelAndView customerOrder(String wechat, String orderId) {
+    public ModelAndView customerOrder(String orderId) {
         ModelAndView view = new ModelAndView();
         Map<String, Object> condition = new HashMap<>();
-        if (!StringUtils.isEmpty(wechat)) {
-            condition.put("wechat", wechat);
-        }
         if (!StringUtils.isEmpty(orderId)) {
             condition.put("orderId", orderId);
         }
@@ -253,7 +248,7 @@ public class CommodityController {
             return view;
         }
         ResultData fetchCustomerOrderData = orderService.fetchCustomerOrder(condition);
-        if (fetchCustomerOrderData.getResponseCode() != ResponseCode.RESPONSE_OK || fetchCustomerOrderData.getResponseCode() != ResponseCode.RESPONSE_NULL) {
+        if (fetchCustomerOrderData.getResponseCode() != ResponseCode.RESPONSE_OK) {
             //订单不存在错误页面
         	WechatConfig.oauthWechat(view, "/customer/component/order_error_msg");
             view.setViewName("/customer/component/order_error_msg");
@@ -264,6 +259,28 @@ public class CommodityController {
         WechatConfig.oauthWechat(view, "/customer/order/detail");
         view.setViewName("/customer/order/detail");
         return view;
+    }
+    
+    @RequestMapping(method = RequestMethod.POST, value = "/detail/{goodsId}")
+    public ResultData detail(@PathVariable("goodsId") String goodsId){
+    	ResultData resultData=new ResultData();
+    	Map<String, Object> dataMap = new HashMap<>();
+    	
+    	Map<String, Object> condition=new HashMap<>();
+    	condition.put("goodsId", goodsId);
+    	ResultData  queryData=commodityService.fetchGoods4Customer(condition);
+    	if (queryData.getData()!=null) {
+    		Goods4Customer goods=((List<Goods4Customer>)queryData.getData()).get(0);
+    		dataMap.put("goods", goods);
+    		List<Thumbnail> thumbnails=(List<Thumbnail>)commodityService.fetchThumbnail(condition).getData();
+    		if (thumbnails.size() != 0) {
+    			dataMap.put("thumbnails", thumbnails);
+			}else {
+				dataMap.put("thumbnails", 0);
+			}
+		}
+        resultData.setData(dataMap);
+        return resultData;   	
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/forbid/{goodsId}")
@@ -347,7 +364,7 @@ public class CommodityController {
     @RequestMapping(method = RequestMethod.POST, value = "/delete/Thumbnail/{thumbnailId}")
     public String deleteThumbnail(@PathVariable("thumbnailId") String thumbnailId) {
 
-        ResultData resultData=commodityService.deleteGoodsThumbnail(thumbnailId);
+        commodityService.deleteGoodsThumbnail(thumbnailId);
      
         JSONObject resultObject = new JSONObject();
         JSONArray initialPreviewArray = new JSONArray();
