@@ -1,8 +1,6 @@
 package selling.sunshine.dao.impl;
 
-import java.util.List;
-import java.util.Map;
-
+import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -10,9 +8,15 @@ import selling.sunshine.dao.BaseDao;
 import selling.sunshine.dao.CustomerOrderDao;
 import selling.sunshine.model.CustomerOrder;
 import selling.sunshine.model.OrderPool;
+import selling.sunshine.pagination.MobilePage;
+import selling.sunshine.pagination.MobilePageParam;
 import selling.sunshine.utils.IDGenerator;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by sunshine on 6/14/16.
@@ -41,9 +45,9 @@ public class CustomerOrderDaoImpl extends BaseDao implements CustomerOrderDao {
         }
     }
 
-	@Override
-	public ResultData updateOrder(CustomerOrder customerOrder) {
-		ResultData result = new ResultData();
+    @Override
+    public ResultData updateOrder(CustomerOrder customerOrder) {
+        ResultData result = new ResultData();
         synchronized (lock) {
             try {
                 sqlSession.update("selling.customer.order.update", customerOrder);
@@ -57,22 +61,53 @@ public class CustomerOrderDaoImpl extends BaseDao implements CustomerOrderDao {
                 return result;
             }
         }
-	}
+    }
 
-	@Override
-	public ResultData queryOrder(Map<String, Object> condition) {
-		ResultData result = new ResultData();
-		synchronized(lock){
-			try{
-				List<OrderPool> list = sqlSession.selectList("selling.customer.order.query", condition);
-				result.setData(list);
-			}catch (Exception e) {
-	            logger.error(e.getMessage());
-	            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
-	            result.setDescription(e.getMessage());
-	        } finally {
-	            return result;
-	        }
-		}
-	}
+    @Override
+    public ResultData queryOrder(Map<String, Object> condition) {
+        ResultData result = new ResultData();
+        synchronized (lock) {
+            try {
+                List<OrderPool> list = sqlSession.selectList("selling.customer.order.query", condition);
+                result.setData(list);
+            } catch (Exception e) {
+                logger.error(e.getMessage());
+                result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+                result.setDescription(e.getMessage());
+            } finally {
+                return result;
+            }
+        }
+    }
+
+    @Override
+    public ResultData queryOrder(Map<String, Object> condition, MobilePageParam param) {
+        ResultData result = new ResultData();
+        MobilePage<CustomerOrder> page = new MobilePage<>();
+        ResultData total = queryOrder(condition);
+        if (total.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription(total.getDescription());
+            return result;
+        }
+        page.setTotal(((List) total.getData()).size());
+        List<CustomerOrder> current = queryCustomerOrderByPage(condition, param.getStart(), param.getLength());
+        if (current.isEmpty()) {
+            result.setResponseCode(ResponseCode.RESPONSE_NULL);
+        }
+        page.setData(current);
+        result.setData(page);
+        return result;
+    }
+
+    private List<CustomerOrder> queryCustomerOrderByPage(Map<String, Object> condition, int start, int length) {
+        List<CustomerOrder> result = new ArrayList<>();
+        try {
+            result = sqlSession.selectList("seling.customer.order.query", condition, new RowBounds(start, length));
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        } finally {
+            return result;
+        }
+    }
 }

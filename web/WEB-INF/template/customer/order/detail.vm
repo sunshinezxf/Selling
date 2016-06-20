@@ -78,19 +78,21 @@
                         </div>
                     </a>
                 </div>
+                <!--
                 <div class="weui_cell">
                     <div class="weui_cell_bd weui_cell_primary">
                         <a class="order_status" href="#">查看当前订单状态</a>
                     </div>
                 </div>
+                -->
             </div>
         </div>
     </div>
     <div>
-        <button id="continue" class="">继续购物</button>
+        <button id="continue" class="weui_btn weui_btn_primary continue_btn">继续购物</button>
     </div>
     <div>
-        <button id="leave" class="">离开</button>
+        <button id="leave" class="weui_btn weui_btn_mini weui_btn_default leave_btn">离开</button>
     </div>
     <div class="weui_dialog_alert" id="address_dialog" style="display: none;">
         <div class="weui_mask"></div>
