@@ -31,6 +31,8 @@ import selling.sunshine.utils.ResultData;
 import selling.sunshine.utils.WechatConfig;
 import selling.sunshine.utils.WechatUtil;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import java.util.ArrayList;
@@ -189,15 +191,21 @@ public class CommodityController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{goodsId}")
-    public ModelAndView view(@PathVariable("goodsId") String goodsId, String agentId, String code, String state) {
+    public ModelAndView view(HttpServletRequest request, @PathVariable("goodsId") String goodsId, String agentId, String code, String state) {
         ModelAndView view = new ModelAndView();
-        logger.debug("oppppo" + code + "opppo" + state);
-        if (StringUtils.isEmpty(code) || StringUtils.isEmpty(state)) {
-        	WechatConfig.oauthWechat(view, "/customer/component/goods_error_msg");
-            view.setViewName("/customer/component/goods_error_msg");
-            return view;
+        String openId = null;
+        HttpSession session = request.getSession();
+        if(session.getAttribute("openId") != null && !session.getAttribute("openId").equals("")){
+        	openId = (String) session.getAttribute("openId");
+        } else {
+	        if (StringUtils.isEmpty(code) || StringUtils.isEmpty(state)) {
+	        	WechatConfig.oauthWechat(view, "/customer/component/goods_error_msg");
+	            view.setViewName("/customer/component/goods_error_msg");
+	            return view;
+	        }
+	        openId = WechatUtil.queryOauthOpenId(code);
+	        session.setAttribute("openId", openId);
         }
-        String openId = WechatUtil.queryOauthOpenId(code);
         view.addObject("wechat", openId);
         
         logger.debug("oppppo" + openId);
@@ -235,12 +243,9 @@ public class CommodityController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/customerorder")
-    public ModelAndView customerOrder(String wechat, String orderId) {
+    public ModelAndView customerOrder(String orderId) {
         ModelAndView view = new ModelAndView();
         Map<String, Object> condition = new HashMap<>();
-        if (!StringUtils.isEmpty(wechat)) {
-            condition.put("wechat", wechat);
-        }
         if (!StringUtils.isEmpty(orderId)) {
             condition.put("orderId", orderId);
         }
@@ -251,7 +256,7 @@ public class CommodityController {
             return view;
         }
         ResultData fetchCustomerOrderData = orderService.fetchCustomerOrder(condition);
-        if (fetchCustomerOrderData.getResponseCode() != ResponseCode.RESPONSE_OK || fetchCustomerOrderData.getResponseCode() != ResponseCode.RESPONSE_NULL) {
+        if (fetchCustomerOrderData.getResponseCode() != ResponseCode.RESPONSE_OK) {
             //订单不存在错误页面
         	WechatConfig.oauthWechat(view, "/customer/component/order_error_msg");
             view.setViewName("/customer/component/order_error_msg");

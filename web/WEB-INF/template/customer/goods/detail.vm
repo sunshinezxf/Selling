@@ -410,7 +410,7 @@
                 pingpp_one.init({
                     app_id: "app_K4evXLKq50O8CuL8",
                     amount: data.totalPrice,
-                    channel: [ 'wx_pub'],
+                    channel: ['wx_pub'],
                     charge_url: "${path.concat('/order/customerpay')}",
                     charge_param: {order_id: data.orderId},
                     open_id: '${wechat}',
@@ -434,7 +434,12 @@
                         //若微信公众号渠道需要使用壹收款的支付成功页面，则在这里进行成功回调，
                         //调用 pingpp_one.success 方法，你也可以自己定义回调函数
                         //其他渠道的处理方法请见第 2 节
-                        else pingpp_one.success(function (result) {
+                        else {
+                        $('.unslider-fade').hide();
+                        $('.unslider-nav').hide();
+                        $('.weui_actionsheet').hide();
+                        $('.weui_mask_transition').hide();
+                        pingpp_one.success(function (result) {
                             if (!result.status) {
 		                        $("#fail_dialog").show();
                             }
@@ -442,8 +447,9 @@
                             //这里处理支付成功页面点击“继续购物”按钮触发的方法，
                             //例如：若你需要点击“继续购物”按钮跳转到你的购买页，
                             //则在该方法内写入 window.location.href = "你的购买页面 url"
-                            window.location.href = 'http://yourdomain.com/payment_succeeded';//示例
+                            window.location.href="/commodity/customerorder?"+"orderId="+data.orderId;
                         });
+                        }
                     }
                 });
             } else {

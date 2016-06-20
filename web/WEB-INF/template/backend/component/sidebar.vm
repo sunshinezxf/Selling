@@ -29,15 +29,6 @@
                     </li>
                 </ul>
             </li>
-            <li><a data-toggle="collapse" data-parent="#accordion" href="#customer-management"><i
-                    class="fa fa-book"></i> 顾客管理<i
-                    class="pull-right fa fa-caret-down"></i></a>
-                <ul id="customer-management" class="nav nav-collapse collapse">
-                    <li><a class="sub-nav" href="${path.concat('/customer/overview')}"><i class="fa fa-tasks"></i>
-                        顾客概览</a>
-                    </li>
-                </ul>
-            </li>
             <li><a data-toggle="collapse" data-parent="#accordion" href="#goods-management"><i
                     class="fa fa-book"></i> 商品管理<i
                     class="pull-right fa fa-caret-down"></i></a>
