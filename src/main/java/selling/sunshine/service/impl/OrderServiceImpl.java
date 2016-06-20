@@ -106,11 +106,24 @@ public class OrderServiceImpl implements OrderService {
         ResultData queryResponse = customerOrderDao.queryOrder(condition);
         result.setResponseCode(queryResponse.getResponseCode());
         if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-        	if(((List<CustomerOrder>)queryResponse.getData()).isEmpty()){
-        		result.setResponseCode(ResponseCode.RESPONSE_NULL);
-        	} else {
-        		result.setData(queryResponse.getData());
-        	}
+            if (((List<CustomerOrder>) queryResponse.getData()).isEmpty()) {
+                result.setResponseCode(ResponseCode.RESPONSE_NULL);
+            } else {
+                result.setData(queryResponse.getData());
+            }
+        } else {
+            result.setDescription(queryResponse.getDescription());
+        }
+        return result;
+    }
+
+    @Override
+    public ResultData fetchCustomerOrder(Map<String, Object> condition, MobilePageParam param) {
+        ResultData result = new ResultData();
+        ResultData queryResponse = customerOrderDao.queryOrder(condition, param);
+        result.setResponseCode(queryResponse.getResponseCode());
+        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(queryResponse.getData());
         } else {
             result.setDescription(queryResponse.getDescription());
         }
@@ -170,8 +183,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public ResultData fetchOrder(Map<String, Object> condition,
-                                 MobilePageParam param) {
+    public ResultData fetchOrder(Map<String, Object> condition, MobilePageParam param) {
         ResultData result = new ResultData();
         ResultData queryResponse = orderDao.queryOrderByPage(condition, param);
         result.setResponseCode(queryResponse.getResponseCode());
