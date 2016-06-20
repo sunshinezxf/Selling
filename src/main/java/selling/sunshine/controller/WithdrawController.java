@@ -104,9 +104,7 @@ public class WithdrawController {
             return result;
         }
         Event event = Webhooks.eventParse(webhooks.toString());
-        if ("charge.succeeded".equals(event.getType())) {
-            response.setStatus(200);
-        } else if ("refund.succeeded".equals(event.getType())) {
+        if ("transfer.succeeded".equals(event.getType())) {
             response.setStatus(200);
         } else {
             response.setStatus(500);

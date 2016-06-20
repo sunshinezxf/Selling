@@ -31,7 +31,7 @@
                         <div class="weui_grid_icon">
                             <i class="icon icon_cell"></i>
                         </div>
-                        <p class="weui_grid_label">返现规则</p>
+                        <p class="weui_grid_label">合作协议</p>
                     </a>
                     <a class="weui_grid" href="${path.concat('/agent/contact')}">
                         <div class="weui_grid_icon">

@@ -1,3 +1,5 @@
+<div class="tabbar">
+<div class="weui_tab_bd">
 <div class="hd">
     <h1 class="page_title">订单管理</h1>
 
@@ -48,7 +50,9 @@
         <p class="weui_toast_content">数据加载中</p>
     </div>
 </div>
+</div>
 #parse("/agent/component/navigate.vm")
+</div>
 <script>
 	$(document).ready(function(){
 		$.get_order(${type});
