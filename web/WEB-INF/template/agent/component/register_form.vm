@@ -261,6 +261,7 @@
     function checkFront() {
         photo_num++;
         $("#wrp1").removeClass("weui_uploader_input_wrp");
+        $("#wrp1").addClass("new_weui_uploader_input_wrp");
         $("#photos").text("1/2");
         if (identity_validate()) {
             second_active();
@@ -272,6 +273,7 @@
     function checkBack() {
         photo_num++;
         $("#wrp2").removeClass("weui_uploader_input_wrp");
+        $("#wrp2").addClass("new_weui_uploader_input_wrp");
         $("#photos").text("2/2");
         if (identity_validate()) {
             second_active();
