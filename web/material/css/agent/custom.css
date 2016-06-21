@@ -343,14 +343,38 @@ body {
 	display:none;
 }
 
-.file-input,.btn-file,.weui_uploader_input_wrp{
+.weui_uploader_input_wrp{
 	float: left;
     position: relative;
-    margin-right: 0.9375em;
+    margin-right:6%;
+    margin-bottom: 0.9375em;
+    width: 5.9375em;
+    height: 5.9375em;
+    border: 0.0625em solid #D9D9D9;;
+}
+
+.file-input{
+	float: left;
+    position: relative;
+    margin-right:6%;
+    margin-bottom: 0.9375em;
+    width: 5.9375em;
+    height: 5.9375em;
+    border: 0;
+}
+
+.btn-file{
+	float: left;
+    position: relative;
+    margin-right:6%;
     margin-bottom: 0.9375em;
     width: 5.9375em;
     height: 5.9375em;
     border: 0.0625em solid #D9D9D9;
+}
+
+#wrp1{
+	margin-left:20%;
 }
 
 .file-preview{
