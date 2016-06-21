@@ -95,11 +95,13 @@
             <div class="weui_uploader_bd">
                 <div id="wrp1" class="weui_uploader_input_wrp">
                     <input id="input_id1" class="file" type="file" name="credit"
-                           accept="image/jpg,image/jpeg,image/png,image/gif"/>
+                           accept="image/jpg,image/jpeg,image/png,image/gif" capture="camera"/>
+                    <p>正面</p>
                 </div>
                 <div id="wrp2" class="weui_uploader_input_wrp">
                     <input id="input_id2" class="file" type="file" name="credit"
-                           accept="image/jpg,image/jpeg,image/png,image/gif"/>
+                           accept="image/jpg,image/jpeg,image/png,image/gif" capture="camera"/>
+                    <p>反面</p>
                 </div>
             </div>
         </div>
