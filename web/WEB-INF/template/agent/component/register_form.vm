@@ -88,9 +88,9 @@
             </label>
         </div>
         <div id="identity_verification" class="weui_uploader register_hide">
-            <div class="weui_uploader_hd weui_cell">
-                <div class="weui_cell_bd weui_cell_primary">上传身份证照片（正反面）</div>
-                <div id="photos" class="weui_cell_ft">0/2</div>
+            <div class="weui_uploader_hd weui_cell tips">
+                <div class="weui_cell_bd weui_cell_primary upload_label">上传身份证照片（正反面）</div>
+                <div id="photos" class="weui_cell_ft upload_num">0/2</div>
             </div>
             <div class="weui_uploader_bd">
                 <div id="wrp1" class="weui_uploader_input_wrp">

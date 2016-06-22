@@ -376,11 +376,13 @@ body {
 .weui_uploader_input_wrp p{
 	margin-top:0.2em;
 	font-size:0.9em;
+	color:#808080;
 }
 
 .new_weui_uploader_input_wrp p{
 	margin-top:0.2em;
 	font-size:0.9em;
+	color:#808080;
 }
 
 .file-input{
@@ -425,4 +427,16 @@ body {
 
 .draw_border{
 	border: 0.0625em solid #D9D9D9;
+}
+
+.tips{
+	color:#808080;
+}
+
+.upload_label{
+	margin-left:0.5em;
+}
+
+.upload_num{
+	margin-right:0.5em;
 }
