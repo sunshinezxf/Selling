@@ -152,6 +152,44 @@ public class OrderController {
             result = (MobilePage<Order>) fetchResponse.getData();
         }
         return result;
+    }    
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/customerOrder/overview")
+    public ModelAndView customerOrderOverview() {
+        ModelAndView view = new ModelAndView();
+        view.setViewName("/backend/order/customerOrder");
+        return view;
+    }
+    
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value = "/customerOrder/overview")
+    public MobilePage<CustomerOrder> customerOrderOverview(MobilePageParam param) {
+        MobilePage<CustomerOrder> result = new MobilePage<>();
+        if (StringUtils.isEmpty(param)) {
+            return result;
+        }
+        Map<String, Object> condition = new HashMap<>();
+        List<Integer> status = new ArrayList<>();
+        switch (Integer.parseInt((String) param.getParams().get("status"))) {
+            case 0:
+                status.add(0);
+                break;
+            case 1:
+                status.add(1);
+                break;
+            case 2:
+                status.add(2);
+                break;
+            case 3:
+                status.add(3);
+                break;
+        }
+        condition.put("status", status);
+        ResultData fetchResponse = orderService.fetchCustomerOrder(condition, param);
+        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result = (MobilePage<CustomerOrder>) fetchResponse.getData();
+        }
+        return result;
     }
     
     @RequestMapping(method = RequestMethod.GET, value = "/express")

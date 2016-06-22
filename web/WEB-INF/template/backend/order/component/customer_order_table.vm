@@ -1,0 +1,165 @@
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id-target="order-management">
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+            <h1><i class="fa fa-home"></i> 客户订单概览 </h1>
+            <ol class="breadcrumb">
+                <li><a href="${path.concat('/dashboard')}">首页</a></li>
+                <li><a data-toggle="collapse" data-parent="#accordion" href="#order-management">订单管理</a></li>
+                <li class="active">客户订单概览</li>
+            </ol>
+        </div>
+    </div>
+
+
+        <div class="row">
+           <ul class="nav nav-tabs">
+              <li class="active" id="li1"><a id="1" href="javascript:void(0);" onclick="select(this)"><h4 id="order_class1" class="text-success">已付款订单</h4></a></li>
+              <li id="li2"><a id="2" href="javascript:void(0);" onclick="select(this)"><h4 id="order_class2" class="text-info">未付款订单</h4></a></li>
+              <li id="li3"><a id="3" href="javascript:void(0);" onclick="select(this)"><h4 id="order_class3" class="text-info">已发货订单</h4></a></li>
+              <li id="li4"><a id="4" href="javascript:void(0);" onclick="select(this)"><h4 id="order_class4" class="text-info">已接收订单</h4></a></li>
+           </ul>
+        </div>
+
+    <div class="row">
+        <div class="col-md-12 col-lg-12" id="customer_order_overview">
+            <table class="table table-striped" style="margin-bottom: 0.2em" id="customer_order_table">
+                <tr><th>订单号</th><th>客户</th><th>电话</th><th>地址</th><th>代理商</th><th>总计</th><th>总价</th><th>操作</th></tr>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<script>
+     var url = "${path.concat('/order/customerOrder/overview')}";
+     var start=0;
+     var length=5;
+     var params;
+     var total;
+     
+     
+     $(document).ready(function () {
+          params={"status":1};
+          $.post(url,{
+              start : start,
+              length : length,
+              params : params
+          },function(result){
+                total=result.total;
+                var customerOrderList=result.data;
+                if(total<length){
+                    length=total;
+                } 
+                var node1="";
+                for (var i = 0; i < length; i++) {  
+                      var customerOrder=customerOrderList[i];
+                      if(customerOrder.agent==null){
+                          var agentName="无";
+                      }else{
+                          var agentName=customerOrder.agent.name;
+                      }
+                   node1+="<tr><td>"+customerOrder.orderId+"</td><td>"+customerOrder.receiverName+"</td><td>"+customerOrder.receiverPhone+"</td><td>"+customerOrder.receiverAddress+"</td><td>"+agentName+"</td><td>"+customerOrder.quantity+"</td><td>"+customerOrder.totalPrice+"元</td><td>无快递单</td></tr>";          
+                }
+                $("#customer_order_table").append(node1);
+                total-=length;
+                if(total>0){
+                    var node2="<button type='button' class='btn btn-success' id='loadMore' onclick=loadTable(params)>加载更多</button>";
+                    $("#customer_order_overview").append(node2);
+                }
+          });
+     
+     });
+     
+      function select(obj){
+          $("#customer_order_table").remove();
+          $("#loadMore").remove();
+          switch(obj.id){
+              case "1": $("#li1").attr("class","active");$("#li2").attr("class","");$("#li3").attr("class","");$("#li4").attr("class","");$("#order_class1").attr("class","text-success");$("#order_class2").attr("class","text-info");$("#order_class3").attr("class","text-info");$("#order_class4").attr("class","text-info");
+                        params={"status":1};
+                        break;
+              case "2": $("#li2").attr("class","active");$("#li1").attr("class","");$("#li3").attr("class","");$("#li4").attr("class","");$("#order_class2").attr("class","text-success");$("#order_class1").attr("class","text-info");$("#order_class3").attr("class","text-info");$("#order_class4").attr("class","text-info");
+                        params={"status":0};
+                        break;
+              case "3": $("#li3").attr("class","active");$("#li2").attr("class","");$("#li1").attr("class","");$("#li4").attr("class","");$("#order_class3").attr("class","text-success");$("#order_class2").attr("class","text-info");$("#order_class1").attr("class","text-info");$("#order_class4").attr("class","text-info");
+                        params={"status":2};
+                        break;
+              case "4": $("#li4").attr("class","active");$("#li2").attr("class","");$("#li3").attr("class","");$("#li1").attr("class","");$("#order_class4").attr("class","text-success");$("#order_class2").attr("class","text-info");$("#order_class3").attr("class","text-info");$("#order_class1").attr("class","text-info");
+                        params={"status":3};
+                        break;
+          }
+          start=0;
+          length=5;
+          $.post(url,{
+              start : start,
+              length : length,
+              params : params
+          },function(result){
+                total=result.total;
+                var customerOrderList=result.data;
+                if(total<length){
+                    length=total;
+                } 
+                var node1 = "<table class='table table-striped' style='margin-bottom: 0.2em' id='customer_order_table'><tr><th>订单号</th><th>客户</th><th>电话</th><th>地址</th><th>代理商</th><th>总计</th><th>总价</th><th>操作</th></tr>";
+                for (var i = 0; i < length; i++) {  
+                      var customerOrder=customerOrderList[i];
+                      if(customerOrder.agent==null){
+                          var agentName="无";
+                      }else{
+                          var agentName=customerOrder.agent.name;
+                      }
+                      if(customerOrder.status=="NOT_PAYED"||customerOrder.status=="PAYED"){
+                          var express="无快递单";
+                      }else{
+                          var express="<button type='button' class='btn btn-success' id='" + customerOrder.orderId + "' onclick=expressDetail(this)>快递单详情</button>";
+                      }
+                   var node2="<tr><td>"+customerOrder.orderId+"</td><td>"+customerOrder.receiverName+"</td><td>"+customerOrder.receiverPhone+"</td><td>"+customerOrder.receiverAddress+"</td><td>"+agentName+"</td><td>"+customerOrder.quantity+"</td><td>"+customerOrder.totalPrice+"元</td><td>"+express+"</td></tr>";          
+                   node1+=node2;
+                }
+                node1=node1+"</table>";
+                $("#customer_order_overview").append(node1);
+                total-=length;
+                if(total>0){
+                    var node2="<button type='button' class='btn btn-success' id='loadMore' onclick=loadTable(params)>加载更多</button>";
+                    $("#customer_order_overview").append(node2);
+                }
+              
+          });
+      }
+      
+      function loadTable(params){
+           $("#loadMore").remove();
+           length=5;
+           start+=length;
+           $.post(url,{
+              start : start,
+              length : length,
+              params : params
+          },function(result){
+                var customerOrderList=result.data;
+                if(total<length){
+                    length=total;
+                } 
+                var node="";
+                for (var i = 0; i < length; i++) {  
+                      var customerOrder=customerOrderList[i];
+                      if(customerOrder.agent==null){
+                          var agentName="无";
+                      }else{
+                          var agentName=customerOrder.agent.name;
+                      }
+                      if(customerOrder.status=="NOT_PAYED"||customerOrder.status=="PAYED"){
+                          var express="无快递单";
+                      }else{
+                          var express="<button type='button' class='btn btn-success' id='" + customerOrder.orderId + "' onclick=expressDetail(this)>快递单详情</button>";
+                      }
+                   node+="<tr><td>"+customerOrder.orderId+"</td><td>"+customerOrder.receiverName+"</td><td>"+customerOrder.receiverPhone+"</td><td>"+customerOrder.receiverAddress+"</td><td>"+agentName+"</td><td>"+customerOrder.quantity+"</td><td>"+customerOrder.totalPrice+"元</td><td>"+express+"</td></tr>";          
+               }
+               $("#customer_order_table").append(node);
+                total-=length;
+                if(total>0){
+                    var node2="<button type='button' class='btn btn-success' id='loadMore' onclick=loadTable(params)>加载更多</button>";
+                    $("#customer_order_overview").append(node2);
+                }
+          });
+      }
+</script>

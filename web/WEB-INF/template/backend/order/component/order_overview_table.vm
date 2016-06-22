@@ -1,11 +1,11 @@
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id-target="order-management">
     <div class="row">
         <div class="col-md-12 col-lg-12">
-            <h1><i class="fa fa-home"></i> 订单概览 </h1>
+            <h1><i class="fa fa-home"></i> 代理商订单概览 </h1>
             <ol class="breadcrumb">
                 <li><a href="${path.concat('/dashboard')}">首页</a></li>
                 <li><a data-toggle="collapse" data-parent="#accordion" href="#order-management">订单管理</a></li>
-                <li class="active">订单概览</li>
+                <li class="active">代理商订单概览</li>
             </ol>
         </div>
     </div>
@@ -26,7 +26,7 @@
     </div>
 
 </div>
-#parse("/backend/component/order_item_modal.vm")
+#parse("/backend/order/component/order_item_modal.vm")
 #parse("/backend/express/component/express_detail_modal.vm")
 <script>
 
@@ -46,7 +46,7 @@
         $.post(url, {
             start : payed_start,
             length :length,
-            params :payed_params,
+            params :payed_params
         }, function (result) {
             payed_order_total=result.total;
             var orderList=result.data;

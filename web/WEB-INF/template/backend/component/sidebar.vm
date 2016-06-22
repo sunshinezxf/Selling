@@ -22,7 +22,10 @@
                         订单审核</a>
                     </li>
                     <li><a class="sub-nav" href="${path.concat('/order/overview')}"><i class="fa fa-tasks"></i>
-                        订单概览</a>
+                        代理商订单</a>
+                    </li>
+                    <li><a class="sub-nav" href="${path.concat('/order/customerOrder/overview')}"><i class="fa fa-tasks"></i>
+                        客户订单</a>
                     </li>
                     <li><a class="sub-nav" href="${path.concat('/express/upload')}"><i class="fa fa-tasks"></i>
                         上传快递单</a>
