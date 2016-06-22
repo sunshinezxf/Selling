@@ -25,7 +25,7 @@
 	    	<div class="weui_cells_tips linkClip" data-clipboard-action="copy" data-clipboard-text="${urls.get(${index})}" style="text-align:center;">
 	    		点击此处复制链接
 	    	</div>
-	    	<div class="weui_cells_tips" style="text-align:center;">
+	    	<div class="weui_cells_tips linkSent" style="text-align:center;">
 	    		请把二维码或链接发送给客户
 	    	</div>
 	    </div>
@@ -43,6 +43,12 @@
 </body>
 <script>
 	$(document).ready(function(){
+		var ua = navigator.userAgent.toLowerCase();
+		if(ua.indexOf('iphone') > 0){
+			$(".linkClip").hide();
+			$(".linkSent").html("请把二维码发送给客户");
+		}
+	
 		$.each($(".url"), function(i, val){
 			var size = $(val).parent().width() * 1;
 			$(val).next().qrcode({width:size, height:size, text:$(val).text()});

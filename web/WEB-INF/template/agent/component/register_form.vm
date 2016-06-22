@@ -93,14 +93,17 @@
                 <div id="photos" class="weui_cell_ft">0/2</div>
             </div>
             <div class="weui_uploader_bd">
-                <div id="wrp1" class="weui_uploader_input_wrp">
+                #parse("/test_wxupload.vm")
+                <!--<div id="wrp1" class="weui_uploader_input_wrp">
                     <input id="input_id1" class="file" type="file" name="credit"
                            accept="image/jpg,image/jpeg,image/png,image/gif"/>
+                    <p>正面</p>
                 </div>
                 <div id="wrp2" class="weui_uploader_input_wrp">
                     <input id="input_id2" class="file" type="file" name="credit"
                            accept="image/jpg,image/jpeg,image/png,image/gif"/>
-                </div>
+                    <p>反面</p>
+                </div>-->
             </div>
         </div>
     </div>
@@ -135,7 +138,6 @@
     </div>
 </div>
 <script>
-
     $("#gender_selection").click(function () {
         $("#agent_register_area").hide();
         $("#gender_option").show();
@@ -261,6 +263,7 @@
     function checkFront() {
         photo_num++;
         $("#wrp1").removeClass("weui_uploader_input_wrp");
+        $("#wrp1").addClass("new_weui_uploader_input_wrp");
         $("#photos").text("1/2");
         if (identity_validate()) {
             second_active();
@@ -272,6 +275,7 @@
     function checkBack() {
         photo_num++;
         $("#wrp2").removeClass("weui_uploader_input_wrp");
+        $("#wrp2").addClass("new_weui_uploader_input_wrp");
         $("#photos").text("2/2");
         if (identity_validate()) {
             second_active();
@@ -338,11 +342,11 @@
 
     $("#wrp1").delegate("img", "click", function () {
         photo_num--;
-        $("#input_id1").click();
+        ##$("#input_id1").click();
     });
     $("#wrp2").delegate("img", "click", function () {
         photo_num--;
-        $("#input_id2").click();
+        ##$("#input_id2").click();
     });
 
     $("#input_id1").fileinput({

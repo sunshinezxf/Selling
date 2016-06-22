@@ -115,6 +115,8 @@
                 /material/js/** = anon
 
                 /payment/** = anon
+				
+				/withdraw/inform = anon
 
                 /** = authc
             </value>

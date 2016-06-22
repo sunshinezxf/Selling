@@ -21,7 +21,7 @@
 	    	<div id="linkClip" class="weui_cells_tips" data-clipboard-action="copy" data-clipboard-text="${url}" style="text-align:center;">
 	    		点击此处复制链接
 	    	</div>
-	    	<div class="weui_cells_tips" style="text-align:center;">
+	    	<div class="weui_cells_tips linkSent" style="text-align:center;">
 	    		请把二维码或链接发送给被邀请注册的代理商
 	    	</div>
 	    </div>
@@ -39,6 +39,12 @@
 <script>
 	url = "${url}";
 	$(document).ready(function(){
+		var ua = navigator.userAgent.toLowerCase();
+		if(ua.indexOf('iphone') > 0){
+			$("#linkClip").hide();
+			$(".linkSent").html("请把二维码发送给被邀请注册的代理商");
+		}
+	
 		var cl = new Clipboard('#linkClip');
 		cl.on('success', function(e) {
 		 	$('#toast').show();
