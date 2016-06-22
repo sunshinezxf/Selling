@@ -21,7 +21,7 @@
              <div class="col-md-12 col-lg-12" id="check_order_table">          
              
             </div>
-            <div class="col-md-12 col-lg-12" id="check_customerOrder_table">          
+            <div class="col-md-12 col-lg-12" id="check_customerOrder_table" style="display:none">          
              
             </div>      
          </div>
@@ -37,12 +37,14 @@
     var start = 0;
     var length= 5;
     var total=0;
+    var customerOrderStart = 0;
+    var customerOrderTotal=0;
+     var customerOrderLength=5;
 
     var goods_quantity_list = new Object();
     var quantity_num_list=new Object();
     $(document).ready(function () {
-        $.post("${path.concat('/order/statistics')}", function (result) {
-        
+        $.post("${path.concat('/order/statistics')}", function (result) {       
         var orderNum=0;
         
         if((result.data.orderList != null) || (result.data.customerOrderList != null)){
@@ -123,15 +125,11 @@
             }
             document.getElementById("total").innerHTML="待处理订单累计：<strong>"+orderNum+"笔</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' class='btn btn-info' onclick=expressAll()>一键发货</button><br>"+node;
         
-       
-       
+    if(result.data.orderList != null){       
         $.post(url, {
             start: start,
-            length :length,
+            length :length
         }, function (result) {
-        
-        
-         if(result.data.orderList != null){
             total=result.total;
             var orderList=result.data;            
             
@@ -156,29 +154,54 @@
                 
             total-=length;
             if(total>0){
-                 var node6="<button type='button' class='btn btn-success' id='loadMore' onclick=loadTable(this)>加载更多</button>";
-                 $("#check_order_table").append(node6);
-            }
-            
- 
-            
-         }
-            
+                 var node3="<button type='button' class='btn btn-success' id='loadMore' onclick=loadTable(this)>加载更多</button>";
+                 $("#check_order_table").append(node3);
+            }  
+                              
          });
-         
-        $.post(url, {
-            start: start,
-            length :length,
+     }
+      
+  if(result.data.customerOrderList != null){     
+        $.post("${path.concat('/order/customerOrder/check')}", {
+            start: customerOrderStart,
+            length :customerOrderLength
         }, function (result) {
-            
+            customerOrderTotal=result.total;           
+            var customerOrderList=result.data;
+            if(customerOrderTotal<customerOrderLength){
+               customerOrderLength=customerOrderTotal;
+            }
+            var node1 = "<table class='table table-striped' style='margin-bottom: 0.2em' id='customer_order_table'><tr><th>订单号</th><th>客户</th><th>电话</th><th>地址</th><th>代理商</th><th>总计</th><th>总价</th><td>操作</td></tr>";
+            for (var i = 0; i < customerOrderLength; i++) {  
+               var customerOrder=customerOrderList[i];
+               if(customerOrder.agent==null){
+                   var agentName="无";
+               }else{
+                   var agentName=customerOrder.agent.name;
+               }
+               var node2="<tr><td>"+customerOrder.orderId+"</td><td>"+customerOrder.receiverName+"</td><td>"+customerOrder.receiverPhone+"</td><td>"+customerOrder.receiverAddress+"</td><td>"+agentName+"</td><td>"+customerOrder.quantity+"</td><td>"+customerOrder.totalPrice+"元</td><td><button type='button' class='btn btn-info' id='" + customerOrder.orderId + "' onclick=expressCustomerOrder(this)>发货</button></td></tr>";          
+               node1+=node2;
+            }
+            node1=node1+"</table>";
+            $("#check_customerOrder_table").append(node1);
+            customerOrderTotal-=customerOrderLength;
+            if(customerOrderTotal>0){
+                 var node3="<button type='button' class='btn btn-success' id='loadCustomerOrderMore' onclick=loadCustomerOrderTable(this)>加载更多</button>";
+                 $("#check_customerOrder_table").append(node3);
+            }  
+            if(result.data.orderList != null){
+               $("#check_customerOrder_table").fadeOut();
+            } 
         });
+   }
     
-        }else{
+}else{
             document.getElementById("total").innerHTML="当前没有待审核的订单！";
         } 
-        });
+});
      
-    });
+});
+
 
     
 </script>
@@ -244,10 +267,23 @@
       newElement.setAttribute("value",parentId);
       turnForm.appendChild(newElement);
       turnForm.submit();
-      #*
-      window.location.href = "${path.concat('/order/express/')}"+id;
-      *#
     }
+    
+    function expressCustomerOrder(obj){
+      var id= obj.id 
+      var turnForm = document.createElement("form");       
+      document.body.appendChild(turnForm);
+      turnForm.method = 'post';
+      turnForm.action = '${path.concat('/order/express')}';
+      var newElement = document.createElement("input");
+      newElement.setAttribute("name","customerOrderId");
+      newElement.setAttribute("type","hidden");
+      newElement.setAttribute("value",id);
+      turnForm.appendChild(newElement);
+      turnForm.submit();
+    }
+    
+    
     
     function expressAll(){
        window.location.href = "${path.concat('/order/express')}";
@@ -258,7 +294,7 @@
             start+=length; 
             $.post(url, {
                start: start,
-               length :length,
+               length :length
             }, function (result) {
                  var orderList=result.data;   
                  if(total<length){	
@@ -279,10 +315,39 @@
                 
             total-=length;
             if(total>0){
-                 var node6="<button type='button' class='btn btn-success' id='loadMore' onclick=loadTable(this)>加载更多</button>";
-                 $("#check_order_table").append(node6);
+                 var node3="<button type='button' class='btn btn-success' id='loadMore' onclick=loadTable(this)>加载更多</button>";
+                 $("#check_order_table").append(node3);
             }
                  
+         });   
+      }
+      
+      function loadCustomerOrderTable(obj){
+            $("#loadCustomerOrderMore").remove();  
+            customerOrderStart+=customerOrderLength; 
+            $.post("${path.concat('/order/customerOrder/check')}", {
+               start: customerOrderStart,
+               length :customerOrderLength
+            }, function (result) {              
+                 var customerOrderList=result.data;
+                 if(customerOrderTotal<customerOrderLength){
+                     customerOrderLength=customerOrderTotal;
+                 }
+            for (var i = 0; i < customerOrderLength; i++) {  
+               var customerOrder=customerOrderList[i];
+               if(customerOrder.agent==null){
+                   var agentName="无";
+               }else{
+                   var agentName=customerOrder.agent.name;
+               }
+               var node="<tr><td>"+customerOrder.orderId+"</td><td>"+customerOrder.receiverName+"</td><td>"+customerOrder.receiverPhone+"</td><td>"+customerOrder.receiverAddress+"</td><td>"+agentName+"</td><td>"+customerOrder.quantity+"</td><td>"+customerOrder.totalPrice+"元</td><td><button type='button' class='btn btn-info' id='" + customerOrder.orderId + "' onclick=expressCustomerOrder(this)>发货</button></td></tr>";          
+               $("#customer_order_table").append(node);
+            }      
+            customerOrderTotal-=customerOrderLength;
+            if(customerOrderTotal>0){
+                 var node3="<button type='button' class='btn btn-success' id='loadCustomerOrderMore' onclick=loadCustomerOrderTable(this)>加载更多</button>";
+                 $("#check_customerOrder_table").append(node3);
+            }                  
          });   
       }
       

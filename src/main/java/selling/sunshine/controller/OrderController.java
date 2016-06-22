@@ -94,7 +94,7 @@ public class OrderController {
     }
     
     @ResponseBody
-    @RequestMapping(method = RequestMethod.POST, value = "/customer/check")
+    @RequestMapping(method = RequestMethod.POST, value = "/customerOrder/check")
     public MobilePage<CustomerOrder> customerOrderHandle(MobilePageParam param) {
         MobilePage<CustomerOrder> result = new MobilePage<>();
         if (StringUtils.isEmpty(param)) {
@@ -107,7 +107,7 @@ public class OrderController {
         List<SortRule> rule = new ArrayList<>();
         rule.add(new SortRule("create_time", "asc"));
         condition.put("sort", rule);
-        ResultData fetchResponse = orderService.fetchOrder(condition, param);
+        ResultData fetchResponse = orderService.fetchCustomerOrder(condition, param);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             result = (MobilePage<CustomerOrder>) fetchResponse.getData();
         }
@@ -192,6 +192,23 @@ public class OrderController {
                 expressList.add(express);
             }
         }
+        
+        //添加顾客订单
+        status.clear();
+        condition.clear();
+        status.add(1);
+        condition.put("status", status);
+        List<CustomerOrder> customerOrderList=(List<CustomerOrder>)orderService.fetchCustomerOrder(condition).getData();
+        for (CustomerOrder customerOrder:customerOrderList) {
+        	 Express express = new Express("代填", "云草纲目", "18000000000",
+                     "云南", customerOrder.getReceiverName(),
+                     customerOrder.getReceiverPhone(),
+                    customerOrder.getReceiverAddress(), customerOrder.getGoods().getName(), expressDate);
+             express.setExpressId("expressNumber" +k);
+             k++;
+            // express.setOrderItem(orderItems.get(i));
+             expressList.add(express);
+		}
         view.addObject("expressList", expressList);
         view.setViewName("/backend/order/express");
         return view;
@@ -200,31 +217,44 @@ public class OrderController {
     @RequestMapping(method = RequestMethod.POST, value = "/express")
     public ModelAndView express(HttpServletRequest request) {
         ModelAndView view = new ModelAndView();
-        if (request.getParameter("orderId") == null) {
+        if ((request.getParameter("orderId") == null)&&(request.getParameter("customerOrderId") == null)) {
             view.setViewName("/backend/order/express");
             return view;
         }
-        Map<String, Object> condition = new HashMap<>();
-        condition.put("orderId", request.getParameter("orderId"));
-        ResultData orderData = orderService.fetchOrder(condition);
-        Order order = ((List<Order>) orderData.getData()).get(0);
-        // 验证order的每一项orderItem购买的商品的数量与相应的价格是否一致
-        // 若不一致，则将不一致的那一项删除，并且把钱退回给代理商并告知他
-        // 同时，根据不同情况修改order的状态和orderItem的状态
-        List<OrderItem> orderItems = order.getOrderItems();
-        for (OrderItem item : orderItems) {
-            if (item.getOrderItemPrice() != (item.getGoodsQuantity() * item.getGoods().getAgentPrice())) {
-
-            }
-        }
         Timestamp expressDate = new Timestamp(System.currentTimeMillis());
         List<Express> expressList = new ArrayList<>();
-        for (int i = 0; i < orderItems.size(); i++) {
-            Express express = new Express("代填", "云草纲目", "18000000000", "云南", orderItems.get(i).getCustomer().getName(), orderItems.get(i).getCustomer().getPhone().getPhone(), orderItems.get(i).getCustomer().getAddress().getAddress(), orderItems.get(i).getGoods().getName(), expressDate);
-            express.setExpressId("expressNumber" + i);
-            express.setOrderItem(orderItems.get(i));
-            expressList.add(express);
-        }
+        if (request.getParameter("orderId") != null) {
+            Map<String, Object> condition = new HashMap<>();
+            condition.put("orderId", request.getParameter("orderId"));
+            ResultData orderData = orderService.fetchOrder(condition);
+            Order order = ((List<Order>) orderData.getData()).get(0);
+            // 验证order的每一项orderItem购买的商品的数量与相应的价格是否一致
+            // 若不一致，则将不一致的那一项删除，并且把钱退回给代理商并告知他
+            // 同时，根据不同情况修改order的状态和orderItem的状态
+            List<OrderItem> orderItems = order.getOrderItems();
+            for (OrderItem item : orderItems) {
+                if (item.getOrderItemPrice() != (item.getGoodsQuantity() * item.getGoods().getAgentPrice())) {
+
+                }
+            }
+            for (int i = 0; i < orderItems.size(); i++) {
+                Express express = new Express("代填", "云草纲目", "18000000000", "云南", orderItems.get(i).getCustomer().getName(), orderItems.get(i).getCustomer().getPhone().getPhone(), orderItems.get(i).getCustomer().getAddress().getAddress(), orderItems.get(i).getGoods().getName(), expressDate);
+                express.setExpressId("expressNumber" + i);
+                express.setOrderItem(orderItems.get(i));
+                expressList.add(express);
+            }
+		}else {
+			 Map<String, Object> condition = new HashMap<>();
+	         condition.put("orderId", request.getParameter("customerOrderId"));
+	         CustomerOrder customerOrder=((List<CustomerOrder>)orderService.fetchCustomerOrder(condition).getData()).get(0);
+	         Express express = new Express("代填", "云草纲目", "18000000000",
+                     "云南", customerOrder.getReceiverName(),
+                     customerOrder.getReceiverPhone(),
+                    customerOrder.getReceiverAddress(), customerOrder.getGoods().getName(), expressDate);
+             express.setExpressId("expressNumber" +0);
+             expressList.add(express);
+		}
+
         view.addObject("expressList", expressList);
         view.setViewName("/backend/order/express");
         return view;

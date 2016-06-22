@@ -103,7 +103,7 @@ public class CustomerOrderDaoImpl extends BaseDao implements CustomerOrderDao {
     private List<CustomerOrder> queryCustomerOrderByPage(Map<String, Object> condition, int start, int length) {
         List<CustomerOrder> result = new ArrayList<>();
         try {
-            result = sqlSession.selectList("seling.customer.order.query", condition, new RowBounds(start, length));
+            result = sqlSession.selectList("selling.customer.order.query", condition, new RowBounds(start, length));
         } catch (Exception e) {
             logger.error(e.getMessage());
         } finally {
