@@ -27,7 +27,11 @@
     <button type="button" class="weui_btn weui_btn_disabled weui_btn_default" id="lg_btn" disabled="disabled">
         登录
     </button>
-    <a href="${path.concat('/agent/register')}" class="weui_btn weui_btn_mini weui_btn_default">注册</a>
+</div>
+<div class="weui_btn_area">
+	<div class="weui_cell_bd weui_cell_primary problock">
+		<a href="${path.concat('/agent/register')}" >还没有账号？注册</a>
+	</div>
 </div>
 
 <script>

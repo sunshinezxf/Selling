@@ -1,5 +1,6 @@
 package selling.sunshine.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.pingplusplus.model.Charge;
 import org.apache.shiro.SecurityUtils;
@@ -561,7 +562,7 @@ public class OrderController {
             view.setViewName("redirect:/agent/prompt");
             return view;
         }
-        view.addObject("order", order);
+        view.addObject("order", JSON.toJSON(order));
         view.addObject("agent", target);
         WechatConfig.oauthWechat(view, "agent/order/pay");
         view.setViewName("agent/order/pay");

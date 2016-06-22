@@ -1,4 +1,4 @@
-<div id="customer_option" style="display: none;">
+<div id="customer_option" style="display: none;padding-bottom:55px;">
 	<div class="weui_cells weui_cells_radio" >
 	    #foreach($elem in $customer)
 	    <label class="weui_cell customer" id="${elem.customerId}">

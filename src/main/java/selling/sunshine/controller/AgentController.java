@@ -166,7 +166,7 @@ public class AgentController {
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value="/checkbinding")
-    public ResultData checkBinding(){
+    public ResultData checkBinding(HttpServletRequest request){
     	ResultData result = new ResultData();
     	Map<String, Object> condition = new HashMap<String, Object>();
     	Subject subject = SecurityUtils.getSubject();
@@ -185,6 +185,13 @@ public class AgentController {
         }
         Agent agent = ((List<Agent>) fetchAgentResponse.getData()).get(0);
         if(agent.getWechat() == null || agent.getWechat().equals("")){
+        	HttpSession session = request.getSession();
+        	String openId = (String) session.getAttribute("openId");
+        	if(openId != null && !openId.equals("")){
+        		agent.setWechat(openId);
+        		result.setData(agent);
+        		return result;
+        	}
         	result.setResponseCode(ResponseCode.RESPONSE_NULL);
         	result.setDescription("没有绑定微信号");
         	return result;
@@ -300,6 +307,8 @@ public class AgentController {
             view.setViewName("/agent/login");
             return view;
         }
+        //
+        Subject subject = SecurityUtils.getSubject();
         view.setViewName("redirect:/agent/order/place");
         return view;
     }
@@ -331,7 +340,6 @@ public class AgentController {
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
-        WechatConfig.oauthWechat(view, "/agent/register");
         view.setViewName("/agent/register");
         return view;
     }
@@ -513,7 +521,7 @@ public class AgentController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/order/place")
-    public ModelAndView placeOrder(String code, HttpServletRequest request) {
+    public ModelAndView placeOrder(String code) {
         ModelAndView view = new ModelAndView();
         if (!StringUtils.isEmpty(code)) {
             oauth(code);
@@ -588,17 +596,6 @@ public class AgentController {
         condition.put("agentId", user.getAgent().getAgentId());
         ResultData queryAgentResponse = agentService.fetchAgent(condition);
         Agent agent = ((List<Agent>) queryAgentResponse.getData()).get(0);
-        if(agent.getWechat() == null || agent.getWechat().equals("")){
-	        HttpSession session = request.getSession();
-	    	String openId = (String) session.getAttribute("openId");
-	    	if(openId != null && !openId.equals("")){
-	    		agent.setWechat(openId);
-	    		ResultData updateAgentData = agentService.updateAgent(agent);
-	    		if(updateAgentData.getResponseCode() != ResponseCode.RESPONSE_OK){
-	    			logger.error("ERROR! SESSION OPENID ERROR");
-	    		}
-	    	}
-        }
         if (agent.isGranted()) {
         	WechatConfig.oauthWechat(view, "/agent/order/place");
             view.setViewName("/agent/order/place");
@@ -1259,5 +1256,11 @@ public class AgentController {
         return resultData;
     }
 
-
+    @RequestMapping(method = RequestMethod.GET, value = "/test")
+    public ModelAndView test() {
+    	ModelAndView view = new ModelAndView();
+    	WechatConfig.oauthWechat(view, "/agent/test");
+    	view.setViewName("/agent/component/test_wxupload");
+    	return view;
+    }
 }

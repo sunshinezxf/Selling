@@ -10,7 +10,9 @@
             signature: '${configuration.signature}',
             jsApiList: [
                 'onMenuShareTimeline',
-                'onMenuShareAppMessage'
+                'onMenuShareAppMessage',
+                'chooseImage',
+                'uploadImage'
             ]
         });
         // 2. 分享接口
