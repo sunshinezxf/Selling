@@ -180,7 +180,7 @@ public class OrderController {
             }
             
             for (int i = 0; i < orderItems.size(); i++) {
-                Express express = new Express("代填", "云草纲目", "18000000000",
+                Express express = new Express("待填", "云草纲目", "18000000000",
                         "云南", orderItems.get(i).getCustomer().getName(),
                         orderItems.get(i).getCustomer().getPhone().getPhone(),
                         orderItems.get(i).getCustomer().getAddress()
@@ -200,7 +200,7 @@ public class OrderController {
         condition.put("status", status);
         List<CustomerOrder> customerOrderList=(List<CustomerOrder>)orderService.fetchCustomerOrder(condition).getData();
         for (CustomerOrder customerOrder:customerOrderList) {
-        	 Express express = new Express("代填", "云草纲目", "18000000000",
+        	 Express express = new Express("待填", "云草纲目", "18000000000",
                      "云南", customerOrder.getReceiverName(),
                      customerOrder.getReceiverPhone(),
                     customerOrder.getReceiverAddress(), customerOrder.getGoods().getName(), expressDate);
@@ -238,7 +238,7 @@ public class OrderController {
                 }
             }
             for (int i = 0; i < orderItems.size(); i++) {
-                Express express = new Express("代填", "云草纲目", "18000000000", "云南", orderItems.get(i).getCustomer().getName(), orderItems.get(i).getCustomer().getPhone().getPhone(), orderItems.get(i).getCustomer().getAddress().getAddress(), orderItems.get(i).getGoods().getName(), expressDate);
+                Express express = new Express("待填", "云草纲目", "18000000000", "云南", orderItems.get(i).getCustomer().getName(), orderItems.get(i).getCustomer().getPhone().getPhone(), orderItems.get(i).getCustomer().getAddress().getAddress(), orderItems.get(i).getGoods().getName(), expressDate);
                 express.setExpressId("expressNumber" + i);
                 express.setOrderItem(orderItems.get(i));
                 expressList.add(express);
@@ -247,7 +247,7 @@ public class OrderController {
 			 Map<String, Object> condition = new HashMap<>();
 	         condition.put("orderId", request.getParameter("customerOrderId"));
 	         CustomerOrder customerOrder=((List<CustomerOrder>)orderService.fetchCustomerOrder(condition).getData()).get(0);
-	         Express express = new Express("代填", "云草纲目", "18000000000",
+	         Express express = new Express("待填", "云草纲目", "18000000000",
                      "云南", customerOrder.getReceiverName(),
                      customerOrder.getReceiverPhone(),
                     customerOrder.getReceiverAddress(), customerOrder.getGoods().getName(), expressDate);
@@ -284,7 +284,6 @@ public class OrderController {
             }
         }
         resultData.setResponseCode(ResponseCode.RESPONSE_OK);
-        System.err.println("test");
         return resultData;
 
     }
