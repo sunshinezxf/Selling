@@ -1,0 +1,40 @@
+#parse("/common/util.vm")
+<html>
+<head>
+    #parse("/agent/component/init.vm")
+    #parse("/agent/wechat/component/validation.vm")
+    <title>代理商注册</title>
+</head>
+<body ontouchstart>
+    <div id="wrp1" class="weui_uploader_input_wrp draw_border">
+        <img id="img1"/>
+    </div>
+    <div id="wrp2" class="weui_uploader_input_wrp draw_border">
+        <img id="img2"/>
+    </div>
+</body>
+<script>
+     $("#wrp1").click(function(){
+         wx.chooseImage({
+             count: 1, // 默认9
+             sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+             sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+             success: function (res) {
+                 var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+                 $("#img1").attr("src","localIds");
+             }
+         });
+     });
+     $("#wrp2").click(function(){
+         wx.chooseImage({
+             count: 1, // 默认9
+             sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+             sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+             success: function (res) {
+                 var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+                 $("#img2").attr("src","localIds");
+             }
+         });
+     });
+</script>
+</html>
