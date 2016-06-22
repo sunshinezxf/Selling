@@ -11,7 +11,8 @@
             jsApiList: [
                 'onMenuShareTimeline',
                 'onMenuShareAppMessage',
-                'chooseImage'
+                'chooseImage',
+                'uploadImage'
             ]
         });
         // 2. 分享接口
