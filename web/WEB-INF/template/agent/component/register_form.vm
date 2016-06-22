@@ -93,8 +93,7 @@
                 <div id="photos" class="weui_cell_ft">0/2</div>
             </div>
             <div class="weui_uploader_bd">
-                #parse("/test_wxupload.vm")
-                <!--<div id="wrp1" class="weui_uploader_input_wrp">
+                <div id="wrp1" class="weui_uploader_input_wrp">
                     <input id="input_id1" class="file" type="file" name="credit"
                            accept="image/jpg,image/jpeg,image/png,image/gif"/>
                     <p>正面</p>
@@ -103,17 +102,20 @@
                     <input id="input_id2" class="file" type="file" name="credit"
                            accept="image/jpg,image/jpeg,image/png,image/gif"/>
                     <p>反面</p>
-                </div>-->
+                </div>
             </div>
         </div>
     </div>
+    <div id="android_tips" class="weui_cells_tips register_hide">安卓用户请先拍照再上传</div>
     <div id="next_div" class="weui_btn_area">
         <button type="button" class="weui_btn weui_btn_disabled weui_btn_default" id="next_btn" disabled="disabled">
             下一步
         </button>
     </div>
     <div id="login_btn" class="weui_btn_area">
-        <a href="${path.concat('/agent/login')}" class="weui_btn weui_btn_mini weui_btn_default">登录</a>
+    	<div class="weui_cell_bd weui_cell_primary problock">
+        	<a href="${path.concat('/agent/login')}">已有账号？登录</a>
+        </div>
     </div>
     <div id="pre_div" class="weui_btn_area register_hide">
         <button type="button" class="weui_btn weui_btn_plain_primary" id="pre_btn">上一步</button>
@@ -138,6 +140,13 @@
     </div>
 </div>
 <script>
+	$(document).ready(function(){
+		var ua = navigator.userAgent.toLowerCase();
+		if(ua.indexOf('iphone') > 0){
+			$("#android_tips").remove();
+		}
+	});
+	
     $("#gender_selection").click(function () {
         $("#agent_register_area").hide();
         $("#gender_option").show();
@@ -162,6 +171,7 @@
                     $("#information").hide();
                     $("#protocol").hide();
                     $("#identity_verification").show();
+                    $("#android_tips").show();
                     $("#next_div").hide();
                     $("#login_btn").hide();
                     $("#pre_div").show();
@@ -178,6 +188,7 @@
         $("#information").show();
         $("#protocol").show();
         $("#identity_verification").hide();
+        $("#android_tips").hide();
         $("#next_div").show();
         $("#login_btn").show();
         $("#pre_div").hide();
@@ -342,11 +353,11 @@
 
     $("#wrp1").delegate("img", "click", function () {
         photo_num--;
-        ##$("#input_id1").click();
+        $("#input_id1").click();
     });
     $("#wrp2").delegate("img", "click", function () {
         photo_num--;
-        ##$("#input_id2").click();
+        $("#input_id2").click();
     });
 
     $("#input_id1").fileinput({
