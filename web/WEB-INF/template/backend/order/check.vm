@@ -3,6 +3,7 @@
 <head>
     #parse("/backend/component/init.vm")
     #parse("/backend/component/init_datatable.vm")
+    #parse("/backend/component/init_highcharts.vm")
     <title>订单审核</title>
 </head>
 <body>

@@ -144,7 +144,20 @@
     
     function detail(obj){
         $.post("${path.concat('/agent/detail/')}"+obj.id, function (result) {
-           document.getElementById("personal").innerHTML="代理商姓名： "+result.data.agent.name;
+           document.getElementById("agentAddress").innerHTML="居住地： "+result.data.agent.address;
+           if(result.data.agent.wechat==null){
+               document.getElementById("agentWechat").innerHTML="微信号： 尚未绑定";
+           }else{
+               document.getElementById("agentWechat").innerHTML="微信号： "+result.data.agent.wechat;
+           }
+           if(result.data.agent.upperAgent==null){
+               document.getElementById("upperAgent").innerHTML="上级代理商： 无";
+           }else{
+               document.getElementById("upperAgent").innerHTML="上级代理商： "+result.data.agent.upperAgent.name;
+           }
+           document.getElementById("agentclaimScale").innerHTML="群规模： "+result.data.agent.claimScale+"人";
+           document.getElementById("agentCoffer").innerHTML="账户余额： "+result.data.agent.coffer+"元";
+           document.getElementById("agentRefund").innerHTML="累计返现金额： "+result.data.agent.agentRefund+"元";
         });
     }
 </script>

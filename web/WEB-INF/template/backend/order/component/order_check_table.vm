@@ -10,6 +10,9 @@
         </div>
     </div>
     <div class="row">
+         <div class="col-md-12 col-lg-12">   
+            <div id="container" style="min-width:700px;height:400px"></div>
+         </div>
          <div class="col-md-12 col-lg-12" id="main">   
              <p id="total" class="lead text-info"></p>    
              <div class="row">
@@ -351,7 +354,52 @@
          });   
       }
       
-      
+  $('#container').highcharts({
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Monthly Average Rainfall'
+        },
+        subtitle: {
+            text: 'Source: WorldClimate.com'
+        },
+        xAxis: {
+            categories: [
+                '1盒',
+                '6盒',
+                '16盒',
+                '20盒'
+            ]
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: '个数 (个)'
+            }
+        },
+        tooltip: {
+            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name} </td>' +
+                '<td style="padding:0"><b>{point.y} 个</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+        },
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+        },
+        series: [{
+            name: '三七粉',
+            data: [43, 9, 0,10]
+        },{
+            name: '三七粉大号',
+            data: [32, 21, 6,0]
+        }]
+    });
         
 
 </script>
