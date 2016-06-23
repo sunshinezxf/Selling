@@ -126,6 +126,7 @@
         </div>
     </div>
 </div>
+#parse("/agent/loading.vm")
 <script>
     $("#gender_selection").click(function () {
         $("#agent_register_area").hide();
@@ -177,6 +178,7 @@
         $("#agent_register_form").attr("action", "${path.concat('/agent/register')}");
         $("#agent_register_form").attr("method", "post");
         $("#agent_register_form").submit();
+        $("#loadingToast").show();
     });
 </script>
 <script>
