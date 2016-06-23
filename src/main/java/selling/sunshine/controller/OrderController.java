@@ -198,7 +198,7 @@ public class OrderController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/express")
     public ModelAndView express() {
-        ModelAndView view = new ModelAndView();
+    	ModelAndView view = new ModelAndView();
         Map<String, Object> condition = new HashMap<>();
         List<Express> expresses = new ArrayList<>();
         //查询所有状态为已付款的代理商订单
@@ -207,7 +207,7 @@ public class OrderController {
         condition.put("status", status);
         ResultData fetchResponse = orderService.fetchOrder(condition);
         int index = 0;
-        if (fetchResponse.getData() == ResponseCode.RESPONSE_OK) {
+        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             List<Order> list = (List<Order>) fetchResponse.getData();
             for (Order order : list) {
                 for (OrderItem item : order.getOrderItems()) {
@@ -227,7 +227,7 @@ public class OrderController {
         status.add(1);
         condition.put("status", status);
         fetchResponse = orderService.fetchCustomerOrder(condition);
-        if (fetchResponse.getData() == ResponseCode.RESPONSE_OK) {
+        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             List<CustomerOrder> list = (List<CustomerOrder>) fetchResponse.getData();
             for (CustomerOrder item : list) {
                 Goods4Customer goods = item.getGoods();
@@ -264,7 +264,7 @@ public class OrderController {
                 Goods4Agent goods = item.getGoods();
                 Express4Agent express = new Express4Agent("尚未设置", PlatformConfig.getValue("sender_name"), PlatformConfig.getValue("sender_phone"), PlatformConfig.getValue("sender_address"), customer.getName(), customer.getPhone().getPhone(), customer.getAddress().getAddress(), goods.getName());
                 express.setLinkId(item.getOrderItemId());
-                express.setExpressNumber("expressNumber" + 0);
+                express.setExpressId("expressNumber" + 0);
                 expressList.add(express);
             }
         } else {
@@ -276,7 +276,7 @@ public class OrderController {
                 Goods4Customer goods = order.getGoods();
                 Express4Customer express = new Express4Customer("尚未设置", PlatformConfig.getValue("sender_name"), PlatformConfig.getValue("sender_phone"), PlatformConfig.getValue("sender_address"), order.getReceiverName(), order.getReceiverPhone(), order.getReceiverAddress(), goods.getName());
                 express.setLinkId(order.getOrderId());
-                express.setExpressNumber("expressNumber" + 0);
+                express.setExpressId("expressNumber" + 0);
                 expressList.add(express);
             }
         }
@@ -295,7 +295,7 @@ public class OrderController {
         Long num = Long.parseLong(expressNumber);
         for (ExpressItemForm item : itemForms) {
             String linkId = item.getLinkId();
-            if (!StringUtils.isEmpty(linkId) && linkId.startsWith("ODI")) {
+            if (!StringUtils.isEmpty(linkId) && linkId.startsWith("ORI")) {
                 Express4Agent express = new Express4Agent(String.valueOf(num), item.getSenderName(), item.getSenderPhone(), item.getSenderAddress(), item.getReceiverName(), item.getReceiverPhone(), item.getReceiverAddress(), item.getGoodsName());
                 OrderItem temp = new OrderItem();
                 temp.setOrderItemId(linkId);
@@ -305,14 +305,14 @@ public class OrderController {
                 orderService.updateOrderItem(temp);
                 Map<String, Object> condition = new HashMap<>();
                 condition.put("orderItemId", temp.getOrderItemId());
-                ResultData fetchResponse = orderService.fetchOrder(condition);
+                ResultData fetchResponse = orderService.fetchOrderItem(condition);
                 if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
                     condition.clear();
                     temp = ((List<OrderItem>) fetchResponse.getData()).get(0);
                     condition.put("orderId", temp.getOrder().getOrderId());
                     condition.put("status", 1);
                     fetchResponse = orderService.fetchOrderItem(condition);
-                    if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_NULL) {
+                    if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
                         Order order = temp.getOrder();
                         order.setStatus(OrderStatus.FULLY_SHIPMENT);
                         orderService.modifyOrder(order);

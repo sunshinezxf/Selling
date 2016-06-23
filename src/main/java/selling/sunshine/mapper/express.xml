@@ -28,7 +28,7 @@
         <result property="goodsName" column="goods_name"></result>
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
-        <association property="orderItem" column="orderItemId = order_item_id" select="orderItemQuery"></association>
+        <association property="item" column="orderItemId = order_item_id" select="orderItemQuery"></association>
     </resultMap>
 
     <resultMap id="express4CustomerVo" type="selling.sunshine.model.express.Express4Customer">
@@ -79,7 +79,7 @@
     <insert id="insertExpress4Agent" parameterType="selling.sunshine.model.express.Express4Agent"
             useGeneratedKeys="false">
         INSERT INTO express_agent(express_id, order_item_id, express_no, sender_name, sender_phone, sender_address, receiver_name, receiver_phone, receiver_address, goods_name, block_flag, create_time)
-        VALUES (#{expressId}, #{orderItem.orderItemId}, #{expressNumber}, #{senderName}, #{senderPhone}, #{senderAddress}, #{receiverName}, #{receiverPhone}, #{receiverAddress}, #{goodsName}, #{blockFlag}, #{createAt})
+        VALUES (#{expressId}, #{item.orderItemId}, #{expressNumber}, #{senderName}, #{senderPhone}, #{senderAddress}, #{receiverName}, #{receiverPhone}, #{receiverAddress}, #{goodsName}, #{blockFlag}, #{createAt})
     </insert>
 
     <insert id="insertExpress4Customer" parameterType="selling.sunshine.model.express.Express4Customer"
