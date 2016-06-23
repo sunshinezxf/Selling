@@ -1,41 +1,54 @@
 package selling.sunshine.service.impl;
 
-import java.util.List;
-
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import selling.sunshine.dao.ExpressDao;
-import selling.sunshine.model.Express;
+import selling.sunshine.model.express.Express;
+import selling.sunshine.model.express.Express4Agent;
+import selling.sunshine.model.express.Express4Customer;
 import selling.sunshine.service.ExpressService;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
+import java.util.List;
+import java.util.Map;
+
 public class ExpressServiceImpl implements ExpressService {
-	
-	private Logger logger = LoggerFactory.getLogger(ExpressServiceImpl.class);
 
-	@Autowired
-	private ExpressDao expressDao;
+    private Logger logger = LoggerFactory.getLogger(ExpressServiceImpl.class);
 
-	@Override
-	public ResultData createExpress(Express express) {
-		ResultData result = new ResultData();
-		ResultData insertResponse = expressDao.insertExpress(express);
-		result.setResponseCode(insertResponse.getResponseCode());
-		if (insertResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-			result.setData(insertResponse.getData());
-		} else {
-			result.setDescription(insertResponse.getDescription());
-		}
-		return result;
-	}
+    @Autowired
+    private ExpressDao expressDao;
 
-	@Override
-	public ResultData fetchExpress(Map<String, Object> condition) {
+    @Override
+    public ResultData createExpress(Express4Agent express) {
+        ResultData result = new ResultData();
+        ResultData insertResponse = expressDao.insertExpress4Agent(express);
+        result.setResponseCode(insertResponse.getResponseCode());
+        if (insertResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(insertResponse.getData());
+        } else {
+            result.setDescription(insertResponse.getDescription());
+        }
+        return result;
+    }
+
+    @Override
+    public ResultData createExpress(Express4Customer express) {
+        ResultData result = new ResultData();
+        ResultData insertResponse = expressDao.insertExpress4Customer(express);
+        result.setResponseCode(insertResponse.getResponseCode());
+        if (insertResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(insertResponse.getData());
+        } else {
+            result.setDescription(insertResponse.getDescription());
+        }
+        return result;
+    }
+
+    @Override
+    public ResultData fetchExpress(Map<String, Object> condition) {
         ResultData result = new ResultData();
         ResultData queryResponse = expressDao.queryExpress(condition);
         result.setResponseCode(queryResponse.getResponseCode());
@@ -48,6 +61,37 @@ public class ExpressServiceImpl implements ExpressService {
             result.setDescription(queryResponse.getDescription());
         }
         return result;
-	}
+    }
 
+    @Override
+    public ResultData fetchExpress4Agent(Map<String, Object> condition) {
+        ResultData result = new ResultData();
+        ResultData queryResponse = expressDao.queryExpress4Agent(condition);
+        result.setResponseCode(queryResponse.getResponseCode());
+        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            if (((List<Express4Agent>) queryResponse.getData()).isEmpty()) {
+                result.setResponseCode(ResponseCode.RESPONSE_NULL);
+            }
+            result.setData(queryResponse.getData());
+        } else if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
+            result.setDescription(queryResponse.getDescription());
+        }
+        return result;
+    }
+
+    @Override
+    public ResultData fetchExpress4Customer(Map<String, Object> condition) {
+        ResultData result = new ResultData();
+        ResultData queryResponse = expressDao.queryExpress4Customer(condition);
+        result.setResponseCode(queryResponse.getResponseCode());
+        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            if (((List<Express4Customer>) queryResponse.getData()).isEmpty()) {
+                result.setResponseCode(ResponseCode.RESPONSE_NULL);
+            }
+            result.setData(queryResponse.getData());
+        } else if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
+            result.setDescription(queryResponse.getDescription());
+        }
+        return result;
+    }
 }
