@@ -1,4 +1,4 @@
-<div id="identity_verification1" class="weui_uploader register_hide">
+<div id="identity_verification1" class="weui_uploader register_hide identity_verification">
     <div class="weui_uploader_hd weui_cell tips">
         <div class="weui_cell_bd weui_cell_primary upload_label">上传身份证照片（正面）</div>
         <div class="weui_cell_ft upload_example">示例</div>
@@ -13,7 +13,7 @@
         </div>
     </div>
 </div>
-<div id="identity_verification2" class="weui_uploader register_hide">
+<div id="identity_verification2" class="weui_uploader register_hide identity_verification">
     <div class="weui_uploader_hd weui_cell tips">
         <div class="weui_cell_bd weui_cell_primary upload_label">上传身份证照片（反面）</div>
         <div class="weui_cell_ft upload_example">示例</div>
