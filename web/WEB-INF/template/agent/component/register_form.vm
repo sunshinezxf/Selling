@@ -87,26 +87,13 @@
                 </div>
             </label>
         </div>
-        <div id="identity_verification" class="weui_uploader register_hide">
-            <div class="weui_uploader_hd weui_cell tips">
-                <div class="weui_cell_bd weui_cell_primary upload_label">上传身份证照片（正反面）</div>
-                <div id="photos" class="weui_cell_ft upload_num">0/2</div>
-            </div>
-            <div class="weui_uploader_bd">
-                <div id="wrp1" class="weui_uploader_input_wrp">
-                    <input id="input_id1" class="file" type="file" name="credit"
-                           accept="image/jpg,image/jpeg,image/png,image/gif"/>
-                    <p>正面</p>
-                </div>
-                <div id="wrp2" class="weui_uploader_input_wrp">
-                    <input id="input_id2" class="file" type="file" name="credit"
-                           accept="image/jpg,image/jpeg,image/png,image/gif"/>
-                    <p>反面</p>
-                </div>
-            </div>
+        <div id="fileinput_uploader register_hide">
+            #parse("/agent/component/fileinput_uploader.vm")
+        </div>
+        <div id="wx_uploader register_hide">
+            #parse("/agent/component/wx_uploader.vm")
         </div>
     </div>
-    <div id="android_tips" class="weui_cells_tips register_hide">安卓用户请先拍照再上传</div>
     <div id="next_div" class="weui_btn_area">
         <button type="button" class="weui_btn weui_btn_disabled weui_btn_default" id="next_btn" disabled="disabled">
             下一步
@@ -140,13 +127,6 @@
     </div>
 </div>
 <script>
-	$(document).ready(function(){
-		var ua = navigator.userAgent.toLowerCase();
-		if(ua.indexOf('iphone') > 0){
-			$("#android_tips").remove();
-		}
-	});
-	
     $("#gender_selection").click(function () {
         $("#agent_register_area").hide();
         $("#gender_option").show();
@@ -170,7 +150,8 @@
                 } else {
                     $("#information").hide();
                     $("#protocol").hide();
-                    $("#identity_verification").show();
+                    $("#identity_verification1").show();
+                    $("#identity_verification2").show();
                     $("#android_tips").show();
                     $("#next_div").hide();
                     $("#login_btn").hide();
@@ -187,7 +168,8 @@
     $("#pre_btn").click(function () {
         $("#information").show();
         $("#protocol").show();
-        $("#identity_verification").hide();
+        $("#identity_verification1").hide();
+        $("#identity_verification2").hide();
         $("#android_tips").hide();
         $("#next_div").show();
         $("#login_btn").show();
@@ -203,7 +185,16 @@
 </script>
 <script>
     var photo_num = 0;
+    var click_num1=0;
+    var click_num2=0;
     $(document).ready(function () {
+        var ua = navigator.userAgent.toLowerCase();
+		if((ua.indexOf('andriod') > 0)&&(ua.match(/MicroMessenger/i) == "micromessenger")){
+		    $("#wx_uploader").show();
+		}else{
+			$("#fileinput_uploader").show();
+		}
+		
         $("#agent_name").on("input propertychange", function () {
             if (information_validate()) {
                 first_active();
@@ -273,9 +264,8 @@
 
     function checkFront() {
         photo_num++;
-        $("#wrp1").removeClass("weui_uploader_input_wrp");
-        $("#wrp1").addClass("new_weui_uploader_input_wrp");
-        $("#photos").text("1/2");
+        $("#fileinput_wrp1").removeClass("weui_uploader_input_wrp");
+        $("#fileinput_wrp1").addClass("new_weui_uploader_input_wrp");
         if (identity_validate()) {
             second_active();
         } else {
@@ -285,9 +275,8 @@
 
     function checkBack() {
         photo_num++;
-        $("#wrp2").removeClass("weui_uploader_input_wrp");
-        $("#wrp2").addClass("new_weui_uploader_input_wrp");
-        $("#photos").text("2/2");
+        $("#fileinput_wrp2").removeClass("weui_uploader_input_wrp");
+        $("#fileinput_wrp2").addClass("new_weui_uploader_input_wrp");
         if (identity_validate()) {
             second_active();
         } else {
@@ -351,16 +340,16 @@
         return true;
     }
 
-    $("#wrp1").delegate("img", "click", function () {
+    $("#fileinput_wrp1").delegate("img", "click", function () {
         photo_num--;
-        $("#input_id1").click();
+        $("#fileinput_id1").click();
     });
-    $("#wrp2").delegate("img", "click", function () {
+    $("#fileinput_wrp2").delegate("img", "click", function () {
         photo_num--;
-        $("#input_id2").click();
+        $("#fileinput_id2").click();
     });
 
-    $("#input_id1").fileinput({
+    $("#fileinput_id1").fileinput({
         uploadUrl: '${path.concat('/credit/upload')}',
         language: 'zh',
         showUpload: false,
@@ -385,7 +374,7 @@
                     });
                 }
             });
-    $("#input_id2").fileinput({
+    $("#fileinput_id2").fileinput({
         uploadUrl: '${path.concat('/credit/upload')}',
         language: 'zh',
         showUpload: false,
@@ -413,6 +402,71 @@
 
     $("#dialog").find(".weui_btn_dialog.primary").click(function () {
         $("#dialog").hide();
+    });
+    
+    $("#wx_wrp1").click(function(){
+        click_num1++;
+        wx.chooseImage({
+            count: 1, // 默认9
+            sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+            sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+            success: function (res) {
+                var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+                $.each(localIds, function(i,n) {
+                    wx.uploadImage({
+                        localId: n, // 需要上传的图片的本地ID，由chooseImage接口获得
+                        isShowProgressTips: 1,// 默认为1，显示进度提示
+                        success: function (res) {
+                            var serverId = res.serverId; // 返回图片的服务器端ID
+                            $("#wx_wrp1").removeClass("weui_uploader_input_wrp");
+                            $("#wx_wrp1").addClass("new_weui_uploader_input_wrp");
+                            $("#wx_img1").attr("src",localIds);
+                            $("#front").val(serverId);
+                            if(click_num1==1){
+                                photo_num++;
+                            }
+                            if (identity_validate()) {
+                                second_active();
+                            } else {
+                                second_inactive();
+                            }
+                        }
+                    });
+                });
+            }
+        });
+    });
+    $("#wx_wrp2").click(function(){
+        click_num2++;
+        wx.chooseImage({
+            count: 1, // 默认9
+            sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+            sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+            success: function (res) {
+                var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+                $.each(localIds, function(i,n) {
+                    wx.uploadImage({
+                        localId: n, // 需要上传的图片的本地ID，由chooseImage接口获得
+                        isShowProgressTips: 1,// 默认为1，显示进度提示
+                        success: function (res) {
+                            var serverId = res.serverId; // 返回图片的服务器端ID
+                            $("#wx_wrp2").removeClass("weui_uploader_input_wrp");
+                            $("#wx_wrp2").addClass("new_weui_uploader_input_wrp");
+                            $("#wx_img2").attr("src",localIds);
+                            $("#back").val(serverId);
+                            if(click_num2==1){
+                                photo_num++;
+                            }
+                            if (identity_validate()) {
+                                second_active();
+                            } else {
+                                second_inactive();
+                            }
+                        }
+                    });
+                });
+            }
+        });
     });
 
 </script>

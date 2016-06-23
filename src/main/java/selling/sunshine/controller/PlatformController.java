@@ -56,12 +56,9 @@ public class PlatformController {
         try {
             Subject subject = SecurityUtils.getSubject();
             if (subject.isAuthenticated() && subject.getPrincipal() != null) {
-            	subject.logout();
-                view.setViewName("redirect:/login");
-                return view;
+                subject.logout();
             }
-            subject.login(new UsernamePasswordToken(form.getUsername(), form
-                    .getPassword()));
+            subject.login(new UsernamePasswordToken(form.getUsername(), form.getPassword()));
         } catch (Exception e) {
             view.setViewName("redirect:/login");
             return view;
