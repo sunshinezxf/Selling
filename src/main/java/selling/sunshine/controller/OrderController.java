@@ -13,24 +13,21 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import selling.sunshine.form.ExpressForm;
-import selling.sunshine.form.OrderItemForm;
-import selling.sunshine.form.PayForm;
-import selling.sunshine.form.SortRule;
+import selling.sunshine.dao.CustomerOrderDao;
+import selling.sunshine.form.*;
 import selling.sunshine.model.*;
+import selling.sunshine.model.express.Express;
+import selling.sunshine.model.express.Express4Agent;
+import selling.sunshine.model.express.Express4Customer;
 import selling.sunshine.model.goods.Goods4Agent;
+import selling.sunshine.model.goods.Goods4Customer;
 import selling.sunshine.pagination.MobilePage;
 import selling.sunshine.pagination.MobilePageParam;
 import selling.sunshine.service.*;
-import selling.sunshine.utils.Prompt;
-import selling.sunshine.utils.PromptCode;
-import selling.sunshine.utils.ResponseCode;
-import selling.sunshine.utils.ResultData;
-import selling.sunshine.utils.WechatConfig;
+import selling.sunshine.utils.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -64,6 +61,9 @@ public class OrderController {
     private ExpressService expressService;
 
     @Autowired
+    private CustomerOrderDao customerOrderDao;
+
+    @Autowired
     private RefundService refundService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/check")
@@ -93,7 +93,7 @@ public class OrderController {
         }
         return result;
     }
-    
+
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/customerOrder/check")
     public MobilePage<CustomerOrder> customerOrderHandle(MobilePageParam param) {
@@ -153,15 +153,15 @@ public class OrderController {
             result = (MobilePage<Order>) fetchResponse.getData();
         }
         return result;
-    }    
-    
+    }
+
     @RequestMapping(method = RequestMethod.GET, value = "/customerOrder/overview")
     public ModelAndView customerOrderOverview() {
         ModelAndView view = new ModelAndView();
         view.setViewName("/backend/order/customerOrder");
         return view;
     }
-    
+
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/customerOrder/overview")
     public MobilePage<CustomerOrder> customerOrderOverview(MobilePageParam param) {
@@ -192,107 +192,91 @@ public class OrderController {
         }
         return result;
     }
-    
+
     @RequestMapping(method = RequestMethod.GET, value = "/express")
     public ModelAndView express() {
         ModelAndView view = new ModelAndView();
         Map<String, Object> condition = new HashMap<>();
+        List<Express> expresses = new ArrayList<>();
+        //查询所有状态为已付款的代理商订单
         List<Integer> status = new ArrayList<>();
         status.add(2);
         condition.put("status", status);
-        List<Order> orderList = (List<Order>) orderService
-                .fetchOrder(condition).getData();
-        List<Express> expressList = new ArrayList<>();
-        Timestamp expressDate = new Timestamp(System.currentTimeMillis());
-        int k=0;
-        for (int j = 0; j < orderList.size(); j++) {
-            Order order = orderList.get(j);
-            // 验证order的每一项orderItem购买的商品的数量与相应的价格是否一致
-            // 若不一致，则将不一致的那一项删除，并且把钱退回给代理商并告知他
-            // 同时，根据不同情况修改order的状态和orderItem的状态
-            List<OrderItem> orderItems = order.getOrderItems();
-            for (OrderItem item : orderItems) {
-                if (item.getOrderItemPrice() != (item.getGoodsQuantity() * item
-                        .getGoods().getAgentPrice())) {
-
+        ResultData fetchResponse = orderService.fetchOrder(condition);
+        int index = 0;
+        if (fetchResponse.getData() == ResponseCode.RESPONSE_OK) {
+            List<Order> list = (List<Order>) fetchResponse.getData();
+            for (Order order : list) {
+                for (OrderItem item : order.getOrderItems()) {
+                    Customer customer = item.getCustomer();
+                    Goods4Agent goods = item.getGoods();
+                    Express4Agent express = new Express4Agent("尚未设置", PlatformConfig.getValue("sender_name"), PlatformConfig.getValue("sender_phone"), PlatformConfig.getValue("sender_address"), customer.getName(), customer.getPhone().getPhone(), customer.getAddress().getAddress(), goods.getName());
+                    express.setExpressId("expressNumber" + index);
+                    index++;
+                    express.setLinkId(item.getOrderItemId());
+                    expresses.add(express);
                 }
             }
-            
-            for (int i = 0; i < orderItems.size(); i++) {
-                Express express = new Express("待填", "云草纲目", "18000000000",
-                        "云南", orderItems.get(i).getCustomer().getName(),
-                        orderItems.get(i).getCustomer().getPhone().getPhone(),
-                        orderItems.get(i).getCustomer().getAddress()
-                                .getAddress(), orderItems.get(i).getGoods()
-                                .getName(), expressDate);
-                express.setExpressId("expressNumber" +k);
-                k++;
-                express.setOrderItem(orderItems.get(i));
-                expressList.add(express);
-            }
         }
-        
-        //添加顾客订单
-        status.clear();
+        //查询所有顾客订单
         condition.clear();
+        status.clear();
         status.add(1);
         condition.put("status", status);
-        List<CustomerOrder> customerOrderList=(List<CustomerOrder>)orderService.fetchCustomerOrder(condition).getData();
-        for (CustomerOrder customerOrder:customerOrderList) {
-        	 Express express = new Express("待填", "云草纲目", "18000000000",
-                     "云南", customerOrder.getReceiverName(),
-                     customerOrder.getReceiverPhone(),
-                    customerOrder.getReceiverAddress(), customerOrder.getGoods().getName(), expressDate);
-             express.setExpressId("expressNumber" +k);
-             k++;
-            // express.setOrderItem(orderItems.get(i));
-             expressList.add(express);
-		}
-        view.addObject("expressList", expressList);
+        fetchResponse = orderService.fetchCustomerOrder(condition);
+        if (fetchResponse.getData() == ResponseCode.RESPONSE_OK) {
+            List<CustomerOrder> list = (List<CustomerOrder>) fetchResponse.getData();
+            for (CustomerOrder item : list) {
+                Goods4Customer goods = item.getGoods();
+                Express4Customer express = new Express4Customer("尚未设置", PlatformConfig.getValue("sender_name"), PlatformConfig.getValue("sender_phone"), PlatformConfig.getValue("sender_address"), item.getReceiverName(), item.getReceiverPhone(), item.getReceiverAddress(), goods.getName());
+                express.setExpressId("expressNumber" + index);
+                index++;
+                express.setLinkId(item.getOrderId());
+                expresses.add(express);
+            }
+        }
+        view.addObject("expressList", expresses);
         view.setViewName("/backend/order/express");
         return view;
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/express")
-    public ModelAndView express(HttpServletRequest request) {
+    public ModelAndView express(String orderId, String customerOrderId) {
         ModelAndView view = new ModelAndView();
-        if ((request.getParameter("orderId") == null)&&(request.getParameter("customerOrderId") == null)) {
+        if (StringUtils.isEmpty(orderId) && StringUtils.isEmpty(customerOrderId)) {
             view.setViewName("/backend/order/express");
             return view;
         }
-        Timestamp expressDate = new Timestamp(System.currentTimeMillis());
         List<Express> expressList = new ArrayList<>();
-        if (request.getParameter("orderId") != null) {
+        if (StringUtils.isEmpty(orderId)) {
             Map<String, Object> condition = new HashMap<>();
-            condition.put("orderId", request.getParameter("orderId"));
+            condition.put("orderId", orderId);
             ResultData orderData = orderService.fetchOrder(condition);
             Order order = ((List<Order>) orderData.getData()).get(0);
             // 验证order的每一项orderItem购买的商品的数量与相应的价格是否一致
             // 若不一致，则将不一致的那一项删除，并且把钱退回给代理商并告知他
             // 同时，根据不同情况修改order的状态和orderItem的状态
-            List<OrderItem> orderItems = order.getOrderItems();
-            for (OrderItem item : orderItems) {
-                if (item.getOrderItemPrice() != (item.getGoodsQuantity() * item.getGoods().getAgentPrice())) {
-
-                }
-            }
-            for (int i = 0; i < orderItems.size(); i++) {
-                Express express = new Express("待填", "云草纲目", "18000000000", "云南", orderItems.get(i).getCustomer().getName(), orderItems.get(i).getCustomer().getPhone().getPhone(), orderItems.get(i).getCustomer().getAddress().getAddress(), orderItems.get(i).getGoods().getName(), expressDate);
-                express.setExpressId("expressNumber" + i);
-                express.setOrderItem(orderItems.get(i));
+            for (OrderItem item : order.getOrderItems()) {
+                Customer customer = item.getCustomer();
+                Goods4Agent goods = item.getGoods();
+                Express4Agent express = new Express4Agent("尚未设置", PlatformConfig.getValue("sender_name"), PlatformConfig.getValue("sender_phone"), PlatformConfig.getValue("sender_address"), customer.getName(), customer.getPhone().getPhone(), customer.getAddress().getAddress(), goods.getName());
+                express.setLinkId(item.getOrderItemId());
+                express.setExpressNumber("expressNumber" + 0);
                 expressList.add(express);
             }
-		}else {
-			 Map<String, Object> condition = new HashMap<>();
-	         condition.put("orderId", request.getParameter("customerOrderId"));
-	         CustomerOrder customerOrder=((List<CustomerOrder>)orderService.fetchCustomerOrder(condition).getData()).get(0);
-	         Express express = new Express("待填", "云草纲目", "18000000000",
-                     "云南", customerOrder.getReceiverName(),
-                     customerOrder.getReceiverPhone(),
-                    customerOrder.getReceiverAddress(), customerOrder.getGoods().getName(), expressDate);
-             express.setExpressId("expressNumber" +0);
-             expressList.add(express);
-		}
+        } else {
+            Map<String, Object> condition = new HashMap<>();
+            condition.put("orderId", customerOrderId);
+            ResultData fetchResponse = orderService.fetchCustomerOrder(condition);
+            if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                CustomerOrder order = ((List<CustomerOrder>) orderService.fetchCustomerOrder(condition).getData()).get(0);
+                Goods4Customer goods = order.getGoods();
+                Express4Customer express = new Express4Customer("尚未设置", PlatformConfig.getValue("sender_name"), PlatformConfig.getValue("sender_phone"), PlatformConfig.getValue("sender_address"), order.getReceiverName(), order.getReceiverPhone(), order.getReceiverAddress(), goods.getName());
+                express.setLinkId(order.getOrderId());
+                express.setExpressNumber("expressNumber" + 0);
+                expressList.add(express);
+            }
+        }
 
         view.addObject("expressList", expressList);
         view.setViewName("/backend/order/express");
@@ -301,26 +285,46 @@ public class OrderController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/expressData")
     @ResponseBody
-    public ResultData express(@RequestBody List<ExpressForm> expressData) {
+    public ResultData express(@RequestBody ExpressForm form) {
         ResultData resultData = new ResultData();
-        List<Express> expressList = expressData.get(0).getExpressList();
-        String expressNumber = expressData.get(0).getExpressNumber();
+        List<ExpressItemForm> itemForms = form.getExpressItem();
+        String expressNumber = form.getExpressNumber();
         Long num = Long.parseLong(expressNumber);
-        for (Express express : expressList) {
-            express.setExpressNumber(String.valueOf(num));
-            num++;
-            expressService.createExpress(express);
-            if (express.getOrderItem() != null) {
-                express.getOrderItem().setStatus(OrderItemStatus.SHIPPED);
-                orderService.updateOrderItem(express.getOrderItem());
+        for (ExpressItemForm item : itemForms) {
+            String linkId = item.getLinkId();
+            if (!StringUtils.isEmpty(linkId) && linkId.startsWith("ODI")) {
+                Express4Agent express = new Express4Agent(String.valueOf(num), item.getSenderName(), item.getSenderPhone(), item.getSenderAddress(), item.getReceiverName(), item.getReceiverPhone(), item.getReceiverAddress(), item.getGoodsName());
+                OrderItem temp = new OrderItem();
+                temp.setOrderItemId(linkId);
+                temp.setStatus(OrderItemStatus.SHIPPED);
+                express.setItem(temp);
+                expressService.createExpress(express);
+                orderService.updateOrderItem(temp);
                 Map<String, Object> condition = new HashMap<>();
-                condition.put("orderItemId", express.getOrderItem().getOrderItemId());
-                OrderItem item = ((List<OrderItem>) orderService.fetchOrderItem(condition).getData()).get(0);
-                if (item.getOrder().getStatus() != OrderStatus.FULLY_SHIPMENT) {
-                    item.getOrder().setStatus(OrderStatus.FULLY_SHIPMENT);
-                    orderService.modifyOrder(item.getOrder());
+                condition.put("orderItemId", temp.getOrderItemId());
+                ResultData fetchResponse = orderService.fetchOrder(condition);
+                if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                    condition.clear();
+                    temp = ((List<OrderItem>) fetchResponse.getData()).get(0);
+                    condition.put("orderId", temp.getOrder().getOrderId());
+                    condition.put("status", 1);
+                    fetchResponse = orderService.fetchOrderItem(condition);
+                    if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_NULL) {
+                        Order order = temp.getOrder();
+                        order.setStatus(OrderStatus.FULLY_SHIPMENT);
+                        orderService.modifyOrder(order);
+                    }
                 }
+            } else if (linkId.startsWith("CUO")) {
+                Express4Customer express = new Express4Customer(String.valueOf(num), item.getSenderName(), item.getSenderPhone(), item.getSenderAddress(), item.getReceiverName(), item.getReceiverPhone(), item.getReceiverAddress(), item.getGoodsName());
+                CustomerOrder temp = new CustomerOrder();
+                temp.setOrderId(linkId);
+                temp.setStatus(OrderItemStatus.SHIPPED);
+                express.setOrder(temp);
+                expressService.createExpress(express);
+                customerOrderDao.updateOrder(temp);
             }
+            num++;
         }
         resultData.setResponseCode(ResponseCode.RESPONSE_OK);
         return resultData;
@@ -366,15 +370,15 @@ public class OrderController {
         status.add(2);
         condition.put("status", status);
         List<Order> orderList = (List<Order>) orderService.fetchOrder(condition).getData();
-        
-        
+
+
         condition.clear();
         status.clear();
         status.add(1);
         condition.put("status", status);
-        List<CustomerOrder> customerOrderList=(List<CustomerOrder>)orderService.fetchCustomerOrder(condition).getData();
-        
-        
+        List<CustomerOrder> customerOrderList = (List<CustomerOrder>) orderService.fetchCustomerOrder(condition).getData();
+
+
         Map<String, Object> dataMap = new HashMap<>();
         dataMap.put("orderList", orderList);
         dataMap.put("customerOrderList", customerOrderList);
@@ -398,7 +402,7 @@ public class OrderController {
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         if (user == null) {
-        	WechatConfig.oauthWechat(view, "/agent/login");
+            WechatConfig.oauthWechat(view, "/agent/login");
             view.setViewName("/agent/login");
             return view;
         }
@@ -441,7 +445,7 @@ public class OrderController {
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         if (user == null) {
-        	WechatConfig.oauthWechat(view, "/agent/login");
+            WechatConfig.oauthWechat(view, "/agent/login");
             view.setViewName("/agent/login");
             return view;
         }
@@ -509,7 +513,7 @@ public class OrderController {
                 attr.addFlashAttribute("prompt", prompt);
                 view.setViewName("redirect:/agent/prompt");
             } else if (type.equals("submit")) {
-            	attr.addFlashAttribute("openId", openId);
+                attr.addFlashAttribute("openId", openId);
                 view.setViewName("redirect:/order/pay/" + order.getOrderId());
             }
             return view;
@@ -527,7 +531,7 @@ public class OrderController {
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         if (user == null) {
-        	WechatConfig.oauthWechat(view, "/agent/login");
+            WechatConfig.oauthWechat(view, "/agent/login");
             view.setViewName("/agent/login");
             return view;
         }
@@ -577,7 +581,7 @@ public class OrderController {
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         if (user == null) {
-        	WechatConfig.oauthWechat(view, "/agent/login");
+            WechatConfig.oauthWechat(view, "/agent/login");
             view.setViewName("/agent/login");
             return view;
         }
@@ -632,7 +636,7 @@ public class OrderController {
         view.setViewName("redirect:/agent/prompt");
         return view;
     }
-    
+
     @RequestMapping(method = RequestMethod.POST, value = "/otherpay")
     public Charge otherPay(HttpServletRequest request) {
         Charge charge = new Charge();
@@ -661,7 +665,6 @@ public class OrderController {
         return charge;
     }
 
-   
 
     @RequestMapping(method = RequestMethod.POST, value = "/customerpay")
     public Charge customerPay(HttpServletRequest request) {

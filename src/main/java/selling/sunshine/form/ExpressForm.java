@@ -2,27 +2,25 @@ package selling.sunshine.form;
 
 import java.util.List;
 
-import selling.sunshine.model.Express;
-
 public class ExpressForm {
 
-	private List<Express> expressList;
-	private String expressNumber;
+    private String expressNumber;
+    
+    private List<ExpressItemForm> expressItem;
 
-	public List<Express> getExpressList() {
-		return expressList;
-	}
+    public String getExpressNumber() {
+        return expressNumber;
+    }
 
-	public void setExpressList(List<Express> expressList) {
-		this.expressList = expressList;
-	}
+    public void setExpressNumber(String expressNumber) {
+        this.expressNumber = expressNumber;
+    }
 
-	public String getExpressNumber() {
-		return expressNumber;
-	}
+    public List<ExpressItemForm> getExpressItem() {
+        return expressItem;
+    }
 
-	public void setExpressNumber(String expressNumber) {
-		this.expressNumber = expressNumber;
-	}
-
+    public void setExpressItem(List<ExpressItemForm> expressItem) {
+        this.expressItem = expressItem;
+    }
 }
