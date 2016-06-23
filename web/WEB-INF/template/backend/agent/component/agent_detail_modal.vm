@@ -26,26 +26,26 @@
                </p>
                <hr>
                <p class="form-group">
-                    <label class="col-sm-4 col-md-4 col-lg-3">代理商订单信息:</label>&nbsp;&nbsp;
+                    <label class="col-sm-8 col-md-8 col-lg-8">代理商订单信息(最近三个月):</label>&nbsp;&nbsp;
                     <br>
-                    <p class="form-group">
-                        <text></text>
+                    <p class="form-group" id="orderList">
+                        
                     </p>
                </p>
                <hr>
                <p class="form-group">
-                    <label class="col-sm-4 col-md-4 col-lg-3">代理商返现记录:</label>&nbsp;&nbsp;
+                    <label class="col-sm-8 col-md-8 col-lg-8">代理商返现信息:</label>&nbsp;&nbsp;
                     <br>
-                    <p class="form-group">
-                        <text></text>
+                    <p class="form-group" id="refundRecordList">
+                      
                     </p>
                </p>
                <hr>
                <p class="form-group">
-                    <label class="col-sm-4 col-md-4 col-lg-3">代理商提现记录:</label>&nbsp;&nbsp;
+                    <label class="col-sm-8 col-md-8 col-lg-8">代理商提现信息:</label>&nbsp;&nbsp;
                     <br>
-                    <p class="form-group">
-                        <text></text>
+                    <p class="form-group" id="withdrawRecordList">
+                       
                     </p>
                </p>
             </div>
