@@ -1,0 +1,28 @@
+<div id="identity_verification1" class="weui_uploader register_hide">
+    <div class="weui_uploader_hd weui_cell tips">
+        <div class="weui_cell_bd weui_cell_primary upload_label">上传身份证照片（正面）</div>
+        <div class="weui_cell_ft upload_example">示例</div>
+    </div>
+    <div class="weui_uploader_bd">
+        <div id="wx_wrp1" class="weui_uploader_input_wrp draw_border">
+            <img id="wx_img1" class="wx_img"/>
+        </div>
+        <div id="font_example" class="example">
+            <img class="example_img" src="${path.concat('/material/images/font_example.jpg')}"/>
+        </div>
+    </div>
+</div>
+<div id="identity_verification2" class="weui_uploader register_hide">
+    <div class="weui_uploader_hd weui_cell tips">
+        <div class="weui_cell_bd weui_cell_primary upload_label">上传身份证照片（反面）</div>
+        <div class="weui_cell_ft upload_example">示例</div>
+    </div>
+    <div class="weui_uploader_bd">
+        <div id="wx_wrp2" class="weui_uploader_input_wrp draw_border">
+            <img id="wx_img2" class="wx_img"/>
+        </div>
+        <div id="back_example" class="example">
+            <img class="example_img" src="${path.concat('/material/images/back_example.jpg')}"/>
+        </div>
+    </div>
+</div>
