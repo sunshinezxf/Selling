@@ -88,12 +88,16 @@
         <if test="agentId != null and agentId != ''">
             AND agent_id = #{agentId}
         </if>
+        <if test="blockFlag != null and blockFlag != ''">
+            AND block_flag = #{blockFlag}
+        </if>
         <if test="createAt !=null and createAt != ''">
             AND create_time LIKE #{createAt}
         </if>
         <if test="refundDescription !=null and refundDescription != ''">
             AND refund_description LIKE #{refundDescription}
         </if>
+        
         ORDER BY create_time
     </select>
 
@@ -102,4 +106,14 @@
 		FROM goods
 		WHERE goods_id = #{goodsId}
 	</select>
+	
+	<update id="updateBatch">
+	   UPDATE refund_record
+	   <set>
+	        <if test="blockFlag != null and blockFlag != ''">
+                block_flag = true
+            </if>
+	   </set>
+	   WHERE block_flag = false
+	</update>
 </mapper>
