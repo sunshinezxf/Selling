@@ -93,7 +93,11 @@ public class OrderServiceImpl implements OrderService {
         ResultData queryResponse = orderDao.queryOrder(condition);
         result.setResponseCode(queryResponse.getResponseCode());
         if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            result.setData(queryResponse.getData());
+        	if(((List<Order>)queryResponse.getData()).isEmpty()){
+        		result.setResponseCode(ResponseCode.RESPONSE_NULL);
+        	} else {
+        		result.setData(queryResponse.getData());
+        	}
         } else {
             result.setDescription(queryResponse.getDescription());
         }
