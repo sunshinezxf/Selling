@@ -3,6 +3,7 @@
 <configuration>
     <mappers>
         <mapper resource="selling/sunshine/mapper/admin.xml"/>
+        <mapper resource="selling/sunshine/mapper/backoperationlog.xml"/>
         <mapper resource="selling/sunshine/mapper/commodity.xml"/>
         <mapper resource="selling/sunshine/mapper/commoditythumbnail.xml"/>
         <mapper resource="selling/sunshine/mapper/agent.xml"/>
