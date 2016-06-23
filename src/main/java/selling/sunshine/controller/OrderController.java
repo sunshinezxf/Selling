@@ -251,7 +251,7 @@ public class OrderController {
             return view;
         }
         List<Express> expressList = new ArrayList<>();
-        if (StringUtils.isEmpty(orderId)) {
+        if (!StringUtils.isEmpty(orderId)) {
             Map<String, Object> condition = new HashMap<>();
             condition.put("orderId", orderId);
             ResultData orderData = orderService.fetchOrder(condition);
