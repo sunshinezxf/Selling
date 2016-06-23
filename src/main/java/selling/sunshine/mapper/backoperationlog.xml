@@ -28,7 +28,7 @@
 	</select>
 	
 	<insert id="insert" parameterType="selling.sunshine.model.BackOperationLog" useGeneratedKeys="false">
-		INSERT INTO back_operation_log(log_id, admin_info, operatin_event, block_flag, create_time)
+		INSERT INTO back_operation_log(log_id, admin_info, operation_event, block_flag, create_time)
 		VALUES(#{logId}, #{adminInfo}, #{operationEvent}, #{blockFlag}, #{createAt})
 	</insert>
 </mapper>

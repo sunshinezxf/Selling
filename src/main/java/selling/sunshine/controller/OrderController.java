@@ -726,7 +726,7 @@ public class OrderController {
         }
         
         //记录下单的admin
-        BackOperationLog backOperationLog = new BackOperationLog(admin.getUsername(), "adminpay");
+        BackOperationLog backOperationLog = new BackOperationLog(admin.getUsername(), "管理员" + admin.getUsername() + "将订单:" + orderId + "设置为已付款");
         ResultData createLogData = logService.createbackOperationLog(backOperationLog);
         if(createLogData.getResponseCode() != ResponseCode.RESPONSE_OK){
         	result.setResponseCode(createLogData.getResponseCode());
