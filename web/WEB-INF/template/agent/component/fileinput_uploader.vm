@@ -1,0 +1,30 @@
+<div id="identity_verification1" class="weui_uploader register_hide">
+    <div class="weui_uploader_hd weui_cell tips">
+        <div class="weui_cell_bd weui_cell_primary upload_label">上传身份证照片（正面）</div>
+        <div class="weui_cell_ft upload_example">示例</div>
+    </div>
+    <div class="weui_uploader_bd">
+        <div id="fileinput_wrp1" class="weui_uploader_input_wrp">
+            <input id="fileinput_id1" class="file" type="file" name="credit"
+                   accept="image/jpg,image/jpeg,image/png,image/gif" capture="camera"/>
+        </div>
+        <div id="front_example" class="example">
+            <img class="example_img" src="${path.concat('/material/images/front_example.jpg')}"/>
+        </div>
+    </div>
+</div>
+<div id="identity_verification2" class="weui_uploader register_hide">
+    <div class="weui_uploader_hd weui_cell tips">
+        <div class="weui_cell_bd weui_cell_primary upload_label">上传身份证照片（反面）</div>
+        <div class="weui_cell_ft upload_example">示例</div>
+    </div>
+    <div class="weui_uploader_bd">
+        <div id="fileinput_wrp2" class="weui_uploader_input_wrp">
+            <input id="fileinput_id2" class="file" type="file" name="credit"
+                   accept="image/jpg,image/jpeg,image/png,image/gif" capture="camera"/>
+        </div>
+        <div id="back_example" class="example">
+            <img class="example_img" src="${path.concat('/material/images/back_example.jpg')}"/>
+        </div>
+    </div>
+</div>
