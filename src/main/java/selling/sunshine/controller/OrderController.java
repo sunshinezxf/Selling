@@ -65,6 +65,9 @@ public class OrderController {
 
     @Autowired
     private RefundService refundService;
+    
+    @Autowired
+    private LogService logService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/check")
     public ModelAndView handle() {
@@ -153,6 +156,44 @@ public class OrderController {
             result = (MobilePage<Order>) fetchResponse.getData();
         }
         return result;
+    }    
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/customerOrder/overview")
+    public ModelAndView customerOrderOverview() {
+        ModelAndView view = new ModelAndView();
+        view.setViewName("/backend/order/customerOrder");
+        return view;
+    }
+    
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value = "/customerOrder/overview")
+    public MobilePage<CustomerOrder> customerOrderOverview(MobilePageParam param) {
+        MobilePage<CustomerOrder> result = new MobilePage<>();
+        if (StringUtils.isEmpty(param)) {
+            return result;
+        }
+        Map<String, Object> condition = new HashMap<>();
+        List<Integer> status = new ArrayList<>();
+        switch (Integer.parseInt((String) param.getParams().get("status"))) {
+            case 0:
+                status.add(0);
+                break;
+            case 1:
+                status.add(1);
+                break;
+            case 2:
+                status.add(2);
+                break;
+            case 3:
+                status.add(3);
+                break;
+        }
+        condition.put("status", status);
+        ResultData fetchResponse = orderService.fetchCustomerOrder(condition, param);
+        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result = (MobilePage<CustomerOrder>) fetchResponse.getData();
+        }
+        return result;
     }
     
     @RequestMapping(method = RequestMethod.GET, value = "/express")
@@ -235,7 +276,7 @@ public class OrderController {
             List<OrderItem> orderItems = order.getOrderItems();
             for (OrderItem item : orderItems) {
                 if (item.getOrderItemPrice() != (item.getGoodsQuantity() * item.getGoods().getAgentPrice())) {
-
+                	
                 }
             }
             for (int i = 0; i < orderItems.size(); i++) {
@@ -649,6 +690,51 @@ public class OrderController {
         }
         return charge;
     }
-
+    
+    
+    @RequestMapping(method = RequestMethod.GET, value="/adminpay/{orderId}")
+    public ResultData adminPay(HttpServletRequest request, @PathVariable("orderId") String orderId) {
+    	ResultData result = new ResultData();
+    	Subject subject = SecurityUtils.getSubject();
+    	User user = (User) subject.getPrincipal();
+    	if(user == null){
+    		result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+    		result.setDescription("管理员未登录");
+    		return result;
+    	}
+    	Admin admin = user.getAdmin();
+    	Map<String, Object> condition = new HashMap<String, Object>();
+        condition.put("orderId", orderId);
+        ResultData fetchOrderData = orderService.fetchOrder(condition);
+        if(fetchOrderData.getResponseCode() != ResponseCode.RESPONSE_OK){
+        	result.setResponseCode(fetchOrderData.getResponseCode());
+        	result.setDescription("获取订单错误");;
+        	return result;
+        }
+        Order order = ((List<Order>)fetchOrderData.getData()).get(0);
+        
+        //将Order和OrderItem变成已发货
+        order.setStatus(OrderStatus.PAYED);
+        for (OrderItem orderItem : order.getOrderItems()) {
+            orderItem.setStatus(OrderItemStatus.PAYED);
+        }
+        ResultData payData = orderService.payOrder(order);
+        if (payData.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            result.setResponseCode(payData.getResponseCode());
+            result.setDescription("下单失败");
+            return result;
+        }
+        
+        //记录下单的admin
+        BackOperationLog backOperationLog = new BackOperationLog(admin.getUsername(), "管理员" + admin.getUsername() + "将订单:" + orderId + "设置为已付款");
+        ResultData createLogData = logService.createbackOperationLog(backOperationLog);
+        if(createLogData.getResponseCode() != ResponseCode.RESPONSE_OK){
+        	result.setResponseCode(createLogData.getResponseCode());
+        	result.setDescription("记录操作日志失败");
+        	return result;
+        }
+        result.setData(payData.getData());
+    	return result;
+    }
 
 }

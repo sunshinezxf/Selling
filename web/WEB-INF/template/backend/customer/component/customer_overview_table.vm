@@ -16,7 +16,7 @@
         </div>
     </div>
 </div>
-#parse("/backend/component/customer_detail_modal.vm")
+#parse("/backend/customer/component/customer_detail_modal.vm")
 <script>
     $(document).ready(function () {
         $("#overview_customer_table").DataTable({

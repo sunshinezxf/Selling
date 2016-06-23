@@ -106,6 +106,8 @@
                 /customer/overview = roles[admin]
                 /customer/add = roles[agent]
                 /customer/modify = roles[agent]
+                
+                /order/adminpay = roles[admin]
 
                 /wechat = anon
 

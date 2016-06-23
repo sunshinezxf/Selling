@@ -3,13 +3,13 @@
 <head>
     #parse("/backend/component/init.vm")
     #parse("/backend/component/init_datatable.vm")
-    <title>订单概览</title>
+    <title>客户订单概览</title>
 </head>
 <body>
     #parse("/backend/component/navigate_with_login.vm")
     <div class="container-fluid">
         #parse("/backend/component/sidebar.vm")
-        #parse("/backend/order/component/order_item_table.vm")
+        #parse("/backend/order/component/customer_order_table.vm")
     </div>
 </body>
 </html>

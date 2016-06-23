@@ -9,7 +9,7 @@
     #parse("/backend/component/navigate_with_login.vm")
     <div class="container-fluid">
         #parse("/backend/component/sidebar.vm")
-        #parse("/backend/component/customer_detail_table.vm")
+        #parse("/backend/customer/component/customer_detail_table.vm")
     </div>
 </bod>
 </html>

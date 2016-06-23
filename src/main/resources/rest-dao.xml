@@ -61,4 +61,8 @@
     <bean id="bankCardDao" class="selling.sunshine.dao.impl.BankCardDaoImpl">
         <property name="sqlSession" ref="sqlSession"></property>
     </bean>
+    
+    <bean id="backOperationLogDao" class="selling.sunshine.dao.impl.BackOperationLogDaoImpl">
+    	<property name="sqlSession" ref="sqlSession"></property>
+    </bean>
 </beans>
