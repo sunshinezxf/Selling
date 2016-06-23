@@ -167,7 +167,7 @@
                for(var i = childs.length - 1; i >= 0; i--) { 
                   f.removeChild(childs[i]); 
                }
-               var node1="<table class='table table-striped'><tr><th>订单号</th><th>状态</th><th>生成时间</th><th>操作</th></tr>";
+               var node1="<table class='table table-striped'><tr><th>订单号</th><th>状态</th><th>日期</th><th>操作</th></tr>";
                for(var i=0;i<result.data.orderList.length;i++){
                    var order=result.data.orderList[i];
                    if(order.status=="PAYED"){
@@ -198,7 +198,7 @@
                       var refundRecord=result.data.refundRecordList[i];
                       amount+=refundRecord.refundAmount;
                 }
-                 document.getElementById("refundRecordList").innerHTML="累计返现金额："+amount+"<br>"
+                 document.getElementById("refundRecordList").innerHTML="累计返现金额："+amount+"<br><a href='${path.concat('/withdraw/overview')}'>点击查看本月预计返现详细信息</a>";
            }
            if(result.data.withdrawRecordList == ""){
                  document.getElementById("withdrawRecordList").innerHTML="当前无提现记录";
