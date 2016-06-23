@@ -13,4 +13,12 @@
         #parse("/backend/order/component/order_check_table.vm")
     </div>
 </body>
+<script>
+	$(document).ready(function(){
+		var url = "${path.concat('/order/adminpay/ODRfefrle7')}";
+		$.get(url, function(result){
+			console.debug(result);
+		});
+	});
+</script>
 </html>
