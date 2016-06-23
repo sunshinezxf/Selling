@@ -328,7 +328,9 @@
     }
     
     function pay(obj){
-       alert(obj.id);
-        window.location.href = "${path.concat('/order/adminpay/')}"+obj.id;  
+        $.get("${path.concat('/order/adminpay/')}"+obj.id,function(result){
+            window.location.href = "${path.concat('/order/overview')}";
+        });
+         
     }
 </script>
