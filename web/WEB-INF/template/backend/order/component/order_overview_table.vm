@@ -160,7 +160,7 @@
                             var status="未支付";
                          }
                          var date=(new Date(order.createAt)).format("yyyy/MM/dd");
-                         node3+="<tr><td>" +order.orderId+ "</td><td>" +order.agent.name+ "</td><td>" +date+ "</td><td>" +status+ "</td><td><button type='button' class='btn btn-success' id='" + order.orderId + "'  onclick=detail(this) data-toggle='modal' data-target='#order_item_modal'>详情</button></td></tr>";
+                         node3+="<tr><td>" +order.orderId+ "</td><td>" +order.agent.name+ "</td><td>" +date+ "</td><td>" +status+ "</td><td><button type='button' class='btn btn-success' id='" + order.orderId + "'  onclick=detail(this) data-toggle='modal' data-target='#order_item_modal'>详情</button>&nbsp;&nbsp;<button type='button' class='btn btn-success' id='" + order.orderId + "' onclick=pay(this)>确认付款</button></td></tr>";
                        }
                        $("#overview_order").append(node3);
                        submited_order_total-=length;
@@ -258,7 +258,7 @@
                       var status="未支付";
                    }
                    var date=(new Date(order.createAt)).format("yyyy/MM/dd");
-                   node1+="<tr><td>" +order.orderId+ "</td><td>" +order.agent.name+ "</td><td>" +date+ "</td><td>" +status+ "</td><td><button type='button' class='btn btn-success' id='" + order.orderId + "'  onclick=detail(this) data-toggle='modal' data-target='#order_item_modal'>详情</button></td></tr>";
+                   node1+="<tr><td>" +order.orderId+ "</td><td>" +order.agent.name+ "</td><td>" +date+ "</td><td>" +status+ "</td><td><button type='button' class='btn btn-success' id='" + order.orderId + "'  onclick=detail(this) data-toggle='modal' data-target='#order_item_modal'>详情</button>&nbsp;&nbsp;<button type='button' class='btn btn-success' id='" + order.orderId + "' onclick=pay(this)>确认付款</button></td></tr>";
                 }
                 $("#submited_order_table").append(node1);
                 submited_order_total-=length;
@@ -298,11 +298,7 @@
       
       function detail(obj){
         $.post("${path.concat('/order/orderItem/')}"+obj.id, function (result) {
-            #*
-            alert(result.data.totalPrices);
-            alert(result.data.order);
-            alert(result.data.goods_quantity_Map);
-            *#
+
             document.getElementById("model_p").innerHTML="代理商："+result.data.order.agent.name;
             
             var f = document.getElementById("model_table");            
@@ -329,5 +325,12 @@
             }
             document.getElementById("model_quantity").innerHTML=node1;
        });
+    }
+    
+    function pay(obj){
+        $.get("${path.concat('/order/adminpay/')}"+obj.id,function(result){
+            window.location.href = "${path.concat('/order/overview')}";
+        });
+         
     }
 </script>
