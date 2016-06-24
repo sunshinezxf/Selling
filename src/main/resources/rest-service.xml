@@ -30,6 +30,8 @@
     <bean id="uploadService" class="selling.sunshine.service.impl.UploadServiceImpl"></bean>
 
     <bean id="withdrawService" class="selling.sunshine.service.impl.WithdrawServiceImpl"></bean>
-    
+
     <bean id="logService" class="selling.sunshine.service.impl.LogServiceImpl"></bean>
+
+    <bean id="statisticService" class="selling.sunshine.service.impl.StatisticServiceImpl"></bean>
 </beans>
