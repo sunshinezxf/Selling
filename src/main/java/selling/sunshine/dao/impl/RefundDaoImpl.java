@@ -215,7 +215,7 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
 			Agent agent=(Agent)sqlSession.selectList("selling.agent.query",condition).get(0);
 			//更新agent的账户余额以及返现总额
 			agent.setCoffer(agent.getCoffer()+refundRecord.getRefundAmount());
-			agent.setCoffer(agent.getCoffer()+refundRecord.getRefundAmount());
+			agent.setAgentRefund(agent.getAgentRefund()+refundRecord.getRefundAmount());	
 			sqlSession.update("selling.agent.update",agent);
 		}
 		
@@ -243,7 +243,6 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
 //        if (!StringUtils.isEmpty(condition.get("createAt"))) {      
 //        	
 //        }  
-        
         ResultData total = queryRefundRecord(condition);
         if (total.getResponseCode() != ResponseCode.RESPONSE_OK) {
             result.setResponseCode(ResponseCode.RESPONSE_ERROR);
