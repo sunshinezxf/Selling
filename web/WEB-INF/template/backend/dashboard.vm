@@ -2,6 +2,7 @@
 <html lang="zh_CN">
 <head>
     #parse("/backend/component/init.vm")
+    <script type="text/javascript" src="${path.concat('/material/js/backend/sum.js')}"></script>
     <title>首页</title>
 </head>
 <body>
@@ -11,4 +12,7 @@
     #parse("/backend/component/dashboard_table.vm")
 </div>
 </body>
+<script>
+    var order_url = "${path.concat('/statistic/order')}";
+</script>
 </html>
