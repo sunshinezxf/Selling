@@ -19,4 +19,6 @@ public interface RefundDao {
     ResultData queryRefundRecordByPage(Map<String, Object> condition,DataTableParam param);
     
     ResultData refundRecord();
+    
+    public ResultData refund();
 }

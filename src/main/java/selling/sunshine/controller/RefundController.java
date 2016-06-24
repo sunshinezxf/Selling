@@ -7,6 +7,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
 import selling.sunshine.form.RefundConfigForm;
 import selling.sunshine.model.RefundConfig;
 import selling.sunshine.model.RefundRecord;
@@ -18,8 +19,10 @@ import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
 import javax.validation.Valid;
+
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -90,7 +93,7 @@ public class RefundController {
             return result;
         }
         Map<String, Object> condition = new HashMap<>();
-        
+        condition.put("blockFlag", true);
         ResultData fetchResponse = refundService.fetchRefundRecordByPage(condition, param);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             result = (DataTablePage<RefundRecord>) fetchResponse.getData();
@@ -112,10 +115,13 @@ public class RefundController {
             return result;
         }
         Map<String, Object> condition = new HashMap<>();
-		Timestamp timestamp= new Timestamp(System.currentTimeMillis());
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM");
-		String date = dateFormat.format(timestamp);
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.MONTH, -1);
+        Timestamp lastMonth = new Timestamp(c.getTimeInMillis());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM");
+        String date = dateFormat.format(lastMonth);
         condition.put("createAt", date + "%");
+        condition.put("blockFlag", false);
         
         ResultData fetchResponse = refundService.fetchRefundRecordByPage(condition, param);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
