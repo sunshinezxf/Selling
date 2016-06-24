@@ -9,14 +9,13 @@
         <result property="level3Percent" column="level_3_percent"></result>
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
-        <association property="goods" column="goodsId = goods_id" select="goods4CustomerQuery"></association>
+        <association property="goods" column="goodsId = goods_id" select="goods4AgentQuery"></association>
     </resultMap>
 
     <resultMap id="goods4AgentVo" type="selling.sunshine.model.goods.Goods4Agent">
         <result property="goodsId" column="goods_id"></result>
         <result property="name" column="goods_name"></result>
         <result property="description" column="goods_description"></result>
-        <result property="customerPrice" column="prime_price"></result>
         <result property="agentPrice" column="agent_price"></result>
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
