@@ -110,15 +110,19 @@ public class ExpressController {
         Map<String, Object> condition = new HashMap<>();
         for (int i = 1; i < list.size(); i++) {
             String[] str = (String[]) list.get(i);
+            if (str.length < 6) {
+                view.setViewName("/backend/express/express_upload");
+                return view;
+            }
             Express express = new Express("尚未设置", str[0], str[1], str[2], str[3], str[4], str[5], str[6]);
-            if (!StringUtils.isEmpty(str[7])) {
+            if (str.length >= 7 && !StringUtils.isEmpty(str[7])) {
                 condition.clear();
                 condition.put("orderItemId", str[7]);
                 if (orderService.fetchOrderItem(condition).getResponseCode() == ResponseCode.RESPONSE_OK) {
                     OrderItem item = ((List<OrderItem>) orderService.fetchOrderItem(condition).getData()).get(0);
                     express.setLinkId(item.getOrderItemId());
                 }
-            } else if (!StringUtils.isEmpty(str[8])) {
+            } else if (str.length >= 8 && !StringUtils.isEmpty(str[8])) {
                 condition.clear();
                 condition.put("orderId", str[8]);
                 ResultData fetchResponse = orderService.fetchCustomerOrder(condition);
