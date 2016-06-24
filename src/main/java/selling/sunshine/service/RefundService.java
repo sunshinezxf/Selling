@@ -19,4 +19,6 @@ public interface RefundService {
     ResultData fetchRefundRecord(Map<String, Object> condition);
     
     ResultData fetchRefundRecordByPage(Map<String, Object> condition,DataTableParam param);
+    
+    public ResultData refund();
 }

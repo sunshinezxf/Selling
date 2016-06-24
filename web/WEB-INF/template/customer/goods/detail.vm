@@ -45,7 +45,43 @@
 </div>
 
 <div class="detail_area">
-     <p>产地：云南昆明</p>
+    <div class="product_parameters">
+        <h2 class="parameters_title">产品参数</h2>
+        <table class="parameters_table">
+            <tr>
+                <td class="parameters_hd">产品名称</td>
+                <td class="parameters_bd">云草纲目三七超细粉</td>
+            </tr>
+            <tr>
+                <td class="parameters_hd">配料</td>
+                <td class="parameters_bd">文山三七</td>
+            </tr>
+            <tr>
+                <td class="parameters_hd">细度</td>
+                <td class="parameters_bd">500目</td>
+            </tr>
+            <tr>
+                <td class="parameters_hd">规格</td>
+                <td class="parameters_bd">180g/瓶</td>
+            </tr>
+            <tr>
+                <td class="parameters_hd">食用方法</td>
+                <td class="parameters_bd">生吃、泡水、煲汤等</td>
+            </tr>
+            <tr>
+                <td class="parameters_hd">储存条件</td>
+                <td class="parameters_bd">阴凉干燥处</td>
+            </tr>
+            <tr>
+                <td class="parameters_hd">保质期</td>
+                <td class="parameters_bd">3年</td>
+            </tr>
+            <tr>
+                <td class="parameters_hd">食品添加剂</td>
+                <td class="parameters_bd">无</td>
+            </tr>
+        </table>
+    </div>
 </div>
 
 <div class="buy_area">

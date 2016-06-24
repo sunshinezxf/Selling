@@ -1192,7 +1192,6 @@ public class AgentController {
         //代理商提现信息
         List<WithdrawRecord> withdrawRecordList = (List<WithdrawRecord>) withdrawService.fetchWithdrawRecord(condition).getData();
 
-
         dataMap.put("agent", agent);
         dataMap.put("orderList", orderList);
         dataMap.put("refundRecordList", refundRecordList);

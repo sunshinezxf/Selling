@@ -118,14 +118,28 @@
             <if test="agent != null and agent.agentId != null and agent.agentId != ''">
                 agent_id = #{agent.agentId},
             </if>
-            order_id = #{orderId},
-            quantity = #{quantity},
-            receiver_name = #{receiverName},
-            receiver_phone = #{receiverPhone},
-            receiver_addr = #{receiverAddress},
-            total_price = #{totalPrice},
-            order_status = #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler},
-            goods_id = #{goods.goodsId}
+            <if test="quantity != null">
+                quantity = #{quantity},
+            </if>
+            <if test="receiverName != null">
+                receiver_name = #{receiverName},
+            </if>
+            <if test="receiverPhone != null">
+                receiver_phone = #{receiverPhone},
+            </if>
+            <if test="receiverAddress != null">
+                receiver_addr = #{receiverAddress},
+            </if>
+            <if test="totalPrice != null">
+                total_price = #{totalPrice},
+            </if>
+            <if test="status != null">
+                order_status = #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler},
+            </if>
+            <if test="goods!= null and goods.goodsId != null">
+                goods_id = #{goods.goodsId},
+            </if>
+            order_id = #{orderId}
         </set>
         WHERE order_id = #{orderId}
     </update>

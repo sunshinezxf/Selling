@@ -17,6 +17,7 @@
     </div>
 </div>
 #parse("/backend/agent/component/agent_detail_modal.vm")
+#parse("/backend/order/component/order_item_modal.vm")
 <script>
     $(document).ready(function () {
         $("#overview_agent_table").DataTable({
@@ -158,6 +159,97 @@
            document.getElementById("agentclaimScale").innerHTML="群规模： "+result.data.agent.claimScale+"人";
            document.getElementById("agentCoffer").innerHTML="账户余额： "+result.data.agent.coffer+"元";
            document.getElementById("agentRefund").innerHTML="累计返现金额： "+result.data.agent.agentRefund+"元";
+           if(result.data.orderList == ""){
+                 document.getElementById("orderList").innerHTML="最近三个月无订单";
+           }else{
+               var f = document.getElementById("orderList");            
+               var childs = f.childNodes; 
+               for(var i = childs.length - 1; i >= 0; i--) { 
+                  f.removeChild(childs[i]); 
+               }
+               var node1="<table class='table table-striped'><tr><th>订单号</th><th>状态</th><th>日期</th><th>操作</th></tr>";
+               for(var i=0;i<result.data.orderList.length;i++){
+                   var order=result.data.orderList[i];
+                   if(order.status=="PAYED"){
+                        var status="已付款未发货";
+                   }else if(order.status=="PATIAL_SHIPMENT"){
+                        var status="部分发货";
+                   }else if(order.status=="FULLY_SHIPMENT"){
+                        var status="完全发货";
+                   }else if(order.status=="SAVED"){
+                        var status="已保存未支付";
+                   }else if(order.status=="SUBMITTED"){
+                        var status="已提交未支付";
+                   }else{
+                        var status="已结束";
+                   }
+                   var date=(new Date(order.createAt)).format("yyyy/MM/dd");
+                   var node2="<tr><td>"+order.orderId+"</td><td>"+status+"</td><td>"+date+"</td><td><button type='button' class='btn btn-success' id='" + order.orderId + "'  onclick=orderItemDetail(this) data-toggle='modal' data-target='#order_item_modal'>详情</button></td></tr>";
+                   node1+=node2;
+              }
+              node1+="</table>";
+              $("#orderList").append(node1);
+           }
+           if(result.data.refundRecordList == ""){
+                 document.getElementById("refundRecordList").innerHTML="当前无返现记录";
+           }else{
+                var amount=0;
+                for(var i=0;i<result.data.refundRecordList.length;i++){
+                      var refundRecord=result.data.refundRecordList[i];
+                      amount+=refundRecord.refundAmount;
+                }
+                 document.getElementById("refundRecordList").innerHTML="累计返现金额："+amount+"<br><a href='${path.concat('/withdraw/overview')}'>点击查看本月预计返现详细信息</a>";
+           }
+           if(result.data.withdrawRecordList == ""){
+                 document.getElementById("withdrawRecordList").innerHTML="当前无提现记录";
+           }else{
+               var amount=0;
+               for(var i=0;i<result.data.withdrawRecordList.length;i++){
+                   var withdrawRecord=result.data.withdrawRecordList[i];
+                   amount+=withdrawRecord.amount;
+               }
+               document.getElementById("withdrawRecordList").innerHTML="总提现金额："+amount+"<br>"+"<a href='${path.concat('/withdraw/overview')}'>点击查看详细提现记录</a>";
+           }
         });
     }
+    
+    function orderItemDetail(obj){
+        $.post("${path.concat('/order/orderItem/')}"+obj.id, function (result) {
+
+            document.getElementById("model_p").innerHTML="代理商："+result.data.order.agent.name;
+            
+            var f = document.getElementById("model_table");            
+            var childs = f.childNodes; 
+            for(var i = childs.length - 1; i >= 0; i--) { 
+               f.removeChild(childs[i]); 
+            }
+
+            var node="<tr><th>客户</th><th>产品</th><th>数量</th><th>价格</th></tr>";
+            for(var i=0;i<result.data.order.orderItems.length;i++){
+               var orderItem=result.data.order.orderItems[i];
+               node+="<tr><td>"+orderItem.customer.name+"</td><td>"+orderItem.goods.name+"</td><td>"+orderItem.goodsQuantity+"</td><td>"+orderItem.orderItemPrice+"</td>";
+            }
+            $("#model_table").append(node);
+            document.getElementById("model_total").innerHTML="总计:&nbsp;"+result.data.totalPrices+"元";
+            var node1="";
+            for(var key in result.data.goods_quantity_Map){
+                node1+="商品:&nbsp;"+key+"&nbsp;&nbsp;&nbsp;&nbsp;总共:&nbsp;"+result.data.goods_quantity_Map[key]+"件<br>"
+            }
+            document.getElementById("model_quantity").innerHTML=node1;
+       });
+    }
 </script>
+<style>
+    #agent_detail_modal .modal-body{
+       height:600px;     
+       overflow:auto;
+    } 
+    #agent_detail_modal .modal-body #orderList{
+       height:300px;     
+       overflow:auto;
+    }
+
+ 
+
+    
+</style>

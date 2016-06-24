@@ -95,4 +95,11 @@ public class RefundServiceImpl implements RefundService {
 		}
 		return resultData;
 	}
+
+	@Override
+	public ResultData refund() {
+		ResultData resultData = new ResultData();
+		resultData=refundDao.refund();
+		return resultData;
+	}
 }

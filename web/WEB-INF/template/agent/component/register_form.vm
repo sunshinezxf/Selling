@@ -87,10 +87,10 @@
                 </div>
             </label>
         </div>
-        <div id="fileinput_uploader register_hide">
+        <div id="fileinput_uploader" class="register_hide">
             #parse("/agent/component/fileinput_uploader.vm")
         </div>
-        <div id="wx_uploader register_hide">
+        <div id="wx_uploader" class="register_hide">
             #parse("/agent/component/wx_uploader.vm")
         </div>
     </div>
@@ -126,6 +126,7 @@
         </div>
     </div>
 </div>
+#parse("/agent/loading.vm")
 <script>
     $("#gender_selection").click(function () {
         $("#agent_register_area").hide();
@@ -150,9 +151,7 @@
                 } else {
                     $("#information").hide();
                     $("#protocol").hide();
-                    $("#identity_verification1").show();
-                    $("#identity_verification2").show();
-                    $("#android_tips").show();
+                    $(".identity_verification").show();
                     $("#next_div").hide();
                     $("#login_btn").hide();
                     $("#pre_div").show();
@@ -168,9 +167,7 @@
     $("#pre_btn").click(function () {
         $("#information").show();
         $("#protocol").show();
-        $("#identity_verification1").hide();
-        $("#identity_verification2").hide();
-        $("#android_tips").hide();
+        $(".identity_verification").hide();
         $("#next_div").show();
         $("#login_btn").show();
         $("#pre_div").hide();
@@ -181,6 +178,7 @@
         $("#agent_register_form").attr("action", "${path.concat('/agent/register')}");
         $("#agent_register_form").attr("method", "post");
         $("#agent_register_form").submit();
+        $("#loadingToast").show();
     });
 </script>
 <script>
@@ -189,8 +187,12 @@
     var click_num2=0;
     $(document).ready(function () {
         var ua = navigator.userAgent.toLowerCase();
-		if((ua.indexOf('andriod') > 0)&&(ua.match(/MicroMessenger/i) == "micromessenger")){
-		    $("#wx_uploader").show();
+		if(ua.indexOf('android') > -1 || ua.indexOf('adr') > -1){
+		    if(ua.indexOf('micromessenger') > -1){
+		        $("#wx_uploader").show();
+		    }else{
+		        $("#fileinput_uploader").show();
+		    }
 		}else{
 			$("#fileinput_uploader").show();
 		}

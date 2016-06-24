@@ -1,14 +1,5 @@
 package selling.sunshine.controller;
 
-
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import jxl.Cell;
 import jxl.Sheet;
 import jxl.Workbook;
@@ -16,6 +7,7 @@ import jxl.Workbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,12 +16,22 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
-import selling.sunshine.model.Express;
+import selling.sunshine.model.CustomerOrder;
 import selling.sunshine.model.OrderItem;
+import selling.sunshine.model.express.Express;
+import selling.sunshine.model.express.Express4Agent;
+import selling.sunshine.model.express.Express4Customer;
 import selling.sunshine.service.ExpressService;
 import selling.sunshine.service.OrderService;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
+
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RequestMapping("/express")
 @RestController
@@ -39,21 +41,40 @@ public class ExpressController {
 
 	@Autowired
 	private ExpressService expressService;
-	
+
 	@Autowired
 	private OrderService orderService;
 
-	@RequestMapping(method = RequestMethod.POST, value = "/detail/{orderItemId}")
-	public ResultData detail(@PathVariable("orderItemId") String orderItemId) {
-		ResultData resultData=new ResultData();
+	@RequestMapping(method = RequestMethod.POST, value = "/detail/{id}")
+	public ResultData detail(@PathVariable("id") String id) {
+		ResultData resultData = new ResultData();
 		Map<String, Object> dataMap = new HashMap<>();
-		Map<String, Object> condition = new HashMap<String, Object>();
-		condition.put("orderItemId", orderItemId);
-		ResultData queryResult = expressService.fetchExpress(condition);
-
-		Express express = ((List<Express>) queryResult.getData()).get(0);
-		dataMap.put("express", express);
-		resultData.setData(dataMap);
+		Map<String, Object> condition = new HashMap<>();
+		if (!StringUtils.isEmpty(id) && id.startsWith("ORI")) {
+			condition.put("orderItemId", id);
+			ResultData queryResponse = expressService
+					.fetchExpress4Agent(condition);
+			if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+				Express4Agent express = ((List<Express4Agent>) queryResponse
+						.getData()).get(0);
+				dataMap.put("express", express);
+				resultData.setData(dataMap);
+			} else {
+				resultData.setResponseCode(ResponseCode.RESPONSE_NULL);
+			}
+		} else if (id.startsWith("CUO")) {
+			condition.put("orderId", id);
+			ResultData queryResponse = expressService
+					.fetchExpress4Customer(condition);
+			if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+				Express4Customer express = ((List<Express4Customer>) queryResponse
+						.getData()).get(0);
+				dataMap.put("express", express);
+				resultData.setData(dataMap);
+			} else {
+				resultData.setResponseCode(ResponseCode.RESPONSE_NULL);
+			}
+		}
 		return resultData;
 	}
 
@@ -74,7 +95,7 @@ public class ExpressController {
 		}
 		System.out.println(".............test");
 		// 创建一个list 用来存储读取的内容
-		List<Object> list = new ArrayList<Object>();
+		List<Object> list = new ArrayList<>();
 		Workbook rwb = null;
 		Cell cell = null;
 		// 创建输入流
@@ -103,25 +124,41 @@ public class ExpressController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		Timestamp expressDate=new Timestamp(System.currentTimeMillis());
-		List<Express> expressList=new ArrayList<>();
+		List<Express> expressList = new ArrayList<>();
+		Map<String, Object> condition = new HashMap<>();
 		for (int i = 1; i < list.size(); i++) {
 			String[] str = (String[]) list.get(i);
-			Express express = new Express("代填", str[0],str[1], str[2], str[3], str[4],str[5], str[6],expressDate);
-			express.setExpressId("expressNumber"+(i-1));
-			if (str[7]!=null&&!str[7].equals("")) {
-				Map<String, Object> condition=new HashMap<>();
+			if (str.length < 7) {
+				view.setViewName("/backend/express/express_upload");
+				return view;
+			}
+			Express express = new Express("尚未设置", str[0], str[1], str[2],
+					str[3], str[4], str[5], str[6]);
+			if (str.length >= 8 && !StringUtils.isEmpty(str[7])) {
+				condition.clear();
 				condition.put("orderItemId", str[7]);
-				if (orderService.fetchOrderItem(condition).getResponseCode()==ResponseCode.RESPONSE_OK) {
-					OrderItem item=((List<OrderItem>)orderService.fetchOrderItem(condition).getData()).get(0);
-					express.setOrderItem(item);
+				if (orderService.fetchOrderItem(condition).getResponseCode() == ResponseCode.RESPONSE_OK) {
+					OrderItem item = ((List<OrderItem>) orderService
+							.fetchOrderItem(condition).getData()).get(0);
+					express.setLinkId(item.getOrderItemId());
+				}
+			} else if (str.length >= 9 && !StringUtils.isEmpty(str[8])) {
+				condition.clear();
+				condition.put("orderId", str[8]);
+				ResultData fetchResponse = orderService
+						.fetchCustomerOrder(condition);
+				if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+					CustomerOrder order = ((List<CustomerOrder>) fetchResponse
+							.getData()).get(0);
+					express.setLinkId(order.getOrderId());
 				}
 			}
+			express.setExpressId("expressNumber" + (i - 1));
 			expressList.add(express);
 		}
 		view.addObject("expressList", expressList);
 		view.setViewName("/backend/order/express");
-		//view.setViewName("redirect:/agent/express");
+		// view.setViewName("redirect:/agent/express");
 		return view;
 	}
 

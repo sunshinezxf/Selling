@@ -2,7 +2,7 @@
     <div class="col-sm-3 col-md-2 sidebar">
         <ul class="nav nav-sidebar" id="accordion" aria-multiselectable="true">
             <li><a href="${path.concat('/dashboard')}"><i class="fa fa-desktop"></i> 首页</a></li>
-            <li><a data-toggle="collapse" data-parent="#accordion" href="#agent-management"><i
+            <li><a class="menu" data-toggle="collapse" data-parent="#accordion" href="#agent-management"><i
                     class="fa fa-book"></i> 代理管理<i
                     class="pull-right fa fa-caret-down"></i></a>
                 <ul id="agent-management" class="nav nav-collapse collapse">
@@ -14,7 +14,7 @@
                     </li>
                 </ul>
             </li>
-            <li><a data-toggle="collapse" data-parent="#accordion" href="#order-management"><i
+            <li><a class="menu" data-toggle="collapse" data-parent="#accordion" href="#order-management"><i
                     class="fa fa-book"></i> 订单管理<i
                     class="pull-right fa fa-caret-down"></i></a>
                 <ul id="order-management" class="nav nav-collapse collapse">
@@ -32,7 +32,7 @@
                     </li>
                 </ul>
             </li>
-            <li><a data-toggle="collapse" data-parent="#accordion" href="#goods-management"><i
+            <li><a class="menu" data-toggle="collapse" data-parent="#accordion" href="#goods-management"><i
                     class="fa fa-book"></i> 商品管理<i
                     class="pull-right fa fa-caret-down"></i></a>
                 <ul id="goods-management" class="nav nav-collapse collapse">
@@ -44,7 +44,7 @@
                     </li>
                 </ul>
             </li>
-            <li><a data-toggle="collapse" data-parent="#accordion" href="#statement-management"><i
+            <li><a class="menu" data-toggle="collapse" data-parent="#accordion" href="#statement-management"><i
                     class="fa fa-book"></i> 返现管理<i
                     class="pull-right fa fa-caret-down"></i></a>
                 <ul id="statement-management" class="nav nav-collapse collapse">
@@ -56,7 +56,7 @@
                     </li>
                 </ul>
             </li>
-            <li><a data-toggle="collapse" data-parent="#accordion" href="#withdraw-management"><i
+            <li><a class="menu" data-toggle="collapse" data-parent="#accordion" href="#withdraw-management"><i
                     class="fa fa-book"></i> 提现管理<i
                     class="pull-right fa fa-caret-down"></i></a>
                 <ul id="withdraw-management" class="nav nav-collapse collapse">
@@ -68,7 +68,7 @@
                     </li>
                 </ul>
             </li>
-            <li><a data-toggle="collapse" data-parent="#accordion" href="#config-management"><i
+            <li><a class="menu" data-toggle="collapse" data-parent="#accordion" href="#config-management"><i
                     class="fa fa-cog"></i> 基本配置<i
                     class="pull-right fa fa-caret-down"></i></a>
                 <ul id="config-management" class="nav nav-collapse collapse">
@@ -80,7 +80,7 @@
                     </li>
                 </ul>
             </li>
-            <li><a data-toggle="collapse" data-parent="#accordion" href="#admin-management"><i
+            <li><a class="menu" data-toggle="collapse" data-parent="#accordion" href="#admin-management"><i
                     class="fa fa-book"></i> 管理员管理<i
                     class="pull-right fa fa-caret-down"></i></a>
                 <ul id="admin-management" class="nav nav-collapse collapse">
@@ -98,13 +98,24 @@
 <script>
     $("#agent-management").collapse('hide');
     $("#order-management").collapse('hide');
-    $("#customer-management").collapse('hide');
     $("#goods-management").collapse('hide');
     $("#statement-management").collapse('hide');
+    $("#withdraw-management").collapse('hide');
     $("#config-management").collapse('hide');
     $("#admin-management").collapse('hide');
     $(function () {
         var target_id = $(".main").attr("id-target");
         $("#" + target_id).collapse('show');
     });
+    
+    var array=["#agent-management","#order-management","#goods-management","#statement-management","#withdraw-management","#config-management","#admin-management"];
+    $(".menu").click(function(){
+        var menu_id=$(this).attr("href");
+        $.each(array,function(i,value) {
+            if(value!=menu_id){
+                $(value).collapse('hide');
+            }
+        });   
+    });
+    
 </script>

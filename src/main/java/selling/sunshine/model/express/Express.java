@@ -15,6 +15,7 @@ public class Express extends Entity {
     private String receiverPhone;
     private String receiverAddress;
     private String goodsName;
+    private String linkId;
 
     public Express() {
         super();
@@ -35,8 +36,13 @@ public class Express extends Entity {
         this.receiverAddress = receiverAddress;
     }
 
-    public Express(String expressNumber, String senderName, String senderPhone, String senderAddress, String receiverName, String receiverPhone, String receiverAddress) {
+    public Express(String senderName, String senderPhone, String senderAddress, String receiverName, String receiverPhone, String receiverAddress, String goodsName) {
         this(senderName, senderPhone, senderAddress, receiverName, receiverPhone, receiverAddress);
+        this.goodsName = goodsName;
+    }
+
+    public Express(String expressNumber, String senderName, String senderPhone, String senderAddress, String receiverName, String receiverPhone, String receiverAddress, String goodsName) {
+        this(senderName, senderPhone, senderAddress, receiverName, receiverPhone, receiverAddress, goodsName);
         this.expressNumber = expressNumber;
     }
 
@@ -110,5 +116,13 @@ public class Express extends Entity {
 
     public void setGoodsName(String goodsName) {
         this.goodsName = goodsName;
+    }
+
+    public String getLinkId() {
+        return linkId;
+    }
+
+    public void setLinkId(String linkId) {
+        this.linkId = linkId;
     }
 }
