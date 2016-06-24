@@ -14,5 +14,6 @@
 </body>
 <script>
     var order_url = "${path.concat('/statistic/order')}";
+    var agent_url = "${path.concat('/statistic/agent')}";
 </script>
 </html>
