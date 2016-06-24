@@ -66,7 +66,6 @@
                      var node3={name: agentMap[agentId][j].name,x: 800,y: height2};
                      var node4={source: agentList[i].name,target: agentMap[agentId][j].name}
                      dataList[length+1]=node3;  
-                     alert(JSON.stringify(dataList));
                      linkList[length]=node4;
                      height2+=100;
                      length++;
@@ -155,12 +154,5 @@
 });
      
 });
-     
-
-        
-
-     
-     
-
-
+  
 </script>

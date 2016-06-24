@@ -52,7 +52,6 @@
             },
             columns: [
                 {title: "商品名称", "mData": "name"},
-                {title: "商品原价", "mData": "customerPrice"},
                 {title: "代理价格", "mData": "agentPrice"},
                 {
                     title: "描述", "mData": "description"
@@ -148,7 +147,7 @@
                         $("#goods_id").val(goodsId);
                         var goodsname = full.name;
                         $("#goods_name").text(goodsname);
-                        var goodsprice = full.price;
+                        var goodsprice = full.agentPrice;
                         $("#goods_price").text(goodsprice + "元");
                         var url = "${path.concat('/refund/config/goods/')}" + full.goodsId;
                         $.ajax({

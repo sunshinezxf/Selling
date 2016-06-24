@@ -129,17 +129,38 @@ body {
 }
 
 .detail_area{
-	height:21%;
+	height:auto;
 	width:100%;
-    margin-top:2%;
-    background: #ffffff;
+	margin-top:2%;
     border-top: 0.0625em solid #e1e1e1;
     border-bottom: 0.0625em solid #e1e1e1;
+    padding-bottom:5.4em;
+    background: #ffffff;
 }
 
-.detail_area p{
-	margin-left:0.75em;
-    margin-top:0.5em;
+.product_parameters{
+	margin-left:0.6em;
+}
+ 
+.parameters_title{
+	margin:0.4em auto 0 0.15em;
+    font-size:1.05em;
+    font-weight:normal;
+    color:#808080;
+}
+
+.parameters_table{
+	width:100%;
+}
+
+.parameters_hd{
+	width:30%;
+	color:#808080;
+}
+
+.parameters_bd{
+	width:70%;
+	font-size:0.965em;
 }
 
 .id,.pay{
@@ -192,7 +213,7 @@ body {
 .buy_area{
     position:fixed;
     width:100%;
-    height:10%;
+    height:4.4em;
     bottom:0;
     top:auto;
     right:0;
@@ -249,7 +270,7 @@ body {
     display:inline-block;
     font-size:1em;
     padding-top:0.35em;
-    margin-left:0.7em;
+    margin-left:0.8em;
 }
  
 .number_choose{
