@@ -192,6 +192,7 @@
            }
            if(result.data.refundRecordList == ""){
                  document.getElementById("refundRecordList").innerHTML="当前无返现记录";
+                 document.getElementById("refundRecordContainer").style.display="none";
            }else{
                 var amount=0;
                 var amount2=0;
@@ -203,11 +204,50 @@
                       }
                 }
                 
-                 document.getElementById("refundRecordList").innerHTML="累计返现金额："+amount+"元<br>本月预计返现金额："+amount2+"元ß";
+                 document.getElementById("refundRecordList").innerHTML="累计返现金额："+amount+"元<br>本月预计返现金额："+amount2+"元";
+                 document.getElementById("refundRecordContainer").style.display="block";
+                 $.post("${path.concat('/refund/statistic/')}"+result.data.agent.agentId, function (result) {
+                   $('#refundRecordContainer').highcharts({
+                      title: {
+                         text: '返现详细记录（过去一年内）',
+                         x: -20 //center
+                      },        
+                      subtitle: {
+                         text: '过去一年内总计返现'+result.totalAmount+'元',
+                         x: -20
+                      },
+                      xAxis: {
+                        categories: result.categories
+                      },
+                      yAxis: { 
+                        title: {
+                        text: '金额 (元)'
+                        },
+                        plotLines: [{
+                          value: 0,
+                          width: 1,
+                          color: '#808080'
+                        }]
+                      },
+                      tooltip: {
+                          valueSuffix: '元'
+                      },
+                      legend: {
+                         layout: 'vertical',
+                         align: 'right',
+                         verticalAlign: 'middle',
+                         borderWidth: 0
+                      },
+                      series: [{
+                         name: '返现金额',
+                         data: result.data
+                      }]
+                  });
+               });
            }
            if(result.data.withdrawRecordList == ""){
                  document.getElementById("withdrawRecordList").innerHTML="当前无提现记录";
-                  document.getElementById("withdrawRecordContainer").style.display="none";
+                 document.getElementById("withdrawRecordContainer").style.display="none";
            }else{
                var amount=0;
                for(var i=0;i<result.data.withdrawRecordList.length;i++){
@@ -219,7 +259,7 @@
                $.post("${path.concat('/withdraw/statistic/')}"+result.data.agent.agentId, function (result) {
                    $('#withdrawRecordContainer').highcharts({
                       title: {
-                         text: '提现详细记录（一年内）',
+                         text: '提现详细记录（过去一年内）',
                          x: -20 //center
                       },        
                       subtitle: {

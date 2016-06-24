@@ -102,4 +102,16 @@ public class RefundServiceImpl implements RefundService {
 		resultData=refundDao.refund();
 		return resultData;
 	}
+
+	@Override
+	public ResultData statistic(Map<String, Object> condition) {
+		ResultData result = new ResultData();
+		result=refundDao.statistic(condition);
+		if (result.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            if (((List) result.getData()).isEmpty()) {
+                result.setResponseCode(ResponseCode.RESPONSE_NULL);
+            }
+		}
+		return result;
+	}
 }

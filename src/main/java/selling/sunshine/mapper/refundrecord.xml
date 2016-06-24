@@ -33,6 +33,11 @@
         <result property="poolDate" column="pool_date"></result>
         <association property="goods" column="goodsId = goods_id" select="goods4AgentQuery"></association>
     </resultMap>
+    
+    <resultMap id="statisticVo" type="java.util.Map">
+        <result property="date" column="refundDate"></result>
+        <result property="amount" column="amount"></result>
+    </resultMap>
 
     <insert id="insert" parameterType="selling.sunshine.model.RefundRecord" useGeneratedKeys="false">
         INSERT INTO refund_record
@@ -115,4 +120,14 @@
 	   </set>
 	   WHERE block_flag = false
 	</update>
+	
+    <select id="statistic" parameterType="java.util.Map" resultMap="statisticVo">
+      SELECT DATE_FORMAT(refund_record.create_time,'%Y-%m') AS refundDate,sum(refund_amount) AS amount 
+      FROM refund_record  
+      WHERE DATE_FORMAT(refund_record.create_time,'%Y-%m')>DATE_FORMAT(date_sub(current_date(), interval 12 month),'%Y-%m') 
+      AND block_flag=1 
+      AND agent_id=#{agentId}
+      GROUP BY DATE_FORMAT(refund_record.create_time,'%Y-%m') 
+      ORDER BY  DATE_FORMAT(refund_record.create_time,'%Y-%m')
+    </select>
 </mapper>
