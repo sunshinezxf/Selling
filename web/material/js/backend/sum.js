@@ -75,7 +75,7 @@ $(document).ready(function () {
                 text: '平台代理申请统计'
             },
             tooltip: {
-                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>}'
             },
             plotOptions: {
                 pie: {
