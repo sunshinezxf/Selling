@@ -8,6 +8,7 @@
         <result property="refundAmount" column="refund_amount"></result>
         <result property="refundDescription" column="refund_description"></result>
         <result property="createAt" column="create_time"></result>
+        <result property="blockFlag" column="block_flag"></result>
         <association property="agent" column="agentId = agent_id" select="agentLiteQuery"></association>
         <association property="orderPool" column="orderPoolId = order_pool_id" select="orderPoolQuery"></association>
     </resultMap>
@@ -79,7 +80,7 @@
 
 
     <select id="query" parameterType="java.util.Map" resultMap="refundRecordVo">
-        SELECT refund_id,order_pool_id,refund_name,refund_percent,refund_amount,refund_description,agent_id,create_time
+        SELECT refund_id,order_pool_id,refund_name,refund_percent,refund_amount,refund_description,agent_id,create_time,block_flag
         FROM refund_record
         WHERE 1 = 1
         <if test="refundRecordId != null and refundRecordId != ''">

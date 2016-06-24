@@ -96,9 +96,13 @@
         <if test="createAt != null and createAt != ''">
             AND create_time = #{createAt}
         </if>
+        <if test="date != null and date != ''">
+            AND create_time BETWEEN DATE_SUB( CURRENT_DATE() , INTERVAL 3 MONTH ) AND CURRENT_DATE();
+        </if>
         <if test="rule != null and rule != ''">
             ORDER BY ${rule}
         </if>
+
     </select>
 
     <update id="update" parameterType="selling.sunshine.model.Order">

@@ -159,7 +159,7 @@
            document.getElementById("agentclaimScale").innerHTML="群规模： "+result.data.agent.claimScale+"人";
            document.getElementById("agentCoffer").innerHTML="账户余额： "+result.data.agent.coffer+"元";
            document.getElementById("agentRefund").innerHTML="累计返现金额： "+result.data.agent.agentRefund+"元";
-           if(result.data.orderList == ""){
+           if((result.data.orderList == null) || (result.data.orderList == "")){
                  document.getElementById("orderList").innerHTML="最近三个月无订单";
            }else{
                var f = document.getElementById("orderList");            
@@ -194,21 +194,66 @@
                  document.getElementById("refundRecordList").innerHTML="当前无返现记录";
            }else{
                 var amount=0;
+                var amount2=0;
                 for(var i=0;i<result.data.refundRecordList.length;i++){
                       var refundRecord=result.data.refundRecordList[i];
                       amount+=refundRecord.refundAmount;
+                      if(!refundRecord.blockFlag){
+                           amount2+=refundRecord.refundAmount;
+                      }
                 }
-                 document.getElementById("refundRecordList").innerHTML="累计返现金额："+amount+"<br><a href='${path.concat('/withdraw/overview')}'>点击查看本月预计返现详细信息</a>";
+                
+                 document.getElementById("refundRecordList").innerHTML="累计返现金额："+amount+"元<br>本月预计返现金额："+amount2+"元ß";
            }
            if(result.data.withdrawRecordList == ""){
                  document.getElementById("withdrawRecordList").innerHTML="当前无提现记录";
+                  document.getElementById("withdrawRecordContainer").style.display="none";
            }else{
                var amount=0;
                for(var i=0;i<result.data.withdrawRecordList.length;i++){
                    var withdrawRecord=result.data.withdrawRecordList[i];
                    amount+=withdrawRecord.amount;
                }
-               document.getElementById("withdrawRecordList").innerHTML="总提现金额："+amount+"<br>"+"<a href='${path.concat('/withdraw/overview')}'>点击查看详细提现记录</a>";
+               document.getElementById("withdrawRecordList").innerHTML="总提现金额："+amount+"元";
+               document.getElementById("withdrawRecordContainer").style.display="block";
+               $.post("${path.concat('/withdraw/statistic/')}"+result.data.agent.agentId, function (result) {
+                   $('#withdrawRecordContainer').highcharts({
+                      title: {
+                         text: '提现详细记录（一年内）',
+                         x: -20 //center
+                      },        
+                      subtitle: {
+                         text: '过去一年内总计提现'+result.totalAmount+'元',
+                         x: -20
+                      },
+                      xAxis: {
+                        categories: result.categories
+                      },
+                      yAxis: { 
+                        title: {
+                        text: '金额 (元)'
+                        },
+                        plotLines: [{
+                          value: 0,
+                          width: 1,
+                          color: '#808080'
+                        }]
+                      },
+                      tooltip: {
+                          valueSuffix: '元'
+                      },
+                      legend: {
+                         layout: 'vertical',
+                         align: 'right',
+                         verticalAlign: 'middle',
+                         borderWidth: 0
+                      },
+                      series: [{
+                         name: '提现金额',
+                         data: result.data
+                      }]
+                  });
+               });
            }
         });
     }
@@ -238,6 +283,8 @@
             document.getElementById("model_quantity").innerHTML=node1;
        });
     }
+    
+
 </script>
 <style>
     #agent_detail_modal .modal-body{

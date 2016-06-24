@@ -1,6 +1,7 @@
 package selling.sunshine.controller;
 
 import com.alibaba.fastjson.JSONObject;
+
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
@@ -13,6 +14,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import selling.sunshine.form.*;
 import selling.sunshine.model.*;
 import selling.sunshine.model.goods.Goods4Agent;
@@ -24,6 +26,7 @@ import selling.sunshine.utils.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+
 import java.net.URLEncoder;
 import java.util.*;
 
@@ -1175,12 +1178,20 @@ public class AgentController {
         condition.put("agentId", agentId);
         Agent agent = ((List<Agent>) agentService.fetchAgent(condition).getData()).get(0);
 
-        //代理商订单信息
-        List<Order> orderList = (List<Order>) orderService.fetchOrder(condition).getData();
+
         //代理商返现信息
         List<RefundRecord> refundRecordList = (List<RefundRecord>) refundService.fetchRefundRecord(condition).getData();
         //代理商提现信息
+        List<Integer> status=new ArrayList<Integer>();
+        status.add(1);
+        condition.put("status", status);
         List<WithdrawRecord> withdrawRecordList = (List<WithdrawRecord>) withdrawService.fetchWithdrawRecord(condition).getData();
+        condition.clear();
+        condition.put("agentId", agentId); 
+        condition.put("date", "3");
+        //代理商订单信息
+        List<Order> orderList = (List<Order>) orderService.fetchOrder(condition).getData();
+
 
         dataMap.put("agent", agent);
         dataMap.put("orderList", orderList);
