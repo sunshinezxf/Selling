@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import selling.sunshine.service.AgentService;
 import selling.sunshine.service.OrderService;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
@@ -28,6 +29,9 @@ public class StatisticController {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private AgentService agentService;
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/order")
@@ -105,6 +109,31 @@ public class StatisticController {
         deliver4CusOrder.add(cusOrderNotDelivered);
         deliver4CusOrder.add(cusOrderDelivered);
         result.put("deliver4Cus", deliver4CusOrder);
+        return result;
+    }
+
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value = "/agent")
+    public JSONObject agentSum() {
+        JSONObject result = new JSONObject();
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("granted", false);
+        condition.put("blockFlag", false);
+        int grantedNum = 0;
+        int checkNum = 0;
+        ResultData fetchResponse = agentService.fetchAgent(condition);
+        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            checkNum = ((List) fetchResponse.getData()).size();
+        }
+        condition.put("granted", true);
+        fetchResponse = agentService.fetchAgent(condition);
+        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            grantedNum = ((List) fetchResponse.getData()).size();
+        }
+        JSONArray agentCheck = new JSONArray();
+        agentCheck.add(grantedNum);
+        agentCheck.add(checkNum);
+        result.put("grant", agentCheck);
         return result;
     }
 }
