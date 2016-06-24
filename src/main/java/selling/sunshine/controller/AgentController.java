@@ -11,6 +11,7 @@ import org.springframework.http.HttpRequest;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import selling.sunshine.form.*;
@@ -441,7 +442,7 @@ public class AgentController {
      * @return
      */
     @RequestMapping(method = RequestMethod.POST, value = "/register")
-    public ModelAndView register(@Valid AgentForm form, BindingResult result) {
+    public ModelAndView register(@Valid AgentForm form, BindingResult result, HttpServletRequest request) {
         ModelAndView view = new ModelAndView();
         //验证表单信息是否符合限制要求
         if (result.hasErrors()) {
@@ -481,8 +482,17 @@ public class AgentController {
                 }
             }
             ResultData createResponse = agentService.createAgent(agent);
-            Credit credit = new Credit(form.getFront(), form.getBack(), new selling.sunshine.model.lite.Agent(agent));
-            agentService.createCredit(credit);
+            if(!form.getFront().startsWith("/material")){
+            	//进行微信上传身份证的操作
+            	String front = WechatUtil.downloadCredit(form.getFront(), PlatformConfig.getAccessToken(), request.getSession().getServletContext().getRealPath("/"));
+            	String back =  WechatUtil.downloadCredit(form.getBack(), PlatformConfig.getAccessToken(), request.getSession().getServletContext().getRealPath("/"));
+            	Credit credit = new Credit(front, back, new selling.sunshine.model.lite.Agent(agent));
+            	agentService.createCredit(credit);
+            } else {
+            	//进行非微信上传身份证的操作
+            	Credit credit = new Credit(form.getFront(), form.getBack(), new selling.sunshine.model.lite.Agent(agent));
+            	agentService.createCredit(credit);
+            }
             if (createResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
                 Prompt prompt = new Prompt("提示", "您已成功提交申请,待审核通过后即可使用", "/agent/login");
                 view.addObject("prompt", prompt);
