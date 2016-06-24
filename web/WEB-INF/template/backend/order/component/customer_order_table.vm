@@ -29,7 +29,7 @@
     </div>
 
 </div>
-
+#parse("/backend/express/component/express_detail_modal.vm")
 <script>
      var url = "${path.concat('/order/customerOrder/overview')}";
      var start=0;
@@ -161,5 +161,22 @@
                     $("#customer_order_overview").append(node2);
                 }
           });
+      }
+      
+      
+      function expressDetail(obj){
+         $.post("${path.concat('/express/detail/')}"+obj.id, function (result) {
+            document.getElementById("expressNumber").innerHTML=result.data.express.expressNumber;
+            document.getElementById("createAt").innerHTML=(new Date(result.data.express.createAt)).format("yyyy/MM/dd");
+            document.getElementById("senderName").innerHTML=result.data.express.senderName;
+            document.getElementById("senderPhone").innerHTML=result.data.express.senderPhone;
+            document.getElementById("senderAddress").innerHTML=result.data.express.senderAddress;
+            document.getElementById("receiverName").innerHTML=result.data.express.receiverName;
+            document.getElementById("receiverPhone").innerHTML=result.data.express.receiverPhone;
+             document.getElementById("receiverAddress").innerHTML=result.data.express.receiverAddress;
+              document.getElementById("goodsName").innerHTML=result.data.express.goodsName;
+            $("#express_detail_modal").modal('show');   
+         
+         });
       }
 </script>

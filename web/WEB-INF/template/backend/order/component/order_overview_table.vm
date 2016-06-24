@@ -26,6 +26,28 @@
     </div>
 
 </div>
+<div class="modal fade" id="dialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel">
+               提示
+            </h4>
+         </div>
+         <div class="modal-body">
+
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">
+               取消
+            </button>
+            <button type="button" class="btn btn-primary" id="dialogConfirm">
+               确定
+            </button>
+         </div>
+   </div>
+</div>
 #parse("/backend/order/component/order_item_modal.vm")
 #parse("/backend/express/component/express_detail_modal.vm")
 <script>
@@ -327,10 +349,17 @@
        });
     }
     
+    var id;
     function pay(obj){
-        $.get("${path.concat('/order/adminpay/')}"+obj.id,function(result){
+            $("#dialog").find(".modal-body").html("确认该订单已经付款后，点击确定将订单状态改为已付款！");
+    		$("#dialog").modal('show');  
+    		id=obj.id
+    }
+    
+    $("#dialog").find("#dialogConfirm").click(function(){
+        $.get("${path.concat('/order/adminpay/')}"+id,function(result){
             window.location.href = "${path.concat('/order/overview')}";
         });
-         
-    }
+    	$("#dialog").modal('hide');
+    });
 </script>
