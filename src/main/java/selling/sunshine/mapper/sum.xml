@@ -20,7 +20,7 @@
             where order_status = 1
             group by customer_order.goods_id, quantity
             ) as item_sum
-        group by goods_id, goods_quantity
+        group by goods_id, goods_name, goods_quantity
         order by goods_quantity ASC
     </select>
 </mapper>
