@@ -120,17 +120,8 @@
                         }
                     }
                 }
-                var node = "";
-                for (var goods_quantity in goods_quantity_list) {
-                    node = node + goods_quantity + "总计:&nbsp;" + goods_quantity_list[goods_quantity]['quantity'] + "盒  &nbsp;";
-                }
-                node += "<br>"
-                for (var name in quantity_num_list) {
-                    for (var quantity_num in quantity_num_list[name]) {
-                        node = node + name + quantity_num + "盒:&nbsp;" + quantity_num_list[name][quantity_num]['num'] + "个  &nbsp;";
-                    }
-                }
-                document.getElementById("total").innerHTML = "待处理订单累计：<strong>" + orderNum + "笔</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' class='btn btn-info' onclick=expressAll()>一键发货</button><br>" + node;
+
+                document.getElementById("total").innerHTML = "待处理订单累计：<strong>" + orderNum + "笔</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' class='btn btn-info' onclick=expressAll()>一键发货</button><br>";
 
                 if (result.data.orderList != null) {
                     $.post(url, {
@@ -364,53 +355,43 @@
             }
         });
     }
+    $(document).ready(function () {
+        $.post(order_sum_url, function (result) {
+            var category = result.category;
+            var series = result.series;
 
-    $('#container').highcharts({
-        chart: {
-            type: 'column'
-        },
-        title: {
-            text: 'Monthly Average Rainfall'
-        },
-        subtitle: {
-            text: 'Source: WorldClimate.com'
-        },
-        xAxis: {
-            categories: [
-                '1盒',
-                '6盒',
-                '16盒',
-                '20盒'
-            ]
-        },
-        yAxis: {
-            min: 0,
-            title: {
-                text: '个数 (个)'
-            }
-        },
-        tooltip: {
-            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name} </td>' +
-            '<td style="padding:0"><b>{point.y} 个</b></td></tr>',
-            footerFormat: '</table>',
-            shared: true,
-            useHTML: true
-        },
-        plotOptions: {
-            column: {
-                pointPadding: 0.2,
-                borderWidth: 0
-            }
-        },
-        series: [{
-            name: '三七粉',
-            data: [43, 9, 0, 10]
-        }, {
-            name: '三七粉大号',
-            data: [32, 21, 6, 0]
-        }]
+            $('#container').highcharts({
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: '待处理订单信息汇总'
+                },
+                xAxis: {
+                    categories: category
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: '个数 (个)'
+                    }
+                },
+                tooltip: {
+                    headerFormat: '<span>{point.key}</span><br>',
+                    pointFormat: '{series.name}' +
+                    '&nbsp;{point.y} 件<br>',
+                    footerFormat: '',
+                    shared: true,
+                    useHTML: true
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
+                    }
+                },
+                series: series
+            });
+        });
     });
-
-
 </script>

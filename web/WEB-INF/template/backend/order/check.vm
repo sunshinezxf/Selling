@@ -13,4 +13,7 @@
         #parse("/backend/order/component/order_check_table.vm")
     </div>
 </body>
+<script>
+    var order_sum_url = "${path.concat('/statistic/order/sum')}";
+</script>
 </html>
