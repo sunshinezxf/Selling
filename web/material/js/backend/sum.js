@@ -76,7 +76,7 @@ $(document).ready(function () {
                 }]
             });
         }else{
-        	$('#order_container').html('<p>对不起，当前暂无订单数据！</p>');
+        	$('#order_container').html('<p style="font-size:20px;">对不起，当前暂无订单数据！</p>');
         }
         
     });
@@ -121,7 +121,7 @@ $(document).ready(function () {
                 }]
             });
         }else{
-        	$('#agent_container').html('<p>对不起，当前暂无代理商数据！</p>');
+        	$('#agent_container').html('<p style="font-size:20px;">对不起，当前暂无代理商数据！</p>');
         }
         
     });
