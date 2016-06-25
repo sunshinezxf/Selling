@@ -64,10 +64,14 @@ public class StatisticServiceImpl implements StatisticService {
                 int index = 0;
                 while (quantityIterator.hasNext()) {
                     int temp = quantityIterator.next();
-                    Sum4Order current = sum.get(index);
-                    if (current.getQuantity() == temp) {
-                        val.add(current.getNum());
-                        index++;
+                    if(sum.size() >= index + 1) {
+                    	Sum4Order current = sum.get(index);
+                    	if (current.getQuantity() == temp) {
+                    		val.add(current.getNum());
+                    		index++;
+                    	}else {
+                    		val.add(0);
+                    	}
                     } else {
                         val.add(0);
                     }
