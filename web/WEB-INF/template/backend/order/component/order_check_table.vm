@@ -169,7 +169,7 @@
                         if (customerOrderTotal < customerOrderLength) {
                             customerOrderLength = customerOrderTotal;
                         }
-                        var node1 = "<table class='table table-striped' style='margin-bottom: 0.2em' id='customer_order_table'><tr><th>订单号</th><th>客户</th><th>电话</th><th>地址</th><th>代理商</th><th>总计</th><th>总价</th><th>操作</th></tr>";
+                        var node1 = "<table class='table table-striped' style='margin-bottom: 0.2em' id='customer_order_table'><tr><th>订单号</th><th>客户</th><th>电话</th><th>地址</th><th>代理商</th><th>商品</th><th>总计</th><th>总价</th><th>操作</th></tr>";
                         for (var i = 0; i < customerOrderLength; i++) {
                             var customerOrder = customerOrderList[i];
                             if (customerOrder.agent == null) {
@@ -177,7 +177,7 @@
                             } else {
                                 var agentName = customerOrder.agent.name;
                             }
-                            var node2 = "<tr><td>" + customerOrder.orderId + "</td><td>" + customerOrder.receiverName + "</td><td>" + customerOrder.receiverPhone + "</td><td>" + customerOrder.receiverAddress + "</td><td>" + agentName + "</td><td>" + customerOrder.quantity + "</td><td>" + customerOrder.totalPrice + "元</td><td><button type='button' class='btn btn-info' id='" + customerOrder.orderId + "' onclick=expressCustomerOrder(this)>发货</button></td></tr>";
+                            var node2 = "<tr><td>" + customerOrder.orderId + "</td><td>" + customerOrder.receiverName + "</td><td>" + customerOrder.receiverPhone + "</td><td>" + customerOrder.receiverAddress + "</td><td>" + agentName + "</td><td>" +customerOrder.goods.name +"</td><td>"+customerOrder.quantity + "</td><td>" + customerOrder.totalPrice + "元</td><td><button type='button' class='btn btn-info' id='" + customerOrder.orderId + "' onclick=expressCustomerOrder(this)>发货</button></td></tr>";
                             node1 += node2;
                         }
                         node1 = node1 + "</table>";
@@ -345,7 +345,7 @@
                 } else {
                     var agentName = customerOrder.agent.name;
                 }
-                var node = "<tr><td>" + customerOrder.orderId + "</td><td>" + customerOrder.receiverName + "</td><td>" + customerOrder.receiverPhone + "</td><td>" + customerOrder.receiverAddress + "</td><td>" + agentName + "</td><td>" + customerOrder.quantity + "</td><td>" + customerOrder.totalPrice + "元</td><td><button type='button' class='btn btn-info' id='" + customerOrder.orderId + "' onclick=expressCustomerOrder(this)>发货</button></td></tr>";
+                var node = "<tr><td>" + customerOrder.orderId + "</td><td>" + customerOrder.receiverName + "</td><td>" + customerOrder.receiverPhone + "</td><td>" + customerOrder.receiverAddress + "</td><td>" + agentName + "</td><td>"+customerOrder.goods.name+"</td><td>" + customerOrder.quantity + "</td><td>" + customerOrder.totalPrice + "元</td><td><button type='button' class='btn btn-info' id='" + customerOrder.orderId + "' onclick=expressCustomerOrder(this)>发货</button></td></tr>";
                 $("#customer_order_table").append(node);
             }
             customerOrderTotal -= customerOrderLength;
