@@ -97,7 +97,7 @@
             AND create_time = #{createAt}
         </if>
         <if test="date != null and date != ''">
-            AND create_time BETWEEN DATE_SUB( CURRENT_DATE() , INTERVAL 3 MONTH ) AND CURRENT_DATE();
+            AND DATE_FORMAT(create_time,'%Y-%m')>DATE_FORMAT(date_sub(current_date(), interval 3 month),'%Y-%m')
         </if>
         <if test="rule != null and rule != ''">
             ORDER BY ${rule}
