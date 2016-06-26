@@ -314,7 +314,6 @@
       }
       
       function detail(obj){
-         alert(obj.id);
         $.post("${path.concat('/order/orderItem/')}"+obj.id, function (result) {
             
             document.getElementById("model_p").innerHTML="代理商："+result.data.order.agent.name;
