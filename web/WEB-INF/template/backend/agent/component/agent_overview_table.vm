@@ -250,7 +250,7 @@
                  document.getElementById("withdrawRecordContainer").style.display="none";
            }else{
                var amount=0;
-               for(var i=0;i<result.data.withdrawRecordList.length;i++){
+               for(var i=0;i<result.data	.withdrawRecordList.length;i++){
                    var withdrawRecord=result.data.withdrawRecordList[i];
                    amount+=withdrawRecord.amount;
                }
