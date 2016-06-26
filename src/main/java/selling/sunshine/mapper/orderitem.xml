@@ -134,7 +134,7 @@
     <select id="orderQuery" parameterType="java.util.Map" resultMap="orderVo">
         SELECT order_id, agent_id, block_flag, create_time
         FROM `order`
-        WHERE order_id = #{orderId} AND block_flag = 0 
+        WHERE order_id = #{orderId}
     </select>
 
     <select id="customerQuery" parameterType="java.util.Map" resultMap="customerVo">
