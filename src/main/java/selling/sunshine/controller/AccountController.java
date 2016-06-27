@@ -92,20 +92,6 @@ public class AccountController {
         }
         Agent agent = ((List<Agent>) fetchAgentResponse.getData()).get(0);
 
-        ResultData fetchBankCardResponse = agentService.fetchBankCard(condition);
-        if (fetchBankCardResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
-            Prompt prompt = new Prompt("失败", "银行卡错误", "/account/info");
-            view.addObject("prompt", prompt);
-            WechatConfig.oauthWechat(view, "/agent/prompt");
-            view.setViewName("/agent/prompt");
-            return view;
-        }
-        if (fetchBankCardResponse.getResponseCode() == ResponseCode.RESPONSE_NULL) {
-            view.addObject("bankCard", "empty");
-        } else {
-            List<BankCard> bankCardList = (List<BankCard>) fetchBankCardResponse.getData();
-            view.addObject("bankCard", bankCardList.get(0));
-        }
         view.addObject("agent", agent);
         WechatConfig.oauthWechat(view, "/agent/account/withdraw");
         view.setViewName("/agent/account/withdraw");

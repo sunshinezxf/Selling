@@ -6,11 +6,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import selling.wechat.model.Follower;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by sunshine on 5/24/16.
@@ -128,6 +132,56 @@ public class WechatUtil {
         } finally {
             return result;
         }
+    }
+    
+    public static String downloadCredit(String media_id, String token, String base){
+    	logger.debug("creditdebug");
+    	String url = "https://api.weixin.qq.com/cgi-bin/media/get?access_token=" +  token + "&media_id=" + media_id;
+    	String result = "";
+    	logger.debug(url);
+    	try{
+    		URL address = new URL(url);
+    		HttpURLConnection connection = (HttpURLConnection) address.openConnection();
+    		connection.setRequestMethod("GET");
+    		connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+    		connection.setDoOutput(true);
+    		connection.setDoInput(true);
+    		System.setProperty("sun.net.client.defaultConnectTimeout", "30000");
+            System.setProperty("sun.net.client.defaultReadTimeout", "30000");
+            connection.connect();
+            InputStream is= connection.getInputStream();
+            //路径处理
+            String PATH = "/material/upload";
+            Date current = new Date();
+            SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+            String time = format.format(current);
+            StringBuilder builder = new StringBuilder(base);
+            builder.append(PATH);
+            builder.append("/");
+            builder.append(time);
+            File directory = new File(builder.toString());
+            if (!directory.exists()) {
+                directory.mkdirs();
+            }
+            String name = IDGenerator.generate("TH") + ".jpg";
+            String completeName = builder.append(File.separator).append(name).toString();
+            File temp = new File(completeName);
+            //开始下载
+            FileOutputStream fileOutputStream = new FileOutputStream(temp);
+            byte[] data = new byte[1024];
+            int len = 0;
+            while ((len = is.read(data)) != -1) {
+            	fileOutputStream.write(data, 0, len);
+            }
+            //返回路径
+            int index = temp.getPath().indexOf(SystemTeller.tellPath(PATH + "/" + time));
+            result = temp.getPath().substring(index);
+            logger.debug(result);
+    	} catch (Exception e){
+    		logger.debug(e.getMessage());
+    	} finally {
+    		return result;
+    	}
     }
 
     public static final String inputStream2String(InputStream in) throws IOException {

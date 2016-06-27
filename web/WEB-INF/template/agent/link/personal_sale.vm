@@ -3,7 +3,7 @@
 <head>
     #parse("/agent/component/init.vm")
     #parse("/agent/component/init_qrcode.vm")
-    <title>注册邀请</title>
+    <title>客户商城</title>
     <script type="text/javascript" src="${path.concat('/plugins/clipboard/clipboard.min.js')}"></script>
 </head>
 <body ontouchstart>
