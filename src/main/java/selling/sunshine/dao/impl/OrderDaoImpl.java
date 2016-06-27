@@ -1,6 +1,7 @@
 package selling.sunshine.dao.impl;
 
 import org.apache.ibatis.session.RowBounds;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -271,7 +272,10 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
                     if (pool.getQuantity() >= config.getAmountTrigger()) {
                         pool.setBlockFlag(false);
                         pool.setRefundAmount(Double.parseDouble(resultList.get(i).get("quantity").toString()) * config.getLevel1Percent());
-                    }
+                    }else {
+                    	 pool.setBlockFlag(true);
+                    	 pool.setRefundAmount(0);
+					}
                     sqlSession.insert("selling.order.pool.insert", pool);
                     configCondition.clear();
                 }
