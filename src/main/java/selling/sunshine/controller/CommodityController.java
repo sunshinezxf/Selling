@@ -126,10 +126,15 @@ public class CommodityController {
 		}
 		for (Thumbnail thumbnail : thumbnails) {
 			JSONObject initialPreviewConfigObject = new JSONObject();
-			initialPreviewArray.add("/selling" + thumbnail.getPath());
+			//initialPreviewArray.add("/selling" + thumbnail.getPath());
+			initialPreviewArray.add(thumbnail.getPath());
+//			initialPreviewConfigObject.put(
+//					"url",
+//					"/selling/commodity/delete/Thumbnail/"
+//							+ thumbnail.getThumbnailId());
 			initialPreviewConfigObject.put(
 					"url",
-					"/selling/commodity/delete/Thumbnail/"
+					"/commodity/delete/Thumbnail/"
 							+ thumbnail.getThumbnailId());
 			initialPreviewConfigObject.put("key", thumbnail.getThumbnailId());
 			initialPreviewConfigArray.add(initialPreviewConfigObject);
@@ -352,8 +357,10 @@ public class CommodityController {
                     JSONArray initialPreviewArray = new JSONArray();
                     JSONArray initialPreviewConfigArray = new JSONArray();
                     JSONObject initialPreviewConfigObject = new JSONObject();
-                    initialPreviewArray.add("/selling" + response.getData().toString());
-                    initialPreviewConfigObject.put("url", "/selling/commodity/delete/Thumbnail/"+thumbnailId);
+//                  initialPreviewArray.add("/selling" + response.getData().toString());
+                    initialPreviewArray.add(response.getData().toString());
+//                  initialPreviewConfigObject.put("url", "/selling/commodity/delete/Thumbnail/"+thumbnailId);
+                    initialPreviewConfigObject.put("url", "/commodity/delete/Thumbnail/"+thumbnailId);
                     initialPreviewConfigObject.put("key", thumbnailId);
                     initialPreviewConfigArray.add(initialPreviewConfigObject);
                     resultObject.put("initialPreview", initialPreviewArray);

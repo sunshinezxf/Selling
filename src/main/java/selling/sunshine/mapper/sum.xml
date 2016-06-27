@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="selling.statistic">
+    <resultMap id="sum4OrderVo" type="selling.sunshine.model.sum.Sum4Order">
+        <result property="goodsId" column="goods_id"></result>
+        <result property="goodsName" column="goods_name"></result>
+        <result property="quantity" column="goods_quantity"></result>
+        <result property="num" column="num"></result>
+    </resultMap>
+
+    <select id="sum4order" resultMap="sum4OrderVo">
+        select goods_id, goods_name, goods_quantity, sum(item_num) as num from (
+            select goods.goods_id as goods_id, goods.goods_name as goods_name, goods_quantity, count(order_item_id) as item_num
+            from order_item left join goods on order_item.goods_id = goods.goods_id
+            where order_item_status = 1
+            group by order_item.goods_id, goods_quantity
+            union
+            select goods.goods_id as goods_id, goods.goods_name as goods_name, quantity as goods_quantity, count(order_id) as item_num
+            from customer_order left join goods on customer_order.goods_id = goods.goods_id
+            where order_status = 1
+            group by customer_order.goods_id, quantity
+            ) as item_sum
+        group by goods_id, goods_name, goods_quantity
+        order by goods_quantity ASC
+    </select>
+</mapper>

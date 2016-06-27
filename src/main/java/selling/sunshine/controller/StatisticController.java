@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import selling.sunshine.service.AgentService;
 import selling.sunshine.service.OrderService;
+import selling.sunshine.service.StatisticService;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
@@ -33,9 +34,12 @@ public class StatisticController {
     @Autowired
     private AgentService agentService;
 
+    @Autowired
+    private StatisticService statisticService;
+
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/order")
-    public JSONObject orderSum() {
+    public JSONObject order() {
         JSONObject result = new JSONObject();
         Map<String, Object> condition = new HashMap<>();
         List<Integer> status = new ArrayList<>();
@@ -114,7 +118,7 @@ public class StatisticController {
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/agent")
-    public JSONObject agentSum() {
+    public JSONObject agent() {
         JSONObject result = new JSONObject();
         Map<String, Object> condition = new HashMap<>();
         condition.put("granted", false);
@@ -134,6 +138,18 @@ public class StatisticController {
         agentCheck.add(grantedNum);
         agentCheck.add(checkNum);
         result.put("grant", agentCheck);
+        return result;
+    }
+
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value = "/order/sum")
+    public JSONObject orderSum() {
+        JSONObject result = new JSONObject();
+        ResultData queryResponse = statisticService.query4OrderSum();
+        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result = (JSONObject) queryResponse.getData();
+        }
+        logger.debug("data sum: " + result);
         return result;
     }
 }

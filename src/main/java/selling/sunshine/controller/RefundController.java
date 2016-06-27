@@ -8,6 +8,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+
 import selling.sunshine.form.RefundConfigForm;
 import selling.sunshine.model.RefundConfig;
 import selling.sunshine.model.RefundRecord;
@@ -129,6 +132,30 @@ public class RefundController {
         }
         return result;
 	}
+    
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value = "/statistic/{agentId}")
+    public JSONObject statistic(@PathVariable("agentId") String agentId) {
+    	JSONObject result = new JSONObject();
+    	Map<String, Object> condition=new HashMap<>();
+    	condition.put("agentId", agentId);
+    	if (refundService.statistic(condition).getResponseCode()==ResponseCode.RESPONSE_OK) {
+    		List<Map<String, Object>> list=(List<Map<String,Object>>)refundService.statistic(condition).getData();
+    		JSONArray categories = new JSONArray();
+    		JSONArray data = new JSONArray();
+    		double totalAmount=0;
+    		for (int i = 0; i < list.size(); i++) {
+				categories.add(list.get(i).get("date"));
+				data.add(list.get(i).get("amount"));
+				totalAmount+=(double)list.get(i).get("amount");
+			}
+    		result.put("totalAmount", totalAmount);
+    		result.put("categories", categories);
+    		result.put("data", data);
+		}
+    
+    	return result;
+    }
     
 
 }

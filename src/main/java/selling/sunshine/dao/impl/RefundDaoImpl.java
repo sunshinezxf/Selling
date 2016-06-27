@@ -271,5 +271,21 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
         }
     }
 
+	@Override
+	public ResultData statistic(Map<String, Object> condition) {
+		ResultData result = new ResultData();
+		try {
+			List<Map<String, Object>> list=sqlSession.selectList("selling.refund.record.statistic",condition);
+			result.setData(list);
+			result.setResponseCode(ResponseCode.RESPONSE_OK);
+			return result;
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+			result.setDescription(e.getMessage());
+		}
+        return result;
+	}
+
 	
 }

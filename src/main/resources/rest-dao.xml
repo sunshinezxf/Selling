@@ -21,9 +21,9 @@
     <bean id="customerDao" class="selling.sunshine.dao.impl.CustomerDaoImpl">
         <property name="sqlSession" ref="sqlSession"></property>
     </bean>
-    
+
     <bean id="customerOrderDao" class="selling.sunshine.dao.impl.CustomerOrderDaoImpl">
-    	<property name="sqlSession" ref="sqlSession"></property>
+        <property name="sqlSession" ref="sqlSession"></property>
     </bean>
 
     <bean id="orderDao" class="selling.sunshine.dao.impl.OrderDaoImpl">
@@ -61,8 +61,12 @@
     <bean id="bankCardDao" class="selling.sunshine.dao.impl.BankCardDaoImpl">
         <property name="sqlSession" ref="sqlSession"></property>
     </bean>
-    
+
     <bean id="backOperationLogDao" class="selling.sunshine.dao.impl.BackOperationLogDaoImpl">
-    	<property name="sqlSession" ref="sqlSession"></property>
+        <property name="sqlSession" ref="sqlSession"></property>
+    </bean>
+
+    <bean id="statisticDao" class="selling.sunshine.dao.impl.StatisticDaoImpl">
+        <property name="sqlSession" ref="sqlSession"></property>
     </bean>
 </beans>

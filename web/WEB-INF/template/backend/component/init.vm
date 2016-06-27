@@ -8,5 +8,4 @@
 <script type="text/javascript" src="${path.concat('/plugins/jquery/jquery-1.12.3.min.js')}"></script>
 <script type="text/javascript" src="${path.concat('/plugins/bootstrap/js/bootstrap.min.js')}"></script>
 <script type="text/javascript" src="${path.concat('/plugins/bootstrap/js/bootstrap-dialog.js')}"></script>
-#parse("/backend/component/init_highcharts.vm")
 <script type="text/javascript" src="${path.concat('/material/js/backend/dashboard.js')}"></script>

@@ -17,4 +17,6 @@ public interface WithdrawDao {
     ResultData updateWithdraw(WithdrawRecord record);
 
     ResultData queryWithdrawByPage(Map<String, Object> condition, DataTableParam param);
+    
+    ResultData statistic(Map<String, Object> condition);
 }

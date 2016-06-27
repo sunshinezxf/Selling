@@ -20,5 +20,7 @@ public interface RefundDao {
     
     ResultData refundRecord();
     
-    public ResultData refund();
+    ResultData refund();
+    
+    ResultData statistic(Map<String, Object> condition);
 }

@@ -106,8 +106,10 @@
                 /customer/overview = roles[admin]
                 /customer/add = roles[agent]
                 /customer/modify = roles[agent]
-                
+
                 /order/adminpay = roles[admin]
+
+                /statistic/** = roles[admin]
 
                 /wechat = anon
 
@@ -117,8 +119,8 @@
                 /material/js/** = anon
 
                 /payment/** = anon
-				
-				/withdraw/inform = anon
+
+                /withdraw/inform = anon
 
                 /** = authc
             </value>

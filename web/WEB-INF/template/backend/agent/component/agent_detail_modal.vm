@@ -39,6 +39,8 @@
                     <p class="form-group" id="refundRecordList">
                       
                     </p>
+                    <br>
+                    <div id="refundRecordContainer" style="display:none"></div>
                </p>
                <hr>
                <p class="form-group">
@@ -47,6 +49,8 @@
                     <p class="form-group" id="withdrawRecordList">
                        
                     </p>
+                    <br>
+                    <div id="withdrawRecordContainer" style="display:none"></div>
                </p>
             </div>
             <div class="modal-footer">

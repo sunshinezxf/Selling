@@ -108,7 +108,8 @@
               }
                var node="";
                for(var i=0;i<result.data.thumbnails.length;i++){
-                   var path="/selling"+result.data.thumbnails[i].path;
+                  // var path="/selling"+result.data.thumbnails[i].path;
+                    var path=result.data.thumbnails[i].path;
                    node+="<img src ='" + path + "' class='img-rounded' style='width:160px;height:160px;'>&nbsp;&nbsp;";
                }
                $("#thumbnails").append(node);
