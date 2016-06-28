@@ -11,13 +11,15 @@
     </div>
     <div class="bd">
         <div class="weui_cells">
-            <div class="weui_cell">
-                <div class="weui_cell_hd">
-                    <label class="weui_label">手机号</label>
-                </div>
-                <div class="weui_cell_bd weui_cell_primary">
-                    <input class="weui_input" id="customer_tel" name="customer_phone" type="tel" placeholder="请填写手机号查询订单"
-                       autocomplete="off"/>
+            <div id="consult_form">
+                <div class="weui_cell">
+                    <div class="weui_cell_hd">
+                        <label class="weui_label">手机号</label>
+                    </div>
+                    <div class="weui_cell_bd weui_cell_primary">
+                        <input class="weui_input" id="customer_tel" name="phone" type="tel" placeholder="请填写手机号查询订单"
+                           autocomplete="off"/>
+                    </div>
                 </div>
             </div>
         </div>
@@ -89,15 +91,9 @@
             first_inactive();
         } else {
             //传给controller查询，成功则跳转到订单详情页面，失败则跳转到您当前无任何订单的提示页面
-            //var url = "${path.concat('/agent/validate/')}" + phone;
-            //$.post(url, function (result) {
-            //    if (result.responseCode == "RESPONSE_OK") {
-            //        
-            //    } else {
-            //    }
-            //
-            //});
-
+            $("#consult_form").attr("action", "${path.concat('/order/search')}");
+            $("#consult_form").attr("method", "post");
+            $("#consult_form").submit();
         }
 
     });
