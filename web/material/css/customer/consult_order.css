@@ -17,3 +17,11 @@ body {
     font-weight: 400;
     margin: 0 15%;
 }
+
+button.weui_btn{
+	width:40%;
+}
+	
+.weui_btn_default,.weui_btn_primary{
+	margin-top:6%;
+}

@@ -13,23 +13,27 @@
         #if(${orderFromAgent})
             #foreach( $order in ${orderFromAgent} )
             <div class="weui_panel weui_panel_access">
-                <div class="weui_panel_hd">
-                    <p>订单号:${order.orderItemId}</p>
-                    <p>代理商:${order.agent.name}</p>
+                <div class="weui_panel_hd col1">
+                    <h4 class="weui_media_title">订单号:${order.orderItemId}</h4>
+                    #if(${order.order.agent.name})
+                        <p class="weui_media_desc">代理商:${order.order.agent.name}</p>
+                    #else
+                        <p class="weui_media_desc">代理商:无</p>
+                    #end
                 </div>
                 <div class="weui_panel_bd">
-                    <div class="weui_media_box weui_media_text">
+                    <div class="weui_media_box weui_media_text col2">
                         <h4 class="weui_media_title">商品名:${order.goods.name}</h4>
                         <p class="weui_media_desc">数量:${order.goodsQuantity}</p>
                     </div>
-                    <div class="weui_media_box weui_media_text">
+                    <div class="weui_media_box weui_media_text col3">
                         <h4 class="weui_media_title">收件人:${order.customer.name}</h4>
-                        <p class="weui_media_desc">手机号:${order.customer.phone}</p>
+                        <p class="weui_media_desc">手机号:${order.customer.phone.phone}</p>
                         <p class="weui_media_desc">地址:${order.receiveAddress}</p>
                     </div>
-                    <div class="weui_media_box weui_media_text">
-                        <h4 class="weui_media_title">共${order.goodsQuantity}件商品</h4>
-                        <p class="weui_media_desc">合计：${order.orderItemPrice}元</p>
+                    <div class="weui_media_box weui_media_text col4">
+                        <p class="weui_media_desc">共${order.goodsQuantity}件商品</p>
+                        <h4 class="weui_media_title">合计：${order.orderItemPrice}元</h4>
                     </div>
                 </div>
                 <!--<a href="javascript:void(0);" class="weui_panel_ft">查看更多</a>-->
@@ -40,23 +44,27 @@
         #if(${orderFromCustomer})
             #foreach( $order in ${orderFromCustomer} )
             <div class="weui_panel weui_panel_access">
-                <div class="weui_panel_hd">
-                    <p>订单号:${order.orderId}</p>
-                    <p>代理商:${order.agent.name}</p>
+                <div class="weui_panel_hd col1">
+                    <h4 class="weui_media_title">订单号:${order.orderId}</h4>
+                    #if(${order.agent.name})
+                        <p class="weui_media_desc">代理商:${order.agent.name}</p>
+                    #else
+                        <p class="weui_media_desc">代理商:无</p>
+                    #end
                 </div>
                 <div class="weui_panel_bd">
-                    <div class="weui_media_box weui_media_text">
+                    <div class="weui_media_box weui_media_text col2">
                         <h4 class="weui_media_title">商品名:${order.goods.name}</h4>
                         <p class="weui_media_desc">数量:${order.quantity}</p>
                     </div>
-                    <div class="weui_media_box weui_media_text">
+                    <div class="weui_media_box weui_media_text col3">
                         <h4 class="weui_media_title">收件人:${order.receiverName}</h4>
                         <p class="weui_media_desc">手机号:${order.receiverPhone}</p>
                         <p class="weui_media_desc">地址:${order.receiverAddress}</p>
                     </div>
-                    <div class="weui_media_box weui_media_text">
-                        <h4 class="weui_media_title">共${order.quantity}件商品</h4>
-                        <p class="weui_media_desc">合计：${order.totalPrice}元</p>
+                    <div class="weui_media_box weui_media_text col4">
+                        <p class="weui_media_desc">共${order.quantity}件商品</p>
+                        <h4 class="weui_media_title">合计：${order.totalPrice}元</h4>
                     </div>
                 </div>
                 <!--<a href="javascript:void(0);" class="weui_panel_ft">查看更多</a>-->

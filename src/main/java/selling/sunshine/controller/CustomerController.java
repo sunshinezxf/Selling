@@ -328,10 +328,24 @@ public class CustomerController {
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             List<OrderItem> list = (List<OrderItem>) fetchResponse.getData();
             if (!list.isEmpty()) {
+                for (OrderItem item : list) {
+                    String orderId = item.getOrder().getOrderId();
+                    condition.clear();
+                    condition.put("orderId", orderId);
+                    Order order = ((List<Order>) orderService.fetchOrder(condition).getData()).get(0);
+                    item.setOrder(order);
+                    condition.clear();
+                    condition.put("customerId", item.getCustomer().getCustomerId());
+                    Customer customer = ((List<Customer>) customerService.fetchCustomer(condition).getData()).get(0);
+                    item.setCustomer(customer);
+                }
                 view.addObject("orderFromAgent", list);
                 empty = false;
             }
         }
+        condition.clear();
+        condition.put("receiverPhone", phone);
+        condition.put("blockFlag", false);
         List<Integer> status = new ArrayList<>();
         status.add(1);
         status.add(2);
@@ -346,6 +360,7 @@ public class CustomerController {
         }
         if (empty) {
             view.setViewName("/customer/component/order_error_msg");
+            return view;
         }
         view.setViewName("/customer/order/order_list");
         return view;
