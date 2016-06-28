@@ -3,7 +3,6 @@
 <head>
     #parse("/backend/component/init.vm")
     #parse("/backend/component/init_datatable.vm")
-    #parse("/backend/component/init_print.vm")
     <title>物流单</title>
 </head>
 <bod>

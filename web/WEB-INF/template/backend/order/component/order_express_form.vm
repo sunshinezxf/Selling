@@ -87,7 +87,9 @@
 </div>
 
 <script>
+   #*
    var LODOP = getLodop();; //声明为全局变量  
+   *#
    $("#setExpressNumber").click(function(){
     	 $("#express_modal").modal('show');          
     });
@@ -101,7 +103,7 @@
                     document.getElementById("expressNumber"+i).innerHTML = (parseFloat(expressNumber)+i);
                  }
                  if(!document.getElementById("print")) {
-                     var node="<div class=''><button type='button' class='btn btn-success' id='print' onclick=print()>打印</button></div>";
+                     var node="<div class=''><button type='button' class='btn btn-success' id='print' onclick=print()>生成excel文件</button></div>";
                      $("#main").append(node);
                  }   
     	  }else{
@@ -110,18 +112,15 @@
     });
     
     function print(){
-      
+           #*
     	for(var i=0;i<${expressList}.length;i++){
     	    createPrintPage(document.getElementById("expressNumber"+i).innerHTML,${expressList}[i].createAt,${expressList}[i].senderName,${expressList}[i].senderPhone,${expressList}[i].senderAddress,${expressList}[i].receiverName,${expressList}[i].receiverPhone,${expressList}[i].receiverAddress,${expressList}[i].goodsName);
-    	     	   
-    	      #*
-    	     LODOP.PREVIEW();
-    	     
-    	      *#
-    	 LODOP.PRINT();
-    	    
-    	   
+    	     	    	 
+    	     LODOP.PREVIEW(); 
+    	     LODOP.PRINT();
+       
     	}
+    	  *#
 
 
     	var data={"expressItem":${expressList},"expressNumber":$("#expressId").val()};
@@ -131,12 +130,16 @@
             dataType:"json",      
             contentType:"application/json",               
             data:JSON.stringify(data), 
-            success:function(data){ 
+            success:function(data){           
+            #*
                  window.location.href = "${path.concat('/order/check')}";  
+            *#
             } 
          });  
     }
     
+    
+       #*
     function createPrintPage(expressNumber,expressDate,senderName,senderPhone,senderAddress,receiverName,receiverPhone,receiverAddress,goodsName){
         
         LODOP.PRINT_INITA(0,0,387,725,"中通");
@@ -151,6 +154,7 @@
         LODOP.ADD_PRINT_TEXT(160,53,328,30,receiverAddress);
         LODOP.ADD_PRINT_TEXT(191,55,154,35,goodsName);
     }
+    *#
     
     
 </script>

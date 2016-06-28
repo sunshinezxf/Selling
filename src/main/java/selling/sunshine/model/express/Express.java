@@ -16,6 +16,7 @@ public class Express extends Entity {
     private String receiverAddress;
     private String goodsName;
     private String linkId;
+    private int goodsQuantity;
 
     public Express() {
         super();
@@ -125,4 +126,14 @@ public class Express extends Entity {
     public void setLinkId(String linkId) {
         this.linkId = linkId;
     }
+
+	public int getGoodsQuantity() {
+		return goodsQuantity;
+	}
+
+	public void setGoodsQuantity(int goodsQuantity) {
+		this.goodsQuantity = goodsQuantity;
+	}
+    
+    
 }
