@@ -24,7 +24,7 @@
                     </div>
                     <div class="weui_media_box weui_media_text col3">
                         <h4 class="weui_media_title">收件人:${order.customer.name}</h4>
-                        <p class="weui_media_desc">手机号:${order.customer.phone}</p>
+                        <p class="weui_media_desc">手机号:${order.customer.customerPhone.phone}</p>
                         <p class="weui_media_desc">地址:${order.receiveAddress}</p>
                     </div>
                     <div class="weui_media_box weui_media_text col4">
