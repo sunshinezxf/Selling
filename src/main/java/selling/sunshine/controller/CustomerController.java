@@ -10,9 +10,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import com.alibaba.fastjson.JSON;
-
 import selling.sunshine.form.CustomerAddressForm;
 import selling.sunshine.form.CustomerForm;
 import selling.sunshine.form.PurchaseForm;
@@ -312,4 +309,35 @@ public class CustomerController {
         return resultData;
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/consult")
+    public ModelAndView consult() {
+        ModelAndView view = new ModelAndView();
+        view.setViewName("/customer/order/consult");
+        return view;
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/order/search")
+    public ModelAndView search(String phone) {
+        ModelAndView view = new ModelAndView();
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("phone", phone);
+        condition.put("blockFlag", false);
+        condition.put("status", 1);
+        ResultData fetchResponse = orderService.fetchOrderItem(condition);
+        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            List<OrderItem> list = (List<OrderItem>) fetchResponse.getData();
+            view.addObject("orderFromAgent", list);
+        }
+        List<Integer> status = new ArrayList<>();
+        status.add(1);
+        status.add(2);
+        condition.put("status", status);
+        fetchResponse = orderService.fetchCustomerOrder(condition);
+        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            List<CustomerOrder> list = (List<CustomerOrder>) fetchResponse.getData();
+            view.addObject("orderFromCustomer", list);
+        }
+        view.setViewName("/customer/order/order_list");
+        return view;
+    }
 }
