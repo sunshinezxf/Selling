@@ -28,8 +28,8 @@
                         <p class="weui_media_desc">地址:${order.receiveAddress}</p>
                     </div>
                     <div class="weui_media_box weui_media_text col4">
-                        <h4 class="weui_media_title">共${order.goodsQuantity}件商品</h4>
-                        <p class="weui_media_desc">合计：${order.orderItemPrice}元</p>
+                        <p class="weui_media_desc">共${order.goodsQuantity}件商品</p>
+                        <h4 class="weui_media_title">合计：${order.orderItemPrice}元</h4>
                     </div>
                 </div>
                 <!--<a href="javascript:void(0);" class="weui_panel_ft">查看更多</a>-->
@@ -55,8 +55,8 @@
                         <p class="weui_media_desc">地址:${order.receiverAddress}</p>
                     </div>
                     <div class="weui_media_box weui_media_text col4">
-                        <h4 class="weui_media_title">共${order.quantity}件商品</h4>
-                        <p class="weui_media_desc">合计：${order.totalPrice}元</p>
+                        <p class="weui_media_desc">共${order.quantity}件商品</p>
+                        <h4 class="weui_media_title">合计：${order.totalPrice}元</h4>
                     </div>
                 </div>
                 <!--<a href="javascript:void(0);" class="weui_panel_ft">查看更多</a>-->
