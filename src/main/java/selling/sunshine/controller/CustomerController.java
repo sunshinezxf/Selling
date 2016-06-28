@@ -328,6 +328,17 @@ public class CustomerController {
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             List<OrderItem> list = (List<OrderItem>) fetchResponse.getData();
             if (!list.isEmpty()) {
+                for (OrderItem item : list) {
+                    String orderId = item.getOrder().getOrderId();
+                    Map<String, Object> condition = new HashMap<>();
+                    condition.put("orderId", orderId);
+                    Order order = ((List<Order>) orderService.fetchOrder(condition).getData()).get(0);
+                    item.setOrder(order);
+                    condition.clear();
+                    condition.put("customerId", item.getCustomer().getCustomerId());
+                    Customer customer = ((List<Customer>) customerService.fetchCustomer(condition).getData()).get(0);
+                    item.setCustomer(customer);
+                }
                 view.addObject("orderFromAgent", list);
                 empty = false;
             }
