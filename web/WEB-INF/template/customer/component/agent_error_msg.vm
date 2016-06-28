@@ -9,13 +9,13 @@
     <div class="mother" id="mother">
 	    <div class="errorBox">
 	        <div class="error_img">
-	            <img src="${path.concat('/material/images/error_bg.png')}">
+	            <i class="weui_icon_warn"></i>
 	        </div>
 		    <div class="errorText">
 			    <h1>代理商不存在！</h1>
 			</div>
 		    <div class="confirm_area">
-				<button class="weui_btn weui_btn_primary" id="confirm">确定</button>
+				<button class="weui_btn weui_btn_default" id="confirm">确定</button>
 			</div>
 		</div>
 	</div>
