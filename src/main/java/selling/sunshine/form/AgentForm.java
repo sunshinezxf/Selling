@@ -13,7 +13,7 @@ public class AgentForm {
 
     @NotNull
     private String gender;
-    
+
     @NotNull
     @Length(min = 11, max = 11)
     private String phone;
@@ -26,7 +26,6 @@ public class AgentForm {
 
     private String wechat;
 
-    @NotNull
     private String memberNum;
 
     @NotNull
