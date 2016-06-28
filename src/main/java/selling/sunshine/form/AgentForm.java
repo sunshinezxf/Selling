@@ -26,7 +26,7 @@ public class AgentForm {
 
     private String wechat;
 
-    private String memberNum;
+    private String memberNum = "0";
 
     @NotNull
     private String front;
