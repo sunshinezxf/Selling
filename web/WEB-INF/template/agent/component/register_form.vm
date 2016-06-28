@@ -225,7 +225,7 @@
                 first_inactive();
             }
         });
-        $("#agent_assword").on("input propertychange", function () {
+        $("#agent_password").on("input propertychange", function () {
             if (information_validate()) {
                 first_active();
             } else {
@@ -233,20 +233,15 @@
             }
         });
         $("#num_member").blur(function () {
-            if (isNaN($("#num_member").val())) {
-                $("#dialog").find(".weui_dialog_bd").html("群规模请填写数字！");
-                $("#dialog").fadeIn();
-                $("#num_member").val("");
-                first_inactive();
+            if(($("#num_member").val()!=null)&&($("#num_member").val()!="")){
+                if (isNaN($("#num_member").val())) {
+                    $("#dialog").find(".weui_dialog_bd").html("群规模请填写数字！");
+                    $("#dialog").fadeIn();
+                    $("#num_member").val("");
+                }
             }
         });
-        $("#num_member").on("input propertychange", function () {
-            if (information_validate()) {
-                first_active();
-            } else {
-                first_inactive();
-            }
-        });
+        
         $("#checkbox1").change(function () {
             if (information_validate()) {
                 first_active();
@@ -306,10 +301,9 @@
         var phone = $("#agent_tel").val();
         var address = $("#agent_addr").val();
         var password = $("#agent_password").val();
-        var number = $("#num_member").val();
         var isConfirm1 = $("#checkbox1").prop("checked");
         var isConfirm2 = $("#checkbox2").prop("checked");
-        if (not_null(name) && not_null(gender) && not_null(phone) && not_null(address) && not_null(password) && not_null(number) && isConfirm1 && isConfirm2) {
+        if (not_null(name) && not_null(gender) && not_null(phone) && not_null(address) && not_null(password) && isConfirm1 && isConfirm2) {
             return true;
         }
         return false;
