@@ -309,12 +309,14 @@ public class CustomerController {
         return resultData;
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/consult")
     public ModelAndView consult() {
         ModelAndView view = new ModelAndView();
         view.setViewName("/customer/order/consult");
         return view;
     }
 
+    @RequestMapping(method = RequestMethod.POST, value = "/order/search")
     public ModelAndView search(String phone) {
         ModelAndView view = new ModelAndView();
         Map<String, Object> condition = new HashMap<>();
