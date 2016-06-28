@@ -3,7 +3,7 @@
     <div class="order_content">
         <div class="panel">
            <div class="hd">
-                <h1 class="page_title">代客下单</h1>
+                <h1 class="page_title">群员订单</h1>
                 #if(${hasConfig})
 					 #if(!${isNextMonth})
 					 	#set($payDay = $shipDay - 1)
