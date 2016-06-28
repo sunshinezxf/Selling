@@ -157,7 +157,6 @@ public class PlatformController {
         //当只有一个admin时不允许删除
         if (((List<Admin>) response.getData()).size() == 1) {
             response.setResponseCode(ResponseCode.RESPONSE_NULL);
-            ;
             return response;
         }
 
