@@ -86,6 +86,15 @@
                     <p>我同意</p><a href="${path.concat('/material/protocol/2.pdf')}">《云草纲目社群拓展合作协议书（试行版）》</a>
                 </div>
             </label>
+            <label class="weui_cell weui_check_label">
+                <div class="weui_cell_hd procheckbox">
+                    <input id="checkbox3" type="checkbox" class="weui_check" name="checkbox"/>
+                    <i class="weui_icon_checked"></i>
+                </div>
+                <div class="weui_cell_bd weui_cell_primary problock">
+                    <p>我同意</p><a href="${path.concat('/material/protocol/3.pdf')}">《社群管理规范》</a>
+                </div>
+            </label>
         </div>
         <div id="fileinput_uploader" class="register_hide">
             #parse("/agent/component/fileinput_uploader.vm")
@@ -100,8 +109,8 @@
         </button>
     </div>
     <div id="login_btn" class="weui_btn_area">
-    	<div class="weui_cell_bd weui_cell_primary problock">
-        	<a href="${path.concat('/agent/login')}">已有账号？登录</a>
+        <div class="weui_cell_bd weui_cell_primary problock">
+            <a href="${path.concat('/agent/login')}">已有账号？登录</a>
         </div>
     </div>
     <div id="pre_div" class="weui_btn_area register_hide">
@@ -183,20 +192,20 @@
 </script>
 <script>
     var photo_num = 0;
-    var click_num1=0;
-    var click_num2=0;
+    var click_num1 = 0;
+    var click_num2 = 0;
     $(document).ready(function () {
         var ua = navigator.userAgent.toLowerCase();
-		if(ua.indexOf('android') > -1 || ua.indexOf('adr') > -1){
-		    if(ua.indexOf('micromessenger') > -1){
-		        $("#wx_uploader").show();
-		    }else{
-		        $("#fileinput_uploader").show();
-		    }
-		}else{
-			$("#fileinput_uploader").show();
-		}
-		
+        if (ua.indexOf('android') > -1 || ua.indexOf('adr') > -1) {
+            if (ua.indexOf('micromessenger') > -1) {
+                $("#wx_uploader").show();
+            } else {
+                $("#fileinput_uploader").show();
+            }
+        } else {
+            $("#fileinput_uploader").show();
+        }
+
         $("#agent_name").on("input propertychange", function () {
             if (information_validate()) {
                 first_active();
@@ -233,7 +242,7 @@
             }
         });
         $("#num_member").blur(function () {
-            if(($("#num_member").val()!=null)&&($("#num_member").val()!="")){
+            if (($("#num_member").val() != null) && ($("#num_member").val() != "")) {
                 if (isNaN($("#num_member").val())) {
                     $("#dialog").find(".weui_dialog_bd").html("群规模请填写数字！");
                     $("#dialog").fadeIn();
@@ -241,7 +250,7 @@
                 }
             }
         });
-        
+
         $("#checkbox1").change(function () {
             if (information_validate()) {
                 first_active();
@@ -256,7 +265,13 @@
                 first_inactive();
             }
         });
-
+        $("#checkbox3").change(function () {
+            if (information_validate()) {
+                first_active();
+            } else {
+                first_inactive();
+            }
+        });
     });
 
     function checkFront() {
@@ -303,7 +318,8 @@
         var password = $("#agent_password").val();
         var isConfirm1 = $("#checkbox1").prop("checked");
         var isConfirm2 = $("#checkbox2").prop("checked");
-        if (not_null(name) && not_null(gender) && not_null(phone) && not_null(address) && not_null(password) && isConfirm1 && isConfirm2) {
+        var isConfirm3 = $("#checkbox3").prop("checked");
+        if (not_null(name) && not_null(gender) && not_null(phone) && not_null(address) && not_null(password) && isConfirm1 && isConfirm2 && isConfirm3) {
             return true;
         }
         return false;
@@ -399,8 +415,8 @@
     $("#dialog").find(".weui_btn_dialog.primary").click(function () {
         $("#dialog").hide();
     });
-    
-    $("#wx_wrp1").click(function(){
+
+    $("#wx_wrp1").click(function () {
         click_num1++;
         wx.chooseImage({
             count: 1, // 默认9
@@ -408,7 +424,7 @@
             sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
             success: function (res) {
                 var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
-                $.each(localIds, function(i,n) {
+                $.each(localIds, function (i, n) {
                     wx.uploadImage({
                         localId: n, // 需要上传的图片的本地ID，由chooseImage接口获得
                         isShowProgressTips: 1,// 默认为1，显示进度提示
@@ -416,9 +432,9 @@
                             var serverId = res.serverId; // 返回图片的服务器端ID
                             $("#wx_wrp1").removeClass("weui_uploader_input_wrp");
                             $("#wx_wrp1").addClass("new_weui_uploader_input_wrp");
-                            $("#wx_img1").attr("src",localIds);
+                            $("#wx_img1").attr("src", localIds);
                             $("#front").val(serverId);
-                            if(click_num1==1){
+                            if (click_num1 == 1) {
                                 photo_num++;
                             }
                             if (identity_validate()) {
@@ -432,7 +448,7 @@
             }
         });
     });
-    $("#wx_wrp2").click(function(){
+    $("#wx_wrp2").click(function () {
         click_num2++;
         wx.chooseImage({
             count: 1, // 默认9
@@ -440,7 +456,7 @@
             sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
             success: function (res) {
                 var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
-                $.each(localIds, function(i,n) {
+                $.each(localIds, function (i, n) {
                     wx.uploadImage({
                         localId: n, // 需要上传的图片的本地ID，由chooseImage接口获得
                         isShowProgressTips: 1,// 默认为1，显示进度提示
@@ -448,9 +464,9 @@
                             var serverId = res.serverId; // 返回图片的服务器端ID
                             $("#wx_wrp2").removeClass("weui_uploader_input_wrp");
                             $("#wx_wrp2").addClass("new_weui_uploader_input_wrp");
-                            $("#wx_img2").attr("src",localIds);
+                            $("#wx_img2").attr("src", localIds);
                             $("#back").val(serverId);
-                            if(click_num2==1){
+                            if (click_num2 == 1) {
                                 photo_num++;
                             }
                             if (identity_validate()) {
