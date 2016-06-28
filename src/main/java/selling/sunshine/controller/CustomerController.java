@@ -319,6 +319,7 @@ public class CustomerController {
     @RequestMapping(method = RequestMethod.POST, value = "/order/search")
     public ModelAndView search(String phone) {
         ModelAndView view = new ModelAndView();
+        boolean empty = true;
         Map<String, Object> condition = new HashMap<>();
         condition.put("phone", phone);
         condition.put("blockFlag", false);
@@ -326,7 +327,10 @@ public class CustomerController {
         ResultData fetchResponse = orderService.fetchOrderItem(condition);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             List<OrderItem> list = (List<OrderItem>) fetchResponse.getData();
-            view.addObject("orderFromAgent", list);
+            if (!list.isEmpty()) {
+                view.addObject("orderFromAgent", list);
+                empty = false;
+            }
         }
         List<Integer> status = new ArrayList<>();
         status.add(1);
@@ -335,7 +339,13 @@ public class CustomerController {
         fetchResponse = orderService.fetchCustomerOrder(condition);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             List<CustomerOrder> list = (List<CustomerOrder>) fetchResponse.getData();
-            view.addObject("orderFromCustomer", list);
+            if (!list.isEmpty()) {
+                view.addObject("orderFromCustomer", list);
+                empty = false;
+            }
+        }
+        if (empty) {
+            view.setViewName("/customer/component/order_error_msg");
         }
         view.setViewName("/customer/order/order_list");
         return view;

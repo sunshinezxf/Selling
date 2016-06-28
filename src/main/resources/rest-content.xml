@@ -103,6 +103,8 @@
                 /credit/upload = anon
 
                 /customer/place = anon
+                /customer/consult = anon
+                /customer/order/search = anon
                 /customer/overview = roles[admin]
                 /customer/add = roles[agent]
                 /customer/modify = roles[agent]
