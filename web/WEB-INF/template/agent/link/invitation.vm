@@ -11,7 +11,7 @@
 	<div class="panel weui_tab_bd" id="self_info_panel">
 	    <div class="hd">
 	        <h1 class="page_title">注册邀请</h1>
-			<p class="page_desc">我的邀请码</p>
+			<p class="page_desc">${agent.getName()}邀请你加入云草三七代理商</p>
 	    </div>
 	    <div class="bd">
 	    	<div id="qrcode" style="display:none;">
