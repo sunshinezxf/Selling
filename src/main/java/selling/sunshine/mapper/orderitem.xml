@@ -78,6 +78,9 @@
         <if test="blockFlag != null and blockFlag != ''">
             AND block_flag = #{blockFlag}
         </if>
+        <if test="phone != null and phone != ''">
+            AND customer_id IN (select customer_id from customer_phone where phone = #{phone} and block_flag = false)
+        </if>
         <if test="rule != null and rule != ''">
             ORDER BY ${rule}
         </if>

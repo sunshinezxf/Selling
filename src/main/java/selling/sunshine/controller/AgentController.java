@@ -1,21 +1,17 @@
 package selling.sunshine.controller;
 
 import com.alibaba.fastjson.JSONObject;
-
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import selling.sunshine.form.*;
 import selling.sunshine.model.*;
 import selling.sunshine.model.goods.Goods4Agent;
@@ -27,7 +23,6 @@ import selling.sunshine.utils.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-
 import java.net.URLEncoder;
 import java.util.*;
 
@@ -162,43 +157,43 @@ public class AgentController {
         view.setViewName("/agent/prompt");
         return view;
     }
-    
+
     /**
      * 检查代理商是否已经绑定微信号
-     * 
+     *
      * @return
      */
     @ResponseBody
-    @RequestMapping(method = RequestMethod.GET, value="/checkbinding")
-    public ResultData checkBinding(HttpServletRequest request){
-    	ResultData result = new ResultData();
-    	Map<String, Object> condition = new HashMap<String, Object>();
-    	Subject subject = SecurityUtils.getSubject();
+    @RequestMapping(method = RequestMethod.GET, value = "/checkbinding")
+    public ResultData checkBinding(HttpServletRequest request) {
+        ResultData result = new ResultData();
+        Map<String, Object> condition = new HashMap<String, Object>();
+        Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         if (user == null || user.getAgent() == null) {
-        	result.setResponseCode(ResponseCode.RESPONSE_ERROR);
-        	result.setDescription("请重新登录");
-        	return result;
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription("请重新登录");
+            return result;
         }
         condition.put("agentId", user.getAgent().getAgentId());
         ResultData fetchAgentResponse = agentService.fetchAgent(condition);
         if (fetchAgentResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
-        	result.setResponseCode(ResponseCode.RESPONSE_ERROR);
-        	result.setDescription("代理商不存在");
-        	return result;
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription("代理商不存在");
+            return result;
         }
         Agent agent = ((List<Agent>) fetchAgentResponse.getData()).get(0);
-        if(agent.getWechat() == null || agent.getWechat().equals("")){
-        	HttpSession session = request.getSession();
-        	String openId = (String) session.getAttribute("openId");
-        	if(openId != null && !openId.equals("")){
-        		agent.setWechat(openId);
-        		result.setData(agent);
-        		return result;
-        	}
-        	result.setResponseCode(ResponseCode.RESPONSE_NULL);
-        	result.setDescription("没有绑定微信号");
-        	return result;
+        if (agent.getWechat() == null || agent.getWechat().equals("")) {
+            HttpSession session = request.getSession();
+            String openId = (String) session.getAttribute("openId");
+            if (openId != null && !openId.equals("")) {
+                agent.setWechat(openId);
+                result.setData(agent);
+                return result;
+            }
+            result.setResponseCode(ResponseCode.RESPONSE_NULL);
+            result.setDescription("没有绑定微信号");
+            return result;
         }
         result.setData(agent);
         return result;
@@ -293,7 +288,7 @@ public class AgentController {
         //判断代理商填写的用户名和密码是否符合要求
         if (result.hasErrors()) {
             //attr.addFlashAttribute("warn", "您的手机号或密码错误");
-        	WechatConfig.oauthWechat(view, "/agent/login");
+            WechatConfig.oauthWechat(view, "/agent/login");
             view.addObject("warn", "您的手机号或密码错误");
             view.setViewName("/agent/login");
             return view;
@@ -306,7 +301,7 @@ public class AgentController {
             subject.login(new UsernamePasswordToken(form.getPhone(), form.getPassword()));
         } catch (Exception e) {
             //attr.addFlashAttribute("warn", "您的手机号或密码错误");
-        	WechatConfig.oauthWechat(view, "/agent/login");
+            WechatConfig.oauthWechat(view, "/agent/login");
             view.addObject("warn", "您的手机号或密码错误");
             view.setViewName("/agent/login");
             return view;
@@ -378,7 +373,7 @@ public class AgentController {
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         if (user == null || user.getAgent() == null) {
-        	WechatConfig.oauthWechat(view, "/agent/login");
+            WechatConfig.oauthWechat(view, "/agent/login");
             view.setViewName("/agent/login");
             return view;
         }
@@ -409,15 +404,15 @@ public class AgentController {
         }
         for (Goods4Agent goods : goodsList) {
             String url = "http://" + PlatformConfig.getValue("server_url") + "/commodity/" + goods.getGoodsId() + "?agentId=" + user.getAgent().getAgentId();
-            try{
-            	String shareURL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + PlatformConfig.getValue("wechat_appid") + "&redirect_uri=" + URLEncoder.encode(url, "utf-8") + "&response_type=code&scope=snsapi_base&state=view#wechat_redirect";
-            	urls.add(shareURL);
-            }catch(Exception e) {
-            	logger.error(e.getMessage());
+            try {
+                String shareURL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + PlatformConfig.getValue("wechat_appid") + "&redirect_uri=" + URLEncoder.encode(url, "utf-8") + "&response_type=code&scope=snsapi_base&state=view#wechat_redirect";
+                urls.add(shareURL);
+            } catch (Exception e) {
+                logger.error(e.getMessage());
             }
         }
         view.addObject("goodsList", goodsList);
-        view.addObject("agent",user.getAgent());
+        view.addObject("agent", user.getAgent());
         view.addObject("urls", urls);
         WechatConfig.oauthWechat(view, "/agent/link/personal_sale");
         view.setViewName("/agent/link/personal_sale");
@@ -462,7 +457,7 @@ public class AgentController {
                 return view;
             }
             //根据用户提交的表单构造代理信息
-            Agent agent = new Agent(form.getName(), form.getGender(), form.getPhone(), form.getAddress(), form.getPassword(), form.getWechat(), Integer.parseInt(form.getMemberNum()));
+            Agent agent = new Agent(form.getName(), form.getGender(), form.getPhone(), form.getAddress(), form.getPassword(), form.getWechat(), StringUtils.isEmpty(form.getMemberNum()) ? 0 : Integer.parseInt(form.getMemberNum()));
             if (!StringUtils.isEmpty(form.getUpper())) {
                 condition.clear();
                 condition.put("agentId", form.getUpper());
@@ -486,16 +481,16 @@ public class AgentController {
                 }
             }
             ResultData createResponse = agentService.createAgent(agent);
-            if(!form.getFront().startsWith("/material")){
-            	//进行微信上传身份证的操作
-            	String front = WechatUtil.downloadCredit(form.getFront(), PlatformConfig.getAccessToken(), request.getSession().getServletContext().getRealPath("/"));
-            	String back =  WechatUtil.downloadCredit(form.getBack(), PlatformConfig.getAccessToken(), request.getSession().getServletContext().getRealPath("/"));
-            	Credit credit = new Credit(front, back, new selling.sunshine.model.lite.Agent(agent));
-            	agentService.createCredit(credit);
+            if (!form.getFront().startsWith("/material")) {
+                //进行微信上传身份证的操作
+                String front = WechatUtil.downloadCredit(form.getFront(), PlatformConfig.getAccessToken(), request.getSession().getServletContext().getRealPath("/"));
+                String back = WechatUtil.downloadCredit(form.getBack(), PlatformConfig.getAccessToken(), request.getSession().getServletContext().getRealPath("/"));
+                Credit credit = new Credit(front, back, new selling.sunshine.model.lite.Agent(agent));
+                agentService.createCredit(credit);
             } else {
-            	//进行非微信上传身份证的操作
-            	Credit credit = new Credit(form.getFront(), form.getBack(), new selling.sunshine.model.lite.Agent(agent));
-            	agentService.createCredit(credit);
+                //进行非微信上传身份证的操作
+                Credit credit = new Credit(form.getFront(), form.getBack(), new selling.sunshine.model.lite.Agent(agent));
+                agentService.createCredit(credit);
             }
             if (createResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
                 Prompt prompt = new Prompt("提示", "您已成功提交申请,待审核通过后即可使用", "/agent/login");
@@ -525,7 +520,7 @@ public class AgentController {
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         if (user == null || user.getAgent() == null) {
-        	WechatConfig.oauthWechat(view, "/agent/login");
+            WechatConfig.oauthWechat(view, "/agent/login");
             view.setViewName("/agent/login");
             return view;
         }
@@ -552,7 +547,7 @@ public class AgentController {
                 view.setViewName("/agent/prompt");
                 return view;
             } else {
-            	WechatConfig.oauthWechat(view, "/agent/login");
+                WechatConfig.oauthWechat(view, "/agent/login");
                 view.setViewName("/agent/login");
                 return view;
             }
@@ -612,7 +607,7 @@ public class AgentController {
         ResultData queryAgentResponse = agentService.fetchAgent(condition);
         Agent agent = ((List<Agent>) queryAgentResponse.getData()).get(0);
         if (agent.isGranted()) {
-        	WechatConfig.oauthWechat(view, "/agent/order/place");
+            WechatConfig.oauthWechat(view, "/agent/order/place");
             view.setViewName("/agent/order/place");
             return view;
         }
@@ -630,7 +625,7 @@ public class AgentController {
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         if (user == null) {
-        	WechatConfig.oauthWechat(view, "/agent/login");
+            WechatConfig.oauthWechat(view, "/agent/login");
             view.setViewName("/agent/login");
             return view;
         }
@@ -665,7 +660,7 @@ public class AgentController {
         ResultData fetchAgentResponse = agentService.fetchAgent(condition);
         Agent agent = ((List<Agent>) fetchAgentResponse.getData()).get(0);
         if (agent.isGranted()) {
-        	WechatConfig.oauthWechat(view, "/agent/order/modify");
+            WechatConfig.oauthWechat(view, "/agent/order/modify");
             view.setViewName("/agent/order/modify");
             return view;
         }
@@ -687,7 +682,7 @@ public class AgentController {
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         if (user == null) {
-        	WechatConfig.oauthWechat(view, "/agent/login");
+            WechatConfig.oauthWechat(view, "/agent/login");
             view.setViewName("/agent/login");
             return view;
         }
@@ -817,7 +812,7 @@ public class AgentController {
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         if (user == null) {
-        	WechatConfig.oauthWechat(view, "/agent/login");
+            WechatConfig.oauthWechat(view, "/agent/login");
             view.setViewName("/agent/login");
             return view;
         }
@@ -840,7 +835,7 @@ public class AgentController {
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         if (user == null) {
-        	WechatConfig.oauthWechat(view, "/agent/login");
+            WechatConfig.oauthWechat(view, "/agent/login");
             view.setViewName("/agent/login");
             return view;
         }
@@ -888,7 +883,7 @@ public class AgentController {
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         if (user == null) {
-        	WechatConfig.oauthWechat(view, "/agent/login");
+            WechatConfig.oauthWechat(view, "/agent/login");
             view.setViewName("/agent/login");
             return view;
         }
@@ -974,7 +969,7 @@ public class AgentController {
             view.setViewName("/agent/prompt");
             return view;
         } else {
-        	WechatConfig.oauthWechat(view, "/agent/login");
+            WechatConfig.oauthWechat(view, "/agent/login");
             view.setViewName("/agent/login");
             return view;
         }
@@ -1193,12 +1188,12 @@ public class AgentController {
         //代理商返现信息
         List<RefundRecord> refundRecordList = (List<RefundRecord>) refundService.fetchRefundRecord(condition).getData();
         //代理商提现信息
-        List<Integer> status=new ArrayList<Integer>();
+        List<Integer> status = new ArrayList<Integer>();
         status.add(1);
         condition.put("status", status);
         List<WithdrawRecord> withdrawRecordList = (List<WithdrawRecord>) withdrawService.fetchWithdrawRecord(condition).getData();
         condition.clear();
-        condition.put("agentId", agentId); 
+        condition.put("agentId", agentId);
         condition.put("date", "3");
         //代理商订单信息
         List<Order> orderList = (List<Order>) orderService.fetchOrder(condition).getData();
@@ -1222,12 +1217,12 @@ public class AgentController {
         return view;
 
     }
-    
+
     @RequestMapping(method = RequestMethod.POST, value = "/subordinateData/{agentId}")
     public ResultData subordinateData(@PathVariable String agentId) {
-    	ResultData resultData=new ResultData();
-    	Map<String, Object> dataMap = new HashMap<>();
-       
+        ResultData resultData = new ResultData();
+        Map<String, Object> dataMap = new HashMap<>();
+
         Map<String, Object> agentMap = new HashMap<>();
 
         Map<String, Object> condition = new HashMap<>();
@@ -1247,7 +1242,7 @@ public class AgentController {
         condition2.put("agentId", agentId);
         Agent agent2 = ((List<Agent>) agentService.fetchAgent(condition2).getData()).get(0);
 
-        
+
         dataMap.put("agentList", agentList);
         dataMap.put("agent", agent2);
         dataMap.put("agentMap", agentMap);
@@ -1280,9 +1275,9 @@ public class AgentController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/test")
     public ModelAndView test() {
-    	ModelAndView view = new ModelAndView();
-    	WechatConfig.oauthWechat(view, "/agent/test");
-    	view.setViewName("/agent/component/test_wxupload");
-    	return view;
+        ModelAndView view = new ModelAndView();
+        WechatConfig.oauthWechat(view, "/agent/test");
+        view.setViewName("/agent/component/test_wxupload");
+        return view;
     }
 }
