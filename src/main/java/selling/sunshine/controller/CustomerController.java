@@ -332,6 +332,9 @@ public class CustomerController {
                 empty = false;
             }
         }
+        condition.clear();
+        condition.put("receiverPhone", phone);
+        condition.put("blockFlag", false);
         List<Integer> status = new ArrayList<>();
         status.add(1);
         status.add(2);
@@ -346,6 +349,7 @@ public class CustomerController {
         }
         if (empty) {
             view.setViewName("/customer/component/order_error_msg");
+            return view;
         }
         view.setViewName("/customer/order/order_list");
         return view;
