@@ -320,15 +320,16 @@ public class CustomerController {
         Map<String, Object> condition = new HashMap<>();
         condition.put("phone", phone);
         condition.put("blockFlag", false);
-        List<Integer> status = new ArrayList<>();
-        status.add(1);
-        status.add(2);
-        condition.put("status", status);
+        condition.put("status", 1);
         ResultData fetchResponse = orderService.fetchOrderItem(condition);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             List<OrderItem> list = (List<OrderItem>) fetchResponse.getData();
             view.addObject("orderFromAgent", list);
         }
+        List<Integer> status = new ArrayList<>();
+        status.add(1);
+        status.add(2);
+        condition.put("status", status);
         fetchResponse = orderService.fetchCustomerOrder(condition);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             List<CustomerOrder> list = (List<CustomerOrder>) fetchResponse.getData();
