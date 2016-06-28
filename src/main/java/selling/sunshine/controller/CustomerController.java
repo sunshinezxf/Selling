@@ -330,7 +330,7 @@ public class CustomerController {
             if (!list.isEmpty()) {
                 for (OrderItem item : list) {
                     String orderId = item.getOrder().getOrderId();
-                    Map<String, Object> condition = new HashMap<>();
+                    condition.clear();
                     condition.put("orderId", orderId);
                     Order order = ((List<Order>) orderService.fetchOrder(condition).getData()).get(0);
                     item.setOrder(order);
