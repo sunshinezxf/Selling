@@ -63,6 +63,9 @@
                 #{mode}
             </foreach>
         </if>
+        <if test="receiverPhone != null">
+            AND receiver_phone = #{receiverPhone}
+        </if>
     </select>
 
     <select id="sumCustomerOrder" parameterType="java.util.Map" resultMap="sumCustomerOrderVo">
