@@ -115,10 +115,10 @@
     	    createPrintPage(document.getElementById("expressNumber"+i).innerHTML,${expressList}[i].createAt,${expressList}[i].senderName,${expressList}[i].senderPhone,${expressList}[i].senderAddress,${expressList}[i].receiverName,${expressList}[i].receiverPhone,${expressList}[i].receiverAddress,${expressList}[i].goodsName);
     	     	   
     	      #*
-    	    
-    	      LODOP.PRINT();
+    	     LODOP.PREVIEW();
+    	     
     	      *#
-    	 LODOP.PREVIEW();
+    	 LODOP.PRINT();
     	    
     	   
     	}
