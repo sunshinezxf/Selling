@@ -8,61 +8,69 @@
 </head>
 <body ontouchstart>
 <div class="container">
-	<div class="panel weui_tab_bd" id="self_info_panel">
-	    <div class="hd">
-	        <h1 class="page_title">注册邀请</h1>
-			<p class="page_desc">${agent.getName()}邀请你加入云草三七代理商</p>
-	    </div>
-	    <div class="bd">
-	    	<div id="qrcode" style="display:none;">
-	    	</div>
-	    </div>
-	    <div class="bd">
-	    	<div id="linkClip" class="weui_cells_tips" data-clipboard-action="copy" data-clipboard-text="${url}" style="text-align:center;">
-	    		点击此处复制链接
-	    	</div>
-	    	<div class="weui_cells_tips linkSent" style="text-align:center;">
-	    		请截屏二维码或发送链接给被邀请注册的代理商
-	    	</div>
-	    </div>
-	</div>
-	<div id="toast" style="display: none;">
-	    <div class="weui_mask_transparent"></div>
-	    <div class="weui_toast">
-	        <i class="weui_icon_toast"></i>
-	        <p class="weui_toast_content">已复制到剪切板</p>
-	    </div>
-	</div>
-	#parse("/agent/component/navigate.vm")
+    <div class="panel weui_tab_bd" id="self_info_panel">
+        <div class="hd">
+            <h1 class="page_title">注册邀请</h1>
+
+            <p class="page_desc">${agent.getName()}邀请你加入云草三七代理商</p>
+        </div>
+        <div class="bd">
+            <div id="qrcode" style="display:none;">
+            </div>
+        </div>
+        <div class="bd">
+            <div id="linkClip" class="weui_cells_tips" data-clipboard-action="copy" data-clipboard-text="${url}"
+                 style="text-align:center;">
+                点击此处复制链接
+            </div>
+            <div class="weui_cells_tips linkSent" style="text-align:center;">
+                请截屏二维码或发送链接给被邀请注册的代理商
+            </div>
+        </div>
+    </div>
+    <div id="toast" style="display: none;">
+        <div class="weui_mask_transparent"></div>
+        <div class="weui_toast">
+            <i class="weui_icon_toast"></i>
+
+            <p class="weui_toast_content">已复制到剪切板</p>
+        </div>
+    </div>
+    #parse("/agent/component/navigate.vm")
 </div>
 </body>
 <script>
-	url = "${url}";
-	$(document).ready(function(){
-		var ua = navigator.userAgent.toLowerCase();
-		if(ua.indexOf('iphone') > 0){
-			$("#linkClip").hide();
-			$(".linkSent").html("请把二维码发送给被邀请注册的代理商");
-		}
-	
-		var cl = new Clipboard('#linkClip');
-		cl.on('success', function(e) {
-		 	$('#toast').show();
+    url = "${url}";
+    $(document).ready(function () {
+        var ua = navigator.userAgent.toLowerCase();
+        if (ua.indexOf('iphone') > 0) {
+            $("#linkClip").hide();
+            $(".linkSent").html("请把二维码发送给被邀请注册的代理商");
+        }
+
+        var cl = new Clipboard('#linkClip');
+        cl.on('success', function (e) {
+            $('#toast').show();
             setTimeout(function () {
                 $('#toast').hide();
             }, 2000);
-		    e.clearSelection();
-		});
-		var size = $("#qrcode").parent().width() * 0.7;
-		$("#qrcode").qrcode({width:size, height:size, text:url});
-		$.convertCanvasToImage($("#qrcode").children());
-	});
-	$.convertCanvasToImage = function(canvas) {
-		var image = new Image();
-		image.src = canvas[0].toDataURL("image/png");
-		$(image).addClass("page_title");
-		$(image).insertAfter($("#qrcode"));
-		return image;
-	}
+            e.clearSelection();
+        });
+        var size = $("#qrcode").parent().width() * 0.7;
+        $("#qrcode").qrcode({width: size, height: size, text: url});
+        $.convertCanvasToImage($("#qrcode").children());
+    });
+    $.convertCanvasToImage = function (canvas) {
+        var image = new Image();
+        image.src = canvas[0].toDataURL("image/png");
+        $(image).addClass("page_title");
+        $(image).insertAfter($("#qrcode"));
+        return image;
+    }
 </script>
+<script>
+    var title = "邀请代理";
+    var description = "${agent.name}邀请您加入云草三七代理商,共同构建健康生活";
+</script>
+    #parse("/agent/wechat/component/validation.vm")
 </html>

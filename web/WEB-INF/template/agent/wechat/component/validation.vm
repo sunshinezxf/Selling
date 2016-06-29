@@ -22,7 +22,7 @@
                 title: title, // 分享标题
                 desc: description, // 分享描述
                 link: '${configuration.shareLink}', // 分享链接
-                imgUrl: '', // 分享图标
+                imgUrl: '${path.concat('/material/images/logo.jpeg')}', // 分享图标
                 type: '', // 分享类型,music、video或link，不填默认为link
                 dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
                 success: function () {
@@ -34,7 +34,7 @@
             wx.onMenuShareTimeline({
                 title: title,
                 link: '${configuration.shareLink}',
-                imgUrl: '',
+                imgUrl: ''${path.concat('/material/images/logo.jpeg')}'',
                 trigger: function (res) {
                 },
                 success: function (res) {

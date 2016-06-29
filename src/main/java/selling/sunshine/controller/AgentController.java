@@ -378,6 +378,7 @@ public class AgentController {
             return view;
         }
         String url = "http://" + PlatformConfig.getValue("server_url") + "/agent/" + user.getAgent().getAgentId() + "/embrace";
+        WechatConfig.oauthWechat(view, "/agent/invite", url);
         view.addObject("url", url);
         view.addObject("agent", user.getAgent());
         WechatConfig.oauthWechat(view, "/agent/link/invitation");
