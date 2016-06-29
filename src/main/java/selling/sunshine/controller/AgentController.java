@@ -418,7 +418,7 @@ public class AgentController {
         view.addObject("goodsList", goodsList);
         view.addObject("agent", user.getAgent());
         view.addObject("urls", urls);
-        WechatConfig.oauthWechat(view, "/agent/link/personal_sale", link);
+        WechatConfig.oauthWechat(view, "/agent/personalsale", link);
         view.setViewName("/agent/link/personal_sale");
         return view;
     }
