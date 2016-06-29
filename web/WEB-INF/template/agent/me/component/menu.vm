@@ -51,13 +51,13 @@
                         <div class="weui_grid_icon">
                             <i class="icon icon_search_bar"></i>
                         </div>
-                        <p class="weui_grid_label">邀请代理</p>
+                        <p class="weui_grid_label">拓展</p>
                     </a>
                     <a class="weui_grid" href="${path.concat('/agent/personalsale')}">
                         <div class="weui_grid_icon">
                             <i class="icon icon_tab"></i>
                         </div>
-                        <p class="weui_grid_label">客户商城</p>
+                        <p class="weui_grid_label">分享</p>
                     </a>
                 </div>
             </div>
