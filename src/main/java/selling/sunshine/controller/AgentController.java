@@ -381,7 +381,6 @@ public class AgentController {
         WechatConfig.oauthWechat(view, "/agent/invite", url);
         view.addObject("url", url);
         view.addObject("agent", user.getAgent());
-        WechatConfig.oauthWechat(view, "/agent/link/invitation");
         view.setViewName("/agent/link/invitation");
         return view;
     }
