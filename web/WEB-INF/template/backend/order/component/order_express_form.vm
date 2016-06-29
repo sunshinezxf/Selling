@@ -120,24 +120,53 @@
     	     LODOP.PRINT();
        
     	}
-    	  *#
+    	
+    	
+        var turnForm = document.createElement("form");
+        document.body.appendChild(turnForm);
+        turnForm.method = 'post';
+        turnForm.action = '${path.concat('/order/expressData')}';
+        var newElement = document.createElement("input");
+        newElement.setAttribute("type", "hidden");
+        newElement.setAttribute("name", "firstNumber");
+        newElement.setAttribute("value", $("#expressId").val());     
+        turnForm.appendChild(newElement);
+        
+        var list=${expressList};
+        for(var i=0;i<list.length;i++){
+           alert(JSON.stringify(list[i]));
+           var newElement2 = document.createElement("input");
+           newElement2.setAttribute("type", "hidden");
+           newElement2.setAttribute("name", "expressItem");
+           newElement2.setAttribute("value", list[i]);
+           newElement2.setAttribute("id", i);
+           turnForm.appendChild(newElement2);
+        }
+        turnForm.submit();
 
 
-    	var data={"expressItem":${expressList},"expressNumber":$("#expressId").val()};
+
+ *#
+       var data={"expressItem":${expressList},"expressNumber":$("#expressId").val()};
     	$.ajax({ 
             type:"POST", 
-            url:"${path.concat('/order/expressData')}", 
-            dataType:"json",      
-            contentType:"application/json",               
+            url:"${path.concat('/order/expressData')}",                        
             data:JSON.stringify(data), 
-            success:function(data){           
-            #*
-                 window.location.href = "${path.concat('/order/check')}";  
-            *#
+            processData: false,
+            contentType:"application/json",  
+            dataType: "application/vnd.ms-excel",  
+            success:function(data){ 
+                      
             } 
          });  
+         window.location.href="${path.concat('/order/exportExcel')}";  
+          
+ 
     }
     
+    
+  
+      
     
        #*
     function createPrintPage(expressNumber,expressDate,senderName,senderPhone,senderAddress,receiverName,receiverPhone,receiverAddress,goodsName){

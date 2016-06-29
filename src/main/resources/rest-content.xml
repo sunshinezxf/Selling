@@ -83,7 +83,8 @@
                 /agent/login = anon
                 /agent/prompt = anon
 
-                /account/** = roles[agent]
+                /account/** = anon
+                /account/info = anon
 
                 /agent/check = roles[admin]
                 /agent/grant = roles[admin]
@@ -110,6 +111,7 @@
                 /customer/modify = roles[agent]
 
                 /order/adminpay = roles[admin]
+                /order/customerpay = anon
 
                 /statistic/** = roles[admin]
 
