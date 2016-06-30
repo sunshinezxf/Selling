@@ -14,7 +14,7 @@
             from order_item left join goods on order_item.goods_id = goods.goods_id
             where order_item_status = 1
             group by order_item.goods_id, goods_quantity
-            union
+            union ALL
             select goods.goods_id as goods_id, goods.goods_name as goods_name, quantity as goods_quantity, count(order_id) as item_num
             from customer_order left join goods on customer_order.goods_id = goods.goods_id
             where order_status = 1
