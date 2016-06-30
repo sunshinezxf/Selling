@@ -36,6 +36,7 @@ import javax.validation.Valid;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -468,6 +469,41 @@ public class OrderController {
 		book.close();
 		os.flush();
 		os.close();
+		return null;
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/downloadOrderExcel")
+	public String downloadOrderExcel(HttpServletRequest request, HttpServletResponse response) throws IOException, RowsExceededException, WriteException {
+		Map<String, Object> condition = new HashMap<>();
+		List<Integer> status = new ArrayList<>();
+		status.add(2);
+		condition.put("status", status);
+		List<Order> orderList = (List<Order>) orderService
+				.fetchOrder(condition).getData();
+
+		condition.clear();
+		status.clear();
+		status.add(1);
+		condition.put("status", status);
+		List<CustomerOrder> customerOrderList = (List<CustomerOrder>) orderService
+				.fetchCustomerOrder(condition).getData();
+		response.reset();
+		response.setContentType("application/vnd.ms-excel");
+		response.setCharacterEncoding("utf-8");
+		response.setHeader("Content-Disposition", "attachment;filename="
+				+ URLEncoder.encode("已付款订单.xls", "utf-8"));
+		OutputStream os = response.getOutputStream();
+		WritableWorkbook book = null;
+		WritableSheet sheet1;
+		WritableSheet sheet2;
+		book = Workbook.createWorkbook(os);
+		sheet1 = book.createSheet(" 代理商订单 ", 0);
+		sheet2 = book.createSheet(" 客户订单 ", 1);
+		String headerArr[] = { "订单编号", "订单项编号", "代理商", "顾客", "商品", "数量",
+				"总价", "购买日期" };
+		for (int i = 0; i < headerArr.length; i++) {
+			sheet1.addCell(new Label(i, 0, headerArr[i]));
+		}
 		return null;
 	}
 
