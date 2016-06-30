@@ -38,6 +38,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -497,13 +498,60 @@ public class OrderController {
 		WritableSheet sheet1;
 		WritableSheet sheet2;
 		book = Workbook.createWorkbook(os);
-		sheet1 = book.createSheet(" 代理商订单 ", 0);
-		sheet2 = book.createSheet(" 客户订单 ", 1);
-		String headerArr[] = { "订单编号", "订单项编号", "代理商", "顾客", "商品", "数量",
-				"总价", "购买日期" };
-		for (int i = 0; i < headerArr.length; i++) {
-			sheet1.addCell(new Label(i, 0, headerArr[i]));
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		if (orderList!=null) {
+			sheet1 = book.createSheet(" 代理商订单 ", 0);
+			String headerArr[] = { "订单编号", "订单项编号", "代理商", "顾客", "商品", "数量",
+					"总价", "购买日期" };
+
+			for (int i = 0; i < headerArr.length; i++) {
+				sheet1.addCell(new Label(i, 0, headerArr[i]));
+			}
+			int k=1;
+			for (int i = 0; i < orderList.size(); i++) {
+				Order order=orderList.get(i);
+				List<OrderItem> orderItems=order.getOrderItems();
+				for (int j = 0; j < orderItems.size(); j++) {
+					sheet1.addCell(new Label(0, k, order.getOrderId()));
+					sheet1.addCell(new Label(1, k, orderItems.get(j).getOrderItemId()));
+					sheet1.addCell(new Label(2, k, order.getAgent().getName()));
+					sheet1.addCell(new Label(3, k, orderItems.get(j).getCustomer().getName()));
+					sheet1.addCell(new Label(4, k, orderItems.get(j).getGoods().getName()));
+					sheet1.addCell(new Label(5, k, String.valueOf(orderItems.get(j).getGoodsQuantity())));
+					sheet1.addCell(new Label(6, k, String.valueOf(orderItems.get(j).getOrderItemPrice())));
+					System.err.println(dateFormat.format(orderItems.get(j).getCreateAt()));
+					sheet1.addCell(new Label(7, k, dateFormat.format(orderItems.get(j).getCreateAt())));
+					k++;
+				}
+			}
 		}
+        if (customerOrderList!=null) {
+    		sheet2 = book.createSheet(" 客户订单 ", 1);
+			String headerArr2[] = { "订单编号", "代理商", "顾客", "商品", "数量",
+					"总价", "购买日期" };
+			for (int i = 0; i < headerArr2.length; i++) {
+				sheet2.addCell(new Label(i, 0, headerArr2[i]));
+			}
+			for (int i = 0; i < customerOrderList.size(); i++) {
+				sheet2.addCell(new Label(0, i+1, customerOrderList.get(i).getOrderId()));
+				if (customerOrderList.get(i).getAgent()!=null) {
+					sheet2.addCell(new Label(1, i+1, customerOrderList.get(i).getAgent().getName()));
+				}else {
+					sheet2.addCell(new Label(1, i+1, ""));
+				}			
+				sheet2.addCell(new Label(2, i+1, customerOrderList.get(i).getReceiverName()));
+				sheet2.addCell(new Label(3, i+1, customerOrderList.get(i).getGoods().getName()));
+				sheet2.addCell(new Label(4, i+1, String.valueOf(customerOrderList.get(i).getQuantity())));
+				sheet2.addCell(new Label(5, i+1, String.valueOf(customerOrderList.get(i).getTotalPrice())));
+				sheet2.addCell(new Label(6, i+1, dateFormat.format(customerOrderList.get(i).getCreateAt())));
+			}
+			
+		}
+		// 写入数据并关闭文件
+		book.write();
+		book.close();
+		os.flush();
+		os.close();
 		return null;
 	}
 
