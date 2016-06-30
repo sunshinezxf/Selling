@@ -43,29 +43,37 @@ public class WechatConfig {
         result.setUrl(url);
         return result;
     }
-    
-    public static void oauthWechat(ModelAndView view, String urlBase){
-    	 String url = "http://" + PlatformConfig.getValue("server_url") + urlBase;
-         String configUrl = url + "";
-         Configuration configuration = WechatConfig.config(configUrl);
-         configuration.setShareLink(url);
-         view.addObject("configuration", configuration);
-    }
-    
-    public static void oauthWechat(ModelAndView view, String urlBase, String code, String state){
-   	 	String url = "http://" + PlatformConfig.getValue("server_url") + urlBase;
-	   	String configUrl;
-	    if (!StringUtils.isEmpty(code) && !StringUtils.isEmpty(code)) {
-	        String openId = WechatUtil.queryOauthOpenId(code);
-	        configUrl = url + "?code=" + code + "&state=" + state;
-	        view.addObject("wechat", openId);
-	    } else {
-	        configUrl = url + "";
-	    }
+
+    public static void oauthWechat(ModelAndView view, String urlBase) {
+        String url = "http://" + PlatformConfig.getValue("server_url") + urlBase;
+        String configUrl = url + "";
         Configuration configuration = WechatConfig.config(configUrl);
         configuration.setShareLink(url);
         view.addObject("configuration", configuration);
-   }
+    }
+
+    public static void oauthWechat(ModelAndView view, String urlBase, String shareURL) {
+        String url = "http://" + PlatformConfig.getValue("server_url") + urlBase;
+        String configUrl = url + "";
+        Configuration configuration = WechatConfig.config(configUrl);
+        configuration.setShareLink(shareURL);
+        view.addObject("configuration", configuration);
+    }
+
+    public static void oauthWechat(ModelAndView view, String urlBase, String code, String state) {
+        String url = "http://" + PlatformConfig.getValue("server_url") + urlBase;
+        String configUrl;
+        if (!StringUtils.isEmpty(code) && !StringUtils.isEmpty(code)) {
+            String openId = WechatUtil.queryOauthOpenId(code);
+            configUrl = url + "?code=" + code + "&state=" + state;
+            view.addObject("wechat", openId);
+        } else {
+            configUrl = url + "";
+        }
+        Configuration configuration = WechatConfig.config(configUrl);
+        configuration.setShareLink(url);
+        view.addObject("configuration", configuration);
+    }
 
     private static String getJsapiTicket() {
         return PlatformConfig.getJsapiTicket();

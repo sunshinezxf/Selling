@@ -378,9 +378,9 @@ public class AgentController {
             return view;
         }
         String url = "http://" + PlatformConfig.getValue("server_url") + "/agent/" + user.getAgent().getAgentId() + "/embrace";
+        WechatConfig.oauthWechat(view, "/agent/invite", url);
         view.addObject("url", url);
         view.addObject("agent", user.getAgent());
-        WechatConfig.oauthWechat(view, "/agent/link/invitation");
         view.setViewName("/agent/link/invitation");
         return view;
     }
@@ -402,10 +402,14 @@ public class AgentController {
         if (fetchGoodsResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             goodsList = (List) fetchGoodsResponse.getData();
         }
+        String link = "";
         for (Goods4Agent goods : goodsList) {
             String url = "http://" + PlatformConfig.getValue("server_url") + "/commodity/" + goods.getGoodsId() + "?agentId=" + user.getAgent().getAgentId();
             try {
                 String shareURL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + PlatformConfig.getValue("wechat_appid") + "&redirect_uri=" + URLEncoder.encode(url, "utf-8") + "&response_type=code&scope=snsapi_base&state=view#wechat_redirect";
+                if (StringUtils.isEmpty(link)) {
+                    link = shareURL;
+                }
                 urls.add(shareURL);
             } catch (Exception e) {
                 logger.error(e.getMessage());
@@ -414,7 +418,7 @@ public class AgentController {
         view.addObject("goodsList", goodsList);
         view.addObject("agent", user.getAgent());
         view.addObject("urls", urls);
-        WechatConfig.oauthWechat(view, "/agent/link/personal_sale");
+        WechatConfig.oauthWechat(view, "/agent/personalsale", link);
         view.setViewName("/agent/link/personal_sale");
         return view;
     }

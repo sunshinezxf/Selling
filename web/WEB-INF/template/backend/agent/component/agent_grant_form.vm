@@ -11,6 +11,7 @@
     </div>
     <div class="row">
         <div class="col-md-12 col-lg-12">
+
            <form id="confirm_check_form">
                     <input type="hidden" name="agentId" value=${agent.agentId} />
            </form>
@@ -35,19 +36,22 @@
           </p>
         </div>
         #if(${credit}!="")
-           <div class="col-md-12 col-lg-12">
-               <p>身份证正反面照片：</p>
-               <div class="col-xs-6 col-md-6 col-lg-6">
-                    <img src = ${path.concat('')}${credit.frontPath} class="img-rounded" style="width:441px;height:358px;">
-               </div>
-               <div class="col-xs-6 col-md-6 col-lg-6">
-                    <img src = ${path.concat('')}${credit.backPath} class="img-rounded" style="width:441px;height:358px;">
-               </div>
+            <div class="col-md-12 col-lg-12">
+                <p>身份证正反面照片：</p>
+
+                <div class="col-xs-6 col-md-6 col-lg-6">
+                    <img src= ${path.concat('')}${credit.frontPath} class="img-rounded"
+                         style="width:441px;height:358px;">
+                </div>
+                <div class="col-xs-6 col-md-6 col-lg-6">
+                    <img src= ${path.concat('')}${credit.backPath} class="img-rounded"
+                         style="width:441px;height:358px;">
+                </div>
             </div>
         #else
-           <div class="col-md-12 col-lg-12">
-             <p>当前用户没有上传身份证正反面照片</p>
-           </div>
+            <div class="col-md-12 col-lg-12">
+                <p>当前用户没有上传身份证正反面照片</p>
+            </div>
         #end
         <div class="col-md-12 col-lg-12">
             <br/>

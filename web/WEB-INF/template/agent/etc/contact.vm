@@ -7,11 +7,13 @@
 <body ontouchstart>
 <div class="container">
     <div class="hd">
-    	<h1 class="page_title">联系我们</h1>
+        <h1 class="page_title">联系我们</h1>
+
+        <p class="page_desc">如果您有任何问题,欢迎和我们联系</p>
     </div>
     <div class="weui_cell">
-    	<div class="weui_cell_bd weui_cell_primary">客服电话</div>
-    	<div class="weui_cell_ft">13905160906</div>
+        <div class="weui_cell_bd weui_cell_primary">服务热线</div>
+        <div class="weui_cell_ft">0871-63111137</div>
     </div>
     #parse("/agent/component/navigate.vm")
 </div>
