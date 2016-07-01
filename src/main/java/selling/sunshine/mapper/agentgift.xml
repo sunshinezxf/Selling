@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="selling.agent.gift">
-    <resultMap id="agentGiftVo" type="selling.sunshine.model.gift.AgentGift">
+    <resultMap id="agentGiftVo" type="selling.sunshine.model.gift.GiftConfig">
         <result property="giftId" column="agent_gift_id"></result>
         <result property="amount" column="available_amount"></result>
         <result property="blockFlag" column="block_flag"></result>
@@ -27,7 +27,7 @@
         <result property="createAt" column="create_time"></result>
     </resultMap>
 
-    <insert id="insert" parameterType="selling.sunshine.model.gift.AgentGift" useGeneratedKeys="false">
+    <insert id="insert" parameterType="selling.sunshine.model.gift.GiftConfig" useGeneratedKeys="false">
         INSERT INTO agent_gift(agent_gift_id, available_amount, agent_id, goods_id, block_flag, create_time)
         VALUES (#{giftId}, #{amount}, #{agent.agentId}, #{goods.goodsId}, #{blockFlag}, #{createAt})
     </insert>
@@ -56,7 +56,7 @@
         </if>
     </select>
 
-    <update id="update" parameterType="selling.sunshine.model.gift.AgentGift">
+    <update id="update" parameterType="selling.sunshine.model.gift.GiftConfig">
         UPDATE agent_gift
         <set>
             <if test="amount != null">
@@ -70,7 +70,7 @@
         WHERE agent_gift_id = #{giftId}
     </update>
 
-    <update id="block" parameterType="selling.sunshine.model.gift.AgentGift">
+    <update id="block" parameterType="selling.sunshine.model.gift.GiftConfig">
         UPDATE agent_gift
         block_flag = #{blockFlag}
         WHERE agent_gift_id = #{giftId}

@@ -11,6 +11,7 @@ import selling.sunshine.model.Agent;
 import selling.sunshine.model.Credit;
 import selling.sunshine.model.Role;
 import selling.sunshine.model.User;
+import selling.sunshine.model.gift.GiftConfig;
 import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.utils.IDGenerator;
@@ -252,5 +253,38 @@ public class AgentDaoImpl extends BaseDao implements AgentDao {
         }
     }
 
+    @Transactional
+    @Override
+    public ResultData insertAgentGift(GiftConfig gift) {
+        ResultData result = new ResultData();
+        synchronized (lock) {
+            try {
+                gift.setGiftId(IDGenerator.generate("AGG"));
+                sqlSession.insert("selling.agent.gift.insert", gift);
+                result.setData(gift);
+            } catch (Exception e) {
+                logger.error(e.getMessage());
+                result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+                result.setDescription(e.getMessage());
+            } finally {
+                return result;
+            }
+        }
+    }
 
+    @Override
+    public ResultData queryAgentGift(Map<String, Object> condition) {
+        ResultData result = new ResultData();
+        condition = handle(condition);
+        try {
+            List<GiftConfig> list = sqlSession.selectList("selling.agent.gift.query", condition);
+            result.setData(list);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription(e.getMessage());
+        } finally {
+            return result;
+        }
+    }
 }

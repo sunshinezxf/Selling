@@ -7,24 +7,24 @@ import selling.sunshine.model.lite.Agent;
 /**
  * Created by sunshine on 7/1/16.
  */
-public class AgentGift extends Entity {
+public class GiftConfig extends Entity {
     private String giftId;
     private Agent agent;
     private Goods4Agent goods;
     private int amount;
 
-    public AgentGift() {
+    public GiftConfig() {
         super();
         amount = 0;
     }
 
-    public AgentGift(Agent agent, Goods4Agent goods) {
+    public GiftConfig(Agent agent, Goods4Agent goods) {
         this();
         this.agent = agent;
         this.goods = goods;
     }
 
-    public AgentGift(Agent agent, Goods4Agent goods, int amount) {
+    public GiftConfig(Agent agent, Goods4Agent goods, int amount) {
         this(agent, goods);
         this.amount = amount;
     }
