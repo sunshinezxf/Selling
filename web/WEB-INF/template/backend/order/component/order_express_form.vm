@@ -11,53 +11,56 @@
     </div>
     <div class="row">
         <div class="col-md-12 col-lg-12" id="main">
-           <div class="">
-               <button type="button" class="btn btn-success" id="setExpressNumber">设置快递单号</button>
-           </div>
-           <br>
+            <div class="">
+                <button type="button" class="btn btn-success" id="setExpressNumber">设置快递单号</button>
+                <button type="button" style="display:none;" id="download" onclick="download()"></button>
+            </div>
+            <br>
             #foreach($expressItem in ${expressList})
-              <div class="" id="express-form">
-                 <div id="basic-express-info" class="table bs-callout">
-                    <div class="row">
-                        <div class="col-xs-2 col-md-2 col-lg-2">快递单号</div>
-                        <div class="col-xs-5 col-md-5 col-lg-5" id=$expressItem.expressId>$expressItem.expressNumber</div>
-                        <div class="col-xs-2 col-md-2 col-lg-2">日期</div>
-                        <div class="col-xs-3 col-md-3 col-lg-3">$!date.format('yyyy-MM-dd',$!expressItem.createAt)</div>
+                <div class="" id="express-form">
+                    <div id="basic-express-info" class="table bs-callout">
+                        <div class="row">
+                            <div class="col-xs-2 col-md-2 col-lg-2">快递单号</div>
+                            <div class="col-xs-5 col-md-5 col-lg-5"
+                                 id=$expressItem.expressId>$expressItem.expressNumber</div>
+                            <div class="col-xs-2 col-md-2 col-lg-2">日期</div>
+                            <div class="col-xs-3 col-md-3 col-lg-3">$!date.format(
+                                'yyyy-MM-dd',$!expressItem.createAt)</div>
+                        </div>
                     </div>
-                 </div>
-                 <div id="basic-sender-info" class="table bs-callout">
-                    <div class="row">
-                        <div class="col-xs-2 col-md-2 col-lg-2">寄件人</div>
-                        <div class="col-xs-5 col-md-5 col-lg-5">$expressItem.senderName</div>
-                        <div class="col-xs-2 col-md-2 col-lg-2">联系方式</div>
-                        <div class="col-xs-3 col-md-3 col-lg-3">$expressItem.senderPhone</div>
+                    <div id="basic-sender-info" class="table bs-callout">
+                        <div class="row">
+                            <div class="col-xs-2 col-md-2 col-lg-2">寄件人</div>
+                            <div class="col-xs-5 col-md-5 col-lg-5">$expressItem.senderName</div>
+                            <div class="col-xs-2 col-md-2 col-lg-2">联系方式</div>
+                            <div class="col-xs-3 col-md-3 col-lg-3">$expressItem.senderPhone</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-2 col-lg-2">地址</div>
+                            <div class="col-xs-5 col-md-5 col-lg-5">$expressItem.senderAddress</div>
+                        </div>
                     </div>
-                    <div class="row">
-                        <div class="col-xs-2 col-md-2 col-lg-2">地址</div>
-                        <div class="col-xs-5 col-md-5 col-lg-5">$expressItem.senderAddress</div>
+                    <div id="basic-receiver-info" class="table bs-callout">
+                        <div class="row">
+                            <div class="col-xs-2 col-md-2 col-lg-2">收件人</div>
+                            <div class="col-xs-5 col-md-5 col-lg-5">$expressItem.receiverName</div>
+                            <div class="col-xs-2 col-md-2 col-lg-2">联系方式</div>
+                            <div class="col-xs-3 col-md-3 col-lg-3">$expressItem.receiverPhone</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 col-md-2 col-lg-2">地址</div>
+                            <div class="col-xs-5 col-md-5 col-lg-5">$expressItem.receiverAddress</div>
+                        </div>
+                    </div>
+                    <div id="basic-goods-info" class="table bs-callout">
+                        <div class="row">
+                            <div class="col-xs-3 col-md-3 col-lg-3">品名</div>
+                            <div class="col-xs-9 col-md-9 col-lg-9" style="height:50px;">$expressItem.goodsName</div>
+                        </div>
                     </div>
                 </div>
-                <div id="basic-receiver-info" class="table bs-callout">
-                    <div class="row">
-                        <div class="col-xs-2 col-md-2 col-lg-2">收件人</div>
-                        <div class="col-xs-5 col-md-5 col-lg-5">$expressItem.receiverName</div>
-                        <div class="col-xs-2 col-md-2 col-lg-2">联系方式</div>
-                        <div class="col-xs-3 col-md-3 col-lg-3">$expressItem.receiverPhone</div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-2 col-md-2 col-lg-2">地址</div>
-                        <div class="col-xs-5 col-md-5 col-lg-5">$expressItem.receiverAddress</div>
-                    </div>
-                </div>
-                <div id="basic-goods-info" class="table bs-callout">
-                    <div class="row">
-                        <div class="col-xs-3 col-md-3 col-lg-3">品名</div>
-                        <div class="col-xs-9 col-md-9 col-lg-9" style="height:50px;">$expressItem.goodsName</div>
-                    </div>
-                </div>
-             </div>
-             <br>
-           #end
+                <br>
+            #end
         </div>
     </div>
 </div>
@@ -72,8 +75,10 @@
                 <form class="form-horizontal" id="express_form">
                     <p class="form-group">
                         <label class="col-sm-4 col-md-4 col-lg-3">起始快递单号:</label>&nbsp;&nbsp;
-                        <input type="number" id="expressId" name="expressId" autocomplete="off" onkeyup="value=value.replace(/[^\d]/g,'')"/>
+                        <input type="number" id="expressId" name="expressId" autocomplete="off"
+                               onkeyup="value=value.replace(/[^\d]/g,'')"/>
                     </p>
+
                     <p class="form-group">
                         <label class="col-sm-12 col-md-12 col-lg-12">*说明文字</label>
                     </p>
@@ -87,110 +92,117 @@
 </div>
 
 <script>
-   #*
-   var LODOP = getLodop();; //声明为全局变量  
-   *#
-   $("#setExpressNumber").click(function(){
-    	 $("#express_modal").modal('show');          
-    });
-    
-   $("#express_modal").find("#express_confirm").click(function(){
-    	   
-    	  var expressNumber=$("#expressId").val();
-    	  if(expressNumber!=""){
-    	         $("#express_modal").modal('hide');   	         
-                 for(var i=0;i<${expressList}.length;i++){
-                    #*
-                    document.getElementById("expressNumber"+i).innerHTML = "<font color='#0000FF'>"+(parseFloat(expressNumber)+i)+"</font>";
-                    *#
-                    document.getElementById("expressNumber"+i).innerHTML =(parseFloat(expressNumber)+i);
-                    document.getElementById("expressNumber"+i).style.background ="#bcd4ec"; 
-                 }
-                 if(!document.getElementById("print")) {
-                     var node="<div class=''><button type='button' class='btn btn-success' id='print' onclick=print()>生成excel文件</button></div>";
-                     $("#main").append(node);
-                 }   
-    	  }else{
-    	    
-    	  }
-    });
-    
-    function print(){
-           #*
-    	for(var i=0;i<${expressList}.length;i++){
-    	    createPrintPage(document.getElementById("expressNumber"+i).innerHTML,${expressList}[i].createAt,${expressList}[i].senderName,${expressList}[i].senderPhone,${expressList}[i].senderAddress,${expressList}[i].receiverName,${expressList}[i].receiverPhone,${expressList}[i].receiverAddress,${expressList}[i].goodsName);
-    	     	    	 
-    	     LODOP.PREVIEW(); 
-    	     LODOP.PRINT();
-       
-    	}
-    	
-    	
-        var turnForm = document.createElement("form");
-        document.body.appendChild(turnForm);
-        turnForm.method = 'post';
-        turnForm.action = '${path.concat('/order/expressData')}';
-        var newElement = document.createElement("input");
-        newElement.setAttribute("type", "hidden");
-        newElement.setAttribute("name", "firstNumber");
-        newElement.setAttribute("value", $("#expressId").val());     
-        turnForm.appendChild(newElement);
-        
-        var list=${expressList};
-        for(var i=0;i<list.length;i++){
-           alert(JSON.stringify(list[i]));
-           var newElement2 = document.createElement("input");
-           newElement2.setAttribute("type", "hidden");
-           newElement2.setAttribute("name", "expressItem");
-           newElement2.setAttribute("value", list[i]);
-           newElement2.setAttribute("id", i);
-           turnForm.appendChild(newElement2);
-        }
-        turnForm.submit();
-
-
-
- *#
-       var data={"expressItem":${expressList},"expressNumber":$("#expressId").val()};
-    	$.ajax({ 
-            type:"POST", 
-            url:"${path.concat('/order/expressData')}",                        
-            data:JSON.stringify(data), 
-            processData: false,
-            contentType:"application/json",  
-            dataType: "application/vnd.ms-excel",  
-            success:function(data){ 
-                      
-            } 
-         });  
-         $("#setExpressNumber").fadeOut();
-         $("#express-form").fadeOut();
-         $("#print").fadeOut();
- 
-         window.location.href="${path.concat('/order/exportExcel')}";  
-
-    }
-    
-    
-  
-      
-    
-       #*
-    function createPrintPage(expressNumber,expressDate,senderName,senderPhone,senderAddress,receiverName,receiverPhone,receiverAddress,goodsName){
-        
-        LODOP.PRINT_INITA(0,0,387,725,"中通");
-        LODOP.SET_PRINT_PAGESIZE(1,"100mm","180mm","");//设置纸张高度
-        LODOP.ADD_PRINT_TEXT(58,7,183,25,expressNumber);
-        LODOP.ADD_PRINT_TEXT(46,214,73,35,(new Date(expressDate)).format("yyyy/MM/dd"));
-        LODOP.ADD_PRINT_TEXT(81,63,70,25,senderName);
-        LODOP.ADD_PRINT_TEXT(85,157,127,25,senderPhone);
-        LODOP.ADD_PRINT_TEXT(104,56,230,30,senderAddress);
-        LODOP.ADD_PRINT_TEXT(138,66,65,20,receiverName);
-        LODOP.ADD_PRINT_TEXT(139,167,130,25,receiverPhone);
-        LODOP.ADD_PRINT_TEXT(160,53,328,30,receiverAddress);
-        LODOP.ADD_PRINT_TEXT(191,55,154,35,goodsName);
-    }
+    #*
+    var LODOP = getLodop();; //声明为全局变量
     *#
-    
-    
+    $("#setExpressNumber").click(function () {
+        $("#express_modal").modal('show');
+    });
+
+    $("#express_modal").find("#express_confirm").click(function () {
+
+        var expressNumber = $("#expressId").val();
+        if (expressNumber != "") {
+            $("#express_modal").modal('hide');
+            for (var i = 0; i <${expressList}.
+            length;
+            i++
+        )
+            {
+            #*
+            document.getElementById("expressNumber"+i).innerHTML = "<font color='#0000FF'>"+(parseFloat(expressNumber)+i)+"</font>";
+            *#
+                document.getElementById("expressNumber" + i).innerHTML = (parseFloat(expressNumber) + i);
+                document.getElementById("expressNumber" + i).style.background = "#bcd4ec";
+            }
+            if (!document.getElementById("print")) {
+                var node = "<div class=''><button type='button' class='btn btn-success' id='print' onclick=print()>生成excel文件</button></div>";
+                $("#main").append(node);
+            }
+        } else {
+
+        }
+    });
+
+    function print() {
+    #*
+ for(var i=0;i<${expressList}.length;i++){
+     createPrintPage(document.getElementById("expressNumber"+i).innerHTML,${expressList}[i].createAt,${expressList}[i].senderName,${expressList}[i].senderPhone,${expressList}[i].senderAddress,${expressList}[i].receiverName,${expressList}[i].receiverPhone,${expressList}[i].receiverAddress,${expressList}[i].goodsName);
+
+      LODOP.PREVIEW();
+      LODOP.PRINT();
+
+ }
+
+
+ var turnForm = document.createElement("form");
+ document.body.appendChild(turnForm);
+ turnForm.method = 'post';
+ turnForm.action = '${path.concat('/order/expressData')}';
+ var newElement = document.createElement("input");
+ newElement.setAttribute("type", "hidden");
+ newElement.setAttribute("name", "firstNumber");
+ newElement.setAttribute("value", $("#expressId").val());
+ turnForm.appendChild(newElement);
+
+ var list=${expressList};
+ for(var i=0;i<list.length;i++){
+    alert(JSON.stringify(list[i]));
+    var newElement2 = document.createElement("input");
+    newElement2.setAttribute("type", "hidden");
+    newElement2.setAttribute("name", "expressItem");
+    newElement2.setAttribute("value", list[i]);
+    newElement2.setAttribute("id", i);
+    turnForm.appendChild(newElement2);
+ }
+ turnForm.submit();
+
+
+
+*#
+        var data = {"expressItem":${expressList}, "expressNumber": $("#expressId").val()};
+        $.ajax({
+            type: "POST",
+            url: "${path.concat('/order/expressData')}",
+            data: JSON.stringify(data),
+            processData: false,
+            contentType: "application/json",
+            success: function (data) {
+                $("#setExpressNumber").fadeOut();
+                $("#express-form").fadeOut();
+                $("#print").fadeOut();
+                $("#download").click();
+            },
+            error: function (data, status) {
+                alert(JSON.stringify(status));
+            }
+        });
+    }
+
+    function download() {
+        window.location.href = "${path.concat('/order/exportExcel')}";
+    }
+
+
+
+
+
+    #*
+ function createPrintPage(expressNumber,expressDate,senderName,senderPhone,senderAddress,receiverName,receiverPhone,receiverAddress,goodsName){
+
+     LODOP.PRINT_INITA(0,0,387,725,"中通");
+     LODOP.SET_PRINT_PAGESIZE(1,"100mm","180mm","");//设置纸张高度
+     LODOP.ADD_PRINT_TEXT(58,7,183,25,expressNumber);
+     LODOP.ADD_PRINT_TEXT(46,214,73,35,(new Date(expressDate)).format("yyyy/MM/dd"));
+     LODOP.ADD_PRINT_TEXT(81,63,70,25,senderName);
+     LODOP.ADD_PRINT_TEXT(85,157,127,25,senderPhone);
+     LODOP.ADD_PRINT_TEXT(104,56,230,30,senderAddress);
+     LODOP.ADD_PRINT_TEXT(138,66,65,20,receiverName);
+     LODOP.ADD_PRINT_TEXT(139,167,130,25,receiverPhone);
+     LODOP.ADD_PRINT_TEXT(160,53,328,30,receiverAddress);
+     LODOP.ADD_PRINT_TEXT(191,55,154,35,goodsName);
+ }
+ *#
+
+
 </script>
