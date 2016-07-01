@@ -25,6 +25,7 @@
         <result property="receiveAddress" column="receive_address"></result>
         <result property="status" column="order_item_status"
                 typeHandler="selling.sunshine.handler.mybatis.order.OrderItemStatusHandler"></result>
+        <result property="createAt" column="create_time"></result>
         <association property="customer" column="customerId = customer_id" select="customerQuery"></association>
         <association property="goods" column="goodsId = goods_id" select="goods4AgentQuery"></association>
     </resultMap>
