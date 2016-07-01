@@ -27,9 +27,6 @@
                     <li><a class="sub-nav" href="${path.concat('/order/customerOrder/overview')}"><i class="fa fa-tasks"></i>
                         客户订单</a>
                     </li>
-                    <li><a class="sub-nav" href="${path.concat('/express/upload')}"><i class="fa fa-tasks"></i>
-                        上传快递单</a>
-                    </li>
                 </ul>
             </li>
             <li><a class="menu" data-toggle="collapse" data-parent="#accordion" href="#goods-management"><i
@@ -107,7 +104,7 @@
         var target_id = $(".main").attr("id-target");
         $("#" + target_id).collapse('show');
     });
-    
+
     var array=["#agent-management","#order-management","#goods-management","#statement-management","#withdraw-management","#config-management","#admin-management"];
     $(".menu").click(function(){
         var menu_id=$(this).attr("href");
@@ -115,7 +112,7 @@
             if(value!=menu_id){
                 $(value).collapse('hide');
             }
-        });   
+        });
     });
-    
+
 </script>

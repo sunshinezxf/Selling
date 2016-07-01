@@ -1,110 +1,74 @@
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container-fluid">
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar"
-                    aria-expanded="true" aria-controls="navbar">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="">云草纲目生物科技有限公司</a>
         </div>
-        <div id="navbar" class="navbar-collapse collapse in">
+        <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="${path.concat('/dashboard')}"><i class="fa fa-desktop"></i> 首页</a></li>
-                <li><a class="dropdown-toggle" data-toggle="dropdown" data-parent="#accordion"><i
-                        class="fa fa-book"></i> 代理管理<i
-                        class="pull-right fa fa-caret-down"></i></a>
+                <li><a href="${path.concat('/dashboard')}">首页</a></li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button"
+                       aria-haspopup="true" aria-expanded="true">代理管理 <span class="caret"></span></a>
                     <ul class="dropdown-menu nav nav-pills nav-stacked">
-                        <li><a class="sub-nav" href="${path.concat('/agent/check')}"><i class="fa fa-edit"></i>
-                            代理审核</a>
-                        </li>
-                        <li><a class="sub-nav" href="${path.concat('/agent/overview')}"><i class="fa fa-tasks"></i>
-                            代理概览</a>
-                        </li>
+                        <li><a class="menu" href="${path.concat('/agent/check')}">代理审核</a></li>
+                        <li><a class="menu" href="${path.concat('/agent/overview')}">代理概览</a></li>
                     </ul>
                 </li>
-                <li><a class="dropdown-toggle" data-toggle="dropdown" data-parent="#accordion"><i
-                        class="fa fa-book"></i> 订单管理<i
-                        class="pull-right fa fa-caret-down"></i></a>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button"
+                       aria-haspopup="true" aria-expanded="true">订单管理 <span class="caret"></span></a>
                     <ul class="dropdown-menu nav nav-pills nav-stacked">
-                        <li><a class="sub-nav" href="${path.concat('/order/check')}"><i class="fa fa-edit"></i>
-                            订单审核</a>
-                        </li>
-                        <li><a class="sub-nav" href="${path.concat('/order/overview')}"><i class="fa fa-tasks"></i>
-                            代理商订单</a>
-                        </li>
-                        <li><a class="sub-nav" href="${path.concat('/order/customerOrder/overview')}"><i
-                                class="fa fa-tasks"></i>
-                            客户订单</a>
-                        </li>
-                        <li><a class="sub-nav" href="${path.concat('/express/upload')}"><i class="fa fa-tasks"></i>
-                            上传快递单</a>
-                        </li>
+                        <li><a class="menu" href="${path.concat('/order/check')}">订单审核</a></li>
+                        <li><a class="menu" href="${path.concat('/order/overview')}">代理上订单</a></li>
+                        <li><a class="menu" href="${path.concat('/order/customerOrder/overview')}">客户订单</a></li>
                     </ul>
                 </li>
-                <li><a class="dropdown-toggle" data-toggle="dropdown" data-parent="#accordion"><i
-                        class="fa fa-book"></i> 商品管理<i
-                        class="pull-right fa fa-caret-down"></i></a>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button"
+                       aria-haspopup="true" aria-expanded="true">商品管理 <span class="caret"></span></a>
                     <ul class="dropdown-menu nav nav-pills nav-stacked">
-                        <li><a class="sub-nav" href="${path.concat('/commodity/create')}"><i class="fa fa-edit"></i>
-                            添加商品</a>
-                        </li>
-                        <li><a class="sub-nav" href="${path.concat('/commodity/overview')}"><i class="fa fa-tasks"></i>
-                            商品概览</a>
-                        </li>
+                        <li><a class="menu" href="${path.concat('/commodity/create')}">添加商品</a></li>
+                        <li><a class="menu" href="${path.concat('/commodity/overview')}">商品概览</a></li>
                     </ul>
                 </li>
-                <li><a class="dropdown-toggle" data-toggle="dropdown" data-parent="#accordion"><i
-                        class="fa fa-book"></i> 返现管理<i
-                        class="pull-right fa fa-caret-down"></i></a>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button"
+                       aria-haspopup="true" aria-expanded="true">返现管理 <span class="caret"></span></a>
                     <ul class="dropdown-menu nav nav-pills nav-stacked">
-                        <li><a class="sub-nav" href="${path.concat('/refund/record/month')}"><i class="fa fa-edit"></i>
-                            当月返现</a>
-                        </li>
-                        <li><a class="sub-nav" href="${path.concat('/refund/record/overview')}"><i
-                                class="fa fa-tasks"></i>
-                            返现记录</a>
-                        </li>
+                        <li><a class="menu" href="${path.concat('/refund/record/month')}">当月返现</a></li>
+                        <li><a class="menu" href="${path.concat('/refund/record/overview')}">返现记录</a></li>
                     </ul>
                 </li>
-                <li><a class="dropdown-toggle" data-toggle="dropdown" data-parent="#accordion"><i
-                        class="fa fa-book"></i> 提现管理<i
-                        class="pull-right fa fa-caret-down"></i></a>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button"
+                       aria-haspopup="true" aria-expanded="true">提现管理 <span class="caret"></span></a>
                     <ul class="dropdown-menu nav nav-pills nav-stacked">
-                        <li><a class="sub-nav" href="${path.concat('/withdraw/check')}"><i class="fa fa-edit"></i>
-                            提现申请</a>
-                        </li>
-                        <li><a class="sub-nav" href="${path.concat('/withdraw/overview')}"><i class="fa fa-tasks"></i>
-                            提现概览</a>
-                        </li>
+                        <li><a class="menu" href="${path.concat('/withdraw/check')}">提现申请</a></li>
+                        <li><a class="menu" href="${path.concat('/withdraw/overview')}">提现概览</a></li>
                     </ul>
                 </li>
-                <li><a class="dropdown-toggle" data-toggle="dropdown" data-parent="#accordion"><i
-                        class="fa fa-cog"></i> 基本配置<i
-                        class="pull-right fa fa-caret-down"></i></a>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button"
+                       aria-haspopup="true" aria-expanded="true">基本配置 <span class="caret"></span></a>
                     <ul class="dropdown-menu nav nav-pills nav-stacked">
-                        <li><a class="sub-nav" href="${path.concat('/shipment/config')}"><i class="fa fa-cog"></i>
-                            发货配置</a>
-                        </li>
-                        <li><a class="sub-nav" href="${path.concat('/refund/config')}"><i class="fa fa-cog"></i>
-                            返现配置</a>
-                        </li>
+                        <li><a class="menu" href="${path.concat('/shipment/config')}">发货配置</a></li>
+                        <li><a class="menu" href="${path.concat('/refund/config')}">返现配置</a></li>
                     </ul>
                 </li>
-                <li><a class="dropdown-toggle" data-toggle="dropdown" data-parent="#accordion"><i
-                        class="fa fa-book"></i> 管理员管理<i
-                        class="pull-right fa fa-caret-down"></i></a>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button"
+                       aria-haspopup="true" aria-expanded="true">管理员管理 <span class="caret"></span></a>
                     <ul class="dropdown-menu nav nav-pills nav-stacked">
-                        <li><a class="sub-nav" href="${path.concat('/register')}"><i class="fa fa-cog"></i>
-                            账号授权</a>
-                        </li>
-                        <li><a class="sub-nav" href="${path.concat('/manage')}"><i class="fa fa-cog"></i>
-                            账号管理</a>
-                        </li>
+                        <li><a class="menu" href="${path.concat('/register')}">账号授权</a></li>
+                        <li><a class="menu" href="${path.concat('/manage')}">账号管理</a></li>
                     </ul>
                 </li>
-                <li><a href="${path.concat('/logout')}">退出</a></li>
             </ul>
         </div>
     </div>

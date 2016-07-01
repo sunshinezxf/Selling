@@ -2,10 +2,12 @@ package selling.sunshine.model.express;
 
 import selling.sunshine.model.CustomerOrder;
 
+import java.io.Serializable;
+
 /**
  * Created by sunshine on 6/22/16.
  */
-public class Express4Customer extends Express {
+public class Express4Customer extends Express implements Serializable {
     private CustomerOrder order;
 
     public Express4Customer() {

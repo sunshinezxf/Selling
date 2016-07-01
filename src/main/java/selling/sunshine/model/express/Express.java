@@ -134,6 +134,4 @@ public class Express extends Entity {
 	public void setGoodsQuantity(int goodsQuantity) {
 		this.goodsQuantity = goodsQuantity;
 	}
-    
-    
 }
