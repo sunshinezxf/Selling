@@ -544,6 +544,7 @@ public class OrderController {
 		}
 		
 		for (int i=0;i<expresseList.size();i++) {
+			sheet.addCell(new Label(0,i+3,expresseList.get(i).getExpressNumber()));
 			sheet.addCell(new Label(2,i+3,expresseList.get(i).getSenderName()));
 			sheet.addCell(new Label(3,i+3,expresseList.get(i).getSenderPhone()));
 			sheet.addCell(new Label(7,i+3,expresseList.get(i).getSenderAddress()));
@@ -554,7 +555,7 @@ public class OrderController {
 			sheet.addCell(new Label(16,i+3,"10"));
 			sheet.addCell(new Label(17,i+3,"10"));
 			sheet.addCell(new Label(36,i+3,String.valueOf(expresseList.get(i).getGoodsQuantity())));
-			sheet.addCell(new Label(37,i+3,expresseList.get(i).getExpressNumber()));
+			//sheet.addCell(new Label(37,i+3,expresseList.get(i).getExpressNumber()));
 		}
 	
 		// 写入数据并关闭文件
