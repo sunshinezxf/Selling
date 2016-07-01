@@ -64,3 +64,10 @@ CREATE TABLE IF NOT EXISTS `selling`.`agent_gift` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
   ENGINE = InnoDB;
+
+INSERT INTO `selling`.`role` (`role_id`, `role_name`, `block_flag`, `create_time`) VALUES ('ROL00000003', 'finance', '0', '2016-05-03 11:00:20');
+INSERT INTO `selling`.`role` (`role_id`, `role_name`, `block_flag`, `create_time`) VALUES ('ROL00000004', 'express', '0', '2016-05-03 11:00:30');
+
+ALTER TABLE `selling`.`order`
+ADD COLUMN `order_type` INT NOT NULL DEFAULT 0 AFTER `order_price`;
+
