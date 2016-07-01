@@ -70,6 +70,22 @@
         WHERE agent_gift_id = #{giftId}
     </update>
 
+    <update id="updateBatch" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" separator=",">
+            UPDATE agent_gift
+            <set>
+                <if test="item.amount != null">
+                    available_amount = #{item.amount},
+                </if>
+                <if test="item.createAt != null">
+                    create_time = #{item.createAt},
+                </if>
+                agent_gift_id = #{item.giftId}
+            </set>
+            WHERE agent_gift_id = #{item.giftId}
+        </foreach>
+    </update>
+
     <update id="block" parameterType="selling.sunshine.model.gift.GiftConfig">
         UPDATE agent_gift
         block_flag = #{blockFlag}

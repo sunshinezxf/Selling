@@ -6,6 +6,7 @@ import selling.sunshine.model.gift.GiftConfig;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.utils.ResultData;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,4 +34,6 @@ public interface AgentDao {
     ResultData queryAgentGift(Map<String, Object> condition);
 
     ResultData updateAgentGift(GiftConfig config);
+
+    ResultData updateAgentGift(List<GiftConfig> list);
 }
