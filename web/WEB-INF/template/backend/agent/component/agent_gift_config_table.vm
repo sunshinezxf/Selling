@@ -1,0 +1,109 @@
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id-target="agent-management">
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+            <h1><i class="fa fa-home"></i> 赠送配置 </h1>
+            <ol class="breadcrumb">
+                <li><a href="${path.concat('/dashboard')}">首页</a></li>
+                <li><a data-toggle="collapse" data-parent="#accordion" href="#agent-management">代理管理</a></li>
+                <li class="active">代理审核</li>
+            </ol>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+            <table id="gift_config_table" class="table table-striped table-bordered" cellspacing="0" width="100%">
+            </table>
+
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $("#gift_config_table").DataTable({
+            searching: false,
+            ordering: false,
+            paging: true,
+            "sPaginationType": "full_numbers",
+            "bPaginate": false,
+            "bLengthChange": true,
+            "bSort": false,
+            "bDeferRender": true,
+            "bProcessing": true,
+            "bServerSide": true,
+            "bInfoFiltered": false,
+            "sAjaxSource": '${path.concat('/agent/check')}',
+            "infoFiltered": false,
+            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                $(nRow).removeClass('dataTable');
+                $(nRow).css("text-align", "left");
+            },
+            "fnInitComplete": function () {
+                $("#check_agent_table").removeClass('no-footer');
+            },
+            "fnServerData": function (sSource, aoData, fnCallback) {
+                $.ajax({
+                    "dataType": "json",
+                    "type": "POST",
+                    "url": sSource,
+                    "data": aoData,
+                    "success": fnCallback
+                })
+            },
+            columns: [
+                {
+                    title: "申请时间", "mRender": function (data, type, full) {
+                    return ((new Date(full.createAt)).format("yyyy/MM/dd hh:mm"));
+                }
+                },
+                {title: "姓名", "mData": "name"},
+                {title: "手机", "mData": "phone"},
+                {
+                    title: "上级代理", "mRender": function (data, type, full) {
+                    if (full.upperAgent == null) {
+                        return "(无)";
+                    }
+                    return full.upperAgent.name;
+                }
+                },
+                {
+                    title: "操作", "mRender": function (data, type, full) {
+                    var operation = "";
+                    if (!full.granted) {
+                        var verification_button = "<button type='button' id='" + full.agentId + "' class='btn btn-info btn-group-sm grant' >授权</button>&nbsp;"
+                        operation += verification_button;
+                    }
+                    $("#" + full.agentId).on('click', function () {
+                        window.location.href = "${path.concat('/agent/check/')}" + full.agentId;
+                    })
+                    var limit_button = "<button type='button' class='btn btn-warning btn-group-sm'>禁用</button>&nbsp;"
+                    operation += limit_button;
+                    return operation;
+                }
+                }
+            ],
+            "language": {
+                "processing": "正在加载中",
+                "lengthMenu": "每页显示 _MENU_ 条记录",
+                "zeroRecords": "抱歉， 没有找到",
+                "info": "从 _START_ 到 _END_, 共 _TOTAL_ 条数据",
+                "infoEmpty": "暂无数据",
+                "infoFiltered": "数据表中共 _MAX_ 条记录)",
+                "zeroRecords": "当前没有需要审核的代理",
+                "search": "搜索:",
+                "paginate": {
+                    "first": "首页",
+                    "previous": "上一页",
+                    "next": "下一页",
+                    "last": "尾页"
+                }
+            }
+        });
+
+        $('#check_agent_table tbody tr').on('click', function () {
+            alert("test");
+            if ($(this).hasClass('selected')) {
+                alert("test");
+            }
+        });
+    });
+</script>
