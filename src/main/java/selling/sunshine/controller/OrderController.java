@@ -501,6 +501,9 @@ public class OrderController {
 	public String exportExcel(HttpServletRequest request, HttpServletResponse response,HttpSession session)
 			throws IOException, RowsExceededException, WriteException {
         List<Express> expresseList=(List<Express>)session.getAttribute("expresseList");
+        if (expresseList==null) {
+			return null;
+		}
 		response.reset();
 		response.setContentType("application/vnd.ms-excel");
 		response.setCharacterEncoding("utf-8");

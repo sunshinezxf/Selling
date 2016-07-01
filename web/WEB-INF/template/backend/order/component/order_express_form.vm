@@ -163,11 +163,12 @@
                       
             } 
          });  
-         window.location.href="${path.concat('/order/exportExcel')}";  
          $("#setExpressNumber").fadeOut();
          $("#express-form").fadeOut();
          $("#print").fadeOut();
  
+         window.location.href="${path.concat('/order/exportExcel')}";  
+
     }
     
     
