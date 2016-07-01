@@ -31,10 +31,10 @@
                 </div>
                 <div class="weui_cell">
                     <div class="weui_cell_bd weui_cell_primary">
-                        <p>分享人:</p>
+                        <p>优惠码:</p>
                     </div>
                     <div class="weui_cell_ft">
-                        <p>${customerOrder.agent.name}</p>
+                        <p>${customerOrder.agent.agentId}</p>
                     </div>
                 </div>
                 <div class="weui_cell">
