@@ -498,7 +498,7 @@ public class OrderController {
 		response.reset();
 		response.setContentType("application/vnd.ms-excel");
 		response.setCharacterEncoding("utf-8");
-		response.setHeader("Content-Disposition", "attachment;filename=快递单.xls"
+		response.setHeader("Content-Disposition", "attachment;filename="
 				+ URLEncoder.encode("快递单.xls", "utf-8"));
 		OutputStream os = response.getOutputStream();
 		WritableWorkbook book = null;
