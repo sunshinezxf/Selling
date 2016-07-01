@@ -110,6 +110,7 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
 		Map<String, Object> condition=new HashMap<>();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM");
 		String currentDate=dateFormat.format(new Timestamp(System.currentTimeMillis()));
+		condition.put("blockFlag", false);
 		condition.put("date", currentDate + "%");
 		List<OrderPool> poolList=sqlSession.selectList("selling.order.pool.query", condition);
 		if (poolList.size()>0) {

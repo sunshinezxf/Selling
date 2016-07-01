@@ -100,7 +100,11 @@
     	  if(expressNumber!=""){
     	         $("#express_modal").modal('hide');   	         
                  for(var i=0;i<${expressList}.length;i++){
-                    document.getElementById("expressNumber"+i).innerHTML = (parseFloat(expressNumber)+i);
+                    #*
+                    document.getElementById("expressNumber"+i).innerHTML = "<font color='#0000FF'>"+(parseFloat(expressNumber)+i)+"</font>";
+                    *#
+                    document.getElementById("expressNumber"+i).innerHTML =(parseFloat(expressNumber)+i);
+                    document.getElementById("expressNumber"+i).style.background ="#bcd4ec"; 
                  }
                  if(!document.getElementById("print")) {
                      var node="<div class=''><button type='button' class='btn btn-success' id='print' onclick=print()>生成excel文件</button></div>";
@@ -159,11 +163,12 @@
                       
             } 
          });  
-         window.location.href="${path.concat('/order/exportExcel')}";  
          $("#setExpressNumber").fadeOut();
          $("#express-form").fadeOut();
          $("#print").fadeOut();
  
+         window.location.href="${path.concat('/order/exportExcel')}";  
+
     }
     
     

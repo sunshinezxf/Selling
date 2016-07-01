@@ -1,6 +1,7 @@
 package selling.sunshine.dao;
 
 import selling.sunshine.model.Order;
+import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.pagination.MobilePageParam;
 import selling.sunshine.utils.ResultData;
 
@@ -13,8 +14,10 @@ public interface OrderDao {
 
     ResultData queryOrderByPage(Map<String, Object> condition, MobilePageParam param);
 
+    ResultData queryOrderByPage(Map<String, Object> condition, DataTableParam param);
+
     ResultData updateOrder(Order order);
-    
+
     ResultData cancelOrder(Order order);
 
     ResultData sumOrder();

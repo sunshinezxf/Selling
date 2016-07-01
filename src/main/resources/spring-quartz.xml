@@ -29,7 +29,7 @@
     <bean id="poolTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="poolDetail"></property>
         <property name="cronExpression">
-            <value>0 0 0 15 * ?</value>
+            <value>0 0 0 1 * ?</value>
         </property>
     </bean>
 

@@ -1,0 +1,55 @@
+#parse("/common/util.vm")
+<html lang="zh_CN">
+<head>
+    #parse("/agent/component/init.vm")
+    <title>三七赠送</title>
+</head>
+<body ontouchstart>
+<div class="container">
+	<div class="tabbar">
+    <div class="hd">
+        <h1 class="page_title">三七赠送</h1>
+
+        <p class="page_desc">我们为您提供了数件可供赠送的商品</p>
+    </div>
+    <div class="bd">
+		<div class="weui_btn_area clear-margin-top">
+	        <a id="gift-btn" href="${path.concat('/agent/order/gift')}" class="weui_btn weui_btn_plain_primary">去赠送</a>
+	    </div>
+	    <div id="gift-list" class="weui_cells weui_cells_access clear-margin-top">
+	    	#foreach($giftConfig in $giftConfigs)
+    		<div class="weui_cell">
+	            <div class="weui_cell_bd weui_cell_primary">
+	                <p>${giftConfig.goods.name}</p>
+	            </div>
+	            <div class="weui_cell_ft">${giftConfig.amount}件</div>
+	        </div>
+	    	#end
+	    </div>
+    </div>
+    #parse("/agent/component/navigate.vm")
+    </div>
+</div>
+</body>
+<script>
+$(document).ready(function(){
+	if(!$.check_gift()){
+		$("#gift-btn").removeAttr('href');
+		$("#gift-btn").removeAttr('onclick');
+		$("#gift-btn").html("没有可赠送的商品");
+	}
+});
+
+$.check_gift = function(){
+	var rtn = false;
+	$.each($("#gift-list").children(), function(i, val){
+		if($(val).find(".weui_cell_ft").html() == "0件"){
+			$(val).remove();
+		} else {
+			rtn = true;
+		}
+	});
+	return rtn;
+}
+</script>
+</html>

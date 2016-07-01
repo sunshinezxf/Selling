@@ -23,6 +23,8 @@ import selling.sunshine.model.express.Express4Agent;
 import selling.sunshine.model.express.Express4Customer;
 import selling.sunshine.model.goods.Goods4Agent;
 import selling.sunshine.model.goods.Goods4Customer;
+import selling.sunshine.pagination.DataTablePage;
+import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.pagination.MobilePage;
 import selling.sunshine.pagination.MobilePageParam;
 import selling.sunshine.service.*;
@@ -38,6 +40,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -147,38 +150,96 @@ public class OrderController {
 		return view;
 	}
 
+//	@ResponseBody
+//	@RequestMapping(method = RequestMethod.POST, value = "/overview")
+//	public MobilePage<Order> overview(MobilePageParam param) {
+//		MobilePage<Order> result = new MobilePage<>();
+//		if (StringUtils.isEmpty(param)) {
+//			return result;
+//		}
+//		Map<String, Object> condition = new HashMap<>();
+//		List<Integer> status = new ArrayList<>();
+//		switch (Integer.parseInt((String) param.getParams().get("status"))) {
+//		case 0:
+//			status.add(0);
+//			break;
+//		case 1:
+//			status.add(1);
+//			break;
+//		case 2:
+//			status.add(2);
+//			status.add(3);
+//			status.add(4);
+//			break;
+//		case 3:
+//			status.add(5);
+//			break;
+//		}
+//		condition.put("status", status);
+//		ResultData fetchResponse = orderService.fetchOrder(condition, param);
+//		if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+//			result = (MobilePage<Order>) fetchResponse.getData();
+//		}
+//		return result;
+//	}
+	
 	@ResponseBody
-	@RequestMapping(method = RequestMethod.POST, value = "/overview")
-	public MobilePage<Order> overview(MobilePageParam param) {
-		MobilePage<Order> result = new MobilePage<>();
+	@RequestMapping(method = RequestMethod.POST, value = "/submitedTableOrderOverview")
+	public DataTablePage<Order> submitedTableOrderOverview(DataTableParam param) {
+		DataTablePage<Order> result = new DataTablePage<>();
 		if (StringUtils.isEmpty(param)) {
 			return result;
 		}
 		Map<String, Object> condition = new HashMap<>();
 		List<Integer> status = new ArrayList<>();
-		switch (Integer.parseInt((String) param.getParams().get("status"))) {
-		case 0:
-			status.add(0);
-			break;
-		case 1:
-			status.add(1);
-			break;
-		case 2:
-			status.add(2);
-			status.add(3);
-			status.add(4);
-			break;
-		case 3:
-			status.add(5);
-			break;
-		}
+		status.add(0);
+		status.add(1);
 		condition.put("status", status);
 		ResultData fetchResponse = orderService.fetchOrder(condition, param);
 		if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-			result = (MobilePage<Order>) fetchResponse.getData();
+			result = (DataTablePage<Order>) fetchResponse.getData();
 		}
 		return result;
 	}
+	
+	@ResponseBody
+	@RequestMapping(method = RequestMethod.POST, value = "/payedOrderOverview")
+	public DataTablePage<Order> payedOrderOverview(DataTableParam param) {
+		DataTablePage<Order> result = new DataTablePage<>();
+		if (StringUtils.isEmpty(param)) {
+			return result;
+		}
+		Map<String, Object> condition = new HashMap<>();
+		List<Integer> status = new ArrayList<>();
+		status.add(2);
+		status.add(3);
+		status.add(4);
+		condition.put("status", status);
+		ResultData fetchResponse = orderService.fetchOrder(condition, param);
+		if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+			result = (DataTablePage<Order>) fetchResponse.getData();
+		}
+		return result;
+	}
+	
+	@ResponseBody
+	@RequestMapping(method = RequestMethod.POST, value = "/finishedOrderOverview")
+	public DataTablePage<Order> finishedOrderOverview(DataTableParam param) {
+		DataTablePage<Order> result = new DataTablePage<>();
+		if (StringUtils.isEmpty(param)) {
+			return result;
+		}
+		Map<String, Object> condition = new HashMap<>();
+		List<Integer> status = new ArrayList<>();
+		status.add(5);
+		condition.put("status", status);
+		ResultData fetchResponse = orderService.fetchOrder(condition, param);
+		if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+			result = (DataTablePage<Order>) fetchResponse.getData();
+		}
+		return result;
+	}
+
 
 	@RequestMapping(method = RequestMethod.GET, value = "/customerOrder/overview")
 	public ModelAndView customerOrderOverview() {
@@ -186,17 +247,17 @@ public class OrderController {
 		view.setViewName("/backend/order/customerOrder");
 		return view;
 	}
-
+	
 	@ResponseBody
-	@RequestMapping(method = RequestMethod.POST, value = "/customerOrder/overview")
-	public MobilePage<CustomerOrder> customerOrderOverview(MobilePageParam param) {
-		MobilePage<CustomerOrder> result = new MobilePage<>();
+	@RequestMapping(method = RequestMethod.POST, value = "/customerOrder/overview/{statusCode}")
+	public DataTablePage<CustomerOrder> customerOrderOverview(DataTableParam param,@PathVariable("statusCode")int statusCode) {
+		DataTablePage<CustomerOrder> result = new DataTablePage<>();
 		if (StringUtils.isEmpty(param)) {
 			return result;
 		}
 		Map<String, Object> condition = new HashMap<>();
 		List<Integer> status = new ArrayList<>();
-		switch (Integer.parseInt((String) param.getParams().get("status"))) {
+		switch (statusCode) {
 		case 0:
 			status.add(0);
 			break;
@@ -214,10 +275,42 @@ public class OrderController {
 		ResultData fetchResponse = orderService.fetchCustomerOrder(condition,
 				param);
 		if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-			result = (MobilePage<CustomerOrder>) fetchResponse.getData();
+			result = (DataTablePage<CustomerOrder>) fetchResponse.getData();
 		}
 		return result;
 	}
+
+//	@ResponseBody
+//	@RequestMapping(method = RequestMethod.POST, value = "/customerOrder/overview")
+//	public MobilePage<CustomerOrder> customerOrderOverview(MobilePageParam param) {
+//		MobilePage<CustomerOrder> result = new MobilePage<>();
+//		if (StringUtils.isEmpty(param)) {
+//			return result;
+//		}
+//		Map<String, Object> condition = new HashMap<>();
+//		List<Integer> status = new ArrayList<>();
+//		switch (Integer.parseInt((String) param.getParams().get("status"))) {
+//		case 0:
+//			status.add(0);
+//			break;
+//		case 1:
+//			status.add(1);
+//			break;
+//		case 2:
+//			status.add(2);
+//			break;
+//		case 3:
+//			status.add(3);
+//			break;
+//		}
+//		condition.put("status", status);
+//		ResultData fetchResponse = orderService.fetchCustomerOrder(condition,
+//				param);
+//		if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+//			result = (MobilePage<CustomerOrder>) fetchResponse.getData();
+//		}
+//		return result;
+//	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/express")
 	public ModelAndView express() {
@@ -408,6 +501,9 @@ public class OrderController {
 	public String exportExcel(HttpServletRequest request, HttpServletResponse response,HttpSession session)
 			throws IOException, RowsExceededException, WriteException {
         List<Express> expresseList=(List<Express>)session.getAttribute("expresseList");
+        if (expresseList==null) {
+			return null;
+		}
 		response.reset();
 		response.setContentType("application/vnd.ms-excel");
 		response.setCharacterEncoding("utf-8");
@@ -451,6 +547,7 @@ public class OrderController {
 		}
 		
 		for (int i=0;i<expresseList.size();i++) {
+			sheet.addCell(new Label(0,i+3,expresseList.get(i).getExpressNumber()));
 			sheet.addCell(new Label(2,i+3,expresseList.get(i).getSenderName()));
 			sheet.addCell(new Label(3,i+3,expresseList.get(i).getSenderPhone()));
 			sheet.addCell(new Label(7,i+3,expresseList.get(i).getSenderAddress()));
@@ -461,7 +558,7 @@ public class OrderController {
 			sheet.addCell(new Label(16,i+3,"10"));
 			sheet.addCell(new Label(17,i+3,"10"));
 			sheet.addCell(new Label(36,i+3,String.valueOf(expresseList.get(i).getGoodsQuantity())));
-			sheet.addCell(new Label(37,i+3,expresseList.get(i).getExpressNumber()));
+			//sheet.addCell(new Label(37,i+3,expresseList.get(i).getExpressNumber()));
 		}
 	
 		// 写入数据并关闭文件
@@ -497,13 +594,60 @@ public class OrderController {
 		WritableSheet sheet1;
 		WritableSheet sheet2;
 		book = Workbook.createWorkbook(os);
-		sheet1 = book.createSheet(" 代理商订单 ", 0);
-		sheet2 = book.createSheet(" 客户订单 ", 1);
-		String headerArr[] = { "订单编号", "订单项编号", "代理商", "顾客", "商品", "数量",
-				"总价", "购买日期" };
-		for (int i = 0; i < headerArr.length; i++) {
-			sheet1.addCell(new Label(i, 0, headerArr[i]));
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		if (orderList!=null) {
+			sheet1 = book.createSheet(" 代理商订单 ", 0);
+			String headerArr[] = { "订单编号", "订单项编号", "代理商", "顾客", "商品", "数量",
+					"总价", "购买日期" };
+
+			for (int i = 0; i < headerArr.length; i++) {
+				sheet1.addCell(new Label(i, 0, headerArr[i]));
+			}
+			int k=1;
+			for (int i = 0; i < orderList.size(); i++) {
+				Order order=orderList.get(i);
+				List<OrderItem> orderItems=order.getOrderItems();
+				for (int j = 0; j < orderItems.size(); j++) {
+					sheet1.addCell(new Label(0, k, order.getOrderId()));
+					sheet1.addCell(new Label(1, k, orderItems.get(j).getOrderItemId()));
+					sheet1.addCell(new Label(2, k, order.getAgent().getName()));
+					sheet1.addCell(new Label(3, k, orderItems.get(j).getCustomer().getName()));
+					sheet1.addCell(new Label(4, k, orderItems.get(j).getGoods().getName()));
+					sheet1.addCell(new Label(5, k, String.valueOf(orderItems.get(j).getGoodsQuantity())));
+					sheet1.addCell(new Label(6, k, String.valueOf(orderItems.get(j).getOrderItemPrice())));
+					sheet1.addCell(new Label(7, k, dateFormat.format(orderItems.get(j).getCreateAt())));
+					
+					k++;
+				}
+			}
 		}
+        if (customerOrderList!=null) {
+    		sheet2 = book.createSheet(" 客户订单 ", 1);
+			String headerArr2[] = { "订单编号", "代理商", "顾客", "商品", "数量",
+					"总价", "购买日期" };
+			for (int i = 0; i < headerArr2.length; i++) {
+				sheet2.addCell(new Label(i, 0, headerArr2[i]));
+			}
+			for (int i = 0; i < customerOrderList.size(); i++) {
+				sheet2.addCell(new Label(0, i+1, customerOrderList.get(i).getOrderId()));
+				if (customerOrderList.get(i).getAgent()!=null) {
+					sheet2.addCell(new Label(1, i+1, customerOrderList.get(i).getAgent().getName()));
+				}else {
+					sheet2.addCell(new Label(1, i+1, ""));
+				}			
+				sheet2.addCell(new Label(2, i+1, customerOrderList.get(i).getReceiverName()));
+				sheet2.addCell(new Label(3, i+1, customerOrderList.get(i).getGoods().getName()));
+				sheet2.addCell(new Label(4, i+1, String.valueOf(customerOrderList.get(i).getQuantity())));
+				sheet2.addCell(new Label(5, i+1, String.valueOf(customerOrderList.get(i).getTotalPrice())));
+				sheet2.addCell(new Label(6, i+1, dateFormat.format(customerOrderList.get(i).getCreateAt())));
+			}
+			
+		}
+		// 写入数据并关闭文件
+		book.write();
+		book.close();
+		os.flush();
+		os.close();
 		return null;
 	}
 

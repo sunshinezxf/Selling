@@ -1,7 +1,6 @@
 package selling.sunshine.dao.impl;
 
 import org.apache.ibatis.session.RowBounds;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,6 +8,8 @@ import selling.sunshine.dao.BaseDao;
 import selling.sunshine.dao.OrderDao;
 import selling.sunshine.model.*;
 import selling.sunshine.model.goods.Goods4Agent;
+import selling.sunshine.pagination.DataTablePage;
+import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.pagination.MobilePage;
 import selling.sunshine.pagination.MobilePageParam;
 import selling.sunshine.utils.IDGenerator;
@@ -93,6 +94,28 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
         }
         page.setTotal(((List<Order>) total.getData()).size());
         List<Order> current = queryOrderByPage(condition, param.getStart(), param.getLength());
+        if (current.size() == 0) {
+            result.setResponseCode(ResponseCode.RESPONSE_NULL);
+        }
+        page.setData(current);
+        result.setData(page);
+        return result;
+    }
+
+    @Override
+    public ResultData queryOrderByPage(Map<String, Object> condition, DataTableParam param) {
+        ResultData result = new ResultData();
+        DataTablePage<Order> page = new DataTablePage<>();
+        condition = handle(condition);
+        ResultData total = queryOrder(condition);
+        if (total.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription(total.getDescription());
+            return result;
+        }
+        page.setiTotalRecords(((List) total.getData()).size());
+        page.setiTotalDisplayRecords(((List) total.getData()).size());
+        List<Order> current = queryOrderByPage(condition, param.getiDisplayStart(), param.getiDisplayLength());
         if (current.size() == 0) {
             result.setResponseCode(ResponseCode.RESPONSE_NULL);
         }
@@ -272,10 +295,10 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
                     if (pool.getQuantity() >= config.getAmountTrigger()) {
                         pool.setBlockFlag(false);
                         pool.setRefundAmount(Double.parseDouble(resultList.get(i).get("quantity").toString()) * config.getLevel1Percent());
-                    }else {
-                    	 pool.setBlockFlag(true);
-                    	 pool.setRefundAmount(0);
-					}
+                    } else {
+                        pool.setBlockFlag(true);
+                        pool.setRefundAmount(0);
+                    }
                     sqlSession.insert("selling.order.pool.insert", pool);
                     configCondition.clear();
                 }

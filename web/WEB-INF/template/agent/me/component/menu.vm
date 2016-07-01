@@ -59,6 +59,12 @@
                         </div>
                         <p class="weui_grid_label">分享</p>
                     </a>
+                    <a class="weui_grid" href="${path.concat('/agent/gift')}">
+                        <div class="weui_grid_icon">
+                            <i class="icon icon_msg"></i>
+                        </div>
+                        <p class="weui_grid_label">赠送</p>
+                    </a>
                 </div>
             </div>
         </div>

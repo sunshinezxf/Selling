@@ -11,6 +11,7 @@ import selling.sunshine.model.Agent;
 import selling.sunshine.model.Credit;
 import selling.sunshine.model.Role;
 import selling.sunshine.model.User;
+import selling.sunshine.model.gift.GiftConfig;
 import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.utils.IDGenerator;
@@ -252,5 +253,69 @@ public class AgentDaoImpl extends BaseDao implements AgentDao {
         }
     }
 
+    @Transactional
+    @Override
+    public ResultData insertAgentGift(GiftConfig config) {
+        ResultData result = new ResultData();
+        synchronized (lock) {
+            try {
+                config.setGiftId(IDGenerator.generate("AGG"));
+                sqlSession.insert("selling.agent.gift.insert", config);
+                result.setData(config);
+            } catch (Exception e) {
+                logger.error(e.getMessage());
+                result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+                result.setDescription(e.getMessage());
+            } finally {
+                return result;
+            }
+        }
+    }
 
+    @Override
+    public ResultData queryAgentGift(Map<String, Object> condition) {
+        ResultData result = new ResultData();
+        condition = handle(condition);
+        try {
+            List<GiftConfig> list = sqlSession.selectList("selling.agent.gift.query", condition);
+            result.setData(list);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription(e.getMessage());
+        } finally {
+            return result;
+        }
+    }
+
+    @Override
+    public ResultData updateAgentGift(GiftConfig config) {
+        ResultData result = new ResultData();
+        try {
+            sqlSession.update("selling.agent.gift.update", config);
+            result.setData(config);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription(e.getMessage());
+        } finally {
+            return result;
+        }
+    }
+
+    @Transactional
+    @Override
+    public ResultData updateAgentGift(List<GiftConfig> list) {
+        ResultData result = new ResultData();
+        try {
+            sqlSession.update("selling.agent.gift.updateBatch", list);
+            result.setData(list);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription(e.getMessage());
+        } finally {
+            return result;
+        }
+    }
 }

@@ -1,5 +1,6 @@
 package selling.sunshine.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -14,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import selling.sunshine.form.*;
 import selling.sunshine.model.*;
+import selling.sunshine.model.gift.GiftConfig;
 import selling.sunshine.model.goods.Goods4Agent;
 import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
@@ -422,6 +424,28 @@ public class AgentController {
         view.setViewName("/agent/link/personal_sale");
         return view;
     }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/gift")
+    public ModelAndView sendGift(){
+    	ModelAndView view = new ModelAndView();
+    	Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        if (user == null || user.getAgent() == null) {
+            view.setViewName("/agent/login");
+            return view;
+        }
+        Map<String, Object> condition = new HashMap<String, Object>();
+        condition.put("agentId", user.getAgent().getAgentId());
+        ResultData fetchGiftConfigResponse = agentService.fetchAgentGift(condition);
+        if(fetchGiftConfigResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR){
+        	logger.error(fetchGiftConfigResponse.getDescription());
+        	view.addObject("giftConfigs", new ArrayList<GiftConfig>());
+        } else {
+        	view.addObject("giftConfigs", (List<GiftConfig>)fetchGiftConfigResponse.getData());
+        }
+        view.setViewName("/agent/etc/gift");
+    	return view;
+    }
 
     @RequestMapping(method = RequestMethod.POST, value = "/validate/{phone}")
     @ResponseBody
@@ -605,6 +629,7 @@ public class AgentController {
                 view.addObject("isNextMonth", isNextMonth);
             }
         }
+        view.addObject("operation", "PLACE");
         //根据代理商的ID查询代理商的详细信息
         condition.clear();
         condition.put("agentId", user.getAgent().getAgentId());
@@ -621,7 +646,7 @@ public class AgentController {
         view.setViewName("/agent/prompt");
         return view;
     }
-
+    
     @RequestMapping(method = RequestMethod.GET, value = "/order/modify/{orderId}")
     public ModelAndView modifyOrder(@PathVariable("orderId") String orderId) {
         ModelAndView view = new ModelAndView();
@@ -666,6 +691,94 @@ public class AgentController {
         if (agent.isGranted()) {
             WechatConfig.oauthWechat(view, "/agent/order/modify");
             view.setViewName("/agent/order/modify");
+            return view;
+        }
+        Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "尊敬的代理商，您的资料现在正在审核中，只有当审核通过后才能代客下单，请耐心等待！", "/agent/login");
+        view.addObject("prompt", prompt);
+        WechatConfig.oauthWechat(view, "/agent/prompt");
+        view.setViewName("/agent/prompt");
+        return view;
+    }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/order/gift")
+    public ModelAndView giftOrder(){
+    	ModelAndView view = new ModelAndView();
+    	//获取当前登陆的用户
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        if (user == null) {
+            WechatConfig.oauthWechat(view, "/agent/login");
+            view.setViewName("/agent/login");
+            return view;
+        }
+        //创建查询的删选条件集合
+        Map<String, Object> condition = new HashMap<>();
+        //查询商品信息
+        condition.put("blockFlag", false);
+        ResultData fetchGoodsResponse = commodityService.fetchGoods4Agent(condition);
+        if (fetchGoodsResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            view.addObject("goods", fetchGoodsResponse.getData());
+        }
+        //查询代理商的客户列表
+        condition.clear();
+        condition.put("agentId", user.getAgent().getAgentId());
+        condition.put("blockFlag", false);
+        ResultData fetchCustomerResponse = customerService.fetchCustomer(condition);
+        if (fetchCustomerResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            view.addObject("customer", fetchCustomerResponse.getData());
+        }
+        //查询平台当前配置的发货日期
+        condition.clear();
+        ResultData fetchShipmentResponse = shipmentService.fetchShipmentConfig(condition);
+        if (fetchShipmentResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            List<ShipConfig> shipmentList = (List<ShipConfig>) fetchShipmentResponse.getData();
+            if (shipmentList.isEmpty()) {
+                //如果没有配置shipment
+                view.addObject("hasConfig", false);
+            } else {
+                int currentDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+                shipmentList.sort(new Comparator<ShipConfig>() {
+                    @Override
+                    public int compare(ShipConfig ship1, ShipConfig ship2) {
+                        return Integer.valueOf(ship1.getDate()).compareTo(Integer.valueOf(ship2.getDate()));
+                    }
+                });
+                int shipDay = 0;
+                boolean isNextMonth = false;
+                for (ShipConfig ship : shipmentList) {
+                    if (ship.getDate() > currentDay) {
+                        shipDay = ship.getDate();
+                        break;
+                    }
+                }
+                if (shipDay == 0) {
+                    shipDay = shipmentList.get(0).getDate();
+                    isNextMonth = true;
+                }
+                view.addObject("hasConfig", true);
+                view.addObject("shipDay", shipDay);
+                view.addObject("isNextMonth", isNextMonth);
+            }
+        }
+        view.addObject("operation", "GIFT");
+        //查询代理商赠送额度
+        condition.clear();
+        condition.put("agentId", user.getAgent().getAgentId());
+        ResultData fetchGiftConfigResponse = agentService.fetchAgentGift(condition);
+        if(fetchGiftConfigResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR){
+        	view.addObject("giftConfigs", JSON.toJSON(new ArrayList<GiftConfig>()));
+        } else {
+        	view.addObject("giftConfigs", JSON.toJSON((List<GiftConfig>)fetchGiftConfigResponse.getData()));
+        }
+        
+        //根据代理商的ID查询代理商的详细信息
+        condition.clear();
+        condition.put("agentId", user.getAgent().getAgentId());
+        ResultData queryAgentResponse = agentService.fetchAgent(condition);
+        Agent agent = ((List<Agent>) queryAgentResponse.getData()).get(0);
+        if (agent.isGranted()) {
+            WechatConfig.oauthWechat(view, "/agent/order/place");
+            view.setViewName("/agent/order/place");
             return view;
         }
         Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "尊敬的代理商，您的资料现在正在审核中，只有当审核通过后才能代客下单，请耐心等待！", "/agent/login");
@@ -728,17 +841,43 @@ public class AgentController {
         }
         order.setOrderItems(orderItems);//构造Order
         order.setPrice(order_price);
+        List<GiftConfig> giftConfigs = null;
         switch (type) {
-            case "save":
-                order.setStatus(OrderStatus.SAVED);
-                break;
-            case "submit":
-                order.setStatus(OrderStatus.SUBMITTED);
-                break;
-            default:
-                order.setStatus(OrderStatus.SAVED);
+        case "save":
+            order.setStatus(OrderStatus.SAVED);
+            break;
+        case "submit":
+            order.setStatus(OrderStatus.SUBMITTED);
+            break;
+        case "gift":
+        	Map<String, Object> condition = new HashMap<String, Object>();
+            condition.put("agentId", user.getAgent().getAgentId());
+            ResultData fetchGiftConfigResponse = agentService.fetchAgentGift(condition);
+            if(fetchGiftConfigResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR){
+            	logger.error(fetchGiftConfigResponse.getDescription());
+             	giftConfigs = new ArrayList<GiftConfig>();
+            } else {
+            	giftConfigs = (List<GiftConfig>)fetchGiftConfigResponse.getData();
+            }
+            for(GiftConfig giftConfig : giftConfigs){
+            	for(OrderItem orderItem : order.getOrderItems()){
+            		if(giftConfig.getGoods().getGoodsId().equals(orderItem.getGoods().getGoodsId())){
+            			giftConfig.setAmount(giftConfig.getAmount() - orderItem.getGoodsQuantity());
+            			if(giftConfig.getAmount() < 0){
+            				Prompt prompt = new Prompt("提示", "赠送商品数超过额度", "/agent/gift");
+                            attr.addFlashAttribute("prompt", prompt);
+                            view.setViewName("redirect:/agent/prompt");
+                            return view;
+            			}
+            		}
+            	}
+            }
+            order.setStatus(OrderStatus.PAYED);
+            //这里要将Order的赠品字段设一下
+        	break;
+        default:
+            order.setStatus(OrderStatus.SAVED);
         }
-
         ResultData fetchResponse = orderService.placeOrder(order);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             if (type.equals("save")) {
@@ -747,6 +886,17 @@ public class AgentController {
                 view.setViewName("redirect:/agent/prompt");
             } else if (type.equals("submit")) {
                 view.setViewName("redirect:/order/pay/" + order.getOrderId());
+            } else if (type.equals("gift")){
+            	ResultData fetchGiftResponse = agentService.updateAgentGift(giftConfigs);
+            	if(fetchGiftResponse.getResponseCode() == ResponseCode.RESPONSE_OK){
+	            	Prompt prompt = new Prompt("提示", "赠送成功", "/agent/order/manage/2");
+	                attr.addFlashAttribute("prompt", prompt);
+	                view.setViewName("redirect:/agent/prompt");
+            	} else {
+            		Prompt prompt = new Prompt("提示", "赠送成功，但是需要审核", "/agent/order/manage/2");
+	                attr.addFlashAttribute("prompt", prompt);
+	                view.setViewName("redirect:/agent/prompt");
+            	}
             }
             return view;
         }
@@ -1277,11 +1427,10 @@ public class AgentController {
         return resultData;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/test")
-    public ModelAndView test() {
+    @RequestMapping(method = RequestMethod.GET, value = "/{agentId}/gift")
+    public ModelAndView giftConfig(@PathVariable("agentId") String agentId) {
         ModelAndView view = new ModelAndView();
-        WechatConfig.oauthWechat(view, "/agent/test");
-        view.setViewName("/agent/component/test_wxupload");
+        view.setViewName("/backend/agent/giftconfig");
         return view;
     }
 }
