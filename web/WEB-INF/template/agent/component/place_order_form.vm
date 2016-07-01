@@ -3,7 +3,11 @@
     <div class="order_content">
         <div class="panel">
            <div class="hd">
+           		#if(${operation} == "GIFT")
+           		<h1 class="page_title">群员赠送</h1>
+           		#else
                 <h1 class="page_title">群员订单</h1>
+                #end
                 #if(${hasConfig})
 					 #if(!${isNextMonth})
 					 	#set($payDay = $shipDay - 1)
@@ -40,12 +44,18 @@
             		</div>		
             		<p id="total_goods_price" >共计:0元<p>
             	</div>
+            	#if(${operation} == "GIFT")
+            	<div class="weui_cell_ft">
+            		<a class="weui_btn weui_btn_mini weui_btn_primary" id="gift_order_btn">&nbsp&nbsp&nbsp赠送&nbsp&nbsp&nbsp</a>
+            	</div>
+            	#else
             	<div class="weui_cell_ft">
             		<a class="weui_btn weui_btn_mini weui_btn_plain_primary" style="display:none;" id="save_order_btn">&nbsp&nbsp&nbsp保存&nbsp&nbsp&nbsp</a>
             	</div>&nbsp;
             	<div class="weui_cell_ft">
             		<a class="weui_btn weui_btn_mini weui_btn_primary" id="place_order_btn">&nbsp&nbsp&nbsp下单&nbsp&nbsp&nbsp</a>
             	</div>
+            	#end
             </div>
         </div>
     </div>
@@ -112,6 +122,44 @@
     	$("#place_order_form").attr("method","post");
     	$("#place_order_form").submit();
     });
+    #if(${operation} == "GIFT")
+    $("#gift_order_btn").click(function(){
+    	if(!$.check_order()){
+    		return;
+    	}
+    	if(!$.check_gift()){
+    		$("#dialog").find(".weui_dialog_bd").html("商品超过赠送额度");
+    		$("#dialog").fadeIn();
+    		return;
+    	}
+    	$("#place_order_form").attr("action", "${path.concat('/agent/order/place/gift')}");
+    	$("#place_order_form").attr("method","post");
+    	$("#place_order_form").submit();
+    });
+    $.check_gift = function(){
+    	var lessThan = false;
+    	var giftConfigs = eval('('+'${giftConfigs}'+')');
+    	var order_info_list = new Object();
+        var order_item_list = $("#order_item_list").children();
+        $.each(order_item_list, function(i, val){
+        	var name = $(val).children(".order_item_body").children().eq(2).find(".weui_cell_ft").text();
+        	var quantity = $(val).children(".order_item_body").children().eq(3).find(".weui_cell_ft").text();
+        	var id = $(val).children(".order_item_body").children().eq(7).val();
+        	lessThan = false;
+        	for(var i in giftConfigs){
+        		if(giftConfigs[i]['goods']['goodsId'] == id){
+        			lessThan = true;
+        			giftConfigs[i]['amount'] -= parseInt(quantity);
+        			if(giftConfigs[i]['amount'] < 0){
+        				lessThan = false;
+        				break;
+        			}
+        		}
+        	}
+        });
+        return lessThan;
+    }
+    #end
     $.check_order = function(){
     	if($("#order_item_list").children().size() == 0) {
     		$("#dialog").find(".weui_dialog_bd").html("还没有创建订单");
@@ -182,12 +230,16 @@
 	});
     
     $.check_order_leave = function(URL){
+    	#if(${operation} == "GIFT")
+    	return true;
+    	#else
     	if($("#order_item_list").children().size() != 0) {
     		targetURL = URL;
     		$("#leave_dialog").fadeIn();
     		return false;
     	}
     	return true;
+    	#end
     }
     
     $("#leave_dialog").find(".weui_btn_dialog.default").click(function(){

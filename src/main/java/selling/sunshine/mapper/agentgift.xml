@@ -14,8 +14,6 @@
         <result property="agentId" column="agent_id"></result>
         <result property="name" column="agent_name"></result>
         <result property="phone" column="agent_phone"></result>
-        <result property="blockFlag" column="block_flag"></result>
-        <result property="createAt" column="create_time"></result>
     </resultMap>
 
     <resultMap id="goods4AgentVo" type="selling.sunshine.model.goods.Goods4Agent">
@@ -70,6 +68,22 @@
         WHERE agent_gift_id = #{giftId}
     </update>
 
+    <update id="updateBatch" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" separator=",">
+            UPDATE agent_gift
+            <set>
+                <if test="item.amount != null">
+                    available_amount = #{item.amount},
+                </if>
+                <if test="item.createAt != null">
+                    create_time = #{item.createAt},
+                </if>
+                agent_gift_id = #{item.giftId}
+            </set>
+            WHERE agent_gift_id = #{item.giftId}
+        </foreach>
+    </update>
+
     <update id="block" parameterType="selling.sunshine.model.gift.GiftConfig">
         UPDATE agent_gift
         block_flag = #{blockFlag}
@@ -77,7 +91,7 @@
     </update>
 
     <select id="agentLiteQuery" parameterType="java.util.Map" resultMap="agentLiteVo">
-        SELECT agent_id, agent_name, agent_phone, block_flag, create_time
+        SELECT agent_id, agent_name, agent_phone
         FROM agent
         WHERE agent_id = #{agentId}
     </select>
