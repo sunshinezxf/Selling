@@ -22,145 +22,203 @@
 
     <div class="row">
         <div class="col-md-12 col-lg-12" id="customer_order_overview">
-            <table class="table table-striped" style="margin-bottom: 0.2em" id="customer_order_table">
-                <tr><th>订单号</th><th>客户</th><th>电话</th><th>地址</th><th>代理商</th><th>总计</th><th>总价</th><th>操作</th></tr>
-            </table>
+
         </div>
     </div>
 
 </div>
 #parse("/backend/express/component/express_detail_modal.vm")
 <script>
-     var url = "${path.concat('/order/customerOrder/overview')}";
-     var start=0;
-     var length=5;
-     var params;
-     var total;
+
      
      
      $(document).ready(function () {
-          params={"status":1};
-          $.post(url,{
-              start : start,
-              length : length,
-              params : params
-          },function(result){
-                total=result.total;
-                var customerOrderList=result.data;
-                if(total<length){
-                    length=total;
-                } 
-                var node1="";
-                for (var i = 0; i < length; i++) {  
-                      var customerOrder=customerOrderList[i];
-                      if(customerOrder.agent==null){
+         var node="<table id='customer_order_table' class='table table-striped table-bordered' cellspacing='0' width='100%'></table>";
+         $("#customer_order_overview").append(node);
+         var status=1;
+         $("#customer_order_table").DataTable({
+            searching: false,
+            ordering: false,
+            paging: true,
+            "sPaginationType": "full_numbers",
+            "bPaginate": false,
+            "bLengthChange": true,
+            "bSort": false,
+            "bDeferRender": true,
+            "bProcessing": true,
+            "bServerSide": true,
+            "bInfoFiltered": false,
+            "sAjaxSource": '${path.concat('/order/customerOrder/overview/')}'+status,
+            "infoFiltered": false,
+            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                $(nRow).removeClass('dataTable');
+                $(nRow).css("text-align", "left");
+            },
+            "fnInitComplete": function () {
+                $("#overview_agent_table").removeClass('no-footer');
+            },
+            "fnServerData": function (sSource, aoData, fnCallback) {
+                $.ajax({
+                    "dataType": "json",
+                    "type": "POST",
+                    "url": sSource,
+                    "data": aoData,
+                    "success": fnCallback
+                })
+            },
+            columns: [
+                {title: "订单号", "mData": "orderId"},
+                {title: "客户", "mData": "receiverName"},
+                {title: "电话", "mData": "receiverPhone"},
+                {title: "地址", "mData": "receiverAddress"},
+                {
+                    title: "代理商", "mRender": function (data, type, full) {
+                      if(full.agent==null){
                           var agentName="无";
                       }else{
-                          var agentName=customerOrder.agent.name;
+                          var agentName=full.agent.name;
                       }
-                   node1+="<tr><td>"+customerOrder.orderId+"</td><td>"+customerOrder.receiverName+"</td><td>"+customerOrder.receiverPhone+"</td><td>"+customerOrder.receiverAddress+"</td><td>"+agentName+"</td><td>"+customerOrder.quantity+"</td><td>"+customerOrder.totalPrice+"元</td><td>无快递单</td></tr>";          
+                      return agentName;
                 }
-                $("#customer_order_table").append(node1);
-                total-=length;
-                if(total>0){
-                    var node2="<button type='button' class='btn btn-success' id='loadMore' onclick=loadTable(params)>加载更多</button>";
-                    $("#customer_order_overview").append(node2);
+                },
+                {title: "总计", "mData": "quantity"},
+                {title: "总价", "mData": "totalPrice"},
+                {
+                    title: "下单时间", "mRender": function (data, type, full) {
+                    return ((new Date(full.createAt)).format("yyyy/MM/dd"));
                 }
-          });
+                },
+                {
+                    title: "操作", "mRender": function (data, type, full) {
+                    var operation = "无快递单";
+                    return operation;
+                }
+                }
+            ],
+            "language": {
+                "processing": "正在加载中",
+                "lengthMenu": "每页显示 _MENU_ 条记录",
+                "zeroRecords": "抱歉， 没有找到",
+                "info": "从 _START_ 到 _END_, 共 _TOTAL_ 条数据",
+                "infoEmpty": "暂无数据",
+                "infoFiltered": "数据表中共 _MAX_ 条记录)",
+                "zeroRecords": "当前暂无数据",
+                "search": "搜索:",
+                "paginate": {
+                    "first": "首页",
+                    "previous": "上一页",
+                    "next": "下一页",
+                    "last": "尾页"
+                }
+            }
+        });
      
      });
      
       function select(obj){
-          $("#customer_order_table").remove();
-          $("#loadMore").remove();
+          var status;
           switch(obj.id){
               case "1": $("#li1").attr("class","active");$("#li2").attr("class","");$("#li3").attr("class","");$("#li4").attr("class","");$("#order_class1").attr("class","text-success");$("#order_class2").attr("class","text-info");$("#order_class3").attr("class","text-info");$("#order_class4").attr("class","text-info");
-                        params={"status":1};
+                        status=1;
                         break;
               case "2": $("#li2").attr("class","active");$("#li1").attr("class","");$("#li3").attr("class","");$("#li4").attr("class","");$("#order_class2").attr("class","text-success");$("#order_class1").attr("class","text-info");$("#order_class3").attr("class","text-info");$("#order_class4").attr("class","text-info");
-                        params={"status":0};
+                         status=0;
                         break;
               case "3": $("#li3").attr("class","active");$("#li2").attr("class","");$("#li1").attr("class","");$("#li4").attr("class","");$("#order_class3").attr("class","text-success");$("#order_class2").attr("class","text-info");$("#order_class1").attr("class","text-info");$("#order_class4").attr("class","text-info");
-                        params={"status":2};
+                        status=2;
                         break;
               case "4": $("#li4").attr("class","active");$("#li2").attr("class","");$("#li3").attr("class","");$("#li1").attr("class","");$("#order_class4").attr("class","text-success");$("#order_class2").attr("class","text-info");$("#order_class3").attr("class","text-info");$("#order_class1").attr("class","text-info");
-                        params={"status":3};
+                        status=3;
                         break;
           }
-          start=0;
-          length=5;
-          $.post(url,{
-              start : start,
-              length : length,
-              params : params
-          },function(result){
-                total=result.total;
-                var customerOrderList=result.data;
-                if(total<length){
-                    length=total;
-                } 
-                var node1 = "<table class='table table-striped' style='margin-bottom: 0.2em' id='customer_order_table'><tr><th>订单号</th><th>客户</th><th>电话</th><th>地址</th><th>代理商</th><th>总计</th><th>总价</th><th>操作</th></tr>";
-                for (var i = 0; i < length; i++) {  
-                      var customerOrder=customerOrderList[i];
-                      if(customerOrder.agent==null){
+            var f = document.getElementById("customer_order_overview");
+            var childs = f.childNodes;
+            for (var i = childs.length - 1; i >= 0; i--) {
+                f.removeChild(childs[i]);
+            }
+          var node="<table id='customer_order_table' class='table table-striped table-bordered' cellspacing='0' width='100%'></table>";
+          $("#customer_order_overview").append(node);
+          $("#customer_order_table").DataTable({
+            searching: false,
+            ordering: false,
+            paging: true,
+            "sPaginationType": "full_numbers",
+            "bPaginate": false,
+            "bLengthChange": true,
+            "bSort": false,
+            "bDeferRender": true,
+            "bProcessing": true,
+            "bServerSide": true,
+            "bInfoFiltered": false,
+            "sAjaxSource": '${path.concat('/order/customerOrder/overview/')}'+status,
+            "infoFiltered": false,
+            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                $(nRow).removeClass('dataTable');
+                $(nRow).css("text-align", "left");
+            },
+            "fnInitComplete": function () {
+                $("#overview_agent_table").removeClass('no-footer');
+            },
+            "fnServerData": function (sSource, aoData, fnCallback) {
+                $.ajax({
+                    "dataType": "json",
+                    "type": "POST",
+                    "url": sSource,
+                    "data": aoData,
+                    "success": fnCallback
+                })
+            },
+            columns: [
+                {title: "订单号", "mData": "orderId"},
+                {title: "客户", "mData": "receiverName"},
+                {title: "电话", "mData": "receiverPhone"},
+                {title: "地址", "mData": "receiverAddress"},
+                {
+                    title: "代理商", "mRender": function (data, type, full) {
+                      if(full.agent==null){
                           var agentName="无";
                       }else{
-                          var agentName=customerOrder.agent.name;
+                          var agentName=full.agent.name;
                       }
-                      if(customerOrder.status=="NOT_PAYED"||customerOrder.status=="PAYED"){
+                      return agentName;
+                }
+                },
+                {title: "总计", "mData": "quantity"},
+                {title: "总价", "mData": "totalPrice"},
+                {
+                    title: "下单时间", "mRender": function (data, type, full) {
+                    return ((new Date(full.createAt)).format("yyyy/MM/dd"));
+                }
+                },
+                {
+                    title: "操作", "mRender": function (data, type, full) {
+                      if(full.status=="NOT_PAYED"||full.status=="PAYED"){
                           var express="无快递单";
                       }else{
-                          var express="<button type='button' class='btn btn-success' id='" + customerOrder.orderId + "' onclick=expressDetail(this)>快递单详情</button>";
+                          var express="<button type='button' class='btn btn-success' id='" + full.orderId + "' onclick=expressDetail(this)>快递单详情</button>";
                       }
-                   var node2="<tr><td>"+customerOrder.orderId+"</td><td>"+customerOrder.receiverName+"</td><td>"+customerOrder.receiverPhone+"</td><td>"+customerOrder.receiverAddress+"</td><td>"+agentName+"</td><td>"+customerOrder.quantity+"</td><td>"+customerOrder.totalPrice+"元</td><td>"+express+"</td></tr>";          
-                   node1+=node2;
+                    return express;
                 }
-                node1=node1+"</table>";
-                $("#customer_order_overview").append(node1);
-                total-=length;
-                if(total>0){
-                    var node2="<button type='button' class='btn btn-success' id='loadMore' onclick=loadTable(params)>加载更多</button>";
-                    $("#customer_order_overview").append(node2);
                 }
-              
-          });
-      }
-      
-      function loadTable(params){
-           $("#loadMore").remove();
-           length=5;
-           start+=length;
-           $.post(url,{
-              start : start,
-              length : length,
-              params : params
-          },function(result){
-                var customerOrderList=result.data;
-                if(total<length){
-                    length=total;
-                } 
-                var node="";
-                for (var i = 0; i < length; i++) {  
-                      var customerOrder=customerOrderList[i];
-                      if(customerOrder.agent==null){
-                          var agentName="无";
-                      }else{
-                          var agentName=customerOrder.agent.name;
-                      }
-                      if(customerOrder.status=="NOT_PAYED"||customerOrder.status=="PAYED"){
-                          var express="无快递单";
-                      }else{
-                          var express="<button type='button' class='btn btn-success' id='" + customerOrder.orderId + "' onclick=expressDetail(this)>快递单详情</button>";
-                      }
-                   node+="<tr><td>"+customerOrder.orderId+"</td><td>"+customerOrder.receiverName+"</td><td>"+customerOrder.receiverPhone+"</td><td>"+customerOrder.receiverAddress+"</td><td>"+agentName+"</td><td>"+customerOrder.quantity+"</td><td>"+customerOrder.totalPrice+"元</td><td>"+express+"</td></tr>";          
-               }
-               $("#customer_order_table").append(node);
-                total-=length;
-                if(total>0){
-                    var node2="<button type='button' class='btn btn-success' id='loadMore' onclick=loadTable(params)>加载更多</button>";
-                    $("#customer_order_overview").append(node2);
+            ],
+            "language": {
+                "processing": "正在加载中",
+                "lengthMenu": "每页显示 _MENU_ 条记录",
+                "zeroRecords": "抱歉， 没有找到",
+                "info": "从 _START_ 到 _END_, 共 _TOTAL_ 条数据",
+                "infoEmpty": "暂无数据",
+                "infoFiltered": "数据表中共 _MAX_ 条记录)",
+                "zeroRecords": "当前暂无数据",
+                "search": "搜索:",
+                "paginate": {
+                    "first": "首页",
+                    "previous": "上一页",
+                    "next": "下一页",
+                    "last": "尾页"
                 }
-          });
+            }
+        });
+ 
       }
       
       
@@ -173,8 +231,8 @@
             document.getElementById("senderAddress").innerHTML=result.data.express.senderAddress;
             document.getElementById("receiverName").innerHTML=result.data.express.receiverName;
             document.getElementById("receiverPhone").innerHTML=result.data.express.receiverPhone;
-             document.getElementById("receiverAddress").innerHTML=result.data.express.receiverAddress;
-              document.getElementById("goodsName").innerHTML=result.data.express.goodsName;
+            document.getElementById("receiverAddress").innerHTML=result.data.express.receiverAddress;
+            document.getElementById("goodsName").innerHTML=result.data.express.goodsName;
             $("#express_detail_modal").modal('show');   
          
          });

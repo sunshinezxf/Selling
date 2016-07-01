@@ -23,6 +23,8 @@ import selling.sunshine.model.express.Express4Agent;
 import selling.sunshine.model.express.Express4Customer;
 import selling.sunshine.model.goods.Goods4Agent;
 import selling.sunshine.model.goods.Goods4Customer;
+import selling.sunshine.pagination.DataTablePage;
+import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.pagination.MobilePage;
 import selling.sunshine.pagination.MobilePageParam;
 import selling.sunshine.service.*;
@@ -148,38 +150,96 @@ public class OrderController {
 		return view;
 	}
 
+//	@ResponseBody
+//	@RequestMapping(method = RequestMethod.POST, value = "/overview")
+//	public MobilePage<Order> overview(MobilePageParam param) {
+//		MobilePage<Order> result = new MobilePage<>();
+//		if (StringUtils.isEmpty(param)) {
+//			return result;
+//		}
+//		Map<String, Object> condition = new HashMap<>();
+//		List<Integer> status = new ArrayList<>();
+//		switch (Integer.parseInt((String) param.getParams().get("status"))) {
+//		case 0:
+//			status.add(0);
+//			break;
+//		case 1:
+//			status.add(1);
+//			break;
+//		case 2:
+//			status.add(2);
+//			status.add(3);
+//			status.add(4);
+//			break;
+//		case 3:
+//			status.add(5);
+//			break;
+//		}
+//		condition.put("status", status);
+//		ResultData fetchResponse = orderService.fetchOrder(condition, param);
+//		if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+//			result = (MobilePage<Order>) fetchResponse.getData();
+//		}
+//		return result;
+//	}
+	
 	@ResponseBody
-	@RequestMapping(method = RequestMethod.POST, value = "/overview")
-	public MobilePage<Order> overview(MobilePageParam param) {
-		MobilePage<Order> result = new MobilePage<>();
+	@RequestMapping(method = RequestMethod.POST, value = "/submitedTableOrderOverview")
+	public DataTablePage<Order> submitedTableOrderOverview(DataTableParam param) {
+		DataTablePage<Order> result = new DataTablePage<>();
 		if (StringUtils.isEmpty(param)) {
 			return result;
 		}
 		Map<String, Object> condition = new HashMap<>();
 		List<Integer> status = new ArrayList<>();
-		switch (Integer.parseInt((String) param.getParams().get("status"))) {
-		case 0:
-			status.add(0);
-			break;
-		case 1:
-			status.add(1);
-			break;
-		case 2:
-			status.add(2);
-			status.add(3);
-			status.add(4);
-			break;
-		case 3:
-			status.add(5);
-			break;
-		}
+		status.add(0);
+		status.add(1);
 		condition.put("status", status);
 		ResultData fetchResponse = orderService.fetchOrder(condition, param);
 		if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-			result = (MobilePage<Order>) fetchResponse.getData();
+			result = (DataTablePage<Order>) fetchResponse.getData();
 		}
 		return result;
 	}
+	
+	@ResponseBody
+	@RequestMapping(method = RequestMethod.POST, value = "/payedOrderOverview")
+	public DataTablePage<Order> payedOrderOverview(DataTableParam param) {
+		DataTablePage<Order> result = new DataTablePage<>();
+		if (StringUtils.isEmpty(param)) {
+			return result;
+		}
+		Map<String, Object> condition = new HashMap<>();
+		List<Integer> status = new ArrayList<>();
+		status.add(2);
+		status.add(3);
+		status.add(4);
+		condition.put("status", status);
+		ResultData fetchResponse = orderService.fetchOrder(condition, param);
+		if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+			result = (DataTablePage<Order>) fetchResponse.getData();
+		}
+		return result;
+	}
+	
+	@ResponseBody
+	@RequestMapping(method = RequestMethod.POST, value = "/finishedOrderOverview")
+	public DataTablePage<Order> finishedOrderOverview(DataTableParam param) {
+		DataTablePage<Order> result = new DataTablePage<>();
+		if (StringUtils.isEmpty(param)) {
+			return result;
+		}
+		Map<String, Object> condition = new HashMap<>();
+		List<Integer> status = new ArrayList<>();
+		status.add(5);
+		condition.put("status", status);
+		ResultData fetchResponse = orderService.fetchOrder(condition, param);
+		if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+			result = (DataTablePage<Order>) fetchResponse.getData();
+		}
+		return result;
+	}
+
 
 	@RequestMapping(method = RequestMethod.GET, value = "/customerOrder/overview")
 	public ModelAndView customerOrderOverview() {
@@ -187,17 +247,17 @@ public class OrderController {
 		view.setViewName("/backend/order/customerOrder");
 		return view;
 	}
-
+	
 	@ResponseBody
-	@RequestMapping(method = RequestMethod.POST, value = "/customerOrder/overview")
-	public MobilePage<CustomerOrder> customerOrderOverview(MobilePageParam param) {
-		MobilePage<CustomerOrder> result = new MobilePage<>();
+	@RequestMapping(method = RequestMethod.POST, value = "/customerOrder/overview/{statusCode}")
+	public DataTablePage<CustomerOrder> customerOrderOverview(DataTableParam param,@PathVariable("statusCode")int statusCode) {
+		DataTablePage<CustomerOrder> result = new DataTablePage<>();
 		if (StringUtils.isEmpty(param)) {
 			return result;
 		}
 		Map<String, Object> condition = new HashMap<>();
 		List<Integer> status = new ArrayList<>();
-		switch (Integer.parseInt((String) param.getParams().get("status"))) {
+		switch (statusCode) {
 		case 0:
 			status.add(0);
 			break;
@@ -215,10 +275,42 @@ public class OrderController {
 		ResultData fetchResponse = orderService.fetchCustomerOrder(condition,
 				param);
 		if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-			result = (MobilePage<CustomerOrder>) fetchResponse.getData();
+			result = (DataTablePage<CustomerOrder>) fetchResponse.getData();
 		}
 		return result;
 	}
+
+//	@ResponseBody
+//	@RequestMapping(method = RequestMethod.POST, value = "/customerOrder/overview")
+//	public MobilePage<CustomerOrder> customerOrderOverview(MobilePageParam param) {
+//		MobilePage<CustomerOrder> result = new MobilePage<>();
+//		if (StringUtils.isEmpty(param)) {
+//			return result;
+//		}
+//		Map<String, Object> condition = new HashMap<>();
+//		List<Integer> status = new ArrayList<>();
+//		switch (Integer.parseInt((String) param.getParams().get("status"))) {
+//		case 0:
+//			status.add(0);
+//			break;
+//		case 1:
+//			status.add(1);
+//			break;
+//		case 2:
+//			status.add(2);
+//			break;
+//		case 3:
+//			status.add(3);
+//			break;
+//		}
+//		condition.put("status", status);
+//		ResultData fetchResponse = orderService.fetchCustomerOrder(condition,
+//				param);
+//		if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+//			result = (MobilePage<CustomerOrder>) fetchResponse.getData();
+//		}
+//		return result;
+//	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/express")
 	public ModelAndView express() {
