@@ -8,6 +8,8 @@ import selling.sunshine.dao.BaseDao;
 import selling.sunshine.dao.CustomerOrderDao;
 import selling.sunshine.model.CustomerOrder;
 import selling.sunshine.model.OrderPool;
+import selling.sunshine.pagination.DataTablePage;
+import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.pagination.MobilePage;
 import selling.sunshine.pagination.MobilePageParam;
 import selling.sunshine.utils.IDGenerator;
@@ -81,7 +83,7 @@ public class CustomerOrderDaoImpl extends BaseDao implements CustomerOrderDao {
     }
 
     @Override
-    public ResultData queryOrder(Map<String, Object> condition, MobilePageParam param) {
+    public ResultData queryOrderByPage(Map<String, Object> condition, MobilePageParam param) {
         ResultData result = new ResultData();
         MobilePage<CustomerOrder> page = new MobilePage<>();
         ResultData total = queryOrder(condition);
@@ -93,6 +95,28 @@ public class CustomerOrderDaoImpl extends BaseDao implements CustomerOrderDao {
         page.setTotal(((List) total.getData()).size());
         List<CustomerOrder> current = queryCustomerOrderByPage(condition, param.getStart(), param.getLength());
         if (current.isEmpty()) {
+            result.setResponseCode(ResponseCode.RESPONSE_NULL);
+        }
+        page.setData(current);
+        result.setData(page);
+        return result;
+    }
+
+    @Override
+    public ResultData queryOrderByPage(Map<String, Object> condition, DataTableParam param) {
+        ResultData result = new ResultData();
+        DataTablePage<CustomerOrder> page = new DataTablePage<>();
+        condition = handle(condition);
+        ResultData total = queryOrder(condition);
+        if (total.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription(total.getDescription());
+            return result;
+        }
+        page.setiTotalRecords(((List) total.getData()).size());
+        page.setiTotalDisplayRecords(((List) total.getData()).size());
+        List<CustomerOrder> current = queryCustomerOrderByPage(condition, param.getiDisplayStart(), param.getiDisplayLength());
+        if (current.size() == 0) {
             result.setResponseCode(ResponseCode.RESPONSE_NULL);
         }
         page.setData(current);
