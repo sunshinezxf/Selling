@@ -255,13 +255,13 @@ public class AgentDaoImpl extends BaseDao implements AgentDao {
 
     @Transactional
     @Override
-    public ResultData insertAgentGift(GiftConfig gift) {
+    public ResultData insertAgentGift(GiftConfig config) {
         ResultData result = new ResultData();
         synchronized (lock) {
             try {
-                gift.setGiftId(IDGenerator.generate("AGG"));
-                sqlSession.insert("selling.agent.gift.insert", gift);
-                result.setData(gift);
+                config.setGiftId(IDGenerator.generate("AGG"));
+                sqlSession.insert("selling.agent.gift.insert", config);
+                result.setData(config);
             } catch (Exception e) {
                 logger.error(e.getMessage());
                 result.setResponseCode(ResponseCode.RESPONSE_ERROR);
@@ -279,6 +279,20 @@ public class AgentDaoImpl extends BaseDao implements AgentDao {
         try {
             List<GiftConfig> list = sqlSession.selectList("selling.agent.gift.query", condition);
             result.setData(list);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription(e.getMessage());
+        } finally {
+            return result;
+        }
+    }
+
+    @Override
+    public ResultData updateAgentGift(GiftConfig config) {
+        ResultData result = new ResultData();
+        try {
+            sqlSession.update("selling.agent.gift.update", config);
         } catch (Exception e) {
             logger.error(e.getMessage());
             result.setResponseCode(ResponseCode.RESPONSE_ERROR);
