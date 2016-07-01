@@ -4,9 +4,11 @@ import selling.sunshine.model.Agent;
 import selling.sunshine.model.BankCard;
 import selling.sunshine.model.Credit;
 import selling.sunshine.model.WithdrawRecord;
+import selling.sunshine.model.gift.GiftConfig;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.utils.ResultData;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -42,4 +44,10 @@ public interface AgentService {
     ResultData applyWithdraw(WithdrawRecord record);
 
     ResultData queryWithdraw(Map<String, Object> condition);
+    
+    ResultData fetchAgentGift(Map<String, Object> condition);
+    
+    ResultData updateAgentGift(GiftConfig giftConfig);
+    
+    ResultData updateAgentGift(List<GiftConfig> giftConfigs);
 }
