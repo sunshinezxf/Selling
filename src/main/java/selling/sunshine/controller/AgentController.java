@@ -1277,11 +1277,10 @@ public class AgentController {
         return resultData;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/test")
-    public ModelAndView test() {
+    @RequestMapping(method = RequestMethod.GET, value = "/{agentId}/gift")
+    public ModelAndView giftConfig(@PathVariable("agentId") String agentId) {
         ModelAndView view = new ModelAndView();
-        WechatConfig.oauthWechat(view, "/agent/test");
-        view.setViewName("/agent/component/test_wxupload");
+        view.setViewName("/backend/agent/giftconfig");
         return view;
     }
 }
