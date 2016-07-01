@@ -519,8 +519,8 @@ public class OrderController {
 					sheet1.addCell(new Label(4, k, orderItems.get(j).getGoods().getName()));
 					sheet1.addCell(new Label(5, k, String.valueOf(orderItems.get(j).getGoodsQuantity())));
 					sheet1.addCell(new Label(6, k, String.valueOf(orderItems.get(j).getOrderItemPrice())));
-					System.err.println(dateFormat.format(orderItems.get(j).getCreateAt()));
 					sheet1.addCell(new Label(7, k, dateFormat.format(orderItems.get(j).getCreateAt())));
+					
 					k++;
 				}
 			}
