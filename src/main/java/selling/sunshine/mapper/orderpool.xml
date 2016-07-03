@@ -97,7 +97,7 @@
         <if test="poolDate != null and poolDate != ''">
             AND pool_date = #{poolDate}
         </if>
-        <if test="blockFlag != null and blockFlag != ''">
+        <if test="blockFlag != null">
             AND block_flag = #{blockFlag}
         </if>
         <if test="date != null and date != ''">
