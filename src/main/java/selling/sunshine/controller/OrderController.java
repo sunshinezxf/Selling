@@ -545,7 +545,7 @@ public class OrderController {
             sheet.addCell(new Label(8, i + 3, expresseList.get(i).getReceiverName()));
             sheet.addCell(new Label(9, i + 3, expresseList.get(i).getReceiverPhone()));
             sheet.addCell(new Label(13, i + 3, expresseList.get(i).getReceiverAddress()));
-            sheet.addCell(new Label(14, i + 3, "淘宝物品"));
+            sheet.addCell(new Label(14, i + 3, "云草纲目三七超细粉"));
             sheet.addCell(new Label(16, i + 3, "10"));
             sheet.addCell(new Label(17, i + 3, "10"));
             sheet.addCell(new Label(36, i + 3, String.valueOf(expresseList.get(i).getGoodsQuantity())));
