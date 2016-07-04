@@ -50,7 +50,7 @@
         var node="<table id='payed_order_table' class='table table-striped table-bordered' cellspacing='0' width='100%'></table>";
         $("#overview_order").append(node);
         $("#payed_order_table").DataTable({
-            searching: false,
+            searching: true,
             ordering: false,
             paging: true,
             "sPaginationType": "full_numbers",
@@ -142,7 +142,7 @@
         var node="<table id='payed_order_table' class='table table-striped table-bordered' cellspacing='0' width='100%'></table>";
         $("#overview_order").append(node);
         $("#payed_order_table").DataTable({
-            searching: false,
+            searching: true,
             ordering: false,
             paging: true,
             "sPaginationType": "full_numbers",
@@ -223,7 +223,7 @@
          var node="<table id='submited_order_table' class='table table-striped table-bordered' cellspacing='0' width='100%'></table>";
         $("#overview_order").append(node);
         $("#submited_order_table").DataTable({
-            searching: false,
+            searching: true,
             ordering: false,
             paging: true,
             "sPaginationType": "full_numbers",
@@ -307,7 +307,7 @@
         var node="<table id='finish_order_table' class='table table-striped table-bordered' cellspacing='0' width='100%'></table>";
         $("#overview_order").append(node);
         $("#finish_order_table").DataTable({
-            searching: false,
+            searching: true,
             ordering: false,
             paging: true,
             "sPaginationType": "full_numbers",

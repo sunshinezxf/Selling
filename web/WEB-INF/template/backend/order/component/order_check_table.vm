@@ -117,7 +117,7 @@
           var node="<table id='payed_order_table' class='table table-striped table-bordered' cellspacing='0' width='100%'></table>";
           $("#check_order_table").append(node);
           $("#payed_order_table").DataTable({
-            searching: false,
+            searching: true,
             ordering: false,
             paging: true,
             "sPaginationType": "full_numbers",
@@ -192,7 +192,7 @@
          $("#check_order_table").append(node);
          var status=1;
          $("#customer_order_table").DataTable({
-            searching: false,
+            searching: true,
             ordering: false,
             paging: true,
             "sPaginationType": "full_numbers",
@@ -296,7 +296,7 @@
           var node="<table id='payed_order_table' class='table table-striped table-bordered' cellspacing='0' width='100%'></table>";
           $("#check_order_table").append(node);
           $("#payed_order_table").DataTable({
-            searching: false,
+            searching: true,
             ordering: false,
             paging: true,
             "sPaginationType": "full_numbers",
@@ -371,7 +371,7 @@
          $("#check_order_table").append(node);
          var status=1;
          $("#customer_order_table").DataTable({
-            searching: false,
+            searching: true,
             ordering: false,
             paging: true,
             "sPaginationType": "full_numbers",

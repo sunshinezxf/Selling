@@ -4,6 +4,8 @@ import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+
 import selling.sunshine.dao.BaseDao;
 import selling.sunshine.dao.OrderDao;
 import selling.sunshine.model.*;
@@ -107,6 +109,10 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
         ResultData result = new ResultData();
         DataTablePage<Order> page = new DataTablePage<>();
         condition = handle(condition);
+        if (!StringUtils.isEmpty(param.getsSearch())) {  
+           String searchParam=param.getsSearch().replace("/", "-");
+       	   condition.put("search", "%"+searchParam+"%");
+		}
         ResultData total = queryOrder(condition);
         if (total.getResponseCode() != ResponseCode.RESPONSE_OK) {
             result.setResponseCode(ResponseCode.RESPONSE_ERROR);
