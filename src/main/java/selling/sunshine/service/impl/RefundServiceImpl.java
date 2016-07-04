@@ -114,4 +114,16 @@ public class RefundServiceImpl implements RefundService {
 		}
 		return result;
 	}
+
+	@Override
+	public ResultData calculateRefund(String agentId) {
+		ResultData result = new ResultData();
+		result=refundDao.calculateRefund(agentId);
+		if (result.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            if (((List) result.getData()).isEmpty()) {
+                result.setResponseCode(ResponseCode.RESPONSE_NULL);
+            }
+		}
+		return result;
+	}
 }

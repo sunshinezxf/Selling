@@ -157,5 +157,13 @@ public class RefundController {
     	return result;
     }
     
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value = "/calculateRefund")
+    public ResultData calculateRefund(@PathVariable("agentId") String agentId) {
+    	ResultData resultData=new ResultData();
+    	resultData=refundService.calculateRefund(agentId);
+    	return resultData;
+	}
+    
 
 }

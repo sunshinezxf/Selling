@@ -113,6 +113,9 @@
 		<if test="date != null and date != ''">
 			AND i.create_time LIKE #{date}
 		</if>
+		<if test="agentId != null and agentId != ''">
+			AND o.agent_id = #{agentId}
+		</if>
         GROUP BY o.agent_id,i.goods_id
 	</select>
 

@@ -23,4 +23,6 @@ public interface RefundService {
     ResultData refund();
     
     ResultData statistic(Map<String, Object> condition);
+    
+    ResultData calculateRefund(String agentId);
 }
