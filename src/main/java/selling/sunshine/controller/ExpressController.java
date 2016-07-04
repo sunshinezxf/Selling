@@ -71,6 +71,7 @@ public class ExpressController {
 				Express4Customer express = ((List<Express4Customer>) queryResponse
 						.getData()).get(0);
 				dataMap.put("express", express);
+				resultData.setDescription("test");
 				resultData.setData(dataMap);
 			} else {
 				resultData.setResponseCode(ResponseCode.RESPONSE_NULL);

@@ -123,6 +123,9 @@
         <if test="expressNumber != null and expressNumber != ''">
             AND express_no = #{expressNumber}
         </if>
+        <if test="orderItemId != null and orderItemId != ''">
+            AND order_item_id = #{orderItemId}
+        </if>
     </select>
 
     <select id="query4Customer" parameterType="java.util.Map" resultMap="express4CustomerVo">
@@ -135,6 +138,9 @@
         </if>
         <if test="expressNumber != null and expressNumber != ''">
             AND express_no = #{expressNumber}
+        </if>
+        <if test="orderId != null and orderId != ''">
+            AND customer_order_id = #{orderId}
         </if>
     </select>
 

@@ -3,6 +3,8 @@
 <mapper namespace="selling.order">
     <resultMap id="orderVo" type="selling.sunshine.model.Order">
         <result property="orderId" column="order_id"></result>
+        <result property="type" column="order_type"
+                typeHandler="selling.sunshine.handler.mybatis.order.OrderTypeHandler"></result>
         <result property="status" column="order_status"
                 typeHandler="selling.sunshine.handler.mybatis.order.OrderStatusHandler"></result>
         <result property="price" column="order_price"></result>
@@ -71,16 +73,19 @@
 
 
     <insert id="insert" parameterType="selling.sunshine.model.Order" useGeneratedKeys="false">
-        INSERT INTO `order`(order_id, order_status, order_price, agent_id, block_flag, create_time)
-        VALUES (#{orderId}, #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler}, #{price}, #{agent.agentId}, #{blockFlag}, #{createAt})
+        INSERT INTO `order`(order_id, order_type, order_status, order_price, agent_id, block_flag, create_time)
+        VALUES (#{orderId}, #{type, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler}, #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler}, #{price}, #{agent.agentId}, #{blockFlag}, #{createAt})
     </insert>
 
     <select id="query" parameterType="java.util.Map" resultMap="orderVo">
-        SELECT order_id, order_status, order_price, agent_id, block_flag, create_time
+        SELECT order_id, order_type, order_status, order_price, agent_id, block_flag, create_time
         FROM `order`
         WHERE 1 = 1
         <if test="orderId != null and orderId != ''">
             AND order_id = #{orderId}
+        </if>
+        <if test="type != null and type != ''">
+            AND order_type = #{type}
         </if>
         <if test="status != null and status != ''">
             AND order_status IN
@@ -97,13 +102,18 @@
         <if test="createAt != null and createAt != ''">
             AND create_time = #{createAt}
         </if>
+        <if test="search !=null and search != ''">
+            AND (order_id LIKE #{search} OR DATE_FORMAT(create_time,'%Y-%m-%D') LIKE #{search} OR agent_id IN (SELECT agent_id FROM agent WHERE agent_name LIKE #{search}))
+        </if>
         <if test="date != null and date != ''">
             AND DATE_FORMAT(create_time,'%Y-%m')>DATE_FORMAT(date_sub(current_date(), interval 3 month),'%Y-%m')
         </if>
         <if test="rule != null and rule != ''">
             ORDER BY ${rule}
         </if>
-
+        <if test="rule == null">
+            ORDER by create_time DESC
+        </if>
     </select>
 
     <update id="update" parameterType="selling.sunshine.model.Order">

@@ -66,6 +66,10 @@
         <if test="receiverPhone != null">
             AND receiver_phone = #{receiverPhone}
         </if>
+        <if test="search !=null and search != ''">
+            AND (order_id LIKE #{search} OR DATE_FORMAT(create_time,'%Y-%m-%D') LIKE #{search} OR receiver_name LIKE #{search} OR receiver_addr LIKE #{search} OR receiver_phone LIKE #{search}
+                OR total_price LIKE #{search} OR quantity LIKE #{search} OR agent_id IN (SELECT agent_id FROM agent WHERE agent_name LIKE #{search}))
+        </if>
     </select>
 
     <select id="sumCustomerOrder" parameterType="java.util.Map" resultMap="sumCustomerOrderVo">
