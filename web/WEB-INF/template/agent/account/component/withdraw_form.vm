@@ -12,18 +12,56 @@
 <div class="weui_btn_area">
 	<a class="weui_btn weui_btn_default" disabled="disabled" id="withdraw_confirm">申请</a>
 </div>
+<div class="weui_dialog_confirm" id="bind_dialog" style="display: none;">
+    <div class="weui_mask"></div>
+    <div class="weui_dialog">
+        <div class="weui_dialog_hd"><strong class="weui_dialog_title">您还没有绑定微信</strong></div>
+        <div class="weui_dialog_bd" style="text-align:center;">微信支付</div>
+        <div class="weui_dialog_ft">
+            <a href="javascript:;" class="weui_btn_dialog default">返回</a>
+        	<a href="javascript:;" class="weui_btn_dialog primary">绑定</a>
+        </div>
+    </div>
+</div>
+#parse("/agent/loading.vm")
 <script>
 	agentCoffer = parseFloat(${agent.coffer});
-	$("#withdraw_confirm").on("click", function(){
+	$(document).ready(function(){
+		$("#withdraw_confirm").on("click", $.withdraw);
+	});
+	
+	$.withdraw = function(){
 		if($.checkMoney() != 0){
 			return;
 		}
 		$("#withdraw_confirm").unbind("click");
 		$("#bankCardNo").val($("#cardNo_head").html());
-		$("#withdraw_form").attr("action","${path.concat('/account/withdraw')}")
-		$("#withdraw_form").attr("method","post");
-		$("#withdraw_form").submit();
-	});
+		var url = "${path.concat('/agent/checkbinding')}";
+		$.get(url, function(result){
+			if(result.responseCode == "RESPONSE_NULL"){
+    			$("#bind_dialog").show();
+    			return;
+    		} 
+    		if(result.responseCode == "RESPONSE_ERROR"){
+    			window.location == "${path.concat('/agent/login')}";
+    		} else {
+    			$("#withdraw_form").attr("action","${path.concat('/account/withdraw')}")
+				$("#withdraw_form").attr("method","post");
+				$("#withdraw_form").submit();
+    		}
+		});
+	}
+	
+	$("#bind_dialog").find(".weui_btn_dialog.default").click(function(){
+    	$("#bind_dialog").hide();
+    	$("#withdraw_confirm").on("click", $.withdraw);
+    });
+    
+    $("#bind_dialog").find(".weui_btn_dialog.primary").click(function(){
+    	$("#bind_dialog").hide();
+    	$("#loadingToast").show();
+    	window.location = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx67fcdc4fa58f7578&redirect_uri=http%3a%2f%2fwww.yuncaogangmu.com%2fagent%2fbind&response_type=code&scope=snsapi_base&state=view#wechat_redirect";
+    });
 	
 	$.checkMoney = function(){
 		var money_input = parseFloat($("#money_input").val());

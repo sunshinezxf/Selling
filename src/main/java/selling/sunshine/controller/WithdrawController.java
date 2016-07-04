@@ -4,18 +4,12 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.pingplusplus.model.Event;
 import com.pingplusplus.model.Webhooks;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
 import selling.sunshine.model.WithdrawRecord;
 import selling.sunshine.model.WithdrawStatus;
 import selling.sunshine.pagination.DataTablePage;
@@ -27,7 +21,6 @@ import selling.sunshine.utils.ResultData;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -63,9 +56,10 @@ public class WithdrawController {
             return result;
         }
         Map<String, Object> condition = new HashMap<String, Object>();
-        List<Integer> status=new ArrayList<Integer>();
+        List<Integer> status = new ArrayList<Integer>();
         status.add(0);
         condition.put("status", status);
+        condition.put("blockFlag", true);
         ResultData fetchResponse = withdrawService.fetchWithdrawRecord(condition, param);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             result = (DataTablePage<WithdrawRecord>) fetchResponse.getData();
@@ -128,28 +122,51 @@ public class WithdrawController {
         }
         return result;
     }
-    
+
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/statistic/{agentId}")
     public JSONObject statistic(@PathVariable("agentId") String agentId) {
-    	JSONObject result = new JSONObject();
-    	Map<String, Object> condition=new HashMap<>();
-    	condition.put("agentId", agentId);
-    	if (withdrawService.statistic(condition).getResponseCode()==ResponseCode.RESPONSE_OK) {
-    		List<Map<String, Object>> list=(List<Map<String,Object>>)withdrawService.statistic(condition).getData();
-    		JSONArray categories = new JSONArray();
-    		JSONArray data = new JSONArray();
-    		double totalAmount=0;
-    		for (int i = 0; i < list.size(); i++) {
-				categories.add(list.get(i).get("date"));
-				data.add(list.get(i).get("amount"));
-				totalAmount+=(double)list.get(i).get("amount");
-			}
-    		result.put("totalAmount", totalAmount);
-    		result.put("categories", categories);
-    		result.put("data", data);
-		}
-    
-    	return result;
+        JSONObject result = new JSONObject();
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("agentId", agentId);
+        if (withdrawService.statistic(condition).getResponseCode() == ResponseCode.RESPONSE_OK) {
+            List<Map<String, Object>> list = (List<Map<String, Object>>) withdrawService.statistic(condition).getData();
+            JSONArray categories = new JSONArray();
+            JSONArray data = new JSONArray();
+            double totalAmount = 0;
+            for (int i = 0; i < list.size(); i++) {
+                categories.add(list.get(i).get("date"));
+                data.add(list.get(i).get("amount"));
+                totalAmount += (double) list.get(i).get("amount");
+            }
+            result.put("totalAmount", totalAmount);
+            result.put("categories", categories);
+            result.put("data", data);
+        }
+
+        return result;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/{withdrawId}/send")
+    public ModelAndView send(@PathVariable("withdrawId") String withdrawId) {
+        ModelAndView view = new ModelAndView();
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("withdrawId", withdrawId);
+        ResultData fetchResponse = withdrawService.fetchWithdrawRecord(condition);
+        if (fetchResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            view.setViewName("redirect:/withdraw/check");
+            return view;
+        }
+        WithdrawRecord record = ((List<WithdrawRecord>) fetchResponse.getData()).get(0);
+        if (record.isBlockFlag() == true) {
+            record.setBlockFlag(false);
+            ResultData updateResponse = withdrawService.updateWithdrawRecord(record);
+            if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                view.setViewName("redirect:/withdraw/check");
+                return view;
+            }
+        }
+        view.setViewName("redirect:/withdraw/check");
+        return view;
     }
 }

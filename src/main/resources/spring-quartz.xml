@@ -8,6 +8,8 @@
 
     <bean id="wechatSchedule" class="selling.sunshine.schedule.WechatSchedule"></bean>
 
+    <bean id="withdrawSchedule" class="selling.sunshine.schedule.WithdrawSchedule"></bean>
+
     <bean id="poolDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <property name="targetObject" ref="poolSchedule"></property>
         <property name="targetMethod" value="schedule"></property>
@@ -22,6 +24,12 @@
 
     <bean id="wechatDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <property name="targetObject" ref="wechatSchedule"></property>
+        <property name="targetMethod" value="schedule"></property>
+        <property name="concurrent" value="false"></property>
+    </bean>
+
+    <bean id="withdrawDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="withdrawSchedule"></property>
         <property name="targetMethod" value="schedule"></property>
         <property name="concurrent" value="false"></property>
     </bean>
@@ -44,6 +52,13 @@
         <property name="jobDetail" ref="wechatDetail"></property>
         <property name="cronExpression">
             <value>0 0 * * * ?</value>
+        </property>
+    </bean>
+
+    <bean id="withdrawTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="withdrawDetail"></property>
+        <property name="cronExpression">
+            <value>0 0/5 * * * ?</value>
         </property>
     </bean>
 

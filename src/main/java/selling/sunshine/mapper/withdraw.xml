@@ -18,7 +18,7 @@
         <result property="name" column="agent_name"></result>
         <result property="phone" column="agent_phone"></result>
     </resultMap>
-    
+
     <resultMap id="statisticVo" type="java.util.Map">
         <result property="date" column="withdrawDate"></result>
         <result property="amount" column="amount"></result>
@@ -56,7 +56,7 @@
 
     <update id="update" parameterType="selling.sunshine.model.WithdrawRecord">
         UPDATE withdraw_record
-        set withdraw_status = #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler}
+        set withdraw_status = #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler}, block_flag = #{blockFlag}
         WHERE withdraw_id = #{withdrawId}
     </update>
 
@@ -95,7 +95,7 @@
         FROM agent
         WHERE agent_id = #{agentId}
     </select>
-    
+
     <select id="statistic" parameterType="java.util.Map" resultMap="statisticVo">
       SELECT DATE_FORMAT(withdraw_record.create_time,'%Y-%m') AS withdrawDate,SUM(withdraw_amount) AS amount 
       FROM withdraw_record  

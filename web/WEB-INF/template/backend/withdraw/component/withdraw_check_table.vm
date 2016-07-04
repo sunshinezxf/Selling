@@ -61,9 +61,13 @@
                     title: "操作", "mRender": function (data, type, full) {
                     var operation = "";
                     if (full.status == "APPLY") {
-
+                        var pay_button = "<button type='button' id='" + full.withdrawId + "' class='btn btn-info btn-group-sm grant' >确认金额</button>&nbsp;";
+                        operation += pay_button;
                     }
-                    return "";
+                    $("#" + full.withdrawId).on('click', function() {
+                       window.location.href = "${path.concat('/withdraw/')}" + full.withdrawId + '/send';
+                    });
+                    return operation;
                 }
                 }
             ],

@@ -5,7 +5,7 @@ import selling.sunshine.model.lite.Agent;
 /**
  * Created by sunshine on 6/18/16.
  */
-public class WithdrawRecord extends Entity{
+public class WithdrawRecord extends Entity {
     private String withdrawId;
     private Agent agent;
     private String openId;
@@ -15,6 +15,7 @@ public class WithdrawRecord extends Entity{
 
     public WithdrawRecord() {
         super();
+        this.setBlockFlag(true);
     }
 
     public WithdrawRecord(String openId, double wealth, double amount) {
