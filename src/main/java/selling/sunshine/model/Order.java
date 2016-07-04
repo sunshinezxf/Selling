@@ -12,12 +12,19 @@ public class Order extends Entity {
     private String orderId;
     private Agent agent;
     private double price;
+    private OrderType type;
     private OrderStatus status;
     private List<OrderItem> orderItems;
 
     public Order() {
         super();
+        this.type = OrderType.ORDINARY;
         this.status = OrderStatus.SUBMITTED;
+    }
+
+    public Order(OrderType type) {
+        this();
+        this.type = type;
     }
 
     public String getOrderId() {
@@ -42,6 +49,14 @@ public class Order extends Entity {
 
     public void setAgent(Agent agent) {
         this.agent = agent;
+    }
+
+    public OrderType getType() {
+        return type;
+    }
+
+    public void setType(OrderType type) {
+        this.type = type;
     }
 
     public OrderStatus getStatus() {
