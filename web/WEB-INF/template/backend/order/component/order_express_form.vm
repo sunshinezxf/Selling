@@ -168,9 +168,7 @@
             processData: false,
             contentType: "application/json",
             success: function (data) {
-                $("#setExpressNumber").fadeOut();
-                $("#express-form").fadeOut();
-                $("#print").fadeOut();
+                $("#main").fadeOut();
                 $("#download").click();
             },
             error: function (data, status) {

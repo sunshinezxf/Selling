@@ -191,6 +191,24 @@ public class OrderController {
         }
         return result;
     }
+    
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value = "/checkOrder")
+    public DataTablePage<Order> checkOrder(DataTableParam param) {
+        DataTablePage<Order> result = new DataTablePage<>();
+        if (StringUtils.isEmpty(param)) {
+            return result;
+        }
+        Map<String, Object> condition = new HashMap<>();
+        List<Integer> status = new ArrayList<>();
+        status.add(2);
+        condition.put("status", status);
+        ResultData fetchResponse = orderService.fetchOrder(condition, param);
+        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result = (DataTablePage<Order>) fetchResponse.getData();
+        }
+        return result;
+    }
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/payedOrderOverview")
