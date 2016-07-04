@@ -2,19 +2,30 @@
 <html lang="zh_CN">
 <head>
     #parse("/customer/component/init.vm")
+    <!--
     <link rel="stylesheet" href="${path.concat('/plugins/unslider/css/unslider.css')}"/>
+    -->
+    <link rel="stylesheet" href="${path.concat('/plugins/fancybox/source/jquery.fancybox.css')}" type="text/css" media="screen" />
     <link rel="stylesheet" href="${path.concat('/material/css/customer/goods_detail.css')}"/>
+    <!--
     <script type="text/javascript" src="${path.concat('/plugins/jquery/jquery.event.move.js')}"></script>
     <script type="text/javascript" src="${path.concat('/plugins/jquery/jquery.event.swipe.js')}"></script>
+    -->
+    <script type="text/javascript" src="${path.concat('/plugins/fancybox/source/jquery.fancybox.pack.js')}"></script>
+    <script type="text/javascript" src="${path.concat('/plugins/jquery/pinchzoom.min.js')}"></script>
     <script type="text/javascript" src="${path.concat('/plugins/jquery/jquery.provincesCity.js')}"></script>
     <script type="text/javascript" src="${path.concat('/plugins/jquery/jquery.provincesData.js')}"></script>
+    <!--
     <script type="text/javascript" src="${path.concat('/plugins/unslider/js/unslider-min.js')}"></script>
+    -->
     <title>商品详情</title>
 </head>
 <body ontouchstart>
 <div class="below">
     <div class="unslider_div">
-        <img class="img" src="${path.concat('/material/goods_img/4.jpg')}"/>
+        <a id="logo" href="${path.concat('/material/goods_img/4_b.bmp')}">
+            <img class="img" src="${path.concat('/material/goods_img/4.jpg')}"/>
+        </a>
     </div>
     <!--
     <div class="fading-slider">
@@ -29,11 +40,15 @@
     <div class="gap"></div>
     <div class="detail_area">
         <div class="feeling_div">
-            <img class="img" src="${path.concat('/material/images/feelings.jpg')}"/>
+            <a id="feelings" href="${path.concat('/material/images/feelings_b.jpg')}">
+                <img class="img" src="${path.concat('/material/images/feelings.jpg')}"/>
+            </a>
         </div>
         <div class="gap"></div>
         <div class="product_parameters">
-            <img class="img" src="${path.concat('/material/images/parameter.jpg')}"/>
+            <a id="parameter" href="${path.concat('/material/images/parameter_b.bmp')}">
+                <img class="img" src="${path.concat('/material/images/parameter.png')}"/>
+            </a>
         </div>
     </div>
 </div>
@@ -209,6 +224,8 @@
 <script>
     var goods_price;
     var alertNum = 0;
+    var forbidden=false;
+
     $(function () {
         //var slidey = $('.fading-slider').unslider({
         //    animation: 'fade',
@@ -228,6 +245,57 @@
             img.src= this.src;        //this为id="img"的dom节点对象
             var rate=img.height/img.width; //这里的img.width和img.height为原图大小
             this.height=this.width*rate;
+        });
+        
+        $("#logo").fancybox({
+            padding : 0,
+            closeBtn:false,
+            closeClick:true,
+            afterShow:function() {
+                $('.fancybox-outter').addClass('pinch-zoom-container'); 
+                $('.fancybox-inner').addClass('pinch-zoom');                   
+                $('div.pinch-zoom').each(function () {
+                    new RTP.PinchZoom($(this), {});
+                });
+                forbidden=true;
+            },
+            afterClose:function(){
+                forbidden=false;
+            }
+        });
+        
+        $("#feelings").fancybox({
+            padding : 0,
+            closeBtn:false,
+            closeClick:true,
+            afterShow:function() {
+                $('.fancybox-outter').addClass('pinch-zoom-container'); 
+                $('.fancybox-inner').addClass('pinch-zoom');                   
+                $('div.pinch-zoom').each(function () {
+                    new RTP.PinchZoom($(this), {});
+                });
+                forbidden=true;
+            },
+            afterClose:function(){
+                forbidden=false;
+            }
+        });
+        
+        $("#parameter").fancybox({
+            padding : 0,
+            closeBtn:false,
+            closeClick:true,
+            afterShow:function() {
+                $('.fancybox-outter').addClass('pinch-zoom-container'); 
+                $('.fancybox-inner').addClass('pinch-zoom');                   
+                $('div.pinch-zoom').each(function () {
+                    new RTP.PinchZoom($(this), {});
+                });
+                forbidden=true;
+            },
+            afterClose:function(){
+                forbidden=false;
+            }
         });
         
         convert_id();
@@ -303,7 +371,7 @@
     });
 
     $('#purchase').click(function () {
-        $('html,body').addClass('ovfHiden');
+        forbidden=true;
         $.toggleNumModifySheet();
     });
 
@@ -314,7 +382,7 @@
         number_div.show()
                 .focus()
                 .addClass('weui_fade_toggle').one('click', function () {
-                    $('html,body').removeClass('ovfHiden');
+                    forbidden=false;
                     hideActionSheet(weuiActionsheet, number_div);
                 });
         number_div.unbind('transitionend').unbind('webkitTransitionEnd');
@@ -517,6 +585,15 @@
             }
         });
     });
+    
+    document.addEventListener("touchmove",function(e){
+        if(forbidden){
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    },false);
+    
 
+    
 </script>
 </html>
