@@ -63,6 +63,9 @@
         block_flag, create_time
         FROM order_item
         WHERE 1 = 1
+        <if test="orderId != null and orderId != ''">
+            AND order_id = #{orderId}
+        </if>
         <if test="orderItemId != null and orderItemId != ''">
             AND order_item_id = #{orderItemId}
         </if>

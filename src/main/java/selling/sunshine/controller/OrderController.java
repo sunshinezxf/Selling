@@ -458,28 +458,25 @@ public class OrderController {
                         item.getGoodsName());
                 express.setGoodsQuantity(item.getGoodsQuantity());
                 OrderItem temp = new OrderItem();
-                temp.setOrderItemId(linkId);
-                temp.setStatus(OrderItemStatus.SHIPPED);
-                express.setItem(temp);
-                expressService.createExpress(express);
-                orderService.updateOrderItem(temp);
                 Map<String, Object> condition = new HashMap<>();
-                condition.put("orderItemId", temp.getOrderItemId());
+                condition.put("orderItemId", linkId);
                 ResultData fetchResponse =
                         orderService.fetchOrderItem(condition);
                 if (fetchResponse.getResponseCode() ==
                         ResponseCode.RESPONSE_OK) {
-                    condition.clear();
-                    temp = ((List<OrderItem>) fetchResponse.getData()).get(0);
-                    condition.put("orderId", temp.getOrder().getOrderId());
-                    condition.put("status", 1);
-                    fetchResponse = orderService.fetchOrderItem(condition);
-                    if (fetchResponse.getResponseCode() ==
-                            ResponseCode.RESPONSE_OK) {
-                        Order order = temp.getOrder();
+                	temp=((List<OrderItem>) fetchResponse.getData()).get(0);
+                }
+                temp.setStatus(OrderItemStatus.SHIPPED);
+                express.setItem(temp);
+                expressService.createExpress(express);
+                orderService.updateOrderItem(temp);
+                condition.clear();
+                condition.put("orderId", temp.getOrder().getOrderId());                
+                fetchResponse = orderService.fetchOrder(condition);
+                if (fetchResponse.getResponseCode() ==ResponseCode.RESPONSE_OK) {
+                        Order order = ((List<Order>) fetchResponse.getData()).get(0);
                         order.setStatus(OrderStatus.FULLY_SHIPMENT);
-                        orderService.modifyOrder(order);
-                    }
+                        orderService.modifyOrder(order);                   
                 }
                 expresseList.add(express);
             } else if (linkId.startsWith("CUO")) {
@@ -490,7 +487,13 @@ public class OrderController {
                         item.getReceiverAddress(), item.getGoodsName());
                 express.setGoodsQuantity(item.getGoodsQuantity());
                 CustomerOrder temp = new CustomerOrder();
-                temp.setOrderId(linkId);
+                Map<String, Object> condition = new HashMap<>();
+                condition.put("orderId", linkId);
+                ResultData fetchResponse =customerOrderDao.queryOrder(condition);
+                if (fetchResponse.getResponseCode() ==
+                        ResponseCode.RESPONSE_OK) {
+                	temp=((List<CustomerOrder>) fetchResponse.getData()).get(0);
+				}
                 temp.setStatus(OrderItemStatus.SHIPPED);
                 express.setOrder(temp);
                 expressService.createExpress(express);
