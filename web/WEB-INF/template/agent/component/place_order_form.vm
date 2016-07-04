@@ -83,6 +83,19 @@
         </div>
 	</div>
 </div>
+#if(${operation} == "GIFT")
+<div class="weui_dialog_confirm" id="gift_dialog" style="display:none;">
+    <div class="weui_mask"></div>
+    <div class="weui_dialog">
+        <div class="weui_dialog_hd"><strong class="weui_dialog_title"></strong></div>
+        <div class="weui_dialog_bd" style="text-align:center;">确认赠送吗？</div>
+        <div class="weui_dialog_ft">
+            <a href="javascript:;" class="weui_btn_dialog default">返回</a>
+            <a href="javascript:;" class="weui_btn_dialog primary">赠送</a>
+        </div>
+	</div>
+</div>
+#end
 #parse("/agent/order/add_order_item.vm")
 <script>
 	//立了一个flag，判断是新增还是修改订单
@@ -132,10 +145,29 @@
     		$("#dialog").fadeIn();
     		return;
     	}
+    	var total_num = $.check_num();
+    	$("#gift_dialog").find(".weui_dialog_title").html("将赠出" + total_num + "件商品");
+    	$("#gift_dialog").show();
+    	
+    });
+    $("#gift_dialog").find(".weui_btn_dialog.primary").click(function(){
+    	$("#gift_dialog").find(".weui_btn_dialog.primary").unbind("click");
     	$("#place_order_form").attr("action", "${path.concat('/agent/order/place/gift')}");
     	$("#place_order_form").attr("method","post");
     	$("#place_order_form").submit();
     });
+    $("#gift_dialog").find(".weui_btn_dialog.default").click(function(){
+    	$("#gift_dialog").hide();
+	});
+	$.check_num = function(){
+		var order_item_list = $("#order_item_list").children();
+		var total_num = 0;
+		$.each(order_item_list, function(i, val){
+        	var quantity = $(val).children(".order_item_body").children().eq(3).find(".weui_cell_ft").text();
+        	total_num += parseInt(quantity);
+        });
+        return total_num;
+	}
     $.check_gift = function(){
     	var lessThan = false;
     	var giftConfigs = eval('('+'${giftConfigs}'+')');

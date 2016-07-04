@@ -16,7 +16,7 @@
 		<div class="weui_btn_area clear-margin-top">
 	        <a id="gift-btn" href="${path.concat('/agent/order/gift')}" class="weui_btn weui_btn_plain_primary">去赠送</a>
 	    </div>
-	    <div id="gift-list" class="weui_cells weui_cells_access clear-margin-top">
+	    <div id="gift-list" class="weui_cells clear-margin-top">
 	    	#foreach($giftConfig in $giftConfigs)
     		<div class="weui_cell">
 	            <div class="weui_cell_bd weui_cell_primary">
@@ -43,7 +43,7 @@ $(document).ready(function(){
 $.check_gift = function(){
 	var rtn = false;
 	$.each($("#gift-list").children(), function(i, val){
-		if($(val).find(".weui_cell_ft").html() == "0件"){
+		if($(val).find(".weui_cell_ft").text() == "0件"){
 			$(val).remove();
 		} else {
 			rtn = true;
