@@ -52,6 +52,10 @@
                     <br>
                     <div id="withdrawRecordContainer" style="display:none"></div>
                </p>
+               <hr>
+               <p class="form-group" id="subordinate">
+                   
+               </p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal" id="confirm">确认</button>

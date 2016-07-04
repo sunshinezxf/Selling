@@ -15,6 +15,11 @@ public class Goods4Agent extends AbstractGoods {
         this.setName(name);
         this.setDescription(description);
     }
+    
+    public Goods4Agent(Goods4Customer goods4Customer){
+    	this(goods4Customer.getName(), goods4Customer.getDescription());
+    	this.agentPrice = goods4Customer.getAgentPrice();
+    }
 
     public Goods4Agent(String name, double agentPrice, String description) {
         this(name, description);

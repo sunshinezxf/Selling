@@ -89,7 +89,7 @@
             type: 'graph',
             layout: 'none',
             symbolSize: 50,
-            roam: true,
+            roam: false,
             label: {
                 normal: {
                     show: true
@@ -149,6 +149,20 @@
        
     function detail(obj){
         $.post("${path.concat('/agent/detail/')}"+obj, function (result) {
+                    var url = "${path.concat('/agent/statistics/')}" + result.data.agent.agentId;
+                    var agentId=result.data.agent.agentId;
+                    $.ajax({
+                        type: "post",
+                        url: url,
+                        async: false,
+                        success: function (result) {
+                            if(result.data.agentNum==0){
+                               document.getElementById("subordinate").innerHTML="没有下级代理商";
+                            }else{
+                               document.getElementById("subordinate").innerHTML="下级代理商:"+"<a href='${path.concat('/agent/subordinate/')}" + agentId + "'>"+result.data.agentNum+"</a>";
+                            }
+                        }
+                    });
            document.getElementById("agentAddress").innerHTML="居住地： "+result.data.agent.address;
            if(result.data.agent.wechat==null){
                document.getElementById("agentWechat").innerHTML="微信号： 尚未绑定";

@@ -22,7 +22,7 @@
 	            <div class="weui_cell_bd weui_cell_primary">
 	                <p>${giftConfig.goods.name}</p>
 	            </div>
-	            <div class="weui_cell_ft">${giftConfig.amount}件</div>
+	            <div class="weui_cell_ft">可赠送：${giftConfig.amount}件</div>
 	        </div>
 	    	#end
 	    </div>
