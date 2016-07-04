@@ -79,6 +79,9 @@
         <if test="date != null and date != ''">
             AND create_time LIKE #{date}
         </if>
+        <if test="agentId != null and agentId != ''">
+			AND agent_id = #{agentId}
+		</if>
         GROUP BY agent_id,goods_id
     </select>
 
