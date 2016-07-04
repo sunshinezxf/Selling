@@ -212,4 +212,11 @@ public class PlatformController {
         view.setViewName("/navigate");
         return view;
     }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/log")
+    public ModelAndView log() {
+        ModelAndView view = new ModelAndView();
+        view.setViewName("/backend/system/log");
+        return view;
+    }
 }
