@@ -37,6 +37,12 @@ public class WithdrawSchedule {
                     withdrawService.createWithdrawRecord(item);
                 }
             };
+            thread.start();
+            try {
+                thread.sleep(15000);
+            } catch (InterruptedException e) {
+                logger.error(e.getMessage());
+            }
         }
     }
 }
