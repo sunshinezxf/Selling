@@ -1,3 +1,4 @@
+#set($role = $session.getAttribute("role"))
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -11,64 +12,80 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="${path.concat('/dashboard')}">首页</a></li>
-                <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" role="button"
-                       aria-haspopup="true" aria-expanded="true">代理管理 <span class="caret"></span></a>
-                    <ul class="dropdown-menu nav nav-pills nav-stacked">
-                        <li><a class="menu" href="${path.concat('/agent/check')}">代理审核</a></li>
-                        <li><a class="menu" href="${path.concat('/agent/overview')}">代理概览</a></li>
-                    </ul>
-                </li>
-                <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" role="button"
-                       aria-haspopup="true" aria-expanded="true">订单管理 <span class="caret"></span></a>
-                    <ul class="dropdown-menu nav nav-pills nav-stacked">
-                        <li><a class="menu" href="${path.concat('/order/check')}">订单审核</a></li>
-                        <li><a class="menu" href="${path.concat('/order/overview')}">代理上订单</a></li>
-                        <li><a class="menu" href="${path.concat('/order/customerOrder/overview')}">客户订单</a></li>
-                    </ul>
-                </li>
-                <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" role="button"
-                       aria-haspopup="true" aria-expanded="true">商品管理 <span class="caret"></span></a>
-                    <ul class="dropdown-menu nav nav-pills nav-stacked">
-                        <li><a class="menu" href="${path.concat('/commodity/create')}">添加商品</a></li>
-                        <li><a class="menu" href="${path.concat('/commodity/overview')}">商品概览</a></li>
-                    </ul>
-                </li>
-                <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" role="button"
-                       aria-haspopup="true" aria-expanded="true">返现管理 <span class="caret"></span></a>
-                    <ul class="dropdown-menu nav nav-pills nav-stacked">
-                        <li><a class="menu" href="${path.concat('/refund/record/month')}">当月返现</a></li>
-                        <li><a class="menu" href="${path.concat('/refund/record/overview')}">返现记录</a></li>
-                    </ul>
-                </li>
-                <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" role="button"
-                       aria-haspopup="true" aria-expanded="true">提现管理 <span class="caret"></span></a>
-                    <ul class="dropdown-menu nav nav-pills nav-stacked">
-                        <li><a class="menu" href="${path.concat('/withdraw/check')}">提现申请</a></li>
-                        <li><a class="menu" href="${path.concat('/withdraw/overview')}">提现概览</a></li>
-                    </ul>
-                </li>
-                <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" role="button"
-                       aria-haspopup="true" aria-expanded="true">基本配置 <span class="caret"></span></a>
-                    <ul class="dropdown-menu nav nav-pills nav-stacked">
-                        <li><a class="menu" href="${path.concat('/shipment/config')}">发货配置</a></li>
-                        <li><a class="menu" href="${path.concat('/refund/config')}">返现配置</a></li>
-                    </ul>
-                </li>
-                <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" role="button"
-                       aria-haspopup="true" aria-expanded="true">管理员管理 <span class="caret"></span></a>
-                    <ul class="dropdown-menu nav nav-pills nav-stacked">
-                        <li><a class="menu" href="${path.concat('/register')}">账号授权</a></li>
-                        <li><a class="menu" href="${path.concat('/manage')}">账号管理</a></li>
-                    </ul>
-                </li>
+                #if($role == "admin")
+                    <li><a href="${path.concat('/dashboard')}">首页</a></li>
+                #end
+                #if($role == "admin" || $role == "auditor")
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" role="button"
+                           aria-haspopup="true" aria-expanded="true">代理管理 <span class="caret"></span></a>
+                        <ul class="dropdown-menu nav nav-pills nav-stacked">
+                            <li><a class="menu" href="${path.concat('/agent/check')}">代理审核</a></li>
+                            <li><a class="menu" href="${path.concat('/agent/overview')}">代理概览</a></li>
+                        </ul>
+                    </li>
+                #end
+                #if($role == "admin" || $role == "express")
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" role="button"
+                           aria-haspopup="true" aria-expanded="true">订单管理 <span class="caret"></span></a>
+                        <ul class="dropdown-menu nav nav-pills nav-stacked">
+                            <li><a class="menu" href="${path.concat('/order/check')}">订单审核</a></li>
+                            <li><a class="menu" href="${path.concat('/order/overview')}">代理上订单</a></li>
+                            <li><a class="menu" href="${path.concat('/order/customerOrder/overview')}">客户订单</a></li>
+                        </ul>
+                    </li>
+                #end
+                #if($role == "admin")
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" role="button"
+                           aria-haspopup="true" aria-expanded="true">商品管理 <span class="caret"></span></a>
+                        <ul class="dropdown-menu nav nav-pills nav-stacked">
+                            <li><a class="menu" href="${path.concat('/commodity/create')}">添加商品</a></li>
+                            <li><a class="menu" href="${path.concat('/commodity/overview')}">商品概览</a></li>
+                        </ul>
+                    </li>
+                #end
+                #if($role == "admin")
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" role="button"
+                           aria-haspopup="true" aria-expanded="true">返现管理 <span class="caret"></span></a>
+                        <ul class="dropdown-menu nav nav-pills nav-stacked">
+                            <li><a class="menu" href="${path.concat('/refund/record/month')}">当月返现</a></li>
+                            <li><a class="menu" href="${path.concat('/refund/record/overview')}">返现记录</a></li>
+                        </ul>
+                    </li>
+                #end
+                #if($role == "admin")
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" role="button"
+                           aria-haspopup="true" aria-expanded="true">提现管理 <span class="caret"></span></a>
+                        <ul class="dropdown-menu nav nav-pills nav-stacked">
+                            <li><a class="menu" href="${path.concat('/withdraw/check')}">提现申请</a></li>
+                            <li><a class="menu" href="${path.concat('/withdraw/overview')}">提现概览</a></li>
+                        </ul>
+                    </li>
+                #end
+                #if($role == "admin")
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" role="button"
+                           aria-haspopup="true" aria-expanded="true">基本配置 <span class="caret"></span></a>
+                        <ul class="dropdown-menu nav nav-pills nav-stacked">
+                            <li><a class="menu" href="${path.concat('/shipment/config')}">发货配置</a></li>
+                            <li><a class="menu" href="${path.concat('/refund/config')}">返现配置</a></li>
+                        </ul>
+                    </li>
+                #end
+                #if($role == "admin")
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" role="button"
+                           aria-haspopup="true" aria-expanded="true">管理员管理 <span class="caret"></span></a>
+                        <ul class="dropdown-menu nav nav-pills nav-stacked">
+                            <li><a class="menu" href="${path.concat('/register')}">账号授权</a></li>
+                            <li><a class="menu" href="${path.concat('/manage')}">账号管理</a></li>
+                        </ul>
+                    </li>
+                #end
             </ul>
         </div>
     </div>

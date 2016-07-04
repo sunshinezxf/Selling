@@ -1,94 +1,113 @@
+#set($role = $session.getAttribute("role"))
 <div class="row">
     <div class="col-sm-3 col-md-2 sidebar">
         <ul class="nav nav-sidebar" id="accordion" aria-multiselectable="true">
-            <li><a href="${path.concat('/dashboard')}"><i class="fa fa-desktop"></i> 首页</a></li>
-            <li><a class="menu" data-toggle="collapse" data-parent="#accordion" href="#agent-management"><i
-                    class="fa fa-book"></i> 代理管理<i
-                    class="pull-right fa fa-caret-down"></i></a>
-                <ul id="agent-management" class="nav nav-collapse collapse">
-                    <li><a class="sub-nav" href="${path.concat('/agent/check')}"><i class="fa fa-edit"></i>
-                        代理审核</a>
-                    </li>
-                    <li><a class="sub-nav" href="${path.concat('/agent/overview')}"><i class="fa fa-tasks"></i>
-                        代理概览</a>
-                    </li>
-                </ul>
-            </li>
-            <li><a class="menu" data-toggle="collapse" data-parent="#accordion" href="#order-management"><i
-                    class="fa fa-book"></i> 订单管理<i
-                    class="pull-right fa fa-caret-down"></i></a>
-                <ul id="order-management" class="nav nav-collapse collapse">
-                    <li><a class="sub-nav" href="${path.concat('/order/check')}"><i class="fa fa-edit"></i>
-                        订单审核</a>
-                    </li>
-                    <li><a class="sub-nav" href="${path.concat('/order/overview')}"><i class="fa fa-tasks"></i>
-                        代理商订单</a>
-                    </li>
-                    <li><a class="sub-nav" href="${path.concat('/order/customerOrder/overview')}"><i class="fa fa-tasks"></i>
-                        客户订单</a>
-                    </li>
-                </ul>
-            </li>
-            <li><a class="menu" data-toggle="collapse" data-parent="#accordion" href="#goods-management"><i
-                    class="fa fa-book"></i> 商品管理<i
-                    class="pull-right fa fa-caret-down"></i></a>
-                <ul id="goods-management" class="nav nav-collapse collapse">
-                    <li><a class="sub-nav" href="${path.concat('/commodity/create')}"><i class="fa fa-edit"></i>
-                        添加商品</a>
-                    </li>
-                    <li><a class="sub-nav" href="${path.concat('/commodity/overview')}"><i class="fa fa-tasks"></i>
-                        商品概览</a>
-                    </li>
-                </ul>
-            </li>
-            <li><a class="menu" data-toggle="collapse" data-parent="#accordion" href="#statement-management"><i
-                    class="fa fa-book"></i> 返现管理<i
-                    class="pull-right fa fa-caret-down"></i></a>
-                <ul id="statement-management" class="nav nav-collapse collapse">
-                    <li><a class="sub-nav" href="${path.concat('/refund/record/month')}"><i class="fa fa-edit"></i>
-                        当月返现</a>
-                    </li>
-                    <li><a class="sub-nav" href="${path.concat('/refund/record/overview')}"><i class="fa fa-tasks"></i>
-                        返现记录</a>
-                    </li>
-                </ul>
-            </li>
-            <li><a class="menu" data-toggle="collapse" data-parent="#accordion" href="#withdraw-management"><i
-                    class="fa fa-book"></i> 提现管理<i
-                    class="pull-right fa fa-caret-down"></i></a>
-                <ul id="withdraw-management" class="nav nav-collapse collapse">
-                    <li><a class="sub-nav" href="${path.concat('/withdraw/check')}"><i class="fa fa-edit"></i>
-                        提现申请</a>
-                    </li>
-                    <li><a class="sub-nav" href="${path.concat('/withdraw/overview')}"><i class="fa fa-tasks"></i>
-                        提现概览</a>
-                    </li>
-                </ul>
-            </li>
-            <li><a class="menu" data-toggle="collapse" data-parent="#accordion" href="#config-management"><i
-                    class="fa fa-cog"></i> 基本配置<i
-                    class="pull-right fa fa-caret-down"></i></a>
-                <ul id="config-management" class="nav nav-collapse collapse">
-                    <li><a class="sub-nav" href="${path.concat('/shipment/config')}"><i class="fa fa-cog"></i>
-                        发货配置</a>
-                    </li>
-                    <li><a class="sub-nav" href="${path.concat('/refund/config')}"><i class="fa fa-cog"></i>
-                        返现配置</a>
-                    </li>
-                </ul>
-            </li>
-            <li><a class="menu" data-toggle="collapse" data-parent="#accordion" href="#admin-management"><i
-                    class="fa fa-book"></i> 管理员管理<i
-                    class="pull-right fa fa-caret-down"></i></a>
-                <ul id="admin-management" class="nav nav-collapse collapse">
-                    <li><a class="sub-nav" href="${path.concat('/register')}"><i class="fa fa-cog"></i>
-                        账号授权</a>
-                    </li>
-                    <li><a class="sub-nav" href="${path.concat('/manage')}"><i class="fa fa-cog"></i>
-                        账号管理</a>
-                    </li>
-                </ul>
-            </li>
+            #if($role == "admin")
+                <li><a href="${path.concat('/dashboard')}"><i class="fa fa-desktop"></i> 首页</a></li>
+            #end
+            #if($role == "admin" || $role == "auditor")
+                <li><a class="menu" data-toggle="collapse" data-parent="#accordion" href="#agent-management"><i
+                        class="fa fa-book"></i> 代理管理<i
+                        class="pull-right fa fa-caret-down"></i></a>
+                    <ul id="agent-management" class="nav nav-collapse collapse">
+                        <li><a class="sub-nav" href="${path.concat('/agent/check')}"><i class="fa fa-edit"></i>
+                            代理审核</a>
+                        </li>
+                        <li><a class="sub-nav" href="${path.concat('/agent/overview')}"><i class="fa fa-tasks"></i>
+                            代理概览</a>
+                        </li>
+                    </ul>
+                </li>
+            #end
+            #if($role == "admin" || $role == "express")
+                <li><a class="menu" data-toggle="collapse" data-parent="#accordion" href="#order-management"><i
+                        class="fa fa-book"></i> 订单管理<i
+                        class="pull-right fa fa-caret-down"></i></a>
+                    <ul id="order-management" class="nav nav-collapse collapse">
+                        <li><a class="sub-nav" href="${path.concat('/order/check')}"><i class="fa fa-edit"></i>
+                            订单审核</a>
+                        </li>
+                        <li><a class="sub-nav" href="${path.concat('/order/overview')}"><i class="fa fa-tasks"></i>
+                            代理商订单</a>
+                        </li>
+                        <li><a class="sub-nav" href="${path.concat('/order/customerOrder/overview')}"><i
+                                class="fa fa-tasks"></i>
+                            客户订单</a>
+                        </li>
+                    </ul>
+                </li>
+            #end
+            #if($role == "admin")
+                <li><a class="menu" data-toggle="collapse" data-parent="#accordion" href="#goods-management"><i
+                        class="fa fa-book"></i> 商品管理<i
+                        class="pull-right fa fa-caret-down"></i></a>
+                    <ul id="goods-management" class="nav nav-collapse collapse">
+                        <li><a class="sub-nav" href="${path.concat('/commodity/create')}"><i class="fa fa-edit"></i>
+                            添加商品</a>
+                        </li>
+                        <li><a class="sub-nav" href="${path.concat('/commodity/overview')}"><i class="fa fa-tasks"></i>
+                            商品概览</a>
+                        </li>
+                    </ul>
+                </li>
+            #end
+            #if($role == "admin")
+                <li><a class="menu" data-toggle="collapse" data-parent="#accordion" href="#statement-management"><i
+                        class="fa fa-book"></i> 返现管理<i
+                        class="pull-right fa fa-caret-down"></i></a>
+                    <ul id="statement-management" class="nav nav-collapse collapse">
+                        <li><a class="sub-nav" href="${path.concat('/refund/record/month')}"><i class="fa fa-edit"></i>
+                            当月返现</a>
+                        </li>
+                        <li><a class="sub-nav" href="${path.concat('/refund/record/overview')}"><i
+                                class="fa fa-tasks"></i>
+                            返现记录</a>
+                        </li>
+                    </ul>
+                </li>
+            #end
+            #if($role == "admin")
+                <li><a class="menu" data-toggle="collapse" data-parent="#accordion" href="#withdraw-management"><i
+                        class="fa fa-book"></i> 提现管理<i
+                        class="pull-right fa fa-caret-down"></i></a>
+                    <ul id="withdraw-management" class="nav nav-collapse collapse">
+                        <li><a class="sub-nav" href="${path.concat('/withdraw/check')}"><i class="fa fa-edit"></i>
+                            提现申请</a>
+                        </li>
+                        <li><a class="sub-nav" href="${path.concat('/withdraw/overview')}"><i class="fa fa-tasks"></i>
+                            提现概览</a>
+                        </li>
+                    </ul>
+                </li>
+            #end
+            #if($role == "admin")
+                <li><a class="menu" data-toggle="collapse" data-parent="#accordion" href="#config-management"><i
+                        class="fa fa-cog"></i> 基本配置<i
+                        class="pull-right fa fa-caret-down"></i></a>
+                    <ul id="config-management" class="nav nav-collapse collapse">
+                        <li><a class="sub-nav" href="${path.concat('/shipment/config')}"><i class="fa fa-cog"></i>
+                            发货配置</a>
+                        </li>
+                        <li><a class="sub-nav" href="${path.concat('/refund/config')}"><i class="fa fa-cog"></i>
+                            返现配置</a>
+                        </li>
+                    </ul>
+                </li>
+            #end
+            #if($role == "admin")
+                <li><a class="menu" data-toggle="collapse" data-parent="#accordion" href="#admin-management"><i
+                        class="fa fa-book"></i> 管理员管理<i
+                        class="pull-right fa fa-caret-down"></i></a>
+                    <ul id="admin-management" class="nav nav-collapse collapse">
+                        <li><a class="sub-nav" href="${path.concat('/register')}"><i class="fa fa-cog"></i>
+                            账号授权</a>
+                        </li>
+                        <li><a class="sub-nav" href="${path.concat('/manage')}"><i class="fa fa-cog"></i>
+                            账号管理</a>
+                        </li>
+                    </ul>
+                </li>
+            #end
         </ul>
     </div>
 </div>
@@ -105,11 +124,11 @@
         $("#" + target_id).collapse('show');
     });
 
-    var array=["#agent-management","#order-management","#goods-management","#statement-management","#withdraw-management","#config-management","#admin-management"];
-    $(".menu").click(function(){
-        var menu_id=$(this).attr("href");
-        $.each(array,function(i,value) {
-            if(value!=menu_id){
+    var array = ["#agent-management", "#order-management", "#goods-management", "#statement-management", "#withdraw-management", "#config-management", "#admin-management"];
+    $(".menu").click(function () {
+        var menu_id = $(this).attr("href");
+        $.each(array, function (i, value) {
+            if (value != menu_id) {
                 $(value).collapse('hide');
             }
         });

@@ -125,7 +125,6 @@ public class AccountController {
         Agent agent = ((List<Agent>) fetchAgentResponse.getData()).get(0);
         double money = form.getMoney();
         condition.clear();
-
         if (money > agent.getCoffer()) {
             Prompt prompt = new Prompt("提示", "您的的提现金额超过余额", "/account/info");
             view.addObject("prompt", prompt);
@@ -133,7 +132,6 @@ public class AccountController {
             view.setViewName("/agent/prompt");
             return view;
         }
-
         WithdrawRecord record = new WithdrawRecord();
         record.setAgent(user.getAgent());
         record.setAmount(money);
@@ -163,7 +161,6 @@ public class AccountController {
             view.setViewName("/agent/prompt");
             return view;
         }
-
         Prompt prompt = new Prompt("提示", "申请提现成功，预计2日内到账", "/account/info");
         view.addObject("prompt", prompt);
         WechatConfig.oauthWechat(view, "/agent/prompt");

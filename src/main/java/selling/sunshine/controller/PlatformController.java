@@ -11,10 +11,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import selling.sunshine.form.AdminForm;
 import selling.sunshine.model.Admin;
+import selling.sunshine.model.User;
 import selling.sunshine.service.AdminService;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
@@ -47,7 +50,7 @@ public class PlatformController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/login")
-    public ModelAndView login(@Valid AdminForm form, BindingResult result) {
+    public ModelAndView login(@Valid AdminForm form, BindingResult result, HttpServletRequest request) {
         ModelAndView view = new ModelAndView();
         if (result.hasErrors()) {
             view.setViewName("redirect:/login");
@@ -59,6 +62,9 @@ public class PlatformController {
                 subject.logout();
             }
             subject.login(new UsernamePasswordToken(form.getUsername(), form.getPassword()));
+            User user = (User) subject.getPrincipal();
+            HttpSession session = request.getSession();
+            session.setAttribute("role", user.getRole().getName());
         } catch (Exception e) {
             view.setViewName("redirect:/login");
             return view;
