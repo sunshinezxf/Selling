@@ -873,7 +873,7 @@ public class AgentController {
             	}
             }
             order.setStatus(OrderStatus.PAYED);
-            //这里要将Order的赠品字段设一下
+            order.setType(OrderType.GIFT);
         	break;
         default:
             order.setStatus(OrderStatus.SAVED);
@@ -951,6 +951,42 @@ public class AgentController {
         condition.put("sort", orderBy);
         condition.put("blockFlag", false);
         ResultData fetchResponse = orderService.fetchOrder(condition);
+        if(Integer.parseInt(type) == 2 || Integer.parseInt(type) == 3){
+	        //customerOrder与代理商Order合并
+	        condition.clear();
+	        List<Integer> customerStatus = new ArrayList<Integer>();
+	        if(Integer.parseInt(type) == 2){
+	        	customerStatus.add(1);
+	        	customerStatus.add(2);
+	        } else {
+	        	customerStatus.add(3);
+	        	customerStatus.add(4);
+	        }
+	        condition.put("agentId", user.getAgent().getAgentId());
+	        condition.put("status", customerStatus);
+	        ResultData fetchCustomerOrderResponse = orderService.fetchCustomerOrder(condition);
+	        List<Order> orderList = (List<Order>) fetchResponse.getData();
+	        List<CustomerOrder> customerOrderList = (List<CustomerOrder>) fetchCustomerOrderResponse.getData();
+	        for(CustomerOrder customerOrder : customerOrderList){
+	        	List<OrderItem> orderItemList = new ArrayList<OrderItem>();
+	        	OrderItem orderItem = new OrderItem(customerOrder);
+	        	orderItemList.add(orderItem);
+	        	Order order = new Order();
+	        	order.setAgent(user.getAgent());
+	        	order.setOrderId(customerOrder.getOrderId());
+	        	order.setOrderItems(orderItemList);
+	        	order.setPrice(customerOrder.getTotalPrice());
+	        	order.setCreateAt(customerOrder.getCreateAt());
+	        	order.setType(OrderType.CUSTOMER);
+	        	orderList.add(order);
+	        }
+	        orderList.sort(new Comparator<Order>(){
+				@Override
+				public int compare(Order o1, Order o2) {
+					return o1.getCreateAt().compareTo(o2.getCreateAt());
+				}
+	        });
+        }
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             result.setData(fetchResponse.getData());
         } else {

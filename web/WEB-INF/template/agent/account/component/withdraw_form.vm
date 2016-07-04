@@ -17,7 +17,8 @@
 	$("#withdraw_confirm").on("click", function(){
 		if($.checkMoney() != 0){
 			return;
-		}		
+		}
+		$("#withdraw_confirm").unbind("click");
 		$("#bankCardNo").val($("#cardNo_head").html());
 		$("#withdraw_form").attr("action","${path.concat('/account/withdraw')}")
 		$("#withdraw_form").attr("method","post");

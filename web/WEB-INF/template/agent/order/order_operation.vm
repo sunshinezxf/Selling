@@ -91,6 +91,18 @@
     		}
     		var list = data.data;
     		$.each(list, function(i, val){
+    			var typeString = "";
+    			switch(val.type){
+    			case "ORDINARY":
+    				break;
+    			case "GIFT":
+    				typeString = "(赠送)";
+    				break;
+    			case "CUSTOMER":
+    				typeString = "(分享)";
+    				break;
+    			default:
+    			}
     			var	timeString = (new Date(val.createAt)).format("yyyy MM dd");
     			var time = timeString.split(" ");
     			var html = 
@@ -99,7 +111,7 @@
     				"<i class='icon icon_article'></i>" + 
     				"</div>" + 
     				"<div class='weui_cell_bd weui_cell_primary'>" +
-    				"<p>" + time[0] + "年" + parseInt(time[1]) + "月" + time[2] + "日</p>" + 
+    				"<p>" + time[0] + "年" + parseInt(time[1]) + "月" + time[2] + "日<span style='color:#888;'>" + typeString + "</span></p>" +
     				"</div>" + 
     				"<div class='weui_cell_ft'>含" + val.orderItems.length + "个订单项</div>" + 
     				"</a>";

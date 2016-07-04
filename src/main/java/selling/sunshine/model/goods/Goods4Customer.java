@@ -17,7 +17,7 @@ public class Goods4Customer extends Goods4Agent {
     public Goods4Customer(String name, String description) {
         super(name, description);
     }
-
+    
     public Goods4Customer(String name, double agentPrice, double customerPrice, String description) {
         super(name, agentPrice, description);
         this.customerPrice = customerPrice;
