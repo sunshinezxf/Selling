@@ -26,7 +26,9 @@
 #parse("/agent/loading.vm")
 <script>
 	agentCoffer = parseFloat(${agent.coffer});
-	$("#withdraw_confirm").on("click", $.withdraw);
+	$(document).ready(function(){
+		$("#withdraw_confirm").on("click", $.withdraw);
+	});
 	
 	$.withdraw = function(){
 		if($.checkMoney() != 0){
