@@ -195,6 +195,7 @@
                       if(full.status=="NOT_PAYED"||full.status=="PAYED"){
                           var express="无快递单";
                       }else{
+                     
                           var express="<button type='button' class='btn btn-success' id='" + full.orderId + "' onclick=expressDetail(this)>快递单详情</button>";
                       }
                     return express;
