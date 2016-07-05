@@ -880,6 +880,9 @@ public class AgentController {
             }
             order.setStatus(OrderStatus.PAYED);
             order.setType(OrderType.GIFT);
+            for(OrderItem tmp : order.getOrderItems()){
+            	tmp.setStatus(OrderItemStatus.PAYED);
+            }
         	break;
         default:
             order.setStatus(OrderStatus.SAVED);
