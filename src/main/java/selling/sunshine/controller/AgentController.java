@@ -518,7 +518,7 @@ public class AgentController {
                 }
             }
             ResultData createResponse = agentService.createAgent(agent);
-            if (!form.getFront().startsWith("/material")) {
+            if (!form.getFront().startsWith("/material")&&!form.getFront().startsWith("\\material")) {
                 //进行微信上传身份证的操作
                 String front = WechatUtil.downloadCredit(form.getFront(), PlatformConfig.getAccessToken(), request.getSession().getServletContext().getRealPath("/"));
                 String back = WechatUtil.downloadCredit(form.getBack(), PlatformConfig.getAccessToken(), request.getSession().getServletContext().getRealPath("/"));
