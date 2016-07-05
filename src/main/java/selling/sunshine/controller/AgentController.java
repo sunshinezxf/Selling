@@ -2,6 +2,7 @@ package selling.sunshine.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
@@ -13,6 +14,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import selling.sunshine.form.*;
 import selling.sunshine.model.*;
 import selling.sunshine.model.gift.GiftConfig;
@@ -25,6 +27,7 @@ import selling.sunshine.utils.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+
 import java.net.URLEncoder;
 import java.util.*;
 
@@ -1405,6 +1408,19 @@ public class AgentController {
         condition2.put("upperAgent", agent);
         List<Agent> agentList = (List<Agent>) agentService.fetchAgent(condition2).getData();
         dataMap.put("agentNum", agentList.size());
+        
+        //查询某个代理商当月已付款订单数（包含已发货和已结束）、未付款订单数
+        Map<String, Object> condition3 = new HashMap<>();
+        condition3.put("agentId", agentId);
+        condition3.put("month", "");
+        List<Integer> status = new ArrayList<>();
+        status.add(2);
+        status.add(3);
+        status.add(4);
+        status.add(5);
+        condition3.put("status", status);
+        orderService.fetchOrder(condition3);
+        
         resultData.setData(dataMap);
         return resultData;
     }
