@@ -36,6 +36,9 @@ $(document).ready(function(){
 	if(!$.check_gift()){
 		$("#gift-btn").removeAttr('href');
 		$("#gift-btn").removeAttr('onclick');
+		$("#gift-btn").removeClass("weui_btn_primary");
+        $("#gift-btn").addClass("weui_btn_default");
+        $("#gift-btn").addClass("weui_btn_disabled");
 		$("#gift-btn").html("没有可赠送的商品");
 	}
 });
@@ -43,7 +46,7 @@ $(document).ready(function(){
 $.check_gift = function(){
 	var rtn = false;
 	$.each($("#gift-list").children(), function(i, val){
-		if($(val).find(".weui_cell_ft").text() == "0件"){
+		if($(val).find(".weui_cell_ft").text() == "可赠送：0件"){
 			$(val).remove();
 		} else {
 			rtn = true;

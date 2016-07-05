@@ -7,7 +7,7 @@
            		<h1 class="page_title">群员赠送</h1>
            		#else
                 <h1 class="page_title">群员订单</h1>
-                <p class="page_desc">如果您有任何问题,欢迎和我们联系</p>
+                <p id="refund_condition" class="page_desc"></p>
                 #end
                 #if(${hasConfig})
 					 #if(!${isNextMonth})
@@ -107,6 +107,10 @@
 		var url = "${path.concat('/refund/calculateRefund')}";
 		$.get(url, function(result){
 			console.debug(result);
+			if(result.responseCode != "RESPONSE_OK"){
+				return;
+			}
+			var data = result.data;
 		});
 	});
     

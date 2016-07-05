@@ -194,6 +194,7 @@
     var photo_num = 0;
     var click_num1 = 0;
     var click_num2 = 0;
+    var forbidden=false;
     $(document).ready(function () {
         var ua = navigator.userAgent.toLowerCase();
         if (ua.indexOf('android') > -1 || ua.indexOf('adr') > -1) {
@@ -375,9 +376,11 @@
         allowedFileExtensions: ['jpg', 'jpeg', 'png', 'gif'],
     }).on("filebatchselected", function (event, files) {
         $(this).fileinput("upload");
+        forbidden=true;
     })
             .on("fileuploaded", function (event, result) {
                 if (result.response.responseCode == "RESPONSE_OK") {
+                    forbidden=false;
                     $("#front").val(result.response.data);
                     checkFront();
                 } else {
@@ -400,9 +403,11 @@
         allowedFileExtensions: ['jpg', 'jpeg', 'png', 'gif'],
     }).on("filebatchselected", function (event, files) {
         $(this).fileinput("upload");
+        forbidden=true;
     })
             .on("fileuploaded", function (event, result) {
                 if (result.response.responseCode == "RESPONSE_OK") {
+                    forbidden=false;
                     $("#back").val(result.response.data);
                     checkBack();
                 } else {
@@ -417,12 +422,13 @@
     });
 
     $("#wx_wrp1").click(function () {
-        click_num1++;
         wx.chooseImage({
             count: 1, // 默认9
             sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
             sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
             success: function (res) {
+                click_num1++;
+                forbidden=true;
                 var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
                 $.each(localIds, function (i, n) {
                     wx.uploadImage({
@@ -430,6 +436,7 @@
                         isShowProgressTips: 1,// 默认为1，显示进度提示
                         success: function (res) {
                             var serverId = res.serverId; // 返回图片的服务器端ID
+                            forbidden=false;
                             $("#wx_wrp1").removeClass("weui_uploader_input_wrp");
                             $("#wx_wrp1").addClass("new_weui_uploader_input_wrp");
                             $("#wx_img1").attr("src", localIds);
@@ -449,12 +456,13 @@
         });
     });
     $("#wx_wrp2").click(function () {
-        click_num2++;
         wx.chooseImage({
             count: 1, // 默认9
             sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
             sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
             success: function (res) {
+                click_num2++;
+                forbidden=true;
                 var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
                 $.each(localIds, function (i, n) {
                     wx.uploadImage({
@@ -462,6 +470,7 @@
                         isShowProgressTips: 1,// 默认为1，显示进度提示
                         success: function (res) {
                             var serverId = res.serverId; // 返回图片的服务器端ID
+                            forbidden=false;
                             $("#wx_wrp2").removeClass("weui_uploader_input_wrp");
                             $("#wx_wrp2").addClass("new_weui_uploader_input_wrp");
                             $("#wx_img2").attr("src", localIds);
@@ -480,5 +489,11 @@
             }
         });
     });
-
+    
+    document.addEventListener("touchmove",function(e){
+        if(forbidden){
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    },false);
 </script>

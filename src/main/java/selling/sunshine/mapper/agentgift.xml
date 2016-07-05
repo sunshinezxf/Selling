@@ -69,7 +69,7 @@
     </update>
 
     <update id="updateBatch" parameterType="java.util.List">
-        <foreach collection="list" item="item" index="index" separator=",">
+        <foreach collection="list" item="item" index="index" separator=";">
             UPDATE agent_gift
             <set>
                 <if test="item.amount != null">
