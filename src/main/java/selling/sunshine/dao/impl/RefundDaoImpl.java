@@ -447,20 +447,27 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
             }
             if (resultList.size() != 0) {
             	List<Map<String, Object>> list=new ArrayList<>();
-            	Map<String, Object> dataMap=new HashMap<>();
+            	Map<String, Object> dataMap;
             	Map<String, Object> configCondition = new HashMap<>();
             	Map<String, Object> goodsCondition = new HashMap<>();
             	for (int i = 0; i < resultList.size(); i++) {
                     configCondition.put("goodsId", resultList.get(i).get("goods"));
                     configCondition.put("blockFlag", false);
-                    RefundConfig config = (RefundConfig) sqlSession.selectList("selling.refund.config.query", configCondition).get(0);
-                    dataMap.put("amountTrigger", config.getAmountTrigger());
-                    dataMap.put("quantity", resultList.get(i).get("quantity").toString());
-                    goodsCondition.put("goodsId", resultList.get(i).get("goods"));
-                    Goods4Agent goods=(Goods4Agent)sqlSession.selectList("selling.goods.query4Agent",goodsCondition).get(0);
-                    dataMap.put("goods", goods.getName());
-                    list.add(dataMap);
-                    configCondition.clear();
+                    if(sqlSession.selectList("selling.refund.config.query", configCondition).size()==0){
+                    	 dataMap=new HashMap<>();
+                    	 list.add(dataMap);
+                    }else {
+                        RefundConfig config = (RefundConfig) sqlSession.selectList("selling.refund.config.query", configCondition).get(0);
+                        dataMap=new HashMap<>();
+                        dataMap.put("amountTrigger", config.getAmountTrigger());
+                        dataMap.put("quantity", resultList.get(i).get("quantity").toString());
+                        goodsCondition.put("goodsId", resultList.get(i).get("goods"));
+                        Goods4Agent goods=(Goods4Agent)sqlSession.selectList("selling.goods.query4Agent",goodsCondition).get(0);
+                        dataMap.put("goods", goods.getName());
+                        list.add(dataMap);
+                        configCondition.clear();
+					}
+
                     goodsCondition.clear();
             	}
             	result.setData(list);

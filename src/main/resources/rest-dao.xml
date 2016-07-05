@@ -18,6 +18,10 @@
         <property name="sqlSession" ref="sqlSession"></property>
     </bean>
 
+    <bean id="roleDao" class="selling.sunshine.dao.impl.RoleDaoImpl">
+        <property name="sqlSession" ref="sqlSession"></property>
+    </bean>
+
     <bean id="customerDao" class="selling.sunshine.dao.impl.CustomerDaoImpl">
         <property name="sqlSession" ref="sqlSession"></property>
     </bean>

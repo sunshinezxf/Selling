@@ -11,6 +11,8 @@
 
     <bean id="userService" class="selling.sunshine.service.impl.UserServiceImpl"></bean>
 
+    <bean id="roleService" class="selling.sunshine.service.impl.RoleServiceImpl"></bean>
+
     <bean id="customerService" class="selling.sunshine.service.impl.CustomerServiceImpl"></bean>
 
     <bean id="orderService" class="selling.sunshine.service.impl.OrderServiceImpl"></bean>
