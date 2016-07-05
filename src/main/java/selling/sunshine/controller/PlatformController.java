@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import selling.sunshine.form.AdminForm;
 import selling.sunshine.model.Admin;
+import selling.sunshine.model.Role;
 import selling.sunshine.model.User;
 import selling.sunshine.service.AdminService;
 import selling.sunshine.service.RoleService;
@@ -80,6 +81,13 @@ public class PlatformController {
     @RequestMapping(method = RequestMethod.GET, value = "/register")
     public ModelAndView register() {
         ModelAndView view = new ModelAndView();
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("blockFlag", false);
+        ResultData fetchResponse = roleService.queryRole(condition);
+        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            List<Role> list = (List<Role>) fetchResponse.getData();
+            view.addObject("roles", list);
+        }
         view.setViewName("/backend/admin/admin_register");
         return view;
     }
@@ -216,7 +224,7 @@ public class PlatformController {
         view.setViewName("/navigate");
         return view;
     }
-    
+
     @RequestMapping(method = RequestMethod.GET, value = "/log")
     public ModelAndView log() {
         ModelAndView view = new ModelAndView();
