@@ -88,7 +88,7 @@ public class AdminDaoImpl extends BaseDao implements AdminDao {
      */
     @Transactional
     @Override
-    public ResultData insertAdmin(Admin admin) {
+    public ResultData insertAdmin(Admin admin, Role role) {
         ResultData result = new ResultData();
         synchronized (lock) {
             try {
@@ -96,8 +96,6 @@ public class AdminDaoImpl extends BaseDao implements AdminDao {
                 sqlSession.insert("selling.admin.insert", admin);
                 User user = new User(admin.getUsername(), admin.getPassword());
                 user.setUserId(IDGenerator.generate("USR"));
-                Role role = new Role();
-                role.setRoleId("ROL00000001");
                 user.setRole(role);
                 user.setAdmin(admin);
                 sqlSession.insert("selling.user.insert", user);
