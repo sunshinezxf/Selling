@@ -2,6 +2,7 @@
 <html lang="zh_CN">
 <head>
     #parse("/backend/component/init.vm")
+    #parse("/backend/component/init_log.vm")
     <title>系统日志</title>
 </head>
 <body>
