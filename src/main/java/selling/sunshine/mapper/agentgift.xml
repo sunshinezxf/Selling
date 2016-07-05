@@ -44,7 +44,7 @@
             AND agent_id = #{agentId}
         </if>
         <if test="goodsId != null">
-            AND goods_id = #{goods_id}
+            AND goods_id = #{goodsId}
         </if>
         <if test="rule != null">
             ORDER BY ${rule}

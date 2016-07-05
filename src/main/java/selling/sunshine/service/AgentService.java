@@ -50,4 +50,6 @@ public interface AgentService {
     ResultData updateAgentGift(GiftConfig giftConfig);
     
     ResultData updateAgentGift(List<GiftConfig> giftConfigs);
+    
+    ResultData createAgentGift(GiftConfig giftConfig);
 }
