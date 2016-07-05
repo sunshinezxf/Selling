@@ -109,7 +109,7 @@
 	<select id="sumOrder" parameterType="java.util.Map" resultMap="sumOrderVo">
 		SELECT o.agent_id AS agent,i.goods_id AS goods,SUM(i.goods_quantity) AS quantity,SUM(i.order_item_price) AS price
 		FROM `order` o,order_item i
-		WHERE 1 = 1 AND o.order_id=i.order_id AND (i.order_item_status='1' OR i.order_item_status='2' OR i.order_item_status='3')
+		WHERE 1 = 1 AND o.order_id=i.order_id AND (i.order_item_status='1' OR i.order_item_status='2' OR i.order_item_status='3') AND order_type='0'
 		<if test="date != null and date != ''">
 			AND i.create_time LIKE #{date}
 		</if>
