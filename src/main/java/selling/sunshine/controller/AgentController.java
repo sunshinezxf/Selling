@@ -272,6 +272,12 @@ public class AgentController {
     @RequestMapping(method = RequestMethod.GET, value = "/login")
     public ModelAndView login() {
         ModelAndView view = new ModelAndView();
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        if (user != null && user.getAgent() != null) {
+        	view.setViewName("redirect:/agent/order/place");
+            return view;
+        }
         WechatConfig.oauthWechat(view, "/agent/login");
         view.setViewName("/agent/login");
         return view;
@@ -951,6 +957,7 @@ public class AgentController {
         condition.put("sort", orderBy);
         condition.put("blockFlag", false);
         ResultData fetchResponse = orderService.fetchOrder(condition);
+        List<Order> orderList = (List<Order>) fetchResponse.getData();
         if(Integer.parseInt(type) == 2 || Integer.parseInt(type) == 3){
 	        //customerOrder与代理商Order合并
 	        condition.clear();
@@ -966,7 +973,9 @@ public class AgentController {
 	        condition.put("status", customerStatus);
 	        ResultData fetchCustomerOrderResponse = orderService.fetchCustomerOrder(condition);
 	        //这两个List可能为NULL，使用时请注意判断
-	        List<Order> orderList = (List<Order>) fetchResponse.getData();
+	        if(orderList == null){
+	        	orderList = new ArrayList<Order>();
+	        }
 	        List<CustomerOrder> customerOrderList = (List<CustomerOrder>) fetchCustomerOrderResponse.getData();
 	        if(customerOrderList != null){
 		        for(CustomerOrder customerOrder : customerOrderList){
@@ -990,8 +999,8 @@ public class AgentController {
 		        });
 	        }
         }
-        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            result.setData(fetchResponse.getData());
+        if (fetchResponse.getResponseCode() != ResponseCode.RESPONSE_ERROR) {
+            result.setData(orderList);
         } else {
             result.setResponseCode(fetchResponse.getResponseCode());
             result.setDescription(fetchResponse.getDescription());
