@@ -1499,9 +1499,14 @@ public class AgentController {
         return resultData;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/{agentId}/gift")
+    @RequestMapping(method = RequestMethod.GET, value = "/gift/{agentId}")
     public ModelAndView giftConfig(@PathVariable("agentId") String agentId) {
         ModelAndView view = new ModelAndView();
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("agentId", agentId);
+        Agent agent=((List<Agent>)agentService.fetchAgent(condition).getData()).get(0);
+        view.addObject("agentId", agentId);
+        view.addObject("agentName", agent.getName());
         view.setViewName("/backend/agent/giftconfig");
         return view;
     }

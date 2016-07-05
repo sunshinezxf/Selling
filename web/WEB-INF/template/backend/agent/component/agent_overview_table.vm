@@ -120,6 +120,9 @@
                     var url="${path.concat('/agent/forbid/')}" + full.agentId;
                     var limit_button = "<button type='button' class='btn btn-warning btn-group-sm' onclick=\"javascript:location.href='" + url + "'\">禁用</button>&nbsp;"
                     operation += limit_button;
+                    var giftCofigUrl="${path.concat('/agent/gift/')}" + full.agentId;
+                    var giftCofig_button = "<button type='button' class='btn btn-success btn-group-sm' onclick=\"javascript:location.href='" + giftCofigUrl + "'\">赠送配置</button>&nbsp;"
+                    operation += giftCofig_button;
                     return operation;
                 }
                 }
