@@ -1,5 +1,7 @@
 package selling.sunshine.controller;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +16,14 @@ import com.alibaba.fastjson.JSONObject;
 import selling.sunshine.form.RefundConfigForm;
 import selling.sunshine.model.RefundConfig;
 import selling.sunshine.model.RefundRecord;
+import selling.sunshine.model.User;
 import selling.sunshine.model.goods.Goods4Customer;
 import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.RefundService;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
+import selling.sunshine.utils.WechatConfig;
 
 import javax.validation.Valid;
 
@@ -158,10 +162,17 @@ public class RefundController {
     }
     
     @ResponseBody
-    @RequestMapping(method = RequestMethod.POST, value = "/calculateRefund")
-    public ResultData calculateRefund(@PathVariable("agentId") String agentId) {
-    	ResultData resultData=new ResultData();
-    	resultData=refundService.calculateRefund(agentId);
+    @RequestMapping(method = RequestMethod.GET, value = "/calculateRefund")
+    public ResultData calculateRefund() {
+    	ResultData resultData = new ResultData();
+    	Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        if (user == null || user.getAgent() == null) {
+        	resultData.setResponseCode(ResponseCode.RESPONSE_NULL);
+            resultData.setDescription("请重新登录");
+            return resultData;
+        }
+    	resultData=refundService.calculateRefund(user.getAgent().getAgentId());
     	return resultData;
 	}
     
