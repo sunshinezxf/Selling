@@ -13,6 +13,7 @@ import selling.sunshine.form.AdminForm;
 import selling.sunshine.model.Admin;
 import selling.sunshine.model.User;
 import selling.sunshine.service.AdminService;
+import selling.sunshine.service.RoleService;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
@@ -34,6 +35,9 @@ public class PlatformController {
 
     @Autowired
     private AdminService adminService;
+
+    @Autowired
+    private RoleService roleService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/")
     public ModelAndView index() {

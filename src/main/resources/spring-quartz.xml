@@ -58,7 +58,7 @@
     <bean id="withdrawTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="withdrawDetail"></property>
         <property name="cronExpression">
-            <value>0 0/5 * * * ?</value>
+            <value>0 0 * 11,17 * ?</value>
         </property>
     </bean>
 
@@ -68,6 +68,7 @@
                 <ref bean="poolTrigger"></ref>
                 <ref bean="wechatTrigger"></ref>
                 <ref bean="refundTrigger"></ref>
+                <ref bean="withdrawTrigger"></ref>
             </list>
         </property>
     </bean>

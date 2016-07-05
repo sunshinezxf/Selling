@@ -8,6 +8,7 @@ import selling.sunshine.service.WithdrawService;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +25,9 @@ public class WithdrawSchedule {
     public void schedule() {
         Map<String, Object> condition = new HashMap<>();
         condition.put("blockFlag", false);
-        condition.put("status", 0);
+        List<Integer> status = new ArrayList<>();
+        status.add(0);
+        condition.put("status", status);
         ResultData fetchResponse = withdrawService.fetchWithdrawRecord(condition);
         if (fetchResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
             return;
