@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import selling.sunshine.dao.UserDao;
 import selling.sunshine.model.User;
+import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.UserService;
 import selling.sunshine.utils.Encryption;
 import selling.sunshine.utils.ResponseCode;
@@ -65,5 +66,8 @@ public class UserServiceImpl implements UserService {
         return result;
     }
 
-
+    @Override
+    public ResultData fetchUser(Map<String, Object> condition, DataTableParam param) {
+        return null;
+    }
 }

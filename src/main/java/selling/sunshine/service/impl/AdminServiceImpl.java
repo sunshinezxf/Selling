@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import selling.sunshine.dao.AdminDao;
 import selling.sunshine.model.Admin;
 import selling.sunshine.model.Role;
+import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.AdminService;
 import selling.sunshine.utils.Encryption;
 import selling.sunshine.utils.ResponseCode;
@@ -70,6 +71,22 @@ public class AdminServiceImpl implements AdminService {
             result.setData(queryResponse.getData());
         } else if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
             result.setDescription(queryResponse.getDescription());
+        }
+        return result;
+    }
+
+    @Override
+    public ResultData fetchAdmin(Map<String, Object> condition, DataTableParam param) {
+        ResultData result = new ResultData();
+        ResultData queryResponse = adminDao.queryAdminByPage(condition, param);
+        result.setResponseCode(queryResponse.getResponseCode());
+        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            if (((List) queryResponse.getData()).isEmpty()) {
+                result.setResponseCode(ResponseCode.RESPONSE_NULL);
+            }
+            result.setData(queryResponse.getData());
+        } else {
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
         }
         return result;
     }
