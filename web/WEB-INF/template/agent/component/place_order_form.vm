@@ -7,6 +7,7 @@
            		<h1 class="page_title">群员赠送</h1>
            		#else
                 <h1 class="page_title">群员订单</h1>
+                <p class="page_desc">如果您有任何问题,欢迎和我们联系</p>
                 #end
                 #if(${hasConfig})
 					 #if(!${isNextMonth})
@@ -101,6 +102,14 @@
 	//立了一个flag，判断是新增还是修改订单
 	isAdd = true;
     $("#add_order_item").hide();
+    
+	$(document).ready(function(){
+		var url = "${path.concat('/refund/calculateRefund')}";
+		$.get(url, function(result){
+			console.debug(result);
+		});
+	});
+    
     $("#add_order_btn").click(function () {
     	isAdd = true;
     	//判断是否选择过商品，如果没有就给个默认的

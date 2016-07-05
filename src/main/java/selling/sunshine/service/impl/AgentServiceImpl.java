@@ -277,7 +277,7 @@ public class AgentServiceImpl implements AgentService {
     	ResultData queryResponse = agentDao.queryAgentGift(condition);
     	result.setResponseCode(queryResponse.getResponseCode());
     	if(queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK){
-    		if(((List<BankCard>)queryResponse.getData()).size() == 0){
+    		if(((List<GiftConfig>)queryResponse.getData()).size() == 0){
     			result.setResponseCode(ResponseCode.RESPONSE_NULL);
     		}
     		result.setData(queryResponse.getData());
@@ -309,6 +309,19 @@ public class AgentServiceImpl implements AgentService {
             result.setData(giftConfigs);
         } else {
             result.setDescription(updateResponse.getDescription());
+        }
+        return result;
+	}
+
+	@Override
+	public ResultData createAgentGift(GiftConfig giftConfig) {
+        ResultData result = new ResultData();
+        ResultData insertResponse = agentDao.insertAgentGift(giftConfig);
+        result.setResponseCode(insertResponse.getResponseCode());
+        if (insertResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(insertResponse.getData());
+        } else {
+            result.setDescription(insertResponse.getDescription());
         }
         return result;
 	}
