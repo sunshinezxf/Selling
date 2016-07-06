@@ -24,10 +24,13 @@ import selling.sunshine.model.express.Express4Agent;
 import selling.sunshine.model.express.Express4Customer;
 import selling.sunshine.service.ExpressService;
 import selling.sunshine.service.OrderService;
+import selling.sunshine.utils.DigestUtil;
+import selling.sunshine.utils.HttpUtil;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -164,5 +167,53 @@ public class ExpressController {
 		return view;
 	}
 	
-
+	@RequestMapping(method = RequestMethod.GET, value="/queryExpress/{orderId}")
+	public ResultData queryExpress(@PathVariable("orderId") String orderId){
+		ResultData result = new ResultData();
+		Map<String, Object> condition = new HashMap<String, Object>();
+		ResultData fetchExpressResponse = null;
+		if(orderId.startsWith("ORI")){
+			condition.put("orderItemId", orderId);
+			fetchExpressResponse = expressService.fetchExpress4Agent(condition);
+		} else if(orderId.startsWith("CUO")){
+			condition.put("orderId", orderId);
+			fetchExpressResponse = expressService.fetchExpress4Customer(condition);
+		}
+		if(fetchExpressResponse == null ){
+			result.setResponseCode(ResponseCode.RESPONSE_NULL);
+			result.setDescription("未找到订单");
+			return result;
+		}
+		if(fetchExpressResponse.getResponseCode() != ResponseCode.RESPONSE_OK || ((List<Express>)fetchExpressResponse.getData()).isEmpty()){
+			result.setResponseCode(fetchExpressResponse.getResponseCode());
+			result.setDescription(fetchExpressResponse.getDescription());
+			return result;
+		}
+		Express express = ((List<Express>)fetchExpressResponse.getData()).get(0);
+		String expressNumber = express.getExpressNumber();
+		if(expressNumber == null || expressNumber.equals("")){
+			result.setResponseCode(ResponseCode.RESPONSE_NULL);
+			result.setDescription("没有快递信息");
+			return result;
+		}
+		Map<String, String> map = new HashMap<String, String>();
+		String data = "[" + expressNumber + "]";
+		map.put("data", data);
+		map.put("msg_type", "TRACES");
+		try {
+			map.put("data_digest", DigestUtil.digest(data, "AA076973A63D4CD2BBEFB60544FC1262", DigestUtil.UTF8));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		map.put("company_id", "5be4f9cacac84d3d9dace29dd9026a09");
+		try {
+			result.setData(HttpUtil.post("http://japi.zto.cn/zto/api_utf8/traceInterface", "UTF-8", map));
+		} catch (IOException e) {
+			result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+			e.printStackTrace();
+		} finally{
+			return result;
+		}
+	}
+	
 }

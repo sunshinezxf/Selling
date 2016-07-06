@@ -227,7 +227,9 @@
         		+ order_info + ":" + order_info_list[order_info]['quantity'] +
  				"件")
         }
+        #if(${operation} != "GIFT")
         $("#total_goods_price").html("共计:" + total_price + "元");
+        #end
         //判断是否总价是0，决定显示保存和下单按钮与否
         if(total_price == 0){
         	$("#save_order_btn").hide();

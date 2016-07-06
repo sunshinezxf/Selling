@@ -19,4 +19,11 @@
 </html>
 <script>
 	$("#place_order").addClass("weui_bar_item_on");
+	
+	$(document).ready(function(){
+		var url = "${path.concat('/express/queryExpress/ORIyvefri33')}";
+		$.get(url, function(result){
+			console.debug(result);
+		});
+	});
 </script>
