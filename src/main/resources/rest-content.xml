@@ -106,7 +106,7 @@
 
                 /commodity/create = roles[admin]
                 /commodity/edit/** = roles[admin]
-                /commodity/overview = roles[admin]
+                /commodity/overview = roles["admin, auditor"]
                 /commodity/** = anon
 
                 /credit/upload = anon

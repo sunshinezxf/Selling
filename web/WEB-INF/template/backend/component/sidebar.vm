@@ -66,7 +66,7 @@
                     </ul>
                 </li>
             #end
-            #if($role == "admin")
+            #if($role == "admin"|| $role == "finance")
                 <li><a class="menu" data-toggle="collapse" data-parent="#accordion" href="#withdraw-management"><i
                         class="fa fa-book"></i> 提现管理<i
                         class="pull-right fa fa-caret-down"></i></a>
