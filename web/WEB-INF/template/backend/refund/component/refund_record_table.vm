@@ -23,8 +23,9 @@
             ordering: false,
             paging: true,
             "sPaginationType": "full_numbers",
-            "bPaginate": false,
+            "bPaginate": true,
             "bLengthChange": true,
+            "bAutoWidth": true,
             "bSort": false,
             "bDeferRender": true,
             "bProcessing": true,
@@ -60,7 +61,7 @@
                 },
                 {title: "返现金额(元)", "mData": "refundAmount"},
                 {title: "返现比例(元／件)", "mData": "refundPercent"},
-                {title: "内容", "mData": "refundDescription"}                  
+                {title: "内容", "mData": "refundDescription"}
             ],
             "language": {
                 "processing": "正在加载中",

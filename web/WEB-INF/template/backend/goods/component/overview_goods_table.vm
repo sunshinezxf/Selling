@@ -26,6 +26,7 @@
             "sPaginationType": "full_numbers",
             "bPaginate": false,
             "bLengthChange": true,
+            "bAutoWidth": true,
             "bSort": false,
             "bDeferRender": true,
             "bProcessing": true,
@@ -73,7 +74,7 @@
                     var update_button = "<button type='button' class='btn btn-success btn-group-sm' onclick=\"javascript:location.href='" + edit_url + "'\">修改</button>&nbsp;"
                     operation += update_button;
                     var detail_button = "<button type='button' class='btn btn-success btn-group-sm' id='" + full.goodsId + "' onclick=detail(this) data-toggle='modal' data-target='#goods_detail_modal'>详情</button>&nbsp;"
-                     operation += detail_button;
+                    operation += detail_button;
                     return operation;
                 }
                 }
@@ -96,24 +97,24 @@
             }
         });
     });
-    
-   function detail(obj){
-        $.post("${path.concat('/commodity/detail/')}"+obj.id, function (result) {
-           document.getElementById("goodsName").innerHTML="商品名称： "+result.data.goods.name;
-           if(result.data.thumbnails != 0){
-              var f = document.getElementById("thumbnails");            
-              var childs = f.childNodes; 
-              for(var i = childs.length - 1; i >= 0; i--) { 
-                  f.removeChild(childs[i]); 
-              }
-               var node="";
-               for(var i=0;i<result.data.thumbnails.length;i++){
-                  // var path="/selling"+result.data.thumbnails[i].path;
-                    var path=result.data.thumbnails[i].path;
-                   node+="<img src ='" + path + "' class='img-rounded' style='width:160px;height:160px;'>&nbsp;&nbsp;";
-               }
-               $("#thumbnails").append(node);
-           }             
+
+    function detail(obj) {
+        $.post("${path.concat('/commodity/detail/')}" + obj.id, function (result) {
+            document.getElementById("goodsName").innerHTML = "商品名称： " + result.data.goods.name;
+            if (result.data.thumbnails != 0) {
+                var f = document.getElementById("thumbnails");
+                var childs = f.childNodes;
+                for (var i = childs.length - 1; i >= 0; i--) {
+                    f.removeChild(childs[i]);
+                }
+                var node = "";
+                for (var i = 0; i < result.data.thumbnails.length; i++) {
+                    // var path="/selling"+result.data.thumbnails[i].path;
+                    var path = result.data.thumbnails[i].path;
+                    node += "<img src ='" + path + "' class='img-rounded' style='width:160px;height:160px;'>&nbsp;&nbsp;";
+                }
+                $("#thumbnails").append(node);
+            }
         });
     }
 </script>
