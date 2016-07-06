@@ -73,8 +73,8 @@ ADD COLUMN `order_type` INT NOT NULL DEFAULT 0 AFTER `order_price`;
 ALTER TABLE `selling`.`role`
 ADD COLUMN `role_description` VARCHAR(45) NOT NULL ;
 
-INSERT INTO `selling`.`role` (`role_id`, `role_name`, `role_description`, `block_flag`, `create_time`) VALUES ('ROL00000003', 'auditor', `代理审核员`, '0', '2016-05-03 11:00:20');
-INSERT INTO `selling`.`role` (`role_id`, `role_name`, `role_description`, `block_flag`, `create_time`) VALUES ('ROL00000004', 'express', `发货员`, '0', '2016-05-03 11:00:30');
+INSERT INTO `selling`.`role` (`role_id`, `role_name`, `role_description`, `block_flag`, `create_time`) VALUES ('ROL00000003', 'auditor', '代理审核员', '0', '2016-05-03 11:00:20');
+INSERT INTO `selling`.`role` (`role_id`, `role_name`, `role_description`, `block_flag`, `create_time`) VALUES ('ROL00000004', 'express', '发货员', '0', '2016-05-03 11:00:30');
 INSERT INTO `selling`.`role` (`role_id`, `role_name`, `role_description`, `block_flag`, `create_time`) VALUES ('ROL00000005', 'finance', '财务人员', '0', '2016-05-03 11:00:30');
 
 
