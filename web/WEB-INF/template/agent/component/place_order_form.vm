@@ -41,8 +41,10 @@
             <div class="weui_cell">
             	<div class="weui_cell_bd weui_cell_primary">
             		<div id="total_goods">
-            		</div>		
+            		</div>
+            		#if(${operation} != "GIFT")
             		<p id="total_goods_price" >共计:0元<p>
+            		#end
             	</div>
             	#if(${operation} == "GIFT")
             	<div class="weui_cell_ft">
