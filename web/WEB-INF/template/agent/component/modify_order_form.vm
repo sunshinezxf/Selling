@@ -49,7 +49,18 @@
 					        		</div> 
 					        		<div class="weui_cell_ft quantity">${orderItem.goodsQuantity}</div>
 					        	</a>
-					    		<div class="weui_cell weui_cells_tips clear-margin-top">金额:${orderItem.orderItemPrice}元 </div>
+					    		#if(${operation} == "VIEW" && ${status} != "SUBMITTED" && ${status} != "SAVED")
+					    			<div class="weui_cell weui_cells_tips clear-margin-top">
+						    			<div class="weui_cell_bd weui_cell_primary">
+						    			金额:${orderItem.orderItemPrice}元
+						    			</div>
+						    			<div sytle="text-align:right;" class="express_btn">
+						                    <a class="weui_btn weui_btn_mini weui_btn_plain_primary">&nbsp物流信息&nbsp</a>
+						                </div>
+					    			</div>
+					    		#else
+					    			<div class="weui_cell weui_cells_tips clear-margin-top">金额:${orderItem.orderItemPrice}元 </div>
+					    		#end
 					    		#if(${status} == "SAVED" && ${operation} == "MODIFY")
 					    		<div class="weui_cells_tips delete">删除</div>
 					    		#end
@@ -153,6 +164,13 @@
 			$(val).parent(".weui_cell").data("address", $(val).html());
 			$(val).parent(".weui_cell").data("customerId", $(val).closest(".order_item_body").find(".customer_id").val());
 			$(val).parent(".weui_cell").bind("click",$.showAddress);
+		});
+		//为每个查看物流按钮添加点击事件
+		$.each($(".express_btn"), function(i, val){
+			$(val).on("click",function(){
+				var orderItemId = $(this).parents(".order_item_body").find(".order_item_id").val();
+				window.location = "${path.concat("/order/viewexpress/")}" + orderItemId;
+			})
 		});
 		
 		//添加窗口滑动事件

@@ -17,6 +17,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.fastjson.JSONArray;
+
 import selling.sunshine.model.CustomerOrder;
 import selling.sunshine.model.OrderItem;
 import selling.sunshine.model.express.Express;
@@ -167,37 +169,13 @@ public class ExpressController {
 		return view;
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value="/queryExpress/{orderId}")
-	public ResultData queryExpress(@PathVariable("orderId") String orderId){
+	@RequestMapping(method = RequestMethod.GET, value="/queryExpress/{expressNumber}")
+	public ResultData queryExpress(@PathVariable("expressNumber") String expressNumber){
 		ResultData result = new ResultData();
-		Map<String, Object> condition = new HashMap<String, Object>();
-		ResultData fetchExpressResponse = null;
-		if(orderId.startsWith("ORI")){
-			condition.put("orderItemId", orderId);
-			fetchExpressResponse = expressService.fetchExpress4Agent(condition);
-		} else if(orderId.startsWith("CUO")){
-			condition.put("orderId", orderId);
-			fetchExpressResponse = expressService.fetchExpress4Customer(condition);
-		}
-		if(fetchExpressResponse == null ){
-			result.setResponseCode(ResponseCode.RESPONSE_NULL);
-			result.setDescription("未找到订单");
-			return result;
-		}
-		if(fetchExpressResponse.getResponseCode() != ResponseCode.RESPONSE_OK || ((List<Express>)fetchExpressResponse.getData()).isEmpty()){
-			result.setResponseCode(fetchExpressResponse.getResponseCode());
-			result.setDescription(fetchExpressResponse.getDescription());
-			return result;
-		}
-		Express express = ((List<Express>)fetchExpressResponse.getData()).get(0);
-		String expressNumber = express.getExpressNumber();
-		if(expressNumber == null || expressNumber.equals("")){
-			result.setResponseCode(ResponseCode.RESPONSE_NULL);
-			result.setDescription("没有快递信息");
-			return result;
-		}
 		Map<String, String> map = new HashMap<String, String>();
-		String data = "[" + expressNumber + "]";
+		JSONArray jsonArray= new JSONArray();
+		jsonArray.add(expressNumber);
+		String data = jsonArray.toJSONString();
 		map.put("data", data);
 		map.put("msg_type", "TRACES");
 		try {
