@@ -125,7 +125,7 @@ public class PlatformController {
             Admin admin = new Admin(form.getUsername(), form.getPassword());
             ResultData resultData = adminService.createAdmin(admin, role);
             if (resultData.getResponseCode() == ResponseCode.RESPONSE_OK) {
-                view.setViewName("redirect:/manage");
+                view.setViewName("redirect:/admin/overview");
                 return view;
             } else {
                 view.setViewName("redirect:/register");
@@ -194,22 +194,6 @@ public class PlatformController {
         admin.setAdminId(adminId);
         response = adminService.deleteAdmin(admin);
         return response;
-    }
-
-    @ResponseBody
-    @RequestMapping(method = RequestMethod.POST, value = "/admin/overview")
-    public ResultData overview() {
-        ResultData result = new ResultData();
-        Map<String, Object> condition = new HashMap<>();
-        result = adminService.fetchAdmin(condition);
-        return result;
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value = "/manage")
-    public ModelAndView manage() {
-        ModelAndView view = new ModelAndView();
-        view.setViewName("/backend/admin/admin_management");
-        return view;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/dashboard")

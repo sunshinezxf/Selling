@@ -68,6 +68,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResultData fetchUser(Map<String, Object> condition, DataTableParam param) {
-        return null;
+        ResultData result = new ResultData();
+        ResultData queryResponse = userDao.queryUser(condition,param);
+        result.setResponseCode(queryResponse.getResponseCode());
+        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(queryResponse.getData());
+        } else if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
+            result.setDescription(queryResponse.getDescription());
+        }
+        return result;
     }
 }

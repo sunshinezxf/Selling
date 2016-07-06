@@ -57,61 +57,34 @@
                     return operation;
                 }
                 },
-                {title: "手机", "mData": "phone"},
                 {
-                    title: "注册时间", "mRender": function (data, type, full) {
-                    return ((new Date(full.createAt)).format("yyyy/MM/dd hh:mm"));
-                }
-                },
-                {
-                    title: "审核状态", "mRender": function (data, type, full) {
-                    var operation = "";
-                    if (full.granted == true) {
-                        operation += "已审核通过";
-                    } else {
-                        operation += "审核未通过";
+                    title: "当月已付款订单数", "mRender": function (data, type, full) {
+                       var url = "${path.concat('/agent/statistics/')}" + full.agentId;
+                       var option = "";
+                       $.ajax({
+                           type: "post",
+                           url: url,
+                           async: false,
+                           success: function (result) {
+                              option += result.data.PayedOrderNum;
+                           }
+                       });
+                       return option;
                     }
-                    return operation;
-                }
                 },
                 {
-                    title: "顾客", "mRender": function (data, type, full) {
-                    var url = "${path.concat('/agent/statistics/')}" + full.agentId;
-                    var option = "";
-                    $.ajax({
-                        type: "post",
-                        url: url,
-                        async: false,
-                        success: function (result) {
-                            if(result.data.customerNum==0){
-                               option +="无";
-                               return option;
-                            }
-                            var customerNum = "<a href='${path.concat('/customer/overview/')}" + full.agentId + "'>"+result.data.customerNum+"</a>";
-                            option += customerNum;
-                        }
-                    });
-                    return option;
-                }
-                },
-                {
-                    title: "下级代理商", "mRender": function (data, type, full) {
-                    var url = "${path.concat('/agent/statistics/')}" + full.agentId;
-                    var option = "";
-                    $.ajax({
-                        type: "post",
-                        url: url,
-                        async: false,
-                        success: function (result) {
-                            if(result.data.agentNum==0){
-                               option +="无";
-                               return option;
-                            }
-                            var agentNum = "<a href='${path.concat('/agent/subordinate/')}" + full.agentId + "''>"+result.data.agentNum+"</a>";
-                            option += agentNum;
-                        }
-                    });
-                    return option;
+                    title: "当月未付款订单数", "mRender": function (data, type, full) {
+                       var url = "${path.concat('/agent/statistics/')}" + full.agentId;
+                       var option = "";
+                       $.ajax({
+                           type: "post",
+                           url: url,
+                           async: false,
+                           success: function (result) {
+                              option += result.data.unPayedOrderNum;
+                           }
+                       });
+                       return option;
                 }
                 },
                 {

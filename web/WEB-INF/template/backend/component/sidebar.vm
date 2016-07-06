@@ -102,7 +102,7 @@
                         <li><a class="sub-nav" href="${path.concat('/register')}"><i class="fa fa-cog"></i>
                             账号授权</a>
                         </li>
-                        <li><a class="sub-nav" href="${path.concat('/manage')}"><i class="fa fa-cog"></i>
+                        <li><a class="sub-nav" href="${path.concat('/admin/overview')}"><i class="fa fa-cog"></i>
                             账号管理</a>
                         </li>
                     </ul>

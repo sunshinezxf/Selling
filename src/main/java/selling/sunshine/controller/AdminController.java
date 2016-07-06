@@ -5,8 +5,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+
 import selling.sunshine.model.User;
 import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
@@ -32,12 +35,15 @@ public class AdminController {
     @Autowired
     private UserService userService;
 
+    @RequestMapping(method = RequestMethod.GET, value = "/overview")
     public ModelAndView overview() {
         ModelAndView view = new ModelAndView();
         view.setViewName("/backend/admin/admin_management");
         return view;
     }
 
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value = "/overview")
     public DataTablePage<User> overview(DataTableParam param) {
         DataTablePage<User> result = new DataTablePage<>(param);
         if (StringUtils.isEmpty(param)) {
