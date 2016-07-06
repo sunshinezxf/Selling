@@ -16,7 +16,7 @@
                 <div class="weui_panel_hd col1">
                     <h4 class="order_id">订单号:${order.orderItemId}</h4>
                     #if(${order.order.agent.name})
-                        <p class="agent">分享人:${order.order.agent.name}</p>
+                        <p class="agent">优惠码:${order.order.agent.agentId}</p>
                     #end
                 </div>
                 <div class="weui_panel_bd">
@@ -48,7 +48,7 @@
                 <div class="weui_panel_hd col1">
                     <h4 class="order_id">订单号:${order.orderId}</h4>
                     #if(${order.agent.name})
-                        <p class="agent">分享人:${order.agent.name}</p>
+                        <p class="agent">优惠码:${order.agent.agentId}</p>
                     #end
                 </div>
                 <div class="weui_panel_bd">

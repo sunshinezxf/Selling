@@ -2,41 +2,42 @@
 <html lang="zh_CN">
 <head>
     #parse("/customer/component/init.vm")
-    <!--
     <link rel="stylesheet" href="${path.concat('/plugins/unslider/css/unslider.css')}"/>
-    -->
     <link rel="stylesheet" href="${path.concat('/plugins/fancybox/source/jquery.fancybox.css')}" type="text/css" media="screen" />
     <link rel="stylesheet" href="${path.concat('/material/css/customer/goods_detail.css')}"/>
-    <!--
     <script type="text/javascript" src="${path.concat('/plugins/jquery/jquery.event.move.js')}"></script>
     <script type="text/javascript" src="${path.concat('/plugins/jquery/jquery.event.swipe.js')}"></script>
-    -->
     <script type="text/javascript" src="${path.concat('/plugins/fancybox/source/jquery.fancybox.pack.js')}"></script>
     <script type="text/javascript" src="${path.concat('/plugins/jquery/pinchzoom.min.js')}"></script>
     <script type="text/javascript" src="${path.concat('/plugins/jquery/jquery.provincesCity.js')}"></script>
     <script type="text/javascript" src="${path.concat('/plugins/jquery/jquery.provincesData.js')}"></script>
-    <!--
     <script type="text/javascript" src="${path.concat('/plugins/unslider/js/unslider-min.js')}"></script>
-    -->
     <title>商品详情</title>
 </head>
 <body ontouchstart>
 <div class="below">
     <div class="unslider_div">
-        <a id="logo" href="${path.concat('/material/goods_img/4_b.bmp')}">
-            <img class="img" src="${path.concat('/material/goods_img/4.jpg')}"/>
-        </a>
+        <div class="fading-slider">
+            <ul>
+                <li>
+                    <a id="first_img" class="logo" href="${path.concat('/material/goods_img/4_b.bmp')}">
+                        <img class="img" src="${path.concat('/material/goods_img/4.jpg')}"/>
+                    </a>
+                </li>
+                <li>
+                    <a class="logo" href="${path.concat('/material/goods_img/2.jpg')}">
+                        <img class="img" src="${path.concat('/material/goods_img/2.jpg')}"/>
+                    </a>
+                </li>
+                <li>
+                    <a class="logo" href="${path.concat('/material/goods_img/1.jpg')}">
+                        <img class="img" src="${path.concat('/material/goods_img/1.jpg')}"/>
+                    </a>
+                </li>
+            </ul>
+        </div>
     </div>
-    <!--
-    <div class="fading-slider">
-        <ul>
-            <li><img class="img" src="${path.concat('/material/goods_img/4.jpg')}" alt="详情图1"></li>
-            <li><img src="${path.concat('/material/goods_img/1.jpg')}" alt="详情图1"></li>
-            <li><img src="${path.concat('/material/goods_img/2.jpg')}" alt="详情图2"></li>
-            <li><img src="${path.concat('/material/goods_img/3.jpg')}" alt="详情图3"></li>
-        </ul>
-    </div>
-    -->
+    
     <div class="gap"></div>
     <div class="detail_area">
         <div class="feeling_div">
@@ -51,6 +52,7 @@
             </a>
         </div>
     </div>
+    <a href="weixin://contacts/profile/gh_5535163c9ba8">别人能看到的链接文字</a>
 </div>
 <div class="buy_area">
     <div class="footer_div">
@@ -225,20 +227,21 @@
     var goods_price;
     var alertNum = 0;
     var forbidden=false;
+    
 
     $(function () {
-        //var slidey = $('.fading-slider').unslider({
-        //    animation: 'fade',
-        //    autoplay: true,
-        //    arrows: false,
-        //    fluid: false
-        //});
-        //var data = slidey.data('unslider');
-        //$('.fading-slider').on('swipeleft', function (e) {
-        //    data.next();
-        //}).on('swiperight', function (e) {
-        //    data.prev();
-        //});
+        var slidey = $('.fading-slider').unslider({
+            animation: 'fade',
+            autoplay: true,
+            arrows: false,
+            fluid: false
+        });
+        var data = slidey.data('unslider');
+        $('.fading-slider').on('swipeleft', function (e) {
+            data.next();
+        }).on('swiperight', function (e) {
+            data.prev();
+        });
         
         $('.img').load( function (){    //<img>加载url事件
             var img = new Image();    //图片预加载
@@ -247,7 +250,10 @@
             this.height=this.width*rate;
         });
         
-        $("#logo").fancybox({
+        $('.unslider-fade').css('height',$('#first_img img').height());
+        
+        
+        $(".logo").fancybox({
             padding : 0,
             closeBtn:false,
             closeClick:true,
@@ -369,6 +375,7 @@
         });
 
     });
+    
 
     $('#purchase').click(function () {
         forbidden=true;
