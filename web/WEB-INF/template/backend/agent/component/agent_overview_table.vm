@@ -25,9 +25,8 @@
             ordering: false,
             paging: true,
             "sPaginationType": "full_numbers",
-            "bPaginate": true,
+            "bPaginate": false,
             "bLengthChange": true,
-            "bAutoWidth": true,
             "bSort": false,
             "bDeferRender": true,
             "bProcessing": true,
@@ -54,12 +53,29 @@
             columns: [
                 {
                     title: "姓名", "mRender": function (data, type, full) {
-                    var operation = "<a id='" + full.agentId + "' onclick=detail(this) data-toggle='modal' data-target='#agent_detail_modal'>" + full.name + "</a>";
+                    var operation = "<a id='" + full.agentId + "' onclick=detail(this) data-toggle='modal' data-target='#agent_detail_modal'>"+full.name+"</a>";
+                    return operation;
+                }
+                },
+                {title: "手机", "mData": "phone"},
+                {
+                    title: "注册时间", "mRender": function (data, type, full) {
+                    return ((new Date(full.createAt)).format("yyyy/MM/dd hh:mm"));
+                }
+                },
+                {
+                    title: "审核状态", "mRender": function (data, type, full) {
+                    var operation = "";
+                    if (full.granted == true) {
+                        operation += "已审核通过";
+                    } else {
+                        operation += "审核未通过";
+                    }
                     return operation;
                 }
                 },
                 {
-                    title: "当月已付款订单数", "mRender": function (data, type, full) {
+                    title: "顾客", "mRender": function (data, type, full) {
                     var url = "${path.concat('/agent/statistics/')}" + full.agentId;
                     var option = "";
                     $.ajax({
@@ -67,14 +83,19 @@
                         url: url,
                         async: false,
                         success: function (result) {
-                            option += result.data.PayedOrderNum;
+                            if(result.data.customerNum==0){
+                               option +="无";
+                               return option;
+                            }
+                            var customerNum = "<a href='${path.concat('/customer/overview/')}" + full.agentId + "'>"+result.data.customerNum+"</a>";
+                            option += customerNum;
                         }
                     });
                     return option;
                 }
                 },
                 {
-                    title: "当月未付款订单数", "mRender": function (data, type, full) {
+                    title: "下级代理商", "mRender": function (data, type, full) {
                     var url = "${path.concat('/agent/statistics/')}" + full.agentId;
                     var option = "";
                     $.ajax({
@@ -82,7 +103,12 @@
                         url: url,
                         async: false,
                         success: function (result) {
-                            option += result.data.unPayedOrderNum;
+                            if(result.data.agentNum==0){
+                               option +="无";
+                               return option;
+                            }
+                            var agentNum = "<a href='${path.concat('/agent/subordinate/')}" + full.agentId + "''>"+result.data.agentNum+"</a>";
+                            option += agentNum;
                         }
                     });
                     return option;
@@ -91,12 +117,12 @@
                 {
                     title: "操作", "mRender": function (data, type, full) {
                     var operation = "";
-                    var giftCofigUrl = "${path.concat('/agent/gift/')}" + full.agentId;
-                    var giftCofig_button = "<button type='button' class='btn btn-success btn-group-sm' onclick=\"javascript:location.href='" + giftCofigUrl + "'\">赠送</button>&nbsp;"
-                    operation += giftCofig_button;
-                    var url = "${path.concat('/agent/forbid/')}" + full.agentId;
+                    var url="${path.concat('/agent/forbid/')}" + full.agentId;
                     var limit_button = "<button type='button' class='btn btn-warning btn-group-sm' onclick=\"javascript:location.href='" + url + "'\">禁用</button>&nbsp;"
                     operation += limit_button;
+                    var giftCofigUrl="${path.concat('/agent/gift/')}" + full.agentId;
+                    var giftCofig_button = "<button type='button' class='btn btn-success btn-group-sm' onclick=\"javascript:location.href='" + giftCofigUrl + "'\">赠送配置</button>&nbsp;"
+                    operation += giftCofig_button;
                     return operation;
                 }
                 }
@@ -119,200 +145,199 @@
             }
         });
     });
-
-    function detail(obj) {
-        $.post("${path.concat('/agent/detail/')}" + obj.id, function (result) {
-            document.getElementById("agentAddress").innerHTML = "居住地： " + result.data.agent.address;
-            if (result.data.agent.wechat == null) {
-                document.getElementById("agentWechat").innerHTML = "微信号： 尚未绑定";
-            } else {
-                document.getElementById("agentWechat").innerHTML = "微信号： " + result.data.agent.wechat;
-            }
-            if (result.data.agent.upperAgent == null) {
-                document.getElementById("upperAgent").innerHTML = "上级代理商： 无";
-            } else {
-                document.getElementById("upperAgent").innerHTML = "上级代理商： " + result.data.agent.upperAgent.name;
-            }
-            document.getElementById("agentclaimScale").innerHTML = "群规模： " + result.data.agent.claimScale + "人";
-            document.getElementById("agentCoffer").innerHTML = "账户余额： " + result.data.agent.coffer + "元";
-            document.getElementById("agentRefund").innerHTML = "累计返现金额： " + result.data.agent.agentRefund + "元";
-            if ((result.data.orderList == null) || (result.data.orderList == "")) {
-                document.getElementById("orderList").innerHTML = "最近三个月无订单";
-            } else {
-                var f = document.getElementById("orderList");
-                var childs = f.childNodes;
-                for (var i = childs.length - 1; i >= 0; i--) {
-                    f.removeChild(childs[i]);
+    
+    function detail(obj){
+        $.post("${path.concat('/agent/detail/')}"+obj.id, function (result) {
+           document.getElementById("agentAddress").innerHTML="居住地： "+result.data.agent.address;
+           if(result.data.agent.wechat==null){
+               document.getElementById("agentWechat").innerHTML="微信号： 尚未绑定";
+           }else{
+               document.getElementById("agentWechat").innerHTML="微信号： "+result.data.agent.wechat;
+           }
+           if(result.data.agent.upperAgent==null){
+               document.getElementById("upperAgent").innerHTML="上级代理商： 无";
+           }else{
+               document.getElementById("upperAgent").innerHTML="上级代理商： "+result.data.agent.upperAgent.name;
+           }
+           document.getElementById("agentclaimScale").innerHTML="群规模： "+result.data.agent.claimScale+"人";
+           document.getElementById("agentCoffer").innerHTML="账户余额： "+result.data.agent.coffer+"元";
+           document.getElementById("agentRefund").innerHTML="累计返现金额： "+result.data.agent.agentRefund+"元";
+           if((result.data.orderList == null) || (result.data.orderList == "")){
+                 document.getElementById("orderList").innerHTML="最近三个月无订单";
+           }else{
+               var f = document.getElementById("orderList");            
+               var childs = f.childNodes; 
+               for(var i = childs.length - 1; i >= 0; i--) { 
+                  f.removeChild(childs[i]); 
+               }
+               var node1="<table class='table table-striped'><tr><th>订单号</th><th>状态</th><th>日期</th><th>操作</th></tr>";
+               for(var i=0;i<result.data.orderList.length;i++){
+                   var order=result.data.orderList[i];
+                   if(order.status=="PAYED"){
+                        var status="已付款未发货";
+                   }else if(order.status=="PATIAL_SHIPMENT"){
+                        var status="部分发货";
+                   }else if(order.status=="FULLY_SHIPMENT"){
+                        var status="完全发货";
+                   }else if(order.status=="SAVED"){
+                        var status="已保存未支付";
+                   }else if(order.status=="SUBMITTED"){
+                        var status="已提交未支付";
+                   }else{
+                        var status="已结束";
+                   }
+                   var date=(new Date(order.createAt)).format("yyyy/MM/dd");
+                   var node2="<tr><td>"+order.orderId+"</td><td>"+status+"</td><td>"+date+"</td><td><button type='button' class='btn btn-success' id='" + order.orderId + "'  onclick=orderItemDetail(this) data-toggle='modal' data-target='#order_item_modal'>详情</button></td></tr>";
+                   node1+=node2;
+              }
+              node1+="</table>";
+              $("#orderList").append(node1);
+           }
+           if(result.data.refundRecordList == ""){
+                 document.getElementById("refundRecordList").innerHTML="当前无返现记录";
+                 document.getElementById("refundRecordContainer").style.display="none";
+           }else{
+                var amount=0;
+                var amount2=0;
+                for(var i=0;i<result.data.refundRecordList.length;i++){
+                      var refundRecord=result.data.refundRecordList[i];
+                      amount+=refundRecord.refundAmount;
+                      if(!refundRecord.blockFlag){
+                           amount2+=refundRecord.refundAmount;
+                      }
                 }
-                var node1 = "<table class='table table-striped'><tr><th>订单号</th><th>状态</th><th>日期</th><th>操作</th></tr>";
-                for (var i = 0; i < result.data.orderList.length; i++) {
-                    var order = result.data.orderList[i];
-                    if (order.status == "PAYED") {
-                        var status = "已付款未发货";
-                    } else if (order.status == "PATIAL_SHIPMENT") {
-                        var status = "部分发货";
-                    } else if (order.status == "FULLY_SHIPMENT") {
-                        var status = "完全发货";
-                    } else if (order.status == "SAVED") {
-                        var status = "已保存未支付";
-                    } else if (order.status == "SUBMITTED") {
-                        var status = "已提交未支付";
-                    } else {
-                        var status = "已结束";
-                    }
-                    var date = (new Date(order.createAt)).format("yyyy/MM/dd");
-                    var node2 = "<tr><td>" + order.orderId + "</td><td>" + status + "</td><td>" + date + "</td><td><button type='button' class='btn btn-success' id='" + order.orderId + "'  onclick=orderItemDetail(this) data-toggle='modal' data-target='#order_item_modal'>详情</button></td></tr>";
-                    node1 += node2;
-                }
-                node1 += "</table>";
-                $("#orderList").append(node1);
-            }
-            if (result.data.refundRecordList == "") {
-                document.getElementById("refundRecordList").innerHTML = "当前无返现记录";
-                document.getElementById("refundRecordContainer").style.display = "none";
-            } else {
-                var amount = 0;
-                var amount2 = 0;
-                for (var i = 0; i < result.data.refundRecordList.length; i++) {
-                    var refundRecord = result.data.refundRecordList[i];
-                    amount += refundRecord.refundAmount;
-                    if (!refundRecord.blockFlag) {
-                        amount2 += refundRecord.refundAmount;
-                    }
-                }
-
-                document.getElementById("refundRecordList").innerHTML = "累计返现金额：" + amount + "元<br>本月预计返现金额：" + amount2 + "元";
-                document.getElementById("refundRecordContainer").style.display = "block";
-                $.post("${path.concat('/refund/statistic/')}" + result.data.agent.agentId, function (result) {
-                    $('#refundRecordContainer').highcharts({
+                
+                 document.getElementById("refundRecordList").innerHTML="累计返现金额："+amount+"元<br>本月预计返现金额："+amount2+"元";
+                 document.getElementById("refundRecordContainer").style.display="block";
+                 $.post("${path.concat('/refund/statistic/')}"+result.data.agent.agentId, function (result) {
+                   $('#refundRecordContainer').highcharts({
+                      title: {
+                         text: '返现详细记录（过去一年内）',
+                         x: -20 //center
+                      },        
+                      subtitle: {
+                         text: '过去一年内总计返现'+result.totalAmount+'元',
+                         x: -20
+                      },
+                      xAxis: {
+                        categories: result.categories
+                      },
+                      yAxis: { 
                         title: {
-                            text: '返现详细记录（过去一年内）',
-                            x: -20 //center
+                        text: '金额 (元)'
                         },
-                        subtitle: {
-                            text: '过去一年内总计返现' + result.totalAmount + '元',
-                            x: -20
-                        },
-                        xAxis: {
-                            categories: result.categories
-                        },
-                        yAxis: {
-                            title: {
-                                text: '金额 (元)'
-                            },
-                            plotLines: [{
-                                value: 0,
-                                width: 1,
-                                color: '#808080'
-                            }]
-                        },
-                        tooltip: {
-                            valueSuffix: '元'
-                        },
-                        legend: {
-                            layout: 'vertical',
-                            align: 'right',
-                            verticalAlign: 'middle',
-                            borderWidth: 0
-                        },
-                        series: [{
-                            name: '返现金额',
-                            data: result.data
+                        plotLines: [{
+                          value: 0,
+                          width: 1,
+                          color: '#808080'
                         }]
-                    });
-                });
-            }
-            if (result.data.withdrawRecordList == "") {
-                document.getElementById("withdrawRecordList").innerHTML = "当前无提现记录";
-                document.getElementById("withdrawRecordContainer").style.display = "none";
-            } else {
-                var amount = 0;
-                for (var i = 0; i < result.data.withdrawRecordList.length; i++) {
-                    var withdrawRecord = result.data.withdrawRecordList[i];
-                    amount += withdrawRecord.amount;
-                }
-                document.getElementById("withdrawRecordList").innerHTML = "总提现金额：" + amount + "元";
-                document.getElementById("withdrawRecordContainer").style.display = "block";
-                $.post("${path.concat('/withdraw/statistic/')}" + result.data.agent.agentId, function (result) {
-                    $('#withdrawRecordContainer').highcharts({
+                      },
+                      tooltip: {
+                          valueSuffix: '元'
+                      },
+                      legend: {
+                         layout: 'vertical',
+                         align: 'right',
+                         verticalAlign: 'middle',
+                         borderWidth: 0
+                      },
+                      series: [{
+                         name: '返现金额',
+                         data: result.data
+                      }]
+                  });
+               });
+           }
+           if(result.data.withdrawRecordList == ""){
+                 document.getElementById("withdrawRecordList").innerHTML="当前无提现记录";
+                 document.getElementById("withdrawRecordContainer").style.display="none";
+           }else{
+               var amount=0;
+               for(var i=0;i<result.data	.withdrawRecordList.length;i++){
+                   var withdrawRecord=result.data.withdrawRecordList[i];
+                   amount+=withdrawRecord.amount;
+               }
+               document.getElementById("withdrawRecordList").innerHTML="总提现金额："+amount+"元";
+               document.getElementById("withdrawRecordContainer").style.display="block";
+               $.post("${path.concat('/withdraw/statistic/')}"+result.data.agent.agentId, function (result) {
+                   $('#withdrawRecordContainer').highcharts({
+                      title: {
+                         text: '提现详细记录（过去一年内）',
+                         x: -20 //center
+                      },        
+                      subtitle: {
+                         text: '过去一年内总计提现'+result.totalAmount+'元',
+                         x: -20
+                      },
+                      xAxis: {
+                        categories: result.categories
+                      },
+                      yAxis: { 
                         title: {
-                            text: '提现详细记录（过去一年内）',
-                            x: -20 //center
+                        text: '金额 (元)'
                         },
-                        subtitle: {
-                            text: '过去一年内总计提现' + result.totalAmount + '元',
-                            x: -20
-                        },
-                        xAxis: {
-                            categories: result.categories
-                        },
-                        yAxis: {
-                            title: {
-                                text: '金额 (元)'
-                            },
-                            plotLines: [{
-                                value: 0,
-                                width: 1,
-                                color: '#808080'
-                            }]
-                        },
-                        tooltip: {
-                            valueSuffix: '元'
-                        },
-                        legend: {
-                            layout: 'vertical',
-                            align: 'right',
-                            verticalAlign: 'middle',
-                            borderWidth: 0
-                        },
-                        series: [{
-                            name: '提现金额',
-                            data: result.data
+                        plotLines: [{
+                          value: 0,
+                          width: 1,
+                          color: '#808080'
                         }]
-                    });
-                });
-            }
+                      },
+                      tooltip: {
+                          valueSuffix: '元'
+                      },
+                      legend: {
+                         layout: 'vertical',
+                         align: 'right',
+                         verticalAlign: 'middle',
+                         borderWidth: 0
+                      },
+                      series: [{
+                         name: '提现金额',
+                         data: result.data
+                      }]
+                  });
+               });
+           }
         });
     }
+    
+    function orderItemDetail(obj){
+        $.post("${path.concat('/order/orderItem/')}"+obj.id, function (result) {
+          
 
-    function orderItemDetail(obj) {
-        $.post("${path.concat('/order/orderItem/')}" + obj.id, function (result) {
-
-
-            document.getElementById("model_p").innerHTML = "代理商：" + result.data.order.agent.name;
-
-            var f = document.getElementById("model_table");
-            var childs = f.childNodes;
-            for (var i = childs.length - 1; i >= 0; i--) {
-                f.removeChild(childs[i]);
+            document.getElementById("model_p").innerHTML="代理商："+result.data.order.agent.name;
+            
+            var f = document.getElementById("model_table");            
+            var childs = f.childNodes; 
+            for(var i = childs.length - 1; i >= 0; i--) { 
+               f.removeChild(childs[i]); 
             }
 
-            var node = "<tr><th>客户</th><th>产品</th><th>数量</th><th>价格</th></tr>";
-            for (var i = 0; i < result.data.order.orderItems.length; i++) {
-                var orderItem = result.data.order.orderItems[i];
-                node += "<tr><td>" + orderItem.customer.name + "</td><td>" + orderItem.goods.name + "</td><td>" + orderItem.goodsQuantity + "</td><td>" + orderItem.orderItemPrice + "</td>";
+            var node="<tr><th>客户</th><th>产品</th><th>数量</th><th>价格</th></tr>";
+            for(var i=0;i<result.data.order.orderItems.length;i++){
+               var orderItem=result.data.order.orderItems[i];
+               node+="<tr><td>"+orderItem.customer.name+"</td><td>"+orderItem.goods.name+"</td><td>"+orderItem.goodsQuantity+"</td><td>"+orderItem.orderItemPrice+"</td>";
             }
             $("#model_table").append(node);
-            document.getElementById("model_total").innerHTML = "总计:&nbsp;" + result.data.totalPrices + "元";
-            var node1 = "";
-            for (var key in result.data.goods_quantity_Map) {
-                node1 += "商品:&nbsp;" + key + "&nbsp;&nbsp;&nbsp;&nbsp;总共:&nbsp;" + result.data.goods_quantity_Map[key] + "件<br>"
+            document.getElementById("model_total").innerHTML="总计:&nbsp;"+result.data.totalPrices+"元";
+            var node1="";
+            for(var key in result.data.goods_quantity_Map){
+                node1+="商品:&nbsp;"+key+"&nbsp;&nbsp;&nbsp;&nbsp;总共:&nbsp;"+result.data.goods_quantity_Map[key]+"件<br>"
             }
-            document.getElementById("model_quantity").innerHTML = node1;
-        });
+            document.getElementById("model_quantity").innerHTML=node1;
+       });
     }
-
+    
 
 </script>
 <style>
-    #agent_detail_modal .modal-body {
-        height: 600px;
-        overflow: auto;
-    }
-
-    #agent_detail_modal .modal-body #orderList {
-        height: 300px;
-        overflow: auto;
+    #agent_detail_modal .modal-body{
+       height:600px;     
+       overflow:auto;
+    } 
+    #agent_detail_modal .modal-body #orderList{
+       height:300px;     
+       overflow:auto;
     }
 
 </style>
