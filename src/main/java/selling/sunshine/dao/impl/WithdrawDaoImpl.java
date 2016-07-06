@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
 import selling.sunshine.dao.BaseDao;
 import selling.sunshine.dao.WithdrawDao;
 import selling.sunshine.model.WithdrawRecord;
@@ -114,19 +113,34 @@ public class WithdrawDaoImpl extends BaseDao implements WithdrawDao {
         }
     }
 
-	@Override
-	public ResultData statistic(Map<String, Object> condition) {
-		ResultData result = new ResultData();
-		try {
-			List<Map<String, Object>> list=sqlSession.selectList("selling.agent.withdraw.statistic",condition);
-			result.setData(list);
-			result.setResponseCode(ResponseCode.RESPONSE_OK);
-			return result;
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-			result.setResponseCode(ResponseCode.RESPONSE_ERROR);
-			result.setDescription(e.getMessage());
-		}
+    @Override
+    public ResultData statistic(Map<String, Object> condition) {
+        ResultData result = new ResultData();
+        try {
+            List<Map<String, Object>> list = sqlSession.selectList("selling.agent.withdraw.statistic", condition);
+            result.setData(list);
+            result.setResponseCode(ResponseCode.RESPONSE_OK);
+            return result;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription(e.getMessage());
+        }
         return result;
-	}
+    }
+
+    @Override
+    public ResultData money(Map<String, Object> condition) {
+        ResultData result = new ResultData();
+        try {
+            Double money = sqlSession.selectOne("selling.withdraw.money", condition);
+            result.setData(money);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription(e.getMessage());
+        } finally {
+            return result;
+        }
+    }
 }

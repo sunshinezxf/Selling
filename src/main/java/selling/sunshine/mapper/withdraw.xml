@@ -105,4 +105,16 @@
       GROUP BY DATE_FORMAT(withdraw_record.create_time,'%Y-%m') 
       ORDER BY  DATE_FORMAT(withdraw_record.create_time,'%Y-%m')
     </select>
+
+    <select id="money" parameterType="java.util.Map" resultType="java.lang.Double">
+        SELECT sum(withdraw_amount)
+        FROM withdraw_record
+        WHERE 1 = 1
+        <if test="check != null and check != ''">
+            AND withdraw_status = 0 AND block_flag = TRUE
+        </if>
+        <if test="pay != null and pay != ''">
+            AND withdraw_status = 0 and block_flag = FALSE
+        </if>
+    </select>
 </mapper>
