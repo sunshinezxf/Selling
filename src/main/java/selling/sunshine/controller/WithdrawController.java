@@ -119,6 +119,7 @@ public class WithdrawController {
             ResultData fetchResponse = withdrawService.fetchWithdrawRecord(condition);
             WithdrawRecord record = ((List<WithdrawRecord>) fetchResponse.getData()).get(0);
             record.setStatus(WithdrawStatus.PROCESS);
+            result = withdrawService.updateWithdrawRecord(record);
         }
         return result;
     }
