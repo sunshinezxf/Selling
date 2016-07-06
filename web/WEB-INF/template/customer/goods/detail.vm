@@ -20,8 +20,8 @@
         <div class="fading-slider">
             <ul>
                 <li>
-                    <a id="first_img" class="logo" href="${path.concat('/material/goods_img/4_b.bmp')}">
-                        <img class="img" src="${path.concat('/material/goods_img/4.jpg')}"/>
+                    <a id="first_img" class="logo" href="${path.concat('/material/goods_img/1_b.jpg')}">
+                        <img class="img" src="${path.concat('/material/goods_img/1.jpg')}"/>
                     </a>
                 </li>
                 <li>
@@ -30,8 +30,8 @@
                     </a>
                 </li>
                 <li>
-                    <a class="logo" href="${path.concat('/material/goods_img/1.jpg')}">
-                        <img class="img" src="${path.concat('/material/goods_img/1.jpg')}"/>
+                    <a class="logo" href="${path.concat('/material/goods_img/3_b.jpg')}">
+                        <img class="img" src="${path.concat('/material/goods_img/3.jpg')}"/>
                     </a>
                 </li>
             </ul>
@@ -40,19 +40,110 @@
     
     <div class="gap"></div>
     <div class="detail_area">
-        <div class="feeling_div">
+        <div class="options_div">
+            <table cellpadding="0" cellspacing="0">
+                <th>
+                    <td class="normal chosen">
+                        <button id="det" class="option chosen_btn">图文详情</button>
+                    </td>
+                    <td class="normal">
+                        <button id="par" class="option">产品参数</button>
+                    </td>
+                    <td class="normal">
+                        <button id="mor" class="option">更多信息</button>
+                    </td>
+                </th>
+            </table>
+        </div>
+        <div class="gap"></div>
+        <div id="detail" class="detail">
             <a id="feelings" href="${path.concat('/material/images/feelings_b.jpg')}">
                 <img class="img" src="${path.concat('/material/images/feelings.jpg')}"/>
             </a>
         </div>
-        <div class="gap"></div>
-        <div class="product_parameters">
-            <a id="parameter" href="${path.concat('/material/images/parameter_b.bmp')}">
-                <img class="img" src="${path.concat('/material/images/parameter.png')}"/>
+        <div id="parameters" class="product_parameters">
+            <table class="p_table">
+                <tr>
+                    <td class="p_hd">产品名称</td>
+                    <td class="p_bd">云草纲目三七超细粉</td>
+                </tr>
+                <tr>
+                    <td class="p_hd">规格</td>
+                    <td class="p_bd">180克/瓶</td>
+                </tr>
+                <tr>
+                    <td class="p_hd">原料产地</td>
+                    <td class="p_bd">云南文山</td>
+                </tr>
+                <tr>
+                    <td class="p_hd">性味与归经</td>
+                    <td class="p_bd">甘、微苦、温。归肝、胃经</td>
+                </tr>
+                <tr>
+                    <td class="p_hd">用法与用量</td>
+                    <td class="p_bd">3-9克，吞服一次1-3克，外用适量</td>
+                </tr>
+                <tr>
+                    <td class="p_hd">功能与主治</td>
+                    <td class="p_bd">散瘀止血，消肿定痛，益气活血。用于跌扑肿痛，内外出血，气虚血瘀，胸痹心痛，中风偏瘫，气虚体弱；软组织挫伤，出血性疾病，高血压，冠心病，脑卒中，高血脂症，糖尿病血管突变，免疫功能低下见上述证候者。</td>
+                </tr>
+                <tr>
+                    <td class="p_hd">注意</td>
+                    <td class="p_bd">孕妇慎用；有创面者禁用</td>
+                </tr>
+                <tr>
+                    <td class="p_hd">生产厂家</td>
+                    <td class="p_bd">昆明道地中药饮片厂</td>
+                </tr>
+                <tr>
+                    <td class="p_hd">生产地址</td>
+                    <td class="p_bd">昆明市五华区普吉路521号</td>
+                </tr>
+                <tr>
+                    <td class="p_hd">生产许可证</td>
+                    <td class="p_bd">滇20160179</td>
+                </tr>
+                <tr>
+                    <td class="p_hd">执行标准</td>
+                    <td class="p_bd">《中国药典》2015年版一部云YPBZ-0091-2008</td>
+                </tr>
+                <tr>
+                    <td class="p_hd">监制</td>
+                    <td class="p_bd">云南云草纲目生物科技有限公司</td>
+                </tr>
+                <tr>
+                    <td class="p_hd">有效期</td>
+                    <td class="p_bd">三年</td>
+                </tr>
+                <tr>
+                    <td class="p_hd">贮藏</td>
+                    <td class="p_bd">密封</td>
+                </tr>
+                <tr>
+                    <td class="p_hd">电话</td>
+                    <td class="p_bd">0871-63111137</td>
+                </tr>
+                <tr>
+                    <td class="p_hd">邮编</td>
+                    <td class="p_bd">650032</td>
+                </tr>
+                <tr>
+                    <td class="p_hd">生产批号</td>
+                    <td class="p_bd">见瓶身</td>
+                </tr>
+                <tr>
+                    <td class="p_hd" style="border-bottom:none;">生产日期</td>
+                    <td class="p_bd" style="border-bottom:none;">见瓶身</td>
+                </tr>
+            </table>
+        </div>
+        <div id="more" class="more">
+            <a id="qrcode" href="${path.concat('/material/images/qrcode_b.png')}">
+                <img class="img" src="${path.concat('/material/images/qrcode.png')}"/>
             </a>
+            <p>长按上方二维码，扫描后关注，即可了解更多有关“云草纲目超细三七粉”的信息</p>
         </div>
     </div>
-    <a href="weixin://contacts/profile/gh_5535163c9ba8">别人能看到的链接文字</a>
 </div>
 <div class="buy_area">
     <div class="footer_div">
@@ -252,6 +343,9 @@
         
         $('.unslider-fade').css('height',$('#first_img img').height());
         
+        $('#detail').show();
+        $('#parameters').hide();
+        $('#more').hide();
         
         $(".logo").fancybox({
             padding : 0,
@@ -287,7 +381,7 @@
             }
         });
         
-        $("#parameter").fancybox({
+        $("#qrcode").fancybox({
             padding : 0,
             closeBtn:false,
             closeClick:true,
@@ -430,6 +524,43 @@
     $("#fail_dialog").find(".weui_btn_dialog.primary").click(function () {
         $("#fail_dialog").hide();
     });
+    
+    $('#det').click(function () {
+        $(this).parent().addClass("chosen");
+        $('#par').parent().removeClass("chosen");
+        $('#mor').parent().removeClass("chosen");
+        $(this).addClass("chosen_btn");
+        $('#par').removeClass("chosen_btn");
+        $('#mor').removeClass("chosen_btn");
+        $('#detail').show();
+        $('#parameters').hide();
+        $('#more').hide();
+    });
+    
+    $('#par').click(function () {
+        $(this).parent().addClass("chosen");
+        $('#det').parent().removeClass("chosen");
+        $('#mor').parent().removeClass("chosen");
+        $(this).addClass("chosen_btn");
+        $('#det').removeClass("chosen_btn");
+        $('#mor').removeClass("chosen_btn");
+        $('#parameters').show();
+        $('#detail').hide();
+        $('#more').hide();
+    });
+    
+    $('#mor').click(function () {
+        $(this).parent().addClass("chosen");
+        $('#par').parent().removeClass("chosen");
+        $('#det').parent().removeClass("chosen");
+        $(this).addClass("chosen_btn");
+        $('#par').removeClass("chosen_btn");
+        $('#det').removeClass("chosen_btn");
+        $('#more').show();
+        $('#parameters').hide();
+        $('#detail').hide();
+    });
+    
     
     function convert_id(){
         var id=$('#agent_id').val();
