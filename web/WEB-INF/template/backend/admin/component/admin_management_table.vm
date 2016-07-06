@@ -17,6 +17,7 @@
         </div>
     </div>
 </div>
+#parse("/backend/admin/component/admin_update_modal.vm")
 <div class="modal fade" id="dialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
    <div class="modal-dialog">
       <div class="modal-content">
@@ -41,28 +42,27 @@
 </div>
 <script>
    
-    var adminId;
+    var userId;
     $("#dialog").find("#dialogConfirm").click(function(){
     	   
-    	   var url="${path.concat('/delete/')}"+adminId;
+    	   var url="${path.concat('/admin/delete/')}"+userId;
     	   $.post(url, function (result) {
     	      var responseCode=result.responseCode;	    
     	      if(responseCode=="RESPONSE_NULL"){  
     	          BootstrapDialog.alert('当前系统中只有一个管理员账号，不能删除!');
     	      }else{
-    	         $("#tr"+adminId).remove();
+    	         window.location.href="${path.concat('/admin/overview')}";
     	      }   	
     	  });
     	  $("#dialog").modal('hide');
     });
     
     function deleteAdmin(obj){
-       $("#dialog").find(".modal-body").html("确定删除这个管理员账号吗！");
+       $("#dialog").find(".modal-body").html("确定删除这个账号吗！");
        $("#dialog").modal('show');  
-       adminId=obj.id;  
+       userId=obj.id;  
     }
-
-    
+  
     $(document).ready(function () {
           $("#admin_overview_table").DataTable({
             searching: false,
@@ -96,16 +96,18 @@
             },
             columns: [
                 {title: "账号", "mData": "username"},
-                {title: "密码", "mData": "password"},
                 {title: "角色", "mData": "role.description"},  
                 {
                     title: "操作", "mRender": function (data, type, full) {
                        var operation = "";
-                       var item_url = "${path.concat('/admin/')}" ;
-                       var modifyButton="<button type='button' class='btn btn-success' onclick=\"javascript:location.href='" + item_url + "'\">修改密码</button>&nbsp;&nbsp;&nbsp;&nbsp;";
+                       var modifyButton="<button type='button' class='btn btn-success' id='" + full.admin.adminId + "' data-toggle='modal' data-target='#admin_update_modal'>修改密码</button>&nbsp;&nbsp;&nbsp;&nbsp;";
                        operation+=modifyButton;
-                       var deleteButton="<button type='button' class='btn btn-danger' id='" + admin.adminId + "' onclick='deleteAdmin(this)'>删除</button>";
+                       var deleteButton="<button type='button' class='btn btn-danger' id='" + full.userId + "' onclick='deleteAdmin(this)'>删除</button>";
                        operation+=deleteButton;
+                       $("#" + full.admin.adminId).on('click', function () {
+                              $("#admin_username").val(full.admin.username);
+                               $("#admin_id").val(full.admin.adminId);
+                       });
                        return operation;
                     }
                 }
