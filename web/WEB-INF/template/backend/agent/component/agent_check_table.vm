@@ -26,6 +26,7 @@
             "sPaginationType": "full_numbers",
             "bPaginate": false,
             "bLengthChange": true,
+            "bAutoWidth": true,
             "bSort": false,
             "bDeferRender": true,
             "bProcessing": true,
@@ -52,7 +53,7 @@
             columns: [
                 {
                     title: "申请时间", "mRender": function (data, type, full) {
-                    return ((new Date(full.createAt)).format("yyyy/MM/dd hh:mm"));
+                    return ((new Date(full.createAt)).format("yyyy/MM/dd"));
                 }
                 },
                 {title: "姓名", "mData": "name"},
@@ -64,18 +65,18 @@
                     }
                     return full.upperAgent.name;
                 }
-                },   
+                },
                 {
                     title: "操作", "mRender": function (data, type, full) {
                     var operation = "";
                     if (!full.granted) {
-                        var verification_button = "<button type='button' id='" + full.agentId + "' class='btn btn-info btn-group-sm grant' >授权</button>&nbsp;"
+                        var verification_button = "<div class = 'btn-group'><button type='button' id='" + full.agentId + "' class='btn btn-info btn-group-sm grant' >审核</button>&nbsp;&nbsp;</div>"
                         operation += verification_button;
                     }
                     $("#" + full.agentId).on('click', function () {
                         window.location.href = "${path.concat('/agent/check/')}" + full.agentId;
                     })
-                    var limit_button = "<button type='button' class='btn btn-warning btn-group-sm'>禁用</button>&nbsp;"
+                    var limit_button = "<div class = 'btn-group'><button type='button' class='btn btn-warning btn-group-sm'>禁用</button>&nbsp;&nbsp;</div>"
                     operation += limit_button;
                     return operation;
                 }
@@ -98,7 +99,7 @@
                 }
             }
         });
-        
+
 
     });
 </script>

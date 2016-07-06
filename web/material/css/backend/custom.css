@@ -134,3 +134,7 @@ input[type="radio"], input[type="checkbox"] {
     border-radius: 3px
 }
 
+.btn {
+    margin-top: 2px;
+    margin-bottom: 2px
+}
