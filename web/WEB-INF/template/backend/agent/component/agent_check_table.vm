@@ -24,7 +24,7 @@
             ordering: false,
             paging: true,
             "sPaginationType": "full_numbers",
-            "bPaginate": false,
+            "bPaginate": true,
             "bLengthChange": true,
             "bAutoWidth": true,
             "bSort": false,

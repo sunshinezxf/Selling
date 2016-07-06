@@ -308,7 +308,9 @@ public class AgentDaoImpl extends BaseDao implements AgentDao {
     public ResultData updateAgentGift(List<GiftConfig> list) {
         ResultData result = new ResultData();
         try {
-            sqlSession.update("selling.agent.gift.updateBatch", list);
+        	for(GiftConfig config : list){
+        		sqlSession.update("selling.agent.gift.update", config);
+        	}
             result.setData(list);
         } catch (Exception e) {
             logger.error(e.getMessage());

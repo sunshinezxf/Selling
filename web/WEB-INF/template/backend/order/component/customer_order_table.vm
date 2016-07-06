@@ -30,8 +30,8 @@
 #parse("/backend/express/component/express_detail_modal.vm")
 <script>
 
-     
-     
+
+
      $(document).ready(function () {
          var node="<table id='customer_order_table' class='table table-striped table-bordered' cellspacing='0' width='100%'></table>";
          $("#customer_order_overview").append(node);
@@ -112,9 +112,9 @@
                 }
             }
         });
-     
+
      });
-     
+
       function select(obj){
           var status;
           switch(obj.id){
@@ -195,7 +195,7 @@
                       if(full.status=="NOT_PAYED"||full.status=="PAYED"){
                           var express="无快递单";
                       }else{
-                     
+
                           var express="<button type='button' class='btn btn-success' id='" + full.orderId + "' onclick=expressDetail(this)>快递单详情</button>";
                       }
                     return express;
@@ -219,10 +219,10 @@
                 }
             }
         });
- 
+
       }
-      
-      
+
+
       function expressDetail(obj){
          $.post("${path.concat('/express/detail/')}"+obj.id, function (result) {
             document.getElementById("expressNumber").innerHTML=result.data.express.expressNumber;
@@ -234,8 +234,8 @@
             document.getElementById("receiverPhone").innerHTML=result.data.express.receiverPhone;
             document.getElementById("receiverAddress").innerHTML=result.data.express.receiverAddress;
             document.getElementById("goodsName").innerHTML=result.data.express.goodsName;
-            $("#express_detail_modal").modal('show');   
-         
+            $("#express_detail_modal").modal('show');
+
          });
       }
 </script>

@@ -10,26 +10,6 @@ body {
 
 .unslider{
 	position: relative;
-	width:100%;
-	height:auto;
-    background: #fff;
-    color: #666;
-    text-align: center;
-    text-shadow: none;
-    border-radius: 0.375em;
-    overflow: visible;
-}
-
-.unslider-fade{
-	position:absolute;
-    top: 0;
-    width:100%;
-    height:auto;	
-	z-index:1;
-}
-
-.unslider-wrap {
-    position: relative;
 }
 
 .unslider-nav{
@@ -37,8 +17,7 @@ body {
     bottom: 0;
     width:100%;
     height:1.25em;
-    z-index:2;
-    display:none;
+    z-index:11;
 }
 
 
@@ -247,7 +226,7 @@ body {
  
 .weui_actionsheet{
 	height:auto;
-	z-index:4;
+	z-index:13;
 }
 
 .number_area{
@@ -456,11 +435,11 @@ body {
 }
 
 .weui_mask_transition {
-    z-index: 3;
+    z-index: 12;
 }
 
 .weui_dialog{
-	z-index:5;
+	z-index:14;
 }
 
 .weui_cells:after {
@@ -497,4 +476,8 @@ body {
 .ovfHiden{
 	overflow-y: hidden;
 	height: 100%;
+}
+
+.pinch-zoom-container{
+	overflow:visible !important;
 }
