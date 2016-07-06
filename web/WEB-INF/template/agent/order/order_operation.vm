@@ -2,8 +2,7 @@
 <div class="weui_tab_bd">
 <div class="hd">
     <h1 class="page_title">订单管理</h1>
-
-    <p class="page_desc">更多关于订单(创建,查询)的操作</p>
+    <p id="refund_condition" class="page_desc">更多关于订单(创建,查询)的操作</p>
 </div>
 <div class="bd">
     <div class="weui_btn_area clear-margin-top">
@@ -36,6 +35,21 @@
 </div>
 <script>
 	$(document).ready(function(){
+		var url = "${path.concat('/refund/calculateRefund')}";
+		$.get(url, function(result){
+			console.debug(result);
+			if(result.responseCode != "RESPONSE_OK"){
+				return;
+			}
+			var data = result.data;
+			var config = data[0];
+			if($.isEmptyObject(config)){
+				return;
+			} 
+			$("#refund_condition").html("社群奖励进度： " + config['quantity'] + "件/"+config['amountTrigger'] + "件");		
+		});
+		
+		
 		$.get_order(${type});
 		switch(${type}){
 		case 0:

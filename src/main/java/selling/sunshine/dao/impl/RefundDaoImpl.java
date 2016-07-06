@@ -403,83 +403,150 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
 
 	@Override
 	public ResultData calculateRefund(String agentId) {
-        ResultData result = new ResultData();
+		ResultData result = new ResultData();
 
-        Calendar c = Calendar.getInstance();
-        Timestamp month = new Timestamp(c.getTimeInMillis());
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM");
-        String date = dateFormat.format(month);
-        try {
-            Map<String, Object> condition = new HashMap<>();
-            condition.put("date", date + "%");
-            condition.put("agentId", agentId);
-            List<Map<String, Object>> sumOrderList = sqlSession.selectList(
-                    "selling.order.pool.sumOrder", condition);
-            List<Map<String, Object>> sumCustomerOrderList = sqlSession.selectList(
-                    "selling.customer.order.sumCustomerOrder", condition);
-            List<Map<String, Object>> resultList = new ArrayList<>();
-            if (sumOrderList.size() == 0) {
-                resultList = sumCustomerOrderList;
-            } else if (sumCustomerOrderList.size() == 0) {
-                resultList = sumOrderList;
-            } else {
-                boolean flag = false;
-                for (int i = 0; i < sumOrderList.size(); i++) {
-                    for (int j = 0; j < sumCustomerOrderList.size(); j++) {
-                        if (sumOrderList.get(i).get("goods").equals(sumCustomerOrderList.get(j).get("goods"))) {
-                            flag = true;
-                            sumCustomerOrderList.get(j).put("quantity", Integer.parseInt(sumCustomerOrderList.get(j)
-                                    .get("quantity").toString()) + Integer.parseInt(sumOrderList.get(i)
-                                    .get("quantity").toString()));
-                            sumCustomerOrderList.get(j).put("price", Double.parseDouble(sumCustomerOrderList.get(j)
-                                    .get("price").toString()) + Double.parseDouble(sumOrderList.get(i)
-                                    .get("price").toString()));
-                            break;
-                        }
-                    }
-                    if (!flag) {
-                        resultList.add(sumOrderList.get(i));
-                    } else {
-                        flag = false;
-                    }
-                }
-                resultList.addAll(sumCustomerOrderList);
-            }
-            if (resultList.size() != 0) {
-            	List<Map<String, Object>> list=new ArrayList<>();
-            	Map<String, Object> dataMap;
-            	Map<String, Object> configCondition = new HashMap<>();
-            	Map<String, Object> goodsCondition = new HashMap<>();
-            	for (int i = 0; i < resultList.size(); i++) {
-                    configCondition.put("goodsId", resultList.get(i).get("goods"));
-                    configCondition.put("blockFlag", false);
-                    if(sqlSession.selectList("selling.refund.config.query", configCondition).size()==0){
-                    	 dataMap=new HashMap<>();
-                    	 list.add(dataMap);
-                    }else {
-                        RefundConfig config = (RefundConfig) sqlSession.selectList("selling.refund.config.query", configCondition).get(0);
-                        dataMap=new HashMap<>();
-                        dataMap.put("amountTrigger", config.getAmountTrigger());
-                        dataMap.put("quantity", resultList.get(i).get("quantity").toString());
-                        goodsCondition.put("goodsId", resultList.get(i).get("goods"));
-                        Goods4Agent goods=(Goods4Agent)sqlSession.selectList("selling.goods.query4Agent",goodsCondition).get(0);
-                        dataMap.put("goods", goods.getName());
-                        list.add(dataMap);
-                        configCondition.clear();
+		Calendar c = Calendar.getInstance();
+		Timestamp month = new Timestamp(c.getTimeInMillis());
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM");
+		String date = dateFormat.format(month);
+		try {
+			Map<String, Object> condition = new HashMap<>();
+			condition.put("date", date + "%");
+			condition.put("agentId", agentId);
+			List<Map<String, Object>> sumOrderList = sqlSession.selectList(
+					"selling.order.pool.sumOrder", condition);
+			List<Map<String, Object>> sumCustomerOrderList = sqlSession
+					.selectList("selling.customer.order.sumCustomerOrder",
+							condition);
+			List<Map<String, Object>> resultList = new ArrayList<>();
+			if (sumOrderList.size() == 0) {
+				resultList = sumCustomerOrderList;
+			} else if (sumCustomerOrderList.size() == 0) {
+				resultList = sumOrderList;
+			} else {
+				boolean flag = false;
+				for (int i = 0; i < sumOrderList.size(); i++) {
+					for (int j = 0; j < sumCustomerOrderList.size(); j++) {
+						if (sumOrderList
+								.get(i)
+								.get("goods")
+								.equals(sumCustomerOrderList.get(j)
+										.get("goods"))) {
+							flag = true;
+							sumCustomerOrderList.get(j).put(
+									"quantity",
+									Integer.parseInt(sumCustomerOrderList
+											.get(j).get("quantity").toString())
+											+ Integer.parseInt(sumOrderList
+													.get(i).get("quantity")
+													.toString()));
+							sumCustomerOrderList.get(j).put(
+									"price",
+									Double.parseDouble(sumCustomerOrderList
+											.get(j).get("price").toString())
+											+ Double.parseDouble(sumOrderList
+													.get(i).get("price")
+													.toString()));
+							break;
+						}
 					}
-
-                    goodsCondition.clear();
-            	}
-            	result.setData(list);
-            	return result;
-            }
-         }catch(Exception e) {
-                logger.error(e.getMessage());
-                result.setResponseCode(ResponseCode.RESPONSE_ERROR);
-                result.setDescription(e.getMessage());
-            } finally {
-                return result;
-            }
+					if (!flag) {
+						resultList.add(sumOrderList.get(i));
+					} else {
+						flag = false;
+					}
+				}
+				resultList.addAll(sumCustomerOrderList);
+			}
+			Map<String, Object> goodsCondition = new HashMap<>();
+			Map<String, Object> configCondition = new HashMap<>();
+			List<Map<String, Object>> list = new ArrayList<>();
+			Map<String, Object> dataMap;
+			boolean flag = false;
+			List<Goods4Agent> goodsList = sqlSession.selectList(
+					"selling.goods.query4Agent", goodsCondition);
+			if (resultList.size() == 0) {
+				for (int i = 0; i < goodsList.size(); i++) {
+					configCondition.put("goodsId", goodsList.get(i)
+							.getGoodsId());
+					configCondition.put("blockFlag", false);
+					if (sqlSession.selectList("selling.refund.config.query",
+							configCondition).size() == 0) {
+						dataMap = new HashMap<>();
+						list.add(dataMap);
+					} else {
+						RefundConfig config = (RefundConfig) sqlSession
+								.selectList("selling.refund.config.query",
+										configCondition).get(0);
+						dataMap = new HashMap<>();
+						dataMap.put("amountTrigger", config.getAmountTrigger());
+						dataMap.put("quantity",0);
+						dataMap.put("goods", goodsList.get(i).getName());
+						list.add(dataMap);
+					}
+					configCondition.clear();
+					list.add(dataMap);
+				}
+			} else {
+				for (int i = 0; i < goodsList.size(); i++) {
+					for (int j = 0; j < resultList.size(); j++) {
+						if (goodsList.get(i).getGoodsId()
+								.equals(resultList.get(j).get("goods"))) {
+							configCondition.put("goodsId", goodsList.get(i)
+									.getGoodsId());
+							configCondition.put("blockFlag", false);
+							if (sqlSession.selectList(
+									"selling.refund.config.query", configCondition)
+									.size() == 0) {
+								dataMap = new HashMap<>();
+							} else {
+								RefundConfig config = (RefundConfig) sqlSession
+										.selectList("selling.refund.config.query",
+												configCondition).get(0);
+								dataMap = new HashMap<>();
+								dataMap.put("amountTrigger",
+										config.getAmountTrigger());
+								dataMap.put("quantity",
+										resultList.get(j).get("quantity"));
+								dataMap.put("goods", goodsList.get(i).getName());
+							}
+							configCondition.clear();
+							list.add(dataMap);
+							flag = true;
+							break;
+						}
+					}
+					if (!flag) {
+						configCondition.put("goodsId", goodsList.get(i)
+								.getGoodsId());
+						configCondition.put("blockFlag", false);
+						if (sqlSession.selectList("selling.refund.config.query",
+								configCondition).size() == 0) {
+							dataMap = new HashMap<>();
+						} else {
+							RefundConfig config = (RefundConfig) sqlSession
+									.selectList("selling.refund.config.query",
+											configCondition).get(0);
+							dataMap = new HashMap<>();
+							dataMap.put("amountTrigger", config.getAmountTrigger());
+							dataMap.put("quantity", 0);
+							dataMap.put("goods", goodsList.get(i).getName());
+						}
+						configCondition.clear();
+						list.add(dataMap);
+					} else {
+						flag = false;
+					}
+				}
+			}
+			result.setData(list);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+			result.setDescription(e.getMessage());
+		} finally {
+			return result;
+		}
 	}
 
 }

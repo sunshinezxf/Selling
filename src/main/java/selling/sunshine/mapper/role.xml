@@ -4,18 +4,19 @@
     <resultMap id="roleVo" type="selling.sunshine.model.Role">
         <result property="roleId" column="role_id"></result>
         <result property="name" column="role_name"></result>
+        <result property="description" column="role_description"></result>
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
     </resultMap>
 
     <!-- insert record in table role -->
     <insert id="insert" parameterType="selling.sunshine.model.Role" useGeneratedKeys="false">
-        INSERT INTO role(role_id, role_name, block_flag, create_time)
-        VALUES (#{roleId}, #{name}, #{blockFlag}, #{createAt})
+        INSERT INTO role(role_id, role_name, role_description, block_flag, create_time)
+        VALUES (#{roleId}, #{name}, #{description}, #{blockFlag}, #{createAt})
     </insert>
 
     <select id="query" parameterType="java.util.Map" resultMap="roleVo">
-        SELECT role_id, role_name, block_flag, create_time
+        SELECT role_id, role_name, role_description, block_flag, create_time
         FROM role
         WHERE 1 = 1
         <if test="roleId != null and roleId != ''">

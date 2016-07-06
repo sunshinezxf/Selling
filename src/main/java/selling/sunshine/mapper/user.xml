@@ -4,6 +4,7 @@
     <resultMap id="roleVo" type="selling.sunshine.model.Role">
         <result property="roleId" column="role_id"></result>
         <result property="name" column="role_name"></result>
+        <result property="description" column="role_description"></result>
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
     </resultMap>
@@ -73,16 +74,22 @@
                 AND password = #{password}
             </if>
         </if>
-        <if test="blockFlag != null and blockFlag != ''">
+        <if test="isAdmin != null">
+            AND agent_id IS NULL AND manager_id IS NOT NULL
+        </if>
+        <if test="blockFlag != null">
             AND block_flag = #{blockFlag}
         </if>
         <if test="rule != null and rule != ''">
             ORDER BY ${rule}
         </if>
+        <if test="rule == null">
+            ORDER BY create_time DESC
+        </if>
     </select>
 
     <select id="roleQuery" parameterType="java.util.Map" resultMap="roleVo">
-		SELECT role_id, role_name, block_flag, create_time
+		SELECT role_id, role_name, role_description, block_flag, create_time
 		FROM role
 		WHERE role_id = #{roleId}
 	</select>

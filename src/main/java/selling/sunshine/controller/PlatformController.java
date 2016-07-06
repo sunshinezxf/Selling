@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import selling.sunshine.form.AdminForm;
+import selling.sunshine.form.AdminLoginForm;
 import selling.sunshine.model.Admin;
 import selling.sunshine.model.Role;
 import selling.sunshine.model.User;
@@ -55,7 +56,7 @@ public class PlatformController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/login")
-    public ModelAndView login(@Valid AdminForm form, BindingResult result, HttpServletRequest request) {
+    public ModelAndView login(@Valid AdminLoginForm form, BindingResult result, HttpServletRequest request) {
         ModelAndView view = new ModelAndView();
         if (result.hasErrors()) {
             view.setViewName("redirect:/login");
@@ -70,6 +71,17 @@ public class PlatformController {
             User user = (User) subject.getPrincipal();
             HttpSession session = request.getSession();
             session.setAttribute("role", user.getRole().getName());
+            switch (user.getRole().getName()) {
+                case "admin":
+                    view.setViewName("redirect:/dashboard");
+                    return view;
+                case "auditor":
+                    view.setViewName("redirect:/agent/check");
+                    return view;
+                case "express":
+                    view.setViewName("redirect:/order/check");
+                    return view;
+            }
         } catch (Exception e) {
             view.setViewName("redirect:/login");
             return view;
@@ -108,10 +120,12 @@ public class PlatformController {
                 view.setViewName("redirect:/register");
                 return view;
             }
+            Role role = new Role();
+            role.setRoleId(form.getRole());
             Admin admin = new Admin(form.getUsername(), form.getPassword());
-            ResultData resultData = adminService.createAdmin(admin);
+            ResultData resultData = adminService.createAdmin(admin, role);
             if (resultData.getResponseCode() == ResponseCode.RESPONSE_OK) {
-                view.setViewName("redirect:/manage");
+                view.setViewName("redirect:/admin/overview");
                 return view;
             } else {
                 view.setViewName("redirect:/register");
@@ -143,16 +157,14 @@ public class PlatformController {
 
 
     @RequestMapping(method = RequestMethod.POST, value = "/modify/{adminId}")
-    public ModelAndView updateAdmin(@PathVariable("adminId") String adminId, @Valid AdminForm adminForm, BindingResult result) {
+    public ModelAndView updateAdmin(@PathVariable("adminId") String adminId, @Valid AdminLoginForm adminLoginForm, BindingResult result) {
         ResultData response = new ResultData();
         ModelAndView view = new ModelAndView();
-
-
         if (result.hasErrors()) {
             view.setViewName("redirect:/manage");
             return view;
         }
-        Admin admin = new Admin(adminForm.getUsername(), adminForm.getPassword());
+        Admin admin = new Admin(adminLoginForm.getUsername(), adminLoginForm.getPassword());
         admin.setAdminId(adminId);
         response = adminService.updateAdmin(admin);
         if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
@@ -182,22 +194,6 @@ public class PlatformController {
         admin.setAdminId(adminId);
         response = adminService.deleteAdmin(admin);
         return response;
-    }
-
-    @ResponseBody
-    @RequestMapping(method = RequestMethod.POST, value = "/admin/overview")
-    public ResultData overview() {
-        ResultData result = new ResultData();
-        Map<String, Object> condition = new HashMap<>();
-        result = adminService.fetchAdmin(condition);
-        return result;
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value = "/manage")
-    public ModelAndView manage() {
-        ModelAndView view = new ModelAndView();
-        view.setViewName("/backend/admin/admin_management");
-        return view;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/dashboard")
