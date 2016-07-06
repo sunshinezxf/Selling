@@ -58,7 +58,6 @@
     });
 
     function deleteAdmin(obj) {
-        alert("test");
         $("#prompt").find(".modal-body").html("确定删除这个账号吗！");
         $("#prompt").modal('show');
         userId = obj.id;
