@@ -7,61 +7,67 @@
             </div>
             <div class="modal-body">
                 <form class="form-horizontal" id="update_admin_form">
-                <input type="hidden" id="admin_id"/>
-                <div class="form-group">
-                    <label class="col-sm-2 col-md-2 col-lg-2 control-label" >
-                        账号:
-                    </label>
-                    <div class="form-group has-feedback col-sm-4 col-md-4 col-lg-4">
-                        <label for="account_email" class="sr-only">
-                              Email address
+                    <input type="hidden" id="admin_id"/>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 col-md-2 col-lg-2 control-label">
+                            账号:
                         </label>
-                        <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
-                        <input type="text" class="form-control" id="admin_username" name="username" placeholder="邮箱" required=""  readonly="true" >
+
+                        <div class="form-group has-feedback col-sm-4 col-md-4 col-lg-4">
+                            <label for="account_email" class="sr-only">
+                                Email address
+                            </label>
+                            <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                            <input type="text" class="form-control" id="admin_username" name="username" placeholder="邮箱"
+                                   required="" readonly="true">
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 col-md-2 col-lg-2 control-label">
-                        新密码:
-                    </label>
-                    <div class="form-group has-feedback col-sm-4 col-md-4 col-lg-4">
-                       <label for="account_password" class="sr-only">
-                            Password
-                       </label>
-                       <span class="glyphicon glyphicon-lock form-control-feedback"></span>
-                       <input type="password" class="form-control" name="password" id="admin_password" placeholder="密码" required="" >
+                    <div class="form-group">
+                        <label class="col-sm-2 col-md-2 col-lg-2 control-label">
+                            新密码:
+                        </label>
+
+                        <div class="form-group has-feedback col-sm-4 col-md-4 col-lg-4">
+                            <label for="account_password" class="sr-only">
+                                Password
+                            </label>
+                            <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                            <input type="password" class="form-control" name="password" id="admin_password"
+                                   placeholder="密码" required="">
+                        </div>
                     </div>
-               </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal" >取消</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                 <button type="button" class="btn btn-default" id="confirm">确认</button>
             </div>
         </div>
     </div>
 </div>
 <div class="modal fade" id="dialog2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-   <div class="modal-dialog">
-      <div class="modal-content">
-         <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title" id="myModalLabel">
-               提示
-            </h4>
-         </div>
-         <div class="modal-body">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">
+                    提示
+                </h4>
+            </div>
+            <div class="modal-body">
 
-         </div>
-         <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">
-               取消
-            </button>
-            <button type="button" class="btn btn-primary" id="dialogConfirm">
-               确定
-            </button>
-         </div>
-   </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    取消
+                </button>
+                <button type="button" class="btn btn-primary" id="dialogConfirm">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
 <script>
     $(function () {
@@ -70,23 +76,23 @@
             keyboard: true
         });
     });
-    
+
     $("#confirm").on('click', function () {
-        var password=$("#admin_password").val();
-        var username=$("#admin_username").val();
-    	if(typeof password == "undefined" || password == "") {
-    		$("#dialog2").find(".modal-body").html("新密码不能为空！");
-    		
-    		$("#dialog2").modal('show');     
-    	} else{
-    	    $("#admin_update_modal").modal('hide');     
-    	    var url="${path.concat('/admin/modify/')}"+$("#admin_id").val();
+        var password = $("#admin_password").val();
+        var username = $("#admin_username").val();
+        if (typeof password == "undefined" || password == "") {
+            $("#dialog2").find(".modal-body").html("新密码不能为空！");
+
+            $("#dialog2").modal('show');
+        } else {
+            $("#admin_update_modal").modal('hide');
+            var url = "${path.concat('/admin/modify/')}" + $("#admin_id").val();
             $("#update_admin_form").attr("action", url);
             $("#update_admin_form").attr("method", "post");
             $("#update_admin_form").submit();
         }
     });
-     $("#dialog2").find("#dialogConfirm").click(function(){
-    	$("#dialog2").modal('hide');
-     });
+    $("#dialog2").find("#dialogConfirm").click(function () {
+        $("#dialog2").modal('hide');
+    });
 </script>
