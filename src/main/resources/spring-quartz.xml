@@ -58,7 +58,7 @@
     <bean id="withdrawTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="withdrawDetail"></property>
         <property name="cronExpression">
-            <value>0 0 * 11,17 * ?</value>
+            <value>0 0 0 11,17 * ?</value>
         </property>
     </bean>
 

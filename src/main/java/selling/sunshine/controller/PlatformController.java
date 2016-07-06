@@ -7,7 +7,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import selling.sunshine.form.AdminForm;
 import selling.sunshine.form.AdminLoginForm;
@@ -81,6 +83,9 @@ public class PlatformController {
                 case "express":
                     view.setViewName("redirect:/order/check");
                     return view;
+                case "finance":
+                    view.setViewName("redirect:/withdraw/check");
+                    return view;
             }
         } catch (Exception e) {
             view.setViewName("redirect:/login");
@@ -136,64 +141,6 @@ public class PlatformController {
             return view;
         }
 
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value = "/admin/{adminId}")
-    public ModelAndView fetchAdmin(@PathVariable("adminId") String adminId) {
-        ModelAndView view = new ModelAndView();
-        ResultData result = new ResultData();
-        Map<String, Object> condition = new HashMap<>();
-        condition.put("adminId", adminId);
-        result = adminService.fetchAdmin(condition);
-        if (result.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
-            view.setViewName("/backend/admin/admin_management");
-            return view;
-        }
-        Admin admin = ((List<Admin>) result.getData()).get(0);
-        view.addObject("admin", admin);
-        view.setViewName("/backend/admin/admin_update");
-        return view;
-    }
-
-
-    @RequestMapping(method = RequestMethod.POST, value = "/modify/{adminId}")
-    public ModelAndView updateAdmin(@PathVariable("adminId") String adminId, @Valid AdminLoginForm adminLoginForm, BindingResult result) {
-        ResultData response = new ResultData();
-        ModelAndView view = new ModelAndView();
-        if (result.hasErrors()) {
-            view.setViewName("redirect:/manage");
-            return view;
-        }
-        Admin admin = new Admin(adminLoginForm.getUsername(), adminLoginForm.getPassword());
-        admin.setAdminId(adminId);
-        response = adminService.updateAdmin(admin);
-        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            view.setViewName("redirect:/manage");
-            return view;
-        } else {
-            view.setViewName("redirect:/manage");
-            return view;
-        }
-    }
-
-    @ResponseBody
-    @RequestMapping(method = RequestMethod.POST, value = "/delete/{adminId}")
-    public ResultData deleteAdmin(@PathVariable("adminId") String adminId) {
-        ResultData response = new ResultData();
-        ModelAndView view = new ModelAndView();
-
-        Map<String, Object> condition = new HashMap<>();
-        response = adminService.fetchAdmin(condition);
-        //当只有一个admin时不允许删除
-        if (((List<Admin>) response.getData()).size() == 1) {
-            response.setResponseCode(ResponseCode.RESPONSE_NULL);
-            return response;
-        }
-
-        Admin admin = new Admin();
-        admin.setAdminId(adminId);
-        response = adminService.deleteAdmin(admin);
-        return response;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/dashboard")

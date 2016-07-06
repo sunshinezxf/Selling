@@ -41,8 +41,10 @@
             <div class="weui_cell">
             	<div class="weui_cell_bd weui_cell_primary">
             		<div id="total_goods">
-            		</div>		
+            		</div>
+            		#if(${operation} != "GIFT")
             		<p id="total_goods_price" >共计:0元<p>
+            		#end
             	</div>
             	#if(${operation} == "GIFT")
             	<div class="weui_cell_ft">
@@ -227,7 +229,9 @@
         		+ order_info + ":" + order_info_list[order_info]['quantity'] +
  				"件")
         }
+        #if(${operation} != "GIFT")
         $("#total_goods_price").html("共计:" + total_price + "元");
+        #end
         //判断是否总价是0，决定显示保存和下单按钮与否
         if(total_price == 0){
         	$("#save_order_btn").hide();

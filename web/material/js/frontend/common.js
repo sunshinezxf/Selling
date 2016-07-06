@@ -31,4 +31,5 @@ $.utf8Substr = function(srcstr,len){
 		retstr = retstr + "...";	//当实际长度超过要截取的长度时在尾处加上省略号	
 	}	
 	return retstr;	
-} 
+}
+

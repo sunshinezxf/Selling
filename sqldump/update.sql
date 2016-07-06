@@ -77,5 +77,9 @@ INSERT INTO `selling`.`role` (`role_id`, `role_name`, `role_description`, `block
 INSERT INTO `selling`.`role` (`role_id`, `role_name`, `role_description`, `block_flag`, `create_time`) VALUES ('ROL00000004', 'express', '发货员', '0', '2016-05-03 11:00:30');
 INSERT INTO `selling`.`role` (`role_id`, `role_name`, `role_description`, `block_flag`, `create_time`) VALUES ('ROL00000005', 'finance', '财务人员', '0', '2016-05-03 11:00:30');
 
+UPDATE role set role_description = '管理员' where role_name = 'admin';
+
+update role set role_description = '代理商' where role_name = 'agent';
+
 
 
