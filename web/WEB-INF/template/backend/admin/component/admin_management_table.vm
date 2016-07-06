@@ -1,3 +1,4 @@
+
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id-target="admin-management">
     <div class="row">
         <div class="col-md-12 col-lg-12">
@@ -18,7 +19,7 @@
     </div>
 </div>
 #parse("/backend/admin/component/admin_update_modal.vm")
-<div class="modal fade" id="dialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="prompt" tabindex="-1" role="dialog">
    <div class="modal-dialog">
       <div class="modal-content">
          <div class="modal-header">
@@ -40,10 +41,11 @@
          </div>
    </div>
 </div>
+
 <script>
    
     var userId;
-    $("#dialog").find("#dialogConfirm").click(function(){
+    $("#prompt").find("#dialogConfirm").click(function(){
     	   
     	   var url="${path.concat('/admin/delete/')}"+userId;
     	   $.post(url, function (result) {
@@ -58,8 +60,9 @@
     });
     
     function deleteAdmin(obj){
-       $("#dialog").find(".modal-body").html("确定删除这个账号吗！");
-       $("#dialog").modal('show');  
+       alert("test");
+       $("#prompt").find(".modal-body").html("确定删除这个账号吗！");
+       $("#prompt").modal('show');  
        userId=obj.id;  
     }
   
