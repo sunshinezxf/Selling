@@ -1,6 +1,7 @@
 package selling.sunshine.service;
 
 import selling.sunshine.model.User;
+import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.utils.ResultData;
 
 import java.util.Map;
@@ -13,5 +14,5 @@ public interface UserService {
 
     ResultData fetchUser(Map<String, Object> condition);
     
-
+    ResultData fetchUser(Map<String, Object> condition, DataTableParam param);
 }

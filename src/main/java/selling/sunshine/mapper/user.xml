@@ -73,11 +73,17 @@
                 AND password = #{password}
             </if>
         </if>
-        <if test="blockFlag != null and blockFlag != ''">
+        <if test="isAdmin != null">
+            AND agent_id IS NULL AND manager_id IS NOT NULL
+        </if>
+        <if test="blockFlag != null">
             AND block_flag = #{blockFlag}
         </if>
         <if test="rule != null and rule != ''">
             ORDER BY ${rule}
+        </if>
+        <if test="rule == null">
+            ORDER BY create_time DESC
         </if>
     </select>
 

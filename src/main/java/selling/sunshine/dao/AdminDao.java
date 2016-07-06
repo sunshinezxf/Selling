@@ -1,6 +1,7 @@
 package selling.sunshine.dao;
 
 import selling.sunshine.model.Admin;
+import selling.sunshine.model.Role;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.utils.ResultData;
 
@@ -14,7 +15,7 @@ public interface AdminDao {
 
     ResultData queryAdminByPage(Map<String, Object> condition, DataTableParam param);
 
-    ResultData insertAdmin(Admin admin);
+    ResultData insertAdmin(Admin admin, Role role);
 
     ResultData updateAdmin(Admin admin);
 

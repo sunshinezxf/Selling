@@ -3,7 +3,7 @@ package selling.sunshine.model;
 /**
  * Created by sunshine on 4/15/16.
  */
-public class Admin extends Entity{
+public class Admin extends Entity {
     private String adminId;
     private String username;
     private String password;

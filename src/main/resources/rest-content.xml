@@ -51,11 +51,14 @@
         <constructor-arg index="1" value="BATCH"/>
     </bean>
 
+    <bean id="roleAuth" class="selling.sunshine.filter.SellingAuthorizationFilter"></bean>
+
     <bean id="shiroEhcacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
         <property name="cacheManagerConfigFile" value="classpath:encache-shiro.xml"/>
     </bean>
 
     <bean id="shiroRealm" class="selling.sunshine.security.ShiroRealm"></bean>
+
     <bean id="oAuthRealm" class="selling.sunshine.security.OAuthRealm"></bean>
 
     <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
@@ -68,10 +71,15 @@
         <property name="cacheManager" ref="shiroEhcacheManager"/>
     </bean>
 
-    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean" depends-on="roleAuth">
         <property name="securityManager" ref="securityManager"/>
         <property name="loginUrl" value="/login"/>
         <property name="unauthorizedUrl" value="/login"/>
+        <property name="filters">
+            <map>
+                <entry key="roles" value-ref="roleAuth"></entry>
+            </map>
+        </property>
         <property name="filterChainDefinitions">
             <value>
                 / = anon
@@ -86,9 +94,9 @@
                 /account/** = anon
                 /account/info = anon
 
-                /agent/check = roles[admin]
-                /agent/grant = roles[admin]
-                /agent/overview = roles[admin]
+                /agent/check = roles["admin, auditor"]
+                /agent/grant = roles["admin, auditor"]
+                /agent/overview = roles["admin, auditor"]
 
                 /agent/** = anon
 
@@ -111,9 +119,12 @@
                 /customer/modify = roles[agent]
 
                 /order/adminpay = roles[admin]
+                /order/check = roles["admin, express"]
+                /order/overview = roles["admin, express"]
+                /order/customerOrder/overview = roles["admin, express"]
                 /order/customerpay = anon
 
-                /statistic/** = roles[admin]
+                /statistic/** = roles["admin, express"]
 
                 /wechat = anon
 

@@ -9,6 +9,7 @@
         <mapper resource="selling/sunshine/mapper/commoditythumbnail.xml"/>
         <mapper resource="selling/sunshine/mapper/agent.xml"/>
         <mapper resource="selling/sunshine/mapper/user.xml"/>
+        <mapper resource="selling/sunshine/mapper/role.xml"/>
         <mapper resource="selling/sunshine/mapper/order.xml"/>
         <mapper resource="selling/sunshine/mapper/orderitem.xml"/>
         <mapper resource="selling/sunshine/mapper/customer.xml"/>
