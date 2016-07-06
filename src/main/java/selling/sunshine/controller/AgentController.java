@@ -27,8 +27,11 @@ import selling.sunshine.utils.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import javax.ws.rs.core.NewCookie;
 
 import java.net.URLEncoder;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -1415,15 +1418,33 @@ public class AgentController {
         //查询某个代理商当月已付款订单数（包含已发货和已结束）、未付款订单数
         Map<String, Object> condition3 = new HashMap<>();
         condition3.put("agentId", agentId);
-        condition3.put("month", "");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM");
+        String date = dateFormat.format(new Timestamp(System.currentTimeMillis()));
+        condition3.put("month",date + "%");
         List<Integer> status = new ArrayList<>();
         status.add(2);
         status.add(3);
         status.add(4);
         status.add(5);
         condition3.put("status", status);
-        orderService.fetchOrder(condition3);
-        
+        List<Order> payedOrderListMonth=(List<Order>)orderService.fetchOrder(condition3).getData();
+        condition3.clear();
+        status.clear();
+        condition3.put("agentId", agentId);
+        condition3.put("month",date + "%");
+        status.add(1);
+        condition3.put("status", status);
+        List<Order> unPayedOrderListMonth=(List<Order>)orderService.fetchOrder(condition3).getData();
+        if (payedOrderListMonth==null) {
+        	 dataMap.put("PayedOrderNum", 0);
+		}else{
+			 dataMap.put("PayedOrderNum", payedOrderListMonth.size());
+		}
+        if (unPayedOrderListMonth==null) {
+        	dataMap.put("unPayedOrderNum", 0);
+		}else {
+	        dataMap.put("unPayedOrderNum", unPayedOrderListMonth.size());
+		}        
         resultData.setData(dataMap);
         return resultData;
     }
