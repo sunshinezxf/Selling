@@ -61,7 +61,7 @@ a{
     position:relative;
     height:auto;
     width:100%;
-    border-bottom: 0.0625em solid #EFEFF4;
+    border-bottom: 0.05em solid #d2d2d2;
 }
 
 .num_div{
@@ -198,7 +198,7 @@ a{
     left:0;
     text-align:center;
     background-color:#fdfdfd;
-    border-top: 0.0625em solid #EFEFF4;
+    border-top: 0.05em solid #d2d2d2;
 }
  
 .btn_area{
