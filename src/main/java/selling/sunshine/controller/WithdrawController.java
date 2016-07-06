@@ -44,6 +44,12 @@ public class WithdrawController {
     @RequestMapping(method = RequestMethod.GET, value = "/check")
     public ModelAndView check() {
         ModelAndView view = new ModelAndView();
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("check", true);
+        ResultData moneyResponse = withdrawService.fetchSumMoney(condition);
+        if (moneyResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            view.addObject("money", moneyResponse.getData());
+        }
         view.setViewName("/backend/withdraw/check");
         return view;
     }
@@ -70,6 +76,12 @@ public class WithdrawController {
     @RequestMapping(method = RequestMethod.GET, value = "/overview")
     public ModelAndView overview() {
         ModelAndView view = new ModelAndView();
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("pay", true);
+        ResultData moneyResponse = withdrawService.fetchSumMoney(condition);
+        if (moneyResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            view.addObject("money", moneyResponse.getData());
+        }
         view.setViewName("/backend/withdraw/overview");
         return view;
     }

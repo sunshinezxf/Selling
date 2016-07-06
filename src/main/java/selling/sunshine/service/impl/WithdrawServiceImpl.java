@@ -2,11 +2,9 @@ package selling.sunshine.service.impl;
 
 import com.pingplusplus.Pingpp;
 import com.pingplusplus.model.Transfer;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import selling.sunshine.dao.WithdrawDao;
 import selling.sunshine.model.WithdrawRecord;
 import selling.sunshine.pagination.DataTableParam;
@@ -99,15 +97,27 @@ public class WithdrawServiceImpl implements WithdrawService {
         return result;
     }
 
-	@Override
-	public ResultData statistic(Map<String, Object> condition) {
-		ResultData result = new ResultData();
-		result=withdrawDao.statistic(condition);
-		if (result.getResponseCode() == ResponseCode.RESPONSE_OK) {
+    @Override
+    public ResultData statistic(Map<String, Object> condition) {
+        ResultData result = new ResultData();
+        result = withdrawDao.statistic(condition);
+        if (result.getResponseCode() == ResponseCode.RESPONSE_OK) {
             if (((List) result.getData()).isEmpty()) {
                 result.setResponseCode(ResponseCode.RESPONSE_NULL);
             }
-		}
-		return result;
-	}
+        }
+        return result;
+    }
+
+    @Override
+    public ResultData fetchSumMoney(Map<String, Object> condition) {
+        ResultData result = new ResultData();
+        ResultData sumResponse = withdrawDao.money(condition);
+        result.setResponseCode(sumResponse.getResponseCode());
+        if (sumResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            double money = (double) sumResponse.getData();
+            result.setData(money);
+        }
+        return result;
+    }
 }
