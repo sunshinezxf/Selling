@@ -133,7 +133,7 @@ public class WithdrawDaoImpl extends BaseDao implements WithdrawDao {
     public ResultData money(Map<String, Object> condition) {
         ResultData result = new ResultData();
         try {
-            Double money = sqlSession.selectOne("selling.withdraw.money", condition);
+            Double money = sqlSession.selectOne("selling.agent.withdraw.money", condition);
             result.setData(money);
         } catch (Exception e) {
             logger.error(e.getMessage());

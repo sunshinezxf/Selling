@@ -5,6 +5,7 @@ import com.pingplusplus.model.Transfer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import selling.sunshine.dao.WithdrawDao;
 import selling.sunshine.model.WithdrawRecord;
 import selling.sunshine.pagination.DataTableParam;
@@ -115,7 +116,10 @@ public class WithdrawServiceImpl implements WithdrawService {
         ResultData sumResponse = withdrawDao.money(condition);
         result.setResponseCode(sumResponse.getResponseCode());
         if (sumResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            double money = (double) sumResponse.getData();
+            double money = 0;
+            if (!StringUtils.isEmpty(sumResponse.getData())) {
+                money = (double) sumResponse.getData();
+            }
             result.setData(money);
         }
         return result;

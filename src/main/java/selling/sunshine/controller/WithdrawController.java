@@ -61,8 +61,8 @@ public class WithdrawController {
         if (StringUtils.isEmpty(param)) {
             return result;
         }
-        Map<String, Object> condition = new HashMap<String, Object>();
-        List<Integer> status = new ArrayList<Integer>();
+        Map<String, Object> condition = new HashMap<>();
+        List<Integer> status = new ArrayList<>();
         status.add(0);
         condition.put("status", status);
         condition.put("blockFlag", true);
@@ -93,7 +93,12 @@ public class WithdrawController {
         if (StringUtils.isEmpty(param)) {
             return result;
         }
-        Map<String, Object> condition = new HashMap<String, Object>();
+        Map<String, Object> condition = new HashMap<>();
+        List<Integer> status = new ArrayList<>();
+        status.add(0);
+        status.add(1);
+        condition.put("status", status);
+        condition.put("blockFlag", false);
         ResultData fetchResponse = withdrawService.fetchWithdrawRecord(condition, param);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             result = (DataTablePage<WithdrawRecord>) fetchResponse.getData();
