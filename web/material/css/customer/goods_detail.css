@@ -454,6 +454,7 @@ a{
 .unslider_div,.detail,.product_parameters,.more{
 	width:100%;
 	height:auto;
+	background-color:#f9f9f9;
 }
 
 .img{
@@ -510,11 +511,6 @@ a{
 	color:#808080;
 }
 
-.product_parameters{
-	background-color:#f9f9f9;
-	
-}
-
 .p_table{
 	width:100%;
 	font-size:0.96em;
@@ -537,8 +533,8 @@ a{
 }
 
 .more p{
-	font-size:1.1em;
-	padding:6%;
+	font-size:0.9em;
+	padding:2% 6%;
 }
 
 .normal{
