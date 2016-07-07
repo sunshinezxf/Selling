@@ -145,6 +145,8 @@
             </value>
         </property>
     </bean>
+    
+    
 
     <task:annotation-driven/>
     <import resource="rest-controller.xml"/>
