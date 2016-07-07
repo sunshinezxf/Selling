@@ -402,6 +402,7 @@ public class AgentController {
     @RequestMapping(method = RequestMethod.GET, value = "/viewinvite")
     public ModelAndView viewInvitedAgent() {
     	ModelAndView view = new ModelAndView();
+    	view.setViewName("/agent/link/invitationview");
     	Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         if (user == null || user.getAgent() == null) {
@@ -418,9 +419,20 @@ public class AgentController {
         	return view;
         }
         List<Agent> agentList = (List<Agent>) agentService.fetchAgent(condition).getData();
+        List<List<String>> agents = new ArrayList<List<String>>();
         for(Agent agent : agentList){
-        	
+        	List<String> agentInfo = new ArrayList<String>();
+        	ResultData quantityData = refundService.calculateQuantity(agent.getAgentId());
+        	agentInfo.add(agent.getName());
+        	agentInfo.add("本月购买商品：" + String.valueOf(quantityData.getData()) + "件");
+        	if(agent.isGranted()){
+        		agentInfo.add("");
+        	} else {
+        		agentInfo.add("(审核中)");
+        	}
+        	agents.add(agentInfo);
         }
+        view.addObject("agents", agents);
     	return view;
     }
 
