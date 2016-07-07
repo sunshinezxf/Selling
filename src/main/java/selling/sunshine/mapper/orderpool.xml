@@ -64,7 +64,7 @@
     <resultMap id="orderQuantityVo" type="java.util.Map">
         <result property="quantity" column="quantity"></result>
     </resultMap>
-    <resultMap id=""customerOrderQuantityVo"" type="java.util.Map">
+    <resultMap id="customerOrderQuantityVo" type="java.util.Map">
         <result property="quantity" column="quantity"></result>
     </resultMap>
 
