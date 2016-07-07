@@ -1,24 +1,25 @@
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
     <div class="content">
         <div class="wrapper">
-            <div class="light"><i></i></div>
             <hr class="line-left">
             <hr class="line-right">
-            <div class="main">
-                <h1 class="title">系统日志</h1>
-                <div class="year">
-                    <h2><a href="#">2016年<i></i></a></h2>
-                    <div class="list">
-                        <ul>
-                            <li class="cls">
-                                <p class="date">3月26日</p>
-                                <p class="intro">微俱聚硬件微美图正式推出</p>
-                            </li>
-                            <li class="cls">
-                                <p class="date">3月19日</p>
-                                <p class="intro">全新会员卡3.0、微官网3.0、微商城2.0上线，渠道统计模块上线！</p>
-                            </li>
-                        </ul>
+            <div class="main-container">
+                <div class="main-content">
+                    <h1 class="title">系统日志</h1>
+                    <div class="year">
+                        <h2><a href="#">2016年<i></i></a></h2>
+                        <div class="list">
+                            <ul>
+                                <li class="cls">
+                                    <p class="date">3月26日</p>
+                                    <p class="intro">微俱聚硬件微美图正式推出</p>
+                                </li>
+                                <li class="cls">
+                                    <p class="date">3月19日</p>
+                                    <p class="intro">全新会员卡3.0、微官网3.0、微商城2.0上线，渠道统计模块上线！</p>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -27,7 +28,8 @@
 </div>
 <script>
     $(document).ready(function () {
-       
+       var length=$('.cls').width()-$('.date').width();
+       $('.intro').css('width',length);
     });
     
     $(".main .year .list").each(function (e, target) {
