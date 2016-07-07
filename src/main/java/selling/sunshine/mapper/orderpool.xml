@@ -60,6 +60,13 @@
         <result property="quantity" column="quantity"></result>
         <result property="price" column="price"></result>
     </resultMap>
+    
+    <resultMap id="orderQuantityVo" type="java.util.Map">
+        <result property="quantity" column="quantity"></result>
+    </resultMap>
+    <resultMap id="customerOrderQuantityVo" type="java.util.Map">
+        <result property="quantity" column="quantity"></result>
+    </resultMap>
 
 	<select id="refundConfigQuery" parameterType="java.util.Map" resultMap="refundConfigVo">
 		SELECT refund_config_id, refund_trigger_amount, level_1_percent,level_2_percent,level_3_percent
@@ -117,6 +124,30 @@
 			AND o.agent_id = #{agentId}
 		</if>
         GROUP BY o.agent_id,i.goods_id
+	</select>
+	
+	<select id="calculateOrderQuantity" parameterType="java.util.Map" resultMap="orderQuantityVo">
+		SELECT SUM(i.goods_quantity) AS quantity
+		FROM `order` o,order_item i
+		WHERE 1 = 1 AND o.order_id=i.order_id AND (i.order_item_status='1' OR i.order_item_status='2' OR i.order_item_status='3') AND order_type='0'
+		<if test="date != null and date != ''">
+			AND o.create_time LIKE #{date}
+		</if>
+		<if test="agentId != null and agentId != ''">
+			AND o.agent_id = #{agentId}
+		</if>
+	</select>
+	
+	<select id="calculateCustomerOrderQuantity" parameterType="java.util.Map" resultMap="customerOrderQuantityVo">
+		SELECT SUM(quantity) AS quantity
+		FROM customer_order
+		WHERE 1 = 1 AND (order_status='1' OR order_status='2' OR order_status='3')
+		<if test="date != null and date != ''">
+			AND create_time LIKE #{date}
+		</if>
+		<if test="agentId != null and agentId != ''">
+			AND agent_id = #{agentId}
+		</if>
 	</select>
 
 	<select id="goods4AgentQuery" parameterType="java.util.Map" resultMap="goods4AgentVo">

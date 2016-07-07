@@ -25,4 +25,6 @@ public interface RefundDao {
     ResultData statistic(Map<String, Object> condition);
     
     ResultData calculateRefund(String agentId);
+    
+    ResultData calculateQuantity(String agentId);
 }

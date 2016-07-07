@@ -440,13 +440,6 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
 											+ Integer.parseInt(sumOrderList
 													.get(i).get("quantity")
 													.toString()));
-							sumCustomerOrderList.get(j).put(
-									"price",
-									Double.parseDouble(sumCustomerOrderList
-											.get(j).get("price").toString())
-											+ Double.parseDouble(sumOrderList
-													.get(i).get("price")
-													.toString()));
 							break;
 						}
 					}
@@ -540,6 +533,44 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
 				}
 			}
 			result.setData(list);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+			result.setDescription(e.getMessage());
+		} finally {
+			return result;
+		}
+	}
+
+	@Override
+	public ResultData calculateQuantity(String agentId) {
+		ResultData result = new ResultData();
+
+		Calendar c = Calendar.getInstance();
+		Timestamp month = new Timestamp(c.getTimeInMillis());
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM");
+		String date = dateFormat.format(month);
+		try {
+			Map<String, Object> condition = new HashMap<>();
+			condition.put("date", date + "%");
+			condition.put("agentId", agentId);
+			List<Map<String, Object>> sumOrderList = sqlSession.selectList(
+					"selling.order.pool.calculateOrderQuantity", condition);
+			List<Map<String, Object>> sumCustomerOrderList = sqlSession
+					.selectList("selling.order.pool.calculateCustomerOrderQuantity",
+							condition);
+			if ((sumOrderList.get(0)==null)&&(sumCustomerOrderList.get(0)==null)) {
+				result.setData(0);
+				return result;
+			}else if(sumOrderList.get(0)==null){
+				result.setData(Integer.parseInt(sumCustomerOrderList.get(0).get("quantity").toString()));
+				return result;
+			}else if(sumCustomerOrderList.get(0)==null){
+				result.setData(Integer.parseInt(sumOrderList.get(0).get("quantity").toString()));
+				return result;
+			}
+	        int quantity=Integer.parseInt(sumOrderList.get(0).get("quantity").toString())+Integer.parseInt(sumCustomerOrderList.get(0).get("quantity").toString());
+			result.setData(quantity);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			result.setResponseCode(ResponseCode.RESPONSE_ERROR);

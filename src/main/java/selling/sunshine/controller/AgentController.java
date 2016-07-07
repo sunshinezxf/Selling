@@ -398,6 +398,43 @@ public class AgentController {
         view.setViewName("/agent/link/invitation");
         return view;
     }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/viewinvite")
+    public ModelAndView viewInvitedAgent() {
+    	ModelAndView view = new ModelAndView();
+    	view.setViewName("/agent/link/invitationview");
+    	Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        if (user == null || user.getAgent() == null) {
+            WechatConfig.oauthWechat(view, "/agent/login");
+            view.setViewName("/agent/login");
+            return view;
+        }
+        Map<String, Object> condition = new HashMap<String, Object>();
+        selling.sunshine.model.lite.Agent agentlite = new selling.sunshine.model.lite.Agent();
+        agentlite.setAgentId(user.getAgent().getAgentId());
+        condition.put("upperAgent", agentlite);
+        ResultData fetchAgentsResponse = agentService.fetchAgent(condition);
+        if(fetchAgentsResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
+        	return view;
+        }
+        List<Agent> agentList = (List<Agent>) agentService.fetchAgent(condition).getData();
+        List<List<String>> agents = new ArrayList<List<String>>();
+        for(Agent agent : agentList){
+        	List<String> agentInfo = new ArrayList<String>();
+        	ResultData quantityData = refundService.calculateQuantity(agent.getAgentId());
+        	agentInfo.add(agent.getName());
+        	agentInfo.add("本月购买商品：" + String.valueOf(quantityData.getData()) + "件");
+        	if(agent.isGranted()){
+        		agentInfo.add("");
+        	} else {
+        		agentInfo.add("(审核中)");
+        	}
+        	agents.add(agentInfo);
+        }
+        view.addObject("agents", agents);
+    	return view;
+    }
 
     @RequestMapping(method = RequestMethod.GET, value = "/personalsale")
     public ModelAndView personalSale() {

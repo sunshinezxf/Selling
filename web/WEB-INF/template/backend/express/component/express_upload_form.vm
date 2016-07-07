@@ -32,7 +32,7 @@
           
             <form enctype="multipart/form-data" method="post" action="${path.concat('/express/upload')}">
                 <label>上传快递单文件</label>
-                <input id="uploadInput" name="excelFile" type="file" data-preview-file-type="text" multiple accept=".xls" data-min-file-count="1"
+                <input id="uploadInput" name="excelFile" type="file" data-preview-file-type="text" multiple accept=".csv" data-min-file-count="1"
                             data-show-preview="true">
             </form>
         </div>
@@ -46,7 +46,9 @@
  $('#uploadInput').fileinput({
         language: 'zh',
         
-    });
+    }).on('fileuploaded', function (event, result) {
+            alert(JSON.stringify(result));
+    });;
 
                 
   
