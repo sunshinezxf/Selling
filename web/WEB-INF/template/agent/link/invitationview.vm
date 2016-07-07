@@ -1,0 +1,33 @@
+#parse("/common/util.vm")
+<html lang="zh_CN">
+<head>
+    #parse("/agent/component/init.vm")
+    #parse("/agent/component/init_qrcode.vm")
+    <title>注册邀请</title>
+</head>
+<body ontouchstart>
+<div class="container">
+    <div class="panel weui_tab_bd" id="self_info_panel">
+        <div class="hd">
+            <h1 class="page_title">邀请代理</h1>
+        </div>
+        <div class="bd">
+        	<div class="weui_cells">
+        		<div class="weui_cell">
+        			#foreach($agent in $agents)
+        			<div class="weui_cell">
+			            <div class="weui_cell_bd weui_cell_primary">
+			                <p>${agent.get(0)}</p>
+			            </div>
+			            <div class="weui_cell_ft">${agent.get(1)}</div>
+			        </div>
+        			#end
+        		</div>
+        	</div>
+        </div>
+    </div>
+    #parse("/agent/component/navigate.vm")
+</div>
+</body>
+    #parse("/agent/wechat/component/validation.vm")
+</html>
