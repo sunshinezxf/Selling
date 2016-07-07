@@ -107,6 +107,7 @@ hr {
 }
 
 .content .main-container {
+	display: block;
 	position:absolute;
 	top:0;
 	left:3%;
@@ -122,7 +123,7 @@ hr {
     top: 0;
     color: #495678;
     font-size: 1.4em;
-    background: url("../../images/log/clock.png") no-repeat left 0.3em;
+    background: url("../../images/log/clock.png") no-repeat left top;
     background-size:1.5em 1.5em;
 }
 
