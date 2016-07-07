@@ -146,7 +146,7 @@
 			AND create_time LIKE #{date}
 		</if>
 		<if test="agentId != null and agentId != ''">
-			agent_id = #{agentId}
+			AND agent_id = #{agentId}
 		</if>
 	</select>
 
