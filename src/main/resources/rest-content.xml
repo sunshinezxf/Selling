@@ -118,6 +118,8 @@
                 /customer/add = roles[agent]
                 /customer/modify = roles[agent]
 
+                /indent/** = anon
+
                 /order/adminpay = roles[admin]
                 /order/check = roles["admin, express"]
                 /order/overview = roles["admin, express"]
