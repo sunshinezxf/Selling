@@ -1,6 +1,7 @@
 package selling.sunshine.controller;
 
 import com.alibaba.fastjson.JSON;
+
 import com.alibaba.fastjson.JSONObject;
 import com.pingplusplus.model.Charge;
 import jxl.Workbook;
@@ -443,15 +444,12 @@ public class OrderController {
     @RequestMapping(method = RequestMethod.POST, value = "/expressData")
     @ResponseBody
     public String express(@RequestBody ExpressForm form, HttpSession session) {
-        ResultData resultData = new ResultData();
         List<Express> itemForms = form.getExpressItem();
-        String expressNumber = form.getExpressNumber();
-        Long num = Long.parseLong(expressNumber);
         List<Express> expresseList = new ArrayList<>();
         for (Express item : itemForms) {
             String linkId = item.getLinkId();
             if (!StringUtils.isEmpty(linkId) && linkId.startsWith("ORI")) {
-                Express4Agent express = new Express4Agent(String.valueOf(num),
+                Express4Agent express = new Express4Agent("",
                         item.getSenderName(), item.getSenderPhone(),
                         item.getSenderAddress(), item.getReceiverName(),
                         item.getReceiverPhone(), item.getReceiverAddress(),
@@ -466,22 +464,12 @@ public class OrderController {
                         ResponseCode.RESPONSE_OK) {
                 	temp=((List<OrderItem>) fetchResponse.getData()).get(0);
                 }
-                temp.setStatus(OrderItemStatus.SHIPPED);
+                express.setLinkId(linkId);
                 express.setItem(temp);
-                expressService.createExpress(express);
-                orderService.updateOrderItem(temp);
-                condition.clear();
-                condition.put("orderId", temp.getOrder().getOrderId());                
-                fetchResponse = orderService.fetchOrder(condition);
-                if (fetchResponse.getResponseCode() ==ResponseCode.RESPONSE_OK) {
-                        Order order = ((List<Order>) fetchResponse.getData()).get(0);
-                        order.setStatus(OrderStatus.FULLY_SHIPMENT);
-                        orderService.modifyOrder(order);                   
-                }
                 expresseList.add(express);
             } else if (linkId.startsWith("CUO")) {
                 Express4Customer express = new Express4Customer(
-                        String.valueOf(num), item.getSenderName(),
+                        "", item.getSenderName(),
                         item.getSenderPhone(), item.getSenderAddress(),
                         item.getReceiverName(), item.getReceiverPhone(),
                         item.getReceiverAddress(), item.getGoodsName());
@@ -494,15 +482,11 @@ public class OrderController {
                         ResponseCode.RESPONSE_OK) {
                 	temp=((List<CustomerOrder>) fetchResponse.getData()).get(0);
 				}
-                temp.setStatus(OrderItemStatus.SHIPPED);
+                express.setLinkId(linkId);
                 express.setOrder(temp);
-                expressService.createExpress(express);
-                customerOrderDao.updateOrder(temp);
                 expresseList.add(express);
             }
-            num++;
         }
-        resultData.setData(expresseList);
         session.setAttribute("expresseList", expresseList);
         return "";
 
@@ -513,6 +497,7 @@ public class OrderController {
 	public String exportExcel(HttpServletRequest request, HttpServletResponse response,HttpSession session)
 			throws IOException, RowsExceededException, WriteException {
         List<Express> expresseList=(List<Express>)session.getAttribute("expresseList");
+        System.err.println(expresseList);
         if (expresseList==null) {
 			return null;
 		}
@@ -559,18 +544,25 @@ public class OrderController {
         }
 
         for (int i = 0; i < expresseList.size(); i++) {
-            sheet.addCell(new Label(0, i + 3, expresseList.get(i).getExpressNumber()));
+            //sheet.addCell(new Label(0, i + 3, expresseList.get(i).getExpressNumber()));
             sheet.addCell(new Label(2, i + 3, expresseList.get(i).getSenderName()));
             sheet.addCell(new Label(3, i + 3, expresseList.get(i).getSenderPhone()));
             sheet.addCell(new Label(7, i + 3, expresseList.get(i).getSenderAddress()));
             sheet.addCell(new Label(8, i + 3, expresseList.get(i).getReceiverName()));
             sheet.addCell(new Label(9, i + 3, expresseList.get(i).getReceiverPhone()));
             sheet.addCell(new Label(13, i + 3, expresseList.get(i).getReceiverAddress()));
-            sheet.addCell(new Label(14, i + 3, "云草纲目三七超细粉"));
+            sheet.addCell(new Label(14, i + 3, expresseList.get(i).getGoodsName()));
             sheet.addCell(new Label(16, i + 3, "10"));
             sheet.addCell(new Label(17, i + 3, "10"));
             sheet.addCell(new Label(36, i + 3, String.valueOf(expresseList.get(i).getGoodsQuantity())));
-            //sheet.addCell(new Label(37,i+3,expresseList.get(i).getExpressNumber()));
+            if (expresseList.get(i).getLinkId().startsWith("ORI")) {
+            	 Express4Agent express=(Express4Agent)expresseList.get(i);
+            	 sheet.addCell(new Label(37,i+3,express.getItem().getOrderItemId()));
+			}else {
+				Express4Customer express =(Express4Customer)expresseList.get(i);
+				 sheet.addCell(new Label(37,i+3,express.getOrder().getOrderId()));
+			}
+           
         }
 
         // 写入数据并关闭文件
