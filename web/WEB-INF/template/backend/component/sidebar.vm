@@ -34,6 +34,10 @@
                                 class="fa fa-tasks"></i>
                             客户订单</a>
                         </li>
+                        <li><a class="sub-nav" href="${path.concat('/express/upload')}"><i
+                                class="fa fa-tasks"></i>
+                           上传快递单</a>
+                        </li>
                     </ul>
                 </li>
             #end

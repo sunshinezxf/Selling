@@ -33,6 +33,7 @@
                             <li><a class="menu" href="${path.concat('/order/check')}">订单审核</a></li>
                             <li><a class="menu" href="${path.concat('/order/overview')}">代理商订单</a></li>
                             <li><a class="menu" href="${path.concat('/order/customerOrder/overview')}">客户订单</a></li>
+                            <li><a class="menu" href="${path.concat('/express/upload')}">上传快递单</a></li>
                         </ul>
                     </li>
                 #end

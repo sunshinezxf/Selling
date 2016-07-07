@@ -3,6 +3,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -37,7 +38,6 @@ public class HttpUtil {
 			conn.setRequestProperty("connection", "Keep-Alive");
 			conn.setRequestProperty("Accept-Charset", charset);
 			conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-			
 			out = new OutputStreamWriter(conn.getOutputStream(), charset);
 			out.write(buildQuery(params, charset));
 			out.flush();
