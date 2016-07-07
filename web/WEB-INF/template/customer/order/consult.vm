@@ -24,7 +24,7 @@
             </form>
         </div>
     
-        <div>
+        <div class="weui_btn_area">
            <button type="button" class="weui_btn weui_btn_disabled weui_btn_default" id="consult_btn" disabled="disabled">
                                  查询
            </button>

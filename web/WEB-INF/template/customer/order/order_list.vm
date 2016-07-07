@@ -99,7 +99,7 @@
     #end
 
 
-    <div class="confirm_area">
+    <div class="confirm_area weui_btn_area">
         <button class="weui_btn weui_btn_primary" id="confirm">确定</button>
     </div>
 </div>
