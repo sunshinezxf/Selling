@@ -51,12 +51,16 @@
 					        	</a>
 					    		#if(${operation} == "VIEW" && ${status} != "SUBMITTED" && ${status} != "SAVED")
 					    			<div class="weui_cell weui_cells_tips clear-margin-top">
-						    			<div class="weui_cell_bd weui_cell_primary">
-						    			金额:${orderItem.orderItemPrice}元
-						    			</div>
+						    			#if(${orderItem.status} == "SHIPPED" || ${orderItem.status} == "RECEIVED")
+						    			<div class="weui_cell_bd weui_cell_primary">已发货</div>
 						    			<div class="express_btn">
 						                    <a class="weui_btn weui_btn_mini weui_btn_plain_primary">&nbsp物流信息&nbsp</a>
 						                </div>
+						                #elseif(${orderItem.status} != "EXCHANGED")
+						                <div class="weui_cell_bd weui_cell_primary">未发货</div>
+						                #else
+						                <div class="weui_cell_bd weui_cell_primary">已退货</div>
+						                #end
 					    			</div>
 					    		#else
 					    			<div class="weui_cell weui_cells_tips clear-margin-top">金额:${orderItem.orderItemPrice}元 </div>

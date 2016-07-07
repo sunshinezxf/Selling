@@ -10,19 +10,18 @@
     <div class="panel weui_tab_bd" id="self_info_panel">
         <div class="hd">
             <h1 class="page_title">邀请代理</h1>
+            <p class="page_desc">这里是您邀请的代理</p>
         </div>
         <div class="bd">
         	<div class="weui_cells">
-        		<div class="weui_cell">
-        			#foreach($agent in $agents)
-        			<div class="weui_cell">
-			            <div class="weui_cell_bd weui_cell_primary">
-			                <p>${agent.get(0)}</p>
-			            </div>
-			            <div class="weui_cell_ft">${agent.get(1)}</div>
-			        </div>
-        			#end
-        		</div>
+    			#foreach($agent in $agents)
+    			<div class="weui_cell">
+		            <div class="weui_cell_bd weui_cell_primary">
+		                <p>${agent.get(0)}<span style="color:#888;">${agent.get(2)}</span></p>
+		            </div>
+		            <div class="weui_cell_ft">${agent.get(1)}</div>
+		        </div>
+    			#end
         	</div>
         </div>
     </div>
@@ -30,4 +29,11 @@
 </div>
 </body>
     #parse("/agent/wechat/component/validation.vm")
+ <script>
+ 	$(document).ready(function(){
+ 		if($(".weui_cells").children().size() == 0){
+ 			$(".page_desc").html("您还没有邀请过代理");
+ 		}
+ 	});
+ </script>
 </html>
