@@ -1,0 +1,114 @@
+<div class="weui_tab_bd">
+    <div class="hd">
+        <h1 class="page_title">物流信息</h1>
+
+        <p class="page_desc">中通快递：${expressNumber}</p>
+    </div>
+	<div class="explaininfo">
+		<div class="extitle">
+			<div style="float:left">物流跟踪</div>
+			<div style="text-align:right;float:right" class="express_btn">
+                <a class="weui_btn weui_btn_mini weui_btn_plain_primary" id="back_btn" >&nbsp返回订单&nbsp</a>
+            </div>
+		</div>
+			<div class="inside">
+				<div class="excontent clearfix">
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+$("#back_btn").on("click", function(){
+	window.history.back();
+})
+$(document).ready(function(){
+	#if(${expressNumber})
+		var expressNumber = "${expressNumber}";
+	#else
+		var expressNumber = "0";
+	#end
+	var width = $(window).width();
+	if(expressNumber == "0"){
+		$(".page_desc").html("暂无物流信息");
+		$(".excontent").append(
+			"<div class='inside clearfix'>\
+				<div class='fl exfl' style='float:left'>\
+						<div class='down'></div>\
+						<div class='up'></div>\
+				</div>\
+				<div class='fl exfr' style='float:left;width:" + (width - 75) + "px'>\
+					<div class='exfloor'>\
+						<div class='up'>商家正积极配货中</div>\
+						<div class='time'></div>\
+					</div>\
+				</div>\
+			</div>"
+		);
+		return;
+	}
+	var url = "${path.concat('/express/queryExpress/')}" + expressNumber;
+	$.get(url, function(result){
+		if(result.responseCode == "RESPONSE_OK"){
+			var data = eval('(' + result.data + ')');
+			if(data.status != true){
+				return;
+			}
+			var traces = (data.data[0].traces).reverse();
+			$(".excontent").empty();
+			console.debug(traces);
+			for(var i in traces){
+				if(i == 0){
+					if(traces[i].scanType == "派件"){
+						traces[i].desc += " 派件人：" + traces[i].dispOrRecMan + " 电话：" + traces[i].dispOrRecManPhone;
+					}
+					$(".excontent").append(
+						"<div class='inside clearfix'>\
+							<div class='fl exflbg' style='float:left;'>\
+									<div class='down'></div>\
+									<div class='up'></div>\
+							</div>\
+							<div class='fl exfr' style='float:left;width:" + (width - 75) +"px'>\
+								<div class='bgfloor'>\
+									<div class='up'>" + traces[i].desc + "</div>\
+									<div class='time'>" + traces[i].scanDate + "</div>\
+								</div>\
+							</div>\
+						</div>"
+					);
+				} else {
+					if(traces[i].scanType == "派件"){
+						traces[i].desc += " 派件人：" + traces[i].dispOrRecMan + " 电话：" + traces[i].dispOrRecManPhone;
+					}
+					$(".excontent").append(
+						"<div class='inside clearfix'>\
+							<div class='fl exfl' style='float:left'>\
+									<div class='down'></div>\
+									<div class='up'></div>\
+							</div>\
+							<div class='fl exfr' style='float:left;width:" + (width - 75) + "px'>\
+								<div class='exfloor'>\
+									<div class='up'>" + traces[i].desc + "</div>\
+									<div class='time'>" + traces[i].scanDate + "</div>\
+								</div>\
+							</div>\
+						</div>"
+					);
+				}
+			}
+		}
+		$(function(){
+		$(".exfr").each(function(){
+			var flagHeight = $(this).height() + 10;
+			//如果当前是exflbg就修改此高度
+			$(this).closest(".inside").find("div.exflbg").children("div.up").css("height",flagHeight);
+			//如果当前是exfl就修改此高度
+			$(this).closest(".inside").find("div.exfl").children("div.up").css("height",flagHeight);
+			
+		});
+		
+	});
+	});
+	
+});
+</script>

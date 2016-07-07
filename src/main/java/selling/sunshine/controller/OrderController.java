@@ -320,7 +320,37 @@ public class OrderController {
 //		}
 //		return result;
 //	}
-
+    @RequestMapping(method = RequestMethod.GET, value = "/viewexpress/{orderId}")
+    public ModelAndView viewExpress(@PathVariable("orderId") String orderId){
+    	ModelAndView view = new ModelAndView();
+    	view.setViewName("/agent/order/express");
+    	Map<String, Object> condition = new HashMap<String, Object>();
+		ResultData fetchExpressResponse = null;
+		if(orderId.startsWith("ORI")){
+			condition.put("orderItemId", orderId);
+			fetchExpressResponse = expressService.fetchExpress4Agent(condition);
+		} else if(orderId.startsWith("CUO")){
+			condition.put("orderId", orderId);
+			fetchExpressResponse = expressService.fetchExpress4Customer(condition);
+		}
+		if(fetchExpressResponse == null ){
+			view.addObject("type","2");//订单号错误
+			return view;
+		}
+		if(fetchExpressResponse.getResponseCode() != ResponseCode.RESPONSE_OK || ((List<Express>)fetchExpressResponse.getData()).isEmpty()){
+			view.addObject("type","1");//没有快递信息
+			return view;
+		}
+		Express express = ((List<Express>)fetchExpressResponse.getData()).get(0);
+		String expressNumber = express.getExpressNumber();
+		if(expressNumber == null || expressNumber.equals("")){
+			view.addObject("type","1");//没有快递信息
+			return view;
+		}
+		view.addObject("expressNumber", expressNumber);
+		return view;
+    }
+    
     @RequestMapping(method = RequestMethod.GET, value = "/express")
     public ModelAndView express() {
         ModelAndView view = new ModelAndView();
