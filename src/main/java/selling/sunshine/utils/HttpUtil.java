@@ -39,7 +39,6 @@ public class HttpUtil {
 			conn.setRequestProperty("Accept-Charset", charset);
 			conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 			out = new OutputStreamWriter(conn.getOutputStream(), charset);
-			System.out.println(buildQuery(params, charset));
 			out.write(buildQuery(params, charset));
 			out.flush();
 			inputStream = conn.getInputStream();

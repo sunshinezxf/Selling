@@ -54,7 +54,7 @@
 						    			<div class="weui_cell_bd weui_cell_primary">
 						    			金额:${orderItem.orderItemPrice}元
 						    			</div>
-						    			<div sytle="text-align:right;" class="express_btn">
+						    			<div class="express_btn">
 						                    <a class="weui_btn weui_btn_mini weui_btn_plain_primary">&nbsp物流信息&nbsp</a>
 						                </div>
 					    			</div>

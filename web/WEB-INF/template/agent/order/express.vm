@@ -7,73 +7,9 @@
 <body ontouchstart>
 <div class="container">
     <div class="tabbar">
-        <div class="weui_tab_bd">
-        	<div class="explaininfo">
-				<div class="extitle">物流跟踪</div>
-					<div class="inside">
-						<div class="excontent clearfix">
-							<div class="inside clearfix">
-								<div class="fl exflbg" style="float:left">
-										<div class="down"></div>
-										<div class="up"></div>
-								</div>
-								<div class="fl exfr" style="float:left">
-									<div class="bgfloor">
-										<div class="up">"快件已到达 上海航空部 上一站是 松江</div>
-										<div class="time">2015-03-14 21:15:02</div>
-									</div>
-								</div>
-							</div>
-							<div class="inside clearfix">
-								<div class="fl exfl" style="float:left">
-										<div class="down"></div>
-										<div class="up"></div>
-								</div>
-								<div class="fl exfr" style="float:left">
-									<div class="exfloor">
-										<div class="up">"快件已到达 上海航空部 上一站是 松江</div>
-										<div class="time">2015-03-14 21:15:02</div>
-									</div>
-								</div>
-							</div>
-							<div class="inside clearfix">
-								<div class="fl exfl" style="float:left">
-										<div class="down"></div>
-										<div class="up"></div>
-								</div>
-								<div class="fl exfr" style="float:left">
-									<div class="exfloor">
-										<div class="up">"快件已到达 上海航空部 上一站是 松江</div>
-										<div class="time">2015-03-14 21:15:02</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-        </div>
+        #parse("/agent/order/express_item.vm")
         #parse("/agent/component/navigate.vm")
     </div>
 </div>
 </body>
-<script>
-$(document).ready(function(){
-	var url = "${path.concat('/express/queryExpress/')}" + ${expressNumber};
-	$.get(url, function(result){
-		console.debug(result);
-	});
-	$(function(){
-	
-		$(".exfr").each(function(){
-			var flagHeight = $(this).height() + 6;
-			//如果当前是exflbg就修改此高度
-			$(this).closest(".inside").find("div.exflbg").children("div.up").css("height",flagHeight);
-			//如果当前是exfl就修改此高度
-			$(this).closest(".inside").find("div.exfl").children("div.up").css("height",flagHeight);
-		});
-		
-	});
-});
-</script>
 </html>
