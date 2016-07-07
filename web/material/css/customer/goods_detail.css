@@ -8,8 +8,13 @@ body {
     background-color: #EFEFF4;
 }
 
+a{
+	-webkit-touch-callout:none;
+}
+
 .unslider{
 	position: relative;
+	border-bottom: 0.0625em solid #EFEFF4;
 }
 
 .unslider-nav{
@@ -37,7 +42,7 @@ body {
     border-radius: 0.3125em;
     overflow: hidden;
     text-indent: -999em;
-    border: 0.125em solid #666;
+    border: 0.125em solid #d0c080;
     cursor: pointer;
     opacity: .4;
 }
@@ -47,7 +52,7 @@ body {
 }
 
 .unslider-nav ol li.unslider-active {
-    background: #666;
+    background: #d0c080;
 	cursor: default;
 	opacity: 1;
 }
@@ -56,7 +61,7 @@ body {
     position:relative;
     height:auto;
     width:100%;
-    border-bottom: 0.0625em solid #EFEFF4;
+    border-bottom: 0.05em solid #d2d2d2;
 }
 
 .num_div{
@@ -193,7 +198,7 @@ body {
     left:0;
     text-align:center;
     background-color:#fdfdfd;
-    border-top: 0.0625em solid #EFEFF4;
+    border-top: 0.05em solid #d2d2d2;
 }
  
 .btn_area{
@@ -446,7 +451,7 @@ body {
     border-bottom:none;
 }
 
-.unslider_div,.feeling_div,.product_parameters{
+.unslider_div,.detail,.product_parameters,.more{
 	width:100%;
 	height:auto;
 }
@@ -481,3 +486,70 @@ body {
 .pinch-zoom-container{
 	overflow:visible !important;
 }
+
+.options_div,.options_div table{
+	width:100%;
+}
+
+.options_div{
+	border-top: 0.05em solid #d2d2d2;
+	border-bottom: 0.05em solid #d2d2d2;
+	background-color:#f9f9f9;
+}
+
+.options_div table{
+	text-align:center;
+}
+
+.option{
+	width:100%;
+	background:none;
+	border:none;
+	padding:5%;
+	font-size:1em;
+	color:#808080;
+}
+
+.product_parameters{
+	background-color:#f9f9f9;
+	
+}
+
+.p_table{
+	width:100%;
+	font-size:0.96em;
+	padding:3%;
+}
+
+.p_hd{
+	width:7em;
+	color:#808080;
+	vertical-align:top;
+	padding:2% 0;
+	border-bottom: 0.05em solid #d2d2d2;
+}
+
+.p_bd{
+	width:auto;
+	vertical-align:top;
+	padding:2% 0;
+	border-bottom: 0.05em solid #d2d2d2;
+}
+
+.more p{
+	font-size:1.1em;
+	padding:6%;
+}
+
+.normal{
+	border-bottom: 0.18em solid #f9f9f9;
+} 
+
+.chosen{
+	border-bottom: 0.18em solid #d0c080;
+}
+
+.chosen_btn{
+	color:#d0c080;
+}
+

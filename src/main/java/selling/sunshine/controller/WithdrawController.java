@@ -44,6 +44,12 @@ public class WithdrawController {
     @RequestMapping(method = RequestMethod.GET, value = "/check")
     public ModelAndView check() {
         ModelAndView view = new ModelAndView();
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("check", true);
+        ResultData moneyResponse = withdrawService.fetchSumMoney(condition);
+        if (moneyResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            view.addObject("money", moneyResponse.getData());
+        }
         view.setViewName("/backend/withdraw/check");
         return view;
     }
@@ -55,8 +61,8 @@ public class WithdrawController {
         if (StringUtils.isEmpty(param)) {
             return result;
         }
-        Map<String, Object> condition = new HashMap<String, Object>();
-        List<Integer> status = new ArrayList<Integer>();
+        Map<String, Object> condition = new HashMap<>();
+        List<Integer> status = new ArrayList<>();
         status.add(0);
         condition.put("status", status);
         condition.put("blockFlag", true);
@@ -70,6 +76,12 @@ public class WithdrawController {
     @RequestMapping(method = RequestMethod.GET, value = "/overview")
     public ModelAndView overview() {
         ModelAndView view = new ModelAndView();
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("pay", true);
+        ResultData moneyResponse = withdrawService.fetchSumMoney(condition);
+        if (moneyResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            view.addObject("money", moneyResponse.getData());
+        }
         view.setViewName("/backend/withdraw/overview");
         return view;
     }
@@ -81,7 +93,12 @@ public class WithdrawController {
         if (StringUtils.isEmpty(param)) {
             return result;
         }
-        Map<String, Object> condition = new HashMap<String, Object>();
+        Map<String, Object> condition = new HashMap<>();
+        List<Integer> status = new ArrayList<>();
+        status.add(0);
+        status.add(1);
+        condition.put("status", status);
+        condition.put("blockFlag", false);
         ResultData fetchResponse = withdrawService.fetchWithdrawRecord(condition, param);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             result = (DataTablePage<WithdrawRecord>) fetchResponse.getData();

@@ -19,4 +19,6 @@ public interface WithdrawDao {
     ResultData queryWithdrawByPage(Map<String, Object> condition, DataTableParam param);
     
     ResultData statistic(Map<String, Object> condition);
+
+    ResultData money(Map<String, Object> condition);
 }

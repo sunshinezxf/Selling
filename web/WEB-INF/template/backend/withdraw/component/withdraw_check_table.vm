@@ -10,6 +10,12 @@
         </div>
     </div>
     <div class="row">
+        #if(${money})
+        <div class="col-md-12 col-lg-12">
+            <h3><span class="label label-info">当前总申请提现金额为：${money}元 </span></h3>
+            <br>
+        </div>
+        #end
         <div class="col-md-12 col-lg-12">
             <table id="check_withdraw_table" class="table table-striped table-bordered" cellspacing="0" width="100%">
             </table>

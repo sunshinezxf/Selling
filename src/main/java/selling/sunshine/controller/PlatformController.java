@@ -7,7 +7,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import selling.sunshine.form.AdminForm;
 import selling.sunshine.form.AdminLoginForm;
@@ -80,6 +82,9 @@ public class PlatformController {
                     return view;
                 case "express":
                     view.setViewName("redirect:/order/check");
+                    return view;
+                case "finance":
+                    view.setViewName("redirect:/withdraw/check");
                     return view;
             }
         } catch (Exception e) {

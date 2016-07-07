@@ -16,4 +16,6 @@ public interface WithdrawService {
 	ResultData updateWithdrawRecord(WithdrawRecord record);
 	
 	ResultData statistic(Map<String, Object> condition);
+
+	ResultData fetchSumMoney(Map<String, Object> condition);
 }

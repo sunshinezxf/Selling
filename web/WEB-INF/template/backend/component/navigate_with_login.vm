@@ -56,7 +56,7 @@
                         </ul>
                     </li>
                 #end
-                #if($role == "admin")
+                #if($role == "admin" || $role == "finance")
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" role="button"
                            aria-haspopup="true" aria-expanded="true">提现管理 <span class="caret"></span></a>
@@ -82,7 +82,7 @@
                            aria-haspopup="true" aria-expanded="true">管理员管理 <span class="caret"></span></a>
                         <ul class="dropdown-menu nav nav-pills nav-stacked">
                             <li><a class="menu" href="${path.concat('/register')}">账号授权</a></li>
-                            <li><a class="menu" href="${path.concat('/manage')}">账号管理</a></li>
+                            <li><a class="menu" href="${path.concat('/admin/overview')}">账号管理</a></li>
                         </ul>
                     </li>
                 #end

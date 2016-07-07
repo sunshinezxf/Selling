@@ -153,6 +153,15 @@
                             }
                             },
                             {
+                                title: "订单类型", "mRender": function (data, type, full) {
+                                    if(full.type=='ORDINARY'){
+                                       return "订单";
+                                    }else{
+                                       return "赠品";
+                                    }
+                                }
+                            },
+                            {
                                 title: "操作", "mRender": function (data, type, full) {
                                 var operation = "";
                                 var detail_button = " <button type='button' id='" + full.orderId + "' class='btn btn-success' onclick=detail(this) data-toggle='modal' data-target='#order_item_modal'>详情</button> ";
@@ -332,6 +341,15 @@
                             return ((new Date(full.createAt)).format("yyyy/MM/dd"));
                         }
                         },
+                        {
+                                title: "订单类型", "mRender": function (data, type, full) {
+                                    if(full.type=='ORDINARY'){
+                                       return "订单";
+                                    }else{
+                                       return "赠品";
+                                    }
+                                }
+                            },
                         {
                             title: "操作", "mRender": function (data, type, full) {
                             var operation = "";
