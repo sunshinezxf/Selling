@@ -28,6 +28,9 @@
             </div>
         </div>
     </div>
+    <a class="weui_panel_ft" href="/agent/viewinvite">
+	        查看已邀请的代理商
+	</a>
     <div id="toast" style="display: none;">
         <div class="weui_mask_transparent"></div>
         <div class="weui_toast">
