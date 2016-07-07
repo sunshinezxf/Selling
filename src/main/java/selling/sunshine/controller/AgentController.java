@@ -424,7 +424,7 @@ public class AgentController {
         	List<String> agentInfo = new ArrayList<String>();
         	ResultData quantityData = refundService.calculateQuantity(agent.getAgentId());
         	agentInfo.add(agent.getName());
-        	agentInfo.add("本月购买商品：" + (String)quantityData.getData() + "件");
+        	agentInfo.add("本月购买商品：" + String.valueOf(quantityData.getData()) + "件");
         	agents.add(agentInfo);
         }
         view.addObject("agents", agents);

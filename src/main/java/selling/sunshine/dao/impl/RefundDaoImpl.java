@@ -559,17 +559,17 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
 			List<Map<String, Object>> sumCustomerOrderList = sqlSession
 					.selectList("selling.order.pool.calculateCustomerOrderQuantity",
 							condition);
-			if ((sumOrderList==null)&&(sumCustomerOrderList==null)) {
+			if ((sumOrderList.get(0)==null)&&(sumCustomerOrderList.get(0)==null)) {
 				result.setData(0);
 				return result;
-			}else if(sumOrderList==null){
-				result.setData((int)sumCustomerOrderList.get(0).get("quantity"));
+			}else if(sumOrderList.get(0)==null){
+				result.setData(Integer.parseInt(sumCustomerOrderList.get(0).get("quantity").toString()));
 				return result;
-			}else if(sumCustomerOrderList==null){
-				result.setData((int)sumOrderList.get(0).get("quantity"));
+			}else if(sumCustomerOrderList.get(0)==null){
+				result.setData(Integer.parseInt(sumOrderList.get(0).get("quantity").toString()));
 				return result;
 			}
-	        int quantity=(int)sumOrderList.get(0).get("quantity")+(int)sumCustomerOrderList.get(0).get("quantity");
+	        int quantity=Integer.parseInt(sumOrderList.get(0).get("quantity").toString())+Integer.parseInt(sumCustomerOrderList.get(0).get("quantity").toString());
 			result.setData(quantity);
 		} catch (Exception e) {
 			logger.error(e.getMessage());

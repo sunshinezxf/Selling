@@ -127,21 +127,21 @@
 	</select>
 	
 	<select id="calculateOrderQuantity" parameterType="java.util.Map" resultMap="orderQuantityVo">
-		SELECT SUM(order_price) AS quantity
-		FROM `order`
-		WHERE 1 = 1 
+		SELECT SUM(i.goods_quantity) AS quantity
+		FROM `order` o,order_item i
+		WHERE 1 = 1 AND o.order_id=i.order_id AND (i.order_item_status='1' OR i.order_item_status='2' OR i.order_item_status='3') AND order_type='0'
 		<if test="date != null and date != ''">
-			AND create_time LIKE #{date}
+			AND o.create_time LIKE #{date}
 		</if>
 		<if test="agentId != null and agentId != ''">
-			AND agent_id = #{agentId}
+			AND o.agent_id = #{agentId}
 		</if>
 	</select>
 	
 	<select id="calculateCustomerOrderQuantity" parameterType="java.util.Map" resultMap="customerOrderQuantityVo">
-		SELECT SUM(total_price) AS quantity
+		SELECT SUM(quantity) AS quantity
 		FROM customer_order
-		WHERE 1 = 1 
+		WHERE 1 = 1 AND (order_status='1' OR order_status='2' OR order_status='3')
 		<if test="date != null and date != ''">
 			AND create_time LIKE #{date}
 		</if>
