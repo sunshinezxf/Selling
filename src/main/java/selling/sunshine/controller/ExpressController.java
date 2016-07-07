@@ -14,18 +14,16 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
-<<<<<<< HEAD
 import com.csvreader.CsvReader;
 
 import selling.sunshine.dao.CustomerOrderDao;
 import selling.sunshine.model.*;
-=======
+
 import com.alibaba.fastjson.JSONArray;
 
 import selling.sunshine.model.CustomerOrder;
 import selling.sunshine.model.OrderItem;
->>>>>>> cc1e40eb32c25e16c3b1aabdfd8eaa00b833e96d
-import selling.sunshine.model.express.Express;
+
 import selling.sunshine.model.express.Express4Agent;
 import selling.sunshine.model.express.Express4Customer;
 import selling.sunshine.service.ExpressService;
@@ -184,6 +182,9 @@ public class ExpressController {
         view.setViewName("redirect:/order/check");
 		return view;
 	}
+
+
+
 
 	
 	@RequestMapping(method = RequestMethod.GET, value="/queryExpress/{expressNumber}")
