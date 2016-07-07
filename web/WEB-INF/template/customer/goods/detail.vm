@@ -138,10 +138,10 @@
             </table>
         </div>
         <div id="more" class="more">
-            <a id="qrcode" href="${path.concat('/material/images/qrcode_b.png')}">
+            ##<a id="qrcode" href="${path.concat('/material/images/qrcode_b.png')}">
                 <img class="img" src="${path.concat('/material/images/qrcode.png')}"/>
-            </a>
-            <p>长按上方二维码，扫描后关注，即可了解更多有关“云草纲目超细三七粉”的信息</p>
+            ##</a>
+            <p>长按上方二维码，扫描后关注,即可了解更多有关“云草纲目超细三七粉”的信息</p>
         </div>
     </div>
 </div>
