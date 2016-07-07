@@ -36,6 +36,18 @@
                         <p class="weui_media_title total_num">共${order.goodsQuantity}件商品</p>
                         <h4 class="weui_media_title total_money">合计：${order.orderItemPrice}元</h4>
                     </div>
+                    <div class="weui_media_box weui_media_text col5">
+                        #if(${order.status} == "SHIPPED" || ${order.status} == "RECEIVED")
+						<div class="weui_cell_bd weui_cell_primary">已发货</div>
+						<div class="express_btn">
+						    <a class="weui_btn weui_btn_mini weui_btn_plain_primary">&nbsp物流信息&nbsp</a>
+						</div>
+						#elseif(${order.status} != "EXCHANGED")
+						<div class="weui_cell_bd weui_cell_primary">未发货</div>
+						#else
+						<div class="weui_cell_bd weui_cell_primary">已退货</div>
+						#end
+                    </div>
                 </div>
                 <!--<a href="javascript:void(0);" class="weui_panel_ft">查看更多</a>-->
             </div>
@@ -67,6 +79,18 @@
                     <div class="weui_media_box weui_media_text col4">
                         <p class="weui_media_title total_num">共${order.quantity}件商品</p>
                         <h4 class="weui_media_title total_money">合计：${order.totalPrice}元</h4>
+                    </div>
+                    <div class="weui_media_box weui_media_text col5">
+                        #if(${order.status} == "SHIPPED" || ${order.status} == "RECEIVED")
+						<div class="weui_cell_bd weui_cell_primary">已发货</div>
+						<div class="express_btn">
+						    <a class="weui_btn weui_btn_mini weui_btn_plain_primary">&nbsp物流信息&nbsp</a>
+						</div>
+						#elseif(${order.status} != "EXCHANGED")
+						<div class="weui_cell_bd weui_cell_primary">未发货</div>
+						#else
+						<div class="weui_cell_bd weui_cell_primary">已退货</div>
+						#end
                     </div>
                 </div>
                 <!--<a href="javascript:void(0);" class="weui_panel_ft">查看更多</a>-->
@@ -119,6 +143,13 @@
     //$("#address_dialog").find(".weui_btn_dialog.primary").click(function(){
     //	$("#address_dialog").hide();
     //});
+    
+    $.each($(".express_btn"), function(i, val){
+		$(val).on("click",function(){
+			var orderItemId = $(this).parents(".order_id").html().substring(4);
+			window.location = "${path.concat("/order/viewexpress/")}" + orderItemId;
+		})
+    });
 
     $("#confirm").click(function () {
         WeixinJSBridge.call('closeWindow');
