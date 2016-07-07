@@ -27,7 +27,7 @@
                 请截屏二维码或发送链接给被邀请注册的代理商
             </div>
         </div>
-        <div class="weui_panel" style="text-align:center;">
+        <div class="panel" style="text-align:center;">
 	        <a class="weui_panel_ft" style="color:#586C94;" href="${path.concat('/agent/viewinvite')}">
 			        查看已邀请的代理商
 			</a>
