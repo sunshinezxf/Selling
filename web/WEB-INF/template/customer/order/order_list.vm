@@ -12,7 +12,7 @@
 <div class="bd">
     #if(${orderFromAgent})
         #foreach( $order in ${orderFromAgent} )
-            <div class="weui_panel weui_panel_access">
+            <div class="weui_panel weui_panel_access order_panel">
                 <div class="weui_panel_hd col1">
                     <h4 class="order_id">订单号:${order.orderItemId}</h4>
                     #if(${order.order.agent.name})
@@ -56,7 +56,7 @@
 
     #if(${orderFromCustomer})
         #foreach( $order in ${orderFromCustomer} )
-            <div class="weui_panel weui_panel_access">
+            <div class="weui_panel weui_panel_access order_panel">
                 <div class="weui_panel_hd col1">
                     <h4 class="order_id">订单号:${order.orderId}</h4>
                     #if(${order.agent.name})
@@ -146,7 +146,7 @@
     
     $.each($(".express_btn"), function(i, val){
 		$(val).on("click",function(){
-			var orderItemId = $(this).parents(".order_id").html().substring(4);
+			var orderItemId = $(this).parents(".order_panel").find(".order_id").html().substring(4);
 			window.location = "${path.concat("/order/viewexpress/customer/")}" + orderItemId;
 		})
     });

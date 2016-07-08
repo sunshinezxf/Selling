@@ -1,8 +1,10 @@
 #parse("/common/util.vm")
 <html lang="zh_CN">
 <head>
-    #parse("/agent/component/init.vm")
-    <title>我的客户</title>
+#parse("/agent/component/init.vm")
+<script type="text/javascript" src="${path.concat('/plugins/jquery/jquery.provincesCity.js')}"></script>
+<script type="text/javascript" src="${path.concat('/plugins/jquery/jquery.provincesData.js')}"></script>
+<title>我的客户</title>
 </head>
 <body ontouchstart>
 <div class="container">
