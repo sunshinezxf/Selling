@@ -199,18 +199,12 @@ public class CommodityController {
     public ModelAndView view(HttpServletRequest request, @PathVariable("goodsId") String goodsId, String agentId, String code, String state) {
         ModelAndView view = new ModelAndView();
         String openId = null;
-        HttpSession session = request.getSession();
-        if(session.getAttribute("openId") != null && !session.getAttribute("openId").equals("")){
-        	openId = (String) session.getAttribute("openId");
-        } else {
-	        if (StringUtils.isEmpty(code) || StringUtils.isEmpty(state)) {
-	        	WechatConfig.oauthWechat(view, "/customer/component/goods_error_msg");
-	            view.setViewName("/customer/component/goods_error_msg");
-	            return view;
-	        }
-	        openId = WechatUtil.queryOauthOpenId(code);
-	        session.setAttribute("openId", openId);
+        if (StringUtils.isEmpty(code) || StringUtils.isEmpty(state)) {
+        	WechatConfig.oauthWechat(view, "/customer/component/goods_error_msg");
+            view.setViewName("/customer/component/goods_error_msg");
+            return view;
         }
+        openId = WechatUtil.queryOauthOpenId(code);
         view.addObject("wechat", openId);
         
         logger.debug("oppppo" + openId);

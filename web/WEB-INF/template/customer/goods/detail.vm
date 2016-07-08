@@ -410,7 +410,7 @@
                 var param = {agentId: agentId};
                 $.post(url, param, function (result) {
                     if (result.responseCode != "RESPONSE_OK") {
-                        $("#dialog").find(".weui_dialog_bd").html("该代理商不存在！");
+                        $("#dialog").find(".weui_dialog_bd").html("优惠码不存在！");
                         $("#dialog").fadeIn();
                         $("#agent_id").val("");
                     }
@@ -708,7 +708,7 @@
                 var param = {agentId: agentId};
                 $.post(url, param, function (result) {
                     if (result.responseCode != "RESPONSE_OK") {
-                        $("#dialog").find(".weui_dialog_bd").html("该代理商不存在！");
+                        $("#dialog").find(".weui_dialog_bd").html("优惠码不存在！");
                         $("#dialog").fadeIn();
                         $("#agent_id").val("");
                         check_agent();
