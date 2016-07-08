@@ -53,9 +53,6 @@ public class ExpressController {
 
 	@Autowired
 	private OrderService orderService;
-	
-	@Autowired
-	private CustomerOrderDao customerOrderDao;
 
 	@RequestMapping(method = RequestMethod.POST, value = "/detail/{id}")
 	public ResultData detail(@PathVariable("id") String id) {
@@ -170,14 +167,13 @@ public class ExpressController {
                     CustomerOrder temp = new CustomerOrder();
                     Map<String, Object> condition = new HashMap<>();
                     condition.put("orderId", linkID);
-                    ResultData fetchResponse =customerOrderDao.queryOrder(condition);
-                    if (fetchResponse.getResponseCode() ==
-                            ResponseCode.RESPONSE_OK) {
-                    	temp=((List<CustomerOrder>) fetchResponse.getData()).get(0);
+                    ResultData fetchResponse =orderService.fetchCustomerOrder(condition);
+                    if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                    	temp = ((List<CustomerOrder>) fetchResponse.getData()).get(0);
                         temp.setStatus(OrderItemStatus.SHIPPED);
                         express.setOrder(temp);
                         expressService.createExpress(express);
-                        customerOrderDao.updateOrder(temp);
+                        orderService.updateCustomerOrder(temp);
     				}
 
     			}        

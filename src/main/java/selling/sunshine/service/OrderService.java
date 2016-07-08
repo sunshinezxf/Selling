@@ -41,4 +41,6 @@ public interface OrderService {
     ResultData fetchOrderItem(Map<String, Object> condition);
 
     ResultData updateOrderItem(OrderItem orderItem);
+    
+    ResultData updateCustomerOrder(CustomerOrder customerOrder);
 }
