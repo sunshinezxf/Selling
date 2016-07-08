@@ -136,7 +136,7 @@ public class ExpressController {
                 	Express4Agent express = new Express4Agent(csvList.get(row)[7],
                 			csvList.get(row)[14], csvList.get(row)[15],
                 			csvList.get(row)[20], csvList.get(row)[0],
-                			csvList.get(row)[1], csvList.get(row)[6],
+                			csvList.get(row)[1], csvList.get(row)[5],
                 			csvList.get(row)[27]);
                     OrderItem temp = new OrderItem();
                     Map<String, Object> condition = new HashMap<>();
@@ -164,7 +164,7 @@ public class ExpressController {
                     		csvList.get(row)[7],
                 			csvList.get(row)[14], csvList.get(row)[15],
                 			csvList.get(row)[20], csvList.get(row)[0],
-                			csvList.get(row)[1], csvList.get(row)[6],
+                			csvList.get(row)[1], csvList.get(row)[5],
                 			csvList.get(row)[27]);
                     CustomerOrder temp = new CustomerOrder();
                     Map<String, Object> condition = new HashMap<>();

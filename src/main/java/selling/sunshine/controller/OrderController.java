@@ -591,7 +591,6 @@ public class OrderController {
 			}
 
         }
-        System.err.println(workbook.toString());
         // 写入数据并关闭文件
         workbook.write(os);
         workbook.close();
