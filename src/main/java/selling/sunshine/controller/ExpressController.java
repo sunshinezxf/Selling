@@ -125,9 +125,12 @@ public class ExpressController {
         		view.setViewName("/backend/express/express_upload");
         		return view;
 			}
+        	if(csvList.get(row)[7].equals("")){
+        		continue;
+        	}
         	Map<String, Object> con=new HashMap<>();
         	con.put("expressNumber", csvList.get(row)[7]);
-        	if (expressService.fetchExpress(con).getData()==null) {
+        	if (expressService.fetchExpress(con).getResponseCode()==ResponseCode.RESPONSE_NULL) {
                 String  linkID = csvList.get(row)[8]; //取得第row行第0列的数据  
                 if (linkID.startsWith("ORI")) {
                 	Express4Agent express = new Express4Agent(csvList.get(row)[7],
