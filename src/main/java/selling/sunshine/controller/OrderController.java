@@ -4,14 +4,14 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.pingplusplus.model.Charge;
 
-import jxl.Workbook;
-import jxl.write.Label;
-import jxl.write.WritableCellFormat;
-import jxl.write.WritableSheet;
-import jxl.write.WritableWorkbook;
-import jxl.write.WriteException;
-import jxl.write.biff.RowsExceededException;
 
+
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.poifs.filesystem.NPOIFSFileSystem;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
@@ -46,11 +46,19 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
+import jxl.write.Label;
+import jxl.write.WritableSheet;
+import jxl.write.WritableWorkbook;
+import jxl.write.WriteException;
+import jxl.write.biff.RowsExceededException;
+import jxl.*;
 
 /**
  * Created by sunshine on 4/11/16.
@@ -530,97 +538,68 @@ public class OrderController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/exportExcel")
 	public String exportExcel(HttpServletRequest request, HttpServletResponse response,HttpSession session)
-			throws IOException, RowsExceededException, WriteException {
+			throws IOException{
         List<Express> expresseList=(List<Express>)session.getAttribute("expresseList");
         if (expresseList==null) {
 			return null;
 		}
+        
+        String context = request.getSession().getServletContext().getRealPath("/");
+        StringBuffer path = new StringBuffer(context);
+        path.append(PlatformConfig.getValue("express_template"));
+        logger.debug(path.toString());
+        File file = new File(path.toString());
+        if (!file.exists()) {
+            logger.error("文件不存在");
+            return "";
+        }
 		response.reset();
 		response.setContentType("application/x-download;charset=utf-8");
 		//response.setCharacterEncoding("utf-8");
 		response.setHeader("Content-Disposition", "attachment;filename="
 				+ URLEncoder.encode("快递单.xls", "utf-8"));
 		OutputStream os = response.getOutputStream();
-		WritableWorkbook book = null;
-		WritableSheet sheet;
-		book = Workbook.createWorkbook(os);
-		sheet = book.createSheet(" 第一页 ", 0);
-		String headerArr[] = { "运单编号", "月结客户", "寄件人", "寄件电话", "寄件省份", "寄件城市",
-				"寄件区县", "寄件详细地址", "收件人", "收件电话", "收件省份", "收件城市", "收件区县",
-				"收件详细地址", "物品类型", "物品重量", "运费", "代收货款", "到付款", "回单编号", "揽件人",
-				"保价金额", "录单备注" };
-        sheet.mergeCells(headerArr.length, 0, headerArr.length + 2, 0);
-        sheet.mergeCells(headerArr.length + 1, 1, headerArr.length + 2, 1);
-        WritableCellFormat cellFormat = new WritableCellFormat();  
-        cellFormat.setAlignment(jxl.format.Alignment.CENTRE);  
-		for (int i = 0; i < headerArr.length; i++) {
-			Label label=new Label(i, 0, headerArr[i]);
-			label.setCellFormat(cellFormat);
-			sheet.addCell(label);
-		}
-		sheet.addCell(new Label(headerArr.length, 0, "短信状态（填写“是”或者“否”）"));
-		// sheet.addCell(new Label( headerArr.length+1 , 0 , ""));
-		// sheet.addCell(new Label( headerArr.length+2 , 0 , ""));
-		sheet.addCell(new Label(headerArr.length, 1, "短信通知寄件人"));
-		sheet.addCell(new Label(headerArr.length + 1, 1, "短信通知收件人"));
-		// sheet.addCell(new Label( headerArr.length+2 , 1 , ""));
-		sheet.addCell(new Label(headerArr.length, 2, "签收"));
-		sheet.addCell(new Label(headerArr.length + 1, 2, "揽件"));
-		sheet.addCell(new Label(headerArr.length + 2, 2, "派件"));
-
-        String headerArr2[] = {"始发地", "发件单位", "发件部门", "发件邮编", "目的地", "收件单位",
-                "收件邮编", "长", "宽", "高", "数量", "订单号"};
-
-        for (int i = 0; i < headerArr2.length; i++) {
-			Label label=new Label(i + headerArr.length + 3, 0, headerArr2[i]);
-			label.setCellFormat(cellFormat);
-            sheet.addCell(label);
-        }
-        for (int i = 0; i < headerArr.length; i++) {
-            sheet.mergeCells(i, 0, i, 2);
-        }
-        for (int i = 0; i < headerArr2.length; i++) {
-            sheet.mergeCells(i + headerArr.length + 3, 0, i + headerArr.length + 3, 2);
-        }
-
-
-        for (int i = 0; i < expresseList.size(); i++) {
-            sheet.addCell(new Label(2, i + 3, expresseList.get(i).getSenderName()));
-            sheet.addCell(new Label(3, i + 3, expresseList.get(i).getSenderPhone()));
-            sheet.addCell(new Label(7, i + 3, expresseList.get(i).getSenderAddress()));
-            sheet.addCell(new Label(8, i + 3, expresseList.get(i).getReceiverName()));
-            sheet.addCell(new Label(9, i + 3, expresseList.get(i).getReceiverPhone()));
-            sheet.addCell(new Label(13, i + 3, expresseList.get(i).getReceiverAddress()));
-            sheet.addCell(new Label(14, i + 3, expresseList.get(i).getGoodsName()));
-            sheet.addCell(new Label(16, i + 3, "10"));
-            sheet.addCell(new Label(17, i + 3, "10"));
-            sheet.addCell(new Label(22, i + 3, String.valueOf(expresseList.get(i).getGoodsQuantity())));
-            //sheet.addCell(new Label(36, i + 3, String.valueOf(expresseList.get(i).getGoodsQuantity())));
+		
+        NPOIFSFileSystem pkg = new NPOIFSFileSystem(file);
+        Workbook workbook = new HSSFWorkbook(pkg.getRoot(), true);
+        for (int row = 3, i = 0; i <  expresseList.size(); i++, row++) {
+            Sheet sheet = workbook.getSheetAt(0);
+            Row current = sheet.createRow(row);
+            Cell senderName = current.createCell(2);
+            senderName.setCellValue(PlatformConfig.getValue("sender_name"));
+            Cell senderPhone = current.createCell(3);
+            senderPhone.setCellValue(PlatformConfig.getValue("sender_phone"));
+            Cell senderAddress = current.createCell(7);
+            senderAddress.setCellValue(PlatformConfig.getValue("sender_address"));
+            Cell receiverName = current.createCell(8);
+            receiverName.setCellValue(expresseList.get(i).getReceiverName());
+            Cell receiverPhone = current.createCell(9);
+            receiverPhone.setCellValue(expresseList.get(i).getReceiverPhone());
+            Cell receiverAddress = current.createCell(13);
+            receiverAddress.setCellValue(expresseList.get(i).getReceiverAddress());
+            Cell goods = current.createCell(14);
+            goods.setCellValue(expresseList.get(i).getGoodsName());
+            Cell description = current.createCell(22);
+            description.setCellValue(String.valueOf(expresseList.get(i).getGoodsQuantity()) + "盒");
+            Cell orderNo = current.createCell(37);
             if (expresseList.get(i).getLinkId().startsWith("ORI")) {
-            	 Express4Agent express=(Express4Agent)expresseList.get(i);
-            	 sheet.addCell(new Label(37,i+3,express.getItem().getOrderItemId()));
+           	 Express4Agent express=(Express4Agent)expresseList.get(i);
+           	 orderNo.setCellValue(express.getItem().getOrderItemId());
 			}else {
 				Express4Customer express =(Express4Customer)expresseList.get(i);
-				sheet.addCell(new Label(37,i+3,express.getOrder().getOrderId()));
+				orderNo.setCellValue(express.getOrder().getOrderId());
 			}
-           
+
         }
-        sheet.setColumnView(2, 30);
-        sheet.setColumnView(3, 30);
-        sheet.setColumnView(7, 50);
-        sheet.setColumnView(8, 30);
-        sheet.setColumnView(9, 30);
-        sheet.setColumnView(13, 50);
-        sheet.setColumnView(14, 30);
-        sheet.setColumnView(36, 10);
-        sheet.setColumnView(37, 30);
+        System.err.println(workbook.toString());
         // 写入数据并关闭文件
-        book.write();
-        book.close();
+        workbook.write(os);
+        workbook.close();
         os.flush();
         os.close();
         session.removeAttribute("expresseList");
         return null;
+        
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/downloadOrderExcel")
@@ -647,7 +626,8 @@ public class OrderController {
         WritableWorkbook book = null;
         WritableSheet sheet1;
         WritableSheet sheet2;
-        book = Workbook.createWorkbook(os);
+        //book = Workbook.createWorkbook(os);
+        book=jxl.Workbook.createWorkbook(os);
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         if (orderList != null) {
             sheet1 = book.createSheet(" 代理商订单 ", 0);
