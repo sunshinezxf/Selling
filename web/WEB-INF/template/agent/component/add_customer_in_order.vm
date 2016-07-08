@@ -31,12 +31,12 @@
                 <label class="weui_label">地址</label>
             </div>
             <div class="weui_cell_bd weui_cell_primary">
-                <input id="customer_address" class="weui_input" type="text" placeholder="请填写客户详细地址"/>
+                <input id="customer_address" class="weui_input" type="text" placeholder="请填写客户详细收货地址"/>
             </div>
         </div>
     </div>
     <div class="weui_btn_area">
-        <button type="button" class="weui_btn weui_btn_primary" id="add_customer_confirm_btn">确认添加</button>
+        <button type="button" class="weui_btn weui_btn_disabled weui_btn_default" id="add_customer_confirm_btn" disabled="disabled">确认添加</button>
         <button type="button" class="weui_btn weui_btn_default" id="add_customer_cancel_btn">取消</button>
     </div>
 </div>
@@ -53,6 +53,28 @@
 <script>
 	$('#province').ProvinceCity();
 	$("#province").children(":first").change(function () {
+        if (addressInfo_validate()) {
+            active();
+        } else {
+            inactive();
+        }
+    });
+    $('#customer_name').on('input propertychange', function () {
+        if (addressInfo_validate()) {
+            active();
+        } else {
+            inactive();
+        }
+    });
+
+    $('#customer_phone').on('input propertychange', function () {
+        if (addressInfo_validate()) {
+            active();
+        } else {
+            inactive();
+        }
+    });
+    $('#customer_address').on('input propertychange', function () {
         if (addressInfo_validate()) {
             active();
         } else {

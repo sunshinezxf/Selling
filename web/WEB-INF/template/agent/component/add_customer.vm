@@ -20,25 +20,93 @@
         </div>
         <div class="weui_cell">
             <div class="weui_cell_hd">
+                <label class="weui_label">地区</label>
+            </div>
+            <div class="weui_cell_bd weui_cell_primary">
+                <div id="province" class="area_select"></div>
+            </div>
+        </div>
+        <div class="weui_cell">
+            <div class="weui_cell_hd">
                 <label class="weui_label">地址</label>
             </div>
             <div class="weui_cell_bd weui_cell_primary">
-                <input id="customer_address" class="weui_input" type="text" placeholder="请填写客户收货地址"/>
+                <input id="customer_address" class="weui_input" type="text" placeholder="请填写客户详细收货地址"/>
             </div>
         </div>
     </div>
     <div class="weui_btn_area">
-        <button type="button" class="weui_btn weui_btn_primary" id="add_confirm_btn">确认添加</button>
+        <button type="button" class="weui_btn weui_btn_disabled weui_btn_default" id="add_confirm_btn" disabled="disabled">确认添加</button>
         <button type="button" class="weui_btn weui_btn_default" id="add_cancel_btn">取消</button>
     </div>
 </div>
 <script>
+	$('#province').ProvinceCity();
+	$("#province").children(":first").change(function () {
+        if (addressInfo_validate()) {
+            active();
+        } else {
+            inactive();
+        }
+    });
+    $('#customer_name').on('input propertychange', function () {
+        if (addressInfo_validate()) {
+            active();
+        } else {
+            inactive();
+        }
+    });
+
+    $('#customer_phone').on('input propertychange', function () {
+        if (addressInfo_validate()) {
+            active();
+        } else {
+            inactive();
+        }
+    });
+    $('#customer_address').on('input propertychange', function () {
+        if (addressInfo_validate()) {
+            active();
+        } else {
+            inactive();
+        }
+    });
+    function not_null(item) {
+        if (item == null || item == "" || item.length <= 0) {
+            return false;
+        }
+        return true;
+    }
+    function addressInfo_validate() {
+        var name = $('#customer_name').val();
+        var phone = $('#customer_phone').val();
+        var address = $('#customer_address').val();
+        var area = $("#province").children(":first").val();
+        if (not_null(name) && not_null(phone) && not_null(address) && area !== "请选择") {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    function active() {
+        $("#add_confirm_btn").removeAttr("disabled");
+        $("#add_confirm_btn").removeClass("weui_btn_disabled");
+        $("#add_confirm_btn").removeClass("weui_btn_default");
+        $("#add_confirm_btn").addClass("weui_btn_primary");
+    }
+
+    function inactive() {
+        $("#add_confirm_btn").attr("disabled", "disabled");
+        $("#add_confirm_btn").removeClass("weui_btn_primary");
+        $("#add_confirm_btn").addClass("weui_btn_disabled");
+        $("#add_confirm_btn").addClass("weui_btn_default");
+    }
     $("#add_confirm_btn").click(function () {
         
         var url = "${path.concat('/customer/add')}";
         var name = $("#customer_name").val();
         var phone = $("#customer_phone").val();
-        var address = $("#customer_address").val();
+       var address = $("#province").children(":first").val() + $("#province").children(":first").next().val() + $("#province").children(":last").val() + $("#customer_address").val();
         
         if((typeof name == "undefined" || name == "")&&(typeof phone == "undefined" || phone == "")&&(typeof address == "undefined" || address == "")){
             $("#dialog").find(".weui_dialog_bd").html("姓名、手机号码和地址不能为空！");

@@ -12,7 +12,7 @@
 <div class="bd">
     #if(${orderFromAgent})
         #foreach( $order in ${orderFromAgent} )
-            <div class="weui_panel weui_panel_access">
+            <div class="weui_panel weui_panel_access order_panel">
                 <div class="weui_panel_hd col1">
                     <h4 class="order_id">订单号:${order.orderItemId}</h4>
                     #if(${order.order.agent.name})
@@ -38,8 +38,8 @@
                     </div>
                     <div class="weui_media_box weui_media_text col5">
                         #if(${order.status} == "SHIPPED" || ${order.status} == "RECEIVED")
-						<div class="weui_cell_bd weui_cell_primary">已发货</div>
-						<div class="express_btn">
+						<div class="weui_cell_bd weui_cell_primary" style="float:left">已发货</div>
+						<div class="express_btn" style="float:right">
 						    <a class="weui_btn weui_btn_mini weui_btn_plain_primary">&nbsp物流信息&nbsp</a>
 						</div>
 						#elseif(${order.status} != "EXCHANGED")
@@ -56,7 +56,7 @@
 
     #if(${orderFromCustomer})
         #foreach( $order in ${orderFromCustomer} )
-            <div class="weui_panel weui_panel_access">
+            <div class="weui_panel weui_panel_access order_panel">
                 <div class="weui_panel_hd col1">
                     <h4 class="order_id">订单号:${order.orderId}</h4>
                     #if(${order.agent.name})
@@ -82,8 +82,8 @@
                     </div>
                     <div class="weui_media_box weui_media_text col5">
                         #if(${order.status} == "SHIPPED" || ${order.status} == "RECEIVED")
-						<div class="weui_cell_bd weui_cell_primary">已发货</div>
-						<div class="express_btn">
+						<div class="weui_cell_bd weui_cell_primary" style="float:left">已发货</div>
+						<div class="express_btn" style="float:right">
 						    <a class="weui_btn weui_btn_mini weui_btn_plain_primary">&nbsp物流信息&nbsp</a>
 						</div>
 						#elseif(${order.status} != "EXCHANGED")
@@ -146,7 +146,7 @@
     
     $.each($(".express_btn"), function(i, val){
 		$(val).on("click",function(){
-			var orderItemId = $(this).parents(".order_id").html().substring(4);
+			var orderItemId = $(this).parents(".order_panel").find(".order_id").html().substring(4);
 			window.location = "${path.concat("/order/viewexpress/customer/")}" + orderItemId;
 		})
     });
