@@ -349,9 +349,9 @@ public class CustomerController {
             }
         }
         condition.clear();
+        status.clear();
         condition.put("receiverPhone", phone);
         condition.put("blockFlag", false);
-        List<Integer> status = new ArrayList<>();
         status.add(1);
         status.add(2);
         condition.put("status", status);
