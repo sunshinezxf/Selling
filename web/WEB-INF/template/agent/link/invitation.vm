@@ -8,7 +8,7 @@
 </head>
 <body ontouchstart>
 <div class="container">
-    <div class="panel weui_tab_bd" id="self_info_panel">
+    <div class="panel weui_tab_bd" style="padding-bottom:65px;" id="self_info_panel">
         <div class="hd">
             <h1 class="page_title">注册邀请</h1>
 
@@ -27,7 +27,7 @@
                 请截屏二维码或发送链接给被邀请注册的代理商
             </div>
         </div>
-        <div class="weui_panel" style="text-align:center;">
+        <div class="panel" style="text-align:center;">
 	        <a class="weui_panel_ft" style="color:#586C94;" href="${path.concat('/agent/viewinvite')}">
 			        查看已邀请的代理商
 			</a>

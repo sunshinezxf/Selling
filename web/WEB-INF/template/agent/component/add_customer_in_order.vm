@@ -20,10 +20,18 @@
         </div>
         <div class="weui_cell">
             <div class="weui_cell_hd">
+                <label class="weui_label">地区</label>
+            </div>
+            <div class="weui_cell_bd weui_cell_primary">
+                <div id="province" class="area_select"></div>
+            </div>
+        </div>
+        <div class="weui_cell">
+            <div class="weui_cell_hd">
                 <label class="weui_label">地址</label>
             </div>
             <div class="weui_cell_bd weui_cell_primary">
-                <input id="customer_address" class="weui_input" type="text" placeholder="请填写客户收货地址"/>
+                <input id="customer_address" class="weui_input" type="text" placeholder="请填写客户详细地址"/>
             </div>
         </div>
     </div>
@@ -43,6 +51,44 @@
 	    </div>
 </div>
 <script>
+	$('#province').ProvinceCity();
+	$("#province").children(":first").change(function () {
+        if (addressInfo_validate()) {
+            active();
+        } else {
+            inactive();
+        }
+    });
+    function not_null(item) {
+        if (item == null || item == "" || item.length <= 0) {
+            return false;
+        }
+        return true;
+    }
+    function addressInfo_validate() {
+        var name = $('#customer_name').val();
+        var phone = $('#customer_phone').val();
+        var address = $('#customer_address').val();
+        var area = $("#province").children(":first").val();
+        if (not_null(name) && not_null(phone) && not_null(address) && area !== "请选择") {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    function active() {
+        $("#add_customer_confirm_btn").removeAttr("disabled");
+        $("#add_customer_confirm_btn").removeClass("weui_btn_disabled");
+        $("#add_customer_confirm_btn").removeClass("weui_btn_default");
+        $("#add_customer_confirm_btn").addClass("weui_btn_primary");
+    }
+
+    function inactive() {
+        $("#add_customer_confirm_btn").attr("disabled", "disabled");
+        $("#add_customer_confirm_btn").removeClass("weui_btn_primary");
+        $("#add_customer_confirm_btn").addClass("weui_btn_disabled");
+        $("#add_customer_confirm_btn").addClass("weui_btn_default");
+    }
     $("#add_customer_confirm_btn").click(function () {
         var url = "${path.concat('/customer/add')}";
         var name = $("#customer_name").val();
@@ -57,7 +103,7 @@
     		$("#add_customer_dialog").fadeIn();
     		return;
         }
-        var address = $("#customer_address").val();
+        var address = $("#province").children(":first").val() + $("#province").children(":first").next().val() + $("#province").children(":last").val() + $("#customer_address").val();
         $.post(url, {
             name: name,
             phone: phone,

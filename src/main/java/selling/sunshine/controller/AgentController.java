@@ -425,6 +425,11 @@ public class AgentController {
         	ResultData quantityData = refundService.calculateQuantity(agent.getAgentId());
         	agentInfo.add(agent.getName());
         	agentInfo.add("本月购买商品：" + String.valueOf(quantityData.getData()) + "件");
+        	if(agent.isGranted()){
+        		agentInfo.add("");
+        	} else {
+        		agentInfo.add("(审核中)");
+        	}
         	agents.add(agentInfo);
         }
         view.addObject("agents", agents);

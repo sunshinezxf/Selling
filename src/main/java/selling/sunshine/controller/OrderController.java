@@ -324,8 +324,8 @@ public class OrderController {
 //		}
 //		return result;
 //	}
-    @RequestMapping(method = RequestMethod.GET, value = "/viewexpress/{orderId}")
-    public ModelAndView viewExpress(@PathVariable("orderId") String orderId){
+    @RequestMapping(method = RequestMethod.GET, value = "/viewexpress/{type}/{orderId}")
+    public ModelAndView viewExpress(@PathVariable("type") String type ,@PathVariable("orderId") String orderId){
     	ModelAndView view = new ModelAndView();
     	view.setViewName("/agent/order/express");
     	Map<String, Object> condition = new HashMap<String, Object>();
@@ -351,6 +351,7 @@ public class OrderController {
 			view.addObject("type","1");//没有快递信息
 			return view;
 		}
+		view.addObject("type", type);
 		view.addObject("expressNumber", expressNumber);
 		return view;
     }

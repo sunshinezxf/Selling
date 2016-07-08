@@ -29,7 +29,7 @@
 <script>
     $(document).ready(function () {
        var length=$('.cls').width()-$('.date').width();
-       $('.intro').css('width',length);
+       $('.intro').css('width',length-1);
     });
     
     $(".main .year .list").each(function (e, target) {
