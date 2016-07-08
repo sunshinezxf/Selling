@@ -128,12 +128,13 @@ public class ExpressController {
         	Map<String, Object> con=new HashMap<>();
         	con.put("expressNumber", csvList.get(row)[7]);
         	if (expressService.fetchExpress(con).getResponseCode()==ResponseCode.RESPONSE_NULL) {
-                String  linkID = csvList.get(row)[8]; //取得第row行第0列的数据  
+                String  linkID = csvList.get(row)[8]; //取得第row行第0列的数据 
+                String address=csvList.get(row)[2]+csvList.get(row)[3]+csvList.get(row)[4]+csvList.get(row)[5];
                 if (linkID.startsWith("ORI")) {
                 	Express4Agent express = new Express4Agent(csvList.get(row)[7],
                 			csvList.get(row)[14], csvList.get(row)[15],
                 			csvList.get(row)[20], csvList.get(row)[0],
-                			csvList.get(row)[1], csvList.get(row)[5],
+                			csvList.get(row)[1], address,
                 			csvList.get(row)[27]);
                     OrderItem temp = new OrderItem();
                     Map<String, Object> condition = new HashMap<>();
@@ -162,7 +163,7 @@ public class ExpressController {
                     		csvList.get(row)[7],
                 			csvList.get(row)[14], csvList.get(row)[15],
                 			csvList.get(row)[20], csvList.get(row)[0],
-                			csvList.get(row)[1], csvList.get(row)[5],
+                			csvList.get(row)[1], address,
                 			csvList.get(row)[27]);
                     CustomerOrder temp = new CustomerOrder();
                     Map<String, Object> condition = new HashMap<>();
