@@ -146,19 +146,20 @@ public class ExpressController {
                     if (fetchResponse.getResponseCode() ==
                             ResponseCode.RESPONSE_OK) {
                     	temp=((List<OrderItem>) fetchResponse.getData()).get(0);
+                        temp.setStatus(OrderItemStatus.SHIPPED);
+                        express.setItem(temp);
+                        expressService.createExpress(express);
+                        orderService.updateOrderItem(temp);
+                        condition.clear();
+                        condition.put("orderId", temp.getOrder().getOrderId());                
+                        fetchResponse = orderService.fetchOrder(condition);
+                        if (fetchResponse.getResponseCode() ==ResponseCode.RESPONSE_OK) {
+                                Order order = ((List<Order>) fetchResponse.getData()).get(0);
+                                order.setStatus(OrderStatus.FULLY_SHIPMENT);
+                                orderService.modifyOrder(order);                   
+                        }
                     }
-                    temp.setStatus(OrderItemStatus.SHIPPED);
-                    express.setItem(temp);
-                    expressService.createExpress(express);
-                    orderService.updateOrderItem(temp);
-                    condition.clear();
-                    condition.put("orderId", temp.getOrder().getOrderId());                
-                    fetchResponse = orderService.fetchOrder(condition);
-                    if (fetchResponse.getResponseCode() ==ResponseCode.RESPONSE_OK) {
-                            Order order = ((List<Order>) fetchResponse.getData()).get(0);
-                            order.setStatus(OrderStatus.FULLY_SHIPMENT);
-                            orderService.modifyOrder(order);                   
-                    }
+
     			}else {
                     Express4Customer express = new Express4Customer(
                     		csvList.get(row)[7],
@@ -173,11 +174,12 @@ public class ExpressController {
                     if (fetchResponse.getResponseCode() ==
                             ResponseCode.RESPONSE_OK) {
                     	temp=((List<CustomerOrder>) fetchResponse.getData()).get(0);
+                        temp.setStatus(OrderItemStatus.SHIPPED);
+                        express.setOrder(temp);
+                        expressService.createExpress(express);
+                        customerOrderDao.updateOrder(temp);
     				}
-                    temp.setStatus(OrderItemStatus.SHIPPED);
-                    express.setOrder(temp);
-                    expressService.createExpress(express);
-                    customerOrderDao.updateOrder(temp);
+
     			}        
 			}
         } 
