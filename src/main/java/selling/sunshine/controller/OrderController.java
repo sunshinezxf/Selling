@@ -1,15 +1,17 @@
 package selling.sunshine.controller;
 
 import com.alibaba.fastjson.JSON;
-
 import com.alibaba.fastjson.JSONObject;
 import com.pingplusplus.model.Charge;
+
 import jxl.Workbook;
 import jxl.write.Label;
+import jxl.write.WritableCellFormat;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
 import jxl.write.biff.RowsExceededException;
+
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
@@ -20,6 +22,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import selling.sunshine.dao.CustomerOrderDao;
 import selling.sunshine.form.ExpressForm;
 import selling.sunshine.form.OrderItemForm;
@@ -42,6 +45,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URLEncoder;
@@ -527,13 +531,12 @@ public class OrderController {
 	public String exportExcel(HttpServletRequest request, HttpServletResponse response,HttpSession session)
 			throws IOException, RowsExceededException, WriteException {
         List<Express> expresseList=(List<Express>)session.getAttribute("expresseList");
-        System.err.println(expresseList);
         if (expresseList==null) {
 			return null;
 		}
 		response.reset();
-		response.setContentType("application/vnd.ms-excel");
-		response.setCharacterEncoding("utf-8");
+		response.setContentType("application/x-download;charset=utf-8");
+		//response.setCharacterEncoding("utf-8");
 		response.setHeader("Content-Disposition", "attachment;filename="
 				+ URLEncoder.encode("快递单.xls", "utf-8"));
 		OutputStream os = response.getOutputStream();
@@ -545,8 +548,14 @@ public class OrderController {
 				"寄件区县", "寄件详细地址", "收件人", "收件电话", "收件省份", "收件城市", "收件区县",
 				"收件详细地址", "物品类型", "物品重量", "运费", "代收货款", "到付款", "回单编号", "揽件人",
 				"保价金额", "录单备注" };
+        sheet.mergeCells(headerArr.length, 0, headerArr.length + 2, 0);
+        sheet.mergeCells(headerArr.length + 1, 1, headerArr.length + 2, 1);
+        WritableCellFormat cellFormat = new WritableCellFormat();  
+        cellFormat.setAlignment(jxl.format.Alignment.CENTRE);  
 		for (int i = 0; i < headerArr.length; i++) {
-			sheet.addCell(new Label(i, 0, headerArr[i]));
+			Label label=new Label(i, 0, headerArr[i]);
+			label.setCellFormat(cellFormat);
+			sheet.addCell(label);
 		}
 		sheet.addCell(new Label(headerArr.length, 0, "短信状态（填写“是”或者“否”）"));
 		// sheet.addCell(new Label( headerArr.length+1 , 0 , ""));
@@ -562,10 +571,10 @@ public class OrderController {
                 "收件邮编", "长", "宽", "高", "数量", "订单号"};
 
         for (int i = 0; i < headerArr2.length; i++) {
-            sheet.addCell(new Label(i + headerArr.length + 3, 0, headerArr2[i]));
+			Label label=new Label(i + headerArr.length + 3, 0, headerArr2[i]);
+			label.setCellFormat(cellFormat);
+            sheet.addCell(label);
         }
-        sheet.mergeCells(headerArr.length, 0, headerArr.length + 2, 0);
-        sheet.mergeCells(headerArr.length + 1, 1, headerArr.length + 2, 1);
         for (int i = 0; i < headerArr.length; i++) {
             sheet.mergeCells(i, 0, i, 2);
         }
@@ -573,8 +582,8 @@ public class OrderController {
             sheet.mergeCells(i + headerArr.length + 3, 0, i + headerArr.length + 3, 2);
         }
 
+
         for (int i = 0; i < expresseList.size(); i++) {
-            //sheet.addCell(new Label(0, i + 3, expresseList.get(i).getExpressNumber()));
             sheet.addCell(new Label(2, i + 3, expresseList.get(i).getSenderName()));
             sheet.addCell(new Label(3, i + 3, expresseList.get(i).getSenderPhone()));
             sheet.addCell(new Label(7, i + 3, expresseList.get(i).getSenderAddress()));
@@ -584,22 +593,32 @@ public class OrderController {
             sheet.addCell(new Label(14, i + 3, expresseList.get(i).getGoodsName()));
             sheet.addCell(new Label(16, i + 3, "10"));
             sheet.addCell(new Label(17, i + 3, "10"));
-            sheet.addCell(new Label(36, i + 3, String.valueOf(expresseList.get(i).getGoodsQuantity())));
+            sheet.addCell(new Label(22, i + 3, String.valueOf(expresseList.get(i).getGoodsQuantity())));
+            //sheet.addCell(new Label(36, i + 3, String.valueOf(expresseList.get(i).getGoodsQuantity())));
             if (expresseList.get(i).getLinkId().startsWith("ORI")) {
             	 Express4Agent express=(Express4Agent)expresseList.get(i);
             	 sheet.addCell(new Label(37,i+3,express.getItem().getOrderItemId()));
 			}else {
 				Express4Customer express =(Express4Customer)expresseList.get(i);
-				 sheet.addCell(new Label(37,i+3,express.getOrder().getOrderId()));
+				sheet.addCell(new Label(37,i+3,express.getOrder().getOrderId()));
 			}
            
         }
-
+        sheet.setColumnView(2, 30);
+        sheet.setColumnView(3, 30);
+        sheet.setColumnView(7, 50);
+        sheet.setColumnView(8, 30);
+        sheet.setColumnView(9, 30);
+        sheet.setColumnView(13, 50);
+        sheet.setColumnView(14, 30);
+        sheet.setColumnView(36, 10);
+        sheet.setColumnView(37, 30);
         // 写入数据并关闭文件
         book.write();
         book.close();
         os.flush();
         os.close();
+        session.removeAttribute("expresseList");
         return null;
     }
 
