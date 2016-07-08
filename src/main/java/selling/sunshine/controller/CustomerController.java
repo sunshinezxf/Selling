@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import selling.sunshine.form.CustomerAddressForm;
 import selling.sunshine.form.CustomerForm;
 import selling.sunshine.form.PurchaseForm;
@@ -26,6 +27,7 @@ import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
 import javax.validation.Valid;
+
 import java.util.*;
 
 /**
@@ -323,7 +325,10 @@ public class CustomerController {
         Map<String, Object> condition = new HashMap<>();
         condition.put("phone", phone);
         condition.put("blockFlag", false);
-        condition.put("status", 1);
+        List<Integer> status = new ArrayList<Integer>();
+        status.add(1);
+        status.add(2);
+        condition.put("statusList", status);
         ResultData fetchResponse = orderService.fetchOrderItem(condition);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             List<OrderItem> list = (List<OrderItem>) fetchResponse.getData();
