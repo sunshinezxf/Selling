@@ -12,11 +12,12 @@
 <div class="bd">
     #if(${orderFromAgent})
         #foreach( $order in ${orderFromAgent} )
+        	#set($agentId = ${order.order.agent.agentId})
             <div class="weui_panel weui_panel_access order_panel">
                 <div class="weui_panel_hd col1">
                     <h4 class="order_id">订单号:${order.orderItemId}</h4>
-                    #if(${order.order.agent.name})
-                        <p class="agent">优惠码:${order.order.agent.agentId}</p>
+                    #if(${order.order.agent.agentId})
+                        <p class="agent">优惠码:$agentId.substring(3)</p>
                     #end
                 </div>
                 <div class="weui_panel_bd">
@@ -56,11 +57,12 @@
 
     #if(${orderFromCustomer})
         #foreach( $order in ${orderFromCustomer} )
+            #set($agentId = ${order.agent.agentId})
             <div class="weui_panel weui_panel_access order_panel">
                 <div class="weui_panel_hd col1">
                     <h4 class="order_id">订单号:${order.orderId}</h4>
-                    #if(${order.agent.name})
-                        <p class="agent">优惠码:${order.agent.agentId}</p>
+                    #if(${order.agent.agentId})
+                        <p class="agent">优惠码:$agentId.substring(3)</p>
                     #end
                 </div>
                 <div class="weui_panel_bd">

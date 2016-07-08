@@ -18,6 +18,7 @@
 		</div>
 	</div>
 </div>
+#parse("/agent/loading.vm")
 <script>
 $("#back_btn").on("click", function(){
 	window.history.back();
@@ -47,11 +48,13 @@ $(document).ready(function(){
 		);
 		return;
 	}
+	$("#loadingToast").show();
 	var url = "${path.concat('/express/queryExpress/')}" + expressNumber;
 	$.get(url, function(result){
 		if(result.responseCode == "RESPONSE_OK"){
 			var data = eval('(' + result.data + ')');
 			if(data.status != true){
+				$("#loadingToast").hide();
 				return;
 			}
 			var traces = (data.data[0].traces).reverse();
@@ -96,6 +99,7 @@ $(document).ready(function(){
 					);
 				}
 			}
+			$("#loadingToast").hide();
 		}
 		$(function(){
 		$(".exfr").each(function(){
