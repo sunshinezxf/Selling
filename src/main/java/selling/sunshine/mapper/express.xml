@@ -96,7 +96,7 @@
         <if test="expressId != null and expressId != ''">
             AND express_id = #{expressId}
         </if>
-        <if test="expressNumber != null and expressNumber != ''">
+        <if test="expressNumber != null">
             AND express_no = #{expressNumber}
         </if>
         UNION ALL

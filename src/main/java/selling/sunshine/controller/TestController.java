@@ -85,11 +85,11 @@ public class TestController {
                 Cell description = current.createCell(22);
                 description.setCellValue(order.getQuantity() + "盒");
                 Cell orderNo = current.createCell(37);
-                orderNo.setCellValue(order.getOrderId());
-                FileOutputStream out = new FileOutputStream(context + "/material/template/test.xls");
-                workbook.write(out);
-                out.close();
+                orderNo.setCellValue(order.getOrderId());               
             }
+            FileOutputStream out = new FileOutputStream(context + "/material/template/test.xls");
+            workbook.write(out);
+            out.close();
         } catch (Exception e) {
             logger.error(e.getMessage());
             return "";

@@ -125,15 +125,18 @@ public class ExpressController {
         		view.setViewName("/backend/express/express_upload");
         		return view;
 			}
+        	if(csvList.get(row)[7].equals("")){
+        		continue;
+        	}
         	Map<String, Object> con=new HashMap<>();
         	con.put("expressNumber", csvList.get(row)[7]);
-        	if (expressService.fetchExpress(con).getData()==null) {
+        	if (expressService.fetchExpress(con).getResponseCode()==ResponseCode.RESPONSE_NULL) {
                 String  linkID = csvList.get(row)[8]; //取得第row行第0列的数据  
                 if (linkID.startsWith("ORI")) {
                 	Express4Agent express = new Express4Agent(csvList.get(row)[7],
                 			csvList.get(row)[14], csvList.get(row)[15],
                 			csvList.get(row)[20], csvList.get(row)[0],
-                			csvList.get(row)[1], csvList.get(row)[6],
+                			csvList.get(row)[1], csvList.get(row)[5],
                 			csvList.get(row)[27]);
                     OrderItem temp = new OrderItem();
                     Map<String, Object> condition = new HashMap<>();
@@ -161,7 +164,7 @@ public class ExpressController {
                     		csvList.get(row)[7],
                 			csvList.get(row)[14], csvList.get(row)[15],
                 			csvList.get(row)[20], csvList.get(row)[0],
-                			csvList.get(row)[1], csvList.get(row)[6],
+                			csvList.get(row)[1], csvList.get(row)[5],
                 			csvList.get(row)[27]);
                     CustomerOrder temp = new CustomerOrder();
                     Map<String, Object> condition = new HashMap<>();
