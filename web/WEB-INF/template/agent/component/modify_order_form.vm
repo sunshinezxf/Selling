@@ -173,7 +173,7 @@
 		$.each($(".express_btn"), function(i, val){
 			$(val).on("click",function(){
 				var orderItemId = $(this).parents(".order_item_body").find(".order_item_id").val();
-				window.location = "${path.concat("/order/viewexpress/")}" + orderItemId;
+				window.location = "${path.concat("/order/viewexpress/agent/")}" + orderItemId;
 			})
 		});
 		
