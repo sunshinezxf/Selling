@@ -1,13 +1,19 @@
 package selling.sunshine.utils;
 
+import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import selling.sunshine.form.SortRule;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by sunshine on 7/7/16.
@@ -20,7 +26,6 @@ public class WorkBookUtil {
         try {
             StringBuffer path = new StringBuffer(context);
             path.append(PlatformConfig.getValue("indent_template"));
-            logger.debug(path.toString());
             File file = new File(path.toString());
             if (file.exists()) {
                 return true;
@@ -53,6 +58,15 @@ public class WorkBookUtil {
             Row provider = sheet.createRow(2);
             Cell providerName = provider.createCell(0);
             providerName.setCellValue("供应方");
+            sheet.addMergedRegion(new CellRangeAddress(2, 2, 1, 3));
+            Cell phone = provider.createCell(4);
+            phone.setCellValue("电话");
+            sheet.addMergedRegion(new CellRangeAddress(2, 2, 5, 6));
+            //地址
+            Row address = sheet.createRow(3);
+            Cell location = address.createCell(0);
+            location.setCellValue("地址");
+            sheet.addMergedRegion(new CellRangeAddress(3, 3, 1, 6));
             FileOutputStream out = new FileOutputStream(path.toString());
             workbook.write(out);
             out.close();
@@ -60,6 +74,12 @@ public class WorkBookUtil {
             logger.error(e.getMessage());
             return false;
         }
+        return true;
+    }
+
+    public static boolean generateExpress(String context) {
+        int length = 38;
+
         return true;
     }
 

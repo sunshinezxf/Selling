@@ -143,12 +143,13 @@
 
                 /withdraw/inform = anon
 
+                /test/** = anon
+
                 /** = authc
             </value>
         </property>
     </bean>
-    
-    
+
 
     <task:annotation-driven/>
     <import resource="rest-controller.xml"/>
