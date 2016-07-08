@@ -34,7 +34,8 @@
                         <p>优惠码:</p>
                     </div>
                     <div class="weui_cell_ft">
-                        <p>${customerOrder.agent.agentId}</p>
+                        #set($agentId = ${customerOrder.agent.agentId})
+                        <p>$agentId.substring(3)</p>
                     </div>
                 </div>
                 <div class="weui_cell">

@@ -8,7 +8,7 @@
 		<div class="extitle">
 			<div style="float:left">物流跟踪</div>
 			<div style="text-align:right;float:right" class="express_btn">
-                <a class="weui_btn weui_btn_mini weui_btn_plain_primary" id="back_btn" >&nbsp返回订单&nbsp</a>
+                <a class="weui_btn weui_btn_mini weui_btn_plain_primary" id="back_btn" style="margin-top:10px">&nbsp返回订单&nbsp</a>
             </div>
 		</div>
 			<div class="inside">
@@ -18,6 +18,7 @@
 		</div>
 	</div>
 </div>
+#parse("/agent/loading.vm")
 <script>
 $("#back_btn").on("click", function(){
 	window.history.back();
@@ -47,11 +48,13 @@ $(document).ready(function(){
 		);
 		return;
 	}
+	$("#loadingToast").show();
 	var url = "${path.concat('/express/queryExpress/')}" + expressNumber;
 	$.get(url, function(result){
 		if(result.responseCode == "RESPONSE_OK"){
 			var data = eval('(' + result.data + ')');
 			if(data.status != true){
+				$("#loadingToast").hide();
 				return;
 			}
 			var traces = (data.data[0].traces).reverse();
@@ -96,6 +99,7 @@ $(document).ready(function(){
 					);
 				}
 			}
+			$("#loadingToast").hide();
 		}
 		$(function(){
 		$(".exfr").each(function(){
