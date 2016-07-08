@@ -108,9 +108,10 @@
                         }
                     }
                 }
-
+                document.getElementById("total").innerHTML = "待处理订单累计：<strong>" + orderNum + "笔</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' class='btn btn-info' onclick=expressAll()>一键发货</button><br>";
+                 #*   
                 document.getElementById("total").innerHTML = "待处理订单累计：<strong>" + orderNum + "笔</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' class='btn btn-info' onclick=expressAll()>一键发货</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' class='btn btn-info' onclick=downloadExcel()>一键下载Excel表格</button><br>";
-
+                 *#
                 if (result.data.orderList != null) {
                     var node = "<table id='payed_order_table' class='table table-striped table-bordered' cellspacing='0' width='100%'></table>";
                     $("#check_order_table").append(node);
