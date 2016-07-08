@@ -3,9 +3,11 @@ package selling.sunshine.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.pingplusplus.model.Charge;
-
-
-
+import jxl.write.Label;
+import jxl.write.WritableSheet;
+import jxl.write.WritableWorkbook;
+import jxl.write.WriteException;
+import jxl.write.biff.RowsExceededException;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.NPOIFSFileSystem;
 import org.apache.poi.ss.usermodel.Cell;
@@ -22,8 +24,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import selling.sunshine.dao.CustomerOrderDao;
 import selling.sunshine.form.ExpressForm;
 import selling.sunshine.form.OrderItemForm;
 import selling.sunshine.form.PayForm;
@@ -45,20 +45,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
-
-import jxl.write.Label;
-import jxl.write.WritableSheet;
-import jxl.write.WritableWorkbook;
-import jxl.write.WriteException;
-import jxl.write.biff.RowsExceededException;
-import jxl.*;
 
 /**
  * Created by sunshine on 4/11/16.
@@ -86,9 +78,6 @@ public class OrderController {
 
     @Autowired
     private ExpressService expressService;
-
-    @Autowired
-    private CustomerOrderDao customerOrderDao;
 
     @Autowired
     private RefundService refundService;
@@ -204,7 +193,7 @@ public class OrderController {
         }
         return result;
     }
-    
+
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/checkOrder")
     public DataTablePage<Order> checkOrder(DataTableParam param) {
@@ -301,7 +290,7 @@ public class OrderController {
         return result;
     }
 
-//	@ResponseBody
+    //	@ResponseBody
 //	@RequestMapping(method = RequestMethod.POST, value = "/customerOrder/overview")
 //	public MobilePage<CustomerOrder> customerOrderOverview(MobilePageParam param) {
 //		MobilePage<CustomerOrder> result = new MobilePage<>();
@@ -333,37 +322,37 @@ public class OrderController {
 //		return result;
 //	}
     @RequestMapping(method = RequestMethod.GET, value = "/viewexpress/{type}/{orderId}")
-    public ModelAndView viewExpress(@PathVariable("type") String type ,@PathVariable("orderId") String orderId){
-    	ModelAndView view = new ModelAndView();
-    	view.setViewName("/agent/order/express");
-    	Map<String, Object> condition = new HashMap<String, Object>();
-		ResultData fetchExpressResponse = null;
-		if(orderId.startsWith("ORI")){
-			condition.put("orderItemId", orderId);
-			fetchExpressResponse = expressService.fetchExpress4Agent(condition);
-		} else if(orderId.startsWith("CUO")){
-			condition.put("orderId", orderId);
-			fetchExpressResponse = expressService.fetchExpress4Customer(condition);
-		}
-		if(fetchExpressResponse == null ){
-			view.addObject("type","2");//订单号错误
-			return view;
-		}
-		if(fetchExpressResponse.getResponseCode() != ResponseCode.RESPONSE_OK || ((List<Express>)fetchExpressResponse.getData()).isEmpty()){
-			view.addObject("type","1");//没有快递信息
-			return view;
-		}
-		Express express = ((List<Express>)fetchExpressResponse.getData()).get(0);
-		String expressNumber = express.getExpressNumber();
-		if(expressNumber == null || expressNumber.equals("")){
-			view.addObject("type","1");//没有快递信息
-			return view;
-		}
-		view.addObject("type", type);
-		view.addObject("expressNumber", expressNumber);
-		return view;
+    public ModelAndView viewExpress(@PathVariable("type") String type, @PathVariable("orderId") String orderId) {
+        ModelAndView view = new ModelAndView();
+        view.setViewName("/agent/order/express");
+        Map<String, Object> condition = new HashMap<String, Object>();
+        ResultData fetchExpressResponse = null;
+        if (orderId.startsWith("ORI")) {
+            condition.put("orderItemId", orderId);
+            fetchExpressResponse = expressService.fetchExpress4Agent(condition);
+        } else if (orderId.startsWith("CUO")) {
+            condition.put("orderId", orderId);
+            fetchExpressResponse = expressService.fetchExpress4Customer(condition);
+        }
+        if (fetchExpressResponse == null) {
+            view.addObject("type", "2");//订单号错误
+            return view;
+        }
+        if (fetchExpressResponse.getResponseCode() != ResponseCode.RESPONSE_OK || ((List<Express>) fetchExpressResponse.getData()).isEmpty()) {
+            view.addObject("type", "1");//没有快递信息
+            return view;
+        }
+        Express express = ((List<Express>) fetchExpressResponse.getData()).get(0);
+        String expressNumber = express.getExpressNumber();
+        if (expressNumber == null || expressNumber.equals("")) {
+            view.addObject("type", "1");//没有快递信息
+            return view;
+        }
+        view.addObject("type", type);
+        view.addObject("expressNumber", expressNumber);
+        return view;
     }
-    
+
     @RequestMapping(method = RequestMethod.GET, value = "/express")
     public ModelAndView express() {
         ModelAndView view = new ModelAndView();
@@ -505,7 +494,7 @@ public class OrderController {
                         orderService.fetchOrderItem(condition);
                 if (fetchResponse.getResponseCode() ==
                         ResponseCode.RESPONSE_OK) {
-                	temp=((List<OrderItem>) fetchResponse.getData()).get(0);
+                    temp = ((List<OrderItem>) fetchResponse.getData()).get(0);
                 }
                 express.setLinkId(linkId);
                 express.setItem(temp);
@@ -520,11 +509,11 @@ public class OrderController {
                 CustomerOrder temp = new CustomerOrder();
                 Map<String, Object> condition = new HashMap<>();
                 condition.put("orderId", linkId);
-                ResultData fetchResponse =customerOrderDao.queryOrder(condition);
+                ResultData fetchResponse = orderService.fetchCustomerOrder(condition);
                 if (fetchResponse.getResponseCode() ==
                         ResponseCode.RESPONSE_OK) {
-                	temp=((List<CustomerOrder>) fetchResponse.getData()).get(0);
-				}
+                    temp = ((List<CustomerOrder>) fetchResponse.getData()).get(0);
+                }
                 express.setLinkId(linkId);
                 express.setOrder(temp);
                 expresseList.add(express);
@@ -536,14 +525,14 @@ public class OrderController {
     }
 
 
-	@RequestMapping(method = RequestMethod.GET, value = "/exportExcel")
-	public String exportExcel(HttpServletRequest request, HttpServletResponse response,HttpSession session)
-			throws IOException{
-        List<Express> expresseList=(List<Express>)session.getAttribute("expresseList");
-        if (expresseList==null) {
-			return null;
-		}
-        
+    @RequestMapping(method = RequestMethod.GET, value = "/exportExcel")
+    public String exportExcel(HttpServletRequest request, HttpServletResponse response, HttpSession session)
+            throws IOException {
+        List<Express> expresseList = (List<Express>) session.getAttribute("expresseList");
+        if (expresseList == null) {
+            return null;
+        }
+
         String context = request.getSession().getServletContext().getRealPath("/");
         StringBuffer path = new StringBuffer(context);
         path.append(PlatformConfig.getValue("express_template"));
@@ -553,16 +542,16 @@ public class OrderController {
             logger.error("文件不存在");
             return "";
         }
-		response.reset();
-		response.setContentType("application/x-download;charset=utf-8");
-		//response.setCharacterEncoding("utf-8");
-		response.setHeader("Content-Disposition", "attachment;filename="
-				+ URLEncoder.encode("快递单.xls", "utf-8"));
-		OutputStream os = response.getOutputStream();
-		
+        response.reset();
+        response.setContentType("application/x-download;charset=utf-8");
+        //response.setCharacterEncoding("utf-8");
+        response.setHeader("Content-Disposition", "attachment;filename="
+                + URLEncoder.encode("快递单.xls", "utf-8"));
+        OutputStream os = response.getOutputStream();
+
         NPOIFSFileSystem pkg = new NPOIFSFileSystem(file);
         Workbook workbook = new HSSFWorkbook(pkg.getRoot(), true);
-        for (int row = 3, i = 0; i <  expresseList.size(); i++, row++) {
+        for (int row = 3, i = 0; i < expresseList.size(); i++, row++) {
             Sheet sheet = workbook.getSheetAt(0);
             Row current = sheet.createRow(row);
             Cell senderName = current.createCell(2);
@@ -583,12 +572,12 @@ public class OrderController {
             description.setCellValue(String.valueOf(expresseList.get(i).getGoodsQuantity()) + "盒");
             Cell orderNo = current.createCell(37);
             if (expresseList.get(i).getLinkId().startsWith("ORI")) {
-           	 Express4Agent express=(Express4Agent)expresseList.get(i);
-           	 orderNo.setCellValue(express.getItem().getOrderItemId());
-			}else {
-				Express4Customer express =(Express4Customer)expresseList.get(i);
-				orderNo.setCellValue(express.getOrder().getOrderId());
-			}
+                Express4Agent express = (Express4Agent) expresseList.get(i);
+                orderNo.setCellValue(express.getItem().getOrderItemId());
+            } else {
+                Express4Customer express = (Express4Customer) expresseList.get(i);
+                orderNo.setCellValue(express.getOrder().getOrderId());
+            }
 
         }
         // 写入数据并关闭文件
@@ -598,7 +587,7 @@ public class OrderController {
         os.close();
         session.removeAttribute("expresseList");
         return null;
-        
+
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/downloadOrderExcel")
@@ -626,7 +615,7 @@ public class OrderController {
         WritableSheet sheet1;
         WritableSheet sheet2;
         //book = Workbook.createWorkbook(os);
-        book=jxl.Workbook.createWorkbook(os);
+        book = jxl.Workbook.createWorkbook(os);
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         if (orderList != null) {
             sheet1 = book.createSheet(" 代理商订单 ", 0);
