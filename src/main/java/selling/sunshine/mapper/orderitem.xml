@@ -72,6 +72,12 @@
         <if test="status != null and status != ''">
             AND order_item_status = #{status}
         </if>
+        <if test="statusList != null and statusList != ''">
+            AND order_item_status IN
+            <foreach collection="statusList" item="mode" index="index" open="(" close=")" separator=",">
+                #{mode}
+            </foreach>
+        </if>
         <if test="customerId != null and customerId != ''">
             AND customer_id = #{customerId}
         </if>
@@ -83,6 +89,9 @@
         </if>
         <if test="phone != null and phone != ''">
             AND customer_id IN (select customer_id from customer_phone where phone = #{phone} and block_flag = false)
+        </if>
+        <if test="daily != null and daily == true">
+            AND to_days(now()) - to_days(create_time) = 1
         </if>
         <if test="rule != null and rule != ''">
             ORDER BY ${rule}
