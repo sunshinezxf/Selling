@@ -39,6 +39,26 @@
         </if>
     </select>
     
+    <update id="update" parameterType="selling.sunshine.model.Credit" useGeneratedKeys="false">
+    	UPDATE CREDIT_INFO
+    	<set>
+	        <if test="agent.agentId != null and agent.agentId != ''">
+	            agent_id = #{agent.agentId},
+	        </if>
+	        <if test="frontPath != null and frontPath != ''">
+	        	credit_front = #{frontPath},
+	        </if>
+	        <if test="backPath != null and backPath != ''">
+	        	credit_back = #{backPath},
+	        </if>
+	        <if test="blockFlag != null">
+	            block_flag = #{blockFlag}
+	        </if>
+	        WHERE agent_id = #{agent.agentId} 
+	        LIMIT 1
+    	</set>
+    </update>
+    
    <select id="agentLiteQuery" parameterType="java.util.Map" resultMap="agentLiteVo">
         SELECT agent_id, agent_name, agent_phone
         FROM agent

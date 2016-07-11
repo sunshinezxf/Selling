@@ -1,16 +1,22 @@
 package selling.wechat.model;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+
 /**
  * Created by sunshine on 7/11/16.
  */
 public class Article {
 
+    @XStreamAlias("Title")
     private String Title;
 
+    @XStreamAlias("Description")
     private String Description;
 
+    @XStreamAlias("PicUrl")
     private String PicUrl;
 
+    @XStreamAlias("Url")
     private String Url;
 
     public String getTitle() {

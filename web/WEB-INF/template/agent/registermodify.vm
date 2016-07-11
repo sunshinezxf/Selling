@@ -1,0 +1,22 @@
+#parse("/common/util.vm")
+<html>
+<head>
+    <link rel="stylesheet" media="all" href="${path.concat('/plugins/fileinput/css/fileinput.min.css')}"/>
+    #parse("/agent/component/init.vm")
+    <script type="text/javascript" src="${path.concat('/plugins/bootstrap/js/bootstrap.min.js')}"></script>
+    <script type="text/javascript" src="${path.concat('/plugins/fileinput/js/fileinput.min.js')}"></script>
+    <script type="text/javascript" src="${path.concat('/plugins/fileinput/js/fileinput_locale_zh.js')}"></script>
+    <title>代理商注册</title>
+</head>
+<body ontouchstart>
+<div class="container">
+    <div class="hd">
+        <h1 class="page_title">注册</h1>
+        <p class="page_desc" style="color:#E64340;">您的注册信息需要修改</p>
+    </div>
+    <div class="bd">
+        #parse("/agent/component/register_modify_form.vm")
+    </div>
+</div>
+</body>
+</html>

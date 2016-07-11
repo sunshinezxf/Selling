@@ -28,7 +28,6 @@ public class XStreamFactory {
                             if (!text.startsWith(XStreamFactory.PREFIX_CDATA)) {
                                 text = XStreamFactory.PREFIX_CDATA + text + XStreamFactory.SUFFIX_CDATA;
                             }
-
                             writer.write(text);
                         }
                     };

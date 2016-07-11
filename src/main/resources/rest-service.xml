@@ -36,4 +36,6 @@
     <bean id="logService" class="selling.sunshine.service.impl.LogServiceImpl"></bean>
 
     <bean id="statisticService" class="selling.sunshine.service.impl.StatisticServiceImpl"></bean>
+
+    <bean id="indentService" class="selling.sunshine.service.impl.IndentServiceImpl"></bean>
 </beans>

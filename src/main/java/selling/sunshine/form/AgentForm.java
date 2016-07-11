@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
  * Created by sunshine on 4/19/16.
  */
 public class AgentForm {
+	private String agentId;
     @NotNull
     private String name;
 
@@ -36,7 +37,15 @@ public class AgentForm {
 
     private String upper;
 
-    public String getName() {
+    public String getAgentId() {
+		return agentId;
+	}
+
+	public void setAgentId(String agentId) {
+		this.agentId = agentId;
+	}
+
+	public String getName() {
         return name;
     }
 

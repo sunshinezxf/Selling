@@ -28,7 +28,9 @@ public interface AgentDao {
     ResultData queryCredit(Map<String, Object> condition);
 
     ResultData insertCredit(Credit credit);
-
+    
+    ResultData updateCredit(Credit credit);
+    
     ResultData insertAgentGift(GiftConfig config);
 
     ResultData queryAgentGift(Map<String, Object> condition);

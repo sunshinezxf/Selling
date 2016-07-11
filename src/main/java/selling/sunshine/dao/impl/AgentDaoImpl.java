@@ -252,6 +252,21 @@ public class AgentDaoImpl extends BaseDao implements AgentDao {
             }
         }
     }
+    
+    @Override
+	public ResultData updateCredit(Credit credit) {
+    	 ResultData result = new ResultData();
+         try {
+             sqlSession.update("selling.agent.credit.update", credit);
+             result.setData(credit);
+         } catch (Exception e) {
+             logger.error(e.getMessage());
+             result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+             result.setDescription(e.getMessage());
+         } finally {
+             return result;
+         }
+	}
 
     @Transactional
     @Override
@@ -320,4 +335,5 @@ public class AgentDaoImpl extends BaseDao implements AgentDao {
             return result;
         }
     }
+
 }
