@@ -109,6 +109,11 @@
 </div>
 </body>
 <script>
+  	#if(${customerOrder.agent.agentId})
+    var agent_id="${customerOrder.agent.agentId}";
+    #else
+    var agent_id = false;
+    #end
     $(document).ready(function () {
         //将地址数据存入dom节点中,并添加显示函数，必须放在地址字符串截取前
         var address_cell = $("#order_item_list").eq(0).find(".address").parent(".weui_cell");
@@ -136,7 +141,11 @@
     });
 
     $("#continue").click(function () {
-        window.location.href ="${path.concat('/commodity/')}" + "${customerOrder.goods.goodsId}" + "?" + "agentId=${customerOrder.agent.agentId}";
+        if(agent_id){
+            window.location.href ="${path.concat('/commodity/')}" + "${customerOrder.goods.goodsId}" + "?" + "agentId=" + agent_id;
+        }else{
+            window.location.href ="${path.concat('/commodity/')}" + "${customerOrder.goods.goodsId}";
+        }
     });
 
     $("#leave").click(function () {
