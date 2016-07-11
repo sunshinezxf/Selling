@@ -27,9 +27,42 @@
     </div>
 
 </div>
+<div class="modal fade" id="customer_detail_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">x</button>
+                <h4 class="modal-title">客户详情</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" id="config_form">
+                    <p class="form-group">
+                        <label class="col-sm-4 col-md-4 col-lg-3">电话:</label>&nbsp;&nbsp;
+                        <text id="customer_phone"></text>
+                    </p>
+                    <p class="form-group">
+                        <label class="col-sm-4 col-md-4 col-lg-3">地址:</label>&nbsp;&nbsp;
+                        <text id="customer_address"></text>
+                    </p>
+                    <p class="form-group">
+                        <label class="col-sm-4 col-md-4 col-lg-3">代理商:</label>&nbsp;&nbsp;
+                        <text id="customer_agent"></text>
+                    </p>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
 #parse("/backend/express/component/express_detail_modal.vm")
 <script>
-
+        $("#customer_detail_modal").modal({
+            show: false,
+            keyboard: true
+        });
 
 
      $(document).ready(function () {
@@ -68,17 +101,21 @@
             },
             columns: [
                 {title: "订单号", "mData": "orderId"},
-                {title: "客户", "mData": "receiverName"},
-                {title: "电话", "mData": "receiverPhone"},
-                {title: "地址", "mData": "receiverAddress"},
                 {
-                    title: "代理商", "mRender": function (data, type, full) {
-                      if(full.agent==null){
-                          var agentName="无";
-                      }else{
-                          var agentName=full.agent.name;
-                      }
-                      return agentName;
+                    title: "客户", "mRender": function (data, type, full) {
+                    var operation = "<a id='" + full.orderId + "' data-toggle='modal' data-target='#customer_detail_modal'>" + full.receiverName + "</a>";
+                    $("#" + full.orderId).on('click', function () {             
+                        document.getElementById("customer_phone").innerHTML=full.receiverPhone;
+                        document.getElementById("customer_address").innerHTML=full.receiverAddress;
+                        $("#customer_address").val(full.receiverAddress);
+                        if(full.agent==null){
+                           document.getElementById("customer_agent").innerHTML="无代理商";
+                        }else{
+                           document.getElementById("customer_agent").innerHTML=full.agent.name;
+                        }
+                       
+                    });
+                    return operation;
                 }
                 },
                 {title: "总计", "mData": "quantity"},
@@ -89,7 +126,7 @@
                 }
                 },
                 {
-                    title: "操作", "mRender": function (data, type, full) {
+                    title: "快递单", "mRender": function (data, type, full) {
                     var operation = "无快递单";
                     return operation;
                 }
@@ -170,17 +207,21 @@
             },
             columns: [
                 {title: "订单号", "mData": "orderId"},
-                {title: "客户", "mData": "receiverName"},
-                {title: "电话", "mData": "receiverPhone"},
-                {title: "地址", "mData": "receiverAddress"},
                 {
-                    title: "代理商", "mRender": function (data, type, full) {
-                      if(full.agent==null){
-                          var agentName="无";
-                      }else{
-                          var agentName=full.agent.name;
-                      }
-                      return agentName;
+                    title: "客户", "mRender": function (data, type, full) {
+                    var operation = "<a id='" + full.orderId + "' data-toggle='modal' data-target='#customer_detail_modal'>" + full.receiverName + "</a>";
+                    $("#" + full.orderId).on('click', function () {             
+                        document.getElementById("customer_phone").innerHTML=full.receiverPhone;
+                        document.getElementById("customer_address").innerHTML=full.receiverAddress;
+                        $("#customer_address").val(full.receiverAddress);
+                        if(full.agent==null){
+                           document.getElementById("customer_agent").innerHTML="无代理商";
+                        }else{
+                           document.getElementById("customer_agent").innerHTML=full.agent.name;
+                        }
+                       
+                    });
+                    return operation;
                 }
                 },
                 {title: "总计", "mData": "quantity"},
@@ -191,7 +232,7 @@
                 }
                 },
                 {
-                    title: "操作", "mRender": function (data, type, full) {
+                    title: "快递单", "mRender": function (data, type, full) {
                       if(full.status=="NOT_PAYED"||full.status=="PAYED"){
                           var express="无快递单";
                       }else{
