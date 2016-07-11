@@ -631,6 +631,7 @@
     }
     
     function pay(){
+    	var openId = '${wechat}';
         var url = '${path.concat('/customer/place')}';
         var goodsId = "${goods.goodsId}";
         var agentId = "AGT" + $('#agent_id').val();
@@ -644,7 +645,8 @@
             goodsNum: goodsNum,
             customerName: customerName,
             phone: phone,
-            address: address
+            address: address,
+            openId: openId
         };
         $.post(url, param, function (result) {
             if (result.responseCode == "RESPONSE_OK") {
