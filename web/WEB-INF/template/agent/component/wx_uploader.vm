@@ -1,28 +1,44 @@
 <div id="identity_verification3" class="weui_uploader register_hide identity_verification">
     <div class="weui_uploader_hd weui_cell tips">
         <div class="weui_cell_bd weui_cell_primary upload_label">上传身份证照片（正面）</div>
+        #if(${credit})
+        <div class="weui_cell_ft upload_example">已上传</div>
+        #else
         <div class="weui_cell_ft upload_example">示例</div>
+        #end
     </div>
     <div class="weui_uploader_bd">
         <div id="wx_wrp1" class="weui_uploader_input_wrp draw_border">
             <img id="wx_img1" class="wx_img"/>
         </div>
         <div id="front_example" class="example">
+            #if(${credit})
+        	<img class="example_img" src="${path}${credit.frontPath}"/>
+        	#else
             <img class="example_img" src="${path.concat('/material/images/front_example.jpg')}"/>
+            #end
         </div>
     </div>
 </div>
 <div id="identity_verification4" class="weui_uploader register_hide identity_verification">
     <div class="weui_uploader_hd weui_cell tips">
         <div class="weui_cell_bd weui_cell_primary upload_label">上传身份证照片（反面）</div>
+        #if(${credit})
+        <div class="weui_cell_ft upload_example">已上传</div>
+        #else
         <div class="weui_cell_ft upload_example">示例</div>
+        #end
     </div>
     <div class="weui_uploader_bd">
         <div id="wx_wrp2" class="weui_uploader_input_wrp draw_border">
             <img id="wx_img2" class="wx_img"/>
         </div>
         <div id="back_example" class="example">
+            #if(${credit})
+        	<img class="example_img" src="${path}${credit.backPath}"/>
+            #else
             <img class="example_img" src="${path.concat('/material/images/back_example.jpg')}"/>
+            #end
         </div>
     </div>
 </div>

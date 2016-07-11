@@ -201,6 +201,19 @@ public class AgentServiceImpl implements AgentService {
     }
     
     @Override
+	public ResultData updateCredit(Credit credit) {
+    	ResultData result = new ResultData();
+		ResultData updateResponse = agentDao.updateCredit(credit);
+        result.setResponseCode(updateResponse.getResponseCode());
+        if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(credit);
+        } else {
+            result.setDescription(updateResponse.getDescription());
+        }
+        return result;
+	}
+    
+    @Override
 	public ResultData fetchBankCard(Map<String, Object> condition) {
     	ResultData result = new ResultData();
     	ResultData queryResponse = bankCardDao.queryBankCard(condition);
@@ -325,5 +338,7 @@ public class AgentServiceImpl implements AgentService {
         }
         return result;
 	}
+
+	
 
 }
