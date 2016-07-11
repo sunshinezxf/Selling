@@ -136,7 +136,7 @@
     });
 
     $("#continue").click(function () {
-        window.location.href = "/commodity/" + "${customerOrder.goods.goodsId}" + "?" + "agentId=${customerOrder.agent.agentId}";
+        window.location.href ="${path.concat('/commodity/')}" + "${customerOrder.goods.goodsId}" + "?" + "agentId=${customerOrder.agent.agentId}";
     });
 
     $("#leave").click(function () {
