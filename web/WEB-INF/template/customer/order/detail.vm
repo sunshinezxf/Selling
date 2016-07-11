@@ -29,6 +29,7 @@
                         <p>${customerOrder.goods.name}</p>
                     </div>
                 </div>
+                #if(${customerOrder.agent.agentId})
                 <div class="weui_cell">
                     <div class="weui_cell_bd weui_cell_primary">
                         <p>优惠码:</p>
@@ -36,8 +37,9 @@
                     <div class="weui_cell_ft">
                         #set($agentId = ${customerOrder.agent.agentId})
                         <p>$agentId.substring(3)</p>
-                    </div>
+                    </div> 
                 </div>
+                #end
                 <div class="weui_cell">
                     <div class="weui_cell_bd weui_cell_primary">
                         <p>数量:</p>
