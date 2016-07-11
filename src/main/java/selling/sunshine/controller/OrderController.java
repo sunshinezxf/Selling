@@ -701,6 +701,21 @@ public class OrderController {
         resultData.setData(result);
         return resultData;
     }
+    
+    @RequestMapping(method = RequestMethod.POST, value = "/customerOrder/{orderId}")
+    @ResponseBody
+    public ResultData overviewCustomerOrder(@PathVariable("orderId") String orderId) {
+        ResultData resultData = new ResultData();
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("orderId", orderId);
+        ResultData queryData = orderService.fetchCustomerOrder(condition);
+        if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
+        	 CustomerOrder order = ((List<CustomerOrder>) queryData.getData()).get(0);
+        	 resultData.setData(order);
+        	  return resultData;
+		}      
+        return resultData;
+    }
 
     @RequestMapping(method = RequestMethod.POST, value = "/statistics")
     @ResponseBody
@@ -726,6 +741,13 @@ public class OrderController {
         resultData.setData(dataMap);
 
         return resultData;
+    }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/statistics")
+    public ModelAndView orderStatistics() {
+        ModelAndView view = new ModelAndView();
+        view.setViewName("/backend/order/statistics");
+        return view;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/save")
