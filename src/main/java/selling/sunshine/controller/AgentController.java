@@ -1309,6 +1309,7 @@ public class AgentController {
         }
         Map<String, Object> condition = new HashMap<String, Object>();
         condition.put("granted", false);
+        condition.put("blockFlag", false);
         ResultData fetchResponse = agentService.fetchAgent(condition, param);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             result = (DataTablePage<Agent>) fetchResponse.getData();
@@ -1342,6 +1343,30 @@ public class AgentController {
         view.setViewName("redirect:/agent/overview");
         return view;
     }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/grantNotPass/{agentId}")
+    public ModelAndView grantNotPass(@PathVariable("agentId") String agentId) {
+    	 ModelAndView view = new ModelAndView();
+         if (StringUtils.isEmpty(agentId)) {
+             view.setViewName("redirect:/agent/overview");
+             return view;
+         }
+         Map<String, Object> condition = new HashMap<>();
+         condition.put("agentId", agentId);
+         ResultData fetchResponse = agentService.fetchAgent(condition);
+         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+             Agent agent = ((List<Agent>) agentService.fetchAgent(condition).getData()).get(0);
+             agent.setGranted(false);
+             agent.setBlockFlag(true);
+             ResultData updateResponse = agentService.updateAgent(agent);
+             if (updateResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            	 view.setViewName("redirect:/agent/overview");
+                 return view;
+			}
+         }
+         view.setViewName("redirect:/agent/overview");
+    	 return view;
+    }
 
     @RequestMapping(method = RequestMethod.GET, value = "/forbid/{agentId}")
     public ModelAndView forbid(@PathVariable("agentId") String agentId) {
@@ -1352,7 +1377,8 @@ public class AgentController {
         }
         Agent agent = new Agent();
         agent.setAgentId(agentId);
-        agent.setGranted(false);
+        agent.setGranted(true);
+        agent.setBlockFlag(true);
         ResultData updateResponse = agentService.updateAgent(agent);
         if (updateResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
             view.setViewName("redirect:/agent/overview");
@@ -1397,6 +1423,7 @@ public class AgentController {
         }
         Map<String, Object> condition = new HashMap<>();
         condition.put("granted", true);
+        condition.put("blockFlag", false);
         List<SortRule> rule = new ArrayList<>();
         rule.add(new SortRule("create_time", "desc"));
         condition.put("sort", rule);

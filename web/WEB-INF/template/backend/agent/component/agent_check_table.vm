@@ -76,8 +76,10 @@
                     $("#" + full.agentId).on('click', function () {
                         window.location.href = "${path.concat('/agent/check/')}" + full.agentId;
                     })
+                    #*
                     var limit_button = "<div class = 'btn-group'><button type='button' class='btn btn-warning btn-group-sm'>禁用</button>&nbsp;&nbsp;</div>"
                     operation += limit_button;
+                    *#
                     return operation;
                 }
                 }
