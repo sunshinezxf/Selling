@@ -10,7 +10,7 @@
                 <table class="table table-striped" id="model_table">
                       
                 </table>
-                <p class="text-info" id="model_total"></p>
+                <p class="text-info" id="model_total" ></p>
                 <p class="text-info" id="model_quantity"></p>
             </div>
             <div class="modal-footer">
