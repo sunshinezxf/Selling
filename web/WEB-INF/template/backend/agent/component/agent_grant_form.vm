@@ -56,15 +56,46 @@
         <div class="col-md-12 col-lg-12">
             <br/>
             <button type="button" class="btn btn-primary" id="check_confirm">确认授权</button>
+             <button type="button" class="btn btn-warning" data-toggle='modal' data-target='#agent_grant_modal'>审核不通过</button>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="agent_grant_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">x</button>
+                <h4 class="modal-title">代理商详情</h4>
+            </div>
+            <div class="modal-body">
+               <p class="form-group">
+                   审核不通过的代理商在登陆我们的系统时，会提示他们去修改自己的注册资料，然后重新提交注册信息，等待审核通过后才能登陆我们的系统！
+               </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="confirm">确认</button>
+            </div>
         </div>
     </div>
 </div>
 <script>
+
+   $("#agent_grant_modal").modal({
+            show: false,
+            keyboard: true
+   });
 
 
     $("#check_confirm").click(function () {
         $("#confirm_check_form").attr("action", "${path.concat('/agent/grant')}");
         $("#confirm_check_form").attr("method", "post");
         $("#confirm_check_form").submit();
+    });
+    
+    $("#confirm").on('click', function () {
+
+        var url = "${path.concat('/agent/grantNotPass/')}${agent.agentId}";
+        window.location.href=url;
     });
 </script>

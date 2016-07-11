@@ -120,6 +120,9 @@
             <if test="claimScale != null and claimScale != ''">
                 scale = #{claimScale},
             </if>
+            <if test="blockFlag != null and blockFlag != ''">
+                block_flag = #{blockFlag},
+            </if>
             agent_id = #{agentId}
         </set>
         WHERE agent_id = #{agentId}
