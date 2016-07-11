@@ -253,7 +253,10 @@
                                 },
                                 {
                                     title: "操作", "mRender": function (data, type, full) {
-                                    var operation = "<button type='button' class='btn btn-info' id='" + full.orderId + "' onclick=expressCustomerOrder(this)>发货</button>";
+                                    var  operation="";
+                                    var detail_button = " <button type='button' id='" + full.orderId + "' class='btn btn-success' onclick=detail(this) data-toggle='modal' data-target='#order_item_modal'>详情</button> ";
+                                    operation += detail_button;
+                                    operation += "<button type='button' class='btn btn-success' id='" + full.orderId + "' onclick=expressCustomerOrder(this)>发货</button>";
                                     return operation;
                                 }
                                 }
@@ -439,9 +442,12 @@
                         },
                         {
                             title: "操作", "mRender": function (data, type, full) {
-                            var operation = "<button type='button' class='btn btn-info' id='" + full.orderId + "' onclick=expressCustomerOrder(this)>发货</button>";
-                            return operation;
-                        }
+                                    var  operation="";
+                                    var detail_button = " <button type='button' id='" + full.orderId + "' class='btn btn-success' onclick=detail(this) data-toggle='modal' data-target='#order_item_modal'>详情</button> ";
+                                    operation += detail_button;
+                                    operation += "<button type='button' class='btn btn-success' id='" + full.orderId + "' onclick=expressCustomerOrder(this)>发货</button>";
+                                    return operation;
+                            }
                         }
                     ],
                     "language": {
@@ -467,12 +473,8 @@
         }
     }
     function detail(obj) {
-        $.post("${path.concat('/order/orderItem/')}" + obj.id, function (result) {
-        #*
-        alert(result.data.totalPrices);
-        alert(result.data.order);
-        alert(result.data.goods_quantity_Map);
-        *#
+       if(obj.id.startsWith("ODR")){
+          $.post("${path.concat('/order/orderItem/')}" + obj.id, function (result) {
             document.getElementById("model_p").innerHTML = "代理商：" + result.data.order.agent.name;
 
             var f = document.getElementById("model_table");
@@ -481,15 +483,10 @@
                 f.removeChild(childs[i]);
             }
 
-            var node = "<tr><th>客户</th><th>产品</th><th>数量</th><th>价格</th><th>快递单</th></tr>";
+            var node = "<tr><th>客户</th><th>产品</th><th>数量</th><th>价格</th></tr>";
             for (var i = 0; i < result.data.order.orderItems.length; i++) {
                 var orderItem = result.data.order.orderItems[i];
-                node += "<tr><td>" + orderItem.customer.name + "</td><td>" + orderItem.goods.name + "</td><td>" + orderItem.goodsQuantity + "</td><td>" + orderItem.orderItemPrice + "</td>";
-                if (orderItem.status == "SHIPPED") {
-                    node += "<td><button type='button' class='btn btn-success' id='" + orderItem.orderItemId + "' onclick=expressDetail(this)>快递单详情</button></td></tr>";
-                } else {
-                    node += "<td>无快递单</td></tr>";
-                }
+                node += "<tr><td>" + orderItem.customer.name + "</td><td>" + orderItem.goods.name + "</td><td>" + orderItem.goodsQuantity + "</td><td>" + orderItem.orderItemPrice + "</td></tr>";
             }
             $("#model_table").append(node);
             document.getElementById("model_total").innerHTML = "总计:&nbsp;" + result.data.totalPrices + "元";
@@ -498,7 +495,31 @@
                 node1 += "商品:&nbsp;" + key + "&nbsp;&nbsp;&nbsp;&nbsp;总共:&nbsp;" + result.data.goods_quantity_Map[key] + "件<br>"
             }
             document.getElementById("model_quantity").innerHTML = node1;
+            document.getElementById("model_total").style.display="";
+            document.getElementById("model_quantity").style.display="";
         });
+       }else{
+           $.post("${path.concat('/order/customerOrder/')}" + obj.id, function (result) {
+               var customerorder=result.data;
+               if(customerorder.agent==null){
+                  document.getElementById("model_p").innerHTML = "无代理商"
+               }else{
+                  document.getElementById("model_p").innerHTML = "代理商："+customerorder.agent.name;
+               }  
+               var f = document.getElementById("model_table");
+               var childs = f.childNodes;
+               for (var i = childs.length - 1; i >= 0; i--) {
+                  f.removeChild(childs[i]);
+               }
+
+               var node = "<tr><th>客户</th><th>产品</th><th>数量</th><th>价格</th></tr>";          
+               node += "<tr><td>" + customerorder.receiverName + "</td><td>" + customerorder.goods.name + "</td><td>" +customerorder.quantity + "</td><td>" + customerorder.totalPrice + "</td></tr>";
+               $("#model_table").append(node);
+               document.getElementById("model_total").style.display="none";
+               document.getElementById("model_quantity").style.display="none";
+           });
+       }
+
     }
 
     function express(obj) {

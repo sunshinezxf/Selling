@@ -6,20 +6,33 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import selling.sunshine.form.SortRule;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by sunshine on 7/7/16.
  */
 public class WorkBookUtil {
     private static Logger logger = LoggerFactory.getLogger(WorkBookUtil.class);
+
+    public static Workbook getIndentTemplate() {
+        Workbook workbook = null;
+        String path = WorkBookUtil.class.getResource("/").getPath();
+        int index = path.lastIndexOf("/WEB-INF/classes/");
+        String parent = path.substring(0, index);
+        File file = new File(parent + PlatformConfig.getValue("indent_template"));
+        if (!file.exists()) {
+            logger.error("订货单模板文件不存在");
+        }
+        try {
+            OPCPackage pkg = OPCPackage.open(file);
+            workbook = new XSSFWorkbook(pkg);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        return workbook;
+    }
 
     public static boolean createIndentTemplate(String context) {
         int length = 7;
