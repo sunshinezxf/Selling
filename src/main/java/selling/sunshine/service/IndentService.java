@@ -7,4 +7,6 @@ import selling.sunshine.utils.ResultData;
  */
 public interface IndentService {
     ResultData generateIndent();
+
+    ResultData produce();
 }
