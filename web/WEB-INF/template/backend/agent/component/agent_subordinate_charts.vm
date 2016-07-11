@@ -13,7 +13,7 @@
     <div class="row">
         <div class="col-md-12 col-lg-12">
            <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
-           <div id="main" style="width: 600px;height:400px;"></div>
+           <div id="main" style="width: 100%;height:100%;"></div>
         </div>
     </div>
 </div>
@@ -42,33 +42,35 @@
      var agentList;
      var agentMap;
      $(document).ready(function () {
+        var main_width=$('#main').width();
+        var main_height=$('#main').height();
         $.post("${path.concat('/agent/subordinateData/')}${agentId}", function (result) {
              agent=result.data.agent;
              agentList=result.data.agentList;
-             var height=100;
-             var node={name: agent.name,x: 300,y: 300};
+             var height=main_height/3;
+             var node={name: agent.name,x: -main_width*3,y: main_height*2};
              var dataList=new Array();
              var linkList=new Array();
              dataList[0]=node;
              
-             for(var i=0;i<agentList.length;i++){    
-               var node1={name: agentList[i].name,x: 550,y: height};
+             for(var i=0;i<agentList.length;i++){
+               var node1={name: agentList[i].name,x: -main_width,y:height };
                var node2={source: agent.name,target: agentList[i].name}
                dataList[i+1]=node1; 
                linkList[i]=node2;
-               height+=200;  
+               height+=300;  
              }
              agentMap=result.data.agentMap;
-             var height2=100; 
+             var height2=main_height/10; 
              var length=agentList.length;
              for(var i=0;i<agentList.length;i++){   
                  var agentId= agentList[i].agentId; 
                  for(var j=0;j<agentMap[agentId].length;j++){
-                     var node3={name: agentMap[agentId][j].name,x: 800,y: height2};
+                     var node3={name: agentMap[agentId][j].name,x: main_width,y:height2};
                      var node4={source: agentList[i].name,target: agentMap[agentId][j].name}
                      dataList[length+1]=node3;  
                      linkList[length]=node4;
-                     height2+=100;
+                     height2+=150;
                      length++;
                  }
                  
