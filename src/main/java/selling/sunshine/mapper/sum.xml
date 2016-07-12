@@ -113,7 +113,8 @@ select if(isnull(order_id),0,1)as q2, agent.agent_id from agent
 		   where `order`.order_type=0 and `order`.order_status in(2,3,4,5)) orderItem 
 	 on agent.agent_id =orderItem.agent_id
 ) t2 group by agent_id
-)total3 group by id) totalTable,
-   agent where payedTable.id=unPayedTable.id and payedTable.id=finishedTable.id and payedTable.id=agent.agent_id and payedTable.id=totalTable.id
+)total3 group by id) totalTable,agent 
+where payedTable.id=unPayedTable.id and payedTable.id=finishedTable.id and payedTable.id=agent.agent_id and payedTable.id=totalTable.id
+and agent.agent_granted=1 and agent.block_flag=0
    </select>
 </mapper>
