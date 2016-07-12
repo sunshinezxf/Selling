@@ -1,0 +1,176 @@
+package selling.sunshine.service.impl;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import selling.sunshine.dao.CustomerDao;
+import selling.sunshine.dao.OrderItemDao;
+import selling.sunshine.model.Customer;
+import selling.sunshine.model.CustomerOrder;
+import selling.sunshine.model.OrderItem;
+import selling.sunshine.model.OrderType;
+import selling.sunshine.model.express.Express;
+import selling.sunshine.model.express.Express4Agent;
+import selling.sunshine.service.DeliverService;
+import selling.sunshine.utils.PlatformConfig;
+import selling.sunshine.utils.ResponseCode;
+import selling.sunshine.utils.ResultData;
+import selling.sunshine.utils.WorkBookUtil;
+
+public class DeliverServiceImpl implements DeliverService {
+	 private Logger logger = LoggerFactory.getLogger(IndentServiceImpl.class);
+
+    @Autowired
+    private OrderItemDao orderItemDao;
+
+    @Autowired
+    private CustomerDao customerDao;
+    
+    @Override
+    public ResultData generateDeliver() {
+        ResultData result = new ResultData();
+        try {
+            Workbook workbook = WorkbookFactory.create(new File(PlatformConfig.getValue("deliver_template")));
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        return result;
+    }
+    
+    //要改 
+    @Override
+    public ResultData produce() {
+        ResultData result = new ResultData();
+//        String path = IndentServiceImpl.class.getResource("/").getPath();
+//        int index = path.lastIndexOf("/WEB-INF/classes/");
+//        String parent = path.substring(0, index);
+//        String directory = "/material/journal/deliver";
+//        Calendar current = Calendar.getInstance();
+//        current.add(Calendar.DATE, -1);
+//        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+//        String time = format.format(current.getTime());
+//        StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(time);
+//        File file = new File(sb.toString());
+//        if (!file.exists()) {
+//            file.mkdirs();
+//        }
+//        Workbook template = WorkBookUtil.getIndentTemplate();
+//        Map<String, Object> condition = new HashMap<>();
+//        List<Integer> status = new ArrayList<>();
+//        status.add(2);
+//        condition.put("statusList", status);
+//        condition.put("daily", true);
+//        ResultData fetchResponse = orderItemDao.queryOrderItem(condition);
+//        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+//            List<OrderItem> list = (List<OrderItem>) fetchResponse.getData();
+//            list.forEach(item -> {
+//                Workbook temp = produce(template, item);
+//                try {
+//                    FileOutputStream out = new FileOutputStream(file + "/" + item.getOrderItemId() + ".xlsx");
+//                    temp.write(out);
+//                    out.close();
+//                } catch (Exception e) {
+//                    logger.error(e.getMessage());
+//                }
+//            });
+//        }
+        return result;
+    }
+
+    private Workbook produce(Workbook template, OrderItem item, Express express) {
+        Sheet sheet = template.getSheetAt(0);
+        Row order = sheet.getRow(1);
+        Cell orderDate = order.getCell(1);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日");
+        orderDate.setCellValue(format.format(express.getCreateAt()));
+        Cell expressNo = order.getCell(5);
+        expressNo.setCellValue(express.getExpressNumber());
+        Row consumer = sheet.getRow(2);
+        Cell consumerName = consumer.getCell(2);
+        consumerName.setCellValue(express.getReceiverName());
+        Cell consumerTel = consumer.getCell(5);
+        consumerTel.setCellValue(express.getReceiverPhone());
+        Row address = sheet.getRow(3);
+        Cell addressDetail = address.getCell(2);
+        addressDetail.setCellValue(express.getReceiverAddress());
+        Row content = sheet.getRow(6);
+        Cell name = content.getCell(1);
+        name.setCellValue(item.getGoods().getName());
+        Cell piece = content.getCell(2);
+        piece.setCellValue("件");
+        Cell price = content.getCell(3);
+        price.setCellValue(item.getGoods().getAgentPrice());
+        Cell quantity = content.getCell(4);
+        quantity.setCellValue(item.getGoodsQuantity());
+        Cell totalPrice = content.getCell(5);
+        totalPrice.setCellValue(item.getOrderItemPrice());
+        Row seller = sheet.getRow(8);
+        Cell sellerName = seller.getCell(1);
+        sellerName.setCellValue(PlatformConfig.getValue("sender_name"));
+        Cell sellerPhone = seller.getCell(5);
+        sellerPhone.setCellValue(PlatformConfig.getValue("sender_phone"));
+        Row sellerAddr = sheet.getRow(9);
+        Cell bookerAddr = sellerAddr.getCell(1);
+        bookerAddr.setCellValue(PlatformConfig.getValue("sender_address"));
+        return template;
+    }
+
+    private Workbook produce(Workbook template, CustomerOrder item, Express express) {
+    	 Sheet sheet = template.getSheetAt(0);
+         Row order = sheet.getRow(1);
+         Cell orderDate = order.getCell(1);
+         SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日");
+         orderDate.setCellValue(format.format(express.getCreateAt()));
+         Cell expressNo = order.getCell(5);
+         expressNo.setCellValue(express.getExpressNumber());
+         Row consumer = sheet.getRow(2);
+         Cell consumerName = consumer.getCell(2);
+         consumerName.setCellValue(express.getReceiverName());
+         Cell consumerTel = consumer.getCell(5);
+         consumerTel.setCellValue(express.getReceiverPhone());
+         Row address = sheet.getRow(3);
+         Cell addressDetail = address.getCell(2);
+         addressDetail.setCellValue(express.getReceiverAddress());
+         Row content = sheet.getRow(6);
+         Cell name = content.getCell(1);
+         name.setCellValue(item.getGoods().getName());
+         Cell piece = content.getCell(2);
+         piece.setCellValue("件");
+         Cell price = content.getCell(3);
+         if(item.getAgent() != null){
+        	 price.setCellValue(item.getGoods().getCustomerPrice());
+         } else {
+        	 price.setCellValue(item.getGoods().getAgentPrice());
+         }
+         Cell quantity = content.getCell(4);
+         quantity.setCellValue(item.getQuantity());
+         Cell totalPrice = content.getCell(5);
+         totalPrice.setCellValue(item.getTotalPrice());
+         Row seller = sheet.getRow(8);
+         Cell sellerName = seller.getCell(1);
+         sellerName.setCellValue(PlatformConfig.getValue("sender_name"));
+         Cell sellerPhone = seller.getCell(5);
+         sellerPhone.setCellValue(PlatformConfig.getValue("sender_phone"));
+         Row sellerAddr = sheet.getRow(9);
+         Cell bookerAddr = sellerAddr.getCell(1);
+         bookerAddr.setCellValue(PlatformConfig.getValue("sender_address"));
+         return template;
+    }
+
+
+}
