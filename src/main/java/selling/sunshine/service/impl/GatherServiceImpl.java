@@ -67,7 +67,7 @@ public class GatherServiceImpl implements DeliverService {
 		priceCell.setCellValue(item.getOrderItemPrice());
 		Row orderTime = sheet.getRow(4);
 		Cell orderTimeCell = orderTime.getCell(2);
-		orderTimeCell.setCellValue(item.getCreateAt());
+		orderTimeCell.setCellValue(format.format(item.getCreateAt()));
 		Row customer = sheet.getRow(5);
 		Cell name = customer.getCell(2);
 		name.setCellValue(item.getCustomer().getName());
@@ -111,7 +111,7 @@ public class GatherServiceImpl implements DeliverService {
 		priceCell.setCellValue(item.getTotalPrice());
 		Row orderTime = sheet.getRow(4);
 		Cell orderTimeCell = orderTime.getCell(2);
-		orderTimeCell.setCellValue(item.getCreateAt());
+		orderTimeCell.setCellValue(format.format(item.getCreateAt()));
 		Row customer = sheet.getRow(5);
 		Cell name = customer.getCell(2);
 		name.setCellValue(item.getReceiverName());
