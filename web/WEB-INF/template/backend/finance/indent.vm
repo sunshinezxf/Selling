@@ -5,5 +5,10 @@
     <title>订货单</title>
 </head>
 <body>
+    #parse("/backend/component/navigate_with_login.vm")
+    <div class="container-fluid">
+        #parse("/backend/component/sidebar.vm")
+        #parse("/backend/finance/component/indent_list.vm")
+    </div>
 </body>
 </html>
