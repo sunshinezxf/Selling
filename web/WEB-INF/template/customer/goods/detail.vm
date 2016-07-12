@@ -3,7 +3,8 @@
 <head>
     #parse("/customer/component/init.vm")
     <link rel="stylesheet" href="${path.concat('/plugins/unslider/css/unslider.css')}"/>
-    <link rel="stylesheet" href="${path.concat('/plugins/fancybox/source/jquery.fancybox.css')}" type="text/css" media="screen" />
+    <link rel="stylesheet" href="${path.concat('/plugins/fancybox/source/jquery.fancybox.css')}" type="text/css"
+          media="screen"/>
     <link rel="stylesheet" href="${path.concat('/material/css/customer/goods_detail.css')}"/>
     <script type="text/javascript" src="${path.concat('/plugins/jquery/jquery.event.move.js')}"></script>
     <script type="text/javascript" src="${path.concat('/plugins/jquery/jquery.event.swipe.js')}"></script>
@@ -37,21 +38,21 @@
             </ul>
         </div>
     </div>
-    
+
     <div class="gap"></div>
     <div class="detail_area">
         <div class="options_div">
             <table cellpadding="0" cellspacing="0">
                 <th>
-                    <td class="normal chosen">
-                        <button id="det" class="option chosen_btn">图文详情</button>
-                    </td>
-                    <td class="normal">
-                        <button id="par" class="option">产品参数</button>
-                    </td>
-                    <td class="normal">
-                        <button id="mor" class="option">更多信息</button>
-                    </td>
+                <td class="normal chosen">
+                    <button id="det" class="option chosen_btn">图文详情</button>
+                </td>
+                <td class="normal">
+                    <button id="par" class="option">产品参数</button>
+                </td>
+                <td class="normal">
+                    <button id="mor" class="option">更多信息</button>
+                </td>
                 </th>
             </table>
         </div>
@@ -85,7 +86,9 @@
                 </tr>
                 <tr>
                     <td class="p_hd">功能与主治</td>
-                    <td class="p_bd">散瘀止血，消肿定痛，益气活血。用于跌扑肿痛，内外出血，气虚血瘀，胸痹心痛，中风偏瘫，气虚体弱；软组织挫伤，出血性疾病，高血压，冠心病，脑卒中，高血脂症，糖尿病血管突变，免疫功能低下见上述证候者。</td>
+                    <td class="p_bd">
+                        散瘀止血，消肿定痛，益气活血。用于跌扑肿痛，内外出血，气虚血瘀，胸痹心痛，中风偏瘫，气虚体弱；软组织挫伤，出血性疾病，高血压，冠心病，脑卒中，高血脂症，糖尿病血管突变，免疫功能低下见上述证候者。
+                    </td>
                 </tr>
                 <tr>
                     <td class="p_hd">注意</td>
@@ -138,9 +141,9 @@
             </table>
         </div>
         <div id="more" class="more">
-            ##<a id="qrcode" href="${path.concat('/material/images/qrcode_b.png')}">
-                <img class="img" src="${path.concat('/material/images/qrcode.png')}"/>
-            ##</a>
+        ##<a id="qrcode" href="${path.concat('/material/images/qrcode_b.png')}">
+            <img class="img" src="${path.concat('/material/images/qrcode.png')}"/>
+        ##</a>
             <p>长按上方二维码，扫描后关注,即可了解更多有关“云草纲目超细三七粉”的信息</p>
         </div>
     </div>
@@ -164,6 +167,7 @@
         <div class="num_div">
             <div class="number_area">
                 <p>购买数量</p>
+
                 <div class="number_choose">
                     <button id="min_btn" class="min">—</button>
                     <input id="goods_num" class="num_box" name="" type="text" value="1" readonly="true"/>
@@ -258,7 +262,7 @@
                                 #end
                             </td>
                         </tr>
-                   </table>
+                    </table>
                 </div>
             </div>
             <!--
@@ -275,7 +279,8 @@
                 <div class="total_info">
                     <div class="total_num">
                         <p>共
-                            <p id="total_num">1</p>件
+
+                        <p id="total_num">1</p>件
                         </p>
                     </div>
                     <div class="total_money">
@@ -317,8 +322,8 @@
 <script>
     var goods_price;
     var alertNum = 0;
-    var forbidden=false;
-    
+    var forbidden = false;
+
 
     $(function () {
         var slidey = $('.fading-slider').unslider({
@@ -333,79 +338,79 @@
         }).on('swiperight', function (e) {
             data.prev();
         });
-        
+
         //$('.img').load( function (){    //<img>加载url事件
         //    var img = new Image();    //图片预加载
         //    img.src= this.src;        //this为id="img"的dom节点对象
         //    var rate=img.height/img.width; //这里的img.width和img.height为原图大小
         //    this.height=this.width*rate;
         //});
-        
-        $('.unslider-fade').css('height',$('#first_img img').height());
-        
+
+        $('.unslider-fade').css('height', $('#first_img img').height());
+
         $('#detail').show();
         $('#parameters').hide();
         $('#more').hide();
-        
+
         $(".logo").fancybox({
-            padding : 0,
-            closeBtn:false,
-            closeClick:true,
-            afterShow:function() {
-                $('.fancybox-outter').addClass('pinch-zoom-container'); 
-                $('.fancybox-inner').addClass('pinch-zoom');                   
+            padding: 0,
+            closeBtn: false,
+            closeClick: true,
+            afterShow: function () {
+                $('.fancybox-outter').addClass('pinch-zoom-container');
+                $('.fancybox-inner').addClass('pinch-zoom');
                 $('div.pinch-zoom').each(function () {
                     new RTP.PinchZoom($(this), {});
                 });
-                forbidden=true;
+                forbidden = true;
             },
-            afterClose:function(){
-                forbidden=false;
+            afterClose: function () {
+                forbidden = false;
             }
         });
-        
+
         $("#feelings").fancybox({
-            padding : 0,
-            closeBtn:false,
-            closeClick:true,
-            afterShow:function() {
-                $('.fancybox-outter').addClass('pinch-zoom-container'); 
-                $('.fancybox-inner').addClass('pinch-zoom');                   
+            padding: 0,
+            closeBtn: false,
+            closeClick: true,
+            afterShow: function () {
+                $('.fancybox-outter').addClass('pinch-zoom-container');
+                $('.fancybox-inner').addClass('pinch-zoom');
                 $('div.pinch-zoom').each(function () {
                     new RTP.PinchZoom($(this), {});
                 });
-                forbidden=true;
+                forbidden = true;
             },
-            afterClose:function(){
-                forbidden=false;
+            afterClose: function () {
+                forbidden = false;
             }
         });
-        
+
         $("#qrcode").fancybox({
-            padding : 0,
-            closeBtn:false,
-            closeClick:true,
-            afterShow:function() {
-                $('.fancybox-outter').addClass('pinch-zoom-container'); 
-                $('.fancybox-inner').addClass('pinch-zoom');                   
+            padding: 0,
+            closeBtn: false,
+            closeClick: true,
+            afterShow: function () {
+                $('.fancybox-outter').addClass('pinch-zoom-container');
+                $('.fancybox-inner').addClass('pinch-zoom');
                 $('div.pinch-zoom').each(function () {
                     new RTP.PinchZoom($(this), {});
                 });
-                forbidden=true;
+                forbidden = true;
             },
-            afterClose:function(){
-                forbidden=false;
+            afterClose: function () {
+                forbidden = false;
             }
         });
-        
+
         convert_id();
-        
+
         check_agent();
 
         $('#agent_id').blur(function () {
-            var agentId =$('#agent_id').val();
+            var agentId = $('#agent_id').val();
             if (agentId != "") {
-                agentId="AGT"+agentId;
+                agentId = "AGT" + agentId;
                 var url = '${path.concat('/agent/agentValidate/')}' + agentId;
                 var param = {agentId: agentId};
                 $.post(url, param, function (result) {
@@ -468,11 +473,35 @@
             }
         });
 
+        document.addEventListener('pingpp_one_ready', function () {
+            $('#confirm').click(function () {
+                var agentId = $('#agent_id').val();
+                if (agentId != "") {
+                    agentId = "AGT" + agentId;
+                    var url = '${path.concat('/agent/agentValidate/')}' + agentId;
+                    var param = {agentId: agentId};
+                    $.post(url, param, function (result) {
+                        if (result.responseCode != "RESPONSE_OK") {
+                            $("#dialog").find(".weui_dialog_bd").html("优惠码不存在！");
+                            $("#dialog").fadeIn();
+                            $("#agent_id").val("");
+                            check_agent();
+                        } else {
+                            pay();
+                        }
+
+                    });
+                } else {
+                    check_agent();
+                    pay();
+                }
+            });
+        });
     });
-    
+
 
     $('#purchase').click(function () {
-        forbidden=true;
+        forbidden = true;
         $.toggleNumModifySheet();
     });
 
@@ -483,7 +512,7 @@
         number_div.show()
                 .focus()
                 .addClass('weui_fade_toggle').one('click', function () {
-                    forbidden=false;
+                    forbidden = false;
                     hideActionSheet(weuiActionsheet, number_div);
                 });
         number_div.unbind('transitionend').unbind('webkitTransitionEnd');
@@ -520,11 +549,11 @@
     $("#dialog").find(".weui_btn_dialog.primary").click(function () {
         $("#dialog").hide();
     });
-    
+
     $("#fail_dialog").find(".weui_btn_dialog.primary").click(function () {
         $("#fail_dialog").hide();
     });
-    
+
     $('#det').click(function () {
         $(this).parent().addClass("chosen");
         $('#par').parent().removeClass("chosen");
@@ -536,7 +565,7 @@
         $('#parameters').hide();
         $('#more').hide();
     });
-    
+
     $('#par').click(function () {
         $(this).parent().addClass("chosen");
         $('#det').parent().removeClass("chosen");
@@ -548,7 +577,7 @@
         $('#detail').hide();
         $('#more').hide();
     });
-    
+
     $('#mor').click(function () {
         $(this).parent().addClass("chosen");
         $('#par').parent().removeClass("chosen");
@@ -560,12 +589,12 @@
         $('#parameters').hide();
         $('#detail').hide();
     });
-    
-    
-    function convert_id(){
-        var id=$('#agent_id').val();
-        if(id!=""){
-            var newId=id.slice(3);
+
+
+    function convert_id() {
+        var id = $('#agent_id').val();
+        if (id != "") {
+            var newId = id.slice(3);
             $('#agent_id').val(newId);
         }
     }
@@ -629,9 +658,9 @@
         }
         return true;
     }
-    
-    function pay(){
-    	var openId = '${wechat}';
+
+    function pay() {
+        var openId = '${wechat}';
         var url = '${path.concat('/customer/place')}';
         var goodsId = "${goods.goodsId}";
         var agentId = "AGT" + $('#agent_id').val();
@@ -679,20 +708,20 @@
                         //调用 pingpp_one.success 方法，你也可以自己定义回调函数
                         //其他渠道的处理方法请见第 2 节
                         else {
-                        $('.unslider-fade').hide();
-                        $('.unslider-nav').hide();
-                        $('.weui_actionsheet').hide();
-                        $('.weui_mask_transition').hide();
-                        pingpp_one.success(function (result) {
-                            if (!result.status) {
-		                        $("#fail_dialog").show();
-                            }
-                        }, function () {
-                            //这里处理支付成功页面点击“继续购物”按钮触发的方法，
-                            //例如：若你需要点击“继续购物”按钮跳转到你的购买页，
-                            //则在该方法内写入 window.location.href = "你的购买页面 url"
-                            window.location.href="/commodity/customerorder?"+"orderId="+data.orderId;
-                        });
+                            $('.unslider-fade').hide();
+                            $('.unslider-nav').hide();
+                            $('.weui_actionsheet').hide();
+                            $('.weui_mask_transition').hide();
+                            pingpp_one.success(function (result) {
+                                if (!result.status) {
+                                    $("#fail_dialog").show();
+                                }
+                            }, function () {
+                                //这里处理支付成功页面点击“继续购物”按钮触发的方法，
+                                //例如：若你需要点击“继续购物”按钮跳转到你的购买页，
+                                //则在该方法内写入 window.location.href = "你的购买页面 url"
+                                window.location.href = "/commodity/customerorder?" + "orderId=" + data.orderId;
+                            });
                         }
                     }
                 });
@@ -701,39 +730,15 @@
             }
         });
     }
-    document.addEventListener('pingpp_one_ready', function () {
-        $('#confirm').click(function () {
-            var agentId =$('#agent_id').val();
-            if (agentId != "") {
-                agentId="AGT"+agentId;
-                var url = '${path.concat('/agent/agentValidate/')}' + agentId;
-                var param = {agentId: agentId};
-                $.post(url, param, function (result) {
-                    if (result.responseCode != "RESPONSE_OK") {
-                        $("#dialog").find(".weui_dialog_bd").html("优惠码不存在！");
-                        $("#dialog").fadeIn();
-                        $("#agent_id").val("");
-                        check_agent();
-                    } else {
-                        pay();
-                    }
 
-                });
-            } else {
-                check_agent();
-                pay();
-            }
-        });
-    });
-    
-    document.addEventListener("touchmove",function(e){
-        if(forbidden){
+
+    document.addEventListener("touchmove", function (e) {
+        if (forbidden) {
             e.preventDefault();
             e.stopPropagation();
         }
-    },false);
-    
+    }, false);
 
-    
+
 </script>
 </html>
