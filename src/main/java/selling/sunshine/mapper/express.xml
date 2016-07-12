@@ -99,6 +99,9 @@
         <if test="expressNumber != null">
             AND express_no = #{expressNumber}
         </if>
+        <if test="linkId != null and linkId != ''">
+            AND order_item_id = #{link_id}
+        </if>
         UNION ALL
         SELECT express_id, customer_order_id AS link_id, express_no, sender_name, sender_phone, sender_address, receiver_name, receiver_phone,
         receiver_address, goods_name, block_flag, create_time
@@ -109,6 +112,9 @@
         </if>
         <if test="expressNumber != null and expressNumber != ''">
             AND express_no = #{expressNumber}
+        </if>
+        <if test="linkId != null and linkId != ''">
+            AND customer_order_id = #{link_id}
         </if>
     </select>
 
