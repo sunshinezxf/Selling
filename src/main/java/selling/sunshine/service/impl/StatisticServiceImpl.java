@@ -3,12 +3,15 @@ package selling.sunshine.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import selling.sunshine.dao.StatisticDao;
 import selling.sunshine.model.sum.Sum4Order;
+import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.StatisticService;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
@@ -87,4 +90,17 @@ public class StatisticServiceImpl implements StatisticService {
         logger.debug("sssss: " + JSON.toJSONString(result));
         return result;
     }
+
+	@Override
+	public ResultData orderStatisticsByPage(DataTableParam param) {
+		ResultData result = new ResultData();
+		ResultData queryResponse=statisticDao.orderStatisticsByPage(param);
+		result.setResponseCode(queryResponse.getResponseCode());
+		if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+			result.setData(queryResponse.getData());
+		} else {
+			result.setDescription(queryResponse.getDescription());
+		}
+		return result;
+	}
 }

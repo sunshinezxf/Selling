@@ -7,6 +7,14 @@
         <result property="quantity" column="goods_quantity"></result>
         <result property="num" column="num"></result>
     </resultMap>
+    
+    <resultMap id="orderMonthVo" type="selling.sunshine.model.sum.OrderStatistics">
+        <result property="agentName" column="agent_name"></result>
+        <result property="payedQuantity" column="payedQuantity"></result>
+        <result property="unPayedQuantity" column="unPayedQuantity"></result>
+        <result property="finishedQuantity" column="finishedQuantity"></result>
+        <result property="totalQuantity" column="totalQuantity"></result>
+    </resultMap>
 
     <select id="sum4order" resultMap="sum4OrderVo">
         select goods_id, goods_name, goods_quantity, sum(item_num) as num from (
@@ -23,4 +31,89 @@
         group by goods_id, goods_name, goods_quantity
         order by goods_quantity ASC
     </select>
+    
+
+   
+   <select id="sumOrderMonth" resultMap="orderMonthVo">
+      select agent_name,payedQuantity,unPayedQuantity,finishedQuantity,totalQuantity from(select agent_id as id,sum(quantity) as payedQuantity from(
+         select agent_id,sum(q1) as quantity from(
+            select if(isnull(order_id),0,1) as q1,agent.agent_id from agent 
+	        left join
+            (select *from  customer_order  
+               where order_status in(1,2)
+               and date_format(create_time,'%Y-%m')=date_format(now(),'%Y-%m')) customerOrder
+	        on  agent.agent_id = customerOrder.agent_id
+         ) t1 group by agent_id
+        union all
+        select agent_id,sum(q2) as quantity from(
+            select if(isnull(order_id),0,1)as q2, agent.agent_id from agent  
+            left join 
+               (select `order`.order_id,`order`.agent_id,order_item.order_item_id from `order`
+                left join order_item
+                on `order`.order_id = order_item.order_id 
+		        where `order`.order_type=0 and `order`.order_status in(2,3,4) 
+                and date_format(`order`.create_time,'%Y-%m')=date_format(now(),'%Y-%m')) orderItem 
+	        on agent.agent_id =orderItem.agent_id
+        ) t2 group by agent_id
+     )total1 group by id) payedTable,
+     (select agent_id as id,sum(quantity) as unPayedQuantity from(
+       select agent_id,sum(q1) as quantity from(
+          select if(isnull(order_id),0,1) as q1,agent.agent_id from agent 
+	      left join
+             (select *from  customer_order  
+              where order_status=0
+              and date_format(create_time,'%Y-%m')=date_format(now(),'%Y-%m')) customerOrder
+	          on  agent.agent_id = customerOrder.agent_id
+             ) t1 group by agent_id
+       union all
+       select agent_id,sum(q2) as quantity from(
+          select if(isnull(order_id),0,1)as q2, agent.agent_id from agent  
+          left join 
+             (select `order`.order_id,`order`.agent_id,order_item.order_item_id from `order`
+                left join order_item on `order`.order_id = order_item.order_id 
+		        where `order`.order_type=0 and `order`.order_status=1 
+                and date_format(`order`.create_time,'%Y-%m')=date_format(now(),'%Y-%m')) orderItem 
+	      on agent.agent_id =orderItem.agent_id
+       ) t2 group by agent_id
+    )total2 group by id) unPayedTable,
+    (select agent_id as id,sum(quantity) as finishedQuantity from(
+       select agent_id,sum(q1) as quantity from(
+           select if(isnull(order_id),0,1) as q1,agent.agent_id from agent 
+	   left join
+           (select *from  customer_order  
+           where order_status=3
+           and date_format(create_time,'%Y-%m')=date_format(now(),'%Y-%m')) customerOrder
+	   on  agent.agent_id = customerOrder.agent_id
+       ) t1 group by agent_id
+       union all
+       select agent_id,sum(q2) as quantity from(
+          select if(isnull(order_id),0,1)as q2, agent.agent_id from agent  
+          left join 
+           (select `order`.order_id,`order`.agent_id,order_item.order_item_id from `order`
+              left join order_item on `order`.order_id = order_item.order_id 
+		      where `order`.order_type=0 and `order`.order_status=5 
+              and date_format(`order`.create_time,'%Y-%m')=date_format(now(),'%Y-%m')) orderItem 
+	      on agent.agent_id =orderItem.agent_id
+      ) t2 group by agent_id
+   )total3 group by id) finishedTable,
+   (select agent_id as id,sum(quantity) as totalQuantity from(
+select agent_id,sum(q1) as quantity from(
+   select if(isnull(order_id),0,1) as q1,agent.agent_id from agent 
+	left join
+         (select *from  customer_order  
+           where order_status in (1,2,3)) customerOrder
+	on  agent.agent_id = customerOrder.agent_id
+) t1 group by agent_id
+union all
+select agent_id,sum(q2) as quantity from(
+select if(isnull(order_id),0,1)as q2, agent.agent_id from agent  
+     left join 
+         (select `order`.order_id,`order`.agent_id,order_item.order_item_id from `order`
+           left join order_item on `order`.order_id = order_item.order_id 
+		   where `order`.order_type=0 and `order`.order_status in(2,3,4,5)) orderItem 
+	 on agent.agent_id =orderItem.agent_id
+) t2 group by agent_id
+)total3 group by id) totalTable,
+   agent where payedTable.id=unPayedTable.id and payedTable.id=finishedTable.id and payedTable.id=agent.agent_id and payedTable.id=totalTable.id
+   </select>
 </mapper>

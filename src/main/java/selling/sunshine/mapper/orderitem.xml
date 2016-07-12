@@ -14,6 +14,8 @@
     <resultMap id="orderVo" type="selling.sunshine.model.Order">
         <result property="orderId" column="order_id"></result>
         <result property="blockFlag" column="block_flag"></result>
+        <result property="type" column="order_type"
+                typeHandler="selling.sunshine.handler.mybatis.order.OrderTypeHandler"></result>
         <result property="createAt" column="create_time"></result>
     </resultMap>
 
@@ -58,9 +60,8 @@
     </insert>
 
     <select id="query" parameterType="java.util.Map" resultMap="orderItemVo">
-        SELECT order_item_id, order_item_status, goods_quantity, order_item_price,receive_address,customer_id,
-        goods_id, order_id,
-        block_flag, create_time
+        SELECT order_item_id, order_item_status, goods_quantity, order_item_price, receive_address, customer_id,
+        goods_id, order_id, block_flag, create_time
         FROM order_item
         WHERE 1 = 1
         <if test="orderId != null and orderId != ''">
@@ -147,7 +148,7 @@
     </select>
 
     <select id="orderQuery" parameterType="java.util.Map" resultMap="orderVo">
-        SELECT order_id, agent_id, block_flag, create_time
+        SELECT order_id, agent_id, order_type, block_flag, create_time
         FROM `order`
         WHERE order_id = #{orderId}
     </select>

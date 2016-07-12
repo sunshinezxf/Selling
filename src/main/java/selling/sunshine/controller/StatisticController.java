@@ -2,13 +2,20 @@ package selling.sunshine.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import selling.sunshine.model.Order;
+import selling.sunshine.model.sum.OrderStatistics;
+import selling.sunshine.pagination.DataTablePage;
+import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.AgentService;
 import selling.sunshine.service.OrderService;
 import selling.sunshine.service.StatisticService;
@@ -152,4 +159,18 @@ public class StatisticController {
         logger.debug("data sum: " + result);
         return result;
     }
+    
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value = "/order/month")
+    public DataTablePage<OrderStatistics> orderMonth(DataTableParam param) {
+    	 DataTablePage<OrderStatistics> result = new DataTablePage<>();
+         if (StringUtils.isEmpty(param)) {
+             return result;
+         }
+         ResultData fetchResponse = statisticService.orderStatisticsByPage(param);
+         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+             result = (DataTablePage<OrderStatistics>) fetchResponse.getData();
+         }
+         return result;
+    } 
 }
