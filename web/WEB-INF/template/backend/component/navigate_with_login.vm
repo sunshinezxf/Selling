@@ -68,6 +68,15 @@
                         </ul>
                     </li>
                 #end
+                #if($role == "admin" || $role == "finance")
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" role="button"
+                           aria-haspopup="true" aria-expanded="true">报表下载 <span class="caret"></span></a>
+                        <ul class="dropdown-menu nav nav-pills nav-stacked">
+                            <li><a class="menu" href="${path.concat('/indent/overview')}">订货单</a></li>
+                        </ul>
+                    </li>
+                #end
                 #if($role == "admin")
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" role="button"

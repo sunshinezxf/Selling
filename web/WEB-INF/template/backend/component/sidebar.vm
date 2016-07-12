@@ -36,11 +36,11 @@
                         </li>
                         <li><a class="sub-nav" href="${path.concat('/express/upload')}"><i
                                 class="fa fa-tasks"></i>
-                           上传快递单</a>
+                            上传快递单</a>
                         </li>
                         <li><a class="sub-nav" href="${path.concat('/order/statistics')}"><i
                                 class="fa fa-tasks"></i>
-                           订单统计</a>
+                            订单统计</a>
                         </li>
                     </ul>
                 </li>
@@ -88,6 +88,16 @@
                     </ul>
                 </li>
             #end
+            #if($role == "admin"|| $role == "finance")
+                <li><a class="menu" data-toggle="collapse" data-parent="#accordion" href="#finance-management"><i
+                        class="fa fa-book"> 报表下载</i><i
+                        class="pull-right fa fa-caret-down"></i></a>
+                    <ul id="finance-management" class="nav nav-collapse collapse">
+                        <li><a class="sub-nav" href="${path.concat("/indent/overview")}"><i class="fa fa-tasks"></i> 订货单</a>
+                        </li>
+                    </ul>
+                </li>
+            #end
             #if($role == "admin")
                 <li><a class="menu" data-toggle="collapse" data-parent="#accordion" href="#config-management"><i
                         class="fa fa-cog"></i> 基本配置<i
@@ -130,12 +140,13 @@
     $("#withdraw-management").collapse('hide');
     $("#config-management").collapse('hide');
     $("#admin-management").collapse('hide');
+    $("#finance-management").collapse('hide');
     $(function () {
         var target_id = $(".main").attr("id-target");
         $("#" + target_id).collapse('show');
     });
 
-    var array = ["#agent-management", "#order-management", "#goods-management", "#statement-management", "#withdraw-management", "#config-management", "#admin-management"];
+    var array = ["#agent-management", "#order-management", "#goods-management", "#statement-management", "#withdraw-management", "#config-management", "#admin-management", "#finance-management"];
     $(".menu").click(function () {
         var menu_id = $(this).attr("href");
         $.each(array, function (i, value) {

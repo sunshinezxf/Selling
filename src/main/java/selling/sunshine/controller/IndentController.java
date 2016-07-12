@@ -7,9 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 import selling.sunshine.service.IndentService;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * Created by sunshine on 7/7/16.
@@ -23,11 +22,10 @@ public class IndentController {
     private IndentService indentService;
 
     @ResponseBody
-    @RequestMapping(method = RequestMethod.GET, value = "/template")
-    public String indent(HttpServletRequest request) {
-        String context = request.getSession().getServletContext().getRealPath("/");
-        indentService.produce();
-
-        return "";
+    @RequestMapping(method = RequestMethod.GET, value = "/overview")
+    public ModelAndView indent() {
+        ModelAndView view = new ModelAndView();
+        view.setViewName("/backend/finance/indent");
+        return view;
     }
 }

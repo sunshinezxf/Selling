@@ -1,0 +1,498 @@
+<div id="agent_register_area">
+    <div class="weui_cells">
+        <form id="agent_register_form">
+            <div id="information">
+                <input type="hidden" name="wechat" value="$!{wechat}" autocomplete="off"/>
+                <input type="hidden" name="upper" value="$!{upper.agentId}" autocomplete="off"/>
+				<input type="hidden" name="agentId" value="${agent.agentId}"/>
+                <div class="weui_cell">
+                    <div class="weui_cell_hd">
+                        <label class="weui_label">姓名</label>
+                    </div>
+                    <div class="weui_cell_bd weui_cell_primary">
+                        <input id="agent_name" name="name" class="weui_input" type="text" placeholder="请填写姓名"
+                               autocomplete="off" value="${agent.name}"/>
+                    </div>
+                </div>
+                <a class="weui_cells_access weui_cell" id="gender_selection">
+                    <div class="weui_cell_bd weui_cell_primary">
+                        <p>称谓</p>
+                    </div>
+                    <div class="weui_cell_ft">
+                        <input type="hidden" id="gender" name="gender" value="${agent.gender}" autocomplete="off"/>
+                    <span id="gender_description">
+
+                    </span>
+                    </div>
+                </a>
+
+                <div class="weui_cell">
+                    <div class="weui_cell_hd">
+                        <label class="weui_label">手机</label>
+                    </div>
+                    <div class="weui_cell_bd weui_cell_primary">
+                        <input class="weui_input" id="agent_tel" name="phone" type="tel" placeholder="请填写手机号"
+                               autocomplete="off" value="${agent.phone}"/>
+                    </div>
+                </div>
+                <div class="weui_cell">
+                    <div class="weui_cell_hd">
+                        <label class="weui_label">地址</label>
+                    </div>
+                    <div class="weui_cell_bd weui_cell_primary">
+                        <input class="weui_input" id="agent_addr" name="address" type="text" placeholder="请填写联系地址"
+                               autocomplete="off" value="${agent.address}"/>
+                    </div>
+                </div>
+                <div class="weui_cell">
+                    <div class="weui_cell_hd">
+                        <label class="weui_label">密码</label>
+                    </div>
+                    <div class="weui_cell_bd weui_cell_primary">
+                        <input class="weui_input" id="agent_password" name="password" type="password"
+                               placeholder="请设置账户密码" autocomplete="off"/>
+                    </div>
+                </div>
+                <div class="weui_cell">
+                    <div class="weui_cell_hd">
+                        <label class="weui_label">群规模</label>
+                    </div>
+                    <div class="weui_cell_bd weui_cell_primary">
+                        <input class="weui_input" id="num_member" name="memberNum" type="tel"
+                               placeholder="请设置群人数" autocomplete="off" value="${agent.claimScale}"/>
+                    </div>
+                </div>
+                <input type="hidden" id="front" name="front" value="${credit.frontPath}"/>
+                <input type="hidden" id="back" name="back" value="${credit.backPath}"/>
+            </div>
+
+        </form>
+        <div id="protocol" class="weui_cells weui_cells_checkbox protocol">
+            <label class="weui_cell weui_check_label">
+                <div class="weui_cell_hd procheckbox">
+                    <input id="checkbox1" type="checkbox" class="weui_check" name="checkbox" checked="checked"/>
+                    <i class="weui_icon_checked"></i>
+                </div>
+                <div class="weui_cell_bd weui_cell_primary problock">
+                    <p>我同意</p><a href="${path.concat('/material/protocol/1.pdf')}">《云草纲目社群营销合作协议书（试行版）》</a>
+                </div>
+            </label>
+            <label class="weui_cell weui_check_label">
+                <div class="weui_cell_hd procheckbox">
+                    <input id="checkbox2" type="checkbox" class="weui_check" name="checkbox" checked="checked"/>
+                    <i class="weui_icon_checked"></i>
+                </div>
+                <div class="weui_cell_bd weui_cell_primary problock">
+                    <p>我同意</p><a href="${path.concat('/material/protocol/2.pdf')}">《云草纲目社群拓展合作协议书（试行版）》</a>
+                </div>
+            </label>
+            <label class="weui_cell weui_check_label">
+                <div class="weui_cell_hd procheckbox">
+                    <input id="checkbox3" type="checkbox" class="weui_check" name="checkbox" checked="checked"/>
+                    <i class="weui_icon_checked"></i>
+                </div>
+                <div class="weui_cell_bd weui_cell_primary problock">
+                    <p>我同意</p><a href="${path.concat('/material/protocol/3.pdf')}">《社群管理规范》</a>
+                </div>
+            </label>
+        </div>
+        <div id="fileinput_uploader" class="register_hide">
+            #parse("/agent/component/fileinput_uploader.vm")
+        </div>
+        <div id="wx_uploader" class="register_hide">
+            #parse("/agent/component/wx_uploader.vm")
+        </div>
+    </div>
+    <div id="next_div" class="weui_btn_area">
+        <button type="button" class="weui_btn weui_btn_disabled weui_btn_default" id="next_btn" disabled="disabled">
+            下一步
+        </button>
+    </div>
+    <div id="login_btn" class="weui_btn_area">
+        <div class="weui_cell_bd weui_cell_primary problock">
+            <a href="${path.concat('/agent/login')}">已有账号？登录</a>
+        </div>
+    </div>
+    <div id="pre_div" class="weui_btn_area register_hide">
+        <button type="button" class="weui_btn weui_btn_plain_primary" id="pre_btn">上一步</button>
+    </div>
+    <div id="register" class="weui_btn_area  register_hide">
+        <button type="button" class="weui_btn weui_btn_disabled weui_btn_default" id="register_pay_btn"
+                disabled="disabled">
+            提交注册申请
+        </button>
+
+    </div>
+</div>
+#parse("/agent/component/gender_list.vm")
+<div class="weui_dialog_alert" id="dialog" style="display: none;">
+    <div class="weui_mask"></div>
+    <div class="weui_dialog">
+        <div class="weui_dialog_hd"><strong class="weui_dialog_title">消息</strong></div>
+        <div class="weui_dialog_bd"></div>
+        <div class="weui_dialog_ft">
+            <a href="javascript:;" class="weui_btn_dialog primary">确定</a>
+        </div>
+    </div>
+</div>
+#parse("/agent/loading.vm")
+<script>
+    $("#gender_selection").click(function () {
+        $("#agent_register_area").hide();
+        $("#gender_option").show();
+    });
+
+    $("#next_btn").click(function () {
+        var phone = $("#agent_tel").val();
+        if (!(/^1[3|4|5|7|8]\d{9}$/.test(phone))) {
+            $("#dialog").find(".weui_dialog_bd").html("手机号码有误，请重填！");
+            $("#dialog").fadeIn();
+            $("#agent_tel").val("");
+            first_inactive();
+        } else {
+            var url = "${path.concat('/agent/validate/')}" + phone;
+            $.post(url, function (result) {
+                if (result.responseCode == "RESPONSE_OK") {
+                    $("#dialog").find(".weui_dialog_bd").html("您填入的手机号已经有其他人正在使用，请检查是否输入错误！");
+                    $("#dialog").fadeIn();
+                    $("#agent_tel").val("");
+                    first_inactive();
+                } else {
+                    $("#information").hide();
+                    $("#protocol").hide();
+                    $(".identity_verification").show();
+                    $("#next_div").hide();
+                    $("#login_btn").hide();
+                    $("#pre_div").show();
+                    $("#register").show();
+                }
+
+            });
+
+        }
+
+    });
+
+    $("#pre_btn").click(function () {
+        $("#information").show();
+        $("#protocol").show();
+        $(".identity_verification").hide();
+        $("#next_div").show();
+        $("#login_btn").show();
+        $("#pre_div").hide();
+        $("#register").hide();
+    });
+
+    $("#register_pay_btn").click(function () {
+        $("#agent_register_form").attr("action", "${path.concat('/agent/register')}");
+        $("#agent_register_form").attr("method", "post");
+        $("#agent_register_form").submit();
+        $("#loadingToast").show();
+    });
+</script>
+<script>
+    var photo_num = 0;
+    var click_num1 = 0;
+    var click_num2 = 0;
+    var forbidden=false;
+    $(document).ready(function () {
+    	second_active();
+        var ua = navigator.userAgent.toLowerCase();
+        if (ua.indexOf('android') > -1 || ua.indexOf('adr') > -1) {
+            if (ua.indexOf('micromessenger') > -1) {
+                $("#wx_uploader").show();
+            } else {
+                $("#fileinput_uploader").show();
+            }
+        } else {
+            $("#fileinput_uploader").show();
+        }
+
+        $("#agent_name").on("input propertychange", function () {
+            if (information_validate()) {
+                first_active();
+            } else {
+                first_inactive();
+            }
+        });
+        $("#gender").on("input propertychange", function () {
+            if (information_validate()) {
+                first_active();
+            } else {
+                first_inactive();
+            }
+        });
+        $("#agent_tel").on("input propertychange", function () {
+            if (information_validate()) {
+                first_active();
+            } else {
+                first_inactive();
+            }
+        });
+        $("#agent_addr").on("input propertychange", function () {
+            if (information_validate()) {
+                first_active();
+            } else {
+                first_inactive();
+            }
+        });
+        $("#agent_password").on("input propertychange", function () {
+            if (information_validate()) {
+                first_active();
+            } else {
+                first_inactive();
+            }
+        });
+        $("#num_member").blur(function () {
+            if (($("#num_member").val() != null) && ($("#num_member").val() != "")) {
+                if (isNaN($("#num_member").val())) {
+                    $("#dialog").find(".weui_dialog_bd").html("群规模请填写数字！");
+                    $("#dialog").fadeIn();
+                    $("#num_member").val("");
+                }
+            }
+        });
+
+        $("#checkbox1").change(function () {
+            if (information_validate()) {
+                first_active();
+            } else {
+                first_inactive();
+            }
+        });
+        $("#checkbox2").change(function () {
+            if (information_validate()) {
+                first_active();
+            } else {
+                first_inactive();
+            }
+        });
+        $("#checkbox3").change(function () {
+            if (information_validate()) {
+                first_active();
+            } else {
+                first_inactive();
+            }
+        });
+    });
+
+    function checkFront() {
+        photo_num++;
+        $("#fileinput_wrp1").removeClass("weui_uploader_input_wrp");
+        $("#fileinput_wrp1").addClass("new_weui_uploader_input_wrp");
+        if (identity_validate()) {
+            second_active();
+        } else {
+            second_inactive();
+        }
+    }
+
+    function checkBack() {
+        photo_num++;
+        $("#fileinput_wrp2").removeClass("weui_uploader_input_wrp");
+        $("#fileinput_wrp2").addClass("new_weui_uploader_input_wrp");
+        if (identity_validate()) {
+            second_active();
+        } else {
+            second_inactive();
+        }
+    }
+
+    function first_active() {
+        $("#next_btn").removeAttr("disabled");
+        $("#next_btn").removeClass("weui_btn_disabled");
+        $("#next_btn").removeClass("weui_btn_default");
+        $("#next_btn").addClass("weui_btn_primary");
+    }
+
+    function first_inactive() {
+        $("#next_btn").attr("disabled", "disabled");
+        $("#next_btn").removeClass("weui_btn_primary");
+        $("#next_btn").addClass("weui_btn_disabled");
+        $("#next_btn").addClass("weui_btn_default");
+    }
+
+    function information_validate() {
+        var name = $("#agent_name").val();
+        var gender = $("#gender").val();
+        var phone = $("#agent_tel").val();
+        var address = $("#agent_addr").val();
+        var password = $("#agent_password").val();
+        var isConfirm1 = $("#checkbox1").prop("checked");
+        var isConfirm2 = $("#checkbox2").prop("checked");
+        var isConfirm3 = $("#checkbox3").prop("checked");
+        if (not_null(name) && not_null(gender) && not_null(phone) && not_null(address) && not_null(password) && isConfirm1 && isConfirm2 && isConfirm3) {
+            return true;
+        }
+        return false;
+    }
+
+    function second_active() {
+        $("#register_pay_btn").removeAttr("disabled");
+        $("#register_pay_btn").removeClass("weui_btn_disabled");
+        $("#register_pay_btn").removeClass("weui_btn_default");
+        $("#register_pay_btn").addClass("weui_btn_primary");
+    }
+
+    function second_inactive() {
+        $("#register_pay_btn").attr("disabled", "disabled");
+        $("#register_pay_btn").removeClass("weui_btn_primary");
+        $("#register_pay_btn").addClass("weui_btn_disabled");
+        $("#register_pay_btn").addClass("weui_btn_default");
+    }
+
+    function identity_validate() {
+      	return true;
+    }
+
+    function not_null(item) {
+        if (item == null || item == "" || item.length <= 0) {
+            return false;
+        }
+        return true;
+    }
+
+    $("#fileinput_wrp1").delegate("img", "click", function () {
+        photo_num--;
+        $("#fileinput_id1").click();
+    });
+    $("#fileinput_wrp2").delegate("img", "click", function () {
+        photo_num--;
+        $("#fileinput_id2").click();
+    });
+
+    $("#fileinput_id1").fileinput({
+        uploadUrl: '${path.concat('/credit/upload')}',
+        language: 'zh',
+        showUpload: false,
+        showCaption: false,
+        showCancel: false,
+        showRemove: false,
+        showUploadedThumbs: false,
+        dropZoneEnabled: false,
+        maxFileCount: 1,
+        maxFileSize: 0,
+        allowedFileExtensions: ['jpg', 'jpeg', 'png', 'gif'],
+    }).on("filebatchselected", function (event, files) {
+        $(this).fileinput("upload");
+        forbidden=true;
+    })
+            .on("fileuploaded", function (event, result) {
+                if (result.response.responseCode == "RESPONSE_OK") {
+                    forbidden=false;
+                    $("#front").val(result.response.data);
+                    checkFront();
+                } else {
+                    $(this).fileinput({
+                        showPreview: false,
+                    });
+                }
+            });
+    $("#fileinput_id2").fileinput({
+        uploadUrl: '${path.concat('/credit/upload')}',
+        language: 'zh',
+        showUpload: false,
+        showCaption: false,
+        showCancel: false,
+        showRemove: false,
+        showUploadedThumbs: false,
+        dropZoneEnabled: false,
+        maxFileCount: 1,
+        maxFileSize: 0,
+        allowedFileExtensions: ['jpg', 'jpeg', 'png', 'gif'],
+    }).on("filebatchselected", function (event, files) {
+        $(this).fileinput("upload");
+        forbidden=true;
+    })
+            .on("fileuploaded", function (event, result) {
+                if (result.response.responseCode == "RESPONSE_OK") {
+                    forbidden=false;
+                    $("#back").val(result.response.data);
+                    checkBack();
+                } else {
+                    $(this).fileinput({
+                        showPreview: false,
+                    });
+                }
+            });
+
+    $("#dialog").find(".weui_btn_dialog.primary").click(function () {
+        $("#dialog").hide();
+    });
+
+    $("#wx_wrp1").click(function () {
+        wx.chooseImage({
+            count: 1, // 默认9
+            sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+            sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+            success: function (res) {
+                click_num1++;
+                forbidden=true;
+                var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+                $.each(localIds, function (i, n) {
+                    wx.uploadImage({
+                        localId: n, // 需要上传的图片的本地ID，由chooseImage接口获得
+                        isShowProgressTips: 1,// 默认为1，显示进度提示
+                        success: function (res) {
+                            var serverId = res.serverId; // 返回图片的服务器端ID
+                            forbidden=false;
+                            $("#wx_wrp1").removeClass("weui_uploader_input_wrp");
+                            $("#wx_wrp1").addClass("new_weui_uploader_input_wrp");
+                            $("#wx_img1").attr("src", localIds);
+                            $("#front").val(serverId);
+                            if (click_num1 == 1) {
+                                photo_num++;
+                            }
+                            if (identity_validate()) {
+                                second_active();
+                            } else {
+                                second_inactive();
+                            }
+                        }
+                    });
+                });
+            }
+        });
+    });
+    $("#wx_wrp2").click(function () {
+        wx.chooseImage({
+            count: 1, // 默认9
+            sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+            sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+            success: function (res) {
+                click_num2++;
+                forbidden=true;
+                var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+                $.each(localIds, function (i, n) {
+                    wx.uploadImage({
+                        localId: n, // 需要上传的图片的本地ID，由chooseImage接口获得
+                        isShowProgressTips: 1,// 默认为1，显示进度提示
+                        success: function (res) {
+                            var serverId = res.serverId; // 返回图片的服务器端ID
+                            forbidden=false;
+                            $("#wx_wrp2").removeClass("weui_uploader_input_wrp");
+                            $("#wx_wrp2").addClass("new_weui_uploader_input_wrp");
+                            $("#wx_img2").attr("src", localIds);
+                            $("#back").val(serverId);
+                            if (click_num2 == 1) {
+                                photo_num++;
+                            }
+                            if (identity_validate()) {
+                                second_active();
+                            } else {
+                                second_inactive();
+                            }
+                        }
+                    });
+                });
+            }
+        });
+    });
+    
+    document.addEventListener("touchmove",function(e){
+        if(forbidden){
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    },false);
+</script>

@@ -2,6 +2,7 @@ package selling.sunshine.controller;
 
 
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
@@ -199,14 +200,32 @@ public class CommodityController {
     public ModelAndView view(HttpServletRequest request, @PathVariable("goodsId") String goodsId, String agentId, String code, String state) {
         ModelAndView view = new ModelAndView();
         String openId = null;
+        logger.debug(JSON.toJSONString(request.getSession().getAttribute("openId")));
         if (StringUtils.isEmpty(code) || StringUtils.isEmpty(state)) {
+        	HttpSession session = request.getSession();
+        	if(session.getAttribute("openId") == null || session.getAttribute("openId").equals("")){
+        		WechatConfig.oauthWechat(view, "/customer/component/goods_error_msg");
+                view.setViewName("/customer/component/goods_error_msg");
+                return view;
+        	}
+        }
+        openId = WechatUtil.queryOauthOpenId(code);
+        if(openId == null || openId.equals("")){
+	        HttpSession session = request.getSession();
+	        if(session.getAttribute("openId") != null && !session.getAttribute("openId").equals("")){
+	        	openId = (String) session.getAttribute("openId");
+	        }
+        }
+        view.addObject("wechat", openId);
+        if (openId == null || openId.equals("")) {
         	WechatConfig.oauthWechat(view, "/customer/component/goods_error_msg");
             view.setViewName("/customer/component/goods_error_msg");
             return view;
         }
-        openId = WechatUtil.queryOauthOpenId(code);
-        view.addObject("wechat", openId);
-        
+        if(openId != null && !openId.equals("")){
+        	HttpSession session = request.getSession();
+        	session.setAttribute("openId", openId);
+        }
         logger.debug("oppppo" + openId);
         
         Map<String, Object> condition = new HashMap<>();

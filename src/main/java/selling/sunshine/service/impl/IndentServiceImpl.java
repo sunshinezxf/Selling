@@ -84,7 +84,17 @@ public class IndentServiceImpl implements IndentService {
         Row order = sheet.getRow(1);
         Cell orderNo = order.getCell(1);
         orderNo.setCellValue(item.getOrderItemId());
-
+        Cell orderDate = order.getCell(5);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日");
+        orderDate.setCellValue(format.format(item.getCreateAt()));
+        Row provider = sheet.getRow(2);
+        Cell providerName = provider.getCell(1);
+        providerName.setCellValue(PlatformConfig.getValue("sender_name"));
+        Cell providerTel = provider.getCell(5);
+        providerTel.setCellValue(PlatformConfig.getValue("sender_phone"));
+        Row address = sheet.getRow(3);
+        Cell addressDetail = address.getCell(1);
+        addressDetail.setCellValue(PlatformConfig.getValue("sender_address"));
         return template;
     }
 

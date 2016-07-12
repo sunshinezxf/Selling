@@ -1,0 +1,16 @@
+#parse("/common/util.vm")
+<html lang="zh_CN">
+<head>
+    #parse("/backend/component/init.vm")
+    #parse("/backend/component/init_datetimepicker.vm")
+    <title>订货单</title>
+    #parse("/backend/finance/component/datetime_picker.vm")
+</head>
+<body>
+    #parse("/backend/component/navigate_with_login.vm")
+    <div class="container-fluid">
+        #parse("/backend/component/sidebar.vm")
+        #parse("/backend/finance/component/indent_list.vm")
+    </div>
+</body>
+</html>

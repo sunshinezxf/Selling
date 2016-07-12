@@ -57,9 +57,27 @@ $(document).ready(function(){
 				$("#loadingToast").hide();
 				return;
 			}
+			console.debug(traces);
+			if(data.data == null){
+				$(".excontent").append(
+					"<div class='inside clearfix'>\
+						<div class='fl exfl' style='float:left'>\
+							<div class='down'></div>\
+							<div class='up'></div>\
+						</div>\
+						<div class='fl exfr' style='float:left;width:" + (width - 75) + "px'>\
+							<div class='exfloor'>\
+								<div class='up'>商家正通知快递公司揽件</div>\
+								<div class='time'></div>\
+							</div>\
+						</div>\
+					</div>"
+				);
+				$("#loadingToast").hide();
+				return;
+			}
 			var traces = (data.data[0].traces).reverse();
 			$(".excontent").empty();
-			console.debug(traces);
 			for(var i in traces){
 				if(i == 0){
 					if(traces[i].scanType == "派件"){

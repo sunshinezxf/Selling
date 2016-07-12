@@ -120,7 +120,7 @@
             <if test="claimScale != null and claimScale != ''">
                 scale = #{claimScale},
             </if>
-            <if test="blockFlag != null and blockFlag != ''">
+            <if test="blockFlag != null">
                 block_flag = #{blockFlag},
             </if>
             agent_id = #{agentId}
