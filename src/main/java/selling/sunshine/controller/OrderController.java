@@ -142,39 +142,6 @@ public class OrderController {
         return view;
     }
 
-//	@ResponseBody
-//	@RequestMapping(method = RequestMethod.POST, value = "/overview")
-//	public MobilePage<Order> overview(MobilePageParam param) {
-//		MobilePage<Order> result = new MobilePage<>();
-//		if (StringUtils.isEmpty(param)) {
-//			return result;
-//		}
-//		Map<String, Object> condition = new HashMap<>();
-//		List<Integer> status = new ArrayList<>();
-//		switch (Integer.parseInt((String) param.getParams().get("status"))) {
-//		case 0:
-//			status.add(0);
-//			break;
-//		case 1:
-//			status.add(1);
-//			break;
-//		case 2:
-//			status.add(2);
-//			status.add(3);
-//			status.add(4);
-//			break;
-//		case 3:
-//			status.add(5);
-//			break;
-//		}
-//		condition.put("status", status);
-//		ResultData fetchResponse = orderService.fetchOrder(condition, param);
-//		if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-//			result = (MobilePage<Order>) fetchResponse.getData();
-//		}
-//		return result;
-//	}
-
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/submitedTableOrderOverview")
     public DataTablePage<Order> submitedTableOrderOverview(DataTableParam param) {

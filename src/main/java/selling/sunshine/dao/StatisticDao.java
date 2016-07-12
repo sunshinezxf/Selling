@@ -1,5 +1,6 @@
 package selling.sunshine.dao;
 
+import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.utils.ResultData;
 
 /**
@@ -7,4 +8,8 @@ import selling.sunshine.utils.ResultData;
  */
 public interface StatisticDao {
     ResultData queryOrderSum();
+    
+    ResultData orderStatistics();
+    
+    ResultData orderStatisticsByPage(DataTableParam param);
 }

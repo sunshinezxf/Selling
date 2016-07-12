@@ -1,5 +1,6 @@
 package selling.sunshine.service;
 
+import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.utils.ResultData;
 
 /**
@@ -7,4 +8,6 @@ import selling.sunshine.utils.ResultData;
  */
 public interface StatisticService {
     ResultData query4OrderSum();
+    
+    ResultData orderStatisticsByPage(DataTableParam param);
 }
