@@ -1,6 +1,7 @@
 package selling.sunshine.service.impl;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +26,7 @@ import selling.sunshine.service.DeliverService;
 import selling.sunshine.utils.PlatformConfig;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
+import selling.sunshine.utils.WorkBookUtil;
 
 public class GatherServiceImpl implements DeliverService {
 	 private Logger logger = LoggerFactory.getLogger(IndentServiceImpl.class);
@@ -47,8 +49,54 @@ public class GatherServiceImpl implements DeliverService {
 	}
 
 	@Override
-	public ResultData produce() {
-		return null;
+	  public <T> ResultData produce(List<T> list) {
+		ResultData result = new ResultData();
+        String path = IndentServiceImpl.class.getResource("/").getPath();
+        int index = path.lastIndexOf("/WEB-INF/classes/");
+        String parent = path.substring(0, index);
+        String directory = "/material/journal/indent";
+        Workbook template = WorkBookUtil.getIndentTemplate();
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+        list.forEach(item -> {
+            if (item instanceof OrderItem) {
+                OrderItem temp = (OrderItem) item;
+                String time = format.format(temp.getCreateAt());
+                StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(time);
+                File file = new File(sb.toString());
+                if (!file.exists()) {
+                    file.mkdirs();
+                }
+                Workbook workbook = produce(template, temp, null);
+                try {
+                    FileOutputStream out = new FileOutputStream(file + "/" + time + "_" + temp.getOrder().getOrderId() + "_" + temp.getCustomer().getName() + ".xlsx");
+                    workbook.write(out);
+                    out.close();
+                } catch (Exception e) {
+                    logger.error(e.getMessage());
+                    result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+                    result.setDescription(e.getMessage());
+                }
+            } else if (item instanceof CustomerOrder) {
+                CustomerOrder temp = (CustomerOrder) item;
+                String time = format.format(temp.getCreateAt());
+                StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(time);
+                File file = new File(sb.toString());
+                if (!file.exists()) {
+                    file.mkdirs();
+                }
+                Workbook workbook = produce(template, temp, null);
+                try {
+                    FileOutputStream out = new FileOutputStream(file + "/" + time + "_" + temp.getOrderId() + "_" + temp.getReceiverName() + ".xlsx");
+                    workbook.write(out);
+                    out.close();
+                } catch (Exception e) {
+                    logger.error(e.getMessage());
+                    result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+                    result.setDescription(e.getMessage());
+                }
+            }
+        });
+        return result;
 	}
 	
 	private Workbook produce(Workbook template, OrderItem item, OrderBill bill) {

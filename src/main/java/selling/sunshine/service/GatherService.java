@@ -1,9 +1,11 @@
 package selling.sunshine.service;
 
+import java.util.List;
+
 import selling.sunshine.utils.ResultData;
 
 public interface GatherService {
 	ResultData generateGather();
 
-    ResultData produce();
+	<T> ResultData produce(List<T> list);
 }

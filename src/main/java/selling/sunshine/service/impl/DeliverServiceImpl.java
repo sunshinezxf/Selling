@@ -54,41 +54,53 @@ public class DeliverServiceImpl implements DeliverService {
     
     //要改 
     @Override
-    public ResultData produce() {
-        ResultData result = new ResultData();
-//        String path = IndentServiceImpl.class.getResource("/").getPath();
-//        int index = path.lastIndexOf("/WEB-INF/classes/");
-//        String parent = path.substring(0, index);
-//        String directory = "/material/journal/deliver";
-//        Calendar current = Calendar.getInstance();
-//        current.add(Calendar.DATE, -1);
-//        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
-//        String time = format.format(current.getTime());
-//        StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(time);
-//        File file = new File(sb.toString());
-//        if (!file.exists()) {
-//            file.mkdirs();
-//        }
-//        Workbook template = WorkBookUtil.getIndentTemplate();
-//        Map<String, Object> condition = new HashMap<>();
-//        List<Integer> status = new ArrayList<>();
-//        status.add(2);
-//        condition.put("statusList", status);
-//        condition.put("daily", true);
-//        ResultData fetchResponse = orderItemDao.queryOrderItem(condition);
-//        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-//            List<OrderItem> list = (List<OrderItem>) fetchResponse.getData();
-//            list.forEach(item -> {
-//                Workbook temp = produce(template, item);
-//                try {
-//                    FileOutputStream out = new FileOutputStream(file + "/" + item.getOrderItemId() + ".xlsx");
-//                    temp.write(out);
-//                    out.close();
-//                } catch (Exception e) {
-//                    logger.error(e.getMessage());
-//                }
-//            });
-//        }
+    public <T> ResultData produce(List<T> list) {
+    	ResultData result = new ResultData();
+        String path = IndentServiceImpl.class.getResource("/").getPath();
+        int index = path.lastIndexOf("/WEB-INF/classes/");
+        String parent = path.substring(0, index);
+        String directory = "/material/journal/indent";
+        Workbook template = WorkBookUtil.getIndentTemplate();
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+        list.forEach(item -> {
+            if (item instanceof OrderItem) {
+                OrderItem temp = (OrderItem) item;
+                String time = format.format(temp.getCreateAt());
+                StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(time);
+                File file = new File(sb.toString());
+                if (!file.exists()) {
+                    file.mkdirs();
+                }
+                Workbook workbook = produce(template, temp, null);
+                try {
+                    FileOutputStream out = new FileOutputStream(file + "/" + time + "_" + temp.getOrder().getOrderId() + "_" + temp.getCustomer().getName() + ".xlsx");
+                    workbook.write(out);
+                    out.close();
+                } catch (Exception e) {
+                    logger.error(e.getMessage());
+                    result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+                    result.setDescription(e.getMessage());
+                }
+            } else if (item instanceof CustomerOrder) {
+                CustomerOrder temp = (CustomerOrder) item;
+                String time = format.format(temp.getCreateAt());
+                StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(time);
+                File file = new File(sb.toString());
+                if (!file.exists()) {
+                    file.mkdirs();
+                }
+                Workbook workbook = produce(template, temp, null);
+                try {
+                    FileOutputStream out = new FileOutputStream(file + "/" + time + "_" + temp.getOrderId() + "_" + temp.getReceiverName() + ".xlsx");
+                    workbook.write(out);
+                    out.close();
+                } catch (Exception e) {
+                    logger.error(e.getMessage());
+                    result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+                    result.setDescription(e.getMessage());
+                }
+            }
+        });
         return result;
     }
 
