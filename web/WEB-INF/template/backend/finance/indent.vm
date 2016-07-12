@@ -4,7 +4,6 @@
     #parse("/backend/component/init.vm")
     #parse("/backend/component/init_datetimepicker.vm")
     <title>订货单</title>
-    #parse("/backend/finance/component/datetime_picker.vm")
 </head>
 <body>
     #parse("/backend/component/navigate_with_login.vm")
