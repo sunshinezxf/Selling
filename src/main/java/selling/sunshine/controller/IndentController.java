@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import selling.sunshine.form.TimeRangeForm;
+import selling.sunshine.model.CustomerOrder;
 import selling.sunshine.model.OrderItem;
 import selling.sunshine.service.IndentService;
 import selling.sunshine.service.OrderService;
@@ -35,11 +36,11 @@ public class IndentController {
     @RequestMapping(method = RequestMethod.GET, value = "/overview")
     public ModelAndView indent() {
         ModelAndView view = new ModelAndView();
-        indentService.produce();
         view.setViewName("/backend/finance/indent");
         return view;
     }
 
+    @RequestMapping(method = RequestMethod.POST, value = "/overview")
     public ResultData indent(@Valid TimeRangeForm form, BindingResult result) {
         ResultData data = new ResultData();
         if (result.hasErrors()) {
@@ -49,11 +50,20 @@ public class IndentController {
         Map<String, Object> condition = new HashMap<>();
         condition.put("start", form.getStart());
         condition.put("end", form.getEnd());
+        condition.put("blockFlag", false);
         List<Integer> status = new ArrayList<>(Arrays.asList(1, 2, 3, 4));
         condition.put("statusList", status);
-        ResultData queryResponse = orderService.fetchOrder(condition);
+        ResultData queryResponse = orderService.fetchOrderItem(condition);
         if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            List<OrderItem> list = (List<OrderItem>)queryResponse.getData();
+            List<OrderItem> list = (List<OrderItem>) queryResponse.getData();
+            indentService.produce(list);
+        }
+        condition.remove("statusList");
+        condition.put("status", status);
+        queryResponse = orderService.fetchCustomerOrder(condition);
+        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            List<CustomerOrder> list = (List<CustomerOrder>) queryResponse.getData();
+            indentService.produce(list);
         }
         return data;
     }
