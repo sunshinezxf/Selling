@@ -16,6 +16,25 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="dialog_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">x</button>
+                <h4 class="modal-title">提示</h4>
+            </div>
+            <div class="modal-body">
+               <p class="form-group">
+                   禁用该代理商后，该代理商的信息将会被注销掉，该代理商的手机号码可以被重新注册！！！
+               </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="dialog_confirm">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
 #parse("/backend/agent/component/agent_detail_modal.vm")
 #parse("/backend/order/component/order_item_modal.vm")
 <script>
@@ -123,8 +142,7 @@
                     var giftCofigUrl = "${path.concat('/agent/gift/')}" + full.agentId;
                     var giftCofig_button = "<button type='button' class='btn btn-success btn-group-sm' onclick=\"javascript:location.href='" + giftCofigUrl + "'\">赠送</button>&nbsp;"
                     operation += giftCofig_button;
-                    var url = "${path.concat('/agent/forbid/')}" + full.agentId;
-                    var limit_button = "<button type='button' class='btn btn-warning btn-group-sm' onclick=\"javascript:location.href='" + url + "'\">禁用</button>&nbsp;"
+                    var limit_button = "<button type='button' class='btn btn-warning btn-group-sm' id='" + full.agentId + "' onclick=setId(this) data-toggle='modal' data-target='#dialog_modal'>禁用</button>&nbsp;"
                     operation += limit_button;
                     return operation;
                 }
@@ -330,7 +348,21 @@
             document.getElementById("model_quantity").innerHTML = node1;
         });
     }
-
+    
+    var id;
+    function setId(obj){
+       id=obj.id;
+    }
+    
+   $("#dialog_modal").modal({
+            show: false,
+            keyboard: true
+   });
+   
+   $("#dialog_confirm").on('click', function () {
+       var url = "${path.concat('/agent/forbid/')}" + id;
+       window.location.href=url;
+    });
 
 </script>
 <style>
