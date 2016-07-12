@@ -63,12 +63,17 @@
                 #{mode}
             </foreach>
         </if>
+        <if test="start != null and end != null and start != '' and end != ''">
+            AND (date_format(create_time, '%Y-%m-%d') &gt;= #{start} AND date_format(create_time, '%Y-%m-%d') &lt;= #{end})
+        </if>
         <if test="receiverPhone != null">
             AND receiver_phone = #{receiverPhone}
         </if>
         <if test="search !=null and search != ''">
-            AND (order_id LIKE #{search} OR DATE_FORMAT(create_time,'%Y-%m-%D') LIKE #{search} OR receiver_name LIKE #{search} OR receiver_addr LIKE #{search} OR receiver_phone LIKE #{search}
-                OR total_price LIKE #{search} OR quantity LIKE #{search} OR agent_id IN (SELECT agent_id FROM agent WHERE agent_name LIKE #{search}))
+            AND (order_id LIKE #{search} OR DATE_FORMAT(create_time,'%Y-%m-%D') LIKE #{search} OR receiver_name LIKE
+            #{search} OR receiver_addr LIKE #{search} OR receiver_phone LIKE #{search}
+            OR total_price LIKE #{search} OR quantity LIKE #{search} OR agent_id IN (SELECT agent_id FROM agent WHERE
+            agent_name LIKE #{search}))
         </if>
         <if test="rule != null and rule != ''">
             ORDER BY ${rule}
@@ -86,8 +91,8 @@
             AND create_time LIKE #{date}
         </if>
         <if test="agentId != null and agentId != ''">
-			AND agent_id = #{agentId}
-		</if>
+            AND agent_id = #{agentId}
+        </if>
         GROUP BY agent_id,goods_id
     </select>
 

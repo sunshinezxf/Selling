@@ -38,4 +38,8 @@
     <bean id="statisticService" class="selling.sunshine.service.impl.StatisticServiceImpl"></bean>
 
     <bean id="indentService" class="selling.sunshine.service.impl.IndentServiceImpl"></bean>
+    
+    <bean id="deliverService" class="selling.sunshine.service.impl.DeliverServiceImpl"></bean>
+    
+    <bean id="gatherService" class="selling.sunshine.service.impl.GatherServiceImpl"></bean>
 </beans>
