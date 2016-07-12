@@ -8,15 +8,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+
 import selling.sunshine.form.TimeRangeForm;
 import selling.sunshine.model.CustomerOrder;
 import selling.sunshine.model.OrderItem;
 import selling.sunshine.service.IndentService;
 import selling.sunshine.service.OrderService;
+import selling.sunshine.service.impl.IndentServiceImpl;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
 import javax.validation.Valid;
+
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -65,6 +69,17 @@ public class IndentController {
             List<CustomerOrder> list = (List<CustomerOrder>) queryResponse.getData();
             indentService.produce(list);
         }
+        String path = IndentController.class.getResource("/").getPath();
+        String os = System.getProperty("os.name").toLowerCase();
+        if(os.indexOf("windows") >= 0){
+        	path = path.substring(1);
+        }
+        
+        int index = path.lastIndexOf("/WEB-INF/classes/");
+        String parent = path.substring(0, index);
+        String directory = "/material/journal/indent";
+        StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(form.getStart().replaceAll("-", ""));
+        System.err.println(sb.toString());
         return data;
     }
 }

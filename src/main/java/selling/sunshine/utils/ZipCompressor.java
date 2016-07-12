@@ -19,7 +19,7 @@ public class ZipCompressor {
     public ZipCompressor(String pathName) {   
         zipFile = new File(pathName);   
     }   
-    public void compress(List<String> pathName) { 
+    public void compress(List<File> fileList) { 
     	ZipOutputStream out = null;   
     	try {  
 			FileOutputStream fileOutputStream = new FileOutputStream(zipFile);   
@@ -27,8 +27,8 @@ public class ZipCompressor {
 					new CRC32());   
 			out = new ZipOutputStream(cos);   
 			String basedir = ""; 
-			for (int i=0;i<pathName.size();i++){
-				compress(new File(pathName.get(i)), out, basedir);   
+			for (int i=0;i<fileList.size();i++){
+				compress(fileList.get(i), out, basedir);   
 			}
 	    	out.close();  
     	} catch (Exception e) {   
