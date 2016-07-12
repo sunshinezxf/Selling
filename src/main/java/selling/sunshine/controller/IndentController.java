@@ -70,6 +70,11 @@ public class IndentController {
             indentService.produce(list);
         }
         String path = IndentController.class.getResource("/").getPath();
+        String os = System.getProperty("os.name").toLowerCase();
+        if(os.indexOf("windows") >= 0){
+        	path = path.substring(1);
+        }
+        
         int index = path.lastIndexOf("/WEB-INF/classes/");
         String parent = path.substring(0, index);
         String directory = "/material/journal/indent";
