@@ -142,12 +142,12 @@ public class DeliverServiceImpl implements DeliverService {
         Cell totalPrice = content.getCell(5);
         totalPrice.setCellValue(item.getOrderItemPrice());
         Row seller = sheet.getRow(8);
-        Cell sellerName = seller.getCell(1);
+        Cell sellerName = seller.getCell(2);
         sellerName.setCellValue(PlatformConfig.getValue("sender_name"));
         Cell sellerPhone = seller.getCell(5);
         sellerPhone.setCellValue(PlatformConfig.getValue("sender_phone"));
         Row sellerAddr = sheet.getRow(9);
-        Cell bookerAddr = sellerAddr.getCell(1);
+        Cell bookerAddr = sellerAddr.getCell(2);
         bookerAddr.setCellValue(PlatformConfig.getValue("sender_address"));
         return template;
     }
@@ -184,12 +184,12 @@ public class DeliverServiceImpl implements DeliverService {
         Cell totalPrice = content.getCell(5);
         totalPrice.setCellValue(item.getTotalPrice());
         Row seller = sheet.getRow(8);
-        Cell sellerName = seller.getCell(1);
+        Cell sellerName = seller.getCell(2);
         sellerName.setCellValue(PlatformConfig.getValue("sender_name"));
         Cell sellerPhone = seller.getCell(5);
         sellerPhone.setCellValue(PlatformConfig.getValue("sender_phone"));
         Row sellerAddr = sheet.getRow(9);
-        Cell bookerAddr = sellerAddr.getCell(1);
+        Cell bookerAddr = sellerAddr.getCell(2);
         bookerAddr.setCellValue(PlatformConfig.getValue("sender_address"));
         return template;
     }
