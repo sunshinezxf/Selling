@@ -55,7 +55,7 @@ public class DeliverServiceImpl implements DeliverService {
         int index = path.lastIndexOf("/WEB-INF/classes/");
         String parent = path.substring(0, index);
         String directory = "/material/journal/deliver";
-        Workbook template = WorkBookUtil.getIndentTemplate();
+        Workbook template = WorkBookUtil.getDeliverTemplate();
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
         list.forEach(item -> {
             Express express = (Express) item;

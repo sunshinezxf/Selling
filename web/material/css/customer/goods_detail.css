@@ -358,7 +358,7 @@ a{
 }
 
 .weui_label{
-	width:6em;
+	width:5em;
 	font-size:0.8em;
 	color:#000040;
 }
@@ -368,18 +368,29 @@ a{
 	color:#000040;
 }
 
-#province select{
+.prov,.city,.dist{
 	color:#000040;
-	width:28.5%;
 	height:2em;
+	padding-right:1.1em;
 	font-size:0.7em;
-	margin-right:3%;
     border: solid 0.0625em #c0c0c0;
     appearance:none;
     -moz-appearance:none;
     -webkit-appearance:none;
     background: url("../../images/arrow.png") no-repeat scroll right center transparent;
     select::-ms-expand { display: none; }
+}
+
+.prov{
+	margin-right:0.3em;
+}
+
+.city{
+	margin-right:0.3em;
+}
+
+.dist{
+	margin-right:0;
 }
 
 .confirm_area{
