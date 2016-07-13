@@ -84,7 +84,7 @@
     });
 
     $('#download').click(function () {
-        var url = "${path.concat('/indent/download/')}" + fileName + "/" + tempFileName;
+        var url = "${path.concat('/deliver/download/')}" + fileName + "/" + tempFileName;
         window.location.href = url;
     });
 </script>
