@@ -4,16 +4,24 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.pingplusplus.model.Event;
 import com.pingplusplus.model.Webhooks;
+
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import selling.sunshine.model.Admin;
+import selling.sunshine.model.BackOperationLog;
+import selling.sunshine.model.User;
 import selling.sunshine.model.WithdrawRecord;
 import selling.sunshine.model.WithdrawStatus;
 import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
+import selling.sunshine.service.LogService;
 import selling.sunshine.service.ToolService;
 import selling.sunshine.service.WithdrawService;
 import selling.sunshine.utils.ResponseCode;
@@ -40,6 +48,9 @@ public class WithdrawController {
 
     @Autowired
     private ToolService toolService;
+    
+    @Autowired
+    private LogService logService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/check")
     public ModelAndView check() {
@@ -166,7 +177,7 @@ public class WithdrawController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{withdrawId}/send")
-    public ModelAndView send(@PathVariable("withdrawId") String withdrawId) {
+    public ModelAndView send(@PathVariable("withdrawId") String withdrawId,HttpServletRequest request) {
         ModelAndView view = new ModelAndView();
         Map<String, Object> condition = new HashMap<>();
         condition.put("withdrawId", withdrawId);
@@ -180,6 +191,16 @@ public class WithdrawController {
             record.setBlockFlag(false);
             ResultData updateResponse = withdrawService.updateWithdrawRecord(record);
             if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                Subject subject = SecurityUtils.getSubject();
+                User user = (User) subject.getPrincipal();
+                if (user == null) {
+                	 view.setViewName("redirect:/withdraw/check");
+                     return view;
+                }
+                Admin admin = user.getAdmin();
+                BackOperationLog backOperationLog = new BackOperationLog(
+                        admin.getUsername(), toolService.getIP(request) ,"管理员" + admin.getUsername() + "确认了提现金额申请");
+                logService.createbackOperationLog(backOperationLog);
                 view.setViewName("redirect:/withdraw/check");
                 return view;
             }

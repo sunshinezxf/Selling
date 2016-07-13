@@ -4,6 +4,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +16,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import selling.sunshine.model.Admin;
+import selling.sunshine.model.BackOperationLog;
+import selling.sunshine.model.User;
 import selling.sunshine.model.gift.GiftConfig;
 import selling.sunshine.model.goods.Goods4Agent;
 import selling.sunshine.model.lite.Agent;
 import selling.sunshine.service.AgentService;
+import selling.sunshine.service.LogService;
+import selling.sunshine.service.ToolService;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
@@ -28,6 +37,12 @@ public class GiftController {
 	@Autowired
 	private AgentService agentService;
 	
+    @Autowired
+    private ToolService toolService;
+    
+    @Autowired
+    private LogService logService;
+	
 	@RequestMapping(method = RequestMethod.GET, value = "/{agentId}/{goodsId}")
 	public ResultData agentGift(@PathVariable("agentId")String agentId,@PathVariable("goodsId")String goodsId) {
 		ResultData resultData=new ResultData();
@@ -39,7 +54,7 @@ public class GiftController {
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/config/{agentId}/{goodsId}/{amount}")
-	public ResultData giftConfig(@PathVariable("agentId")String agentId,@PathVariable("goodsId")String goodsId,@PathVariable("amount")int amount) {
+	public ResultData giftConfig(@PathVariable("agentId")String agentId,@PathVariable("goodsId")String goodsId,@PathVariable("amount")int amount,HttpServletRequest request) {
 		ResultData resultData=new ResultData();
 		Map<String, Object> condition=new HashMap<String, Object>();
 		condition.put("agentId", agentId);
@@ -57,6 +72,16 @@ public class GiftController {
 			giftConfig.setAmount(amount);
 			resultData=agentService.updateAgentGift(giftConfig);
 		}
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        if (user == null) {
+        	resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);;
+            return resultData;
+        }
+        Admin admin = user.getAdmin();
+        BackOperationLog backOperationLog = new BackOperationLog(
+                admin.getUsername(), toolService.getIP(request) ,"管理员" + admin.getUsername() + "修改了代理商"+agentId+"的赠送配置");
+        logService.createbackOperationLog(backOperationLog);
 
 		return resultData;
 	}

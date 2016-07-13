@@ -14,17 +14,22 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import selling.sunshine.form.RefundConfigForm;
+import selling.sunshine.model.Admin;
+import selling.sunshine.model.BackOperationLog;
 import selling.sunshine.model.RefundConfig;
 import selling.sunshine.model.RefundRecord;
 import selling.sunshine.model.User;
 import selling.sunshine.model.goods.Goods4Customer;
 import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
+import selling.sunshine.service.LogService;
 import selling.sunshine.service.RefundService;
+import selling.sunshine.service.ToolService;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 import selling.sunshine.utils.WechatConfig;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import java.sql.Timestamp;
@@ -44,6 +49,12 @@ public class RefundController {
 
     @Autowired
     private RefundService refundService;
+    
+    @Autowired
+    private ToolService toolService;
+    
+    @Autowired
+    private LogService logService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/config")
     public ModelAndView config() {
@@ -53,7 +64,7 @@ public class RefundController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/config/goods/{goodsId}")
-    public ModelAndView config(@PathVariable("goodsId") String goodsId, @Valid RefundConfigForm form, BindingResult result) {
+    public ModelAndView config(@PathVariable("goodsId") String goodsId, @Valid RefundConfigForm form, BindingResult result,HttpServletRequest request) {
         ModelAndView view = new ModelAndView();
         if (result.hasErrors()) {
             view.setViewName("redirect:/refund/config");
@@ -64,6 +75,17 @@ public class RefundController {
         RefundConfig config = new RefundConfig(goods, Integer.parseInt(form.getAmountTrigger()), Double.parseDouble(form.getLevel1Percent()),Double.parseDouble(form.getLevel2Percent()),Double.parseDouble(form.getLevel3Percent()));
         ResultData createResponse = refundService.createRefundConfig(config);
         if (createResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            Subject subject = SecurityUtils.getSubject();
+            User user = (User) subject.getPrincipal();
+            if (user == null) {
+                view.setViewName("redirect:/refund/config");
+                return view;
+            }
+            Admin admin = user.getAdmin();
+            BackOperationLog backOperationLog = new BackOperationLog(
+                    admin.getUsername(), toolService.getIP(request) ,"管理员" + admin.getUsername() + "修改了商品ID为"+goodsId+"的返现配置");
+            logService.createbackOperationLog(backOperationLog);
+
             view.setViewName("redirect:/refund/config");
             return view;
         }
