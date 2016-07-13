@@ -10,8 +10,7 @@
     <script type="text/javascript" src="${path.concat('/plugins/jquery/jquery.event.swipe.js')}"></script>
     <script type="text/javascript" src="${path.concat('/plugins/fancybox/source/jquery.fancybox.pack.js')}"></script>
     <script type="text/javascript" src="${path.concat('/plugins/jquery/pinchzoom.min.js')}"></script>
-    <script type="text/javascript" src="${path.concat('/plugins/jquery/jquery.provincesCity.js')}"></script>
-    <script type="text/javascript" src="${path.concat('/plugins/jquery/jquery.provincesData.js')}"></script>
+    <script type="text/javascript" src="${path.concat('/plugins/jquery/jquery.cityselect.js')}"></script>
     <script type="text/javascript" src="${path.concat('/plugins/unslider/js/unslider-min.js')}"></script>
     <title>商品详情</title>
 </head>
@@ -219,7 +218,11 @@
                                 <label class="weui_label">地区</label>
                             </div>
                             <div class="weui_cell_bd weui_cell_primary">
-                                <div id="province" class="area_select"></div>
+                                <div id="province">  
+                                    <select id="prov" class="prov"></select>   
+                                    <select id="city" class="city" disabled="disabled"></select>  
+                                    <select id="dist" class="dist" disabled="disabled"></select>  
+                                </div>
                             </div>
                         </div>
                         <div class="weui_cell">
@@ -439,7 +442,11 @@
 
         check_num();
 
-        $('#province').ProvinceCity();
+        $('#province').citySelect({
+            url:'${path.concat('/plugins/jquery/city.min.js')}',
+            required:false,
+            nodata:'none',//当子集无数据时，隐藏select
+        });
 
         $('#customer_name').on('input propertychange', function () {
             if (addressInfo_validate()) {
@@ -456,8 +463,24 @@
                 inactive();
             }
         });
+        
+        $("#prov").change(function () {
+            if (addressInfo_validate()) {
+                active();
+            } else {
+                inactive();
+            }
+        });
+        
+        $("#city").change(function () {
+            if (addressInfo_validate()) {
+                active();
+            } else {
+                inactive();
+            }
+        });
 
-        $("#province").children(":first").change(function () {
+        $("#dist").change(function () {
             if (addressInfo_validate()) {
                 active();
             } else {
@@ -630,8 +653,13 @@
         var name = $('#customer_name').val();
         var phone = $('#customer_phone').val();
         var address = $('#customer_address').val();
-        var area = $("#province").children(":first").val();
-        if (not_null(name) && not_null(phone) && not_null(address) && area !== "请选择") {
+        var area;
+        if($("#dist").is(":hidden")){
+            area=$("#city").val();
+        }else{
+            area=$("#dist").val();
+        }
+        if (not_null(name) && not_null(phone) && not_null(address) && not_null(area)) {
             return true;
         } else {
             return false;
@@ -667,7 +695,12 @@
         var goodsNum = $('#goods_num').val();
         var customerName = $('#customer_name').val();
         var phone = $('#customer_phone').val();
-        var address = $("#province").children(":first").val() + $("#province").children(":first").next().val() + $("#province").children(":last").val() + $("#customer_address").val();
+        var address;
+        if($("#dist").is(":hidden")){
+            address = $("#prov").val() + $("#city").val() + $("#customer_address").val();
+        }else{
+            address = $("#prov").val() + $("#city").val() + $("#dist").val() + $("#customer_address").val();
+        }
         var param = {
             goodsId: goodsId,
             agentId: agentId,

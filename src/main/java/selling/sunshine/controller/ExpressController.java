@@ -2,6 +2,9 @@ package selling.sunshine.controller;
 
 
 import com.csvreader.CsvReader;
+
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +20,9 @@ import selling.sunshine.model.*;
 import selling.sunshine.model.express.Express4Agent;
 import selling.sunshine.model.express.Express4Customer;
 import selling.sunshine.service.ExpressService;
+import selling.sunshine.service.LogService;
 import selling.sunshine.service.OrderService;
+import selling.sunshine.service.ToolService;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
@@ -28,6 +33,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 
 @RequestMapping("/express")
@@ -41,6 +48,12 @@ public class ExpressController {
 
     @Autowired
     private OrderService orderService;
+    
+    @Autowired
+    private ToolService toolService;
+    
+    @Autowired
+    private LogService logService;
 
     @RequestMapping(method = RequestMethod.POST, value = "/detail/{id}")
     public ResultData detail(@PathVariable("id") String id) {
@@ -168,6 +181,16 @@ public class ExpressController {
                 }
             }
         }
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        if (user == null) {
+        	 view.setViewName("/backend/express/express_upload");
+             return view;
+        }
+        Admin admin = user.getAdmin();
+        BackOperationLog backOperationLog = new BackOperationLog(
+                admin.getUsername(), toolService.getIP((HttpServletRequest)request) ,"管理员" + admin.getUsername() + "上传了快递单信息");
+        logService.createbackOperationLog(backOperationLog);
         resultData.setResponseCode(ResponseCode.RESPONSE_OK);
         view.setViewName("redirect:/order/check");
         return view;

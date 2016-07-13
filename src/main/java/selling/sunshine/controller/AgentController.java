@@ -73,6 +73,9 @@ public class AgentController {
 
     @Autowired
     private WithdrawService withdrawService;
+    
+    @Autowired
+    private LogService logService;
 
     /**
      * 根据微信服务号的菜单入口传參,获取当前微信用户,并返回绑定账号页面
@@ -1381,7 +1384,7 @@ public class AgentController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/grant")
-    public ModelAndView grant(String agentId) {
+    public ModelAndView grant(String agentId,HttpServletRequest request) {
         ModelAndView view = new ModelAndView();
         if (StringUtils.isEmpty(agentId)) {
             view.setViewName("redirect:/agent/overview");
@@ -1401,6 +1404,16 @@ public class AgentController {
         ResultData fetchResponse = agentService.fetchAgent(condition);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             Agent targetAgent = ((List<Agent>) agentService.fetchAgent(condition).getData()).get(0);
+            Subject subject = SecurityUtils.getSubject();
+            User user = (User) subject.getPrincipal();
+            if (user == null) {
+            	view.setViewName("redirect:/agent/overview");
+                return view;
+            }
+            Admin admin = user.getAdmin();
+            BackOperationLog backOperationLog = new BackOperationLog(
+                    admin.getUsername(), toolService.getIP(request) ,"管理员" + admin.getUsername() + "授权了代理商"+targetAgent.getAgentId());
+            logService.createbackOperationLog(backOperationLog);
             messageService.send(targetAgent.getPhone(), "尊敬的代理商" + targetAgent.getName() + ",您提交的申请信息已经审核通过,欢迎您的加入.【云草纲目】");
         }
         view.setViewName("redirect:/agent/overview");
@@ -1408,7 +1421,7 @@ public class AgentController {
     }
     
     @RequestMapping(method = RequestMethod.GET, value = "/grantNotPass/{agentId}")
-    public ModelAndView grantNotPass(@PathVariable("agentId") String agentId) {
+    public ModelAndView grantNotPass(@PathVariable("agentId") String agentId,HttpServletRequest request) {
     	 ModelAndView view = new ModelAndView();
          if (StringUtils.isEmpty(agentId)) {
              view.setViewName("redirect:/agent/overview");
@@ -1426,13 +1439,23 @@ public class AgentController {
             	 view.setViewName("redirect:/agent/overview");
                  return view;
 			}
+             Subject subject = SecurityUtils.getSubject();
+             User user = (User) subject.getPrincipal();
+             if (user == null) {
+             	view.setViewName("redirect:/agent/overview");
+                 return view;
+             }
+             Admin admin = user.getAdmin();
+             BackOperationLog backOperationLog = new BackOperationLog(
+                     admin.getUsername(), toolService.getIP(request) ,"管理员" + admin.getUsername() + "审核代理商"+agent.getAgentId()+"不通过");
+             logService.createbackOperationLog(backOperationLog);
          }
          view.setViewName("redirect:/agent/overview");
     	 return view;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/forbid/{agentId}")
-    public ModelAndView forbid(@PathVariable("agentId") String agentId) {
+    public ModelAndView forbid(@PathVariable("agentId") String agentId,HttpServletRequest request) {
         ModelAndView view = new ModelAndView();
         if (StringUtils.isEmpty(agentId)) {
             view.setViewName("redirect:/agent/overview");
@@ -1447,6 +1470,16 @@ public class AgentController {
             view.setViewName("redirect:/agent/overview");
             return view;
         }
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        if (user == null) {
+        	view.setViewName("redirect:/agent/overview");
+            return view;
+        }
+        Admin admin = user.getAdmin();
+        BackOperationLog backOperationLog = new BackOperationLog(
+                admin.getUsername(), toolService.getIP(request) ,"管理员" + admin.getUsername() + "禁用了代理商"+agent.getAgentId());
+        logService.createbackOperationLog(backOperationLog);
         view.setViewName("redirect:/agent/overview");
         return view;
     }

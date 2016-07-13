@@ -1,11 +1,11 @@
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id-target="finance-management">
     <div class="row">
         <div class="col-md-12 col-lg-12">
-            <h1><i class="fa fa-home"></i> 平台订货单 </h1>
+            <h1><i class="fa fa-home"></i> 平台发货单 </h1>
             <ol class="breadcrumb">
                 <li><a href="${path.concat('/dashboard')}">首页</a></li>
                 <li><a data-toggle="collapse" data-parent="#accordion" href="#finance-management">报表下载</a></li>
-                <li class="active">订货单</li>
+                <li class="active">发货单</li>
             </ol>
         </div>
         <div class="row">
@@ -61,7 +61,7 @@
         var startTime = $('#dtp_start').val();
         var endTime = $('#dtp_end').val()
         if (startTime && endTime) {
-            var url = '${path.concat('/indent/overview')}';
+            var url = '${path.concat('/deliver/overview')}';
             var param = {
                 start: startTime,
                 end: endTime
@@ -84,7 +84,7 @@
     });
 
     $('#download').click(function () {
-        var url = "${path.concat('/indent/download/')}" + fileName + "/" + tempFileName;
+        var url = "${path.concat('/deliver/download/')}" + fileName + "/" + tempFileName;
         window.location.href = url;
     });
 </script>
