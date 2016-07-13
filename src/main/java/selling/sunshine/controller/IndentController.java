@@ -8,18 +8,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
-
+import selling.sunshine.form.SortRule;
 import selling.sunshine.form.TimeRangeForm;
 import selling.sunshine.model.CustomerOrder;
 import selling.sunshine.model.OrderItem;
 import selling.sunshine.service.IndentService;
 import selling.sunshine.service.OrderService;
-import selling.sunshine.service.impl.IndentServiceImpl;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
 import javax.validation.Valid;
-
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -40,6 +39,30 @@ public class IndentController {
     @RequestMapping(method = RequestMethod.GET, value = "/overview")
     public ModelAndView indent() {
         ModelAndView view = new ModelAndView();
+        Map<String, Object> condition = new HashMap<>();
+        List<Integer> status = new ArrayList<>(Arrays.asList(1, 2, 3, 4));
+        condition.put("statusList", status);
+        condition.put("blockFalg", false);
+        List<SortRule> rule = new ArrayList<>();
+        rule.add(new SortRule("create_time", "asc"));
+        condition.put("sort", rule);
+        ResultData queryResponse = orderService.fetchOrderItem(condition);
+        Timestamp createAt = null;
+        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            OrderItem item = ((List<OrderItem>) queryResponse.getData()).get(0);
+            createAt = item.getCreateAt();
+        }
+        condition.remove("statusList");
+        condition.put("status", status);
+        queryResponse = orderService.fetchCustomerOrder(condition);
+        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            CustomerOrder item = ((List<CustomerOrder>) queryResponse.getData()).get(0);
+            if (createAt == null || createAt.after(item.getCreateAt())) {
+                createAt = item.getCreateAt();
+            }
+        }
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        view.addObject("start", format.format(createAt));
         view.setViewName("/backend/finance/indent");
         return view;
     }
@@ -71,10 +94,10 @@ public class IndentController {
         }
         String path = IndentController.class.getResource("/").getPath();
         String os = System.getProperty("os.name").toLowerCase();
-        if(os.indexOf("windows") >= 0){
-        	path = path.substring(1);
+        if (os.indexOf("windows") >= 0) {
+            path = path.substring(1);
         }
-        
+
         int index = path.lastIndexOf("/WEB-INF/classes/");
         String parent = path.substring(0, index);
         String directory = "/material/journal/indent";
