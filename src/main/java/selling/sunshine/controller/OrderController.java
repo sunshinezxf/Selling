@@ -80,8 +80,6 @@ public class OrderController {
     @Autowired
     private ExpressService expressService;
 
-    @Autowired
-    private RefundService refundService;
 
     @Autowired
     private LogService logService;

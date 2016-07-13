@@ -6,6 +6,8 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,15 +19,20 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import selling.sunshine.form.GoodsForm;
+import selling.sunshine.model.Admin;
 import selling.sunshine.model.Agent;
+import selling.sunshine.model.BackOperationLog;
 import selling.sunshine.model.CustomerOrder;
+import selling.sunshine.model.User;
 import selling.sunshine.model.goods.Goods4Customer;
 import selling.sunshine.model.goods.Thumbnail;
 import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.AgentService;
 import selling.sunshine.service.CommodityService;
+import selling.sunshine.service.LogService;
 import selling.sunshine.service.OrderService;
+import selling.sunshine.service.ToolService;
 import selling.sunshine.service.UploadService;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
@@ -61,6 +68,12 @@ public class CommodityController {
 
     @Autowired
     private UploadService uploadService;
+    
+    @Autowired
+    private ToolService toolService;
+    
+    @Autowired
+    private LogService logService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/create")
     public ModelAndView create() {
@@ -70,7 +83,7 @@ public class CommodityController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/create")
-    public ModelAndView create(@Valid GoodsForm form, BindingResult result) {
+    public ModelAndView create(@Valid GoodsForm form, BindingResult result,HttpServletRequest request) {
         ModelAndView view = new ModelAndView();
         if (result.hasErrors()) {
             view.setViewName("redirect:/commodity/create");
@@ -81,6 +94,17 @@ public class CommodityController {
         goods.setBlockFlag(form.isBlock());
         ResultData response = commodityService.createGoods4Customer(goods);
         if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            Subject subject = SecurityUtils.getSubject();
+            User user = (User) subject.getPrincipal();
+            if (user == null) {
+            	view.setViewName("redirect:/commodity/create");
+                return view;
+            }
+            Admin admin = user.getAdmin();
+            BackOperationLog backOperationLog = new BackOperationLog(
+                    admin.getUsername(), toolService.getIP(request) ,"管理员" + admin.getUsername() + "添加了一个新商品，商品名称:"
+                    + form.getName() +"，商品ID：" + ((Goods4Customer)response.getData()).getGoodsId());
+            logService.createbackOperationLog(backOperationLog);
             view.setViewName("redirect:/commodity/overview");
             return view;
         } else {
@@ -148,7 +172,7 @@ public class CommodityController {
 
 	@RequestMapping(method = RequestMethod.POST, value = "/edit/{goodsId}")
 	public ModelAndView edit(@PathVariable("goodsId") String goodsId,
-			@Valid GoodsForm form, BindingResult result) {
+			@Valid GoodsForm form, BindingResult result,HttpServletRequest request) {
 		ModelAndView view = new ModelAndView();
 		if (result.hasErrors()) {
 			view.setViewName("redirect:/commodity/overview");
@@ -310,7 +334,7 @@ public class CommodityController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/forbid/{goodsId}")
-    public ModelAndView forbid(@PathVariable("goodsId") String goodsId) {
+    public ModelAndView forbid(@PathVariable("goodsId") String goodsId,HttpServletRequest request) {
         ModelAndView view = new ModelAndView();
         Map<String, Object> condition = new HashMap<String, Object>();
         condition.put("goodsId", goodsId);
@@ -323,6 +347,17 @@ public class CommodityController {
         target.setBlockFlag(true);
         ResultData response = commodityService.updateGoods4Customer(target);
         if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            Subject subject = SecurityUtils.getSubject();
+            User user = (User) subject.getPrincipal();
+            if (user == null) {
+            	view.setViewName("redirect:/commodity/create");
+                return view;
+            }
+            Admin admin = user.getAdmin();
+            BackOperationLog backOperationLog = new BackOperationLog(
+                    admin.getUsername(), toolService.getIP(request) ,"管理员" + admin.getUsername() + "将商品"
+                    + target.getName()+"下架，商品ID为："+target.getGoodsId());
+            logService.createbackOperationLog(backOperationLog);
             view.setViewName("redirect:/commodity/overview");
         } else {
             view.setViewName("redirect:/commodity/overview");
@@ -331,7 +366,7 @@ public class CommodityController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/enable/{goodsId}")
-    public ModelAndView enable(@PathVariable("goodsId") String goodsId) {
+    public ModelAndView enable(@PathVariable("goodsId") String goodsId,HttpServletRequest request) {
         ModelAndView view = new ModelAndView();
         Map<String, Object> condition = new HashMap<>();
         condition.put("goodsId", goodsId);
@@ -344,6 +379,17 @@ public class CommodityController {
         target.setBlockFlag(false);
         ResultData response = commodityService.updateGoods4Customer(target);
         if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            Subject subject = SecurityUtils.getSubject();
+            User user = (User) subject.getPrincipal();
+            if (user == null) {
+            	view.setViewName("redirect:/commodity/create");
+                return view;
+            }
+            Admin admin = user.getAdmin();
+            BackOperationLog backOperationLog = new BackOperationLog(
+                    admin.getUsername(), toolService.getIP(request) ,"管理员" + admin.getUsername() + "将商品"
+                    + target.getName()+"上架，商品ID为："+target.getGoodsId());
+            logService.createbackOperationLog(backOperationLog);
             view.setViewName("redirect:/commodity/overview");
         } else {
             view.setViewName("redirect:/commodity/overview");
