@@ -129,7 +129,7 @@ public class IndentController {
         StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(zipName + ".zip");
         ZipCompressor zipCompressor = new ZipCompressor(sb.toString());
         zipCompressor.compress(pathList);
-        data.setData((new StringBuffer(directory).append("/").append(zipName + ".zip")).toString());
+        data.setData(zipName);
         return data;
     }
 

@@ -49,7 +49,7 @@
                 </div>
                 <div class="modal-footer">
                     <a href="#" class="btn btn-default" data-dismiss="modal">取消</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a href="#" class="btn btn-primary" data-dismiss="modal">下载</a>
+                    <a href="#" id="download" class="btn btn-primary" data-dismiss="modal">下载</a>
                 </div>
             </div>
         </div>
@@ -124,6 +124,8 @@
     });
     
     $('#download').click(function(){
+        alert(fileName);
+         alert(tempFileName);
     	var url = "${path.concat('/indent/download/')}" + fileName+"/"+tempFileName;
     	window.location.href=url;
     });
