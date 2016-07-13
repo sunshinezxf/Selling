@@ -125,6 +125,9 @@
             <if test="status != null and status != ''">
                 order_status = #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler},
             </if>
+            <if test="createAt != null and createAt != ''">
+                create_time = #{createAt},
+            </if>
             <if test="blockFlag != null and blockFlag != ''">
                 block_flag = #{blockFlag}
             </if>

@@ -2,6 +2,7 @@ package selling.sunshine.controller;
 
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -131,8 +132,10 @@ public class BillController {
         		if(orderBill.getBillAmount() >= total_price_database) {
         			for(OrderItem orderItem : order.getOrderItems()) {
             			orderItem.setStatus(OrderItemStatus.PAYED);
+            			orderItem.setCreateAt(new Timestamp(System.currentTimeMillis()));
             		}
         			order.setStatus(OrderStatus.PAYED);
+        			order.setCreateAt(new Timestamp(System.currentTimeMillis()));
         			ResultData payData = orderService.payOrder(order);
         		}
             }
@@ -162,6 +165,7 @@ public class BillController {
 			CustomerOrder customerOrder = ((List<CustomerOrder>)customerOrderData.getData()).get(0);
 			if(customerOrderBill.getBillAmount() >= customerOrder.getTotalPrice()){
 				customerOrder.setStatus(OrderItemStatus.PAYED);
+				customerOrder.setCreateAt(new Timestamp(System.currentTimeMillis()));
 				ResultData payData = orderService.payOrder(customerOrder);
 				if(payData.getResponseCode() != ResponseCode.RESPONSE_OK){
 					return payData;
