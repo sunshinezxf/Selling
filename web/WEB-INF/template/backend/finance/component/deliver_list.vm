@@ -1,0 +1,17 @@
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id-target="finance-management">
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+            <h1><i class="fa fa-home"></i> 平台订货单 </h1>
+            <ol class="breadcrumb">
+                <li><a href="${path.concat('/dashboard')}">首页</a></li>
+                <li><a data-toggle="collapse" data-parent="#accordion" href="#finance-management">报表下载</a></li>
+                <li class="active">发货单</li>
+            </ol>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-lg-12">
+                #parse("/backend/finance/component/datetime_picker.vm")
+            </div>
+        </div>
+    </div>
+</div>
