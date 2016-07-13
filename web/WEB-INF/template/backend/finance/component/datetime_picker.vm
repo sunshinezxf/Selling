@@ -20,16 +20,39 @@
 			    <input type="hidden" id="dtp_end" name="end" value="" />
             </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <div class="form-group">
-                <div> 
-                    <button id="consult" class="btn btn-primary">查询</button> 
+                <div>
+                    <button type="button" id="consult" class="btn btn-primary" data-toggle="modal" data-target="#download_loading">查询</button> 
                 </div>
             </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <div class="form-group">
-                <div> 
-                    <button id="download" class="btn btn-default disabled">下载</button> 
+        </fieldset>
+    </div>
+    <div id="download_loading" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                </div>
+                <div class="modal-body">
+                    <h4>正在生成报表，请耐心等待</h4>
+                </div>
+                <div class="modal-footer">
                 </div>
             </div>
-        </fieldset>
+        </div>
+    </div>
+    <div id="download_success" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                </div>
+                <div class="modal-body">
+                    <h4>报表生成成功，请点击下载按钮进行下载</h4>
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-default" data-dismiss="modal">取消</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="#" class="btn btn-primary" data-dismiss="modal">下载</a>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 <script>
@@ -89,15 +112,14 @@
                 } else {
                 	tempFileName=result.data;
                 	fileName=startTime+"－"+endTime;
-                    alert("Success!");
-                    $('#download').removeClass('btn-default');
-                    $('#download').removeClass('disabled');
-                    $('#download').addClass('btn-primary');
+                    $('#download_loading').modal('hide');
+                    $('#download_success').modal('show');
+
                 }
 
             });
         } else {
-           alert("None!"); 
+           alert("开始时间与结束时间均不能为空！"); 
         }
     });
     

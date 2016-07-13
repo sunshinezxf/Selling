@@ -1063,7 +1063,7 @@ public class OrderController {
 
         // 记录下单的admin
         BackOperationLog backOperationLog = new BackOperationLog(
-                admin.getUsername(), "管理员" + admin.getUsername() + "将订单:"
+                admin.getUsername(), toolService.getIP(request) ,"管理员" + admin.getUsername() + "将订单:"
                 + orderId + "设置为已付款");
         ResultData createLogData = logService
                 .createbackOperationLog(backOperationLog);
