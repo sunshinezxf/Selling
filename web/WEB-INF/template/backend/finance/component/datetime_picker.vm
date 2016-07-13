@@ -124,8 +124,6 @@
     });
     
     $('#download').click(function(){
-        alert(fileName);
-         alert(tempFileName);
     	var url = "${path.concat('/indent/download/')}" + fileName+"/"+tempFileName;
     	window.location.href=url;
     });
