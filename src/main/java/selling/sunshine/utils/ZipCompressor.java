@@ -11,15 +11,19 @@ import java.util.zip.CheckedOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class ZipCompressor {   
     static final int BUFFER = 8192;   
   
     private File zipFile;   
+    private Logger logger=LoggerFactory.getLogger(ZipCompressor.class);
     
     public ZipCompressor(String pathName) {   
         zipFile = new File(pathName);   
     }   
-    public void compress(List<File> fileList) { 
+    public void compress(List<String> pathList) { 
     	ZipOutputStream out = null;   
     	try {  
 			FileOutputStream fileOutputStream = new FileOutputStream(zipFile);   
@@ -27,8 +31,8 @@ public class ZipCompressor {
 					new CRC32());   
 			out = new ZipOutputStream(cos);   
 			String basedir = ""; 
-			for (int i=0;i<fileList.size();i++){
-				compress(fileList.get(i), out, basedir);   
+			for (int i=0;i<pathList.size();i++){
+				compress(new File(pathList.get(i)), out, basedir);   
 			}
 	    	out.close();  
     	} catch (Exception e) {   
@@ -55,10 +59,10 @@ public class ZipCompressor {
     private void compress(File file, ZipOutputStream out, String basedir) {   
         /* 判断是目录还是文件 */  
         if (file.isDirectory()) {   
-            System.out.println("压缩：" + basedir + file.getName());   
+        	logger.debug("压缩：" + basedir + file.getName());             
             this.compressDirectory(file, out, basedir);   
-        } else {   
-            System.out.println("压缩：" + basedir + file.getName());   
+        } else {  
+        	logger.debug("压缩：" + basedir + file.getName());      
             this.compressFile(file, out, basedir);   
         }   
     }   

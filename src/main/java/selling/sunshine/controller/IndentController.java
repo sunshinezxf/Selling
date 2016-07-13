@@ -15,8 +15,11 @@ import selling.sunshine.model.OrderItem;
 import selling.sunshine.service.IndentService;
 import selling.sunshine.service.OrderService;
 import selling.sunshine.service.impl.IndentServiceImpl;
+import selling.sunshine.utils.DateUtils;
+import selling.sunshine.utils.IDGenerator;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
+import selling.sunshine.utils.ZipCompressor;
 
 import javax.validation.Valid;
 
@@ -78,8 +81,19 @@ public class IndentController {
         int index = path.lastIndexOf("/WEB-INF/classes/");
         String parent = path.substring(0, index);
         String directory = "/material/journal/indent";
-        StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(form.getStart().replaceAll("-", ""));
-        System.err.println(sb.toString());
+        DateUtils dateUtils=new DateUtils();
+        dateUtils.process(form.getStart(), form.getEnd());
+        List<String> dateList=dateUtils.getDateList();
+        List<String> pathList=new ArrayList<String>();
+        dateList.forEach((date)->{
+        	StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(date.replaceAll("-", ""));
+        	pathList.add(sb.toString());
+        });
+        String zipName=IDGenerator.generate("Indent");
+        StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(zipName+".zip");
+        ZipCompressor zipCompressor=new ZipCompressor(sb.toString());
+        zipCompressor.compress(pathList);
+        data.setData((new StringBuffer(directory).append("/").append(zipName+".zip")).toString());
         return data;
     }
 }
