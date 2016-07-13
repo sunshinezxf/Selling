@@ -1,6 +1,7 @@
 package selling.sunshine.controller;
 
 import org.apache.shiro.SecurityUtils;
+
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +28,7 @@ import selling.sunshine.service.RefundService;
 import selling.sunshine.service.ToolService;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
-import selling.sunshine.utils.WechatConfig;
+
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
