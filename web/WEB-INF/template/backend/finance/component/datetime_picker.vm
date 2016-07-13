@@ -33,6 +33,8 @@
     </div>
 </div>
 <script>
+    var tempFileName;
+    var fileName;
     var date=new Date();
     var today=date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate();
     $('#date_start').datetimepicker({
@@ -85,6 +87,8 @@
                 if (result.responseCode != "RESPONSE_OK") {
                     alert("Error!");
                 } else {
+                	tempFileName=result.data;
+                	fileName=startTime+"－"+endTime;
                     alert("Success!");
                     $('#download').removeClass('btn-default');
                     $('#download').removeClass('disabled');
@@ -95,5 +99,10 @@
         } else {
            alert("None!"); 
         }
+    });
+    
+    $('#download').click(function(){
+    	var url = "${path.concat('/indent/download/')}" + fileName+"/"+tempFileName;
+    	window.location.href=url;
     });
 </script>
