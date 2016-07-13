@@ -1,10 +1,22 @@
 package selling.sunshine.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import selling.sunshine.dao.CustomerOrderDao;
 import selling.sunshine.dao.ExpressDao;
+import selling.sunshine.dao.OrderDao;
+import selling.sunshine.dao.OrderItemDao;
+import selling.sunshine.model.CustomerOrder;
+import selling.sunshine.model.Order;
+import selling.sunshine.model.OrderItem;
+import selling.sunshine.model.OrderItemStatus;
+import selling.sunshine.model.OrderStatus;
 import selling.sunshine.model.express.Express;
 import selling.sunshine.model.express.Express4Agent;
 import selling.sunshine.model.express.Express4Customer;
@@ -15,6 +27,7 @@ import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +38,16 @@ public class ExpressServiceImpl implements ExpressService {
 
     @Autowired
     private ExpressDao expressDao;
-
+    
+    @Autowired
+    private OrderItemDao orderItemDao;
+    
+    @Autowired
+    private OrderDao orderDao;
+    
+    @Autowired
+    private CustomerOrderDao customerOrderDao;
+    
     @Override
     public ResultData createExpress(Express4Agent express) {
         ResultData result = new ResultData();
@@ -128,9 +150,126 @@ public class ExpressServiceImpl implements ExpressService {
 	@Override
 	public ResultData receiveCheck() {
 		ResultData result = new ResultData();
-		//查询已发货的OrderItem
+		//查询已发货的Order
 		Map<String, Object> condition = new HashMap<String, Object>();
-		condition.put("status", "");
+		List<Integer> status = new ArrayList<Integer>();
+        status.add(4);
+		condition.put("status", status);
+		ResultData fetchOrderResponse = orderDao.queryOrder(condition);
+		if(fetchOrderResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR){
+			result.setResponseCode(fetchOrderResponse.getResponseCode());
+			result.setDescription(fetchOrderResponse.getDescription());
+			logger.error(fetchOrderResponse.getDescription());
+			return result;
+		}
+		List<Order> orders = (List<Order>)fetchOrderResponse.getData();
+		//查询每个Order的OrderItems
+		for(Order order : orders){
+			condition.clear();
+			List<Integer> orderItemStatus = new ArrayList<Integer>();
+			condition.put("status", OrderItemStatus.SHIPPED);
+			condition.put("orderId", order.getOrderId());
+			ResultData fetchOrderItemResponse = orderItemDao.queryOrderItem(condition);
+			if(fetchOrderItemResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR){
+				result.setResponseCode(fetchOrderItemResponse.getResponseCode());
+				result.setDescription(fetchOrderItemResponse.getDescription());
+				logger.error(fetchOrderItemResponse.getDescription());
+				return result;
+			}
+			List<OrderItem> orderItems = (List<OrderItem>) fetchOrderItemResponse.getData();
+			//查询每个OrderItem的Express
+			int receiveNum = 0;//记录Order里收货的OrderItem数量 
+			for(OrderItem orderItem : orderItems){
+				condition.clear();
+				condition.put("orderItemId", orderItem.getOrderItemId());
+				condition.put("blockFlag", false);
+				ResultData fetchExpressResponse = expressDao.queryExpress4Agent(condition);
+				if(((List<Express>)fetchExpressResponse.getData()).isEmpty()){
+					continue;
+				}
+				if(fetchExpressResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR){
+					result.setResponseCode(fetchExpressResponse.getResponseCode());
+					result.setDescription(fetchExpressResponse.getDescription());
+					logger.error(fetchExpressResponse.getDescription());
+					return result;
+				}
+				Express express = ((List<Express>) fetchExpressResponse.getData()).get(0);
+				ResultData fetchWuliuResponse =  traceExpress(express.getExpressNumber(), "LATEST");
+				if(fetchWuliuResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR){
+					result.setResponseCode(fetchWuliuResponse.getResponseCode());
+					result.setDescription(fetchWuliuResponse.getDescription());
+					logger.error(fetchWuliuResponse.getDescription());
+					return result;
+				}
+				JSONObject wuliu = JSONObject.parseObject((String)fetchWuliuResponse.getData());
+				JSONArray wuliuInfo = wuliu.getJSONArray("data");
+				if(wuliuInfo != null && !wuliuInfo.isEmpty()){
+					JSONObject wuliuInfoInner = wuliuInfo.getJSONObject(0);
+					JSONObject traces = wuliuInfoInner.getJSONObject("traces");
+					if(traces != null && !traces.isEmpty()) {
+						String scanType = traces.getString("scanType");
+						if(scanType.equals("签收")){
+							receiveNum++;
+							orderItem.setStatus(OrderItemStatus.RECEIVED);
+							orderItemDao.updateOrderItem(orderItem);
+						}
+					}
+				}
+			}
+			if(orderItems.size() == receiveNum){
+				order.setStatus(OrderStatus.FINISHIED);
+				orderDao.updateOrder(order);
+			}
+		}/*
+		status.clear();
+		condition.clear();
+		status.add(2);
+		condition.put("status", status);
+		condition.put("blockFlag", false);
+		ResultData fetchCustomerOrderResponse = customerOrderDao.queryOrder(condition);
+		if(fetchCustomerOrderResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR){
+			result.setResponseCode(fetchCustomerOrderResponse.getResponseCode());
+			result.setDescription(fetchCustomerOrderResponse.getDescription());
+			logger.error(fetchCustomerOrderResponse.getDescription());
+			return result;
+		}
+		List<CustomerOrder> customerOrders = (List<CustomerOrder>) fetchCustomerOrderResponse.getData();
+		for(CustomerOrder customerOrder : customerOrders) {
+			condition.clear();
+			condition.put("orderId", customerOrder.getOrderId());
+			condition.put("blockFlag", false);
+			ResultData fetchExpressResponse = expressDao.queryExpress4Customer(condition);
+			if(fetchExpressResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR){
+				result.setResponseCode(fetchExpressResponse.getResponseCode());
+				result.setDescription(fetchExpressResponse.getDescription());
+				logger.error(fetchExpressResponse.getDescription());
+				return result;
+			}
+			if(((List<Express>)fetchExpressResponse.getData()).isEmpty()){
+				continue;
+			}
+			Express express = ((List<Express>) fetchExpressResponse.getData()).get(0);
+			ResultData fetchWuliuResponse =  traceExpress(express.getExpressNumber(), "LATEST");
+			if(fetchWuliuResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR){
+				result.setResponseCode(fetchWuliuResponse.getResponseCode());
+				result.setDescription(fetchWuliuResponse.getDescription());
+				logger.error(fetchWuliuResponse.getDescription());
+				return result;
+			}
+			JSONObject wuliu = JSONObject.parseObject((String)fetchWuliuResponse.getData());
+			JSONArray wuliuInfo = wuliu.getJSONArray("data");
+			if(wuliuInfo != null && !wuliuInfo.isEmpty()){
+				JSONObject wuliuInfoInner = wuliuInfo.getJSONObject(0);
+				JSONObject traces = wuliuInfoInner.getJSONObject("traces");
+				if(traces != null && !traces.isEmpty()) {
+					String scanType = traces.getString("scanType");
+					if(scanType.equals("签收")){
+						customerOrder.setStatus(OrderItemStatus.RECEIVED);
+						customerOrderDao.updateOrder(customerOrder);
+					}
+				}
+			}
+		}*/
 		return result;
 	}
 }

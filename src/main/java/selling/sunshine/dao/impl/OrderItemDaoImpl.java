@@ -4,6 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
+import com.alibaba.fastjson.JSON;
+
 import selling.sunshine.dao.BaseDao;
 import selling.sunshine.dao.OrderItemDao;
 import selling.sunshine.model.OrderItem;
@@ -58,6 +60,7 @@ public class OrderItemDaoImpl extends BaseDao implements OrderItemDao {
 	@Override
 	public ResultData updateOrderItem(OrderItem orderItem) {
 		ResultData result = new ResultData();
+		logger.debug("oppppppp0" + JSON.toJSONString(orderItem));
         synchronized (lock) {
             try {
                 sqlSession.update("selling.order.item.update", orderItem);
