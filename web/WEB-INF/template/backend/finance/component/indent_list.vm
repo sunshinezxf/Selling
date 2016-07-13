@@ -7,7 +7,11 @@
                 <li><a data-toggle="collapse" data-parent="#accordion" href="#finance-management">报表下载</a></li>
                 <li class="active">订货单</li>
             </ol>
-            #parse("/backend/finance/component/datetime_picker.vm")
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-lg-12">
+                #parse("/backend/finance/component/datetime_picker.vm")
+            </div>
         </div>
     </div>
 </div>

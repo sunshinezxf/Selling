@@ -50,7 +50,7 @@
         <property name="sqlSession" ref="sqlSession"></property>
     </bean>
 
-    <bean id="OrderPoolDao" class="selling.sunshine.dao.impl.OrderPoolDaoImpl">
+    <bean id="orderPoolDao" class="selling.sunshine.dao.impl.OrderPoolDaoImpl">
         <property name="sqlSession" ref="sqlSession"></property>
     </bean>
 
@@ -71,6 +71,10 @@
     </bean>
 
     <bean id="statisticDao" class="selling.sunshine.dao.impl.StatisticDaoImpl">
+        <property name="sqlSession" ref="sqlSession"></property>
+    </bean>
+
+    <bean id="billDao" class="selling.sunshine.dao.impl.BillDaoImpl">
         <property name="sqlSession" ref="sqlSession"></property>
     </bean>
 </beans>
