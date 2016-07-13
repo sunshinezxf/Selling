@@ -13,10 +13,15 @@ import selling.sunshine.model.express.Express;
 import selling.sunshine.service.DeliverService;
 import selling.sunshine.service.ExpressService;
 import selling.sunshine.service.OrderService;
+import selling.sunshine.utils.DateUtils;
+import selling.sunshine.utils.IDGenerator;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
+import selling.sunshine.utils.ZipCompressor;
 
 import javax.validation.Valid;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,6 +71,28 @@ public class DeliverController {
             data.setResponseCode(ResponseCode.RESPONSE_ERROR);
             return data;
         }
+        String path = IndentController.class.getResource("/").getPath();
+        String os = System.getProperty("os.name").toLowerCase();
+        if (os.indexOf("windows") >= 0) {
+            path = path.substring(1);
+        }
+
+        int index = path.lastIndexOf("/WEB-INF/classes/");
+        String parent = path.substring(0, index);
+        String directory = "/material/journal/deliver";
+        DateUtils dateUtils = new DateUtils();
+        dateUtils.process(form.getStart(), form.getEnd());
+        List<String> dateList = dateUtils.getDateList();
+        List<String> pathList = new ArrayList<String>();
+        dateList.forEach((date) -> {
+            StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(date.replaceAll("-", ""));
+            pathList.add(sb.toString());
+        });
+        String zipName = IDGenerator.generate("Deliver");
+        StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(zipName + ".zip");
+        ZipCompressor zipCompressor = new ZipCompressor(sb.toString());
+        zipCompressor.compress(pathList);
+        data.setData(zipName);
         return data;
     }
 }
