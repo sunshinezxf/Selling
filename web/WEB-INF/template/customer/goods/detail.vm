@@ -220,8 +220,8 @@
                             <div class="weui_cell_bd weui_cell_primary">
                                 <div id="province">  
                                     <select id="prov" class="prov"></select>   
-                                    <select id="city" class="city" disabled="disabled"></select>  
-                                    <select id="dist" class="dist" disabled="disabled"></select>  
+                                    <select id="city" class="city" disabled="disabled" style="display:none"></select>  
+                                    <select id="dist" class="dist" disabled="disabled" style="display:none"></select>  
                                 </div>
                             </div>
                         </div>
@@ -447,7 +447,7 @@
             required:false,
             nodata:'none',//当子集无数据时，隐藏select
         });
-
+        
         $('#customer_name').on('input propertychange', function () {
             if (addressInfo_validate()) {
                 active();
@@ -465,6 +465,8 @@
         });
         
         $("#prov").change(function () {
+            $("#city").empty();
+            $("#dist").empty();
             if (addressInfo_validate()) {
                 active();
             } else {
@@ -473,6 +475,7 @@
         });
         
         $("#city").change(function () {
+            $("#dist").empty();
             if (addressInfo_validate()) {
                 active();
             } else {
@@ -654,10 +657,14 @@
         var phone = $('#customer_phone').val();
         var address = $('#customer_address').val();
         var area;
-        if($("#dist").is(":hidden")){
+        if($("#prov").val()=="北京"||$("#prov").val()=="天津"||$("#prov").val()=="上海"||$("#prov").val()=="重庆"||$("#prov").val()=="香港"||$("#prov").val()=="澳门"||$("#prov").val()=="台湾"){
             area=$("#city").val();
         }else{
-            area=$("#dist").val();
+            if($("#prov").val()=="国外"){
+                area=$("#prov").val();
+            }else{
+                area=$("#dist").val();
+            }
         }
         if (not_null(name) && not_null(phone) && not_null(address) && not_null(area)) {
             return true;
@@ -697,7 +704,11 @@
         var phone = $('#customer_phone').val();
         var address;
         if($("#dist").is(":hidden")){
-            address = $("#prov").val() + $("#city").val() + $("#customer_address").val();
+            if($("#city").is(":hidden")){
+                address = $("#prov").val() + $("#customer_address").val();
+            }else{
+                address = $("#prov").val() + $("#city").val() + $("#customer_address").val();
+            }
         }else{
             address = $("#prov").val() + $("#city").val() + $("#dist").val() + $("#customer_address").val();
         }
