@@ -4,12 +4,15 @@ import org.apache.poi.ss.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import selling.sunshine.dao.CustomerDao;
+import org.springframework.util.StringUtils;
+import selling.sunshine.dao.CustomerOrderDao;
 import selling.sunshine.dao.ExpressDao;
 import selling.sunshine.dao.OrderItemDao;
 import selling.sunshine.model.CustomerOrder;
 import selling.sunshine.model.OrderItem;
 import selling.sunshine.model.express.Express;
+import selling.sunshine.model.express.Express4Agent;
+import selling.sunshine.model.express.Express4Customer;
 import selling.sunshine.service.DeliverService;
 import selling.sunshine.utils.PlatformConfig;
 import selling.sunshine.utils.ResponseCode;
@@ -30,7 +33,7 @@ public class DeliverServiceImpl implements DeliverService {
     private OrderItemDao orderItemDao;
 
     @Autowired
-    private CustomerDao customerDao;
+    private CustomerOrderDao customerOrderDao;
 
     @Autowired
     private ExpressDao expressDao;
@@ -53,25 +56,30 @@ public class DeliverServiceImpl implements DeliverService {
         String path = IndentServiceImpl.class.getResource("/").getPath();
         int index = path.lastIndexOf("/WEB-INF/classes/");
         String parent = path.substring(0, index);
-        String directory = "/material/journal/indent";
+        String directory = "/material/journal/deliver";
         Workbook template = WorkBookUtil.getIndentTemplate();
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
         list.forEach(item -> {
-            if (item instanceof OrderItem) {
-                OrderItem temp = (OrderItem) item;
-                String time = format.format(temp.getCreateAt());
-                StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(time);
-                File file = new File(sb.toString());
-                if (!file.exists()) {
-                    file.mkdirs();
-                }
+            Express express = (Express) item;
+            String linkId = express.getLinkId();
+            if (!StringUtils.isEmpty(linkId) && linkId.startsWith("EPA")) {
                 Map<String, Object> condition = new HashMap<>();
-                condition.put("linkId", temp.getOrderItemId());
-                ResultData queryResponse = expressDao.queryExpress(condition);
-                Workbook workbook = null;
-                if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-                    if (!((List<Express>) queryResponse.getData()).isEmpty()) {
-                        workbook = produce(template, temp, ((List<Express>) queryResponse.getData()).get(0));
+                condition.put("expressId", linkId);
+                ResultData response = expressDao.queryExpress4Agent(condition);
+                if (response.getResponseCode() == ResponseCode.RESPONSE_OK && !((List<Express4Agent>) response.getData()).isEmpty()) {
+                    express = ((List<Express4Agent>) response.getData()).get(0);
+                    condition.clear();
+                    condition.put("orderItemId", ((Express4Agent) express).getItem().getOrderItemId());
+                    response = orderItemDao.queryOrderItem(condition);
+                    if (response.getResponseCode() == ResponseCode.RESPONSE_OK && !((List<OrderItem>) response.getData()).isEmpty()) {
+                        OrderItem temp = ((List<OrderItem>) response.getData()).get(0);
+                        String time = format.format(temp.getCreateAt());
+                        StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(time);
+                        File file = new File(sb.toString());
+                        if (!file.exists()) {
+                            file.mkdirs();
+                        }
+                        Workbook workbook = produce(template, temp, express);
                         try {
                             FileOutputStream out = new FileOutputStream(file + "/" + time + "_" + temp.getOrder().getOrderId() + "_" + temp.getCustomer().getName() + ".xlsx");
                             workbook.write(out);
@@ -83,21 +91,25 @@ public class DeliverServiceImpl implements DeliverService {
                         }
                     }
                 }
-            } else if (item instanceof CustomerOrder) {
-                CustomerOrder temp = (CustomerOrder) item;
-                String time = format.format(temp.getCreateAt());
-                StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(time);
-                File file = new File(sb.toString());
-                if (!file.exists()) {
-                    file.mkdirs();
-                }
-                Workbook workbook = null;
+
+            } else if (!StringUtils.isEmpty(linkId) && linkId.startsWith("EPC")) {
                 Map<String, Object> condition = new HashMap<>();
-                condition.put("linkId", temp.getOrderId());
-                ResultData queryResponse = expressDao.queryExpress(condition);
-                if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-                    if (!((List<Express>) queryResponse.getData()).isEmpty()) {
-                        workbook = produce(template, temp, ((List<Express>) queryResponse.getData()).get(0));
+                condition.put("expressId", linkId);
+                ResultData response = expressDao.queryExpress4Customer(condition);
+                if (response.getResponseCode() == ResponseCode.RESPONSE_OK && !((List<Express4Customer>) response.getData()).isEmpty()) {
+                    express = ((List<Express4Customer>) response.getData()).get(0);
+                    condition.clear();
+                    condition.put("orderId", express.getLinkId());
+                    response = customerOrderDao.queryOrder(condition);
+                    if (response.getResponseCode() == ResponseCode.RESPONSE_OK && !((List<CustomerOrder>) response.getData()).isEmpty()) {
+                        CustomerOrder temp = ((List<CustomerOrder>) response.getData()).get(0);
+                        String time = format.format(temp.getCreateAt());
+                        StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(time);
+                        File file = new File(sb.toString());
+                        if (!file.exists()) {
+                            file.mkdirs();
+                        }
+                        Workbook workbook = produce(template, temp, express);
                         try {
                             FileOutputStream out = new FileOutputStream(file + "/" + time + "_" + temp.getOrderId() + "_" + temp.getReceiverName() + ".xlsx");
                             workbook.write(out);

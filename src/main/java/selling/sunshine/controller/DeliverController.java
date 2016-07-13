@@ -9,13 +9,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import selling.sunshine.form.TimeRangeForm;
+import selling.sunshine.model.express.Express;
 import selling.sunshine.service.DeliverService;
+import selling.sunshine.service.ExpressService;
 import selling.sunshine.service.OrderService;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
 import javax.validation.Valid;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -32,6 +35,9 @@ public class DeliverController {
     @Autowired
     private DeliverService deliverService;
 
+    @Autowired
+    private ExpressService expressService;
+
     @RequestMapping(method = RequestMethod.GET, value = "/overview")
     public ModelAndView deliver() {
         ModelAndView view = new ModelAndView();
@@ -47,7 +53,19 @@ public class DeliverController {
             return data;
         }
         Map<String, Object> condition = new HashMap<>();
-
+        condition.put("start", form.getStart());
+        condition.put("end", form.getEnd());
+        ResultData queryResponse = expressService.fetchExpress(condition);
+        if (queryResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            data.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            return data;
+        }
+        List<Express> list = (List<Express>) queryResponse.getData();
+        ResultData produceResponse = deliverService.produce(list);
+        if (produceResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            data.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            return data;
+        }
         return data;
     }
 }

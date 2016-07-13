@@ -89,7 +89,8 @@
     </insert>
 
     <select id="query" parameterType="java.util.Map" resultMap="expressVo">
-        SELECT express_id, order_item_id AS link_id, express_no, sender_name, sender_phone, sender_address, receiver_name, receiver_phone,
+        SELECT express_id, order_item_id AS link_id, express_no, sender_name, sender_phone, sender_address,
+        receiver_name, receiver_phone,
         receiver_address, goods_name, block_flag, create_time
         FROM express_agent
         WHERE 1 = 1
@@ -102,8 +103,13 @@
         <if test="linkId != null and linkId != ''">
             AND order_item_id = #{link_id}
         </if>
+        <if test="start != null and end != null and start != '' and end != ''">
+            AND (date_format(create_time, '%Y-%m-%d') &gt;= #{start} AND date_format(create_time, '%Y-%m-%d') &lt;=
+            #{end})
+        </if>
         UNION ALL
-        SELECT express_id, customer_order_id AS link_id, express_no, sender_name, sender_phone, sender_address, receiver_name, receiver_phone,
+        SELECT express_id, customer_order_id AS link_id, express_no, sender_name, sender_phone, sender_address,
+        receiver_name, receiver_phone,
         receiver_address, goods_name, block_flag, create_time
         FROM express_customer
         WHERE 1 = 1
@@ -115,6 +121,10 @@
         </if>
         <if test="linkId != null and linkId != ''">
             AND customer_order_id = #{link_id}
+        </if>
+        <if test="start != null and end != null and start != '' and end != ''">
+            AND (date_format(create_time, '%Y-%m-%d') &gt;= #{start} AND date_format(create_time, '%Y-%m-%d') &lt;=
+            #{end})
         </if>
     </select>
 
