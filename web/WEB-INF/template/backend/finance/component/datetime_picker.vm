@@ -49,13 +49,15 @@
                 </div>
                 <div class="modal-footer">
                     <a href="#" class="btn btn-default" data-dismiss="modal">取消</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a href="#" class="btn btn-primary" data-dismiss="modal">下载</a>
+                    <a href="#" id="download" class="btn btn-primary" data-dismiss="modal">下载</a>
                 </div>
             </div>
         </div>
     </div>
 </div>
 <script>
+    var tempFileName;
+    var fileName;
     var date=new Date();
     var today=date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate();
     $('#date_start').datetimepicker({
@@ -108,13 +110,21 @@
                 if (result.responseCode != "RESPONSE_OK") {
                     alert("Error!");
                 } else {
+                	tempFileName=result.data;
+                	fileName=startTime+"－"+endTime;
                     $('#download_loading').modal('hide');
                     $('#download_success').modal('show');
+
                 }
 
             });
         } else {
            alert("开始时间与结束时间均不能为空！"); 
         }
+    });
+    
+    $('#download').click(function(){
+    	var url = "${path.concat('/indent/download/')}" + fileName+"/"+tempFileName;
+    	window.location.href=url;
     });
 </script>
