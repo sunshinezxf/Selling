@@ -4,14 +4,16 @@ public class BackOperationLog extends Entity {
 	private String logId;
 	private String adminInfo;
 	private String operationEvent;
+	private String ip;
 	
 	public BackOperationLog(){
 		super();
 	}
 	
-	public BackOperationLog(String adminInfo, String operationEvent){
+	public BackOperationLog(String adminInfo, String ip, String operationEvent){
 		this();
 		this.adminInfo = adminInfo;
+		this.ip = ip;
 		this.operationEvent = operationEvent;
 	}
 
@@ -39,5 +41,12 @@ public class BackOperationLog extends Entity {
 		this.operationEvent = operationEvent;
 	}
 
+	public String getIp() {
+		return ip;
+	}
+
+	public void setIp(String ip) {
+		this.ip = ip;
+	}
 
 }

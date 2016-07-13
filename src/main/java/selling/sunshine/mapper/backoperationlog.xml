@@ -7,6 +7,7 @@
 		<result property="operationEvent" column="operation_event"></result>
 		<result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
+        <result property="ip" column="ip"></result>
 	</resultMap>
 	
 	<select id="query" parameterType="java.util.Map" resultMap="backOperationLogVo">
@@ -28,7 +29,7 @@
 	</select>
 	
 	<insert id="insert" parameterType="selling.sunshine.model.BackOperationLog" useGeneratedKeys="false">
-		INSERT INTO back_operation_log(log_id, admin_info, operation_event, block_flag, create_time)
-		VALUES(#{logId}, #{adminInfo}, #{operationEvent}, #{blockFlag}, #{createAt})
+		INSERT INTO back_operation_log(log_id, admin_info, operation_event, ip, block_flag, create_time)
+		VALUES(#{logId}, #{adminInfo}, #{operationEvent}, #{ip}, #{blockFlag}, #{createAt})
 	</insert>
 </mapper>
