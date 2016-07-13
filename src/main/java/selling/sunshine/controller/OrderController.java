@@ -49,6 +49,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URLEncoder;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -945,8 +946,10 @@ public class OrderController {
             if (cofferData.getResponseCode() == ResponseCode.RESPONSE_OK) {
                 // Order和OrderItem全部改成已付款
                 order.setStatus(OrderStatus.PAYED);
+                order.setCreateAt(new Timestamp(System.currentTimeMillis()));
                 for (OrderItem orderItem : order.getOrderItems()) {
                     orderItem.setStatus(OrderItemStatus.PAYED);
+                    orderItem.setCreateAt(new Timestamp(System.currentTimeMillis()));
                 }
                 ResultData payData = orderService.payOrder(order);
                 if (payData.getResponseCode() == ResponseCode.RESPONSE_OK) {
@@ -1046,8 +1049,10 @@ public class OrderController {
 
         // 将Order和OrderItem变成已发货
         order.setStatus(OrderStatus.PAYED);
+        order.setCreateAt(new Timestamp(System.currentTimeMillis()));
         for (OrderItem orderItem : order.getOrderItems()) {
             orderItem.setStatus(OrderItemStatus.PAYED);
+            orderItem.setCreateAt(new Timestamp(System.currentTimeMillis()));
         }
         ResultData payData = orderService.payOrder(order);
         if (payData.getResponseCode() != ResponseCode.RESPONSE_OK) {
