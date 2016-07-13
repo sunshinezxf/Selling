@@ -18,6 +18,7 @@ import selling.sunshine.utils.WorkBookUtil;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,10 +69,12 @@ public class GatherServiceImpl implements DeliverService {
                 }
                 Map<String, Object> condition = new HashMap<>();
                 condition.put("orderId", temp.getOrder().getOrderId());
-                condition.put("status", 1);
-                condition.put("status", 2);
-                condition.put("status", 3);
-                condition.put("status", 4);
+                List<Integer> status = new ArrayList<>();
+                status.add(1);
+                status.add(2);
+                status.add(3);
+                status.add(4);
+                condition.put("status", status);
                 ResultData queryResponse = orderItemDao.queryOrderItem(condition);
                 if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK && !((List<OrderItem>) queryResponse.getData()).isEmpty()) {
                 	List<OrderItem> orderItems = (List<OrderItem>) queryResponse.getData();
@@ -98,10 +101,12 @@ public class GatherServiceImpl implements DeliverService {
                 }
                 Map<String, Object> condition = new HashMap<>();
                 condition.put("orderId", temp.getCustomerOrder().getOrderId());
-                condition.put("status", 1);
-                condition.put("status", 2);
-                condition.put("status", 3);
-                condition.put("status", 4);
+                List<Integer> status = new ArrayList<>();
+                status.add(1);
+                status.add(2);
+                status.add(3);
+                status.add(4);
+                condition.put("status", status);
                 ResultData queryResponse = customerOrderDao.queryOrder(condition);
                 if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK && !((List<CustomerOrderBill>) queryResponse.getData()).isEmpty()) {
                     CustomerOrder customerOrder = ((List<CustomerOrder>) queryResponse.getData()).get(0);

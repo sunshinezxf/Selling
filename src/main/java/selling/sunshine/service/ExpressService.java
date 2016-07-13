@@ -19,4 +19,6 @@ public interface ExpressService {
     ResultData fetchExpress4Customer(Map<String, Object> condition);
 
     ResultData traceExpress(String expressNo, String type);
+    
+    ResultData receiveCheck();
 }

@@ -124,4 +124,13 @@ public class ExpressServiceImpl implements ExpressService {
             return result;
         }
     }
+
+	@Override
+	public ResultData receiveCheck() {
+		ResultData result = new ResultData();
+		//查询已发货的OrderItem
+		Map<String, Object> condition = new HashMap<String, Object>();
+		condition.put("status", "");
+		return result;
+	}
 }
