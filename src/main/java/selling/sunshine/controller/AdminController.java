@@ -1,5 +1,7 @@
 package selling.sunshine.controller;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +16,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import selling.sunshine.form.AdminLoginForm;
 import selling.sunshine.model.Admin;
+import selling.sunshine.model.BackOperationLog;
 import selling.sunshine.model.User;
 import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.AdminService;
+import selling.sunshine.service.LogService;
+import selling.sunshine.service.ToolService;
 import selling.sunshine.service.UserService;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
@@ -26,6 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 /**
@@ -41,6 +47,12 @@ public class AdminController {
 
     @Autowired
     private UserService userService;
+    
+    @Autowired
+    private ToolService toolService;
+    
+    @Autowired
+    private LogService logService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/overview")
     public ModelAndView overview() {
@@ -67,7 +79,7 @@ public class AdminController {
     
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/delete/{userId}")
-    public ResultData deleteAdmin(@PathVariable("userId") String userId) {
+    public ResultData deleteAdmin(@PathVariable("userId") String userId,HttpServletRequest request) {
         ResultData response = new ResultData();
 
         Map<String, Object> condition = new HashMap<>();
@@ -90,6 +102,16 @@ public class AdminController {
 			}
 		}else {
 	        response = adminService.deleteAdmin(user.getAdmin());
+            Subject subject = SecurityUtils.getSubject();
+            User targetUser = (User) subject.getPrincipal();
+            if (targetUser == null) {
+            	response.setResponseCode(ResponseCode.RESPONSE_ERROR);
+                return response;
+            }
+            Admin targetAdmin = targetUser.getAdmin();
+            BackOperationLog backOperationLog = new BackOperationLog(
+            		targetAdmin.getUsername(), toolService.getIP(request) ,"管理员" + targetAdmin.getUsername() + "删除了管理员ID为："+user.getAdmin().getAdminId()+"的管理员");
+            logService.createbackOperationLog(backOperationLog);
 	        return response;
 		}
 
@@ -97,7 +119,7 @@ public class AdminController {
     
 
     @RequestMapping(method = RequestMethod.POST, value = "/modify/{adminId}")
-    public ModelAndView updateAdmin(@PathVariable("adminId") String adminId, @Valid AdminLoginForm adminLoginForm, BindingResult result) {
+    public ModelAndView updateAdmin(@PathVariable("adminId") String adminId, @Valid AdminLoginForm adminLoginForm, BindingResult result,HttpServletRequest request) {
         ResultData response = new ResultData();
         ModelAndView view = new ModelAndView();
         if (result.hasErrors()) {
@@ -108,6 +130,16 @@ public class AdminController {
         admin.setAdminId(adminId);
         response = adminService.updateAdmin(admin);
         if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            Subject subject = SecurityUtils.getSubject();
+            User user = (User) subject.getPrincipal();
+            if (user == null) {
+            	view.setViewName("redirect:/admin/overview");
+                return view;
+            }
+            Admin targetAdmin = user.getAdmin();
+            BackOperationLog backOperationLog = new BackOperationLog(
+            		targetAdmin.getUsername(), toolService.getIP(request) ,"管理员" + targetAdmin.getUsername() + "修改了管理员ID为："+adminId+"的密码");
+            logService.createbackOperationLog(backOperationLog);
         	view.setViewName("redirect:/admin/overview");
             return view;
         } else {

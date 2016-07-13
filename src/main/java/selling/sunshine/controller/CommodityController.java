@@ -178,6 +178,10 @@ public class CommodityController {
 			view.setViewName("redirect:/commodity/overview");
 			return view;
 		}
+        Map<String, Object> condition = new HashMap<String, Object>();
+        condition.put("goodsId", goodsId);
+        ResultData queryData = commodityService.fetchGoods4Customer(condition);
+        Goods4Customer oldGoods=((List<Goods4Customer>)queryData.getData()).get(0);
 		Goods4Customer goods = new Goods4Customer(form.getName(),
 				Double.parseDouble(form.getAgentPrice()),
 				Double.parseDouble(form.getPrice()), form.getDescription());
@@ -191,7 +195,17 @@ public class CommodityController {
 			thumbnail.setGoods((Goods4Customer) response.getData());
 		}
 		commodityService.updateThumbnails(thumbnails);
-
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        if (user == null) {
+        	view.setViewName("redirect:/commodity/overview");
+            return view;
+        }
+        Admin admin = user.getAdmin();
+        BackOperationLog backOperationLog = new BackOperationLog(
+                admin.getUsername(), toolService.getIP(request) ,"管理员" + admin.getUsername() + "将商品ID为"+oldGoods.getGoodsId()
+                +"的商品信息修改了");
+        logService.createbackOperationLog(backOperationLog);
 		view.setViewName("redirect:/commodity/overview");
 		return view;
 
@@ -350,7 +364,7 @@ public class CommodityController {
             Subject subject = SecurityUtils.getSubject();
             User user = (User) subject.getPrincipal();
             if (user == null) {
-            	view.setViewName("redirect:/commodity/create");
+            	view.setViewName("redirect:/commodity/overview");
                 return view;
             }
             Admin admin = user.getAdmin();
@@ -382,7 +396,7 @@ public class CommodityController {
             Subject subject = SecurityUtils.getSubject();
             User user = (User) subject.getPrincipal();
             if (user == null) {
-            	view.setViewName("redirect:/commodity/create");
+            	view.setViewName("redirect:/commodity/overview");
                 return view;
             }
             Admin admin = user.getAdmin();

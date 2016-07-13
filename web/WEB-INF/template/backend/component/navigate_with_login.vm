@@ -74,6 +74,8 @@
                            aria-haspopup="true" aria-expanded="true">报表下载 <span class="caret"></span></a>
                         <ul class="dropdown-menu nav nav-pills nav-stacked">
                             <li><a class="menu" href="${path.concat('/indent/overview')}">订货单</a></li>
+                            <li><a class="menu" href="${path.concat('/deliver/overview')}">发货单</a></li>
+                            <li><a class="menu" href="${path.concat('/gather/overview')}">收款单</a></li>
                         </ul>
                     </li>
                 #end

@@ -14,10 +14,13 @@ import org.springframework.web.servlet.ModelAndView;
 import selling.sunshine.form.AdminForm;
 import selling.sunshine.form.AdminLoginForm;
 import selling.sunshine.model.Admin;
+import selling.sunshine.model.BackOperationLog;
 import selling.sunshine.model.Role;
 import selling.sunshine.model.User;
 import selling.sunshine.service.AdminService;
+import selling.sunshine.service.LogService;
 import selling.sunshine.service.RoleService;
+import selling.sunshine.service.ToolService;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
@@ -42,6 +45,12 @@ public class PlatformController {
 
     @Autowired
     private RoleService roleService;
+    
+    @Autowired
+    private ToolService toolService;
+    
+    @Autowired
+    private LogService logService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/")
     public ModelAndView index() {
@@ -110,7 +119,7 @@ public class PlatformController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/register")
-    public ModelAndView register(@Valid AdminForm form, BindingResult result) {
+    public ModelAndView register(@Valid AdminForm form, BindingResult result,HttpServletRequest request) {
         ModelAndView view = new ModelAndView();
 
         if (result.hasErrors()) {
@@ -130,6 +139,16 @@ public class PlatformController {
             Admin admin = new Admin(form.getUsername(), form.getPassword());
             ResultData resultData = adminService.createAdmin(admin, role);
             if (resultData.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                Subject subject = SecurityUtils.getSubject();
+                User user = (User) subject.getPrincipal();
+                if (user == null) {
+                	view.setViewName("redirect:/commodity/create");
+                    return view;
+                }
+                Admin targetAdmin = user.getAdmin();
+                BackOperationLog backOperationLog = new BackOperationLog(
+                		targetAdmin.getUsername(), toolService.getIP(request) ,"管理员" + targetAdmin.getUsername() + "新授权了一个管理员账号："+form.getUsername());
+                logService.createbackOperationLog(backOperationLog);
                 view.setViewName("redirect:/admin/overview");
                 return view;
             } else {

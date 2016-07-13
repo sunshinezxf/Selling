@@ -3,27 +3,33 @@
         <fieldset>
             <div class="form-group">
                 <label for="dtp_start" class="control-label">开始时间</label>
-                <div id="date_start" class="input-group date form_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_start" data-link-format="yyyy-mm-dd">
+
+                <div id="date_start" class="input-group date form_date" data-date="" data-date-format="yyyy-mm-dd"
+                     data-link-field="dtp_start" data-link-format="yyyy-mm-dd">
                     <input class="form-control" size="20" type="text" value="" readonly>
                     <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
-			        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                 </div>
-			    <input type="hidden" id="dtp_start" name="start" value="" />
-            </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="hidden" id="dtp_start" name="start" value=""/>
+            </div>
             <div class="form-group">
                 <label for="dtp_end" class="control-label">结束时间</label>
-                <div id="date_end" class="input-group date form_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="dtp_end" data-link-format="yyyy-mm-dd">
+
+                <div id="date_end" class="input-group date form_date" data-date="" data-date-format="yyyy-mm-dd"
+                     data-link-field="dtp_end" data-link-format="yyyy-mm-dd">
                     <input class="form-control" size="20" type="text" value="" readonly>
                     <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
-				    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                 </div>
-			    <input type="hidden" id="dtp_end" name="end" value="" />
-            </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="hidden" id="dtp_end" name="end" value=""/>
+            </div>
             <div class="form-group">
                 <div>
-                    <button type="button" id="consult" class="btn btn-primary" data-toggle="modal" data-target="#download_loading">查询</button> 
+                    <button type="button" id="consult" class="btn btn-primary" data-toggle="modal"
+                            data-target="#download_loading">查询
+                    </button>
                 </div>
-            </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </div>
         </fieldset>
     </div>
     <div id="download_loading" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
@@ -55,76 +61,3 @@
         </div>
     </div>
 </div>
-<script>
-    var tempFileName;
-    var fileName;
-    var date=new Date();
-    var today=date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate();
-    $('#date_start').datetimepicker({
-        language:  'zh-CN',
-        weekStart: 1,
-        todayBtn:  1,
-		autoclose: 1,
-		todayHighlight: 1,
-		startView: 2,
-		minView: 2,
-		forceParse: 0,
-		startDate:'2016-01-01'
-    }).on('show',function(e){
-        if($('#dtp_end').val()){
-            $('#date_start').datetimepicker('setEndDate', $('#dtp_end').val()); 
-        }else{
-            $('#date_start').datetimepicker('setEndDate', today);
-        }
-        
-    });
-    
-    $('#date_end').datetimepicker({
-        language:  'zh-CN',
-        weekStart: 1,
-        todayBtn:  1,
-		autoclose: 1,
-		todayHighlight: 1,
-		startView: 2,
-		minView: 2,
-		forceParse: 0,
-        endDate:today
-    }).on('show',function(e){
-        if($('#dtp_start').val()){
-            $('#date_end').datetimepicker('setStartDate', $('#dtp_start').val()); 
-        }else{
-            $('#date_end').datetimepicker('setStartDate', '2016-01-01');
-        }
-    });
-    
-    $('#consult').click(function(){
-        var startTime = $('#dtp_start').val();
-        var endTime=$('#dtp_end').val()
-        if (startTime&&endTime) {
-            var url = '${path.concat('/indent/overview')}';
-            var param = {
-                start: startTime,
-                end: endTime
-            };
-            $.post(url, param, function (result) {
-                if (result.responseCode != "RESPONSE_OK") {
-                    alert("Error!");
-                } else {
-                	tempFileName=result.data;
-                	fileName=startTime+"_"+endTime;
-                    $('#download_loading').modal('hide');
-                    $('#download_success').modal('show');
-
-                }
-
-            });
-        } else {
-           alert("开始时间与结束时间均不能为空！"); 
-        }
-    });
-    
-    $('#download').click(function(){
-    	var url = "${path.concat('/indent/download/')}" + fileName+"/"+tempFileName;
-    	window.location.href=url;
-    });
-</script>
