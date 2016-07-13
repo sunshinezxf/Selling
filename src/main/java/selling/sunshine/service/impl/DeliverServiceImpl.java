@@ -11,8 +11,6 @@ import selling.sunshine.dao.OrderItemDao;
 import selling.sunshine.model.CustomerOrder;
 import selling.sunshine.model.OrderItem;
 import selling.sunshine.model.express.Express;
-import selling.sunshine.model.express.Express4Agent;
-import selling.sunshine.model.express.Express4Customer;
 import selling.sunshine.service.DeliverService;
 import selling.sunshine.utils.PlatformConfig;
 import selling.sunshine.utils.ResponseCode;
@@ -62,63 +60,53 @@ public class DeliverServiceImpl implements DeliverService {
         list.forEach(item -> {
             Express express = (Express) item;
             String linkId = express.getLinkId();
-            if (!StringUtils.isEmpty(linkId) && linkId.startsWith("EPA")) {
+            if (!StringUtils.isEmpty(linkId) && linkId.startsWith("ORI")) {
                 Map<String, Object> condition = new HashMap<>();
-                condition.put("expressId", linkId);
-                ResultData response = expressDao.queryExpress4Agent(condition);
-                if (response.getResponseCode() == ResponseCode.RESPONSE_OK && !((List<Express4Agent>) response.getData()).isEmpty()) {
-                    express = ((List<Express4Agent>) response.getData()).get(0);
-                    condition.clear();
-                    condition.put("orderItemId", ((Express4Agent) express).getItem().getOrderItemId());
-                    response = orderItemDao.queryOrderItem(condition);
-                    if (response.getResponseCode() == ResponseCode.RESPONSE_OK && !((List<OrderItem>) response.getData()).isEmpty()) {
-                        OrderItem temp = ((List<OrderItem>) response.getData()).get(0);
-                        String time = format.format(temp.getCreateAt());
-                        StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(time);
-                        File file = new File(sb.toString());
-                        if (!file.exists()) {
-                            file.mkdirs();
-                        }
-                        Workbook workbook = produce(template, temp, express);
-                        try {
-                            FileOutputStream out = new FileOutputStream(file + "/" + time + "_" + temp.getOrder().getOrderId() + "_" + temp.getCustomer().getName() + ".xlsx");
-                            workbook.write(out);
-                            out.close();
-                        } catch (Exception e) {
-                            logger.error(e.getMessage());
-                            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
-                            result.setDescription(e.getMessage());
-                        }
+                condition.clear();
+                condition.put("orderItemId", linkId);
+                ResultData response = orderItemDao.queryOrderItem(condition);
+                if (response.getResponseCode() == ResponseCode.RESPONSE_OK && !((List<OrderItem>) response.getData()).isEmpty()) {
+                    OrderItem temp = ((List<OrderItem>) response.getData()).get(0);
+                    String time = format.format(temp.getCreateAt());
+                    StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(time);
+                    File file = new File(sb.toString());
+                    if (!file.exists()) {
+                        file.mkdirs();
+                    }
+                    Workbook workbook = produce(template, temp, express);
+                    try {
+                        FileOutputStream out = new FileOutputStream(file + "/" + time + "_" + temp.getOrder().getOrderId() + "_" + temp.getCustomer().getName() + ".xlsx");
+                        workbook.write(out);
+                        out.close();
+                    } catch (Exception e) {
+                        logger.error(e.getMessage());
+                        result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+                        result.setDescription(e.getMessage());
                     }
                 }
 
-            } else if (!StringUtils.isEmpty(linkId) && linkId.startsWith("EPC")) {
+            } else if (!StringUtils.isEmpty(linkId) && linkId.startsWith("CUO")) {
                 Map<String, Object> condition = new HashMap<>();
-                condition.put("expressId", linkId);
-                ResultData response = expressDao.queryExpress4Customer(condition);
-                if (response.getResponseCode() == ResponseCode.RESPONSE_OK && !((List<Express4Customer>) response.getData()).isEmpty()) {
-                    express = ((List<Express4Customer>) response.getData()).get(0);
-                    condition.clear();
-                    condition.put("orderId", express.getLinkId());
-                    response = customerOrderDao.queryOrder(condition);
-                    if (response.getResponseCode() == ResponseCode.RESPONSE_OK && !((List<CustomerOrder>) response.getData()).isEmpty()) {
-                        CustomerOrder temp = ((List<CustomerOrder>) response.getData()).get(0);
-                        String time = format.format(temp.getCreateAt());
-                        StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(time);
-                        File file = new File(sb.toString());
-                        if (!file.exists()) {
-                            file.mkdirs();
-                        }
-                        Workbook workbook = produce(template, temp, express);
-                        try {
-                            FileOutputStream out = new FileOutputStream(file + "/" + time + "_" + temp.getOrderId() + "_" + temp.getReceiverName() + ".xlsx");
-                            workbook.write(out);
-                            out.close();
-                        } catch (Exception e) {
-                            logger.error(e.getMessage());
-                            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
-                            result.setDescription(e.getMessage());
-                        }
+                condition.clear();
+                condition.put("orderId", linkId);
+                ResultData response = customerOrderDao.queryOrder(condition);
+                if (response.getResponseCode() == ResponseCode.RESPONSE_OK && !((List<CustomerOrder>) response.getData()).isEmpty()) {
+                    CustomerOrder temp = ((List<CustomerOrder>) response.getData()).get(0);
+                    String time = format.format(temp.getCreateAt());
+                    StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(time);
+                    File file = new File(sb.toString());
+                    if (!file.exists()) {
+                        file.mkdirs();
+                    }
+                    Workbook workbook = produce(template, temp, express);
+                    try {
+                        FileOutputStream out = new FileOutputStream(file + "/" + time + "_" + temp.getOrderId() + "_" + temp.getReceiverName() + ".xlsx");
+                        workbook.write(out);
+                        out.close();
+                    } catch (Exception e) {
+                        logger.error(e.getMessage());
+                        result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+                        result.setDescription(e.getMessage());
                     }
                 }
             }
