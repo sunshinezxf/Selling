@@ -9,7 +9,7 @@ import selling.sunshine.dao.CustomerDao;
 import selling.sunshine.dao.CustomerOrderDao;
 import selling.sunshine.dao.OrderItemDao;
 import selling.sunshine.model.*;
-import selling.sunshine.service.DeliverService;
+import selling.sunshine.service.GatherService;
 import selling.sunshine.utils.PlatformConfig;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GatherServiceImpl implements DeliverService {
+public class GatherServiceImpl implements GatherService {
     private Logger logger = LoggerFactory.getLogger(IndentServiceImpl.class);
 
     @Autowired
@@ -31,15 +31,15 @@ public class GatherServiceImpl implements DeliverService {
 
     @Autowired
     private CustomerDao customerDao;
-    
+
     @Autowired
     private CustomerOrderDao customerOrderDao;
 
     @Autowired
     private BillDao billDao;
-    
+
     @Override
-    public ResultData generateDeliver() {
+    public ResultData generateGather() {
         ResultData result = new ResultData();
         try {
             Workbook workbook = WorkbookFactory.create(new File(PlatformConfig.getValue("gather_template")));
@@ -56,11 +56,11 @@ public class GatherServiceImpl implements DeliverService {
         int index = path.lastIndexOf("/WEB-INF/classes/");
         String parent = path.substring(0, index);
         String directory = "/material/journal/indent";
-        Workbook template = WorkBookUtil.getIndentTemplate();
+        Workbook template = WorkBookUtil.getGatherTemplate();
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
         list.forEach(item -> {
             if (item instanceof OrderBill) {
-            	OrderBill temp = (OrderBill)item;
+                OrderBill temp = (OrderBill) item;
                 String time = format.format(temp.getCreateAt());
                 StringBuffer sb = new StringBuffer(parent).append(directory).append(File.separator).append(time);
                 File file = new File(sb.toString());
@@ -77,19 +77,19 @@ public class GatherServiceImpl implements DeliverService {
                 condition.put("status", status);
                 ResultData queryResponse = orderItemDao.queryOrderItem(condition);
                 if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK && !((List<OrderItem>) queryResponse.getData()).isEmpty()) {
-                	List<OrderItem> orderItems = (List<OrderItem>) queryResponse.getData();
-                	for(OrderItem orderItem : orderItems){
-	                    Workbook workbook = produce(template, orderItem, temp);
-	                    try {
-	                        FileOutputStream out = new FileOutputStream(file + File.separator + time + "_" + orderItem.getOrderItemId() + "_" + orderItem.getCustomer().getName() + ".xlsx");
-	                        workbook.write(out);
-	                        out.close();
-	                    } catch (Exception e) {
-	                        logger.error(e.getMessage());
-	                        result.setResponseCode(ResponseCode.RESPONSE_ERROR);
-	                        result.setDescription(e.getMessage());
-	                    }
-                	}
+                    List<OrderItem> orderItems = (List<OrderItem>) queryResponse.getData();
+                    for (OrderItem orderItem : orderItems) {
+                        Workbook workbook = produce(template, orderItem, temp);
+                        try {
+                            FileOutputStream out = new FileOutputStream(file + File.separator + time + "_" + orderItem.getOrderItemId() + "_" + orderItem.getCustomer().getName() + ".xlsx");
+                            workbook.write(out);
+                            out.close();
+                        } catch (Exception e) {
+                            logger.error(e.getMessage());
+                            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+                            result.setDescription(e.getMessage());
+                        }
+                    }
                 }
             } else if (item instanceof CustomerOrderBill) {
                 CustomerOrderBill temp = (CustomerOrderBill) item;
