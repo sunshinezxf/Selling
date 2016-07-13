@@ -57,6 +57,9 @@ public class ZipCompressor {
     }   
   
     private void compress(File file, ZipOutputStream out, String basedir) {   
+    	if (!file.exists()) {
+			return;
+		}
         /* 判断是目录还是文件 */  
         if (file.isDirectory()) {   
         	logger.debug("压缩：" + basedir + file.getName());             
