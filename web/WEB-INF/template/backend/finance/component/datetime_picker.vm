@@ -111,7 +111,7 @@
                     alert("Error!");
                 } else {
                 	tempFileName=result.data;
-                	fileName=startTime+"－"+endTime;
+                	fileName=startTime+"_"+endTime;
                     $('#download_loading').modal('hide');
                     $('#download_success').modal('show');
 
@@ -124,8 +124,6 @@
     });
     
     $('#download').click(function(){
-        alert(fileName);
-         alert(tempFileName);
     	var url = "${path.concat('/indent/download/')}" + fileName+"/"+tempFileName;
     	window.location.href=url;
     });

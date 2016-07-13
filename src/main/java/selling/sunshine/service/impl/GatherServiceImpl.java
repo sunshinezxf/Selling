@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import selling.sunshine.dao.BillDao;
 import selling.sunshine.dao.CustomerDao;
+import selling.sunshine.dao.CustomerOrderDao;
 import selling.sunshine.dao.OrderItemDao;
 import selling.sunshine.model.*;
 import selling.sunshine.service.DeliverService;
@@ -17,6 +18,7 @@ import selling.sunshine.utils.WorkBookUtil;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,10 +31,13 @@ public class GatherServiceImpl implements DeliverService {
 
     @Autowired
     private CustomerDao customerDao;
+    
+    @Autowired
+    private CustomerOrderDao customerOrderDao;
 
     @Autowired
     private BillDao billDao;
-
+    
     @Override
     public ResultData generateDeliver() {
         ResultData result = new ResultData();
@@ -54,8 +59,8 @@ public class GatherServiceImpl implements DeliverService {
         Workbook template = WorkBookUtil.getIndentTemplate();
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
         list.forEach(item -> {
-            if (item instanceof OrderItem) {
-                OrderItem temp = (OrderItem) item;
+            if (item instanceof OrderBill) {
+            	OrderBill temp = (OrderBill)item;
                 String time = format.format(temp.getCreateAt());
                 StringBuffer sb = new StringBuffer(parent).append(directory).append(File.separator).append(time);
                 File file = new File(sb.toString());
@@ -64,23 +69,30 @@ public class GatherServiceImpl implements DeliverService {
                 }
                 Map<String, Object> condition = new HashMap<>();
                 condition.put("orderId", temp.getOrder().getOrderId());
-                condition.put("status", 1);
-                ResultData queryResponse = billDao.queryOrderBill(condition);
-                if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK && !((List<OrderBill>) queryResponse.getData()).isEmpty()) {
-                    OrderBill bill = ((List<OrderBill>) queryResponse.getData()).get(0);
-                    Workbook workbook = produce(template, temp, bill);
-                    try {
-                        FileOutputStream out = new FileOutputStream(file + File.separator + time + "_" + temp.getOrder().getOrderId() + "_" + temp.getCustomer().getName() + ".xlsx");
-                        workbook.write(out);
-                        out.close();
-                    } catch (Exception e) {
-                        logger.error(e.getMessage());
-                        result.setResponseCode(ResponseCode.RESPONSE_ERROR);
-                        result.setDescription(e.getMessage());
-                    }
+                List<Integer> status = new ArrayList<>();
+                status.add(1);
+                status.add(2);
+                status.add(3);
+                status.add(4);
+                condition.put("status", status);
+                ResultData queryResponse = orderItemDao.queryOrderItem(condition);
+                if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK && !((List<OrderItem>) queryResponse.getData()).isEmpty()) {
+                	List<OrderItem> orderItems = (List<OrderItem>) queryResponse.getData();
+                	for(OrderItem orderItem : orderItems){
+	                    Workbook workbook = produce(template, orderItem, temp);
+	                    try {
+	                        FileOutputStream out = new FileOutputStream(file + File.separator + time + "_" + orderItem.getOrderItemId() + "_" + orderItem.getCustomer().getName() + ".xlsx");
+	                        workbook.write(out);
+	                        out.close();
+	                    } catch (Exception e) {
+	                        logger.error(e.getMessage());
+	                        result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+	                        result.setDescription(e.getMessage());
+	                    }
+                	}
                 }
-            } else if (item instanceof CustomerOrder) {
-                CustomerOrder temp = (CustomerOrder) item;
+            } else if (item instanceof CustomerOrderBill) {
+                CustomerOrderBill temp = (CustomerOrderBill) item;
                 String time = format.format(temp.getCreateAt());
                 StringBuffer sb = new StringBuffer(parent).append(directory).append(File.separator).append(time);
                 File file = new File(sb.toString());
@@ -88,14 +100,19 @@ public class GatherServiceImpl implements DeliverService {
                     file.mkdirs();
                 }
                 Map<String, Object> condition = new HashMap<>();
-                condition.put("orderId", temp.getOrderId());
-                condition.put("status", 1);
-                ResultData queryResponse = billDao.queryCustomerOrderBill(condition);
+                condition.put("orderId", temp.getCustomerOrder().getOrderId());
+                List<Integer> status = new ArrayList<>();
+                status.add(1);
+                status.add(2);
+                status.add(3);
+                status.add(4);
+                condition.put("status", status);
+                ResultData queryResponse = customerOrderDao.queryOrder(condition);
                 if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK && !((List<CustomerOrderBill>) queryResponse.getData()).isEmpty()) {
-                    CustomerOrderBill bill = ((List<CustomerOrderBill>) queryResponse.getData()).get(0);
-                    Workbook workbook = produce(template, temp, bill);
+                    CustomerOrder customerOrder = ((List<CustomerOrder>) queryResponse.getData()).get(0);
+                    Workbook workbook = produce(template, customerOrder, temp);
                     try {
-                        FileOutputStream out = new FileOutputStream(file + File.separator + time + "_" + temp.getOrderId() + "_" + temp.getReceiverName() + ".xlsx");
+                        FileOutputStream out = new FileOutputStream(file + File.separator + time + "_" + customerOrder.getOrderId() + "_" + customerOrder.getReceiverName() + ".xlsx");
                         workbook.write(out);
                         out.close();
                     } catch (Exception e) {
