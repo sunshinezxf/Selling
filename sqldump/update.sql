@@ -99,4 +99,11 @@ ADD COLUMN `ip` VARCHAR(45) NULL
 AFTER `operation_event`;
 
 
+##2016年7月14日更新
+ALTER TABLE `selling`.`refund_config`
+ADD COLUMN `month_config` INT NOT NULL DEFAULT 1
+AFTER `refund_trigger_amount`;
+
+
+
 
