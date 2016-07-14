@@ -10,9 +10,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import com.alibaba.fastjson.JSON;
-
 import selling.sunshine.form.CustomerAddressForm;
 import selling.sunshine.form.CustomerForm;
 import selling.sunshine.form.PurchaseForm;
@@ -29,7 +26,6 @@ import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
 import javax.validation.Valid;
-
 import java.util.*;
 
 /**
@@ -91,7 +87,6 @@ public class CustomerController {
         Map<String, Object> orderItemCondition = new HashMap<>();
         orderItemCondition.put("customerId", customerId);
         List<OrderItem> orderItemList = (List<OrderItem>) orderService.fetchOrderItem(orderItemCondition).getData();
-
         List<CustomerAddress> addressList = (List<CustomerAddress>) customerService.fetchCustomerAddress(condition).getData();
         List<CustomerPhone> phoneList = (List<CustomerPhone>) customerService.fetchCustomerPhone(condition).getData();
 

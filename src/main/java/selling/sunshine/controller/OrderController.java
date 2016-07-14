@@ -456,10 +456,8 @@ public class OrderController {
                 OrderItem temp = new OrderItem();
                 Map<String, Object> condition = new HashMap<>();
                 condition.put("orderItemId", linkId);
-                ResultData fetchResponse =
-                        orderService.fetchOrderItem(condition);
-                if (fetchResponse.getResponseCode() ==
-                        ResponseCode.RESPONSE_OK) {
+                ResultData fetchResponse = orderService.fetchOrderItem(condition);
+                if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
                     temp = ((List<OrderItem>) fetchResponse.getData()).get(0);
                 }
                 express.setLinkId(linkId);

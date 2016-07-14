@@ -2,7 +2,6 @@ package selling.sunshine.controller;
 
 
 import com.csvreader.CsvReader;
-
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
@@ -26,6 +25,7 @@ import selling.sunshine.service.ToolService;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
@@ -33,8 +33,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
 
 
 @RequestMapping("/express")
@@ -48,10 +46,10 @@ public class ExpressController {
 
     @Autowired
     private OrderService orderService;
-    
+
     @Autowired
     private ToolService toolService;
-    
+
     @Autowired
     private LogService logService;
 
@@ -129,7 +127,7 @@ public class ExpressController {
             con.put("expressNumber", csvList.get(row)[7]);
             if (expressService.fetchExpress(con).getResponseCode() == ResponseCode.RESPONSE_NULL) {
                 String linkID = csvList.get(row)[8]; //取得第row行第0列的数据
-               // String address = csvList.get(row)[2] + csvList.get(row)[3] + csvList.get(row)[4] + csvList.get(row)[5];
+                // String address = csvList.get(row)[2] + csvList.get(row)[3] + csvList.get(row)[4] + csvList.get(row)[5];
                 String address = csvList.get(row)[5];
                 if (linkID.startsWith("ORI")) {
                     Express4Agent express = new Express4Agent(csvList.get(row)[7],
@@ -140,10 +138,8 @@ public class ExpressController {
                     OrderItem temp = new OrderItem();
                     Map<String, Object> condition = new HashMap<>();
                     condition.put("orderItemId", linkID);
-                    ResultData fetchResponse =
-                            orderService.fetchOrderItem(condition);
-                    if (fetchResponse.getResponseCode() ==
-                            ResponseCode.RESPONSE_OK) {
+                    ResultData fetchResponse = orderService.fetchOrderItem(condition);
+                    if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
                         temp = ((List<OrderItem>) fetchResponse.getData()).get(0);
                         temp.setStatus(OrderItemStatus.SHIPPED);
                         express.setItem(temp);
@@ -184,12 +180,12 @@ public class ExpressController {
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         if (user == null) {
-        	 view.setViewName("/backend/express/express_upload");
-             return view;
+            view.setViewName("/backend/express/express_upload");
+            return view;
         }
         Admin admin = user.getAdmin();
         BackOperationLog backOperationLog = new BackOperationLog(
-                admin.getUsername(), toolService.getIP((HttpServletRequest)request) ,"管理员" + admin.getUsername() + "上传了快递单信息");
+                admin.getUsername(), toolService.getIP((HttpServletRequest) request), "管理员" + admin.getUsername() + "上传了快递单信息");
         logService.createbackOperationLog(backOperationLog);
         resultData.setResponseCode(ResponseCode.RESPONSE_OK);
         view.setViewName("redirect:/order/check");
@@ -208,5 +204,5 @@ public class ExpressController {
         }
         return result;
     }
-    
+
 }
