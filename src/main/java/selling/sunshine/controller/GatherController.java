@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import selling.sunshine.form.TimeRangeForm;
 import selling.sunshine.model.CustomerOrderBill;
+import selling.sunshine.model.DepositBill;
 import selling.sunshine.model.OrderBill;
 import selling.sunshine.service.BillService;
 import selling.sunshine.service.GatherService;
@@ -79,6 +80,12 @@ public class GatherController {
         if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             empty = false;
             List<CustomerOrderBill> list = ((List<CustomerOrderBill>) queryResponse.getData());
+            gatherService.produce(list);
+        }
+        queryResponse = billService.fetchDepositBill(condition);
+        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            empty = false;
+            List<DepositBill> list = ((List<DepositBill>) queryResponse.getData());
             gatherService.produce(list);
         }
 
