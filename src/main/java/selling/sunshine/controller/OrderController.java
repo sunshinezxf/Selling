@@ -1120,17 +1120,18 @@ public class OrderController {
         	resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
             return resultData;
         }
-        indentService.produceAll(allList);
+        ResultData indentData=indentService.produceAll(allList);       
+        resultData.setData(indentData.getData());
     	return resultData;
     }
     
-	@RequestMapping(method = RequestMethod.GET, value = "/download/{fileName}/{tempFileName}")
-	public String downlodad(@PathVariable("fileName") String fileName,@PathVariable("tempFileName") String tempFileName, HttpServletRequest request,
+	@RequestMapping(method = RequestMethod.GET, value = "/indent/download/{fileName}/{tempFileName}")
+	public String download(@PathVariable("fileName") String fileName,@PathVariable("tempFileName") String tempFileName, HttpServletRequest request,
 			HttpServletResponse response) throws UnsupportedEncodingException {
 		// 1.设置文件ContentType类型，这样设置，会自动判断下载文件类型
 		response.setContentType("multipart/form-data");
 		// 2.设置文件头：最后一个参数是设置下载文件名
-		response.setHeader("Content-Disposition", "attachment;fileName=" + URLEncoder.encode("订单报表_"+fileName+".xlsx", "utf-8"));
+		response.setHeader("Content-Disposition", "attachment;fileName=" + URLEncoder.encode("订单报表_"+fileName+".xls", "utf-8"));
 		OutputStream out;
 		// 通过文件路径获得File对象
 		String path = IndentController.class.getResource("/").getPath();
@@ -1141,7 +1142,7 @@ public class OrderController {
 		int index = path.lastIndexOf("/WEB-INF/classes/");
 		String parent = path.substring(0, index);
 		String directory = "/material/journal/indent";
-		StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(tempFileName + ".xlsx");
+		StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(tempFileName + ".xls");
 		File file = new File(sb.toString());
         try {
             FileInputStream fis = new FileInputStream(file);

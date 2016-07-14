@@ -131,7 +131,7 @@ public class IndentController {
 
 
 	@RequestMapping(method = RequestMethod.GET, value = "/download/{fileName}/{tempFileName}")
-	public String downlodad(@PathVariable("fileName") String fileName,@PathVariable("tempFileName") String tempFileName, HttpServletRequest request,
+	public String download(@PathVariable("fileName") String fileName,@PathVariable("tempFileName") String tempFileName, HttpServletRequest request,
 			HttpServletResponse response) throws UnsupportedEncodingException {
 		// 1.设置文件ContentType类型，这样设置，会自动判断下载文件类型
 		response.setContentType("multipart/form-data");

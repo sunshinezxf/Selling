@@ -37,9 +37,15 @@
                         <input type="number" id="config_percent_3" name="level3Percent" value="0"
                                autocomplete="off"/>&nbsp;<span>元/件</span>
                     </p>
+                    <p class="form-group">
+                        <label class="col-sm-4 col-md-4 col-lg-3">月份配置:</label>&nbsp;&nbsp;
+                        <input type="number" id="month_config" name="monthConfig" value="1"
+                               autocomplete="off"/>&nbsp;<span>个月</span>
+                    </p>
 
                     <p class="form-group">
                         <label class="col-sm-12 col-md-12 col-lg-12">*只有当代理每批次达到返现标准数量时,才有资格获得返现机会</label>
+                        <label class="col-sm-12 col-md-12 col-lg-12">*并且只有当代理按照月份配置的月数，连续每个月达到返现标准,才有资格获得返现机会</label>
                     </p>
                 </form>
             </div>

@@ -7,6 +7,7 @@
         <result property="level1Percent" column="level_1_percent"></result>
         <result property="level2Percent" column="level_2_percent"></result>
         <result property="level3Percent" column="level_3_percent"></result>
+        <result property="monthConfig" column="month_config"></result>
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
         <association property="goods" column="goodsId = goods_id" select="goods4AgentQuery"></association>
@@ -22,12 +23,12 @@
     </resultMap>
 
     <insert id="insert" parameterType="selling.sunshine.model.RefundConfig" useGeneratedKeys="false">
-        INSERT INTO refund_config(refund_config_id, goods_id, refund_trigger_amount, level_1_percent,level_2_percent,level_3_percent, block_flag, create_time)
-        VALUES (#{refundConfigId}, #{goods.goodsId}, #{amountTrigger}, #{level1Percent},#{level2Percent},#{level3Percent}, #{blockFlag}, #{createAt})
+        INSERT INTO refund_config(refund_config_id, goods_id, refund_trigger_amount, level_1_percent,level_2_percent,level_3_percent,month_config, block_flag, create_time)
+        VALUES (#{refundConfigId}, #{goods.goodsId}, #{amountTrigger}, #{level1Percent},#{level2Percent},#{level3Percent},#{monthConfig}, #{blockFlag}, #{createAt})
     </insert>
 
     <select id="query" parameterType="java.util.Map" resultMap="refundConfigVo">
-        SELECT refund_config_id, goods_id, refund_trigger_amount, level_1_percent,level_2_percent,level_3_percent,
+        SELECT refund_config_id, goods_id, refund_trigger_amount, level_1_percent,level_2_percent,level_3_percent,month_config,
         block_flag, create_time
         FROM refund_config
         WHERE 1 = 1

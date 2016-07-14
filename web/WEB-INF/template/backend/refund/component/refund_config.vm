@@ -138,6 +138,26 @@
                 }
                 },
                 {
+                    title: "月份配置(个月)", "mRender": function (data, type, full) {
+                    var url = "${path.concat('/refund/config/goods/')}" + full.goodsId;
+                    var option = "";
+                    $.ajax({
+                        type: "get",
+                        url: url,
+                        async: false,
+                        success: function (result) {
+                            var config = result.data;
+                            if (result.responseCode == "RESPONSE_OK") {
+                                option += config.monthConfig;
+                            } else {
+                                option += "暂未配置";
+                            }
+                        }
+                    });
+                    return option;
+                }
+                },
+                {
                     title: "操作", "mRender": function (data, type, full) {
                     var operation = "";
                     var edit_url = "${path.concat('/commodity/edit/')}" + full.goodsId;
@@ -157,11 +177,18 @@
                             async: true,
                             success: function (result) {
                                 var config = result.data;
-                                if (result.responseCode == "RESPONSE_OK") {
+                                if (result.responseCode == "RESPONSE_OK") {                               	
                                     $("#config_trigger").val(config.amountTrigger);
                                     $("#config_percent_1").val(config.level1Percent);
                                     $("#config_percent_2").val(config.level2Percent);
                                     $("#config_percent_3").val(config.level3Percent);
+                                    $("#month_config").val(config.monthConfig);
+                                }else{
+                                    $("#config_trigger").val(0);
+                                    $("#config_percent_1").val(0);
+                                    $("#config_percent_2").val(0);
+                                    $("#config_percent_3").val(0);
+                                    $("#month_config").val(1);
                                 }
                             }
                         });

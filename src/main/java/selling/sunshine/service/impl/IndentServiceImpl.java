@@ -297,7 +297,7 @@ public class IndentServiceImpl implements IndentService {
                     row.createCell((short) 6).setCellValue(orderItem.getGoodsQuantity());                
                     row.createCell((short) 7).setCellValue(orderItem.getOrderItemPrice());  
                     cell = row.createCell((short) 8);  
-                    cell.setCellValue(new SimpleDateFormat("yyyy-mm-dd").format(orderItem.getCreateAt()));  
+                    cell.setCellValue(new SimpleDateFormat("yyyy-MM-dd").format(orderItem.getCreateAt()));  
                     k++;
 				}else if (list.get(i) instanceof CustomerOrder) {
 	                row = sheet2.createRow((int) j);  
@@ -317,7 +317,7 @@ public class IndentServiceImpl implements IndentService {
 	                row.createCell((short) 6).setCellValue(customerOrder.getQuantity());                
 	                row.createCell((short) 7).setCellValue(customerOrder.getTotalPrice());  
 	                cell = row.createCell((short) 8);  
-	                cell.setCellValue(new SimpleDateFormat("yyyy-mm-dd").format(customerOrder.getCreateAt()));  
+	                cell.setCellValue(new SimpleDateFormat("yyyy-MM-dd").format(customerOrder.getCreateAt()));  
 	                j++;
 				}
 
@@ -334,8 +334,9 @@ public class IndentServiceImpl implements IndentService {
             	file.mkdirs();
             }
             String name = IDGenerator.generate("Indent");
-            StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(new SimpleDateFormat("yyyy-mm-dd").format("发货单汇总_"+name));
-            FileOutputStream fout = new FileOutputStream(sb.toString()+".xlsx");  
+            StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(("发货单汇总_"+name));
+            FileOutputStream fout = new FileOutputStream(sb.toString()+".xls");  
+            result.setData("发货单汇总_"+name);
             wb.write(fout);  
             fout.close(); 
             wb.close();
