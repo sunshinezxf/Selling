@@ -139,7 +139,6 @@ public class IndentController {
 		response.setHeader("Content-Disposition", "attachment;fileName=" + URLEncoder.encode("订单报表_"+fileName+".zip", "utf-8"));
 		OutputStream out;
 		// 通过文件路径获得File对象
-		System.err.println(tempFileName);
 		String path = IndentController.class.getResource("/").getPath();
 		String os = System.getProperty("os.name").toLowerCase();
 		if (os.indexOf("windows") >= 0) {
@@ -175,6 +174,10 @@ public class IndentController {
         }
         return "";
     }
+	
+
+	
+
 
 
 }

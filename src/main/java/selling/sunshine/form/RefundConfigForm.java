@@ -16,6 +16,8 @@ public class RefundConfigForm {
     private String level2Percent;
     @NotNull
     private String level3Percent;
+    @NotNull
+    private String monthConfig;
 
     public String getGoodsId() {
         return goodsId;
@@ -55,6 +57,14 @@ public class RefundConfigForm {
 
 	public void setLevel3Percent(String level3Percent) {
 		this.level3Percent = level3Percent;
+	}
+
+	public String getMonthConfig() {
+		return monthConfig;
+	}
+
+	public void setMonthConfig(String monthConfig) {
+		this.monthConfig = monthConfig;
 	}
 
     

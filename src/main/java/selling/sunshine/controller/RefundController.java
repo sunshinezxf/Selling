@@ -73,7 +73,7 @@ public class RefundController {
         }
         Goods4Customer goods = new Goods4Customer();
         goods.setGoodsId(goodsId);
-        RefundConfig config = new RefundConfig(goods, Integer.parseInt(form.getAmountTrigger()), Double.parseDouble(form.getLevel1Percent()),Double.parseDouble(form.getLevel2Percent()),Double.parseDouble(form.getLevel3Percent()));
+        RefundConfig config = new RefundConfig(goods, Integer.parseInt(form.getAmountTrigger()), Double.parseDouble(form.getLevel1Percent()),Double.parseDouble(form.getLevel2Percent()),Double.parseDouble(form.getLevel3Percent()),Integer.parseInt(form.getMonthConfig()));
         ResultData createResponse = refundService.createRefundConfig(config);
         if (createResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             Subject subject = SecurityUtils.getSubject();

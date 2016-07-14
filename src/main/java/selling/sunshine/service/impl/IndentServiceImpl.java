@@ -1,17 +1,28 @@
 package selling.sunshine.service.impl;
 
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
+
 import selling.sunshine.dao.CustomerDao;
+import selling.sunshine.dao.OrderDao;
 import selling.sunshine.dao.OrderItemDao;
 import selling.sunshine.model.Customer;
 import selling.sunshine.model.CustomerOrder;
+import selling.sunshine.model.Order;
 import selling.sunshine.model.OrderItem;
 import selling.sunshine.model.OrderType;
 import selling.sunshine.service.IndentService;
+import selling.sunshine.utils.IDGenerator;
 import selling.sunshine.utils.PlatformConfig;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
@@ -19,6 +30,7 @@ import selling.sunshine.utils.WorkBookUtil;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
@@ -36,6 +48,9 @@ public class IndentServiceImpl implements IndentService {
 
     @Autowired
     private CustomerDao customerDao;
+    
+    @Autowired
+    private OrderDao orderDao;
 
     @Override
     public ResultData generateIndent() {
@@ -188,5 +203,148 @@ public class IndentServiceImpl implements IndentService {
         bookerAddr.setCellValue(item.getReceiverAddress());
         return template;
     }
+
+	@Override
+	public <T> ResultData produceAll(List<T> list) {
+		ResultData result = new ResultData();
+		HSSFWorkbook wb = new HSSFWorkbook();  
+		
+
+			HSSFSheet sheet1 = wb.createSheet();
+			wb.setSheetName(0, "代理商订单"); 
+            HSSFRow row = sheet1.createRow((int) 0);  
+            HSSFCellStyle style = wb.createCellStyle();  
+            style.setAlignment(HSSFCellStyle.ALIGN_CENTER); // 创建一个居中格式  
+            
+			HSSFSheet sheet2 = wb.createSheet();
+			wb.setSheetName(1, "客户订单"); 
+            HSSFRow row2 = sheet2.createRow((int) 0);    
+
+            HSSFCell cell = row.createCell((short) 0);  
+            HSSFCell cell2 = row2.createCell((short) 0);  
+            cell.setCellValue("订单编号");  
+            cell.setCellStyle(style);  
+            cell = row.createCell((short) 1);  
+            cell.setCellValue("代理商");  
+            cell.setCellStyle(style);  
+            cell = row.createCell((short) 2);  
+            cell.setCellValue("顾客");  
+            cell.setCellStyle(style);  
+            cell = row.createCell((short) 3);  
+            cell.setCellValue("联系方式");  
+            cell.setCellStyle(style);  
+            cell = row.createCell((short) 4);  
+            cell.setCellValue("地址");  
+            cell.setCellStyle(style);  
+            cell = row.createCell((short) 5);  
+            cell.setCellValue("商品");  
+            cell.setCellStyle(style);  
+            cell = row.createCell((short) 6);  
+            cell.setCellValue("数量");  
+            cell.setCellStyle(style);  
+            cell = row.createCell((short) 7);  
+            cell.setCellValue("总价");  
+            cell.setCellStyle(style);  
+            cell = row.createCell((short) 8);  
+            cell.setCellValue("购买日期");  
+            cell.setCellStyle(style);  
+            cell2.setCellValue("订单编号");  
+            cell2.setCellStyle(style);  
+            cell2 = row.createCell((short) 1);  
+            cell2.setCellValue("代理商");  
+            cell2.setCellStyle(style);  
+            cell2 = row.createCell((short) 2);  
+            cell2.setCellValue("顾客");  
+            cell2.setCellStyle(style);  
+            cell2 = row.createCell((short) 3);  
+            cell2.setCellValue("联系方式");  
+            cell2.setCellStyle(style);  
+            cell2 = row.createCell((short) 4);  
+            cell2.setCellValue("地址");  
+            cell2.setCellStyle(style);  
+            cell2 = row.createCell((short) 5);  
+            cell2.setCellValue("商品");  
+            cell2.setCellStyle(style);  
+            cell2 = row.createCell((short) 6);  
+            cell2.setCellValue("数量");  
+            cell2.setCellStyle(style);  
+            cell2 = row.createCell((short) 7);  
+            cell2.setCellValue("总价");  
+            cell2.setCellStyle(style);  
+            cell2 = row.createCell((short) 8);  
+            cell2.setCellValue("购买日期");  
+            cell2.setCellStyle(style); 
+            int k=1;
+            int j=1;
+            for (int i = 0; i < list.size(); i++)  
+            {  
+            	if (list.get(i) instanceof OrderItem) {
+                    row = sheet1.createRow((int) k);  
+                    OrderItem orderItem = (OrderItem) list.get(i);  
+                    // 第四步，创建单元格，并设置值  
+                    row.createCell((short) 0).setCellValue(orderItem.getOrder().getOrderId());
+                    Map<String, Object> condition=new HashMap<>();
+                    condition.put("orderId",orderItem.getOrder().getOrderId());
+                    Order order=((List<Order>)orderDao.queryOrder(condition).getData()).get(0);
+                    row.createCell((short) 1).setCellValue(order.getAgent().getName());  
+                    row.createCell((short) 2).setCellValue(orderItem.getCustomer().getName());  
+                    condition.clear();
+                    condition.put("customerId", orderItem.getCustomer().getCustomerId());
+                    Customer customer=((List<Customer>)customerDao.queryCustomer(condition).getData()).get(0);
+                    row.createCell((short) 3).setCellValue(customer.getPhone().getPhone());  
+                    row.createCell((short) 4).setCellValue(customer.getAddress().getAddress());  
+                    row.createCell((short) 5).setCellValue(orderItem.getGoods().getName());  
+                    row.createCell((short) 6).setCellValue(orderItem.getGoodsQuantity());                
+                    row.createCell((short) 7).setCellValue(orderItem.getOrderItemPrice());  
+                    cell = row.createCell((short) 8);  
+                    cell.setCellValue(new SimpleDateFormat("yyyy-mm-dd").format(orderItem.getCreateAt()));  
+                    k++;
+				}else if (list.get(i) instanceof CustomerOrder) {
+	                row = sheet2.createRow((int) j);  
+	                CustomerOrder customerOrder = (CustomerOrder) list.get(i);  
+	                // 第四步，创建单元格，并设置值  
+	                row.createCell((short) 0).setCellValue(customerOrder.getOrderId());  
+	                if (customerOrder.getAgent() != null) {
+	                	 row.createCell((short) 1).setCellValue(customerOrder.getAgent().getName());  
+	                } else {
+	                	 row.createCell((short) 1).setCellValue("");  
+	                }
+	               
+	                row.createCell((short) 2).setCellValue(customerOrder.getReceiverName());  
+	                row.createCell((short) 3).setCellValue(customerOrder.getReceiverPhone());  
+	                row.createCell((short) 4).setCellValue(customerOrder.getReceiverAddress());  
+	                row.createCell((short) 5).setCellValue(customerOrder.getGoods().getName());  
+	                row.createCell((short) 6).setCellValue(customerOrder.getQuantity());                
+	                row.createCell((short) 7).setCellValue(customerOrder.getTotalPrice());  
+	                cell = row.createCell((short) 8);  
+	                cell.setCellValue(new SimpleDateFormat("yyyy-mm-dd").format(customerOrder.getCreateAt()));  
+	                j++;
+				}
+
+            } 
+		
+        try  
+        {  
+            String path = IndentServiceImpl.class.getResource("/").getPath();
+            int index = path.lastIndexOf("/WEB-INF/classes/");
+            String parent = path.substring(0, index);
+            String directory = "/material/journal/indent";
+            File file = new File(parent + directory);
+            if(!file.exists()) {
+            	file.mkdirs();
+            }
+            String name = IDGenerator.generate("Indent");
+            StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(new SimpleDateFormat("yyyy-mm-dd").format("发货单汇总_"+name));
+            FileOutputStream fout = new FileOutputStream(sb.toString()+".xlsx");  
+            wb.write(fout);  
+            fout.close(); 
+            wb.close();
+        }  
+        catch (Exception e)  
+        {  
+            e.printStackTrace();  
+        }  
+		return result;
+	}
 
 }

@@ -119,7 +119,6 @@ public class DeliverController {
         response.setHeader("Content-Disposition", "attachment;fileName=" + URLEncoder.encode("发货单报表_" + fileName + ".zip", "utf-8"));
         OutputStream out;
         // 通过文件路径获得File对象(假如此路径中有一个download.pdf文件)
-        System.err.println(tempFileName);
         String path = IndentController.class.getResource("/").getPath();
         String os = System.getProperty("os.name").toLowerCase();
         if (os.indexOf("windows") >= 0) {
