@@ -158,6 +158,9 @@ public class BillServiceImpl implements BillService {
         ResultData queryResponse = billDao.queryOrderBill(condition);
         result.setResponseCode(queryResponse.getResponseCode());
         if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            if (((List) queryResponse.getData()).isEmpty()) {
+                result.setResponseCode(ResponseCode.RESPONSE_NULL);
+            }
             result.setData(queryResponse.getData());
         } else if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
             result.setDescription(queryResponse.getDescription());
