@@ -103,7 +103,7 @@
                 /bill/inform = anon
 
                 /dashboard = roles[admin]
-                
+
                 /express/queryExpress/* = anon
 
                 /commodity/create = roles[admin]
@@ -144,6 +144,8 @@
                 /withdraw/overview = roles["admin, finance"]
 
                 /withdraw/inform = anon
+
+                /message/** = anon
 
                 /test/** = anon
 

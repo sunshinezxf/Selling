@@ -47,7 +47,7 @@ public class MessageController {
             List<Agent> list = (List<Agent>) fetchResponse.getData();
             Set<String> mobile = new HashSet<>();
             list.forEach(item -> mobile.add(item.getPhone()));
-            ResultData sendResponse = messageService.send(mobile, text);
+            ResultData sendResponse = messageService.send(mobile, text + "【云草纲目】");
             result.setResponseCode(sendResponse.getResponseCode());
         }
         return result;
@@ -56,7 +56,7 @@ public class MessageController {
     @RequestMapping(method = RequestMethod.POST, value = "/preview")
     public ResultData preview(String phone, String text) {
         ResultData result = new ResultData();
-        ResultData preview = messageService.preview(phone, text);
+        ResultData preview = messageService.preview(phone, text + "【云草纲目】");
         result.setResponseCode(preview.getResponseCode());
         if (preview.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
             result.setDescription(preview.getDescription());
