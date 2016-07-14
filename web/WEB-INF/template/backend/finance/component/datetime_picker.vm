@@ -38,10 +38,12 @@
                 <div class="modal-body">
                     <h4 class="download_loading">正在生成报表，请耐心等待</h4>
                     <h4 class="download_success">报表生成成功，请点击下载按钮进行下载</h4>
+                    <h4 class="download_failed">当前时间范围内无报表，请重新选择时间查询</h4>
                 </div>
                 <div class="modal-footer">
                     <a href="#" class="btn btn-default datetime_btn download_success" data-dismiss="modal">取消</a>
                     <a href="#" id="download" class="btn btn-primary download_success" data-dismiss="modal">下载</a>
+                    <a href="#" class="btn btn-primary download_failed" data-dismiss="modal">确定</a>
                 </div>
             </div>
         </div>

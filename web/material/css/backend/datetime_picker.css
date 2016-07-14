@@ -2,7 +2,7 @@
 	margin-right:2em;
 }
 
-.download_success{
+.download_success,.download_failed{
 	display:none
 }
 
