@@ -7,9 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import selling.sunshine.dao.CustomerOrderDao;
 import selling.sunshine.dao.ExpressDao;
+import selling.sunshine.dao.OrderDao;
 import selling.sunshine.dao.OrderItemDao;
 import selling.sunshine.model.CustomerOrder;
+import selling.sunshine.model.Order;
 import selling.sunshine.model.OrderItem;
+import selling.sunshine.model.OrderType;
 import selling.sunshine.model.express.Express;
 import selling.sunshine.service.DeliverService;
 import selling.sunshine.utils.PlatformConfig;
@@ -35,6 +38,9 @@ public class DeliverServiceImpl implements DeliverService {
 
     @Autowired
     private ExpressDao expressDao;
+    
+    @Autowired
+    private OrderDao orderDao;
 
     @Override
     public ResultData generateDeliver() {
@@ -141,6 +147,18 @@ public class DeliverServiceImpl implements DeliverService {
         quantity.setCellValue(item.getGoodsQuantity());
         Cell totalPrice = content.getCell(5);
         totalPrice.setCellValue(item.getOrderItemPrice());
+        Cell tip = content.getCell(6);
+        Map<String, Object> condition = new HashMap<String, Object>();
+        condition.put("orderId", item.getOrder().getOrderId());
+        ResultData fetchOrderData = orderDao.queryOrder(condition);
+        if(fetchOrderData.getResponseCode() == ResponseCode.RESPONSE_OK && !((List<Order>)fetchOrderData.getData()).isEmpty()){
+        	Order orderInfo = ((List<Order>)fetchOrderData.getData()).get(0);
+        	if(orderInfo.getType() == OrderType.GIFT){
+        		tip.setCellValue("赠送");
+        	} else {
+        		tip.setCellValue("");
+        	}
+        }
         Row seller = sheet.getRow(8);
         Cell sellerName = seller.getCell(2);
         sellerName.setCellValue(PlatformConfig.getValue("sender_name"));
