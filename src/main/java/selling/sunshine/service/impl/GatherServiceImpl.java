@@ -4,9 +4,12 @@ import org.apache.poi.ss.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import selling.sunshine.dao.AgentDao;
 import selling.sunshine.dao.BillDao;
 import selling.sunshine.dao.CustomerDao;
 import selling.sunshine.dao.CustomerOrderDao;
+import selling.sunshine.dao.OrderDao;
 import selling.sunshine.dao.OrderItemDao;
 import selling.sunshine.model.*;
 import selling.sunshine.service.GatherService;
@@ -30,11 +33,17 @@ public class GatherServiceImpl implements GatherService {
     private OrderItemDao orderItemDao;
 
     @Autowired
+    private OrderDao orderDao;
+    
+    @Autowired
     private CustomerDao customerDao;
 
     @Autowired
     private CustomerOrderDao customerOrderDao;
 
+    @Autowired
+    private AgentDao agentDao;
+    
     @Autowired
     private BillDao billDao;
 
@@ -69,26 +78,18 @@ public class GatherServiceImpl implements GatherService {
                 }
                 Map<String, Object> condition = new HashMap<>();
                 condition.put("orderId", temp.getOrder().getOrderId());
-                List<Integer> status = new ArrayList<>();
-                status.add(1);
-                status.add(2);
-                status.add(3);
-                status.add(4);
-                condition.put("status", status);
-                ResultData queryResponse = orderItemDao.queryOrderItem(condition);
-                if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK && !((List<OrderItem>) queryResponse.getData()).isEmpty()) {
-                    List<OrderItem> orderItems = (List<OrderItem>) queryResponse.getData();
-                    for (OrderItem orderItem : orderItems) {
-                        Workbook workbook = produce(template, orderItem, temp);
-                        try {
-                            FileOutputStream out = new FileOutputStream(file + File.separator + time + "_" + orderItem.getOrderItemId() + "_" + orderItem.getCustomer().getName() + ".xlsx");
-                            workbook.write(out);
-                            out.close();
-                        } catch (Exception e) {
-                            logger.error(e.getMessage());
-                            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
-                            result.setDescription(e.getMessage());
-                        }
+                ResultData queryResponse = orderDao.queryOrder(condition);
+                if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK && !((List<Order>) queryResponse.getData()).isEmpty()) {
+                    Order order = ((List<Order>) queryResponse.getData()).get(0);
+                    Workbook workbook = produce(template, order.getAgent(), temp);
+                    try {
+                        FileOutputStream out = new FileOutputStream(file + File.separator + time + "_" + temp.getBillId() + "_" + order.getAgent().getName() + ".xlsx");
+                        workbook.write(out);
+                        out.close();
+                    } catch (Exception e) {
+                        logger.error(e.getMessage());
+                        result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+                        result.setDescription(e.getMessage());
                     }
                 }
             } else if (item instanceof CustomerOrderBill) {
@@ -121,12 +122,30 @@ public class GatherServiceImpl implements GatherService {
                         result.setDescription(e.getMessage());
                     }
                 }
+            } else if (item instanceof DepositBill) {
+            	DepositBill temp = (DepositBill) item;
+                String time = format.format(temp.getCreateAt());
+                StringBuffer sb = new StringBuffer(parent).append(directory).append(File.separator).append(time);
+                File file = new File(sb.toString());
+                if (!file.exists()) {
+                    file.mkdirs();
+                }
+                Workbook workbook = produce(template, temp);
+                try {
+                    FileOutputStream out = new FileOutputStream(file + File.separator + time + "_" + temp.getBillId() + "_" + temp.getAgent().getName() + ".xlsx");
+                    workbook.write(out);
+                    out.close();
+                } catch (Exception e) {
+                    logger.error(e.getMessage());
+                    result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+                    result.setDescription(e.getMessage());
+                }
             }
         });
         return result;
     }
 
-    private Workbook produce(Workbook template, OrderItem item, OrderBill bill) {
+    private Workbook produce(Workbook template, selling.sunshine.model.lite.Agent agent, OrderBill bill) {
         Sheet sheet = template.getSheetAt(0);
         Row time = sheet.getRow(1);
         Cell receiverTime = time.getCell(2);
@@ -136,37 +155,37 @@ public class GatherServiceImpl implements GatherService {
         receiverNo.setCellValue("NO." + bill.getBillId());
         Row orderNo = sheet.getRow(2);
         Cell orderNoCell = orderNo.getCell(2);
-        orderNoCell.setCellValue(item.getOrderItemId());
+        orderNoCell.setCellValue(bill.getOrder().getOrderId());
         Row price = sheet.getRow(3);
         Cell priceCell = price.getCell(2);
-        priceCell.setCellValue(item.getOrderItemPrice());
+        priceCell.setCellValue(bill.getBillAmount());
         Row orderTime = sheet.getRow(4);
         Cell orderTimeCell = orderTime.getCell(2);
-        orderTimeCell.setCellValue(format.format(item.getCreateAt()));
+        orderTimeCell.setCellValue(format.format(bill.getCreateAt()));
         Row customer = sheet.getRow(5);
         Cell name = customer.getCell(2);
-        name.setCellValue(item.getCustomer().getName());
+        name.setCellValue(agent.getName());
         Cell phone = customer.getCell(5);
         Map<String, Object> condition = new HashMap<>();
-        condition.put("customerId", item.getCustomer().getCustomerId());
-        ResultData queryResponse = customerDao.queryCustomer(condition);
+        condition.put("agentId", agent.getAgentId());
+        ResultData queryResponse = agentDao.queryAgent(condition);
         if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            List<Customer> list = (List<Customer>) queryResponse.getData();
+            List<Agent> list = (List<Agent>) queryResponse.getData();
             if (!list.isEmpty()) {
-                phone.setCellValue(list.get(0).getPhone().getPhone());
+                phone.setCellValue(list.get(0).getPhone());
             }
         }
         Row sellInfo = sheet.getRow(7);
         Cell sellNo = sellInfo.getCell(0);
-        sellNo.setCellValue("NO." + item.getOrderItemId());
+        sellNo.setCellValue("NO." + bill.getOrder().getOrderId());
         Cell sellPrice1 = sellInfo.getCell(2);
-        sellPrice1.setCellValue(item.getOrderItemPrice());
+        sellPrice1.setCellValue(bill.getBillAmount());
         Cell sellPrice2 = sellInfo.getCell(3);
-        sellPrice2.setCellValue(item.getOrderItemPrice());
+        sellPrice2.setCellValue(bill.getBillAmount());
         Cell sellPrice3 = sellInfo.getCell(4);
         sellPrice3.setCellValue(0);
         Cell sellPrice4 = sellInfo.getCell(5);
-        sellPrice4.setCellValue(item.getOrderItemPrice());
+        sellPrice4.setCellValue(bill.getBillAmount());
         return template;
     }
 
@@ -203,6 +222,51 @@ public class GatherServiceImpl implements GatherService {
         sellPrice3.setCellValue(0);
         Cell sellPrice4 = sellInfo.getCell(5);
         sellPrice4.setCellValue(item.getTotalPrice());
+        return template;
+    }
+    
+    private Workbook produce(Workbook template, DepositBill bill) {
+    	selling.sunshine.model.lite.Agent agent = bill.getAgent();
+    	Sheet sheet = template.getSheetAt(0);
+        Row time = sheet.getRow(1);
+        Cell receiverTime = time.getCell(2);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日");
+        receiverTime.setCellValue(format.format(bill.getCreateAt()));
+        Cell receiverNo = time.getCell(4);
+        receiverNo.setCellValue("NO." + bill.getBillId());
+        Row orderNo = sheet.getRow(2);
+        Cell orderNoCell = orderNo.getCell(2);
+        orderNoCell.setCellValue(bill.getBillId());
+        Row price = sheet.getRow(3);
+        Cell priceCell = price.getCell(2);
+        priceCell.setCellValue(bill.getBillAmount());
+        Row orderTime = sheet.getRow(4);
+        Cell orderTimeCell = orderTime.getCell(2);
+        orderTimeCell.setCellValue(format.format(bill.getCreateAt()));
+        Row customer = sheet.getRow(5);
+        Cell name = customer.getCell(2);
+        name.setCellValue(agent.getName());
+        Cell phone = customer.getCell(5);
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("agentId", agent.getAgentId());
+        ResultData queryResponse = agentDao.queryAgent(condition);
+        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            List<Agent> list = (List<Agent>) queryResponse.getData();
+            if (!list.isEmpty()) {
+                phone.setCellValue(list.get(0).getPhone());
+            }
+        }
+        Row sellInfo = sheet.getRow(7);
+        Cell sellNo = sellInfo.getCell(0);
+        sellNo.setCellValue("NO." + bill.getBillId());
+        Cell sellPrice1 = sellInfo.getCell(2);
+        sellPrice1.setCellValue(bill.getBillAmount());
+        Cell sellPrice2 = sellInfo.getCell(3);
+        sellPrice2.setCellValue(bill.getBillAmount());
+        Cell sellPrice3 = sellInfo.getCell(4);
+        sellPrice3.setCellValue(0);
+        Cell sellPrice4 = sellInfo.getCell(5);
+        sellPrice4.setCellValue(bill.getBillAmount());
         return template;
     }
 }
