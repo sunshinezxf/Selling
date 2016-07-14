@@ -81,7 +81,7 @@ public class DeliverController {
             data.setResponseCode(ResponseCode.RESPONSE_ERROR);
             return data;
         }
-        String path = IndentController.class.getResource("/").getPath();
+        String path = DeliverController.class.getResource("/").getPath();
         String os = System.getProperty("os.name").toLowerCase();
         if (os.indexOf("windows") >= 0) {
             path = path.substring(1);

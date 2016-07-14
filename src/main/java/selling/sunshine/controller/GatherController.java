@@ -38,7 +38,7 @@ public class GatherController {
     @RequestMapping(method = RequestMethod.GET, value = "/overview")
     public ModelAndView gather() {
         ModelAndView view = new ModelAndView();
-
+        view.setViewName("/backend/finance/gather");
         return view;
     }
 
