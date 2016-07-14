@@ -8,6 +8,7 @@
 		<result property="level1Percent" column="level_1_percent"></result>
 		<result property="level2Percent" column="level_2_percent"></result>
 		<result property="level3Percent" column="level_3_percent"></result>
+		<result property="monthConfig" column="month_config"></result>
 	</resultMap>
 
 	<resultMap id="goods4AgentVo" type="selling.sunshine.model.goods.Goods4Agent">
@@ -69,7 +70,7 @@
     </resultMap>
 
 	<select id="refundConfigQuery" parameterType="java.util.Map" resultMap="refundConfigVo">
-		SELECT refund_config_id, refund_trigger_amount, level_1_percent,level_2_percent,level_3_percent
+		SELECT refund_config_id, refund_trigger_amount, level_1_percent,level_2_percent,level_3_percent,month_config
 		FROM refund_config
 		WHERE refund_config_id = #{refundConfigId}
 	</select>
