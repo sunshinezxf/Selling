@@ -146,6 +146,7 @@ public class IndentServiceImpl implements IndentService {
         if (item.getOrder().getType() == OrderType.GIFT) {
             Cell description = content.getCell(6);
             description.setCellValue("赠送");
+            
         }
         Row booker = sheet.getRow(8);
         Cell bookerName = booker.getCell(1);
@@ -248,6 +249,9 @@ public class IndentServiceImpl implements IndentService {
             cell = row.createCell((short) 8);  
             cell.setCellValue("购买日期");  
             cell.setCellStyle(style);  
+            cell = row.createCell((short) 9);  
+            cell.setCellValue("备注");  
+            cell.setCellStyle(style);  
             cell2.setCellValue("订单编号");  
             cell2.setCellStyle(style);  
             cell2 = row2.createCell((short) 1);  
@@ -298,6 +302,12 @@ public class IndentServiceImpl implements IndentService {
                     row.createCell((short) 7).setCellValue(orderItem.getOrderItemPrice());  
                     cell = row.createCell((short) 8);  
                     cell.setCellValue(new SimpleDateFormat("yyyy-MM-dd").format(orderItem.getCreateAt()));  
+                    if (order.getType()==OrderType.GIFT) {
+                        row.createCell((short) 9).setCellValue("赠品");  
+					}else{
+						 row.createCell((short) 9).setCellValue("");  
+					}
+
                     k++;
 				}else if (list.get(i) instanceof CustomerOrder) {
 	                row = sheet2.createRow((int) j);  
