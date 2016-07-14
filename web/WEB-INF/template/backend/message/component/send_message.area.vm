@@ -35,17 +35,43 @@
                         </div>
                     </div>
                 </div>
-                <div id="test_success">
-                    <h4>短信发送成功</h4>
+                <div id="test_success" class="second_content">
+                    <h4>短信发送成功！</h4>
                 </div>
-                <div id="test_failed">
+                <div id="test_failed" class="second_content">
                     <h4 id="failed_message"></h4>
                 </div>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-default first_content" data-dismiss="modal">取消</button>
                 <button id="test_send" class="btn btn-primary disabled first_content" disabled="disabled">发送</button>
-                <button class="btn btn-primary second_content" data-dismiss="modal">确定</button>
+                <button id="second_content_btn" class="btn btn-primary second_content" data-dismiss="modal">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="send_modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">X</button>
+            </div>
+            <div class="modal-body">
+                <div class="first_content" role="form">
+                    <h4>确认发送短信么？</h4>
+                </div>
+                <div id="send_success" class="second_content">
+                    <h4>短信发送成功！</h4>
+                </div>
+                <div id="send_failed" class="second_content">
+                    <h4>短信发送失败！</h4>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-default first_content" data-dismiss="modal">取消</button>
+                <button id="send_confirm" class="btn btn-primary first_content">确认</button>
+                <button id="second_send_content_btn" class="btn btn-primary second_content" data-dismiss="modal">确定</button>
             </div>
         </div>
     </div>
@@ -121,6 +147,10 @@
         $('#test_modal').modal('show');
     });
     
+    $('#send').click(function(){
+        $('#send_modal').modal('show');
+    });
+    
     $('#test_send').click(function(){
         var text=$('#message_content').val();
         var phone = $('#phone').val();
@@ -142,12 +172,51 @@
                 } else {
                     $('#test_success').show();
                 }
-                $('.second_content').show();
+                $('#second_content_btn').show();
             });
         }
     });
     
-    $("#test_modal").on("hidden.bs.modal", function() {  
-         $(this).removeData("bs.modal");  
-    }); 
+    $('#send_confirm').click(function(){
+        var text=$('#message_content').val();
+        var url = '${path.concat('/message/preview')}';
+        var param = {
+            text: text
+        };
+        $.post(url, param, function (result) {
+            $('.first_content').hide();
+            if (result.responseCode != "RESPONSE_OK") {
+                $('#send_failed').show();
+            } else {
+                $('#send_success').show();
+            }
+            $('#second_send_content_btn').show();
+        });
+    });
+    
+    $("#test_modal").on("show.bs.modal", function() {
+        $('.first_content').show();
+        $('.error_tips').hide();
+    });
+    
+    $("#test_modal").on("hide.bs.modal", function() {
+        $('.first_content').hide();
+        $('.second_content').hide();
+        $("#phone").val("");
+        second_inactive();
+        $("#message_content").val("");
+        first_inactive();
+    });
+    
+    $("#send_modal").on("show.bs.modal", function() {
+        $('.first_content').show();
+    });
+    
+    $("#send_modal").on("hide.bs.modal", function() {
+        $('.first_content').hide();
+        $('.second_content').hide();
+        $("#message_content").val("");
+        first_inactive();
+    });
+ 
 </script>
