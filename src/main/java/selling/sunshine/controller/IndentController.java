@@ -1,7 +1,6 @@
 package selling.sunshine.controller;
 
 import org.slf4j.Logger;
-
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
@@ -16,23 +15,13 @@ import selling.sunshine.model.CustomerOrder;
 import selling.sunshine.model.OrderItem;
 import selling.sunshine.service.IndentService;
 import selling.sunshine.service.OrderService;
-import selling.sunshine.utils.DateUtils;
-import selling.sunshine.utils.IDGenerator;
-import selling.sunshine.utils.ResponseCode;
-import selling.sunshine.utils.ResultData;
-import selling.sunshine.utils.ZipCompressor;
+import selling.sunshine.utils.*;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.URLEncoder;
-
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -43,15 +32,15 @@ import java.util.*;
 @RestController
 @RequestMapping("/indent")
 public class IndentController {
-	private Logger logger = LoggerFactory.getLogger(IndentController.class);
+    private Logger logger = LoggerFactory.getLogger(IndentController.class);
 
-	@Autowired
-	private IndentService indentService;
+    @Autowired
+    private IndentService indentService;
 
-	@Autowired
-	private OrderService orderService;
-	
-	
+    @Autowired
+    private OrderService orderService;
+
+
     @RequestMapping(method = RequestMethod.GET, value = "/overview")
     public ModelAndView indent() {
         ModelAndView view = new ModelAndView();
@@ -86,6 +75,7 @@ public class IndentController {
     @RequestMapping(method = RequestMethod.POST, value = "/overview")
     public ResultData indent(@Valid TimeRangeForm form, BindingResult result) {
         ResultData data = new ResultData();
+        boolean empty = true;
         if (result.hasErrors()) {
             data.setResponseCode(ResponseCode.RESPONSE_ERROR);
             return data;
@@ -98,6 +88,7 @@ public class IndentController {
         condition.put("statusList", status);
         ResultData queryResponse = orderService.fetchOrderItem(condition);
         if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            empty = false;
             List<OrderItem> list = (List<OrderItem>) queryResponse.getData();
             indentService.produce(list);
         }
@@ -105,8 +96,13 @@ public class IndentController {
         condition.put("status", status);
         queryResponse = orderService.fetchCustomerOrder(condition);
         if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            empty = false;
             List<CustomerOrder> list = (List<CustomerOrder>) queryResponse.getData();
             indentService.produce(list);
+        }
+        if (empty) {
+            data.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            return data;
         }
         String path = IndentController.class.getResource("/").getPath();
         String os = System.getProperty("os.name").toLowerCase();
@@ -133,6 +129,7 @@ public class IndentController {
         return data;
     }
 
+<<<<<<< HEAD
 	@RequestMapping(method = RequestMethod.GET, value = "/download/{fileName}/{tempFileName}")
 	public String downlodad(@PathVariable("fileName") String fileName,@PathVariable("tempFileName") String tempFileName, HttpServletRequest request,
 			HttpServletResponse response) throws UnsupportedEncodingException {
@@ -153,32 +150,54 @@ public class IndentController {
 		String directory = "/material/journal/indent";
 		StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(tempFileName + ".zip");
 		File file = new File(sb.toString());
+=======
+    @RequestMapping(method = RequestMethod.GET, value = "/download/{fileName}/{tempFileName}")
+    public String downlodad(@PathVariable("fileName") String fileName, @PathVariable("tempFileName") String tempFileName, HttpServletRequest request,
+                            HttpServletResponse response) throws UnsupportedEncodingException {
+        // 1.设置文件ContentType类型，这样设置，会自动判断下载文件类型
+        response.setContentType("multipart/form-data");
+        // 2.设置文件头：最后一个参数是设置下载文件名
+        response.setHeader("Content-Disposition", "attachment;fileName=" + URLEncoder.encode("订单报表_" + fileName + ".zip", "utf-8"));
+        OutputStream out;
+        // 通过文件路径获得File对象(假如此路径中有一个download.pdf文件)
+        System.err.println(tempFileName);
+        String path = IndentController.class.getResource("/").getPath();
+        String os = System.getProperty("os.name").toLowerCase();
+        if (os.indexOf("windows") >= 0) {
+            path = path.substring(1);
+        }
+        int index = path.lastIndexOf("/WEB-INF/classes/");
+        String parent = path.substring(0, index);
+        String directory = "/material/journal/indent";
+        StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(tempFileName + ".zip");
+        File file = new File(sb.toString());
+>>>>>>> e374b28239bb78da79df24e4751d6ddcabade9fc
 
-		try {
-			FileInputStream fis = new FileInputStream(file);
-			BufferedInputStream buff = new BufferedInputStream(fis);
-			byte[] b = new byte[1024];// 相当于我们的缓存
-			long k = 0;// 该值用于计算当前实际下载了多少字节
+        try {
+            FileInputStream fis = new FileInputStream(file);
+            BufferedInputStream buff = new BufferedInputStream(fis);
+            byte[] b = new byte[1024];// 相当于我们的缓存
+            long k = 0;// 该值用于计算当前实际下载了多少字节
 
-			// 3.通过response获取OutputStream对象(out)
-			out = response.getOutputStream();
-			// 开始循环下载
-			while (k < file.length()) {
-				int j = buff.read(b, 0, 1024);
-				k += j;
-				out.write(b, 0, j);
-			}
-			buff.close();
-			fis.close();
-			out.close();
-			out.flush();
-			file.delete();
+            // 3.通过response获取OutputStream对象(out)
+            out = response.getOutputStream();
+            // 开始循环下载
+            while (k < file.length()) {
+                int j = buff.read(b, 0, 1024);
+                k += j;
+                out.write(b, 0, j);
+            }
+            buff.close();
+            fis.close();
+            out.close();
+            out.flush();
+            file.delete();
 
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return "";
-	}
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
 
 
 }

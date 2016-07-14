@@ -60,6 +60,7 @@ public class GatherController {
     @RequestMapping(method = RequestMethod.POST, value = "/overview")
     public ResultData gather(@Valid TimeRangeForm form, BindingResult result) {
         ResultData data = new ResultData();
+        boolean empty = true;
         if (result.hasErrors()) {
             data.setResponseCode(ResponseCode.RESPONSE_ERROR);
             return data;
@@ -70,14 +71,22 @@ public class GatherController {
         condition.put("status", 1);
         ResultData queryResponse = billService.fetchOrderBill(condition);
         if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            empty = false;
             List<OrderBill> list = (List<OrderBill>) queryResponse.getData();
             gatherService.produce(list);
         }
         queryResponse = billService.fetchCustomerOrderBill(condition);
         if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            empty = false;
             List<CustomerOrderBill> list = ((List<CustomerOrderBill>) queryResponse.getData());
             gatherService.produce(list);
         }
+
+        if (empty) {
+            data.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            return data;
+        }
+        
         String path = GatherController.class.getResource("/").getPath();
         String os = System.getProperty("os.name").toLowerCase();
         if (os.indexOf("windows") >= 0) {
@@ -100,6 +109,7 @@ public class GatherController {
         ZipCompressor zipCompressor = new ZipCompressor(sb.toString());
         zipCompressor.compress(pathList);
         data.setData(zipName);
+
         return data;
     }
     
