@@ -73,7 +73,7 @@
     <bean id="expressTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="expressDetail"></property>
         <property name="cronExpression">
-            <value>0 0/30 * * * ?</value>
+            <value>0 0 * * * ?</value>
         </property>
     </bean>
 

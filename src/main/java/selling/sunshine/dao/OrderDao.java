@@ -18,7 +18,7 @@ public interface OrderDao {
 
     ResultData updateOrder(Order order);
 
-    ResultData cancelOrder(Order order);
+    ResultData updateOrderLite(Order order);
 
     ResultData sumOrder();
 }

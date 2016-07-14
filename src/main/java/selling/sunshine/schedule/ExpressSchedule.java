@@ -15,6 +15,6 @@ public class ExpressSchedule {
     private ExpressService expressService;
 
     public void schedule() {
-        
+        expressService.receiveCheck();
     }
 }

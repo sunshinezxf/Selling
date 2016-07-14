@@ -219,7 +219,7 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
     }
 
     @Override
-    public ResultData cancelOrder(Order order) {
+    public ResultData updateOrderLite(Order order) {
         ResultData result = new ResultData();
         synchronized (lock) {
             try {
