@@ -1,7 +1,7 @@
 <div class="container">
     <div id="date_form" class="form-inline" role="form">
         <fieldset>
-            <div class="form-group">
+            <div class="form-group date-formgroup">
                 <label for="dtp_start" class="control-label">开始时间</label>
 
                 <div id="date_start" class="input-group date form_date" data-date="" data-date-format="yyyy-mm-dd"
@@ -12,7 +12,7 @@
                 </div>
                 <input type="hidden" id="dtp_start" name="start" value=""/>
             </div>
-            <div class="form-group">
+            <div class="form-group date-formgroup">
                 <label for="dtp_end" class="control-label">结束时间</label>
 
                 <div id="date_end" class="input-group date form_date" data-date="" data-date-format="yyyy-mm-dd"
@@ -23,39 +23,25 @@
                 </div>
                 <input type="hidden" id="dtp_end" name="end" value=""/>
             </div>
-            <div class="form-group">
+            <div class="form-group date-formgroup">
                 <div>
-                    <button type="button" id="consult" class="btn btn-primary" data-toggle="modal"
-                            data-target="#download_loading">查询
-                    </button>
+                    <button type="button" id="consult" class="btn btn-primary" data-toggle="modal">查询</button>
                 </div>
             </div>
         </fieldset>
     </div>
-    <div id="download_loading" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div id="download_modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                 </div>
                 <div class="modal-body">
-                    <h4>正在生成报表，请耐心等待</h4>
+                    <h4 class="download_loading">正在生成报表，请耐心等待</h4>
+                    <h4 class="download_success">报表生成成功，请点击下载按钮进行下载</h4>
                 </div>
                 <div class="modal-footer">
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="download_success" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                </div>
-                <div class="modal-body">
-                    <h4>报表生成成功，请点击下载按钮进行下载</h4>
-                </div>
-                <div class="modal-footer">
-                    <a href="#" class="btn btn-default" data-dismiss="modal">取消</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a href="#" id="download" class="btn btn-primary" data-dismiss="modal">下载</a>
+                    <a href="#" class="btn btn-default datetime_btn download_success" data-dismiss="modal">取消</a>
+                    <a href="#" id="download" class="btn btn-primary download_success" data-dismiss="modal">下载</a>
                 </div>
             </div>
         </div>
