@@ -67,7 +67,7 @@
         var endTime = $('#dtp_end').val()
         if (startTime && endTime) {
             $('#download_modal').modal('show');
-            var url = '${path.concat('/indent/overview')}';
+            var url = '${path.concat('/order/indent')}';
             var param = {
                 start: startTime,
                 end: endTime
