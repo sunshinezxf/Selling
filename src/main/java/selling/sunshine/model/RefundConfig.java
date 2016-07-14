@@ -12,12 +12,23 @@ public class RefundConfig extends Entity {
     private double level1Percent;
     private double level2Percent;
     private double level3Percent;
+    private int monthConfig;
     private Goods4Agent goods;
 
     public RefundConfig() {
         super();
     }
 
+    public RefundConfig(Goods4Customer goods, int amountTrigger, double level1Percent, double level2Percent, double level3Percent,int monthConfig) {
+        this();
+        this.goods = goods;
+        this.amountTrigger = amountTrigger;
+        this.level1Percent = level1Percent;
+        this.level2Percent = level2Percent;
+        this.level3Percent = level3Percent;
+        this.monthConfig=monthConfig;
+    }
+    
     public RefundConfig(Goods4Customer goods, int amountTrigger, double level1Percent, double level2Percent, double level3Percent) {
         this();
         this.goods = goods;
@@ -74,4 +85,14 @@ public class RefundConfig extends Entity {
     public void setLevel3Percent(double level3Percent) {
         this.level3Percent = level3Percent;
     }
+
+	public int getMonthConfig() {
+		return monthConfig;
+	}
+
+	public void setMonthConfig(int monthConfig) {
+		this.monthConfig = monthConfig;
+	}
+    
+    
 }

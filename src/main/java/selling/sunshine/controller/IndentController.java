@@ -141,7 +141,7 @@ public class IndentController {
 		// 2.设置文件头：最后一个参数是设置下载文件名
 		response.setHeader("Content-Disposition", "attachment;fileName=" + URLEncoder.encode("订单报表_"+fileName+".zip", "utf-8"));
 		OutputStream out;
-		// 通过文件路径获得File对象(假如此路径中有一个download.pdf文件)
+		// 通过文件路径获得File对象
 		System.err.println(tempFileName);
 		String path = IndentController.class.getResource("/").getPath();
 		String os = System.getProperty("os.name").toLowerCase();
