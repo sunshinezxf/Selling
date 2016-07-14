@@ -74,7 +74,8 @@
             };
             $.post(url, param, function (result) {
                 if (result.responseCode != "RESPONSE_OK") {
-                    alert("Error!");
+                    $('.download_loading').hide();
+                    $('.download_failed').show();
                 } else {
                     tempFileName = result.data;
                     fileName = startTime + "_" + endTime;
