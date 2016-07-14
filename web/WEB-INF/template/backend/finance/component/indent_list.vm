@@ -75,11 +75,13 @@
             $.post(url, param, function (result) {
                 if (result.responseCode != "RESPONSE_OK") {
                     $('.download_loading').hide();
+                    $('.download_success').hide();
                     $('.download_failed').show();
                 } else {
                     tempFileName = result.data;
                     fileName = startTime + "_" + endTime;
                     $('.download_loading').hide();
+                    $('.download_failed').hide();
                     $('.download_success').show();
 
                 }
