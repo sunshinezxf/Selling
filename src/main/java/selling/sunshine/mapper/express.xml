@@ -127,7 +127,7 @@
             AND (date_format(create_time, '%Y-%m-%d') &gt;= #{start} AND date_format(create_time, '%Y-%m-%d') &lt;=
             #{end})
         </if>) AS express
-        <if test="rule != null and rule != '">
+        <if test="rule != null and rule != ''">
             ORDER BY ${rule}
         </if>
         <if test="rule == null">
