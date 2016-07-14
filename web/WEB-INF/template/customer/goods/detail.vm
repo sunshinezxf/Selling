@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="${path.concat('/plugins/fancybox/source/jquery.fancybox.css')}" type="text/css"
           media="screen"/>
     <link rel="stylesheet" href="${path.concat('/material/css/customer/goods_detail.css')}"/>
+    <link rel="stylesheet" href="${path.concat('/material/css/common/address_plugin.css')}"/>
     <script type="text/javascript" src="${path.concat('/plugins/jquery/jquery.event.move.js')}"></script>
     <script type="text/javascript" src="${path.concat('/plugins/jquery/jquery.event.swipe.js')}"></script>
     <script type="text/javascript" src="${path.concat('/plugins/fancybox/source/jquery.fancybox.pack.js')}"></script>

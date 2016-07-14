@@ -20,6 +20,11 @@
     var fileName;
     var date = new Date();
     var today = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+    #if(${start})
+    var startDate="${start}";
+    #else
+    var startDate="2016-01-01";
+    #end
     $('#date_start').datetimepicker({
         language: 'zh-CN',
         weekStart: 1,
@@ -29,7 +34,7 @@
         startView: 2,
         minView: 2,
         forceParse: 0,
-        startDate: '2016-01-01'
+        startDate: startDate
     }).on('show', function (e) {
         if ($('#dtp_end').val()) {
             $('#date_start').datetimepicker('setEndDate', $('#dtp_end').val());
@@ -53,7 +58,7 @@
         if ($('#dtp_start').val()) {
             $('#date_end').datetimepicker('setStartDate', $('#dtp_start').val());
         } else {
-            $('#date_end').datetimepicker('setStartDate', '2016-01-01');
+            $('#date_end').datetimepicker('setStartDate', startDate);
         }
     });
 
@@ -61,6 +66,7 @@
         var startTime = $('#dtp_start').val();
         var endTime = $('#dtp_end').val()
         if (startTime && endTime) {
+            $('#download_modal').modal('show');
             var url = '${path.concat('/deliver/overview')}';
             var param = {
                 start: startTime,
@@ -72,8 +78,8 @@
                 } else {
                     tempFileName = result.data;
                     fileName = startTime + "_" + endTime;
-                    $('#download_loading').modal('hide');
-                    $('#download_success').modal('show');
+                    $('.download_loading').hide();
+                    $('.download_success').show();
 
                 }
 

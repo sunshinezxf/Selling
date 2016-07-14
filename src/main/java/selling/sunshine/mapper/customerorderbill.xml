@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="selling.bill.customerOrder">
-	 <resultMap id="customerOrderBillVo" type="selling.sunshine.model.CustomerOrderBill">
+    <resultMap id="customerOrderBillVo" type="selling.sunshine.model.CustomerOrderBill">
         <result property="billId" column="bill_id"></result>
         <result property="billAmount" column="bill_amount"></result>
         <result property="channel" column="channel_name"></result>
-        <result property="status" column="bill_status" typeHandler="selling.sunshine.handler.mybatis.bill.BillStatusHandler"></result>
+        <result property="status" column="bill_status"
+                typeHandler="selling.sunshine.handler.mybatis.bill.BillStatusHandler"></result>
         <result property="clientIp" column="client_ip"></result>
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
         <association property="customerOrder" column="orderId = order_id" select="customerOrderQuery"></association>
     </resultMap>
 
-     <resultMap id="customerOrderVo" type="selling.sunshine.model.CustomerOrder">
+    <resultMap id="customerOrderVo" type="selling.sunshine.model.CustomerOrder">
         <result property="orderId" column="order_id"></result>
         <result property="wechat" column="wechat"></result>
         <result property="quantity" column="quantity"></result>
@@ -22,8 +23,8 @@
         <result property="status" column="order_status"
                 typeHandler="selling.sunshine.handler.mybatis.order.OrderItemStatusHandler"></result>
     </resultMap>
-    
-	    
+
+
     <select id="query" parameterType="java.util.Map" resultMap="customerOrderBillVo">
         SELECT bill_id, order_id, channel_name, bill_amount, bill_status, client_ip, block_flag, create_time
         FROM customer_order_bill
@@ -40,16 +41,22 @@
         <if test="blockFlag != null and blockFlag !=''">
             AND block_flag = #{blockFlag}
         </if>
+        <if test="status != null and status != ''">
+            AND bill_status = #{status}
+        </if>
         <if test="rule != null and rule != ''">
             ORDER BY ${rule}
         </if>
+        <if test="rule == null">
+            ORDER BY create_time DESC
+        </if>
     </select>
-    
+
     <insert id="insert" parameterType="selling.sunshine.model.CustomerOrderBill" useGeneratedKeys="false">
         INSERT INTO customer_order_bill(bill_id,  order_id, channel_name, client_ip, bill_amount, bill_status, block_flag, create_time)
         VALUES (#{billId}, #{customerOrder.orderId}, #{channel}, #{clientIp}, #{billAmount}, #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler}, #{blockFlag}, #{createAt})
     </insert>
-    
+
     <update id="update" parameterType="selling.sunshine.model.CustomerOrderBill" useGeneratedKeys="false">
         UPDATE customer_order_bill
         <set>
@@ -74,15 +81,16 @@
     </update>
 
     <select id="customerOrderQuery" parameterType="java.util.Map" resultMap="customerOrderVo">
-    	SELECT order_id, agent_id, wechat, quantity, receiver_name, receiver_addr, total_price, order_status, block_flag, create_time
-    	FROM customer_order
-    	WHERE 1=1
-    	<if test="orderId != null and orderId != ''">
-    		AND order_id = #{orderId}
-    	</if>
-    	<if test="wechat != null and wechat != ''">
-    		AND wechat = #{wechat}
-    	</if>
+        SELECT order_id, agent_id, wechat, quantity, receiver_name, receiver_addr, total_price, order_status,
+        block_flag, create_time
+        FROM customer_order
+        WHERE 1=1
+        <if test="orderId != null and orderId != ''">
+            AND order_id = #{orderId}
+        </if>
+        <if test="wechat != null and wechat != ''">
+            AND wechat = #{wechat}
+        </if>
     </select>
-    
+
 </mapper>

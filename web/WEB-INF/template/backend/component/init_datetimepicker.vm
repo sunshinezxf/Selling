@@ -1,3 +1,4 @@
 <link href="${path.concat('/plugins/bootstrap/css/bootstrap-datetimepicker.min.css')}" rel="stylesheet" media="screen"/>
+<link href="${path.concat('/material/css/backend/datetime_picker.css')}" rel="stylesheet" media="screen"/>
 <script type="text/javascript" src="${path.concat('/plugins/bootstrap/js/bootstrap-datetimepicker.js')}" charset="UTF-8"></script>
 <script type="text/javascript" src="${path.concat('/plugins/bootstrap/js/locales/bootstrap-datetimepicker.zh-CN.js')}" charset="UTF-8"></script>
