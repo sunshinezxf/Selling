@@ -129,7 +129,7 @@ public class IndentController {
         return data;
     }
 
-<<<<<<< HEAD
+
 	@RequestMapping(method = RequestMethod.GET, value = "/download/{fileName}/{tempFileName}")
 	public String downlodad(@PathVariable("fileName") String fileName,@PathVariable("tempFileName") String tempFileName, HttpServletRequest request,
 			HttpServletResponse response) throws UnsupportedEncodingException {
@@ -150,29 +150,6 @@ public class IndentController {
 		String directory = "/material/journal/indent";
 		StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(tempFileName + ".zip");
 		File file = new File(sb.toString());
-=======
-    @RequestMapping(method = RequestMethod.GET, value = "/download/{fileName}/{tempFileName}")
-    public String downlodad(@PathVariable("fileName") String fileName, @PathVariable("tempFileName") String tempFileName, HttpServletRequest request,
-                            HttpServletResponse response) throws UnsupportedEncodingException {
-        // 1.设置文件ContentType类型，这样设置，会自动判断下载文件类型
-        response.setContentType("multipart/form-data");
-        // 2.设置文件头：最后一个参数是设置下载文件名
-        response.setHeader("Content-Disposition", "attachment;fileName=" + URLEncoder.encode("订单报表_" + fileName + ".zip", "utf-8"));
-        OutputStream out;
-        // 通过文件路径获得File对象(假如此路径中有一个download.pdf文件)
-        System.err.println(tempFileName);
-        String path = IndentController.class.getResource("/").getPath();
-        String os = System.getProperty("os.name").toLowerCase();
-        if (os.indexOf("windows") >= 0) {
-            path = path.substring(1);
-        }
-        int index = path.lastIndexOf("/WEB-INF/classes/");
-        String parent = path.substring(0, index);
-        String directory = "/material/journal/indent";
-        StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(tempFileName + ".zip");
-        File file = new File(sb.toString());
->>>>>>> e374b28239bb78da79df24e4751d6ddcabade9fc
-
         try {
             FileInputStream fis = new FileInputStream(file);
             BufferedInputStream buff = new BufferedInputStream(fis);
