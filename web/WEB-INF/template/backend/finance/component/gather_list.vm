@@ -10,7 +10,7 @@
         </div>
         <div class="row">
             <div class="col-md-12 col-lg-12">
-                #parse("/backend/finance/component/datetime_picker.vm")
+                #parse("/backend/component/datetime_picker.vm")
             </div>
         </div>
     </div>
