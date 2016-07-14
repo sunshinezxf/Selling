@@ -42,6 +42,9 @@
                                 class="fa fa-tasks"></i>
                             订单统计</a>
                         </li>
+                        <li><a class="sub-nav" href="${path.concat('/order/indent')}"><i class="fa fa-tasks"></i>
+                            订货单</a>
+                        </li>
                     </ul>
                 </li>
             #end
@@ -95,7 +98,8 @@
                     <ul id="finance-management" class="nav nav-collapse collapse">
                         <li><a class="sub-nav" href="${path.concat("/indent/overview")}"><i class="fa fa-tasks"></i> 订货单</a>
                         </li>
-                        <li><a class="sub-nav" href="${path.concat("/deliver/overview")}"><i class="fa fa-tasks"></i> 发货单</a>
+                        <li><a class="sub-nav" href="${path.concat("/deliver/overview")}"><i class="fa fa-tasks"></i>
+                            发货单</a>
                         </li>
                         <li><a class="sub-nav" href="${path.concat("/gather/overview")}"><i class="fa fa-tasks"></i> 收款单</a>
                         </li>
