@@ -20,10 +20,4 @@
 </html>
 <script>
 	$("#place_order").addClass("weui_bar_item_on");
-	$(function(){
-		url = "${path.concat('/express/checkExpress')}";
-		$.get(url, function(result){
-			console.debug(result);
-		});
-	});
 </script>

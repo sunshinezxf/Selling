@@ -60,7 +60,6 @@ public class OrderItemDaoImpl extends BaseDao implements OrderItemDao {
 	@Override
 	public ResultData updateOrderItem(OrderItem orderItem) {
 		ResultData result = new ResultData();
-		logger.debug("oppppppp0" + JSON.toJSONString(orderItem));
         synchronized (lock) {
             try {
                 sqlSession.update("selling.order.item.update", orderItem);

@@ -209,9 +209,4 @@ public class ExpressController {
         return result;
     }
     
-    @RequestMapping(method = RequestMethod.GET, value = "/checkExpress")
-    public ResultData checkExpressTest(){
-    	return expressService.receiveCheck();
-    }
-
 }

@@ -167,7 +167,7 @@ public class ExpressServiceImpl implements ExpressService {
 		for(Order order : orders){
 			condition.clear();
 			List<Integer> orderItemStatus = new ArrayList<Integer>();
-			condition.put("status", OrderItemStatus.SHIPPED);
+			condition.put("status", 2);
 			condition.put("orderId", order.getOrderId());
 			ResultData fetchOrderItemResponse = orderItemDao.queryOrderItem(condition);
 			if(fetchOrderItemResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR){
@@ -218,9 +218,9 @@ public class ExpressServiceImpl implements ExpressService {
 			}
 			if(orderItems.size() == receiveNum){
 				order.setStatus(OrderStatus.FINISHIED);
-				orderDao.updateOrder(order);
+				orderDao.updateOrderLite(order);
 			}
-		}/*
+		}
 		status.clear();
 		condition.clear();
 		status.add(2);
@@ -269,7 +269,7 @@ public class ExpressServiceImpl implements ExpressService {
 					}
 				}
 			}
-		}*/
+		}
 		return result;
 	}
 }
