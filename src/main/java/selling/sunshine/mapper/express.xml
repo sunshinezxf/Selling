@@ -89,7 +89,8 @@
     </insert>
 
     <select id="query" parameterType="java.util.Map" resultMap="expressVo">
-        SELECT express_id, order_item_id AS link_id, express_no, sender_name, sender_phone, sender_address,
+        SELECT express_id, link_id, express_no, sender_name, sender_phone, sender_address, receiver_name, receiver_phone, receiver_address, goods_name, block_flag, create_time
+        FROM (SELECT express_id, order_item_id AS link_id, express_no, sender_name, sender_phone, sender_address,
         receiver_name, receiver_phone,
         receiver_address, goods_name, block_flag, create_time
         FROM express_agent
@@ -125,6 +126,12 @@
         <if test="start != null and end != null and start != '' and end != ''">
             AND (date_format(create_time, '%Y-%m-%d') &gt;= #{start} AND date_format(create_time, '%Y-%m-%d') &lt;=
             #{end})
+        </if>) AS express
+        <if test="rule != null and rule != '">
+            ORDER BY ${rule}
+        </if>
+        <if test="rule == null">
+            ORDER BY create_time ASC
         </if>
     </select>
 
