@@ -1,0 +1,16 @@
+.message_btn_area{
+	margin-top:2em;
+}
+
+.test_btn{
+	margin-right:2em;
+}
+
+.error_tips{
+	display:none;
+	color:#ff0000;
+}
+
+.second_content{
+	display:none;
+}
