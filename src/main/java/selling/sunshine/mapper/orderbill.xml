@@ -62,6 +62,10 @@
         <if test="rule != null and rule != ''">
             ORDER BY ${rule}
         </if>
+         <if test="start != null and end != null and start != '' and end != ''">
+            AND (date_format(create_time, '%Y-%m-%d') &gt;= #{start} AND date_format(create_time, '%Y-%m-%d') &lt;=
+            #{end})
+        </if>
     </select>
 
     <insert id="insert" parameterType="selling.sunshine.model.OrderBill" useGeneratedKeys="false">
