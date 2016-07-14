@@ -75,21 +75,28 @@
             $.post(url, param, function (result) {
                 if (result.responseCode != "RESPONSE_OK") {
                     $('.download_loading').hide();
-                    $('.download_success').hide();
                     $('.download_failed').show();
                 } else {
                     tempFileName = result.data;
                     fileName = startTime + "_" + endTime;
                     $('.download_loading').hide();
-                    $('.download_failed').hide();
                     $('.download_success').show();
-
                 }
 
             });
         } else {
             alert("开始时间与结束时间均不能为空！");
         }
+    });
+    
+    $("#download_modal").on("show.bs.modal", function() {
+        $('.download_loading').show();
+    });
+    
+    $("#download_modal").on("hide.bs.modal", function() {
+        $('.download_loading').hide();
+        $('.download_failed').hide();
+        $('.download_success').hide();
     });
 
     $('#download').click(function () {
