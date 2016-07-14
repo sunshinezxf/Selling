@@ -55,7 +55,7 @@ public class GatherServiceImpl implements GatherService {
         String path = IndentServiceImpl.class.getResource("/").getPath();
         int index = path.lastIndexOf("/WEB-INF/classes/");
         String parent = path.substring(0, index);
-        String directory = "/material/journal/indent";
+        String directory = "/material/journal/gather";
         Workbook template = WorkBookUtil.getGatherTemplate();
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
         list.forEach(item -> {
