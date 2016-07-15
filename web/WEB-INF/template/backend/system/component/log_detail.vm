@@ -12,8 +12,16 @@
                             <ul>
                                 #foreach( $log in ${logs} )
                                 <li class="cls">
-                                    <p class="date">$!date.format('yyyy-MM-dd HH:mm:ss ',$!{log.creatAt})</p>
-                                    <p class="intro">${log.adminInfo}:${log.operationEvent}</p>
+                                    <p class="date">$!date.format('MM-dd HH:mm:ss ',$!{log.createAt})</p>
+                                    <div class="intro">
+                                        <p class="event">${log.operationEvent}</p>
+                                        <div class="more">
+                                            <p class="account">账号：  ${log.adminInfo}</p>
+                                            #if(${log.ip})
+                                            <p class="ipInfo">ip地址：${log.ip}</p>
+                                            #end
+                                        </div>
+                                    </div>
                                 </li>
                                 #end
                             </ul>
@@ -28,7 +36,6 @@
     $(document).ready(function () {
        var length=$('.cls').width()-$('.date').width();
        $('.intro').css('width',length-1);
-       
     });
     
     $(".main .year .list").each(function (e, target) {

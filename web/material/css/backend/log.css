@@ -96,22 +96,22 @@ hr {
 	position:absolute;
 	top:0;
 	left:0;
-    width: 2%;
+    width: 3%;
 }
 
 .content .line-right {
 	position:absolute;
 	top:0;
 	right:0;
-    width: 12%;
+    width: 5%;
 }
 
 .content .main-container {
 	display: block;
 	position:absolute;
 	top:0;
-	left:3%;
-    width: 85%;
+	left:4%;
+    width: 90%;
     background: url("../../images/log/line-bg.png") repeat-y 7.7em;
 }
 
@@ -210,11 +210,7 @@ hr {
 }
 
 .content .main-container .year .list ul li .intro {
-    font-size: 1.1em;
-    line-height: 1.8em;
-    color: #0080c0;
     float:left;
-    vertical-align:top;
     padding-left:3.2em;
  }
 
@@ -229,4 +225,15 @@ hr {
 .content .wrapper:first-child .main-container .year.log_close .list {
     opacity: 0;
     height: 0 !important;
+}
+
+.event{
+	font-size: 1.1em;
+	line-height: 1.8em;
+	vertical-align:top;
+	color: #0080c0;
+}
+
+.more {
+	line-height: 2em;
 }
