@@ -1258,10 +1258,12 @@ public class AgentController {
         condition.put("agentId", user.getAgent().getAgentId());
         ResultData fetchAgentResponse = agentService.fetchAgent(condition);
         if (fetchAgentResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+        	view.setViewName("/agent/account/statement");
             return view;
         }
         Agent agent = ((List<Agent>) fetchAgentResponse.getData()).get(0);
         view.addObject("agent", agent);
+        condition.put("blockFlag", true);
         ResultData fetchRefundRecordResponse = refundService.fetchRefundRecord(condition);
         if (fetchRefundRecordResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
             return view;
