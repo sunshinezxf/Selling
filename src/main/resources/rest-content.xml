@@ -120,7 +120,11 @@
                 /customer/add = roles[agent]
                 /customer/modify = roles[agent]
 
-                /indent/** = anon
+                /deliver/** = roles["admin, finance"]
+
+                /gather/** = roles["admin, finance"]
+
+                /indent/** = roles["admin", "finance"]
 
                 /order/adminpay = roles[admin]
                 /order/check = roles["admin, express"]
@@ -138,16 +142,14 @@
                 /material/images/** = anon
                 /material/js/** = anon
 
+                /message/** = roles["admin, auditor"]
+
                 /payment/** = anon
 
                 /withdraw/check = roles["admin, finance"]
                 /withdraw/overview = roles["admin, finance"]
 
                 /withdraw/inform = anon
-
-                /message/** = anon
-
-                /test/** = anon
 
                 /** = authc
             </value>
