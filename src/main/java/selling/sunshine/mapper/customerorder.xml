@@ -64,7 +64,8 @@
             </foreach>
         </if>
         <if test="start != null and end != null and start != '' and end != ''">
-            AND (date_format(create_time, '%Y-%m-%d') &gt;= #{start} AND date_format(create_time, '%Y-%m-%d') &lt;= #{end})
+            AND (date_format(create_time, '%Y-%m-%d') &gt;= #{start} AND date_format(create_time, '%Y-%m-%d') &lt;=
+            #{end})
         </if>
         <if test="receiverPhone != null">
             AND receiver_phone = #{receiverPhone}
@@ -86,7 +87,7 @@
     <select id="sumCustomerOrder" parameterType="java.util.Map" resultMap="sumCustomerOrderVo">
         SELECT agent_id, goods_id, SUM(quantity) AS quantity, SUM(total_price) AS price
         FROM customer_order
-        WHERE 1 = 1 AND (order_status='1' OR order_status='2' OR order_status='3')
+        WHERE 1 = 1 AND (order_status IN (1, 2, 3))) AND agent_id IS NOT NULL
         <if test="date != null and date != ''">
             AND create_time LIKE #{date}
         </if>
