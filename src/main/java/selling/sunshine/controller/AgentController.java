@@ -367,11 +367,20 @@ public class AgentController {
      * @param state
      * @return
      */
-    @RequestMapping(method = RequestMethod.GET, value = "/registermodify/{agentId}")
-    public ModelAndView registerModify(@PathVariable("agentId") String agentId) {
+    @RequestMapping(method = RequestMethod.GET, value = "/registermodify")
+    public ModelAndView registerModify() {
         ModelAndView view = new ModelAndView();
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        if (user == null || user.getAgent() == null) {
+        	 Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "未找到该代理商，请重新注册", "/agent/register");
+             view.addObject("prompt", prompt);
+             WechatConfig.oauthWechat(view, "/agent/prompt");
+             view.setViewName("/agent/prompt");
+             return view;
+        }
         Map<String, Object> condition = new HashMap<String, Object>();
-        condition.put("agentId", agentId);
+        condition.put("agentId", user.getAgent().getAgentId());
         ResultData fetchAgentResponse = agentService.fetchAgent(condition);
         if(fetchAgentResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
         	 Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "未找到该代理商，请重新注册", "/agent/register");
@@ -390,6 +399,7 @@ public class AgentController {
         	Credit credit = ((List<Credit>)fetchCreditResponse.getData()).get(0);
         	view.addObject("credit", credit);
         }
+        WechatConfig.oauthWechat(view, "/agent/registermodify");
         view.setViewName("/agent/registermodify");
         return view;
     }
@@ -603,10 +613,20 @@ public class AgentController {
             } else {
             	createResponse = agentService.createAgent(agent);
             }
-            if (!form.getFront().startsWith("/material")&&!form.getFront().startsWith("\\material")) {
+            if ((!form.getFront().startsWith("/material")&&!form.getFront().startsWith("\\material")) || (!form.getBack().startsWith("/material")&&!form.getBack().startsWith("\\material"))) {
                 //进行微信上传身份证的操作
-                String front = WechatUtil.downloadCredit(form.getFront(), PlatformConfig.getAccessToken(), request.getSession().getServletContext().getRealPath("/"));
-                String back = WechatUtil.downloadCredit(form.getBack(), PlatformConfig.getAccessToken(), request.getSession().getServletContext().getRealPath("/"));
+            	String front = "";
+            	String back = "";
+            	if(!form.getFront().startsWith("/material")&&!form.getFront().startsWith("\\material")){
+            		front = WechatUtil.downloadCredit(form.getFront(), PlatformConfig.getAccessToken(), request.getSession().getServletContext().getRealPath("/"));
+            	} else {
+            		front = form.getFront();
+            	}
+            	if(!form.getBack().startsWith("/material")&&!form.getBack().startsWith("\\material")) {
+            		back = WechatUtil.downloadCredit(form.getBack(), PlatformConfig.getAccessToken(), request.getSession().getServletContext().getRealPath("/"));
+            	} else {
+            		back = form.getBack();
+            	}
                 Credit credit = new Credit(front, back, new selling.sunshine.model.lite.Agent(agent));
                 if(form.getAgentId() != null && !form.getAgentId().equals("")){
                 	agentService.updateCredit(credit);
@@ -749,7 +769,7 @@ public class AgentController {
             view.setViewName("/agent/order/place");
             return view;
         } else if(agent.isBlockFlag()) {
-        	Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "尊敬的代理商，您的账号信息未被审核通过，请重新修改账号信息！", "/agent/registermodify/" + user.getAgent().getAgentId());
+        	Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "尊敬的代理商，您的账号信息未被审核通过，请重新修改账号信息！", "/agent/registermodify" );
             view.addObject("prompt", prompt);
             WechatConfig.oauthWechat(view, "/agent/prompt");
             view.setViewName("/agent/prompt");
