@@ -24,11 +24,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import selling.sunshine.form.ExpressForm;
-import selling.sunshine.form.OrderItemForm;
-import selling.sunshine.form.PayForm;
-import selling.sunshine.form.SortRule;
-import selling.sunshine.form.TimeRangeForm;
+import selling.sunshine.form.*;
 import selling.sunshine.model.*;
 import selling.sunshine.model.express.Express;
 import selling.sunshine.model.express.Express4Agent;
@@ -46,13 +42,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.URLEncoder;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -84,7 +74,7 @@ public class OrderController {
 
     @Autowired
     private ExpressService expressService;
-    
+
     @Autowired
     private IndentService indentService;
 
@@ -377,8 +367,7 @@ public class OrderController {
                 expresses.add(express);
             }
         }
-        ExpressComparator expressComparator = new ExpressComparator();
-        Collections.sort(expresses, expressComparator);
+        Collections.sort(expresses);
         for (int i = 0; i < expresses.size(); i++) {
             expresses.get(i).setExpressId("expressNumber" + i);
         }
@@ -423,8 +412,7 @@ public class OrderController {
             ResultData fetchResponse = orderService
                     .fetchCustomerOrder(condition);
             if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-                CustomerOrder order = ((List<CustomerOrder>) orderService
-                        .fetchCustomerOrder(condition).getData()).get(0);
+                CustomerOrder order = ((List<CustomerOrder>) orderService.fetchCustomerOrder(condition).getData()).get(0);
                 Goods4Customer goods = order.getGoods();
                 Express4Customer express = new Express4Customer("尚未设置",
                         PlatformConfig.getValue("sender_name"),
@@ -437,8 +425,7 @@ public class OrderController {
                 expressList.add(express);
             }
         }
-        ExpressComparator expressComparator = new ExpressComparator();
-        Collections.sort(expressList, expressComparator);
+        Collections.sort(expressList);
         for (int i = 0; i < expressList.size(); i++) {
             expressList.get(i).setExpressId("expressNumber" + i);
         }
@@ -673,7 +660,7 @@ public class OrderController {
         resultData.setData(result);
         return resultData;
     }
-    
+
     @RequestMapping(method = RequestMethod.POST, value = "/customerOrder/{orderId}")
     @ResponseBody
     public ResultData overviewCustomerOrder(@PathVariable("orderId") String orderId) {
@@ -681,11 +668,11 @@ public class OrderController {
         Map<String, Object> condition = new HashMap<>();
         condition.put("orderId", orderId);
         ResultData queryData = orderService.fetchCustomerOrder(condition);
-        if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
-        	 CustomerOrder order = ((List<CustomerOrder>) queryData.getData()).get(0);
-        	 resultData.setData(order);
-        	  return resultData;
-		}      
+        if (queryData.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            CustomerOrder order = ((List<CustomerOrder>) queryData.getData()).get(0);
+            resultData.setData(order);
+            return resultData;
+        }
         return resultData;
     }
 
@@ -714,7 +701,7 @@ public class OrderController {
 
         return resultData;
     }
-    
+
     @RequestMapping(method = RequestMethod.GET, value = "/statistics")
     public ModelAndView orderStatistics() {
         ModelAndView view = new ModelAndView();
@@ -890,8 +877,7 @@ public class OrderController {
         condition.put("agentId", agent.getAgentId());
         Agent target = null;
         try {
-            target = ((List<Agent>) agentService.fetchAgent(condition)
-                    .getData()).get(0);
+            target = ((List<Agent>) agentService.fetchAgent(condition).getData()).get(0);
         } catch (Exception e) {
             logger.debug(e.getMessage());
             Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "失败",
@@ -1067,7 +1053,7 @@ public class OrderController {
 
         // 记录下单的admin
         BackOperationLog backOperationLog = new BackOperationLog(
-                admin.getUsername(), toolService.getIP(request) ,"管理员" + admin.getUsername() + "将订单:"
+                admin.getUsername(), toolService.getIP(request), "管理员" + admin.getUsername() + "将订单:"
                 + orderId + "设置为已付款");
         ResultData createLogData = logService
                 .createbackOperationLog(backOperationLog);
@@ -1079,23 +1065,23 @@ public class OrderController {
         result.setData(payData.getData());
         return result;
     }
-    
+
     @RequestMapping(method = RequestMethod.GET, value = "/indent")
     public ModelAndView indent() {
-    	 ModelAndView view = new ModelAndView();
-         view.setViewName("/backend/order/indent");
-         return view;
+        ModelAndView view = new ModelAndView();
+        view.setViewName("/backend/order/indent");
+        return view;
     }
-    
+
     @RequestMapping(method = RequestMethod.POST, value = "/indent")
     public ResultData indent(@Valid TimeRangeForm form, BindingResult result) {
-    	ResultData resultData=new ResultData();
+        ResultData resultData = new ResultData();
         boolean empty = true;
         if (result.hasErrors()) {
-        	resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
             return resultData;
         }
-        List<Object> allList=new ArrayList<>();
+        List<Object> allList = new ArrayList<>();
         Map<String, Object> condition = new HashMap<>();
         condition.put("start", form.getStart());
         condition.put("end", form.getEnd());
@@ -1117,33 +1103,33 @@ public class OrderController {
             allList.addAll(list);
         }
         if (empty) {
-        	resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
             return resultData;
         }
-        ResultData indentData=indentService.produceAll(allList);       
+        ResultData indentData = indentService.produceAll(allList);
         resultData.setData(indentData.getData());
-    	return resultData;
+        return resultData;
     }
-    
-	@RequestMapping(method = RequestMethod.GET, value = "/indent/download/{fileName}/{tempFileName}")
-	public String download(@PathVariable("fileName") String fileName,@PathVariable("tempFileName") String tempFileName, HttpServletRequest request,
-			HttpServletResponse response) throws UnsupportedEncodingException {
-		// 1.设置文件ContentType类型，这样设置，会自动判断下载文件类型
-		response.setContentType("multipart/form-data");
-		// 2.设置文件头：最后一个参数是设置下载文件名
-		response.setHeader("Content-Disposition", "attachment;fileName=" + URLEncoder.encode("订单报表_"+fileName+".xls", "utf-8"));
-		OutputStream out;
-		// 通过文件路径获得File对象
-		String path = IndentController.class.getResource("/").getPath();
-		String os = System.getProperty("os.name").toLowerCase();
-		if (os.indexOf("windows") >= 0) {
-			path = path.substring(1);
-		}
-		int index = path.lastIndexOf("/WEB-INF/classes/");
-		String parent = path.substring(0, index);
-		String directory = "/material/journal/indent";
-		StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(tempFileName + ".xls");
-		File file = new File(sb.toString());
+
+    @RequestMapping(method = RequestMethod.GET, value = "/indent/download/{fileName}/{tempFileName}")
+    public String download(@PathVariable("fileName") String fileName, @PathVariable("tempFileName") String tempFileName, HttpServletRequest request,
+                           HttpServletResponse response) throws UnsupportedEncodingException {
+        // 1.设置文件ContentType类型，这样设置，会自动判断下载文件类型
+        response.setContentType("multipart/form-data");
+        // 2.设置文件头：最后一个参数是设置下载文件名
+        response.setHeader("Content-Disposition", "attachment;fileName=" + URLEncoder.encode("订单报表_" + fileName + ".xls", "utf-8"));
+        OutputStream out;
+        // 通过文件路径获得File对象
+        String path = IndentController.class.getResource("/").getPath();
+        String os = System.getProperty("os.name").toLowerCase();
+        if (os.indexOf("windows") >= 0) {
+            path = path.substring(1);
+        }
+        int index = path.lastIndexOf("/WEB-INF/classes/");
+        String parent = path.substring(0, index);
+        String directory = "/material/journal/indent";
+        StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(tempFileName + ".xls");
+        File file = new File(sb.toString());
         try {
             FileInputStream fis = new FileInputStream(file);
             BufferedInputStream buff = new BufferedInputStream(fis);
@@ -1169,20 +1155,6 @@ public class OrderController {
         }
         return "";
     }
-	
 
-}
-
-class ExpressComparator implements Comparator<Express> {
-
-    @Override
-    public int compare(Express e1, Express e2) {
-        if (e1.getGoodsQuantity() >= e2.getGoodsQuantity()) {
-            return -1;
-        } else {
-            return 1;
-        }
-
-    }
 
 }

@@ -10,14 +10,12 @@
                         <h2><a href="#">2016年<i></i></a></h2>
                         <div class="list">
                             <ul>
+                                #foreach( $log in ${logs} )
                                 <li class="cls">
-                                    <p class="date">3月26日</p>
-                                    <p class="intro">微俱聚硬件微美图正式推出</p>
+                                    <p class="date">$!date.format('yyyy-MM-dd HH:mm:ss ',$!{log.creatAt})</p>
+                                    <p class="intro">${log.adminInfo}:${log.operationEvent}</p>
                                 </li>
-                                <li class="cls">
-                                    <p class="date">3月19日</p>
-                                    <p class="intro">全新会员卡3.0、微官网3.0、微商城2.0上线，渠道统计模块上线！</p>
-                                </li>
+                                #end
                             </ul>
                         </div>
                     </div>
@@ -30,6 +28,7 @@
     $(document).ready(function () {
        var length=$('.cls').width()-$('.date').width();
        $('.intro').css('width',length-1);
+       
     });
     
     $(".main .year .list").each(function (e, target) {

@@ -135,7 +135,7 @@
                 </li>
             #end
             #if($role == "admin")
-                <li><a href="${path.concat('/log')}"><i class="fa fa-book"></i> 系统日志</a></li>
+                <li><a href="${path.concat('/log/overview')}"><i class="fa fa-book"></i> 系统日志</a></li>
             #end
         </ul>
     </div>
