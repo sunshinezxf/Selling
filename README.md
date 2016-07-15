@@ -1,8 +1,9 @@
 #移动端开源直销系统(可接入微信公众号)
 ##系统介绍
 
-*系统后台实现所用语言为Java*
-*本系统基于Spring MVC, Apache Shiro, Mybatis和MySQL实现*
+*1.系统后台实现所用语言为Java*
+
+*2.本系统基于Spring MVC, Apache Shiro, Mybatis和MySQL实现*
 
 ##系统要求
 
