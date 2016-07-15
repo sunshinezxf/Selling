@@ -1432,7 +1432,7 @@ public class AgentController {
             }
             Admin admin = user.getAdmin();
             BackOperationLog backOperationLog = new BackOperationLog(
-                    admin.getUsername(), toolService.getIP(request) ,"管理员" + admin.getUsername() + "授权了代理商"+targetAgent.getAgentId());
+                    admin.getUsername(), toolService.getIP(request) ,"管理员" + admin.getUsername() + "授权了代理商"+targetAgent.getName()+",手机："+targetAgent.getPhone());
             logService.createbackOperationLog(backOperationLog);
             messageService.send(targetAgent.getPhone(), "尊敬的代理商" + targetAgent.getName() + ",您提交的申请信息已经审核通过,欢迎您的加入.【云草纲目】");
         }
@@ -1467,7 +1467,7 @@ public class AgentController {
              }
              Admin admin = user.getAdmin();
              BackOperationLog backOperationLog = new BackOperationLog(
-                     admin.getUsername(), toolService.getIP(request) ,"管理员" + admin.getUsername() + "审核代理商"+agent.getAgentId()+"不通过");
+                     admin.getUsername(), toolService.getIP(request) ,"管理员" + admin.getUsername() + "审核代理商"+agent.getName()+",手机："+agent.getPhone()+"不通过");
              logService.createbackOperationLog(backOperationLog);
          }
          view.setViewName("redirect:/agent/overview");
@@ -1498,7 +1498,7 @@ public class AgentController {
         }
         Admin admin = user.getAdmin();
         BackOperationLog backOperationLog = new BackOperationLog(
-                admin.getUsername(), toolService.getIP(request) ,"管理员" + admin.getUsername() + "禁用了代理商"+agent.getAgentId());
+                admin.getUsername(), toolService.getIP(request) ,"管理员" + admin.getUsername() + "禁用了代理商"+agent.getName()+",手机："+agent.getPhone());
         logService.createbackOperationLog(backOperationLog);
         view.setViewName("redirect:/agent/overview");
         return view;

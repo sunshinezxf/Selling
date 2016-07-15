@@ -103,7 +103,7 @@ public class CommodityController {
             Admin admin = user.getAdmin();
             BackOperationLog backOperationLog = new BackOperationLog(
                     admin.getUsername(), toolService.getIP(request) ,"管理员" + admin.getUsername() + "添加了一个新商品，商品名称:"
-                    + form.getName() +"，商品ID：" + ((Goods4Customer)response.getData()).getGoodsId());
+                    + form.getName());
             logService.createbackOperationLog(backOperationLog);
             view.setViewName("redirect:/commodity/overview");
             return view;
@@ -203,7 +203,7 @@ public class CommodityController {
         }
         Admin admin = user.getAdmin();
         BackOperationLog backOperationLog = new BackOperationLog(
-                admin.getUsername(), toolService.getIP(request) ,"管理员" + admin.getUsername() + "将商品ID为"+oldGoods.getGoodsId()
+                admin.getUsername(), toolService.getIP(request) ,"管理员" + admin.getUsername() + "将商品名称为"+oldGoods.getName()
                 +"的商品信息修改了");
         logService.createbackOperationLog(backOperationLog);
 		view.setViewName("redirect:/commodity/overview");
@@ -370,7 +370,7 @@ public class CommodityController {
             Admin admin = user.getAdmin();
             BackOperationLog backOperationLog = new BackOperationLog(
                     admin.getUsername(), toolService.getIP(request) ,"管理员" + admin.getUsername() + "将商品"
-                    + target.getName()+"下架，商品ID为："+target.getGoodsId());
+                    + target.getName()+"下架");
             logService.createbackOperationLog(backOperationLog);
             view.setViewName("redirect:/commodity/overview");
         } else {
@@ -402,7 +402,7 @@ public class CommodityController {
             Admin admin = user.getAdmin();
             BackOperationLog backOperationLog = new BackOperationLog(
                     admin.getUsername(), toolService.getIP(request) ,"管理员" + admin.getUsername() + "将商品"
-                    + target.getName()+"上架，商品ID为："+target.getGoodsId());
+                    + target.getName()+"上架");
             logService.createbackOperationLog(backOperationLog);
             view.setViewName("redirect:/commodity/overview");
         } else {

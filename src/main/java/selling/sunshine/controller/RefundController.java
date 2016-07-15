@@ -23,6 +23,7 @@ import selling.sunshine.model.User;
 import selling.sunshine.model.goods.Goods4Customer;
 import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
+import selling.sunshine.service.CommodityService;
 import selling.sunshine.service.LogService;
 import selling.sunshine.service.RefundService;
 import selling.sunshine.service.ToolService;
@@ -56,6 +57,9 @@ public class RefundController {
     
     @Autowired
     private LogService logService;
+    
+    @Autowired
+    private CommodityService commodityService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/config")
     public ModelAndView config() {
@@ -72,7 +76,9 @@ public class RefundController {
             return view;
         }
         Goods4Customer goods = new Goods4Customer();
-        goods.setGoodsId(goodsId);
+        Map<String,Object> condition=new HashMap<>();
+        condition.put("goodsId", goodsId);
+        goods=((List<Goods4Customer>)commodityService.fetchGoods4Customer(condition).getData()).get(0);
         RefundConfig config = new RefundConfig(goods, Integer.parseInt(form.getAmountTrigger()), Double.parseDouble(form.getLevel1Percent()),Double.parseDouble(form.getLevel2Percent()),Double.parseDouble(form.getLevel3Percent()),Integer.parseInt(form.getMonthConfig()));
         ResultData createResponse = refundService.createRefundConfig(config);
         if (createResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
@@ -84,7 +90,7 @@ public class RefundController {
             }
             Admin admin = user.getAdmin();
             BackOperationLog backOperationLog = new BackOperationLog(
-                    admin.getUsername(), toolService.getIP(request) ,"管理员" + admin.getUsername() + "修改了商品ID为"+goodsId+"的返现配置");
+                    admin.getUsername(), toolService.getIP(request) ,"管理员" + admin.getUsername() + "修改了商品名称为"+goods.getName()+"的返现配置");
             logService.createbackOperationLog(backOperationLog);
 
             view.setViewName("redirect:/refund/config");

@@ -110,7 +110,7 @@ public class AdminController {
             }
             Admin targetAdmin = targetUser.getAdmin();
             BackOperationLog backOperationLog = new BackOperationLog(
-            		targetAdmin.getUsername(), toolService.getIP(request) ,"管理员" + targetAdmin.getUsername() + "删除了管理员ID为："+user.getAdmin().getAdminId()+"的管理员");
+            		targetAdmin.getUsername(), toolService.getIP(request) ,"管理员" + targetAdmin.getUsername() + "删除了管理员："+user.getAdmin().getUsername());
             logService.createbackOperationLog(backOperationLog);
 	        return response;
 		}
@@ -138,7 +138,7 @@ public class AdminController {
             }
             Admin targetAdmin = user.getAdmin();
             BackOperationLog backOperationLog = new BackOperationLog(
-            		targetAdmin.getUsername(), toolService.getIP(request) ,"管理员" + targetAdmin.getUsername() + "修改了管理员ID为："+adminId+"的密码");
+            		targetAdmin.getUsername(), toolService.getIP(request) ,"管理员" + targetAdmin.getUsername() + "修改了管理员："+adminLoginForm.getUsername()+"的密码");
             logService.createbackOperationLog(backOperationLog);
         	view.setViewName("redirect:/admin/overview");
             return view;
