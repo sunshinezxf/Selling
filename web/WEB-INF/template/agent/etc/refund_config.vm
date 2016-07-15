@@ -20,6 +20,11 @@
                     <a href="${path.concat('/material/protocol/2.pdf')}">《云草纲目社群拓展合作协议书（试行版）》</a>
                 </div>
             </label>
+            <label class="weui_cell weui_check_label">
+                <div class="weui_cell_bd weui_cell_primary problock" style="text-align:center;">
+                    <a href="${path.concat('/material/protocol/3.pdf')}">《社群管理规范》</a>
+                </div>
+            </label>
     </article>
     #parse("/agent/component/navigate.vm")
 </div>
