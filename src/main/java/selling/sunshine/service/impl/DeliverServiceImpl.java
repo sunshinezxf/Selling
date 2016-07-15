@@ -73,7 +73,7 @@ public class DeliverServiceImpl implements DeliverService {
                 ResultData response = orderItemDao.queryOrderItem(condition);
                 if (response.getResponseCode() == ResponseCode.RESPONSE_OK && !((List<OrderItem>) response.getData()).isEmpty()) {
                     OrderItem temp = ((List<OrderItem>) response.getData()).get(0);
-                    String time = format.format(temp.getCreateAt());
+                    String time = format.format(express.getCreateAt());
                     StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(time);
                     File file = new File(sb.toString());
                     if (!file.exists()) {
@@ -98,7 +98,7 @@ public class DeliverServiceImpl implements DeliverService {
                 ResultData response = customerOrderDao.queryOrder(condition);
                 if (response.getResponseCode() == ResponseCode.RESPONSE_OK && !((List<CustomerOrder>) response.getData()).isEmpty()) {
                     CustomerOrder temp = ((List<CustomerOrder>) response.getData()).get(0);
-                    String time = format.format(temp.getCreateAt());
+                    String time = format.format(express.getCreateAt());
                     StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(time);
                     File file = new File(sb.toString());
                     if (!file.exists()) {
