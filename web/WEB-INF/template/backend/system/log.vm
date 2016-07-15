@@ -9,7 +9,11 @@
     #parse("/backend/component/navigate_with_login.vm")
     <div class="container-fluid">
         #parse("/backend/component/sidebar.vm")
-        #parse("/backend/system/component/log_detail.vm")
+        #if(${logs})
+            #parse("/backend/system/component/log_detail.vm")
+        #else
+            #parse("/backend/system/component/no_log.vm")
+        #end
     </div>
 </body>
 </html>

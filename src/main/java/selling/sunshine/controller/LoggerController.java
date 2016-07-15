@@ -1,0 +1,42 @@
+package selling.sunshine.controller;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
+import selling.sunshine.model.BackOperationLog;
+import selling.sunshine.service.LogService;
+import selling.sunshine.utils.ResponseCode;
+import selling.sunshine.utils.ResultData;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * Created by sunshine on 7/15/16.
+ */
+@RequestMapping("/log")
+@RestController
+public class LoggerController {
+    private Logger logger = LoggerFactory.getLogger(LoggerController.class);
+
+    @Autowired
+    private LogService logService;
+
+    @RequestMapping(method = RequestMethod.GET, value = "/overview")
+    public ModelAndView overview() {
+        ModelAndView view = new ModelAndView();
+        Map<String, Object> condition = new HashMap<>();
+        ResultData response = logService.fetchBackOperationLog(condition);
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            List<BackOperationLog> list = (List<BackOperationLog>) response.getData();
+            view.addObject("logs", list);
+        }
+        view.setViewName("/backend/system/log");
+        return view;
+    }
+}

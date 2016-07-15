@@ -40,7 +40,7 @@
     </select>
     
     <update id="update" parameterType="selling.sunshine.model.Credit" useGeneratedKeys="false">
-    	UPDATE CREDIT_INFO
+    	UPDATE credit_info
     	<set>
 	        <if test="agent.agentId != null and agent.agentId != ''">
 	            agent_id = #{agent.agentId},

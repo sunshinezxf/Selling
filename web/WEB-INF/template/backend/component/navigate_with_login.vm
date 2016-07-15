@@ -101,7 +101,7 @@
                     </li>
                 #end
                 #if($role == "admin")
-                    <li><a href="${path.concat('/log')}">系统日志</a></li>
+                    <li><a href="${path.concat('/log/overview')}">系统日志</a></li>
                 #end
                 <li><a href="${path.concat('/logout')}">退出</a></li>
             </ul>
