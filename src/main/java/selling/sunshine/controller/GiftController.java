@@ -79,8 +79,11 @@ public class GiftController {
             return resultData;
         }
         Admin admin = user.getAdmin();
+        condition.clear();
+        condition.put("agentId", agentId);
+        selling.sunshine.model.Agent agent=((List<selling.sunshine.model.Agent>)agentService.fetchAgent(condition).getData()).get(0);
         BackOperationLog backOperationLog = new BackOperationLog(
-                admin.getUsername(), toolService.getIP(request) ,"管理员" + admin.getUsername() + "修改了代理商"+agentId+"的赠送配置");
+                admin.getUsername(), toolService.getIP(request) ,"管理员" + admin.getUsername() + "修改了代理商"+agent.getName()+"的赠送配置");
         logService.createbackOperationLog(backOperationLog);
 
 		return resultData;
