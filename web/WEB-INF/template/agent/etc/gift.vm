@@ -48,6 +48,8 @@ $.check_gift = function(){
 	$.each($("#gift-list").children(), function(i, val){
 		if($(val).find(".weui_cell_ft").text() == "可赠送：0件"){
 			$(val).remove();
+		} else if(($(val).find(".weui_cell_ft").text()).charAt(4) == "-"){
+			$(val).remove();
 		} else {
 			rtn = true;
 		}

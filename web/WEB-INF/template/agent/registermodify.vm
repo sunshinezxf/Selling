@@ -17,6 +17,7 @@
     <div class="bd">
         #parse("/agent/component/register_modify_form.vm")
     </div>
+    #parse("/agent/wechat/component/validation.vm")
 </div>
 </body>
 </html>
