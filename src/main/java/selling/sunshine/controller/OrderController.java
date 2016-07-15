@@ -1170,6 +1170,12 @@ public class OrderController {
         return "";
     }
 	
+    @RequestMapping(method = RequestMethod.GET, value = "/orderPool")
+    public ResultData orderPool() {
+    	ResultData resultData = new ResultData();
+    	resultData=orderService.poolOrder();
+    	return resultData;
+    }
 
 }
 

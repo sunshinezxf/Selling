@@ -114,9 +114,9 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
 			condition.put("date", currentDate + "%");
 			List<OrderPool> poolList = sqlSession.selectList("selling.order.pool.query", condition);
 			if (poolList.size() > 0) {
-				Set<OrderPool> h = new HashSet<OrderPool>(poolList);
-				poolList.clear();
-				poolList.addAll(h);
+//				Set<OrderPool> h = new HashSet<OrderPool>(poolList);
+//				poolList.clear();
+//				poolList.addAll(h);
 				for (int j = 0; j < poolList.size(); j++) {
 					// 返现要求：连续几个月达到返现数量标准
 					String date = dateFormat.format(poolList.get(j).getPoolDate());
@@ -128,7 +128,7 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
 						Date d = poolList.get(j).getPoolDate();
 						Calendar calendar = Calendar.getInstance();
 						calendar.setTime(d);
-						calendar.add(Calendar.MONTH, -monthConfig);
+						calendar.add(Calendar.MONTH, -i);
 						con.clear();
 						con.put("agentId", poolList.get(j).getAgent().getAgentId());
 						con.put("goodsId", poolList.get(j).getGoods().getGoodsId());
