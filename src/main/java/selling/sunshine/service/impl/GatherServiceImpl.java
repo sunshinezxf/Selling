@@ -156,6 +156,14 @@ public class GatherServiceImpl implements GatherService {
         Row orderNo = sheet.getRow(2);
         Cell orderNoCell = orderNo.getCell(2);
         orderNoCell.setCellValue(bill.getOrder().getOrderId());
+        Cell channel = orderNo.getCell(5);
+        if(bill.getChannel().equals("wx_pub")){
+        	channel.setCellValue("微信付款");
+        }else if(bill.getChannel().equals("coffer")){
+        	channel.setCellValue("余额付款");
+        } else {
+        	channel.setCellValue("");
+        }
         Row price = sheet.getRow(3);
         Cell priceCell = price.getCell(2);
         priceCell.setCellValue(bill.getBillAmount());
@@ -200,6 +208,12 @@ public class GatherServiceImpl implements GatherService {
         Row orderNo = sheet.getRow(2);
         Cell orderNoCell = orderNo.getCell(2);
         orderNoCell.setCellValue(item.getOrderId());
+        Cell channel = orderNo.getCell(5);
+        if(bill.getChannel().equals("wx_pub")){
+        	channel.setCellValue("微信付款");
+        } else {
+        	channel.setCellValue("");
+        }
         Row price = sheet.getRow(3);
         Cell priceCell = price.getCell(2);
         priceCell.setCellValue(item.getTotalPrice());
@@ -237,6 +251,12 @@ public class GatherServiceImpl implements GatherService {
         Row orderNo = sheet.getRow(2);
         Cell orderNoCell = orderNo.getCell(2);
         orderNoCell.setCellValue(bill.getBillId());
+        Cell channel = orderNo.getCell(5);
+        if(bill.getChannel().equals("wx_pub")){
+        	channel.setCellValue("充值");
+        } else {
+        	channel.setCellValue("");
+        }
         Row price = sheet.getRow(3);
         Cell priceCell = price.getCell(2);
         priceCell.setCellValue(bill.getBillAmount());
