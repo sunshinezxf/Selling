@@ -5,7 +5,7 @@ import selling.sunshine.model.Entity;
 /**
  * Created by sunshine on 6/22/16.
  */
-public class Express extends Entity {
+public class Express extends Entity implements Comparable<Express> {
     private String expressId;
     private String expressNumber;
     private String senderName;
@@ -45,6 +45,19 @@ public class Express extends Entity {
     public Express(String expressNumber, String senderName, String senderPhone, String senderAddress, String receiverName, String receiverPhone, String receiverAddress, String goodsName) {
         this(senderName, senderPhone, senderAddress, receiverName, receiverPhone, receiverAddress, goodsName);
         this.expressNumber = expressNumber;
+    }
+
+    @Override
+    public int compareTo(Express o) {
+        int result;
+        if (this.goodsQuantity > o.goodsQuantity) {
+            result = 1;
+        } else if (this.goodsQuantity == o.getGoodsQuantity()) {
+            result = 0;
+        } else {
+            result = -1;
+        }
+        return result;
     }
 
     public String getExpressId() {
@@ -127,11 +140,11 @@ public class Express extends Entity {
         this.linkId = linkId;
     }
 
-	public int getGoodsQuantity() {
-		return goodsQuantity;
-	}
+    public int getGoodsQuantity() {
+        return goodsQuantity;
+    }
 
-	public void setGoodsQuantity(int goodsQuantity) {
-		this.goodsQuantity = goodsQuantity;
-	}
+    public void setGoodsQuantity(int goodsQuantity) {
+        this.goodsQuantity = goodsQuantity;
+    }
 }
