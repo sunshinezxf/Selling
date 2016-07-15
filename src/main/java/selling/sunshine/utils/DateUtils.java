@@ -23,7 +23,6 @@ public class DateUtils {
 
 	public void process(String date1, String date2) {
 		if (date1.equals(date2)) {
-			logger.error("两个日期相等!");
 			return;
 		}
 
@@ -36,16 +35,12 @@ public class DateUtils {
         dateList.add(date1);
 		tmp = format.format(str2Date(date1).getTime() + 3600 * 24 * 1000);
 
-		int num = 0;
+
 		while (tmp.compareTo(date2) < 0) {
-			//System.out.println(tmp);
 			dateList.add(tmp);
-			num++;
 			tmp = format.format(str2Date(tmp).getTime() + 3600 * 24 * 1000);
 		}
 		 dateList.add(date2);
-		if (num == 0)
-			logger.error("两个日期相邻!");
 	}
 
 	private Date str2Date(String str) {
