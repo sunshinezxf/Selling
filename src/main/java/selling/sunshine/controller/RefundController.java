@@ -205,18 +205,5 @@ public class RefundController {
     	return resultData;
 	}
     
-    @RequestMapping(method = RequestMethod.GET, value = "/refundRecord")
-    public ResultData refundRecord() {
-    	ResultData resultData = new ResultData();
-    	resultData=refundService.refundRecord();
-    	return resultData;
-    }
-    
-    @RequestMapping(method = RequestMethod.GET, value = "/refund")
-    public ResultData refund() {
-    	ResultData resultData = new ResultData();
-    	resultData=refundService.refund();
-    	return resultData;
-    }
 
 }

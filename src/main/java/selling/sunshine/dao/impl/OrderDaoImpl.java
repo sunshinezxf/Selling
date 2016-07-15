@@ -240,7 +240,7 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
         ResultData result = new ResultData();
         // 获取当月的前一个月的日期 xxxx年xx月
         Calendar c = Calendar.getInstance();
-        //c.add(Calendar.MONTH, -1);
+        c.add(Calendar.MONTH, -1);
         Timestamp lastMonth = new Timestamp(c.getTimeInMillis());
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM");
         String date = dateFormat.format(lastMonth);

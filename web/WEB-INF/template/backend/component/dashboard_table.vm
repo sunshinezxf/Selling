@@ -7,9 +7,7 @@
             </ol>
         </div>
     </div>
-    <button onclick="javascript:window.location.href='${path.concat('/order/orderPool')}'"> orderPool</button>
-    <button onclick="javascript:window.location.href='${path.concat('/refund/refundRecord')}'"> refundRecord</button>
-    <button onclick="javascript:window.location.href='${path.concat('/refund/refund')}'"> refund</button>
+
 </div>
 
 <div id="order_container" class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main"></div>
