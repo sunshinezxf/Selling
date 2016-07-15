@@ -1484,6 +1484,11 @@ public class AgentController {
             return view;
         }
         Agent agent = new Agent();
+        Map<String, Object> condition=new HashMap<>();
+        condition.put("agentId", agentId);
+        condition.put("granted", true);
+        condition.put("blockFlag", false);
+        agent=((List<Agent>)agentService.fetchAgent(condition).getData()).get(0);
         agent.setAgentId(agentId);
         agent.setGranted(true);
         agent.setBlockFlag(true);
