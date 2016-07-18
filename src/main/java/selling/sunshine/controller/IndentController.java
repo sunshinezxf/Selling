@@ -47,7 +47,7 @@ public class IndentController {
         Map<String, Object> condition = new HashMap<>();
         List<Integer> status = new ArrayList<>(Arrays.asList(1, 2, 3, 4));
         condition.put("statusList", status);
-        condition.put("blockFalg", false);
+        condition.put("blockFlag", false);
         List<SortRule> rule = new ArrayList<>();
         rule.add(new SortRule("create_time", "asc"));
         condition.put("sort", rule);
@@ -87,9 +87,11 @@ public class IndentController {
         List<Integer> status = new ArrayList<>(Arrays.asList(1, 2, 3, 4));
         condition.put("statusList", status);
         ResultData queryResponse = orderService.fetchOrderItem(condition);
+        List total = new ArrayList<>();
         if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             empty = false;
             List<OrderItem> list = (List<OrderItem>) queryResponse.getData();
+            total.addAll(list);
             indentService.produce(list);
         }
         condition.remove("statusList");
@@ -98,18 +100,24 @@ public class IndentController {
         if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             empty = false;
             List<CustomerOrder> list = (List<CustomerOrder>) queryResponse.getData();
+            total.addAll(list);
             indentService.produce(list);
         }
         if (empty) {
             data.setResponseCode(ResponseCode.RESPONSE_ERROR);
             return data;
         }
+        //indent generate summary indent xlsx
+        
+        ResultData resultData=indentService.produceSummary(total);
+        String teString=resultData.getData().toString();
+        System.err.println(teString);
+
         String path = IndentController.class.getResource("/").getPath();
         String os = System.getProperty("os.name").toLowerCase();
         if (os.indexOf("windows") >= 0) {
             path = path.substring(1);
         }
-
         int index = path.lastIndexOf("/WEB-INF/classes/");
         String parent = path.substring(0, index);
         String directory = "/material/journal/indent";
@@ -120,6 +128,7 @@ public class IndentController {
         dateList.forEach((date) -> {
             StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(date.replaceAll("-", ""));
             pathList.add(sb.toString());
+            System.err.println(sb.toString());
         });
         String zipName = IDGenerator.generate("Indent");
         StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(zipName + ".zip");
@@ -128,7 +137,6 @@ public class IndentController {
         data.setData(zipName);
         return data;
     }
-
 
 	@RequestMapping(method = RequestMethod.GET, value = "/download/{fileName}/{tempFileName}")
 	public String download(@PathVariable("fileName") String fileName,@PathVariable("tempFileName") String tempFileName, HttpServletRequest request,
@@ -174,10 +182,6 @@ public class IndentController {
         }
         return "";
     }
-	
-
-	
-
 
 
 }

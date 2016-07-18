@@ -194,6 +194,9 @@ public class GatherServiceImpl implements GatherService {
         sellPrice3.setCellValue(0);
         Cell sellPrice4 = sellInfo.getCell(5);
         sellPrice4.setCellValue(bill.getBillAmount());
+        Row sellMan = sheet.getRow(8);
+        Cell sellManInfo = sellMan.getCell(1);
+        sellManInfo.setCellValue(agent.getName());
         return template;
     }
 
@@ -236,6 +239,9 @@ public class GatherServiceImpl implements GatherService {
         sellPrice3.setCellValue(0);
         Cell sellPrice4 = sellInfo.getCell(5);
         sellPrice4.setCellValue(item.getTotalPrice());
+        Row sellMan = sheet.getRow(8);
+        Cell sellManInfo = sellMan.getCell(1);
+        sellManInfo.setCellValue("无");
         return template;
     }
     
@@ -287,6 +293,9 @@ public class GatherServiceImpl implements GatherService {
         sellPrice3.setCellValue(0);
         Cell sellPrice4 = sellInfo.getCell(5);
         sellPrice4.setCellValue(bill.getBillAmount());
+        Row sellMan = sheet.getRow(8);
+        Cell sellManInfo = sellMan.getCell(1);
+        sellManInfo.setCellValue("无");
         return template;
     }
 }

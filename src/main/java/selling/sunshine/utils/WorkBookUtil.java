@@ -1,7 +1,6 @@
 package selling.sunshine.utils;
 
 import org.apache.poi.openxml4j.opc.OPCPackage;
-
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -35,6 +34,24 @@ public class WorkBookUtil {
         return workbook;
     }
 
+    public static Workbook getIndentSummaryTemplate() {
+        Workbook workbook = null;
+        String path = WorkBookUtil.class.getResource("/").getPath();
+        int index = path.lastIndexOf("/WEB-INF/classes/");
+        String parent = path.substring(0, index);
+        File file = new File(parent + PlatformConfig.getValue("indent_summary_template"));
+        if (!file.exists()) {
+            logger.error("订货单模板文件不存在");
+        }
+        try {
+            OPCPackage pkg = OPCPackage.open(file);
+            workbook = new XSSFWorkbook(pkg);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        return workbook;
+    }
+
     public static Workbook getDeliverTemplate() {
         Workbook workbook = null;
         String path = WorkBookUtil.class.getResource("/").getPath();
@@ -42,7 +59,7 @@ public class WorkBookUtil {
         String parent = path.substring(0, index);
         File file = new File(parent + PlatformConfig.getValue("deliver_template"));
         if (!file.exists()) {
-            logger.error("订货单模板文件不存在");
+            logger.error("发货单模板文件不存在");
         }
         try {
             OPCPackage pkg = OPCPackage.open(file);
@@ -60,7 +77,7 @@ public class WorkBookUtil {
         String parent = path.substring(0, index);
         File file = new File(parent + PlatformConfig.getValue("gather_template"));
         if (!file.exists()) {
-            logger.error("订货单模板文件不存在");
+            logger.error("收款单模板文件不存在");
         }
         try {
             OPCPackage pkg = OPCPackage.open(file);
