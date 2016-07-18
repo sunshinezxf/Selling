@@ -358,58 +358,58 @@ public class IndentServiceImpl implements IndentService {
         for (Object item : list) {
             if (item instanceof OrderItem) {
                 OrderItem o = (OrderItem) item;
-                Row current = sheet.getRow(row);
-                Cell noCell = current.getCell(0);
+                Row current = sheet.createRow(row);
+                Cell noCell = current.createCell(0);
                 noCell.setCellValue(o.getOrderItemId());
-                Cell dateCell = current.getCell(1);
+                Cell dateCell = current.createCell(1);
                 SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日");
                 dateCell.setCellValue(format.format(o.getCreateAt()));
-                Cell consumerNameCell = current.getCell(2);
+                Cell consumerNameCell = current.createCell(2);
                 consumerNameCell.setCellValue(o.getCustomer().getName());
-                Cell phoneCell = current.getCell(3);
+                Cell phoneCell = current.createCell(3);
                 phoneCell.setCellValue(o.getCustomer().getPhone().getPhone());
-                Cell addressCell = current.getCell(4);
+                Cell addressCell = current.createCell(4);
                 addressCell.setCellValue(o.getCustomer().getAddress().getAddress());
                 Map<String, Object> condition = new HashMap<>();
                 condition.put("orderId", o.getOrder().getOrderId());
                 ResultData response = orderDao.queryOrder(condition);
                 if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
-                    Cell agentCell = current.getCell(5);
+                    Cell agentCell = current.createCell(5);
                     Order order = ((List<Order>) response.getData()).get(0);
                     agentCell.setCellValue(order.getAgent().getName());
                 }
-                Cell productNameCell = current.getCell(6);
+                Cell productNameCell = current.createCell(6);
                 productNameCell.setCellValue(o.getGoods().getName());
-                Cell quantityCell = current.getCell(7);
+                Cell quantityCell = current.createCell(7);
                 quantityCell.setCellValue(o.getGoodsQuantity());
-                Cell priceCell = current.getCell(8);
+                Cell priceCell = current.createCell(8);
                 priceCell.setCellValue(o.getOrderItemPrice());
-                Cell description = current.getCell(9);
+                Cell description = current.createCell(9);
                 description.setCellValue((o.getOrder().getType() == OrderType.GIFT) ? "赠品" : "");
                 row++;
             } else if (item instanceof CustomerOrder) {
                 CustomerOrder c = (CustomerOrder) item;
-                Row current = sheet.getRow(row);
-                Cell noCell = current.getCell(0);
+                Row current = sheet.createRow(row);
+                Cell noCell = current.createCell(0);
                 noCell.setCellValue(c.getOrderId());
-                Cell dateCell = current.getCell(1);
+                Cell dateCell = current.createCell(1);
                 SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日");
                 dateCell.setCellValue(format.format(c.getCreateAt()));
-                Cell consumerNameCell = current.getCell(2);
+                Cell consumerNameCell = current.createCell(2);
                 consumerNameCell.setCellValue(c.getReceiverName());
-                Cell phoneCell = current.getCell(3);
+                Cell phoneCell = current.createCell(3);
                 phoneCell.setCellValue(c.getReceiverPhone());
-                Cell addressCell = current.getCell(4);
+                Cell addressCell = current.createCell(4);
                 if (c.getAgent() != null) {
-                    Cell agentCell = current.getCell(5);
+                    Cell agentCell = current.createCell(5);
                     agentCell.setCellValue(c.getAgent().getName());
                 }
                 addressCell.setCellValue(c.getReceiverAddress());
-                Cell productNameCell = current.getCell(6);
+                Cell productNameCell = current.createCell(6);
                 productNameCell.setCellValue(c.getGoods().getName());
-                Cell quantityCell = current.getCell(7);
+                Cell quantityCell = current.createCell(7);
                 quantityCell.setCellValue(c.getQuantity());
-                Cell priceCell = current.getCell(8);
+                Cell priceCell = current.createCell(8);
                 priceCell.setCellValue(c.getTotalPrice());
                 row++;
             }
