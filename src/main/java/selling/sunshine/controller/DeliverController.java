@@ -9,9 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
-
-import com.alibaba.fastjson.JSON;
-
 import selling.sunshine.form.SortRule;
 import selling.sunshine.form.TimeRangeForm;
 import selling.sunshine.model.express.Express;
@@ -83,10 +80,6 @@ public class DeliverController {
             return data;
         }
         List<Express> list = (List<Express>) queryResponse.getData();
-        logger.debug("测试form");
-        logger.debug(JSON.toJSONString(form));
-        logger.debug("测试发货单");
-        logger.debug(JSON.toJSONString(list));
         ResultData produceResponse = deliverService.produce(list);
         if (produceResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
             data.setResponseCode(ResponseCode.RESPONSE_ERROR);
@@ -119,7 +112,7 @@ public class DeliverController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/download/{fileName}/{tempFileName}")
     public String download(@PathVariable("fileName") String fileName, @PathVariable("tempFileName") String tempFileName, HttpServletRequest request,
-                            HttpServletResponse response) throws UnsupportedEncodingException {
+                           HttpServletResponse response) throws UnsupportedEncodingException {
         // 1.设置文件ContentType类型，这样设置，会自动判断下载文件类型
         response.setContentType("multipart/form-data");
         // 2.设置文件头：最后一个参数是设置下载文件名

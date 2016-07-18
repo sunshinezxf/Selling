@@ -15,10 +15,7 @@ import selling.sunshine.model.OrderItem;
 import selling.sunshine.model.OrderType;
 import selling.sunshine.model.express.Express;
 import selling.sunshine.service.DeliverService;
-import selling.sunshine.utils.PlatformConfig;
-import selling.sunshine.utils.ResponseCode;
-import selling.sunshine.utils.ResultData;
-import selling.sunshine.utils.WorkBookUtil;
+import selling.sunshine.utils.*;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -38,7 +35,7 @@ public class DeliverServiceImpl implements DeliverService {
 
     @Autowired
     private ExpressDao expressDao;
-    
+
     @Autowired
     private OrderDao orderDao;
 
@@ -151,13 +148,13 @@ public class DeliverServiceImpl implements DeliverService {
         Map<String, Object> condition = new HashMap<String, Object>();
         condition.put("orderId", item.getOrder().getOrderId());
         ResultData fetchOrderData = orderDao.queryOrder(condition);
-        if(fetchOrderData.getResponseCode() == ResponseCode.RESPONSE_OK && !((List<Order>)fetchOrderData.getData()).isEmpty()){
-        	Order orderInfo = ((List<Order>)fetchOrderData.getData()).get(0);
-        	if(orderInfo.getType() == OrderType.GIFT){
-        		tip.setCellValue("赠送");
-        	} else {
-        		tip.setCellValue("");
-        	}
+        if (fetchOrderData.getResponseCode() == ResponseCode.RESPONSE_OK && !((List<Order>) fetchOrderData.getData()).isEmpty()) {
+            Order orderInfo = ((List<Order>) fetchOrderData.getData()).get(0);
+            if (orderInfo.getType() == OrderType.GIFT) {
+                tip.setCellValue("赠送");
+            } else {
+                tip.setCellValue("");
+            }
         }
         Row seller = sheet.getRow(8);
         Cell sellerName = seller.getCell(2);
@@ -212,5 +209,55 @@ public class DeliverServiceImpl implements DeliverService {
         return template;
     }
 
-
+    @Override
+    public ResultData produceSummary(List<Express> list) {
+        ResultData result = new ResultData();
+        String path = IndentServiceImpl.class.getResource("/").getPath();
+        int index = path.lastIndexOf("/WEB-INF/classes/");
+        String parent = path.substring(0, index);
+        String directory = "/material/journal/deliver";
+        File file = new File(parent + directory);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        Workbook template = WorkBookUtil.getDeliverSummaryTemplate();
+        Sheet sheet = template.getSheetAt(0);
+        int row = 1;
+        for (Express item : list) {
+            Row current = sheet.createRow(row);
+            Cell noCell = current.createCell(0);
+            noCell.setCellValue(item.getLinkId());
+            Cell expressCell = current.createCell(1);
+            expressCell.setCellValue(item.getExpressNumber());
+            Cell deliverCell = current.createCell(2);
+            SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日");
+            deliverCell.setCellValue(format.format(item.getCreateAt()));
+            Cell consumerName = current.createCell(3);
+            consumerName.setCellValue(item.getReceiverName());
+            Cell phoneCell = current.createCell(4);
+            phoneCell.setCellValue(item.getReceiverPhone());
+            Cell addressCell = current.createCell(5);
+            addressCell.setCellValue(item.getReceiverAddress());
+            Cell product = current.createCell(6);
+            product.setCellValue(item.getGoodsName());
+            Cell amount = current.createCell(7);
+            amount.setCellValue(item.getGoodsQuantity());
+            row++;
+        }
+        String name = IDGenerator.generate("DELIVER");
+        StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append("发货统计清单_").append(name).append(".xlsx");
+        try {
+            FileOutputStream out = new FileOutputStream(sb.toString());
+            template.write(out);
+            out.close();
+            template.close();
+            result.setData(new StringBuffer(directory).append("/").append("订货统计清单_").append(name).append(".xlsx").toString());
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription(e.getMessage());
+            return result;
+        }
+        return result;
+    }
 }

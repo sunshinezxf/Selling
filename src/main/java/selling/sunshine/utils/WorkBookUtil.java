@@ -41,7 +41,7 @@ public class WorkBookUtil {
         String parent = path.substring(0, index);
         File file = new File(parent + PlatformConfig.getValue("indent_summary_template"));
         if (!file.exists()) {
-            logger.error("订货单模板文件不存在");
+            logger.error("订货单清单模板文件不存在");
         }
         try {
             OPCPackage pkg = OPCPackage.open(file);
@@ -70,6 +70,24 @@ public class WorkBookUtil {
         return workbook;
     }
 
+    public static Workbook getDeliverSummaryTemplate() {
+        Workbook workbook = null;
+        String path = WorkBookUtil.class.getResource("/").getPath();
+        int index = path.lastIndexOf("/WEB-INF/classes/");
+        String parent = path.substring(0, index);
+        File file = new File(parent + PlatformConfig.getValue("deliver_summary_template"));
+        if (!file.exists()) {
+            logger.error("发货单清单模板文件不存在");
+        }
+        try {
+            OPCPackage pkg = OPCPackage.open(file);
+            workbook = new XSSFWorkbook(pkg);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        return workbook;
+    }
+
     public static Workbook getGatherTemplate() {
         Workbook workbook = null;
         String path = WorkBookUtil.class.getResource("/").getPath();
@@ -87,15 +105,15 @@ public class WorkBookUtil {
         }
         return workbook;
     }
-    
-    public static Workbook getGatherSummaryTemplate(){
-    	Workbook workbook = null;
+
+    public static Workbook getGatherSummaryTemplate() {
+        Workbook workbook = null;
         String path = WorkBookUtil.class.getResource("/").getPath();
         int index = path.lastIndexOf("/WEB-INF/classes/");
         String parent = path.substring(0, index);
         File file = new File(parent + PlatformConfig.getValue("gather_summary_template"));
         if (!file.exists()) {
-            logger.error("收款单模板文件不存在");
+            logger.error("收款单清单模板文件不存在");
         }
         try {
             OPCPackage pkg = OPCPackage.open(file);

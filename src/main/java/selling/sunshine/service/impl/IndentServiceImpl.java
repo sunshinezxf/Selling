@@ -422,13 +422,13 @@ public class IndentServiceImpl implements IndentService {
             }
         }
         String name = IDGenerator.generate("SUMMARY");
-        StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append("发货统计清单_").append(name).append(".xlsx");
+        StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append("订货统计清单_").append(name).append(".xlsx");
         try {
             FileOutputStream out = new FileOutputStream(sb.toString());
             template.write(out);
             out.close();
             template.close();
-            result.setData(new StringBuffer(directory).append("/").append("发货统计清单_").append(name).append(".xlsx").toString());
+            result.setData(new StringBuffer(directory).append("/").append("订货统计清单_").append(name).append(".xlsx").toString());
         } catch (Exception e) {
             logger.error(e.getMessage());
             result.setResponseCode(ResponseCode.RESPONSE_ERROR);
