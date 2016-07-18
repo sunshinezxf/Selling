@@ -75,21 +75,21 @@ public class GatherController {
         if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             empty = false;
             List<OrderBill> list = (List<OrderBill>) queryResponse.getData();
-            total.add(list);
+            total.addAll(list);
             gatherService.produce(list);
         }
         queryResponse = billService.fetchCustomerOrderBill(condition);
         if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             empty = false;
             List<CustomerOrderBill> list = ((List<CustomerOrderBill>) queryResponse.getData());
-            total.add(list);
+            total.addAll(list);
             gatherService.produce(list);
         }
         queryResponse = billService.fetchDepositBill(condition);
         if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             empty = false;
             List<DepositBill> list = ((List<DepositBill>) queryResponse.getData());
-            total.add(list);
+            total.addAll(list);
             gatherService.produce(list);
         }
 
