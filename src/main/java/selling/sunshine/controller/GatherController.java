@@ -66,6 +66,7 @@ public class GatherController {
             data.setResponseCode(ResponseCode.RESPONSE_ERROR);
             return data;
         }
+        List total = new ArrayList<>();
         Map<String, Object> condition = new HashMap<>();
         condition.put("start", form.getStart());
         condition.put("end", form.getEnd());
@@ -74,18 +75,21 @@ public class GatherController {
         if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             empty = false;
             List<OrderBill> list = (List<OrderBill>) queryResponse.getData();
+            total.add(list);
             gatherService.produce(list);
         }
         queryResponse = billService.fetchCustomerOrderBill(condition);
         if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             empty = false;
             List<CustomerOrderBill> list = ((List<CustomerOrderBill>) queryResponse.getData());
+            total.add(list);
             gatherService.produce(list);
         }
         queryResponse = billService.fetchDepositBill(condition);
         if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             empty = false;
             List<DepositBill> list = ((List<DepositBill>) queryResponse.getData());
+            total.add(list);
             gatherService.produce(list);
         }
 
@@ -93,6 +97,9 @@ public class GatherController {
             data.setResponseCode(ResponseCode.RESPONSE_ERROR);
             return data;
         }
+        
+        ResultData resultData=gatherService.produceSummary(total);
+        String summaryPath=resultData.getData().toString();
         
         String path = GatherController.class.getResource("/").getPath();
         String os = System.getProperty("os.name").toLowerCase();
@@ -111,10 +118,13 @@ public class GatherController {
             StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(date.replaceAll("-", ""));
             pathList.add(sb.toString());
         });
+        pathList.add((new StringBuffer(parent).append(summaryPath)).toString());
         String zipName = IDGenerator.generate("Gather");
         StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(zipName + ".zip");
         ZipCompressor zipCompressor = new ZipCompressor(sb.toString());
         zipCompressor.compress(pathList);
+        File file=new File((new StringBuffer(parent).append(summaryPath)).toString());
+        file.delete();
         data.setData(zipName);
 
         return data;
