@@ -136,7 +136,7 @@ public class IndentController {
 		// 1.设置文件ContentType类型，这样设置，会自动判断下载文件类型
 		response.setContentType("multipart/form-data");
 		// 2.设置文件头：最后一个参数是设置下载文件名
-		response.setHeader("Content-Disposition", "attachment;fileName=" + URLEncoder.encode("订单报表_"+fileName+".zip", "utf-8"));
+		response.setHeader("Content-Disposition", "attachment;fileName=" + URLEncoder.encode("订货单报表_"+fileName+".zip", "utf-8"));
 		OutputStream out;
 		// 通过文件路径获得File对象
 		String path = IndentController.class.getResource("/").getPath();

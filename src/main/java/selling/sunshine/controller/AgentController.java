@@ -1495,7 +1495,7 @@ public class AgentController {
         ResultData updateResponse = agentService.updateAgent(agent);
         if (updateResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
             view.setViewName("redirect:/agent/overview");
-            return view;
+            return view; 
         }
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
