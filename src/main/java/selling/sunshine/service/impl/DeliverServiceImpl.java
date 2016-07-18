@@ -240,8 +240,6 @@ public class DeliverServiceImpl implements DeliverService {
             addressCell.setCellValue(item.getReceiverAddress());
             Cell product = current.createCell(6);
             product.setCellValue(item.getGoodsName());
-            Cell amount = current.createCell(7);
-            amount.setCellValue(item.getGoodsQuantity());
             row++;
         }
         String name = IDGenerator.generate("DELIVER");
