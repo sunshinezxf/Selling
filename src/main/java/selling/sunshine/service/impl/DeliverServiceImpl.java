@@ -251,7 +251,7 @@ public class DeliverServiceImpl implements DeliverService {
             template.write(out);
             out.close();
             template.close();
-            result.setData(new StringBuffer(directory).append("/").append("订货统计清单_").append(name).append(".xlsx").toString());
+            result.setData(new StringBuffer(directory).append("/").append("发货统计清单_").append(name).append(".xlsx").toString());
         } catch (Exception e) {
             logger.error(e.getMessage());
             result.setResponseCode(ResponseCode.RESPONSE_ERROR);
