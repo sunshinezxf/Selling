@@ -419,7 +419,7 @@
             for (var i = 0; i < result.data.order.orderItems.length; i++) {
                 var orderItem = result.data.order.orderItems[i];
                 node += "<tr><td>" + orderItem.customer.name + "</td><td>" + orderItem.goods.name + "</td><td>" + orderItem.goodsQuantity + "</td><td>" + orderItem.orderItemPrice + "</td>";
-                if (orderItem.status == "SHIPPED") {
+                if (orderItem.status == "SHIPPED" || orderItem.status == "RECEIVED") {
                     node += "<td><button type='button' class='btn btn-success' id='" + orderItem.orderItemId + "' onclick=expressDetail(this)>快递单详情</button></td></tr>";
                 } else {
                     node += "<td>无快递单</td></tr>";
