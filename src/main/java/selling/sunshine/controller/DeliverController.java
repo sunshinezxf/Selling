@@ -85,6 +85,11 @@ public class DeliverController {
             data.setResponseCode(ResponseCode.RESPONSE_ERROR);
             return data;
         }
+        
+        ResultData resultData=deliverService.produceSummary(list);
+        String summaryPath=resultData.getData().toString();
+        
+        
         String path = DeliverController.class.getResource("/").getPath();
         String os = System.getProperty("os.name").toLowerCase();
         if (os.indexOf("windows") >= 0) {
@@ -102,10 +107,13 @@ public class DeliverController {
             StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(date.replaceAll("-", ""));
             pathList.add(sb.toString());
         });
+        pathList.add((new StringBuffer(parent).append(summaryPath)).toString());
         String zipName = IDGenerator.generate("Deliver");
         StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(zipName + ".zip");
         ZipCompressor zipCompressor = new ZipCompressor(sb.toString());
         zipCompressor.compress(pathList);
+        File file=new File((new StringBuffer(parent).append(summaryPath)).toString());
+        file.delete();
         data.setData(zipName);
         return data;
     }
