@@ -8,4 +8,6 @@ public interface GatherService {
 	ResultData generateGather();
 
 	<T> ResultData produce(List<T> list);
+	
+	ResultData produceSummary(List list);
 }

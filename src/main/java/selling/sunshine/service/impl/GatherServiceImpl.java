@@ -13,6 +13,7 @@ import selling.sunshine.dao.OrderDao;
 import selling.sunshine.dao.OrderItemDao;
 import selling.sunshine.model.*;
 import selling.sunshine.service.GatherService;
+import selling.sunshine.utils.IDGenerator;
 import selling.sunshine.utils.PlatformConfig;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
@@ -298,4 +299,191 @@ public class GatherServiceImpl implements GatherService {
         sellManInfo.setCellValue("无");
         return template;
     }
+
+	@Override
+	public ResultData produceSummary(List list) {
+		ResultData result = new ResultData();
+        String path = IndentServiceImpl.class.getResource("/").getPath();
+        int index = path.lastIndexOf("/WEB-INF/classes/");
+        String parent = path.substring(0, index);
+        String directory = "/material/journal/gather";
+        File file = new File(parent + directory);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        Workbook template = WorkBookUtil.getGatherSummaryTemplate();
+        Sheet sheet = template.getSheetAt(0);
+        int row = 1;
+        for (Object item : list) {
+            if (item instanceof OrderBill) {
+            	OrderBill bill = (OrderBill) item;
+            	Order order = null;
+            	Map<String, Object> condition = new HashMap<>();
+                condition.put("orderId", bill.getOrder().getOrderId());
+                ResultData queryResponse = orderDao.queryOrder(condition);
+                if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK && !((List<Order>) queryResponse.getData()).isEmpty()) {
+                    order = ((List<Order>) queryResponse.getData()).get(0);
+                }
+                Row current = sheet.createRow(row);
+                Cell noCell = current.createCell(0);
+                noCell.setCellValue("NO." + bill.getBillId());
+                Cell dateCell = current.createCell(1);
+                SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日");
+                dateCell.setCellValue(format.format(bill.getCreateAt()));
+                Cell orderNoCell = current.createCell(2);
+                orderNoCell.setCellValue(order.getOrderId());
+                Cell channel = current.createCell(3);
+                if(bill.getChannel().equals("wx_pub")){
+                	channel.setCellValue("微信付款");
+                }else if(bill.getChannel().equals("coffer")){
+                	channel.setCellValue("余额付款");
+                } else {
+                	channel.setCellValue("");
+                }
+                Cell priceCell = current.createCell(4);
+                priceCell.setCellValue(bill.getBillAmount());
+                Cell timeCell = current.createCell(5);
+                timeCell.setCellValue(format.format(bill.getCreateAt()));
+                Cell customer = current.createCell(6);
+                customer.setCellValue(order.getAgent().getName());
+                Cell phone = current.createCell(7);
+                condition.clear();
+                condition.put("agentId", order.getAgent().getAgentId());
+                queryResponse = agentDao.queryAgent(condition);
+                if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                    List<Agent> agentList = (List<Agent>) queryResponse.getData();
+                    if (!agentList.isEmpty()) {
+                        phone.setCellValue(agentList.get(0).getPhone());
+                    }
+                }
+                Cell sellNo = current.createCell(8);
+                sellNo.setCellValue("NO." + order.getOrderId());
+                Cell sellPrice1 = current.createCell(9);
+                sellPrice1.setCellValue(bill.getBillAmount());
+                Cell sellPrice2 = current.createCell(10);
+                sellPrice2.setCellValue(bill.getBillAmount());
+                Cell sellPrice3 = current.createCell(11);
+                sellPrice3.setCellValue(0);
+                Cell sellPrice4 = current.createCell(12);
+                sellPrice4.setCellValue(bill.getBillAmount());
+                Cell sellManInfo = current.createCell(13);
+                sellManInfo.setCellValue(order.getAgent().getName());
+                row++;
+            } else if (item instanceof CustomerOrderBill) {
+            	CustomerOrderBill bill = (CustomerOrderBill) item;
+            	CustomerOrder order = null;
+            	Map<String, Object> condition = new HashMap<>();
+                condition.put("orderId", bill.getCustomerOrder().getOrderId());
+                List<Integer> status = new ArrayList<>();
+                status.add(1);
+                status.add(2);
+                status.add(3);
+                status.add(4);
+                condition.put("status", status);
+                ResultData queryResponse = customerOrderDao.queryOrder(condition);
+                if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK && !((List<CustomerOrderBill>) queryResponse.getData()).isEmpty()) {
+                    order = ((List<CustomerOrder>) queryResponse.getData()).get(0);
+                }
+                Row current = sheet.createRow(row);
+                Cell noCell = current.createCell(0);
+                noCell.setCellValue("NO." + bill.getBillId());
+                Cell dateCell = current.createCell(1);
+                SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日");
+                dateCell.setCellValue(format.format(bill.getCreateAt()));
+                Cell orderNoCell = current.createCell(2);
+                orderNoCell.setCellValue(order.getOrderId());
+                Cell channel = current.createCell(3);
+                if(bill.getChannel().equals("wx_pub")){
+                	channel.setCellValue("微信付款");
+                }else if(bill.getChannel().equals("coffer")){
+                	channel.setCellValue("余额付款");
+                } else {
+                	channel.setCellValue("");
+                }
+                Cell priceCell = current.createCell(4);
+                priceCell.setCellValue(bill.getBillAmount());
+                Cell timeCell = current.createCell(5);
+                timeCell.setCellValue(format.format(bill.getCreateAt()));
+                Cell customer = current.createCell(6);
+                customer.setCellValue(order.getReceiverName());
+                Cell phone = current.createCell(7);
+                phone.setCellValue(order.getReceiverPhone());
+                Cell sellNo = current.createCell(8);
+                sellNo.setCellValue("NO." + order.getOrderId());
+                Cell sellPrice1 = current.createCell(9);
+                sellPrice1.setCellValue(bill.getBillAmount());
+                Cell sellPrice2 = current.createCell(10);
+                sellPrice2.setCellValue(bill.getBillAmount());
+                Cell sellPrice3 = current.createCell(11);
+                sellPrice3.setCellValue(0);
+                Cell sellPrice4 = current.createCell(12);
+                sellPrice4.setCellValue(bill.getBillAmount());
+                Cell sellManInfo = current.createCell(13);
+                sellManInfo.setCellValue("无");
+                row++;
+            } else if (item instanceof DepositBill){
+            	DepositBill bill = (DepositBill) item;
+                Row current = sheet.createRow(row);
+                Cell noCell = current.createCell(0);
+                noCell.setCellValue("NO." + bill.getBillId());
+                Cell dateCell = current.createCell(1);
+                SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日");
+                dateCell.setCellValue(format.format(bill.getCreateAt()));
+                Cell orderNoCell = current.createCell(2);
+                orderNoCell.setCellValue(bill.getBillId());
+                Cell channel = current.createCell(3);
+                if(bill.getChannel().equals("wx_pub")){
+                	channel.setCellValue("微信付款");
+                }else if(bill.getChannel().equals("coffer")){
+                	channel.setCellValue("余额付款");
+                } else {
+                	channel.setCellValue("");
+                }
+                Cell priceCell = current.createCell(4);
+                priceCell.setCellValue(bill.getBillAmount());
+                Cell timeCell = current.createCell(5);
+                timeCell.setCellValue(format.format(bill.getCreateAt()));
+                Cell customer = current.createCell(6);
+                customer.setCellValue(bill.getAgent().getName());
+                Cell phone = current.createCell(7);
+                Map<String, Object> condition = new HashMap<>();
+                condition.put("agentId", bill.getAgent().getAgentId());
+                ResultData queryResponse = agentDao.queryAgent(condition);
+                if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                    List<Agent> agentList = (List<Agent>) queryResponse.getData();
+                    if (!agentList.isEmpty()) {
+                        phone.setCellValue(agentList.get(0).getPhone());
+                    }
+                }
+                Cell sellNo = current.createCell(8);
+                sellNo.setCellValue("NO." + bill.getBillId());
+                Cell sellPrice1 = current.createCell(9);
+                sellPrice1.setCellValue(bill.getBillAmount());
+                Cell sellPrice2 = current.createCell(10);
+                sellPrice2.setCellValue(bill.getBillAmount());
+                Cell sellPrice3 = current.createCell(11);
+                sellPrice3.setCellValue(0);
+                Cell sellPrice4 = current.createCell(12);
+                sellPrice4.setCellValue(bill.getBillAmount());
+                Cell sellManInfo = current.createCell(13);
+                sellManInfo.setCellValue("无");
+                row++;
+            }
+        }
+        String name = IDGenerator.generate("SUMMARY");
+        StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append("收款统计清单_").append(name).append(".xlsx");
+        try {
+            FileOutputStream out = new FileOutputStream(sb.toString());
+            template.write(out);
+            out.close();
+            template.close();
+            result.setData(new StringBuffer(directory).append("/").append("收款统计清单_").append(name).append(".xlsx").toString());
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription(e.getMessage());
+            return result;
+        }
+        return result;
+	}
 }
