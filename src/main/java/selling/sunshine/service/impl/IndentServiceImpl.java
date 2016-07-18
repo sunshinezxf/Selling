@@ -358,6 +358,13 @@ public class IndentServiceImpl implements IndentService {
         for (Object item : list) {
             if (item instanceof OrderItem) {
                 OrderItem o = (OrderItem) item;
+                Customer customer = o.getCustomer();
+                Map<String, Object> condition = new HashMap<>();
+                condition.put("customerId", ((OrderItem) item).getCustomer().getCustomerId());
+                ResultData response = customerDao.queryCustomer(condition);
+                if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                    customer = ((List<Customer>) response.getData()).get(0);
+                }
                 Row current = sheet.createRow(row);
                 Cell noCell = current.createCell(0);
                 noCell.setCellValue(o.getOrderItemId());
@@ -367,12 +374,12 @@ public class IndentServiceImpl implements IndentService {
                 Cell consumerNameCell = current.createCell(2);
                 consumerNameCell.setCellValue(o.getCustomer().getName());
                 Cell phoneCell = current.createCell(3);
-                phoneCell.setCellValue(o.getCustomer().getPhone().getPhone());
+                phoneCell.setCellValue(customer.getPhone().getPhone());
                 Cell addressCell = current.createCell(4);
-                addressCell.setCellValue(o.getCustomer().getAddress().getAddress());
-                Map<String, Object> condition = new HashMap<>();
+                addressCell.setCellValue(customer.getAddress().getAddress());
+                condition.clear();
                 condition.put("orderId", o.getOrder().getOrderId());
-                ResultData response = orderDao.queryOrder(condition);
+                response = orderDao.queryOrder(condition);
                 if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
                     Cell agentCell = current.createCell(5);
                     Order order = ((List<Order>) response.getData()).get(0);
