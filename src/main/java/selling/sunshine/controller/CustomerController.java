@@ -9,7 +9,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import selling.sunshine.form.CustomerAddressForm;
 import selling.sunshine.form.CustomerForm;
 import selling.sunshine.form.PurchaseForm;
@@ -253,7 +252,7 @@ public class CustomerController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/place")
-    public ResultData placeOrder(@Valid PurchaseForm form, BindingResult result, RedirectAttributes attr) {
+    public ResultData placeOrder(@Valid PurchaseForm form, BindingResult result) {
         ResultData resultData = new ResultData();
         if (result.hasErrors()) {
             resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
@@ -278,6 +277,23 @@ public class CustomerController {
             ResultData fetchAgentData = agentService.fetchAgent(condition);
             if (fetchAgentData.getResponseCode() == ResponseCode.RESPONSE_OK) {
                 agent = ((List<Agent>) fetchAgentData.getData()).get(0);
+                Thread thread = new Thread() {
+                    @Override
+                    public void run() {
+                        Map<String, Object> condition = new HashMap<>();
+                        condition.put("phone", phone);
+                        condition.put("blockFlag", false);
+                        condition.put("customerBlockFlag", false);
+                        ResultData response = customerService.fetchCustomerPhone(condition);
+                        if (response.getResponseCode() == ResponseCode.RESPONSE_NULL) {
+                            selling.sunshine.model.lite.Agent agent = new selling.sunshine.model.lite.Agent();
+                            agent.setAgentId(agentId);
+                            Customer customer = new Customer(customerName, address, phone, agent);
+                            customerService.createCustomer(customer);
+                        }
+                    }
+                };
+                thread.start();
             }
         }
         //判断商品是否合法
