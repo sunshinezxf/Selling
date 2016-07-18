@@ -110,8 +110,7 @@ public class IndentController {
         //indent generate summary indent xlsx
         
         ResultData resultData=indentService.produceSummary(total);
-        String teString=resultData.getData().toString();
-        System.err.println(teString);
+        String summaryPath=resultData.getData().toString();
 
         String path = IndentController.class.getResource("/").getPath();
         String os = System.getProperty("os.name").toLowerCase();
@@ -128,12 +127,14 @@ public class IndentController {
         dateList.forEach((date) -> {
             StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(date.replaceAll("-", ""));
             pathList.add(sb.toString());
-            System.err.println(sb.toString());
         });
+        pathList.add((new StringBuffer(parent).append(summaryPath)).toString());
         String zipName = IDGenerator.generate("Indent");
         StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(zipName + ".zip");
         ZipCompressor zipCompressor = new ZipCompressor(sb.toString());
         zipCompressor.compress(pathList);
+        File file=new File((new StringBuffer(parent).append(summaryPath)).toString());
+        file.delete();
         data.setData(zipName);
         return data;
     }
