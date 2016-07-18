@@ -2,7 +2,6 @@ package selling.sunshine.service;
 
 import selling.sunshine.utils.ResultData;
 
-
 import java.util.List;
 
 /**
@@ -12,7 +11,8 @@ public interface IndentService {
     ResultData generateIndent();
 
     <T> ResultData produce(List<T> list);
-    
+
     <T> ResultData produceAll(List<T> list);
-    
+
+    ResultData produceSummary(List list);
 }

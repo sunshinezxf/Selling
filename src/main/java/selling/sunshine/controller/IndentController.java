@@ -87,9 +87,11 @@ public class IndentController {
         List<Integer> status = new ArrayList<>(Arrays.asList(1, 2, 3, 4));
         condition.put("statusList", status);
         ResultData queryResponse = orderService.fetchOrderItem(condition);
+        List total = new ArrayList<>();
         if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             empty = false;
             List<OrderItem> list = (List<OrderItem>) queryResponse.getData();
+            total.addAll(list);
             indentService.produce(list);
         }
         condition.remove("statusList");
@@ -98,6 +100,7 @@ public class IndentController {
         if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             empty = false;
             List<CustomerOrder> list = (List<CustomerOrder>) queryResponse.getData();
+            total.addAll(list);
             indentService.produce(list);
         }
         if (empty) {
@@ -131,25 +134,25 @@ public class IndentController {
     }
 
 
-	@RequestMapping(method = RequestMethod.GET, value = "/download/{fileName}/{tempFileName}")
-	public String download(@PathVariable("fileName") String fileName,@PathVariable("tempFileName") String tempFileName, HttpServletRequest request,
-			HttpServletResponse response) throws UnsupportedEncodingException {
-		// 1.设置文件ContentType类型，这样设置，会自动判断下载文件类型
-		response.setContentType("multipart/form-data");
-		// 2.设置文件头：最后一个参数是设置下载文件名
-		response.setHeader("Content-Disposition", "attachment;fileName=" + URLEncoder.encode("订单报表_"+fileName+".zip", "utf-8"));
-		OutputStream out;
-		// 通过文件路径获得File对象
-		String path = IndentController.class.getResource("/").getPath();
-		String os = System.getProperty("os.name").toLowerCase();
-		if (os.indexOf("windows") >= 0) {
-			path = path.substring(1);
-		}
-		int index = path.lastIndexOf("/WEB-INF/classes/");
-		String parent = path.substring(0, index);
-		String directory = "/material/journal/indent";
-		StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(tempFileName + ".zip");
-		File file = new File(sb.toString());
+    @RequestMapping(method = RequestMethod.GET, value = "/download/{fileName}/{tempFileName}")
+    public String download(@PathVariable("fileName") String fileName, @PathVariable("tempFileName") String tempFileName, HttpServletRequest request,
+                           HttpServletResponse response) throws UnsupportedEncodingException {
+        // 1.设置文件ContentType类型，这样设置，会自动判断下载文件类型
+        response.setContentType("multipart/form-data");
+        // 2.设置文件头：最后一个参数是设置下载文件名
+        response.setHeader("Content-Disposition", "attachment;fileName=" + URLEncoder.encode("订单报表_" + fileName + ".zip", "utf-8"));
+        OutputStream out;
+        // 通过文件路径获得File对象
+        String path = IndentController.class.getResource("/").getPath();
+        String os = System.getProperty("os.name").toLowerCase();
+        if (os.indexOf("windows") >= 0) {
+            path = path.substring(1);
+        }
+        int index = path.lastIndexOf("/WEB-INF/classes/");
+        String parent = path.substring(0, index);
+        String directory = "/material/journal/indent";
+        StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(tempFileName + ".zip");
+        File file = new File(sb.toString());
         try {
             FileInputStream fis = new FileInputStream(file);
             BufferedInputStream buff = new BufferedInputStream(fis);
@@ -175,10 +178,6 @@ public class IndentController {
         }
         return "";
     }
-	
-
-	
-
 
 
 }
