@@ -499,4 +499,21 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
 		}
 	}
 
+	@Override
+	public ResultData calculateQuantityAll(String agentId) {
+		ResultData result = new ResultData();
+		try {
+		Map<String, Object> condition = new HashMap<>();
+		condition.put("agentId", agentId);
+		List<Object> list=sqlSession.selectList("selling.order.pool.calculateQuantityAll",condition);
+		result.setData(list);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+			result.setDescription(e.getMessage());
+		} finally {
+			return result;
+		}
+	}
+
 }
