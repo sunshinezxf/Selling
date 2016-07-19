@@ -27,7 +27,7 @@
                 <h4 class="modal-title">提示</h4>
             </div>
             <div class="modal-body">
-              <div class="btn-group">
+              <div class="btn-group" id="main">
                    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
                       选择上级代理商 <span class="caret"></span>
                    </button>
@@ -407,8 +407,13 @@
          $.post(url,function(result){
         	 if(result.responseCode=="RESPONSE_OK"){
         		var agentList=result.data;
+                var f = document.getElementById("select");
+                var childs = f.childNodes;
+                for (var i = childs.length - 1; i >= 0; i--) {
+                    f.removeChild(childs[i]);
+                }
         		for(var i=0;i<agentList.length;i++){
-        			var agent=agentList[i];
+        			var agent=agentList[i];                                      
         			var node="<li><a id='" + agent.agentId + "' onclick=select(this) href='#'>"+agent.name+"</a></li>";
         			$("#select").append(node);
         		}
