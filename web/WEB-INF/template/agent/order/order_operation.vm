@@ -6,7 +6,7 @@
 </div>
 <div class="bd">
     <div class="weui_btn_area clear-margin-top">
-        <a href="${path.concat('/agent/order/place')}" class="weui_btn weui_btn_plain_primary">新建订单</a>
+        <a href="${path.concat('/agent/order/overview')}" class="weui_btn weui_btn_plain_primary">订单概览</a>
     </div>
     <div class="weui_tab">
         <div class="weui_navbar">
