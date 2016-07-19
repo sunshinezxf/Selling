@@ -24,6 +24,23 @@
           <p>联系地址:&nbsp;&nbsp;
                     <text>${agent.address}</text>
           </p>
+          <p>上级代理商:&nbsp;&nbsp;
+              #if(!${agent.upperAgent})
+                 <text>无</text>&nbsp;&nbsp;	
+                 <div class="btn-group">
+                   <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
+                      选择上级代理商 <span class="caret"></span>
+                   </button>
+                   <ul class="dropdown-menu" role="menu" style="height:200px;overflow:scroll">
+                     #foreach( $elem in ${agentList})
+                      <li><a id="$elem.agentId" onclick=select(this) data-toggle='modal' data-target='#set_upperAgent_modal'>$elem.name</a></li>
+                     #end                    
+                  </ul>
+                </div>
+              #else
+                    <text>${agent.upperAgent.name}</text>
+              #end
+          </p>
           <p>群规模 :&nbsp;&nbsp;
               #if(${agent.claimScale}=="")
                  <text>未填</text>
@@ -56,7 +73,7 @@
         <div class="col-md-12 col-lg-12">
             <br/>
             <button type="button" class="btn btn-primary" id="check_confirm">确认授权</button>
-             <button type="button" class="btn btn-warning" data-toggle='modal' data-target='#agent_grant_modal'>审核不通过</button>
+            <button type="button" class="btn btn-warning" data-toggle='modal' data-target='#agent_grant_modal'>审核不通过</button>
         </div>
     </div>
 </div>
@@ -79,11 +96,35 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="set_upperAgent_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">x</button>
+                <h4 class="modal-title">提示</h4>
+            </div>
+            <div class="modal-body">
+               <p class="form-group">
+                  确定将该代理商设置为代理商${agent.name}的上级代理商？
+               </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="set_confirm">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
 
    $("#agent_grant_modal").modal({
             show: false,
             keyboard: true
+   });
+   
+   $("#set_upperAgent_modal").modal({
+       show: false,
+       keyboard: true
    });
 
 
@@ -98,4 +139,17 @@
         var url = "${path.concat('/agent/grantNotPass/')}${agent.agentId}";
         window.location.href=url;
     });
+    
+    var upperAgentId;
+    function select(obj){
+    	upperAgentId=obj.id;
+    }
+    
+    $("#set_confirm").on('click', function () {
+
+        var url = "${path.concat('/agent/setUpperAgent/')}${agent.agentId}/"+upperAgentId;
+        window.location.href=url;
+    });
+    
+
 </script>

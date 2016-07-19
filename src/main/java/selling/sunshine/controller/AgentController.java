@@ -1374,17 +1374,29 @@ public class AgentController {
             return view;
         }
         Agent agent = ((List<Agent>) agentService.fetchAgent(condition).getData()).get(0);
-
+        condition.clear();
+        condition.put("granted", true);
+        condition.put("blockFlag", false);
+        List<Agent> agentList=(List<Agent>) agentService.fetchAgent(condition).getData();
+//        Iterator<Agent> iter = agentList.iterator();        
+//        while (iter.hasNext()) {      
+//           if (iter.next().getAgentId().equals(agent.getAgentId())) {         
+//             iter.remove();  
+//           }       
+//        } 
+      
         if (agentService.fetchCredit(condition).getResponseCode() != ResponseCode.RESPONSE_OK) {
             view.setViewName("/backend/agent/grant");
             view.addObject("agent", agent);
             view.addObject("credit", "");
+            view.addObject("agentList", agentList);
             return view;
         }
         Credit credit = ((List<Credit>) agentService.fetchCredit(condition).getData()).get(0);
         view.setViewName("/backend/agent/grant");
         view.addObject("agent", agent);
         view.addObject("credit", credit);
+        view.addObject("agentList", agentList);
         return view;
     }
 
@@ -1474,6 +1486,131 @@ public class AgentController {
          }
          view.setViewName("redirect:/agent/overview");
     	 return view;
+    }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/setUpperAgent/{agentId}/{upperAgentId}")
+    public ModelAndView setUpperAgent(@PathVariable("agentId") String agentId,@PathVariable("upperAgentId") String upperAgentId,HttpServletRequest request) {
+    	ModelAndView view=new ModelAndView();
+        if (StringUtils.isEmpty(agentId)) {
+            view.setViewName("redirect:/agent/overview");
+            return view;
+        }
+        if (StringUtils.isEmpty(upperAgentId)) {
+            view.setViewName("redirect:/agent/check/"+agentId);
+            return view;
+        }
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("agentId", agentId);
+        ResultData fetchResponse = agentService.fetchAgent(condition);
+        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+        	 Agent agent = ((List<Agent>) agentService.fetchAgent(condition).getData()).get(0);
+        	 selling.sunshine.model.lite.Agent upperAgent=new selling.sunshine.model.lite.Agent();
+        	 upperAgent.setAgentId(upperAgentId);
+        	 agent.setUpperAgent(upperAgent);
+        	 ResultData updateResponse = agentService.updateAgent(agent);
+             if (updateResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            	 view.setViewName("redirect:/agent/check/"+agentId);
+                 return view;
+			 }
+             Subject subject = SecurityUtils.getSubject();
+             User user = (User) subject.getPrincipal();
+             if (user == null) {
+            	 view.setViewName("redirect:/agent/check/"+agentId);
+                return view;
+             }
+             Admin admin = user.getAdmin();
+             BackOperationLog backOperationLog = new BackOperationLog(
+                     admin.getUsername(), toolService.getIP(request) ,"管理员" + admin.getUsername() + "设置了代理商"+agent.getName()+",手机："+agent.getPhone()+"的上级代理商");
+             logService.createbackOperationLog(backOperationLog);
+        }
+        view.setViewName("redirect:/agent/check/"+agentId);
+        return view;
+    }
+    
+    @RequestMapping(method = RequestMethod.POST, value = "/list/{agentId}")
+    public ResultData list(@PathVariable("agentId") String agentId){
+    	ResultData resultData=new ResultData();
+        if (StringUtils.isEmpty(agentId)) {
+            resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            return resultData;
+        }
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("agentId", agentId);
+        if (agentService.fetchAgent(condition).getResponseCode() != ResponseCode.RESPONSE_OK) {
+            resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            return resultData;
+        }
+        Agent agent = ((List<Agent>) agentService.fetchAgent(condition).getData()).get(0);
+        condition.clear();
+        condition.put("granted", true);
+        condition.put("blockFlag", false);
+        List<Agent> agentList=(List<Agent>) agentService.fetchAgent(condition).getData();
+        Iterator<Agent> iter = agentList.iterator();        
+        while (iter.hasNext()) {      
+           if (iter.next().getAgentId().equals(agent.getAgentId())) {         
+             iter.remove();  
+           }       
+        } 
+        resultData.setData(agentList);
+    	return resultData;
+    }
+    
+    @RequestMapping(method = RequestMethod.POST, value = "/modifyUpperAgent/{agentId}/{upperAgentId}")
+    public ResultData modifyUpperAgent(@PathVariable("agentId") String agentId,@PathVariable("upperAgentId") String upperAgentId,HttpServletRequest request) {
+    	ResultData resultData=new ResultData();
+        if (StringUtils.isEmpty(agentId)) {
+           resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
+           return resultData;
+        }
+        if (StringUtils.isEmpty(upperAgentId)) {
+            resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            return resultData;
+        }
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("agentId", agentId);
+        ResultData fetchResponse = agentService.fetchAgent(condition);
+        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+        	 Agent agent = ((List<Agent>) agentService.fetchAgent(condition).getData()).get(0);
+        	 condition.put("agentId", upperAgentId);
+
+        	 fetchResponse = agentService.fetchAgent(condition);
+        	 if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+        		 Agent upperAgent = ((List<Agent>) agentService.fetchAgent(condition).getData()).get(0);
+        		 while (upperAgent.getUpperAgent()!=null) {
+					if (upperAgent.getUpperAgent().getAgentId().equals(agentId)) {
+				           resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
+				           resultData.setDescription("recursion");
+				           return resultData;
+					}else {
+						 condition.put("agentId", upperAgent.getUpperAgent().getAgentId());
+						 fetchResponse = agentService.fetchAgent(condition);
+						 if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+							 upperAgent = ((List<Agent>) agentService.fetchAgent(condition).getData()).get(0);
+						 }
+					}
+					
+				}
+        	 }
+        	 selling.sunshine.model.lite.Agent upperAgent=new selling.sunshine.model.lite.Agent();
+        	 upperAgent.setAgentId(upperAgentId);
+        	 agent.setUpperAgent(upperAgent);
+        	 ResultData updateResponse = agentService.updateAgent(agent);
+             if (updateResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+                 resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
+                 return resultData;
+			 }
+             Subject subject = SecurityUtils.getSubject();
+             User user = (User) subject.getPrincipal();
+             if (user == null) {
+                 resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
+                 return resultData;
+             }
+             Admin admin = user.getAdmin();
+             BackOperationLog backOperationLog = new BackOperationLog(
+                     admin.getUsername(), toolService.getIP(request) ,"管理员" + admin.getUsername() + "修改了代理商"+agent.getName()+",手机："+agent.getPhone()+"的上级代理商");
+             logService.createbackOperationLog(backOperationLog);
+        }
+        return resultData;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/forbid/{agentId}")
