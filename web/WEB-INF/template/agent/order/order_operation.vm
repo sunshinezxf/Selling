@@ -2,7 +2,7 @@
 <div class="weui_tab_bd">
 <div class="hd">
     <h1 class="page_title">订单管理</h1>
-    <p id="refund_condition" class="page_desc">更多关于订单(创建,查询)的操作</p>
+    <p id="refund_condition" class="page_desc">更多关于订单的操作</p>
 </div>
 <div class="bd">
     <div class="weui_btn_area clear-margin-top">

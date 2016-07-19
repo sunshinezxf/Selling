@@ -1056,19 +1056,90 @@ public class AgentController {
     @RequestMapping(method = RequestMethod.GET, value = "/order/overview")
     public ModelAndView overviewOrder(){
     	ModelAndView view = new ModelAndView();
+    	Subject subject = SecurityUtils.getSubject();
+    	User user = (User) subject.getPrincipal();
+        if (user == null) {
+        	 WechatConfig.oauthWechat(view, "/agent/login");
+             view.setViewName("/agent/login");
+             return view;
+        }
+        //以下是本代理商的信息
+        ResultData fetchOverviewInfoResponse = refundService.calculateQuantityAll(user.getAgent().getAgentId());
+        if(fetchOverviewInfoResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
+        	Prompt prompt = new Prompt(PromptCode.WARNING, "提示信息", "未找到详细信息", "/agent/manage/2");
+            view.addObject("prompt", prompt);
+            WechatConfig.oauthWechat(view, "/agent/prompt");
+            view.setViewName("/agent/prompt");
+            return view;
+        }
+    	List overviewInfo = (List<Integer>) fetchOverviewInfoResponse.getData();
+    	int waitShipped = 0;
+    	double waitMoney = 0.0;
+    	Map<String, Object> condition = new HashMap<String, Object>();
+    	List<Integer> status = new ArrayList<>();
+    	status.add(2);
+    	status.add(3);
+    	condition.put("status", status);
+    	condition.put("agentId", user.getAgent().getAgentId());
+    	condition.put("blockFlag", false);
+    	ResultData fetchOrderResponse = orderService.fetchOrder(condition);
+    	if(fetchOrderResponse.getResponseCode() == ResponseCode.RESPONSE_OK){
+    		List<Order> orderList = (List<Order>) fetchOrderResponse.getData();
+    		for(Order order : orderList) {
+    			List<OrderItem> orderItems = order.getOrderItems();
+    			for(OrderItem orderItem : orderItems) {
+    				if(orderItem.getStatus() == OrderItemStatus.PAYED){
+    					waitShipped += orderItem.getGoodsQuantity();
+    					waitMoney += orderItem.getOrderItemPrice();
+    				}
+    			}
+    		}
+    	}
+    	condition.clear();
+    	status.clear();
+    	status.add(1);
+    	condition.put("agentId", user.getAgent().getAgentId());
+    	condition.put("status", status);
+    	ResultData fetchCustomerOrderResponse = orderService.fetchCustomerOrder(condition);
+    	if(fetchCustomerOrderResponse.getResponseCode() == ResponseCode.RESPONSE_OK){
+    		List<CustomerOrder> customerOrderList = (List<CustomerOrder>) fetchCustomerOrderResponse.getData();
+    		for(CustomerOrder customerOrder : customerOrderList) {
+    			waitShipped += customerOrder.getQuantity();
+    			waitMoney += customerOrder.getTotalPrice();
+    		}
+    	}
+    	overviewInfo.add(waitShipped);
+    	overviewInfo.add(waitMoney);
+    	view.addObject("overviewInfo", overviewInfo);
+    	//以下是下级代理商的信息
+    	condition.clear();
+        selling.sunshine.model.lite.Agent agentlite = new selling.sunshine.model.lite.Agent();
+        agentlite.setAgentId(user.getAgent().getAgentId());
+        condition.put("upperAgent", agentlite);
+        ResultData fetchAgentsResponse = agentService.fetchAgent(condition);
+        if(fetchAgentsResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
+        	return view;
+        }
+        List<Agent> agentList = (List<Agent>) agentService.fetchAgent(condition).getData();
+        List<List<String>> agents = new ArrayList<List<String>>();
+        for(Agent agent : agentList){
+        	List<String> agentInfo = new ArrayList<String>();
+        	ResultData quantityData = refundService.calculateQuantity(agent.getAgentId());
+        	agentInfo.add(agent.getName());
+        	agentInfo.add("本月购买商品：" + String.valueOf(quantityData.getData()) + "件");
+        	if(agent.isGranted()){
+        		agentInfo.add("");
+        	} else {
+        		agentInfo.add("(审核中)");
+        	}
+        	agents.add(agentInfo);
+        }
+        view.addObject("agents", agents);
     	WechatConfig.oauthWechat(view, "/agent/order/overview");
     	view.setViewName("/agent/order/overview");
     	return view;
     }
     
-    @ResponseBody
-    @RequestMapping(method = RequestMethod.GET, value = "/order/overviewinfo")
-    public ResultData viewOrderOverview(){
-    	ResultData result = new ResultData();
-    	
-    	return result;
-    }
-
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/order/list/{type}")
     public ResultData viewOrderList(@PathVariable("type") String type) {
