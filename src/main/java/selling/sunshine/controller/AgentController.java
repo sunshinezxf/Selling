@@ -19,6 +19,7 @@ import selling.sunshine.form.*;
 import selling.sunshine.model.*;
 import selling.sunshine.model.gift.GiftConfig;
 import selling.sunshine.model.goods.Goods4Agent;
+import selling.sunshine.model.sum.TotalQuantityAll;
 import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.*;
@@ -1065,14 +1066,14 @@ public class AgentController {
         }
         //以下是本代理商的信息
         ResultData fetchOverviewInfoResponse = refundService.calculateQuantityAll(user.getAgent().getAgentId());
-        if(fetchOverviewInfoResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
+        if(fetchOverviewInfoResponse.getResponseCode() != ResponseCode.RESPONSE_OK || ((List<TotalQuantityAll>)fetchOverviewInfoResponse.getData()).isEmpty()){
         	Prompt prompt = new Prompt(PromptCode.WARNING, "提示信息", "未找到详细信息", "/agent/manage/2");
             view.addObject("prompt", prompt);
             WechatConfig.oauthWechat(view, "/agent/prompt");
             view.setViewName("/agent/prompt");
             return view;
         }
-    	List overviewInfo = (List<Integer>) fetchOverviewInfoResponse.getData();
+    	List<TotalQuantityAll> overviewInfo = (List<TotalQuantityAll>) fetchOverviewInfoResponse.getData();
     	int waitShipped = 0;
     	double waitMoney = 0.0;
     	Map<String, Object> condition = new HashMap<String, Object>();
@@ -1108,9 +1109,11 @@ public class AgentController {
     			waitMoney += customerOrder.getTotalPrice();
     		}
     	}
-    	overviewInfo.add(waitShipped);
-    	overviewInfo.add(waitMoney);
-    	view.addObject("overviewInfo", overviewInfo);
+    	List wait = new ArrayList<>();
+    	wait.add(waitShipped);
+    	wait.add(waitMoney);
+    	view.addObject("overviewInfo", overviewInfo.get(0));
+    	view.addObject("wait", wait);
     	//以下是下级代理商的信息
     	condition.clear();
         selling.sunshine.model.lite.Agent agentlite = new selling.sunshine.model.lite.Agent();

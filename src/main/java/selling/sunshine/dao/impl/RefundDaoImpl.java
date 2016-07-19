@@ -16,6 +16,7 @@ import selling.sunshine.model.OrderPool;
 import selling.sunshine.model.RefundConfig;
 import selling.sunshine.model.RefundRecord;
 import selling.sunshine.model.goods.Goods4Agent;
+import selling.sunshine.model.sum.TotalQuantityAll;
 import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.utils.IDGenerator;
@@ -505,7 +506,7 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
 		try {
 		Map<String, Object> condition = new HashMap<>();
 		condition.put("agentId", agentId);
-		List<Object> list=sqlSession.selectList("selling.order.pool.calculateQuantityAll",condition);
+		List<TotalQuantityAll> list=sqlSession.selectList("selling.order.pool.calculateQuantityAll",condition);
 		result.setData(list);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
