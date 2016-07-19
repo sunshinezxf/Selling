@@ -19,6 +19,29 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="modify_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">x</button>
+                <h4 class="modal-title">提示</h4>
+            </div>
+            <div class="modal-body">
+              <div class="btn-group">
+                   <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
+                      选择上级代理商 <span class="caret"></span>
+                   </button>
+                   <ul id="select" class="dropdown-menu" role="menu" style="height:200px;overflow:scroll">
+                             
+                  </ul>
+                </div>
+             </div>
+            <div class="modal-footer">
+               <button type="button" class="btn btn-default" data-dismiss="modal">取消</button> 
+            </div>
+        </div>
+    </div>
+</div>
 <div class="modal fade" id="dialog_modal" tabindex="-1" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -34,6 +57,24 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal" id="dialog_confirm">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="waring_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">x</button>
+                <h4 class="modal-title">警告</h4>
+            </div>
+           <div class="modal-body">
+               <p class="form-group">
+                   一个代理商的上级代理商的上级代理商(或上上级代理商。。。)不能是他自己！！！
+               </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">确认</button>
             </div>
         </div>
     </div>
@@ -147,6 +188,8 @@
                     operation += giftCofig_button;
                     var limit_button = "<button type='button' class='btn btn-warning btn-group-sm' id='" + full.agentId + "' onclick=setId(this) data-toggle='modal' data-target='#dialog_modal'>禁用</button>&nbsp;"
                     operation += limit_button;
+                    var update_button = "<button type='button' class='btn btn-info btn-group-sm' id='" + full.agentId + "' onclick=modifyUpperAgent(this) data-toggle='modal' data-target='#modify_modal'>修改上级代理商</button>"
+                    operation += update_button;
                     return operation;
                 }
                 }
@@ -357,9 +400,49 @@
        id=obj.id;
     }
     
+
+    function modifyUpperAgent(obj){
+    	 id=obj.id;
+    	 var url = "${path.concat('/agent/list/')}" + obj.id;
+         $.post(url,function(result){
+        	 if(result.responseCode=="RESPONSE_OK"){
+        		var agentList=result.data;
+        		for(var i=0;i<agentList.length;i++){
+        			var agent=agentList[i];
+        			var node="<li><a id='" + agent.agentId + "' onclick=select(this) href='#'>"+agent.name+"</a></li>";
+        			$("#select").append(node);
+        		}
+        		 
+        	 }
+         });
+    }
+    
+    function select(obj){
+    	 var url = "${path.concat('/agent/modifyUpperAgent/')}"+id+"/"+obj.id; 	
+    	 $.post(url,function(result){
+    		 if(result.responseCode=="RESPONSE_OK"){
+    			 $("#modify_modal").modal('hide');
+    		 }else if(result.description=="recursion"){
+    			 $("#waring_modal").modal('show');
+    		 }else{
+    			 
+    		 }
+    	 });
+    }
+    
    $("#dialog_modal").modal({
             show: false,
             keyboard: true
+   });
+   
+   $("#modify_modal").modal({
+       show: false,
+       keyboard: true
+   });
+   
+   $("#waring_modal").modal({
+       show: false,
+       keyboard: true
    });
    
    $("#dialog_confirm").on('click', function () {

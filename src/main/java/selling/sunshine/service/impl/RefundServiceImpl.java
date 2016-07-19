@@ -138,7 +138,7 @@ public class RefundServiceImpl implements RefundService {
 	public ResultData calculateQuantityAll(String agentId){
 		//ResultData Code仅在agentId不存在时为error
 		//ResultData data为三个Integer的list，记录该agent本日当月和累计买了多少件商品(和Refund的quantity一样，但是是所有商品累计的，赠送不算，客户下的算，直接下的算)
-		return null;
+		return refundDao.calculateQuantityAll(agentId);
 	}
 	
 	

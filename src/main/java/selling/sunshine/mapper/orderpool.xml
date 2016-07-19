@@ -150,6 +150,51 @@
 			AND agent_id = #{agentId}
 		</if>
 	</select>
+	
+	<select id="calculateQuantityAll" parameterType="java.util.Map">
+	  <if test="agentId != null and agentId != ''">
+	     select if(isnull(quantity2),0,quantity2) as quantity2,if(isnull(price2),0,price2) as price2,
+	            if(isnull(quantity1),0,quantity1) as quantity1,if(isnull(price1),0,price1) as price1,
+                if(isnull(quantity3),0,quantity3) as quantity3,if(isnull(price3),0,price3) as price3
+         from(
+      select if(isnull(agent_id),#{agentId},agent_id) as agent_id,sum(quantity) as quantity1,sum(price) as price1 
+     from (select agent_id,sum(quantity) as quantity,sum(total_price) as price from  customer_order  
+               where order_status in(1,2,3)
+               and date_format(create_time,'%Y-%m')=date_format(now(),'%Y-%m') and agent_id=#{agentId}
+            union all
+                select agent_id,sum(goods_quantity) as quantity,sum(order_item_price) as price from `order`
+                left join order_item
+                on `order`.order_id = order_item.order_id 
+		        where `order`.order_type=0 and `order`.order_status in(1,2,3) 
+                and date_format(`order`.create_time,'%Y-%m')=date_format(now(),'%Y-%m') and `order`.agent_id=#{agentId}
+	 ) total1
+	 group by agent_id) t1,
+	 ( select if(isnull(agent_id),#{agentId},agent_id) as agent_id,sum(quantity) as quantity2,sum(price) as price2 
+     from (select agent_id,sum(quantity) as quantity,sum(total_price) as price from  customer_order  
+               where order_status in(1,2,3)
+               and date_format(create_time,'%Y-%m-%d')=date_format(now(),'%Y-%m-%d') and agent_id=#{agentId}
+            union all
+                select agent_id,sum(goods_quantity) as quantity,sum(order_item_price) as price from `order`
+                left join order_item
+                on `order`.order_id = order_item.order_id 
+		        where `order`.order_type=0 and `order`.order_status in(1,2,3) 
+                and date_format(`order`.create_time,'%Y-%m-%d')=date_format(now(),'%Y-%m-%d') and `order`.agent_id=#{agentId}
+      ) total2
+	  group by agent_id) t2, 
+      ( select if(isnull(agent_id),#{agentId},agent_id) as agent_id,sum(quantity) as quantity3,sum(price) as price3 
+       from (select agent_id,sum(quantity) as quantity,sum(total_price) as price from  customer_order  
+               where order_status in(1,2,3)
+               and agent_id=#{agentId}
+            union all
+                select agent_id,sum(goods_quantity) as quantity,sum(order_item_price) as price from `order`
+                left join order_item
+                on `order`.order_id = order_item.order_id 
+		        where `order`.order_type=0 and `order`.order_status in(1,2,3) 
+                and `order`.agent_id=#{agentId}
+      ) total3
+	  group by agent_id) t3 where t1.agent_id=t2.agent_id and t1.agent_id=t3.agent_id;
+	  </if>
+	</select>
 
 	<select id="goods4AgentQuery" parameterType="java.util.Map" resultMap="goods4AgentVo">
 		SELECT goods_id, goods_name, goods_description, prime_price, agent_price, block_flag, create_time

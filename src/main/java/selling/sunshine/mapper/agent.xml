@@ -123,6 +123,9 @@
             <if test="blockFlag != null">
                 block_flag = #{blockFlag},
             </if>
+            <if test="upperAgent != null and upperAgent != ''">
+                upper_agent_id = #{upperAgent.agentId},
+            </if>
             agent_id = #{agentId}
         </set>
         WHERE agent_id = #{agentId}
