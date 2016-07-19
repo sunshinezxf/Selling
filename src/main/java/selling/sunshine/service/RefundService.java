@@ -27,4 +27,6 @@ public interface RefundService {
     ResultData calculateRefund(String agentId);
     
     ResultData calculateQuantity(String agentId);
+    
+    ResultData calculateQuantityAll(String agentId);
 }

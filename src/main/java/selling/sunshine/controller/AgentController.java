@@ -1052,6 +1052,22 @@ public class AgentController {
         view.setViewName("/agent/order/manage");
         return view;
     }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/order/overview")
+    public ModelAndView overviewOrder(){
+    	ModelAndView view = new ModelAndView();
+    	WechatConfig.oauthWechat(view, "/agent/order/overview");
+    	view.setViewName("/agent/order/overview");
+    	return view;
+    }
+    
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.GET, value = "/order/overviewinfo")
+    public ResultData viewOrderOverview(){
+    	ResultData result = new ResultData();
+    	
+    	return result;
+    }
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/order/list/{type}")
