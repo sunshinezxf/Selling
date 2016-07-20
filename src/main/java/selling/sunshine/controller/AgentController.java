@@ -1924,13 +1924,15 @@ public class AgentController {
     public ResultData subordinateData(@PathVariable String agentId) {
         ResultData resultData = new ResultData();
         Map<String, Object> dataMap = new HashMap<>();
-
         Map<String, Object> agentMap = new HashMap<>();
-
         Map<String, Object> condition = new HashMap<>();
+        
         selling.sunshine.model.lite.Agent agent = new selling.sunshine.model.lite.Agent();
         agent.setAgentId(agentId);
         condition.put("upperAgent", agent);
+        List<SortRule> orderBy = new ArrayList<>();
+        orderBy.add(new SortRule("agent_name", "desc"));
+        condition.put("sort", orderBy);
         List<Agent> agentList = (List<Agent>) agentService.fetchAgent(condition).getData();
         for (int i = 0; i < agentList.size(); i++) {
             condition.clear();
@@ -1943,8 +1945,17 @@ public class AgentController {
         Map<String, Object> condition2 = new HashMap<>();
         condition2.put("agentId", agentId);
         Agent agent2 = ((List<Agent>) agentService.fetchAgent(condition2).getData()).get(0);
-
-
+        Map<String, Integer> map=new HashMap<>();
+        int k=2;
+        for (int i = 0; i < agentList.size(); i++) {
+        	if (map.get(agentList.get(i).getName())==null) {
+				map.put(agentList.get(i).getName(), 1);
+				k=2;
+			}else {
+				agentList.get(i).setName(agentList.get(i).getName()+k);
+				k++;
+			}
+		}
         dataMap.put("agentList", agentList);
         dataMap.put("agent", agent2);
         dataMap.put("agentMap", agentMap);
