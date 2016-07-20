@@ -1,4 +1,4 @@
-ALTER TABLE `selling`.`customer_order`
+﻿ALTER TABLE `selling`.`customer_order`
 ADD INDEX `agent_id_idx` (`agent_id` ASC);
 ALTER TABLE `selling`.`customer_order`
 ADD CONSTRAINT `agent_id`
@@ -104,6 +104,8 @@ ALTER TABLE `selling`.`refund_config`
 ADD COLUMN `month_config` INT NOT NULL DEFAULT 1
 AFTER `refund_trigger_amount`;
 
+##2016年7月20日更新
+ALTER TABLE `back_operation_log` CHANGE COLUMN `operation_event` `operation_event` VARCHAR(255);
 
 
 
