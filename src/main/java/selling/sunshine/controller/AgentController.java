@@ -1474,7 +1474,9 @@ public class AgentController {
 //             iter.remove();  
 //           }       
 //        } 
-      
+        condition.clear();
+        condition.put("agentId", agentId);
+        
         if (agentService.fetchCredit(condition).getResponseCode() != ResponseCode.RESPONSE_OK) {
             view.setViewName("/backend/agent/grant");
             view.addObject("agent", agent);

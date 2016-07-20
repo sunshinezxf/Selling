@@ -1,0 +1,92 @@
+<div class="tabbar">
+<div class="weui_tab_bd">
+<div class="hd">
+    <h1 class="page_title">订单管理</h1>
+    <p id="refund_condition" class="page_desc">更多关于订单的操作</p>
+</div>
+<div class="bd">
+    <div class="weui_btn_area clear-margin-top">
+        <a href="${path.concat('/agent/order/manage/2')}" class="weui_btn weui_btn_plain_primary">查看详情</a>
+    </div>
+    <div class="weui_tab">
+        <div class="weui_navbar">
+            <div class="weui_navbar_item " id="overview">
+                订单概览
+            </div>
+            <div class="weui_navbar_item" id="subagent">
+                邀请概览
+            </div>
+        </div>
+        <div class="weui_tab_bd">
+            <div id="overviewlist" class="weui_cells clear-margin-top">
+	    			<div class="weui_cell">
+			            <div class="weui_cell_bd weui_cell_primary">
+			                <p>今日销售：${overviewInfo.quantity2}瓶</p>
+			            </div>
+			            <div class="weui_cell_ft"><span style="color:#888;">${overviewInfo.price2}元</span></div>
+			        </div>
+			        <div class="weui_cell">
+			            <div class="weui_cell_bd weui_cell_primary">
+			                <p>本月销售：${overviewInfo.quantity1}瓶</p>
+			            </div>
+			            <div class="weui_cell_ft"><span style="color:#888;">${overviewInfo.price1}元</span></div>
+			        </div>
+			        <div class="weui_cell">
+			            <div class="weui_cell_bd weui_cell_primary">
+			                <p>累计销售：${overviewInfo.quantity3}瓶</p>
+			            </div>
+			            <div class="weui_cell_ft"><span style="color:#888;">${overviewInfo.price3}元</span></div>
+			        </div>
+			        <div class="weui_cell">
+			            <div class="weui_cell_bd weui_cell_primary">
+			                <p>等待发货：${wait.get(0)}瓶</p>
+			            </div>
+			            <div class="weui_cell_ft"><span style="color:#888;">${wait.get(1)}元</span></div>
+			        </div>
+            </div>
+            <div id="agentslist" style="display:none" class="weui_cells clear-margin-top">
+    			#foreach($agent in $agents)
+    			<div class="weui_cell">
+		            <div class="weui_cell_bd weui_cell_primary">
+		                <p>${agent.get(0)}<span style="color:#888;">${agent.get(2)}</span></p>
+		            </div>
+		            <div class="weui_cell_ft">${agent.get(1)}</div>
+		        </div>
+    			#end
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+#parse("/agent/component/navigate.vm")
+</div>
+<script>
+$(function(){
+	$("#overview").css("font-weight","bold");
+    $("#overview").addClass("weui_bar_item_on");
+});
+
+$("#overview").on("click", function(){
+	$("#subagent").removeClass("weui_bar_item_on");
+    $("#subagent").css("font-weight","normal");
+    $("#overview").css("font-weight","bold");
+    $("#overview").addClass("weui_bar_item_on");
+	$("#agentslist").hide();
+	$("#overviewlist").show();
+	$(".page_desc").html("更多关于订单的操作");
+});
+
+$("#subagent").on("click", function(){
+	$("#overview").removeClass("weui_bar_item_on");
+    $("#overview").css("font-weight","normal");
+    $("#subagent").css("font-weight","bold");
+    $("#subagent").addClass("weui_bar_item_on");
+	$("#overviewlist").hide();
+	$("#agentslist").show();
+	if($("#agentslist").children().size() == 0){
+		$(".page_desc").html("您还没有邀请过代理");
+	} else {
+		$(".page_desc").html("这里是您邀请的代理");
+	}
+});
+</script>
