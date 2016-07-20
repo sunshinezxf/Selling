@@ -1610,10 +1610,16 @@ public class AgentController {
             	 view.setViewName("redirect:/agent/check/"+agentId);
                 return view;
              }
+             condition.put("agentId", upperAgentId);
+             fetchResponse = agentService.fetchAgent(condition);
              Admin admin = user.getAdmin();
-             BackOperationLog backOperationLog = new BackOperationLog(
-                     admin.getUsername(), toolService.getIP(request) ,"管理员" + admin.getUsername() + "设置了代理商"+agent.getName()+",手机："+agent.getPhone()+"的上级代理商");
-             logService.createbackOperationLog(backOperationLog);
+             if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            	 Agent agent2 = ((List<Agent>) agentService.fetchAgent(condition).getData()).get(0);
+            	 BackOperationLog backOperationLog = new BackOperationLog(
+                         admin.getUsername(), toolService.getIP(request) ,"管理员" + admin.getUsername() + "设置了代理商"+agent.getName()+",手机："+agent.getPhone()+"的上级代理商为"+agent2.getName());
+                 logService.createbackOperationLog(backOperationLog);
+             }
+             
         }
         view.setViewName("redirect:/agent/check/"+agentId);
         return view;
@@ -1697,10 +1703,16 @@ public class AgentController {
                  resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
                  return resultData;
              }
-             Admin admin = user.getAdmin();
-             BackOperationLog backOperationLog = new BackOperationLog(
-                     admin.getUsername(), toolService.getIP(request) ,"管理员" + admin.getUsername() + "修改了代理商"+agent.getName()+",手机："+agent.getPhone()+"的上级代理商");
-             logService.createbackOperationLog(backOperationLog);
+             condition.put("agentId", upperAgentId);
+             fetchResponse = agentService.fetchAgent(condition);
+             if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            	 Agent agent2= ((List<Agent>) agentService.fetchAgent(condition).getData()).get(0);
+            	 Admin admin = user.getAdmin();
+                 BackOperationLog backOperationLog = new BackOperationLog(
+                         admin.getUsername(), toolService.getIP(request) ,"管理员" + admin.getUsername() + "修改了代理商"+agent.getName()+",手机："+agent.getPhone()+"的上级代理商为"+agent2.getName());
+                 logService.createbackOperationLog(backOperationLog);
+             }
+            
         }
         return resultData;
     }
