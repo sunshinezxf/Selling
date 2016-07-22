@@ -23,6 +23,7 @@ public class DateUtils {
 
 	public void process(String date1, String date2) {
 		if (date1.equals(date2)) {
+			dateList.add(date1);
 			return;
 		}
 
