@@ -248,7 +248,6 @@ public class DeliverServiceImpl implements DeliverService {
             FileOutputStream out = new FileOutputStream(sb.toString());
             template.write(out);
             out.close();
-            template.close();
             result.setData(new StringBuffer(directory).append("/").append("发货统计清单_").append(name).append(".xlsx").toString());
         } catch (Exception e) {
             logger.error(e.getMessage());
