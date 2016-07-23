@@ -51,40 +51,94 @@
     var history = '$!{history}';
     var second_time_purchase = not_null(history);
 
-    $(document).ready(function () {
-        convert_id();
-        check_agent();
+
+    $(function () {
 
         if (second_time_purchase && addressInfo_validate()) {
             active();
         }
-    });
 
-    function convert_id() {
-        var id = $('#agent_id').val();
-        if (id != "") {
-            var newId = id.slice(3);
-            $('#agent_id').val(newId);
-        }
-    }
+        var slidey = $('.fading-slider').unslider({
+            animation: 'fade',
+            autoplay: true,
+            arrows: false,
+            fluid: false
+        });
+        var data = slidey.data('unslider');
+        $('.fading-slider').on('swipeleft', function (e) {
+            data.next();
+        }).on('swiperight', function (e) {
+            data.prev();
+        });
 
-    function check_agent() {
-        var agent = $('#agent_id').val();
-        var num = $('#goods_num').val();
-        if (agent) {
-            $('#agent_price').show();
-            $('#customer_price').hide();
-            goods_price = "${goods.agentPrice}";
-        } else {
-            $('#customer_price').show();
-            $('#agent_price').hide();
-            goods_price = "${goods.customerPrice}";
-        }
-        $('#goods_per_price').text(goods_price + '元');
-        $('#total_price').text(num * goods_price + '元');
-    }
+        //$('.img').load( function (){    //<img>加载url事件
+        //    var img = new Image();    //图片预加载
+        //    img.src= this.src;        //this为id="img"的dom节点对象
+        //    var rate=img.height/img.width; //这里的img.width和img.height为原图大小
+        //    this.height=this.width*rate;
+        //});
 
-    $(document).ready(function () {
+        $('.unslider-fade').css('height', $('#first_img img').height());
+
+        $('#detail').show();
+        $('#parameters').hide();
+        $('#more').hide();
+
+        $(".logo").fancybox({
+            padding: 0,
+            closeBtn: false,
+            closeClick: true,
+            afterShow: function () {
+                $('.fancybox-outter').addClass('pinch-zoom-container');
+                $('.fancybox-inner').addClass('pinch-zoom');
+                $('div.pinch-zoom').each(function () {
+                    new RTP.PinchZoom($(this), {});
+                });
+                forbidden = true;
+            },
+            afterClose: function () {
+                forbidden = false;
+            }
+        });
+
+        $("#feelings").fancybox({
+            padding: 0,
+            closeBtn: false,
+            closeClick: true,
+            afterShow: function () {
+                $('.fancybox-outter').addClass('pinch-zoom-container');
+                $('.fancybox-inner').addClass('pinch-zoom');
+                $('div.pinch-zoom').each(function () {
+                    new RTP.PinchZoom($(this), {});
+                });
+                forbidden = true;
+            },
+            afterClose: function () {
+                forbidden = false;
+            }
+        });
+
+        $("#qrcode").fancybox({
+            padding: 0,
+            closeBtn: false,
+            closeClick: true,
+            afterShow: function () {
+                $('.fancybox-outter').addClass('pinch-zoom-container');
+                $('.fancybox-inner').addClass('pinch-zoom');
+                $('div.pinch-zoom').each(function () {
+                    new RTP.PinchZoom($(this), {});
+                });
+                forbidden = true;
+            },
+            afterClose: function () {
+                forbidden = false;
+            }
+        });
+
+        convert_id();
+
+        check_agent();
+
         $('#agent_id').blur(function () {
             var agentId = $('#agent_id').val();
             if (agentId != "") {
@@ -115,6 +169,12 @@
         });
 
         check_num();
+
+        $('#province').citySelect({
+            url:'${path.concat('/plugins/jquery/city.min.js')}',
+            required:false,
+            nodata:'none',//当子集无数据时，隐藏select
+        });
 
         $('#customer_name').on('input propertychange', function () {
             if (addressInfo_validate()) {
@@ -283,6 +343,31 @@
         $('#parameters').hide();
         $('#detail').hide();
     });
+
+
+    function convert_id() {
+        var id = $('#agent_id').val();
+        if (id != "") {
+            var newId = id.slice(3);
+            $('#agent_id').val(newId);
+        }
+    }
+
+    function check_agent() {
+        var agent = $('#agent_id').val();
+        var num = $('#goods_num').val();
+        if (agent) {
+            $('#agent_price').show();
+            $('#customer_price').hide();
+            goods_price = "${goods.agentPrice}";
+        } else {
+            $('#customer_price').show();
+            $('#agent_price').hide();
+            goods_price = "${goods.customerPrice}";
+        }
+        $('#goods_per_price').text(goods_price + '元');
+        $('#total_price').text(num * goods_price + '元');
+    }
 
     function check_num() {
         var goodsNum = $('#goods_num').val();
