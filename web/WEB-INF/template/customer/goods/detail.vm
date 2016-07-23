@@ -51,6 +51,31 @@
     var history = '$!{history}';
     var second_time_purchase = not_null(history);
 
+    document.addEventListener('pingpp_one_ready', function () {
+        alert("ping++配置已加载");
+        $('#confirm').click(function () {
+            var agentId = $('#agent_id').val();
+            if (agentId != "") {
+                agentId = "AGT" + agentId;
+                var url = '${path.concat('/agent/agentValidate/')}' + agentId;
+                var param = {agentId: agentId};
+                $.post(url, param, function (result) {
+                    if (result.responseCode != "RESPONSE_OK") {
+                        $("#dialog").find(".weui_dialog_bd").html("优惠码不存在！");
+                        $("#dialog").fadeIn();
+                        $("#agent_id").val("");
+                        check_agent();
+                    } else {
+                        pay();
+                    }
+
+                });
+            } else {
+                check_agent();
+                pay();
+            }
+        });
+    });
 
     $(function () {
 
@@ -176,22 +201,6 @@
             nodata: 'none',//当子集无数据时，隐藏select
         });
 
-        $('#customer_name').on('input propertychange', function () {
-            if (addressInfo_validate()) {
-                active();
-            } else {
-                inactive();
-            }
-        });
-
-        $('#customer_phone').on('input propertychange', function () {
-            if (addressInfo_validate()) {
-                active();
-            } else {
-                inactive();
-            }
-        });
-
         $("#prov").change(function () {
             $("#city").empty();
             $("#dist").empty();
@@ -218,54 +227,43 @@
                 inactive();
             }
         });
-
-        $('#customer_address').on('input propertychange', function () {
-            if (addressInfo_validate()) {
-                active();
-            } else {
-                inactive();
-            }
-        });
-
-        $('#history_address').on('input propertychange', function () {
-            if (addressInfo_validate()) {
-                active();
-            } else {
-                inactive();
-            }
-        })
-
-        document.addEventListener('pingpp_one_ready', function () {
-            alert("ping++配置已加载");
-            $('#confirm').click(function () {
-                var agentId = $('#agent_id').val();
-                if (agentId != "") {
-                    agentId = "AGT" + agentId;
-                    var url = '${path.concat('/agent/agentValidate/')}' + agentId;
-                    var param = {agentId: agentId};
-                    $.post(url, param, function (result) {
-                        if (result.responseCode != "RESPONSE_OK") {
-                            $("#dialog").find(".weui_dialog_bd").html("优惠码不存在！");
-                            $("#dialog").fadeIn();
-                            $("#agent_id").val("");
-                            check_agent();
-                        } else {
-                            pay();
-                        }
-
-                    });
-                } else {
-                    check_agent();
-                    pay();
-                }
-            });
-        });
     });
 
+    $('#customer_name').on('input propertychange', function () {
+        if (addressInfo_validate()) {
+            active();
+        } else {
+            inactive();
+        }
+    });
+
+    $('#customer_phone').on('input propertychange', function () {
+        if (addressInfo_validate()) {
+            active();
+        } else {
+            inactive();
+        }
+    });
 
     $('#purchase').click(function () {
         forbidden = true;
         $.toggleNumModifySheet();
+    });
+
+    $('#customer_address').on('input propertychange', function () {
+        if (addressInfo_validate()) {
+            active();
+        } else {
+            inactive();
+        }
+    });
+
+    $('#history_address').on('input propertychange', function () {
+        if (addressInfo_validate()) {
+            active();
+        } else {
+            inactive();
+        }
     });
 
     $.toggleNumModifySheet = function () {
