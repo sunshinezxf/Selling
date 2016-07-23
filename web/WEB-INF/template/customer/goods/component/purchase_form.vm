@@ -96,7 +96,7 @@
                             </td>
                             <td class="bd">
                                 #if(${agent})
-                                    <input id="agent_id" class="id_input" type="text" value="${agent.agentId}"/>
+                                    <input id="agent_id" class="id_input" type="text" placeholder="可输入优惠码" value="${agent.agentId}"/>
                                 #else
                                     <input id="agent_id" class="id_input" type="text" placeholder="可输入优惠码" value=""/>
                                 #end
