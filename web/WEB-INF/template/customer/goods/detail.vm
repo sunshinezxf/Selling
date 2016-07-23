@@ -171,9 +171,9 @@
         check_num();
 
         $('#province').citySelect({
-            url:'${path.concat('/plugins/jquery/city.min.js')}',
-            required:false,
-            nodata:'none',//当子集无数据时，隐藏select
+            url: '${path.concat('/plugins/jquery/city.min.js')}',
+            required: false,
+            nodata: 'none',//当子集无数据时，隐藏select
         });
 
         $('#customer_name').on('input propertychange', function () {
@@ -226,6 +226,14 @@
                 inactive();
             }
         });
+
+        $('#history_address').on('input propertychange', function () {
+            if (addressInfo_validate()) {
+                active();
+            } else {
+                inactive();
+            }
+        })
 
         document.addEventListener('pingpp_one_ready', function () {
             $('#confirm').click(function () {
