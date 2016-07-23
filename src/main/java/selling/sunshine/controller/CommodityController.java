@@ -1,7 +1,6 @@
 package selling.sunshine.controller;
 
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.shiro.SecurityUtils;
@@ -225,8 +224,7 @@ public class CommodityController {
     @RequestMapping(method = RequestMethod.GET, value = "/{goodsId}")
     public ModelAndView view(HttpServletRequest request, @PathVariable("goodsId") String goodsId, String agentId, String code, String state) {
         ModelAndView view = new ModelAndView();
-        String openId = null;
-        logger.debug(JSON.toJSONString(request.getSession().getAttribute("openId")));
+        String openId;
         if (StringUtils.isEmpty(code) || StringUtils.isEmpty(state)) {
             HttpSession session = request.getSession();
             if (session.getAttribute("openId") == null || session.getAttribute("openId").equals("")) {
