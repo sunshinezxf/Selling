@@ -48,7 +48,8 @@
     var goods_price;
     var alertNum = 0;
     var forbidden = false;
-    var second_time_purchase = not_null('${history}');
+    var history = '$!{history}';
+    var second_time_purchase = not_null(history);
 
     $(document).ready(function () {
         convert_id();
@@ -348,14 +349,18 @@
         var customerName = $('#customer_name').val();
         var phone = $('#customer_phone').val();
         var address;
-        if ($("#dist").is(":hidden")) {
-            if ($("#city").is(":hidden")) {
-                address = $("#prov").val() + $("#customer_address").val();
-            } else {
-                address = $("#prov").val() + $("#city").val() + $("#customer_address").val();
-            }
+        if (second_time_purchase) {
+            address = $('#history_address').val();
         } else {
-            address = $("#prov").val() + $("#city").val() + $("#dist").val() + $("#customer_address").val();
+            if ($("#dist").is(":hidden")) {
+                if ($("#city").is(":hidden")) {
+                    address = $("#prov").val() + $("#customer_address").val();
+                } else {
+                    address = $("#prov").val() + $("#city").val() + $("#customer_address").val();
+                }
+            } else {
+                address = $("#prov").val() + $("#city").val() + $("#dist").val() + $("#customer_address").val();
+            }
         }
         var param = {
             goodsId: goodsId,
