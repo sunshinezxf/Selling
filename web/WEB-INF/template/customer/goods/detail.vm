@@ -200,8 +200,8 @@
                             </div>
                             <div class="weui_cell_bd weui_cell_primary">
                                 <input id="customer_name" name="customerName" class="weui_input" type="text"
-                                       placeholder="请填写收货人姓名"
-                                       autocomplete="off"/>
+                                       placeholder="请填写收货人姓名" autocomplete="off" #if(${history})
+                                       value="${history.receiverName}" #end/>
                             </div>
                         </div>
                         <div class="weui_cell">
@@ -210,30 +210,44 @@
                             </div>
                             <div class="weui_cell_bd weui_cell_primary">
                                 <input id="customer_phone" name="phone" class="weui_input" type="tel"
-                                       placeholder="请填写手机号"
-                                       autocomplete="off"/>
+                                       placeholder="请填写手机号" autocomplete="off" #if(${history})
+                                       value="${history.receiverPhone}" #end/>
                             </div>
                         </div>
-                        <div class="weui_cell">
-                            <div class="weui_cell_hd">
-                                <label class="weui_label">地区</label>
-                            </div>
-                            <div class="weui_cell_bd weui_cell_primary">
-                                <div id="province">  
-                                    <select id="prov" class="prov"></select>   
-                                    <select id="city" class="city" disabled="disabled" style="display:none"></select>  
-                                    <select id="dist" class="dist" disabled="disabled" style="display:none"></select>  
+                        #if(${history})
+                            <div class="weui_cell">
+                                <div class="weui_cell_hd">
+                                    <label class="weui_label">历史地址</label>
+                                </div>
+                                <div class="weui_cell_bd weui_cell_primary">
+                                    ${history.receiverAddress}
                                 </div>
                             </div>
-                        </div>
-                        <div class="weui_cell">
-                            <div class="weui_cell_hd">
-                                <label class="weui_label">地址</label>
+                        #end
+                        <div class="weui_cells">
+                            <div class="weui_cell">
+                                <div class="weui_cell_hd">
+                                    <label class="weui_label">地区</label>
+                                </div>
+                                <div class="weui_cell_bd weui_cell_primary">
+                                    <div id="province">
+                                        <select id="prov" class="prov"></select>
+                                        <select id="city" class="city" disabled="disabled"
+                                                style="display:none"></select>
+                                        <select id="dist" class="dist" disabled="disabled"
+                                                style="display:none"></select>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="weui_cell_bd weui_cell_primary">
-                                <input id="customer_address" name="address" class="weui_input" type="text"
-                                       placeholder="请填写详细地址"
-                                       autocomplete="off"/>
+                            <div class="weui_cell">
+                                <div class="weui_cell_hd">
+                                    <label class="weui_label">地址</label>
+                                </div>
+                                <div class="weui_cell_bd weui_cell_primary">
+                                    <input id="customer_address" name="address" class="weui_input" type="text"
+                                           placeholder="请填写详细地址"
+                                           autocomplete="off"/>
+                                </div>
                             </div>
                         </div>
                         <div class="weui_cell postcode">
@@ -444,11 +458,11 @@
         check_num();
 
         $('#province').citySelect({
-            url:'${path.concat('/plugins/jquery/city.min.js')}',
-            required:false,
-            nodata:'none',//当子集无数据时，隐藏select
+            url: '${path.concat('/plugins/jquery/city.min.js')}',
+            required: false,
+            nodata: 'none',//当子集无数据时，隐藏select
         });
-        
+
         $('#customer_name').on('input propertychange', function () {
             if (addressInfo_validate()) {
                 active();
@@ -464,7 +478,7 @@
                 inactive();
             }
         });
-        
+
         $("#prov").change(function () {
             $("#city").empty();
             $("#dist").empty();
@@ -474,7 +488,7 @@
                 inactive();
             }
         });
-        
+
         $("#city").change(function () {
             $("#dist").empty();
             if (addressInfo_validate()) {
@@ -658,13 +672,13 @@
         var phone = $('#customer_phone').val();
         var address = $('#customer_address').val();
         var area;
-        if($("#prov").val()=="北京"||$("#prov").val()=="天津"||$("#prov").val()=="上海"||$("#prov").val()=="重庆"||$("#prov").val()=="香港"||$("#prov").val()=="澳门"||$("#prov").val()=="台湾"){
-            area=$("#city").val();
-        }else{
-            if($("#prov").val()=="国外"){
-                area=$("#prov").val();
-            }else{
-                area=$("#dist").val();
+        if ($("#prov").val() == "北京" || $("#prov").val() == "天津" || $("#prov").val() == "上海" || $("#prov").val() == "重庆" || $("#prov").val() == "香港" || $("#prov").val() == "澳门" || $("#prov").val() == "台湾") {
+            area = $("#city").val();
+        } else {
+            if ($("#prov").val() == "国外") {
+                area = $("#prov").val();
+            } else {
+                area = $("#dist").val();
             }
         }
         if (not_null(name) && not_null(phone) && not_null(address) && not_null(area)) {
@@ -704,13 +718,13 @@
         var customerName = $('#customer_name').val();
         var phone = $('#customer_phone').val();
         var address;
-        if($("#dist").is(":hidden")){
-            if($("#city").is(":hidden")){
+        if ($("#dist").is(":hidden")) {
+            if ($("#city").is(":hidden")) {
                 address = $("#prov").val() + $("#customer_address").val();
-            }else{
+            } else {
                 address = $("#prov").val() + $("#city").val() + $("#customer_address").val();
             }
-        }else{
+        } else {
             address = $("#prov").val() + $("#city").val() + $("#dist").val() + $("#customer_address").val();
         }
         var param = {
@@ -776,14 +790,11 @@
         });
     }
 
-
     document.addEventListener("touchmove", function (e) {
         if (forbidden) {
             e.preventDefault();
             e.stopPropagation();
         }
     }, false);
-
-
 </script>
 </html>
