@@ -3,8 +3,7 @@
 <head>
     #parse("/customer/component/init.vm")
     <link rel="stylesheet" href="${path.concat('/plugins/unslider/css/unslider.css')}"/>
-    <link rel="stylesheet" href="${path.concat('/plugins/fancybox/source/jquery.fancybox.css')}" type="text/css"
-          media="screen"/>
+    <link rel="stylesheet" href="${path.concat('/plugins/fancybox/source/jquery.fancybox.css')}" media="screen"/>
     <link rel="stylesheet" href="${path.concat('/material/css/customer/goods_detail.css')}"/>
     <link rel="stylesheet" href="${path.concat('/material/css/common/address_plugin.css')}"/>
     <script type="text/javascript" src="${path.concat('/plugins/jquery/jquery.event.move.js')}"></script>
@@ -17,304 +16,12 @@
 </head>
 <body ontouchstart>
 <div class="below">
-    <div class="unslider_div">
-        <div class="fading-slider">
-            <ul>
-                <li>
-                    <a id="first_img" class="logo" href="${path.concat('/material/goods_img/1_b.jpg')}">
-                        <img class="img" src="${path.concat('/material/goods_img/1.jpg')}"/>
-                    </a>
-                </li>
-                <li>
-                    <a class="logo" href="${path.concat('/material/goods_img/2.jpg')}">
-                        <img class="img" src="${path.concat('/material/goods_img/2.jpg')}"/>
-                    </a>
-                </li>
-                <li>
-                    <a class="logo" href="${path.concat('/material/goods_img/3_b.jpg')}">
-                        <img class="img" src="${path.concat('/material/goods_img/3.jpg')}"/>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div>
-
+    #parse("/customer/goods/component/goods_slider.vm")
     <div class="gap"></div>
-    <div class="detail_area">
-        <div class="options_div">
-            <table cellpadding="0" cellspacing="0">
-                <th>
-                <td class="normal chosen">
-                    <button id="det" class="option chosen_btn">图文详情</button>
-                </td>
-                <td class="normal">
-                    <button id="par" class="option">产品参数</button>
-                </td>
-                <td class="normal">
-                    <button id="mor" class="option">更多信息</button>
-                </td>
-                </th>
-            </table>
-        </div>
-        <div class="gap"></div>
-        <div id="detail" class="detail">
-            <a id="feelings" href="${path.concat('/material/images/feelings_b.jpg')}">
-                <img class="img" src="${path.concat('/material/images/feelings.jpg')}"/>
-            </a>
-        </div>
-        <div id="parameters" class="product_parameters">
-            <table class="p_table">
-                <tr>
-                    <td class="p_hd">产品名称</td>
-                    <td class="p_bd">云草纲目三七超细粉</td>
-                </tr>
-                <tr>
-                    <td class="p_hd">规格</td>
-                    <td class="p_bd">180克/瓶</td>
-                </tr>
-                <tr>
-                    <td class="p_hd">原料产地</td>
-                    <td class="p_bd">云南文山</td>
-                </tr>
-                <tr>
-                    <td class="p_hd">性味与归经</td>
-                    <td class="p_bd">甘、微苦、温。归肝、胃经</td>
-                </tr>
-                <tr>
-                    <td class="p_hd">用法与用量</td>
-                    <td class="p_bd">3-9克，吞服一次1-3克，外用适量</td>
-                </tr>
-                <tr>
-                    <td class="p_hd">功能与主治</td>
-                    <td class="p_bd">
-                        散瘀止血，消肿定痛，益气活血。用于跌扑肿痛，内外出血，气虚血瘀，胸痹心痛，中风偏瘫，气虚体弱；软组织挫伤，出血性疾病，高血压，冠心病，脑卒中，高血脂症，糖尿病血管突变，免疫功能低下见上述证候者。
-                    </td>
-                </tr>
-                <tr>
-                    <td class="p_hd">注意</td>
-                    <td class="p_bd">孕妇慎用；有创面者禁用</td>
-                </tr>
-                <tr>
-                    <td class="p_hd">生产厂家</td>
-                    <td class="p_bd">昆明道地中药饮片厂</td>
-                </tr>
-                <tr>
-                    <td class="p_hd">生产地址</td>
-                    <td class="p_bd">昆明市五华区普吉路521号</td>
-                </tr>
-                <tr>
-                    <td class="p_hd">生产许可证</td>
-                    <td class="p_bd">滇20160179</td>
-                </tr>
-                <tr>
-                    <td class="p_hd">执行标准</td>
-                    <td class="p_bd">《中国药典》2015年版一部云YPBZ-0091-2008</td>
-                </tr>
-                <tr>
-                    <td class="p_hd">监制</td>
-                    <td class="p_bd">云南云草纲目生物科技有限公司</td>
-                </tr>
-                <tr>
-                    <td class="p_hd">有效期</td>
-                    <td class="p_bd">三年</td>
-                </tr>
-                <tr>
-                    <td class="p_hd">贮藏</td>
-                    <td class="p_bd">密封</td>
-                </tr>
-                <tr>
-                    <td class="p_hd">电话</td>
-                    <td class="p_bd">0871-63111137</td>
-                </tr>
-                <tr>
-                    <td class="p_hd">邮编</td>
-                    <td class="p_bd">650032</td>
-                </tr>
-                <tr>
-                    <td class="p_hd">生产批号</td>
-                    <td class="p_bd">见瓶身</td>
-                </tr>
-                <tr>
-                    <td class="p_hd" style="border-bottom:none;">生产日期</td>
-                    <td class="p_bd" style="border-bottom:none;">见瓶身</td>
-                </tr>
-            </table>
-        </div>
-        <div id="more" class="more">
-        ##<a id="qrcode" href="${path.concat('/material/images/qrcode_b.png')}">
-            <img class="img" src="${path.concat('/material/images/qrcode.png')}"/>
-        ##</a>
-            <p>长按上方二维码，扫描后关注,即可了解更多有关“云草纲目超细三七粉”的信息</p>
-        </div>
-    </div>
+    #parse("/customer/goods/component/goods_detail.vm")
 </div>
-<div class="buy_area">
-    <div class="footer_div">
-        <div class="goods_information">
-            <div class="under_div">
-                <div id="agent_price" class="price">
-                    <div class="pre_price">￥${goods.customerPrice}</div>
-                    <div class="now_price">${goods.agentPrice}</div>
-                </div>
-                <div id="customer_price" class="price">
-                    <div class="common_price">￥${goods.customerPrice}</div>
-                </div>
-                <div class="post">
-                    <p>包邮</p>
-                </div>
-            </div>
-        </div>
-        <div class="num_div">
-            <div class="number_area">
-                <p>购买数量</p>
-
-                <div class="number_choose">
-                    <button id="min_btn" class="min">—</button>
-                    <input id="goods_num" class="num_box" name="" type="text" value="1" readonly="true"/>
-                    <button id="add_btn" class="add">+</button>
-                </div>
-            </div>
-            <button id="purchase" class="btn_area">立即购买</button>
-        </div>
-    </div>
-</div>
-<div id="actionSheet_wrap">
-    <div class="weui_mask_transition" id="number_div" style="display: none;"></div>
-    <div class="weui_actionsheet" id="weui_actionsheet">
-        <div class="weui_actionsheet_menu">
-            <div class="menu_title">
-                <h3>订单信息</h3>
-            </div>
-            <div class="address_area">
-                <div class="address_information">
-                    <div class="address_title">
-                        <div class="address_icon">
-                            <img class="icon" src="${path.concat('/material/images/address_icon.jpg')}"/>
-                        </div>
-                        <p>收货地址</p>
-                    </div>
-                    <div class="weui_cells">
-                        <div class="weui_cell">
-                            <div class="weui_cell_hd">
-                                <label class="weui_label">姓名</label>
-                            </div>
-                            <div class="weui_cell_bd weui_cell_primary">
-                                <input id="customer_name" name="customerName" class="weui_input" type="text"
-                                       placeholder="请填写收货人姓名" autocomplete="off" #if(${history})
-                                       value="${history.receiverName}" #end/>
-                            </div>
-                        </div>
-                        <div class="weui_cell">
-                            <div class="weui_cell_hd">
-                                <label class="weui_label">手机号</label>
-                            </div>
-                            <div class="weui_cell_bd weui_cell_primary">
-                                <input id="customer_phone" name="phone" class="weui_input" type="tel"
-                                       placeholder="请填写手机号" autocomplete="off" #if(${history})
-                                       value="${history.receiverPhone}" #end/>
-                            </div>
-                        </div>
-                        #if(${history})
-                            <div class="weui_cell">
-                                <div class="weui_cell_hd">
-                                    <label class="weui_label">历史地址</label>
-                                </div>
-                                <div class="weui_cell_bd weui_cell_primary">
-                                    ${history.receiverAddress}
-                                </div>
-                            </div>
-                        #end
-                        <div class="weui_cells">
-                            <div class="weui_cell">
-                                <div class="weui_cell_hd">
-                                    <label class="weui_label">地区</label>
-                                </div>
-                                <div class="weui_cell_bd weui_cell_primary">
-                                    <div id="province">
-                                        <select id="prov" class="prov"></select>
-                                        <select id="city" class="city" disabled="disabled"
-                                                style="display:none"></select>
-                                        <select id="dist" class="dist" disabled="disabled"
-                                                style="display:none"></select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="weui_cell">
-                                <div class="weui_cell_hd">
-                                    <label class="weui_label">地址</label>
-                                </div>
-                                <div class="weui_cell_bd weui_cell_primary">
-                                    <input id="customer_address" name="address" class="weui_input" type="text"
-                                           placeholder="请填写详细地址"
-                                           autocomplete="off"/>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="weui_cell postcode">
-                            <div class="weui_cell_hd">
-                                <label class="weui_label">邮政编码</label>
-                            </div>
-                            <div class="weui_cell_bd weui_cell_primary">
-                                <input id="postcode" name="postcode" class="weui_input" type="tel" placeholder="请填写邮政编码"
-                                       autocomplete="off"/>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="weui_cell id">
-                <div class="id_icon">
-                    <img class="icon" src="${path.concat('/material/images/id_icon.jpg')}"/>
-                </div>
-                <div class="agent_id">
-                    <table>
-                        <tr>
-                            <td class="hd">
-                                <label class="id_label">优惠码</label>
-                            </td>
-                            <td class="bd">
-                                #if(${agent})
-                                    <input id="agent_id" class="id_input" type="text" value="${agent.agentId}"/>
-                                #else
-                                    <input id="agent_id" class="id_input" type="text" placeholder="可输入优惠码" value=""/>
-                                #end
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-            <!--
-            <div class="weui_cell pay">
-                 <div class="weui_cell_bd weui_cell_primary">
-                     <p class="pay_label">支付方式</p>
-                 </div>
-                 <div class="weui_cell_ft">
-                     <p class="pay_way">微信支付</p>
-                 </div>
-            </div>
-            -->
-            <div class="confirm_area">
-                <div class="total_info">
-                    <div class="total_num">
-                        <p>共
-
-                        <p id="total_num">1</p>件
-                        </p>
-                    </div>
-                    <div class="total_money">
-                        <p class="sum">应付总额：</p>
-
-                        <p id="total_price" class="sum_price">元</p>
-                    </div>
-                </div>
-                <div class="to_pay">
-                    <button id="confirm" class="weui_btn weui_btn_disabled weui_btn_default" disabled="disabled">支付
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+    #parse("/customer/goods/component/goods_price.vm")
+    #parse("/customer/goods/component/purchase_form.vm")
 <div class="weui_dialog_alert" id="dialog" style="display: none;">
     <div class="weui_mask"></div>
     <div class="weui_dialog">
@@ -341,90 +48,42 @@
     var goods_price;
     var alertNum = 0;
     var forbidden = false;
+    var second_time_purchase = not_null('${history}');
 
-
-    $(function () {
-        var slidey = $('.fading-slider').unslider({
-            animation: 'fade',
-            autoplay: true,
-            arrows: false,
-            fluid: false
-        });
-        var data = slidey.data('unslider');
-        $('.fading-slider').on('swipeleft', function (e) {
-            data.next();
-        }).on('swiperight', function (e) {
-            data.prev();
-        });
-
-        //$('.img').load( function (){    //<img>加载url事件
-        //    var img = new Image();    //图片预加载
-        //    img.src= this.src;        //this为id="img"的dom节点对象
-        //    var rate=img.height/img.width; //这里的img.width和img.height为原图大小
-        //    this.height=this.width*rate;
-        //});
-
-        $('.unslider-fade').css('height', $('#first_img img').height());
-
-        $('#detail').show();
-        $('#parameters').hide();
-        $('#more').hide();
-
-        $(".logo").fancybox({
-            padding: 0,
-            closeBtn: false,
-            closeClick: true,
-            afterShow: function () {
-                $('.fancybox-outter').addClass('pinch-zoom-container');
-                $('.fancybox-inner').addClass('pinch-zoom');
-                $('div.pinch-zoom').each(function () {
-                    new RTP.PinchZoom($(this), {});
-                });
-                forbidden = true;
-            },
-            afterClose: function () {
-                forbidden = false;
-            }
-        });
-
-        $("#feelings").fancybox({
-            padding: 0,
-            closeBtn: false,
-            closeClick: true,
-            afterShow: function () {
-                $('.fancybox-outter').addClass('pinch-zoom-container');
-                $('.fancybox-inner').addClass('pinch-zoom');
-                $('div.pinch-zoom').each(function () {
-                    new RTP.PinchZoom($(this), {});
-                });
-                forbidden = true;
-            },
-            afterClose: function () {
-                forbidden = false;
-            }
-        });
-
-        $("#qrcode").fancybox({
-            padding: 0,
-            closeBtn: false,
-            closeClick: true,
-            afterShow: function () {
-                $('.fancybox-outter').addClass('pinch-zoom-container');
-                $('.fancybox-inner').addClass('pinch-zoom');
-                $('div.pinch-zoom').each(function () {
-                    new RTP.PinchZoom($(this), {});
-                });
-                forbidden = true;
-            },
-            afterClose: function () {
-                forbidden = false;
-            }
-        });
-
+    $(document).ready(function () {
         convert_id();
-
         check_agent();
 
+        if (second_time_purchase && addressInfo_validate()) {
+            active();
+        }
+    });
+
+    function convert_id() {
+        var id = $('#agent_id').val();
+        if (id != "") {
+            var newId = id.slice(3);
+            $('#agent_id').val(newId);
+        }
+    }
+
+    function check_agent() {
+        var agent = $('#agent_id').val();
+        var num = $('#goods_num').val();
+        if (agent) {
+            $('#agent_price').show();
+            $('#customer_price').hide();
+            goods_price = "${goods.agentPrice}";
+        } else {
+            $('#customer_price').show();
+            $('#agent_price').hide();
+            goods_price = "${goods.customerPrice}";
+        }
+        $('#goods_per_price').text(goods_price + '元');
+        $('#total_price').text(num * goods_price + '元');
+    }
+
+    $(document).ready(function () {
         $('#agent_id').blur(function () {
             var agentId = $('#agent_id').val();
             if (agentId != "") {
@@ -454,14 +113,7 @@
             }
         });
 
-
         check_num();
-
-        $('#province').citySelect({
-            url: '${path.concat('/plugins/jquery/city.min.js')}',
-            required: false,
-            nodata: 'none',//当子集无数据时，隐藏select
-        });
 
         $('#customer_name').on('input propertychange', function () {
             if (addressInfo_validate()) {
@@ -631,31 +283,6 @@
         $('#detail').hide();
     });
 
-
-    function convert_id() {
-        var id = $('#agent_id').val();
-        if (id != "") {
-            var newId = id.slice(3);
-            $('#agent_id').val(newId);
-        }
-    }
-
-    function check_agent() {
-        var agent = $('#agent_id').val();
-        var num = $('#goods_num').val();
-        if (agent) {
-            $('#agent_price').show();
-            $('#customer_price').hide();
-            goods_price = "${goods.agentPrice}";
-        } else {
-            $('#customer_price').show();
-            $('#agent_price').hide();
-            goods_price = "${goods.customerPrice}";
-        }
-        $('#goods_per_price').text(goods_price + '元');
-        $('#total_price').text(num * goods_price + '元');
-    }
-
     function check_num() {
         var goodsNum = $('#goods_num').val();
         if (goodsNum == 1) {
@@ -671,6 +298,9 @@
         var name = $('#customer_name').val();
         var phone = $('#customer_phone').val();
         var address = $('#customer_address').val();
+        if (second_time_purchase) {
+            address = $('#history_address').val();
+        }
         var area;
         if ($("#prov").val() == "北京" || $("#prov").val() == "天津" || $("#prov").val() == "上海" || $("#prov").val() == "重庆" || $("#prov").val() == "香港" || $("#prov").val() == "澳门" || $("#prov").val() == "台湾") {
             area = $("#city").val();
@@ -681,7 +311,7 @@
                 area = $("#dist").val();
             }
         }
-        if (not_null(name) && not_null(phone) && not_null(address) && not_null(area)) {
+        if (not_null(name) && not_null(phone) && not_null(address) && (not_null(area) || second_time_purchase)) {
             return true;
         } else {
             return false;

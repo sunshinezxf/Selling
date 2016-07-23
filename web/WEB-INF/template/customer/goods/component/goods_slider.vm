@@ -1,0 +1,63 @@
+<div class="unslider_div">
+    <div class="fading-slider">
+        <ul>
+            <li>
+                <a id="first_img" class="logo" href="${path.concat('/material/goods_img/1_b.jpg')}">
+                    <img class="img" src="${path.concat('/material/goods_img/1.jpg')}"/>
+                </a>
+            </li>
+            <li>
+                <a class="logo" href="${path.concat('/material/goods_img/2.jpg')}">
+                    <img class="img" src="${path.concat('/material/goods_img/2.jpg')}"/>
+                </a>
+            </li>
+            <li>
+                <a class="logo" href="${path.concat('/material/goods_img/3_b.jpg')}">
+                    <img class="img" src="${path.concat('/material/goods_img/3.jpg')}"/>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        var slidey = $('.fading-slider').unslider({
+            animation: 'fade',
+            autoplay: true,
+            arrows: false,
+            fluid: false
+        });
+        var data = slidey.data('unslider');
+        $('.fading-slider').on('swipeleft', function (e) {
+            data.next();
+        }).on('swiperight', function (e) {
+            data.prev();
+        });
+
+        //$('.img').load( function (){    //<img>加载url事件
+        //    var img = new Image();    //图片预加载
+        //    img.src= this.src;        //this为id="img"的dom节点对象
+        //    var rate=img.height/img.width; //这里的img.width和img.height为原图大小
+        //    this.height=this.width*rate;
+        //});
+
+        $('.unslider-fade').css('height', $('#first_img img').height());
+
+        $(".logo").fancybox({
+            padding: 0,
+            closeBtn: false,
+            closeClick: true,
+            afterShow: function () {
+                $('.fancybox-outter').addClass('pinch-zoom-container');
+                $('.fancybox-inner').addClass('pinch-zoom');
+                $('div.pinch-zoom').each(function () {
+                    new RTP.PinchZoom($(this), {});
+                });
+                forbidden = true;
+            },
+            afterClose: function () {
+                forbidden = false;
+            }
+        });
+    });
+</script>

@@ -1,0 +1,30 @@
+<div class="buy_area">
+    <div class="footer_div">
+        <div class="goods_information">
+            <div class="under_div">
+                <div id="agent_price" class="price">
+                    <div class="pre_price">￥${goods.customerPrice}</div>
+                    <div class="now_price">${goods.agentPrice}</div>
+                </div>
+                <div id="customer_price" class="price">
+                    <div class="common_price">￥${goods.customerPrice}</div>
+                </div>
+                <div class="post">
+                    <p>包邮</p>
+                </div>
+            </div>
+        </div>
+        <div class="num_div">
+            <div class="number_area">
+                <p>购买数量</p>
+
+                <div class="number_choose">
+                    <button id="min_btn" class="min">—</button>
+                    <input id="goods_num" class="num_box" name="" type="text" value="1" readonly="true"/>
+                    <button id="add_btn" class="add">+</button>
+                </div>
+            </div>
+            <button id="purchase" class="btn_area">立即购买</button>
+        </div>
+    </div>
+</div>

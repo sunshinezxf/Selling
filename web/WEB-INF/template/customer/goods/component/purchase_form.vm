@@ -1,0 +1,149 @@
+<div id="actionSheet_wrap">
+    <div class="weui_mask_transition" id="number_div" style="display: none;"></div>
+    <div class="weui_actionsheet" id="weui_actionsheet">
+        <div class="weui_actionsheet_menu">
+            <div class="menu_title">
+                <h3>订单信息</h3>
+            </div>
+            <div class="address_area">
+                <div class="address_information">
+                    <div class="address_title">
+                        <div class="address_icon">
+                            <img class="icon" src="${path.concat('/material/images/address_icon.jpg')}"/>
+                        </div>
+                        <p>收货地址</p>
+                    </div>
+                    <div class="weui_cells">
+                        <div class="weui_cell">
+                            <div class="weui_cell_hd">
+                                <label class="weui_label">姓名</label>
+                            </div>
+                            <div class="weui_cell_bd weui_cell_primary">
+                                <input id="customer_name" name="customerName" class="weui_input" type="text"
+                                       placeholder="请填写收货人姓名" autocomplete="off" #if(${history})
+                                       value="${history.receiverName}" #end/>
+                            </div>
+                        </div>
+                        <div class="weui_cell">
+                            <div class="weui_cell_hd">
+                                <label class="weui_label">手机号</label>
+                            </div>
+                            <div class="weui_cell_bd weui_cell_primary">
+                                <input id="customer_phone" name="phone" class="weui_input" type="tel"
+                                       placeholder="请填写手机号" autocomplete="off" #if(${history})
+                                       value="${history.receiverPhone}" #end/>
+                            </div>
+                        </div>
+                        #if(${history})
+                            <div class="weui_cell">
+                                <div class="weui_cell_hd">
+                                    <label class="weui_label">地址</label>
+                                </div>
+                                <div class="weui_cell_bd weui_cell_primary">
+                                    <input id="history_address" class="weui_input" type="text" placeholder="请填写地址"
+                                           value="${history.receiverAddress}"/>
+                                </div>
+                            </div>
+                        #else
+                            <div class="weui_cells">
+                                <div class="weui_cell">
+                                    <div class="weui_cell_hd">
+                                        <label class="weui_label">地区</label>
+                                    </div>
+                                    <div class="weui_cell_bd weui_cell_primary">
+                                        <div id="province">
+                                            <select id="prov" class="prov"></select>
+                                            <select id="city" class="city" disabled="disabled"
+                                                    style="display:none"></select>
+                                            <select id="dist" class="dist" disabled="disabled"
+                                                    style="display:none"></select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="weui_cell">
+                                    <div class="weui_cell_hd">
+                                        <label class="weui_label">地址</label>
+                                    </div>
+                                    <div class="weui_cell_bd weui_cell_primary">
+                                        <input id="customer_address" name="address" class="weui_input" type="text"
+                                               placeholder="请填写详细地址"
+                                               autocomplete="off"/>
+                                    </div>
+                                </div>
+                            </div>
+                        #end
+                        <div class="weui_cell postcode">
+                            <div class="weui_cell_hd">
+                                <label class="weui_label">邮政编码</label>
+                            </div>
+                            <div class="weui_cell_bd weui_cell_primary">
+                                <input id="postcode" name="postcode" class="weui_input" type="tel" placeholder="请填写邮政编码"
+                                       autocomplete="off"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="weui_cell id">
+                <div class="id_icon">
+                    <img class="icon" src="${path.concat('/material/images/id_icon.jpg')}"/>
+                </div>
+                <div class="agent_id">
+                    <table>
+                        <tr>
+                            <td class="hd">
+                                <label class="id_label">优惠码</label>
+                            </td>
+                            <td class="bd">
+                                #if(${agent})
+                                    <input id="agent_id" class="id_input" type="text" value="${agent.agentId}"/>
+                                #else
+                                    <input id="agent_id" class="id_input" type="text" placeholder="可输入优惠码" value=""/>
+                                #end
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <!--
+            <div class="weui_cell pay">
+                 <div class="weui_cell_bd weui_cell_primary">
+                     <p class="pay_label">支付方式</p>
+                 </div>
+                 <div class="weui_cell_ft">
+                     <p class="pay_way">微信支付</p>
+                 </div>
+            </div>
+            -->
+            <div class="confirm_area">
+                <div class="total_info">
+                    <div class="total_num">
+                        <p>共
+
+                        <p id="total_num">1</p>件
+                        </p>
+                    </div>
+                    <div class="total_money">
+                        <p class="sum">应付总额：</p>
+
+                        <p id="total_price" class="sum_price">元</p>
+                    </div>
+                </div>
+                <div class="to_pay">
+                    <button id="confirm" class="weui_btn weui_btn_disabled weui_btn_default" disabled="disabled">支付
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+
+        $('#province').citySelect({
+            url: '${path.concat('/plugins/jquery/city.min.js')}',
+            required: false,
+            nodata: 'none',//当子集无数据时，隐藏select
+        });
+    })
+</script>
