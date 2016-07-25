@@ -52,6 +52,7 @@
     var second_time_purchase = not_null(history);
 
     document.addEventListener('pingpp_one_ready', function () {
+        alert("ping++配置已加载");
         $('#confirm').click(function () {
             var agentId = $('#agent_id').val();
             if (agentId != "") {
