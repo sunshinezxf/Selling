@@ -403,7 +403,7 @@ public class AgentController {
      * @return
      */
     @RequestMapping(method = RequestMethod.GET, value = "/{agentId}/embrace")
-    public ModelAndView embrace(@PathVariable("agentId") String agentId) {
+    public ModelAndView embrace(@PathVariable("agentId") String agentId, String from, String isappinstalled) {
         ModelAndView view = new ModelAndView();
         if (!StringUtils.isEmpty(agentId)) {
             Map<String, Object> condition = new HashMap<>();
@@ -415,7 +415,12 @@ public class AgentController {
                 view.addObject("upper", agent);
             }
         }
-        WechatConfig.oauthWechat(view, "/agent/" + agentId + "/embrace");
+        if (!StringUtils.isEmpty(from) && !StringUtils.isEmpty(isappinstalled)) {
+            view.setViewName("redirect:/agent/" + agentId + "/embrace");
+            return view;
+        } else {
+            WechatConfig.oauthWechat(view, "/agent/" + agentId + "/embrace");
+        }
         view.setViewName("/agent/register");
         return view;
     }
