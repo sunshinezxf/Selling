@@ -12,7 +12,7 @@
 <div class="bd">
     #if(${orderFromAgent})
         #foreach( $order in ${orderFromAgent} )
-        	#set($agentId = ${order.order.agent.agentId})
+            #set($agentId = ${order.order.agent.agentId})
             <div class="weui_panel weui_panel_access order_panel">
                 <div class="weui_panel_hd col1">
                     <h4 class="order_id">订单号:${order.orderItemId}</h4>
@@ -39,15 +39,21 @@
                     </div>
                     <div class="weui_media_box weui_media_text col5">
                         #if(${order.status} == "SHIPPED" || ${order.status} == "RECEIVED")
-						<div class="weui_media_title" style="color:#999999;">已发货</div>
-						<div class="weui_media_title express_btn" style="float:right;">
-						    <a class="weui_btn weui_btn_mini weui_btn_plain_primary">&nbsp物流信息&nbsp</a>
-						</div>
-						#elseif(${order.status} != "EXCHANGED")
-						<div class="weui_media_title" style="color:#999999;">未发货</div>
-						#else
-						<div class="weui_media_title" style="color:#999999;">已退货</div>
-						#end
+                            <div class="weui_media_title" style="color:#999999;">
+                            	#if(${order.status} == "SHIPPED")
+                                    已发货
+                                #else
+                                    已签收
+                                #end
+                            </div>
+                            <div class="weui_media_title express_btn" style="float:right;">
+                                <a class="weui_btn weui_btn_mini weui_btn_plain_primary">&nbsp物流信息&nbsp</a>
+                            </div>
+                        #elseif(${order.status} != "EXCHANGED")
+                            <div class="weui_media_title" style="color:#999999;">未发货</div>
+                        #else
+                            <div class="weui_media_title" style="color:#999999;">已退货</div>
+                        #end
                     </div>
                 </div>
                 <!--<a href="javascript:void(0);" class="weui_panel_ft">查看更多</a>-->
@@ -84,15 +90,21 @@
                     </div>
                     <div class="weui_media_box weui_media_text col5">
                         #if(${order.status} == "SHIPPED" || ${order.status} == "RECEIVED")
-						<div class="weui_media_title" style="color:#999999;">已发货</div>
-						<div class="weui_media_title express_btn" style="float:right;">
-						    <a class="weui_btn weui_btn_mini weui_btn_plain_primary">&nbsp物流信息&nbsp</a>
-						</div>
-						#elseif(${order.status} != "EXCHANGED")
-						<div class="weui_media_title" style="color:#999999;">未发货</div>
-						#else
-						<div class="weui_media_title" style="color:#999999;">已退货</div>
-						#end
+                            <div class="weui_media_title" style="color:#999999;">
+                                #if(${order.status} == "SHIPPED")
+                                    已发货
+                                #else
+                                    已签收
+                                #end
+                            </div>
+                            <div class="weui_media_title express_btn" style="float:right;">
+                                <a class="weui_btn weui_btn_mini weui_btn_plain_primary">&nbsp物流信息&nbsp</a>
+                            </div>
+                        #elseif(${order.status} != "EXCHANGED")
+                            <div class="weui_media_title" style="color:#999999;">未发货</div>
+                        #else
+                            <div class="weui_media_title" style="color:#999999;">已退货</div>
+                        #end
                     </div>
                 </div>
                 <!--<a href="javascript:void(0);" class="weui_panel_ft">查看更多</a>-->
@@ -145,12 +157,12 @@
     //$("#address_dialog").find(".weui_btn_dialog.primary").click(function(){
     //	$("#address_dialog").hide();
     //});
-    
-    $.each($(".express_btn"), function(i, val){
-		$(val).on("click",function(){
-			var orderItemId = $(this).parents(".order_panel").find(".order_id").html().substring(4);
-			window.location = "${path.concat("/order/viewexpress/customer/")}" + orderItemId;
-		})
+
+    $.each($(".express_btn"), function (i, val) {
+        $(val).on("click", function () {
+            var orderItemId = $(this).parents(".order_panel").find(".order_id").html().substring(4);
+            window.location = "${path.concat("/order/viewexpress/customer/")}" + orderItemId;
+        })
     });
 
     $("#confirm").click(function () {

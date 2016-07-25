@@ -338,9 +338,10 @@ public class CustomerController {
         Map<String, Object> condition = new HashMap<>();
         condition.put("phone", phone);
         condition.put("blockFlag", false);
-        List<Integer> status = new ArrayList<Integer>();
+        List<Integer> status = new ArrayList<>();
         status.add(1);
         status.add(2);
+        status.add(3);
         condition.put("statusList", status);
         ResultData fetchResponse = orderService.fetchOrderItem(condition);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
@@ -367,6 +368,7 @@ public class CustomerController {
         condition.put("blockFlag", false);
         status.add(1);
         status.add(2);
+        status.add(3);
         condition.put("status", status);
         fetchResponse = orderService.fetchCustomerOrder(condition);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {

@@ -58,7 +58,6 @@
         document.body.appendChild(script);
 
 		$(document).on('pingpp_one_ready', function () {
-	        alert("ping++配置已加载");
 	        $('#confirm').click(function () {
 	            var agentId = $('#agent_id').val();
 	            if (agentId != "") {
@@ -83,7 +82,6 @@
 	        });
 	    });
 
-	    alert("我是document ready");
         if (second_time_purchase && addressInfo_validate()) {
             active();
         }
