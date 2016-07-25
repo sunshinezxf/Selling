@@ -15,6 +15,13 @@
         <result property="finishedQuantity" column="finishedQuantity"></result>
         <result property="totalQuantity" column="totalQuantity"></result>
     </resultMap>
+    
+    <resultMap id="agentGoodsVo" type="selling.sunshine.model.sum.AgentGoods">
+        <result property="agentName" column="agent_name"></result>
+        <result property="goodsName" column="goods_name"></result>
+        <result property="quantity" column="quantity"></result>
+        <result property="price" column="price"></result>
+    </resultMap>
 
     <select id="sum4order" resultMap="sum4OrderVo">
         select goods_id, goods_name, goods_quantity, sum(item_num) as num from (
@@ -117,4 +124,40 @@ select if(isnull(order_id),0,1)as q2, agent.agent_id from agent
 where payedTable.id=unPayedTable.id and payedTable.id=finishedTable.id and payedTable.id=agent.agent_id and payedTable.id=totalTable.id
 and agent.agent_granted=1 and agent.block_flag=0
    </select>
+   
+  <select id="sumAgentGoodsMonth"  resultMap="agentGoodsVo">
+  select * from(select agent_name,goods_name,quantity,price from(select agentId,goodsId, sum(quantity) as quantity ,sum(price) as price from(select `order`.agent_id as agentId,order_item.goods_id as goodsId,
+       sum(order_item.goods_quantity) as quantity,sum(order_item.order_item_price) as price from `order`
+	left join order_item
+	on `order`.order_id = order_item.order_id 
+	where `order`.order_type=0 and `order`.order_status in(2,3,4,5) 
+	and date_format(`order`.create_time,'%Y-%m')=date_format(now(),'%Y-%m')
+    group by `order`.agent_id,order_item.goods_id
+union all
+select agent_id as agentId,goods_id as goodsId,
+       sum(quantity) as quantity ,sum(total_price) as price from customer_order  
+         where order_status in(1,2,3)
+         and date_format(create_time,'%Y-%m')=date_format(now(),'%Y-%m')
+         group by agent_id,goods_id) t1 group by agentId,goodsId) t2
+left join agent on t2.agentId=agent.agent_id 
+left join goods on t2.goodsId=goods.goods_id) t3 where agent_name is not null;
+  </select>
+  
+<select id="sumAgentGoods"  resultMap="agentGoodsVo">
+  select * from(select agent_name,goods_name,quantity,price from(select agentId,goodsId, sum(quantity) as quantity ,sum(price) as price from(select `order`.agent_id as agentId,order_item.goods_id as goodsId,
+       sum(order_item.goods_quantity) as quantity,sum(order_item.order_item_price) as price from `order`
+	left join order_item
+	on `order`.order_id = order_item.order_id 
+	where `order`.order_type=0 and `order`.order_status in(2,3,4,5) 
+    group by `order`.agent_id,order_item.goods_id
+union all
+select agent_id as agentId,goods_id as goodsId,
+       sum(quantity) as quantity ,sum(total_price) as price from customer_order  
+         where order_status in(1,2,3)
+         group by agent_id,goods_id) t1 group by agentId,goodsId) t2
+left join agent on t2.agentId=agent.agent_id 
+left join goods on t2.goodsId=goods.goods_id) t3 where agent_name is not null;
+  </select>
+   
+   
 </mapper>

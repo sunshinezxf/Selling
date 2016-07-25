@@ -10,4 +10,8 @@ public interface StatisticService {
     ResultData query4OrderSum();
     
     ResultData orderStatisticsByPage(DataTableParam param);
+    
+    ResultData agentGoodsMonthByPage(DataTableParam param);
+    
+    ResultData agentGoodsByPage(DataTableParam param);
 }

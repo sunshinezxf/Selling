@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import selling.sunshine.dao.BaseDao;
 import selling.sunshine.dao.StatisticDao;
+import selling.sunshine.model.sum.AgentGoods;
 import selling.sunshine.model.sum.OrderStatistics;
 import selling.sunshine.model.sum.Sum4Order;
 import selling.sunshine.pagination.DataTablePage;
@@ -63,6 +64,28 @@ public class StatisticDaoImpl extends BaseDao implements StatisticDao {
             return result;
         }
 	}
+	
+	private List<AgentGoods> agentGoodsMonthByPage(int start, int length){
+		List<AgentGoods> result = new ArrayList<>();
+        try {
+            result = sqlSession.selectList("selling.statistic.sumAgentGoodsMonth", null, new RowBounds(start, length));
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        } finally {
+            return result;
+        }
+	}
+	
+	private List<AgentGoods> agentGoodsByPage(int start, int length){
+		List<AgentGoods> result = new ArrayList<>();
+        try {
+            result = sqlSession.selectList("selling.statistic.sumAgentGoods", null, new RowBounds(start, length));
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        } finally {
+            return result;
+        }
+	}
 
 	@Override
 	public ResultData orderStatisticsByPage(DataTableParam param) {
@@ -84,4 +107,76 @@ public class StatisticDaoImpl extends BaseDao implements StatisticDao {
         result.setData(page);
         return result;
 	}
+
+	@Override
+	public ResultData agentGoodsMonthByPage(DataTableParam param) {
+		ResultData result = new ResultData();
+		DataTablePage<AgentGoods> page = new DataTablePage<>();
+		ResultData total = agentGoodsMonth();
+        if (total.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription(total.getDescription());
+            return result;
+        }
+        page.setiTotalRecords(((List) total.getData()).size());
+        page.setiTotalDisplayRecords(((List) total.getData()).size());
+        List<AgentGoods> current=agentGoodsMonthByPage( param.getiDisplayStart(), param.getiDisplayLength());
+        if (current.size() == 0) {
+            result.setResponseCode(ResponseCode.RESPONSE_NULL);
+        }
+        page.setData(current);
+        result.setData(page);
+        return result;
+	}
+
+	@Override
+	public ResultData agentGoodsMonth() {
+		ResultData result = new ResultData();
+		try {
+		   List<AgentGoods> list=sqlSession.selectList("selling.statistic.sumAgentGoodsMonth");
+		   result.setData(list);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription(e.getMessage());
+        }
+        return result;
+	}
+	
+	@Override
+	public ResultData agentGoods() {
+		ResultData result = new ResultData();
+		try {
+		   List<AgentGoods> list=sqlSession.selectList("selling.statistic.sumAgentGoods");
+		   result.setData(list);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription(e.getMessage());
+        }
+        return result;
+	}
+
+	@Override
+	public ResultData agentGoodsByPage(DataTableParam param) {
+		ResultData result = new ResultData();
+		DataTablePage<AgentGoods> page = new DataTablePage<>();
+		ResultData total = agentGoods();
+        if (total.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription(total.getDescription());
+            return result;
+        }
+        page.setiTotalRecords(((List) total.getData()).size());
+        page.setiTotalDisplayRecords(((List) total.getData()).size());
+        List<AgentGoods> current=agentGoodsByPage( param.getiDisplayStart(), param.getiDisplayLength());
+        if (current.size() == 0) {
+            result.setResponseCode(ResponseCode.RESPONSE_NULL);
+        }
+        page.setData(current);
+        result.setData(page);
+        return result;
+	}
+
+
 }

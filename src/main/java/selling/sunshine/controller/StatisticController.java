@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import selling.sunshine.model.Order;
+import selling.sunshine.model.sum.AgentGoods;
 import selling.sunshine.model.sum.OrderStatistics;
 import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
@@ -170,6 +171,34 @@ public class StatisticController {
          ResultData fetchResponse = statisticService.orderStatisticsByPage(param);
          if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
              result = (DataTablePage<OrderStatistics>) fetchResponse.getData();
+         }
+         return result;
+    } 
+    
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value = "/agent/goods/month")
+    public DataTablePage<AgentGoods> agentGoodsMonth(DataTableParam param) {
+    	 DataTablePage<AgentGoods> result = new DataTablePage<>();
+         if (StringUtils.isEmpty(param)) {
+             return result;
+         }
+         ResultData fetchResponse = statisticService.agentGoodsMonthByPage(param);
+         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+             result = (DataTablePage<AgentGoods>) fetchResponse.getData();
+         }
+         return result;
+    } 
+    
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value = "/agent/goods")
+    public DataTablePage<AgentGoods> agentGoods(DataTableParam param) {
+    	 DataTablePage<AgentGoods> result = new DataTablePage<>();
+         if (StringUtils.isEmpty(param)) {
+             return result;
+         }
+         ResultData fetchResponse = statisticService.agentGoodsByPage(param);
+         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+             result = (DataTablePage<AgentGoods>) fetchResponse.getData();
          }
          return result;
     } 

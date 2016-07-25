@@ -103,4 +103,30 @@ public class StatisticServiceImpl implements StatisticService {
 		}
 		return result;
 	}
+
+	@Override
+	public ResultData agentGoodsMonthByPage(DataTableParam param) {
+		ResultData result = new ResultData();
+		ResultData queryResponse=statisticDao.agentGoodsMonthByPage(param);
+		result.setResponseCode(queryResponse.getResponseCode());
+		if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+			result.setData(queryResponse.getData());
+		} else {
+			result.setDescription(queryResponse.getDescription());
+		}
+		return result;
+	}
+
+	@Override
+	public ResultData agentGoodsByPage(DataTableParam param) {
+		ResultData result = new ResultData();
+		ResultData queryResponse=statisticDao.agentGoodsByPage(param);
+		result.setResponseCode(queryResponse.getResponseCode());
+		if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+			result.setData(queryResponse.getData());
+		} else {
+			result.setDescription(queryResponse.getDescription());
+		}
+		return result;
+	}
 }

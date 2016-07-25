@@ -12,4 +12,12 @@ public interface StatisticDao {
     ResultData orderStatistics();
     
     ResultData orderStatisticsByPage(DataTableParam param);
+    
+    ResultData agentGoodsMonthByPage(DataTableParam param);
+    
+    ResultData agentGoodsMonth();
+    
+    ResultData agentGoodsByPage(DataTableParam param);
+    
+    ResultData agentGoods();
 }
