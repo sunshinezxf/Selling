@@ -39,7 +39,13 @@
                     </div>
                     <div class="weui_media_box weui_media_text col5">
                         #if(${order.status} == "SHIPPED" || ${order.status} == "RECEIVED")
-                            <div class="weui_media_title" style="color:#999999;">已发货</div>
+                            <div class="weui_media_title" style="color:#999999;">
+                            	#if(${order.status} == "SHIPPED")
+                                    已发货
+                                #else
+                                    已签收
+                                #end
+                            </div>
                             <div class="weui_media_title express_btn" style="float:right;">
                                 <a class="weui_btn weui_btn_mini weui_btn_plain_primary">&nbsp物流信息&nbsp</a>
                             </div>
