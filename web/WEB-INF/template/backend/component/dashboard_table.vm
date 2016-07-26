@@ -33,12 +33,13 @@
     <div class="row">
         <div class="col-md-12 col-lg-12">
          当月销售前三代理：<br>
-         #if(${monthList}=="")
-         当月暂无订单
-         #else
+         #if(${monthList})
             #foreach( $elem in ${monthList})
                $elem.agentName,当月共销售$elem.quantity盒</br>
             #end
+        
+         #else
+            当月暂无订单
          #end
         </div>
     </div>
@@ -46,12 +47,12 @@
     <div class="row">
         <div class="col-md-12 col-lg-12">
         累计销售前三代理：<br>
-        #if(${allList}=="")
-        无订单
-        #else
+        #if(${allList})
             #foreach( $elem in ${allList})
                $elem.agentName,累计销售$elem.quantity盒</br>
             #end
+        #else
+            无订单
         #end
         </div>
     </div>

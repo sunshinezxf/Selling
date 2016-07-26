@@ -175,6 +175,8 @@ public class PlatformController {
         resultData=statisticService.orderMonth();
         if (resultData.getResponseCode()==ResponseCode.RESPONSE_OK) {
         	OrderMonth orderMonth=((List<OrderMonth>)resultData.getData()).get(0);
+        	orderMonth.setPrice(((int)(orderMonth.getPrice()*100)*1.0/100));
+        	orderMonth.setTotalPrice(((int)(orderMonth.getTotalPrice()*100)*1.0/100));
         	view.addObject("orderMonth", orderMonth);
 		}else{
 			OrderMonth orderMonth=new OrderMonth();
