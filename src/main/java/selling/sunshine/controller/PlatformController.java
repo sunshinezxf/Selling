@@ -190,7 +190,9 @@ public class PlatformController {
         	if (monthList.size()!=0) {
         		view.addObject("monthList", monthList);
 			}
-        	view.addObject("allList", allList);
+        	if (allList.size()!=0) {
+        	  view.addObject("allList", allList);
+        	}
 		}
         view.setViewName("/backend/dashboard");
         return view;
