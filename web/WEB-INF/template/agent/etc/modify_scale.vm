@@ -1,0 +1,85 @@
+#parse("/common/util.vm")
+<html lang="zh_CN">
+<head>
+    #parse("/agent/component/init.vm")
+    <title>修改群规模</title>
+</head>
+<body ontouchstart>
+<div class="container">
+    <div class="tabbar">
+        <div class="weui_tab_bd">
+            <div class="hd">
+                <h1 class="page_title">
+                    修改群规模
+                </h1>
+                <p class="page_desc">您可以修改群规模</p>
+            </div>
+            <form id="modify_scale_form">
+                <div class="bd">
+                    <div class="weui_cell">
+                        <div class="weui_cell_hd">
+                            <label class="weui_label">群规模</label>
+                        </div>
+                        <div class="weui_cell_bd weui_cell_primary">
+                            <input class="weui_input" id="scale" name="scale" type="tel" placeholder="设置群规模"
+                                   autocomplete="off" value="${scale}"/>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="weui_btn_area">
+                <button type="button" class="weui_btn weui_btn_primary" id="modify_scale_btn">修改
+                </button>
+            </div>
+        </div>
+        #parse("/agent/component/navigate.vm")
+    </div>
+</div>
+</body>
+<script>
+	$("#scale").on("input",function(){
+		var checkFlag = $.checkScale();
+		switch(checkFlag){
+		case -1:
+			$("#modify_scale_btn").removeClass("weui_btn_primary");
+			$("#modify_scale_btn").addClass("weui_btn_default");
+			$("#modify_scale_btn").attr("disabled","disabled");
+			$("#modify_scale_btn").html("修改");
+			break;
+		case 2:
+			$("#modify_scale_btn").removeClass("weui_btn_primary");
+			$("#modify_scale_btn").addClass("weui_btn_default");
+			$("#modify_scale_btn").attr("disabled","disabled");
+			$("#modify_scale_btn").html("格式不正确");
+			break;
+		case 0:
+			$("#modify_scale_btn").removeClass("weui_btn_default");
+			$("#modify_scale_btn").addClass("weui_btn_primary");
+			$("#modify_scale_btn").removeAttr("disabled");
+			$("#modify_scale_btn").html("修改");
+			break;
+		}
+	});
+	
+	$.checkScale = function(){
+		var scale_input = parseInt($("#scale").val());
+		if($("#scale").val() == ""){
+			return -1;
+		}
+		var reNum = /^[0-9]*[1-9][0-9]*$/;
+		if(!reNum.test($("#scale").val())){
+			return 2;
+		}
+		return 0;
+	}
+	
+	$("#modify_scale_btn").on("click", function(){
+		if($.checkScale() != 0) {
+			return;
+		}
+		$("#modify_scale_form").attr("action","${path.concat('/agent/modifyscale')}")
+		$("#modify_scale_form").attr("method","post");
+		$("#modify_scale_form").submit();
+	});
+</script>
+</html>
