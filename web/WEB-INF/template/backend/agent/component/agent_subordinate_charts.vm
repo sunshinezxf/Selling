@@ -18,6 +18,7 @@
     </div>
 </div>
 #parse("/backend/agent/component/agent_detail_modal.vm")
+#parse("/backend/order/component/order_item_modal.vm")
 <div class="modal fade" id="dialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
    <div class="modal-dialog">
       <div class="modal-content">
@@ -35,7 +36,7 @@
                确定
             </button>
          </div>
-</div>
+   </div>
 </div>
 <script>
      var agent;
@@ -318,34 +319,34 @@
         });
     }
     
-    function orderItemDetail(obj){
-        $.post("${path.concat('/order/orderItem/')}"+obj.id, function (result) {
-
-            document.getElementById("model_p").innerHTML="代理商："+result.data.order.agent.name;
-            
-            var f = document.getElementById("model_table");            
-            var childs = f.childNodes; 
-            for(var i = childs.length - 1; i >= 0; i--) { 
-               f.removeChild(childs[i]); 
-            }
-
-            var node="<tr><th>客户</th><th>产品</th><th>数量</th><th>价格</th></tr>";
-            for(var i=0;i<result.data.order.orderItems.length;i++){
-               var orderItem=result.data.order.orderItems[i];
-               node+="<tr><td>"+orderItem.customer.name+"</td><td>"+orderItem.goods.name+"</td><td>"+orderItem.goodsQuantity+"</td><td>"+orderItem.orderItemPrice+"</td>";
-            }
-            $("#model_table").append(node);
-            document.getElementById("model_total").innerHTML="总计:&nbsp;"+result.data.totalPrices+"元";
-            var node1="";
-            for(var key in result.data.goods_quantity_Map){
-                node1+="商品:&nbsp;"+key+"&nbsp;&nbsp;&nbsp;&nbsp;总共:&nbsp;"+result.data.goods_quantity_Map[key]+"件<br>"
-            }
-            document.getElementById("model_quantity").innerHTML=node1;
-       });
-    }
+});
 });
      
-});
+     function orderItemDetail(obj){
+         $.post("${path.concat('/order/orderItem/')}"+obj.id, function (result) {
+
+             document.getElementById("model_p").innerHTML="代理商："+result.data.order.agent.name;
+             
+             var f = document.getElementById("model_table");            
+             var childs = f.childNodes; 
+             for(var i = childs.length - 1; i >= 0; i--) { 
+                f.removeChild(childs[i]); 
+             }
+
+             var node="<tr><th>客户</th><th>产品</th><th>数量</th><th>价格</th></tr>";
+             for(var i=0;i<result.data.order.orderItems.length;i++){
+                var orderItem=result.data.order.orderItems[i];
+                node+="<tr><td>"+orderItem.customer.name+"</td><td>"+orderItem.goods.name+"</td><td>"+orderItem.goodsQuantity+"</td><td>"+orderItem.orderItemPrice+"</td>";
+             }
+             $("#model_table").append(node);
+             document.getElementById("model_total").innerHTML="总计:&nbsp;"+result.data.totalPrices+"元";
+             var node1="";
+             for(var key in result.data.goods_quantity_Map){
+                 node1+="商品:&nbsp;"+key+"&nbsp;&nbsp;&nbsp;&nbsp;总共:&nbsp;"+result.data.goods_quantity_Map[key]+"件<br>"
+             }
+             document.getElementById("model_quantity").innerHTML=node1;
+        });
+     }  
   
 </script>
 
