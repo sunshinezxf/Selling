@@ -138,7 +138,15 @@
         </set>
         WHERE agent_id = #{agentId}
     </update>
-
+    
+	<update id="updateScale" parameterType="selling.sunshine.model.Agent" useGeneratedKeys="false">
+        UPDATE agent
+        <set>
+            scale = #{claimScale}
+        </set>
+        WHERE agent_id = #{agentId}
+    </update>
+    
     <update id="unbind">
         UPDATE agent
         <set>

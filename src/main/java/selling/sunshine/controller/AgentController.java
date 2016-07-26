@@ -1382,6 +1382,14 @@ public class AgentController {
         view.setViewName("/agent/etc/contact");
         return view;
     }
+    
+    @RequestMapping(method = RequestMethod.GET, value="/modifyinfo")
+    public ModelAndView modifyInfo(){
+    	ModelAndView view = new ModelAndView();
+    	WechatConfig.oauthWechat(view, "/agent/etc/modify_info");
+    	view.setViewName("/agent/etc/modify_info");
+    	return view;
+    }
 
     @RequestMapping(method = RequestMethod.GET, value = "/modifypassword")
     public ModelAndView modifyPassword() {
@@ -1428,6 +1436,63 @@ public class AgentController {
             view.setViewName("/agent/login");
             return view;
         }
+    }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/modifyscale")
+    public ModelAndView modifyScale() {
+        ModelAndView view = new ModelAndView();
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        if (user == null || user.getAgent() == null) {
+            view.setViewName("/agent/login");
+            return view;
+        } 
+        Map<String, Object> condition = new HashMap<String, Object>();
+        selling.sunshine.model.lite.Agent agent = user.getAgent();
+        condition.put("agentId", agent.getAgentId());
+        condition.put("blockFlag", false);
+        Agent target = ((List<Agent>) agentService.fetchAgent(condition).getData()).get(0);
+        view.addObject("scale", target.getClaimScale());
+        WechatConfig.oauthWechat(view, "/agent/etc/modify_scale");
+        view.setViewName("/agent/etc/modify_scale");
+        return view;
+    }
+    
+    @RequestMapping(method = RequestMethod.POST, value = "/modifyscale")
+    public ModelAndView modifyScale(@Valid ScaleForm form, BindingResult result) {
+    	 ModelAndView view = new ModelAndView();
+         if (result.hasErrors() || StringUtils.isEmpty(form.getScale())) {
+             Prompt prompt = new Prompt(PromptCode.WARNING, "提示信息", "尊敬的代理商，您输入的群规模有误,请重新尝试", "/agent/modifyscale");
+             view.addObject("prompt", prompt);
+             WechatConfig.oauthWechat(view, "/agent/prompt");
+             view.setViewName("/agent/prompt");
+             return view;
+         }
+         Subject subject = SecurityUtils.getSubject();
+         User user = (User) subject.getPrincipal();
+         if (user == null || user.getAgent() == null) {
+             view.setViewName("/agent/login");
+             return view;
+         }
+         Map<String, Object> condition = new HashMap<String, Object>();
+         selling.sunshine.model.lite.Agent agent = user.getAgent();
+         condition.put("agentId", agent.getAgentId());
+         condition.put("blockFlag", false);
+         Agent target = ((List<Agent>) agentService.fetchAgent(condition).getData()).get(0);
+         target.setClaimScale(form.getScale());
+         ResultData modifyScaleData = agentService.modifyScale(target);
+         if (modifyScaleData.getResponseCode() != ResponseCode.RESPONSE_OK) {
+             Prompt prompt = new Prompt(PromptCode.WARNING, "提示信息", "修改群规模失败,请重新尝试", "/agent/modifyscale");
+             view.addObject("prompt", prompt);
+             WechatConfig.oauthWechat(view, "/agent/prompt");
+             view.setViewName("/agent/prompt");
+             return view;
+         }
+         Prompt prompt = new Prompt(PromptCode.SUCCESS, "成功", "修改群规模成功", "/agent/me");
+         view.addObject("prompt", prompt);
+         WechatConfig.oauthWechat(view, "/agent/prompt");
+         view.setViewName("/agent/prompt");
+         return view;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/prompt")

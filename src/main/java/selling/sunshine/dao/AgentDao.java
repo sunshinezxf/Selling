@@ -22,6 +22,8 @@ public interface AgentDao {
     ResultData updateAgent(Agent agent);
 
     ResultData updateAgentCoffer(Agent agent);
+    
+    ResultData updateAgentScale(Agent agent);
 
     ResultData unbindAgent(String openId);
 

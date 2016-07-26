@@ -166,6 +166,25 @@ public class AgentDaoImpl extends BaseDao implements AgentDao {
             }
         }
     }
+    
+
+	@Override
+	public ResultData updateAgentScale(Agent agent) {
+		ResultData result = new ResultData();
+        synchronized (lock) {
+            try {
+                sqlSession.update("selling.agent.updateScale", agent);
+                result.setData(agent);
+            } catch (Exception e) {
+                logger.error(e.getMessage());
+                result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+                result.setDescription(e.getMessage());
+            } finally {
+                return result;
+            }
+        }
+	}
+
 
     /**
      * 根据微信的openId解绑代理商账号
@@ -335,5 +354,4 @@ public class AgentDaoImpl extends BaseDao implements AgentDao {
             return result;
         }
     }
-
 }

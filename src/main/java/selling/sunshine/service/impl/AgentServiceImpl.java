@@ -183,6 +183,19 @@ public class AgentServiceImpl implements AgentService {
         }
         return result;
     }
+    
+    @Override
+	public ResultData modifyScale(Agent agent) {
+    	 ResultData result = new ResultData();
+         ResultData updateResponse = agentDao.updateAgentScale(agent);
+         result.setResponseCode(updateResponse.getResponseCode());
+         if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+             result.setData(updateResponse.getData());
+         } else {
+             result.setDescription(updateResponse.getDescription());
+         }
+         return result;
+	}
 
     @Override
     public ResultData fetchCredit(Map<String, Object> condition) {
@@ -338,7 +351,5 @@ public class AgentServiceImpl implements AgentService {
         }
         return result;
 	}
-
-	
 
 }

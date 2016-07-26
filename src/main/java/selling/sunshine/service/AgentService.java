@@ -32,6 +32,8 @@ public interface AgentService {
     ResultData resetPassword(Agent agent);
 
     ResultData modifyPassword(Agent agent, String password);
+    
+    ResultData modifyScale(Agent agent);
 
     ResultData fetchCredit(Map<String, Object> condition);
     
