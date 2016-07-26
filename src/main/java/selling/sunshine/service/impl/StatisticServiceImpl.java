@@ -1,6 +1,7 @@
 package selling.sunshine.service.impl;
 
 import com.alibaba.fastjson.JSON;
+
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import selling.sunshine.dao.StatisticDao;
+import selling.sunshine.model.sum.OrderMonth;
 import selling.sunshine.model.sum.Sum4Order;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.StatisticService;
@@ -128,5 +130,53 @@ public class StatisticServiceImpl implements StatisticService {
 			result.setDescription(queryResponse.getDescription());
 		}
 		return result;
+	}
+
+	@Override
+	public ResultData orderMonth() {
+		ResultData result = new ResultData();
+		ResultData response=statisticDao.orderMonth();
+		result.setResponseCode(response.getResponseCode());
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            if (((List<OrderMonth>) response.getData()).size() == 0) {
+                result.setResponseCode(ResponseCode.RESPONSE_NULL);
+            }
+            result.setData(response.getData());
+        } else if (response.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
+            result.setDescription(response.getDescription());
+        }
+        return result;
+	}
+
+	@Override
+	public ResultData orderByYear() {
+		ResultData result = new ResultData();
+		ResultData response=statisticDao.orderByYear();
+		result.setResponseCode(response.getResponseCode());
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            if (((List) response.getData()).size() == 0) {
+                result.setResponseCode(ResponseCode.RESPONSE_NULL);
+            }
+            result.setData(response.getData());
+        } else if (response.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
+            result.setDescription(response.getDescription());
+        }
+        return result;
+	}
+
+	@Override
+	public ResultData topThreeAgent() {
+		ResultData result = new ResultData();
+		ResultData response=statisticDao.topThreeAgent();
+		result.setResponseCode(response.getResponseCode());
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            if (((List) response.getData()).size() == 0) {
+                result.setResponseCode(ResponseCode.RESPONSE_NULL);
+            }
+            result.setData(response.getData());
+        } else if (response.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
+            result.setDescription(response.getDescription());
+        }
+        return result;
 	}
 }

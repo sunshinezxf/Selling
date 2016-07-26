@@ -14,4 +14,10 @@ public interface StatisticService {
     ResultData agentGoodsMonthByPage(DataTableParam param);
     
     ResultData agentGoodsByPage(DataTableParam param);
+    
+    ResultData orderMonth();
+    
+    ResultData orderByYear();
+    
+    ResultData topThreeAgent();
 }

@@ -7,10 +7,86 @@
             </ol>
         </div>
     </div>
-
+   <div class="row">
+        <div class="col-md-12 col-lg-12">
+            本月总计购买商品${orderMonth.quantity}盒，共计${orderMonth.price}元<br>
+            累计购买商品${orderMonth.totalQuantity}盒，共计${orderMonth.totalPrice}元<br>
+            总计已注册的代理商有${orderMonth.num}人，本月新注册代理商${orderMonth.num}人
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+            本月已付款订单：${orderMonth.payedMonth}笔<br>
+            本月已发货订单（包含已结束）：${orderMonth.shippedMonth}笔<br>
+            本月已赠送订单：${orderMonth.giftMonth}笔
+        </div>
+    </div>
+    <hr>
+    
 </div>
 
 <div id="order_container" class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main"></div>
-<div id="agent_container" class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main"></div>
+
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+<hr>
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+         当月销售前三代理：<br>
+            #foreach( $elem in ${monthList})
+               $elem.agentName,当月共销售$elem.quantity盒</br>
+            #end
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+        累计销售前三代理：<br>
+            #foreach( $elem in ${allList})
+               $elem.agentName,累计销售$elem.quantity盒</br>
+            #end
+        </div>
+    </div>
+</div>
+<script>
+$(function () {
+	$.post("${path.concat('/statistic/orderByYear/')}", function (result) {
+    $('#order_container').highcharts({
+        title: {
+            text: '每月已付款订单数量分布图',
+            x: -20 //center
+        },
+        subtitle: {
+            text: '（包含已发货和已结束的订单）',
+            x: -20
+        },
+        xAxis: {
+            categories: ['1月', '2月', '3月', '4月', '5月', '6月','7月', '8月', '9月', '10月', '11月', '12月']
+        },
+        yAxis: {
+            title: {
+                text: '数量（盒）'
+            },
+            plotLines: [{
+                value: 0,
+                width: 1,
+                color: '#808080'
+            }]
+        },
+        tooltip: {
+            valueSuffix: '盒'
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'middle',
+            borderWidth: 0
+        },
+        series:result.series
+    });
+    });
+});
+</script>
+
 
 

@@ -20,4 +20,10 @@ public interface StatisticDao {
     ResultData agentGoodsByPage(DataTableParam param);
     
     ResultData agentGoods();
+    
+    ResultData orderMonth();
+    
+    ResultData orderByYear();
+    
+    ResultData topThreeAgent();
 }

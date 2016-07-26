@@ -17,9 +17,12 @@ import selling.sunshine.model.Admin;
 import selling.sunshine.model.BackOperationLog;
 import selling.sunshine.model.Role;
 import selling.sunshine.model.User;
+import selling.sunshine.model.sum.OrderMonth;
+import selling.sunshine.model.sum.TopThreeAgent;
 import selling.sunshine.service.AdminService;
 import selling.sunshine.service.LogService;
 import selling.sunshine.service.RoleService;
+import selling.sunshine.service.StatisticService;
 import selling.sunshine.service.ToolService;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
@@ -51,6 +54,9 @@ public class PlatformController {
     
     @Autowired
     private LogService logService;
+    
+    @Autowired
+    private StatisticService statisticService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/")
     public ModelAndView index() {
@@ -165,6 +171,25 @@ public class PlatformController {
     @RequestMapping(method = RequestMethod.GET, value = "/dashboard")
     public ModelAndView dashboard() {
         ModelAndView view = new ModelAndView();
+        ResultData resultData = new ResultData();
+        resultData=statisticService.orderMonth();
+        if (resultData.getResponseCode()==ResponseCode.RESPONSE_OK) {
+        	OrderMonth orderMonth=((List<OrderMonth>)resultData.getData()).get(0);
+        	view.addObject("orderMonth", orderMonth);
+		}else{
+			OrderMonth orderMonth=new OrderMonth();
+        	view.addObject("orderMonth", orderMonth);
+		}
+        resultData = statisticService.topThreeAgent();
+        if (resultData.getResponseCode()==ResponseCode.RESPONSE_OK) {
+        	List<Object> list=(List<Object>)resultData.getData();
+        	List<TopThreeAgent> monthList=(List<TopThreeAgent>)list.get(0);
+        	List<TopThreeAgent> allList=(List<TopThreeAgent>)list.get(1);
+        	if (monthList.size()!=0) {
+        		view.addObject("monthList", monthList);
+			}
+        	view.addObject("allList", allList);
+		}
         view.setViewName("/backend/dashboard");
         return view;
     }

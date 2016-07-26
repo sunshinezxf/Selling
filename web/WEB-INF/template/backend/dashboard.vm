@@ -3,7 +3,7 @@
 <head>
     #parse("/backend/component/init.vm")
     #parse("/backend/component/init_highcharts.vm")
-    <script type="text/javascript" src="${path.concat('/material/js/backend/sum.js')}"></script>
+    
     <title>首页</title>
 </head>
 <body>
@@ -14,7 +14,6 @@
 </div>
 </body>
 <script>
-    var order_url = "${path.concat('/statistic/order')}";
-    var agent_url = "${path.concat('/statistic/agent')}";
+
 </script>
 </html>
