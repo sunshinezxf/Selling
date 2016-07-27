@@ -80,7 +80,8 @@
             </foreach>
         </if>
         <if test="start != null and end != null and start != '' and end != ''">
-            AND (date_format(create_time, '%Y-%m-%d') &gt;= #{start} AND date_format(create_time, '%Y-%m-%d') &lt;= #{end})
+            AND (date_format(create_time, '%Y-%m-%d') &gt;= #{start} AND date_format(create_time, '%Y-%m-%d') &lt;=
+            #{end})
         </if>
         <if test="customerId != null and customerId != ''">
             AND customer_id = #{customerId}
@@ -99,6 +100,9 @@
         </if>
         <if test="rule != null and rule != ''">
             ORDER BY ${rule}
+        </if>
+        <if test="rule == null">
+            ORDER BY create_time ASC
         </if>
     </select>
 

@@ -224,6 +224,7 @@ public class CommodityController {
     @RequestMapping(method = RequestMethod.GET, value = "/{goodsId}")
     public ModelAndView view(HttpServletRequest request, @PathVariable("goodsId") String goodsId, String agentId, String code, String state) {
         ModelAndView view = new ModelAndView();
+        boolean sFlag = false;
         String openId;
         if (StringUtils.isEmpty(code) || StringUtils.isEmpty(state)) {
             HttpSession session = request.getSession();
@@ -259,6 +260,7 @@ public class CommodityController {
         if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
             List<CustomerOrder> list = (List<CustomerOrder>) response.getData();
             view.addObject("history", list.get(0));
+            sFlag = true;
         }
         condition.clear();
         condition.put("goodsId", goodsId);
@@ -286,6 +288,7 @@ public class CommodityController {
             Agent agent = ((List<Agent>) fetchAgentData.getData()).get(0);
             view.addObject("agent", agent);
         }
+        view.addObject("sFlag", sFlag);
         view.addObject("goods", goods);
         WechatConfig.oauthWechat(view, "/customer/goods/detail");
         view.setViewName("/customer/goods/detail");
