@@ -168,6 +168,7 @@ public class OrderController {
         Map<String, Object> condition = new HashMap<>();
         List<Integer> status = new ArrayList<>();
         status.add(2);
+        status.add(3);
         condition.put("status", status);
         ResultData fetchResponse = orderService.fetchOrder(condition, param);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
@@ -325,23 +326,27 @@ public class OrderController {
         // 查询所有状态为已付款的代理商订单
         List<Integer> status = new ArrayList<>();
         status.add(2);
+        status.add(3);
         condition.put("status", status);
         ResultData fetchResponse = orderService.fetchOrder(condition);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             List<Order> list = (List<Order>) fetchResponse.getData();
             for (Order order : list) {
                 for (OrderItem item : order.getOrderItems()) {
-                    Customer customer = item.getCustomer();
-                    Goods4Agent goods = item.getGoods();
-                    Express4Agent express = new Express4Agent("尚未设置",
-                            PlatformConfig.getValue("sender_name"),
-                            PlatformConfig.getValue("sender_phone"),
-                            PlatformConfig.getValue("sender_address"),
-                            customer.getName(), customer.getPhone().getPhone(),
-                            customer.getAddress().getAddress(), goods.getName());
-                    express.setLinkId(item.getOrderItemId());
-                    express.setGoodsQuantity(item.getGoodsQuantity());
-                    expresses.add(express);
+                	if (item.getStatus()==OrderItemStatus.PAYED) {
+                        Customer customer = item.getCustomer();
+                        Goods4Agent goods = item.getGoods();
+                        Express4Agent express = new Express4Agent("尚未设置",
+                                PlatformConfig.getValue("sender_name"),
+                                PlatformConfig.getValue("sender_phone"),
+                                PlatformConfig.getValue("sender_address"),
+                                customer.getName(), customer.getPhone().getPhone(),
+                                customer.getAddress().getAddress(), goods.getName());
+                        express.setLinkId(item.getOrderItemId());
+                        express.setGoodsQuantity(item.getGoodsQuantity());
+                        expresses.add(express);
+					}
+
                 }
             }
         }
@@ -394,6 +399,7 @@ public class OrderController {
             // 若不一致，则将不一致的那一项删除，并且把钱退回给代理商并告知他
             // 同时，根据不同情况修改order的状态和orderItem的状态
             for (OrderItem item : order.getOrderItems()) {
+            	if (item.getStatus()==OrderItemStatus.PAYED) {
                 Customer customer = item.getCustomer();
                 Goods4Agent goods = item.getGoods();
                 Express4Agent express = new Express4Agent("尚未设置",
@@ -405,6 +411,7 @@ public class OrderController {
                 express.setLinkId(item.getOrderItemId());
                 express.setGoodsQuantity(item.getGoodsQuantity());
                 expressList.add(express);
+                }
             }
         } else {
             Map<String, Object> condition = new HashMap<>();
@@ -710,6 +717,15 @@ public class OrderController {
         condition.put("orderId", orderId);
         ResultData orderData = orderService.fetchOrder(condition);
         Order order = ((List<Order>) orderData.getData()).get(0);
+        List<OrderItem> orderItems=order.getOrderItems();
+        Iterator<OrderItem> iterator=orderItems.iterator();
+        while (iterator.hasNext()) {
+        	OrderItem orderItem=iterator.next();
+        	if (orderItem.getStatus()!=OrderItemStatus.PAYED) {
+				iterator.remove();
+			}			
+		}
+        order.setOrderItems(orderItems);
         double totalPrices = order.getPrice();
         Map<String, Object> goods_quantity_Map = new HashMap<>();
         for (OrderItem item : order.getOrderItems()) {
@@ -753,6 +769,7 @@ public class OrderController {
         Map<String, Object> condition = new HashMap<>();
         List<Integer> status = new ArrayList<>();
         status.add(2);
+        status.add(3);
         condition.put("status", status);
         List<Order> orderList = (List<Order>) orderService
                 .fetchOrder(condition).getData();
@@ -765,7 +782,21 @@ public class OrderController {
                 .fetchCustomerOrder(condition).getData();
 
         Map<String, Object> dataMap = new HashMap<>();
-        dataMap.put("orderList", orderList);
+        List<Order> orderList2=new ArrayList<>();
+        for (Order order:orderList) {
+            List<OrderItem> orderItems=order.getOrderItems();
+            Iterator<OrderItem> iterator=orderItems.iterator();
+            while (iterator.hasNext()) {
+            	OrderItem orderItem=iterator.next();
+            	if (orderItem.getStatus()!=OrderItemStatus.PAYED) {
+    				iterator.remove();
+    			}			
+    		}
+            order.setOrderItems(orderItems);
+            orderList2.add(order);
+		}
+
+        dataMap.put("orderList", orderList2);
         dataMap.put("customerOrderList", customerOrderList);
         resultData.setData(dataMap);
 

@@ -93,8 +93,15 @@
 <script>
     var data;
     var data2;
+    
+    $(document).ready(function () {
+    	 data = {"expressItem":${expressList}, "expressNumber": $("#expressId").val()};
+    });
+    
     function download() {
-     
+	    if(data2!=null){
+  	        data=data2;
+  	    }
         $.ajax({
             type: "POST",
             url: "${path.concat('/order/expressData')}",
