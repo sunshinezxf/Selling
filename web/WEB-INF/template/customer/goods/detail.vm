@@ -47,8 +47,12 @@
     var goods_price;
     var alertNum = 0;
     var forbidden = false;
-    var history = '$!{history}';
-    var second_time_purchase = not_null(history);
+    #if(${history})
+   	var history = ${history};
+   	var second_time_purchase = true;
+    #else
+    var second_time_purchase = false; 
+    #end
     
 
     $(function () {
