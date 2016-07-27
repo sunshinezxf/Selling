@@ -717,6 +717,35 @@ public class OrderController {
         condition.put("orderId", orderId);
         ResultData orderData = orderService.fetchOrder(condition);
         Order order = ((List<Order>) orderData.getData()).get(0);
+        double totalPrices = order.getPrice();
+        Map<String, Object> goods_quantity_Map = new HashMap<>();
+        for (OrderItem item : order.getOrderItems()) {
+            String goodsName = item.getGoods().getName();
+            int goodsQuantity = item.getGoodsQuantity();
+            if (goods_quantity_Map.containsKey(goodsName)) {
+                goods_quantity_Map
+                        .put(goodsName,
+                                ((int) goods_quantity_Map.get(goodsName) + goodsQuantity));
+            } else {
+                goods_quantity_Map.put(goodsName, goodsQuantity);
+            }
+        }
+        Map<String, Object> result = new HashMap<>();
+        result.put("order", order);
+        result.put("totalPrices", totalPrices);
+        result.put("goods_quantity_Map", goods_quantity_Map);
+        resultData.setData(result);
+        return resultData;
+    }
+    
+    @RequestMapping(method = RequestMethod.POST, value = "/orderItem2/{orderId}")
+    @ResponseBody
+    public ResultData overviewOrderItem2(@PathVariable("orderId") String orderId) {
+        ResultData resultData = new ResultData();
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("orderId", orderId);
+        ResultData orderData = orderService.fetchOrder(condition);
+        Order order = ((List<Order>) orderData.getData()).get(0);
         List<OrderItem> orderItems=order.getOrderItems();
         Iterator<OrderItem> iterator=orderItems.iterator();
         while (iterator.hasNext()) {
@@ -774,6 +803,7 @@ public class OrderController {
         List<Order> orderList = (List<Order>) orderService
                 .fetchOrder(condition).getData();
 
+
         condition.clear();
         status.clear();
         status.add(1);
@@ -783,19 +813,21 @@ public class OrderController {
 
         Map<String, Object> dataMap = new HashMap<>();
         List<Order> orderList2=new ArrayList<>();
-        for (Order order:orderList) {
-            List<OrderItem> orderItems=order.getOrderItems();
-            Iterator<OrderItem> iterator=orderItems.iterator();
-            while (iterator.hasNext()) {
-            	OrderItem orderItem=iterator.next();
-            	if (orderItem.getStatus()!=OrderItemStatus.PAYED) {
-    				iterator.remove();
-    			}			
+        if (orderList!=null) {
+        	for (Order order:orderList) {
+                List<OrderItem> orderItems=order.getOrderItems();
+                Iterator<OrderItem> iterator=orderItems.iterator();
+                while (iterator.hasNext()) {
+                	OrderItem orderItem=iterator.next();
+                	if (orderItem.getStatus()!=OrderItemStatus.PAYED) {
+        				iterator.remove();
+        			}			
+        		}
+                order.setOrderItems(orderItems);
+                orderList2.add(order);
     		}
-            order.setOrderItems(orderItems);
-            orderList2.add(order);
 		}
-
+       
         dataMap.put("orderList", orderList2);
         dataMap.put("customerOrderList", customerOrderList);
         resultData.setData(dataMap);
