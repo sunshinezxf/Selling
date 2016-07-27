@@ -7,9 +7,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import selling.sunshine.dao.CustomerDao;
+import selling.sunshine.dao.ExpressDao;
 import selling.sunshine.dao.OrderDao;
 import selling.sunshine.dao.OrderItemDao;
 import selling.sunshine.model.*;
+import selling.sunshine.model.express.Express4Agent;
+import selling.sunshine.model.express.Express4Customer;
 import selling.sunshine.service.IndentService;
 import selling.sunshine.utils.*;
 
@@ -35,6 +38,9 @@ public class IndentServiceImpl implements IndentService {
 
     @Autowired
     private OrderDao orderDao;
+    
+    @Autowired
+    private ExpressDao expressDao;
 
     @Override
     public ResultData generateIndent() {
@@ -236,6 +242,15 @@ public class IndentServiceImpl implements IndentService {
         cell = row.createCell((short) 9);
         cell.setCellValue("备注");
         cell.setCellStyle(style);
+        cell = row.createCell((short) 10);
+        cell.setCellValue("是否已发货");
+        cell.setCellStyle(style);
+        cell = row.createCell((short) 11);
+        cell.setCellValue("发货时间");
+        cell.setCellStyle(style);
+        cell = row.createCell((short) 12);
+        cell.setCellValue("快递单号");
+        cell.setCellStyle(style);
         cell2.setCellValue("订单编号");
         cell2.setCellStyle(style);
         cell2 = row2.createCell((short) 1);
@@ -261,6 +276,15 @@ public class IndentServiceImpl implements IndentService {
         cell2.setCellStyle(style);
         cell2 = row2.createCell((short) 8);
         cell2.setCellValue("购买日期");
+        cell2.setCellStyle(style);
+        cell2 = row2.createCell((short) 9);
+        cell2.setCellValue("是否已发货");
+        cell2.setCellStyle(style);
+        cell2 = row2.createCell((short) 10);
+        cell2.setCellValue("发货时间");
+        cell2.setCellStyle(style);
+        cell2 = row2.createCell((short) 11);
+        cell2.setCellValue("快递单号");
         cell2.setCellStyle(style);
         int k = 1;
         int j = 1;
@@ -290,7 +314,21 @@ public class IndentServiceImpl implements IndentService {
                 } else {
                     row.createCell((short) 9).setCellValue("");
                 }
-
+                if (orderItem.getStatus()==OrderItemStatus.SHIPPED || orderItem.getStatus()==OrderItemStatus.RECEIVED || orderItem.getStatus()==OrderItemStatus.EXCHANGED) {
+                	 row.createCell((short) 10).setCellValue("是");
+                	 condition.clear();
+                	 condition.put("orderItemId", orderItem.getOrderItemId());
+                	 ResultData queryData=expressDao.queryExpress4Agent(condition);
+                	 if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
+                		 Express4Agent express4Agent=((List<Express4Agent>)queryData.getData()).get(0);
+                		 row.createCell((short) 11).setCellValue(new SimpleDateFormat("yyyy-MM-dd").format(express4Agent.getCreateAt()));
+                    	 row.createCell((short) 12).setCellValue(express4Agent.getExpressNumber());
+					 }
+				}else{
+					row.createCell((short) 10).setCellValue("否");
+					row.createCell((short) 11).setCellValue("");
+					row.createCell((short) 12).setCellValue("");
+				}
                 k++;
             } else if (list.get(i) instanceof CustomerOrder) {
                 row = sheet2.createRow((int) j);
@@ -311,6 +349,21 @@ public class IndentServiceImpl implements IndentService {
                 row.createCell((short) 7).setCellValue(customerOrder.getTotalPrice());
                 cell = row.createCell((short) 8);
                 cell.setCellValue(new SimpleDateFormat("yyyy-MM-dd").format(customerOrder.getCreateAt()));
+                if (customerOrder.getStatus()==OrderItemStatus.SHIPPED || customerOrder.getStatus()==OrderItemStatus.RECEIVED || customerOrder.getStatus()==OrderItemStatus.EXCHANGED) {
+               	 row.createCell((short) 9).setCellValue("是");
+               	 Map<String, Object> condition = new HashMap<>();
+               	 condition.put("orderId", customerOrder.getOrderId());
+               	 ResultData queryData=expressDao.queryExpress4Customer(condition);
+               	 if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
+               		 Express4Customer express=((List<Express4Customer>)queryData.getData()).get(0);
+               		 row.createCell((short) 10).setCellValue(new SimpleDateFormat("yyyy-MM-dd").format(express.getCreateAt()));
+                   	 row.createCell((short) 11).setCellValue(express.getExpressNumber());
+					 }
+				}else{
+					row.createCell((short) 9).setCellValue("否");
+					row.createCell((short) 10).setCellValue("否");
+					row.createCell((short) 11).setCellValue("否");
+				}
                 j++;
             }
 
