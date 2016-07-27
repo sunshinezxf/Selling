@@ -47,9 +47,8 @@
     var goods_price;
     var alertNum = 0;
     var forbidden = false;
-    var history = '$!{history}';
-    var second_time_purchase = not_null(history);
-    
+    var second_time_purchase = ${sFlag};
+
 
     $(function () {
         var script = document.createElement('script');
@@ -57,30 +56,30 @@
         script.src = "${path.concat('/plugins/pingxx/pingpp_one.js')}";
         document.body.appendChild(script);
 
-		$(document).on('pingpp_one_ready', function () {
-	        $('#confirm').click(function () {
-	            var agentId = $('#agent_id').val();
-	            if (agentId != "") {
-	                agentId = "AGT" + agentId;
-	                var url = '${path.concat('/agent/agentValidate/')}' + agentId;
-	                var param = {agentId: agentId};
-	                $.post(url, param, function (result) {
-	                    if (result.responseCode != "RESPONSE_OK") {
-	                        $("#dialog").find(".weui_dialog_bd").html("优惠码不存在！");
-	                        $("#dialog").fadeIn();
-	                        $("#agent_id").val("");
-	                        check_agent();
-	                    } else {
-	                        pay();
-	                    }
-	
-	                });
-	            } else {
-	                check_agent();
-	                pay();
-	            }
-	        });
-	    });
+        $(document).on('pingpp_one_ready', function () {
+            $('#confirm').click(function () {
+                var agentId = $('#agent_id').val();
+                if (agentId != "") {
+                    agentId = "AGT" + agentId;
+                    var url = '${path.concat('/agent/agentValidate/')}' + agentId;
+                    var param = {agentId: agentId};
+                    $.post(url, param, function (result) {
+                        if (result.responseCode != "RESPONSE_OK") {
+                            $("#dialog").find(".weui_dialog_bd").html("优惠码不存在！");
+                            $("#dialog").fadeIn();
+                            $("#agent_id").val("");
+                            check_agent();
+                        } else {
+                            pay();
+                        }
+
+                    });
+                } else {
+                    check_agent();
+                    pay();
+                }
+            });
+        });
 
         if (second_time_purchase && addressInfo_validate()) {
             active();
