@@ -631,6 +631,76 @@ public class OrderController {
         os.close();
         return null;
     }
+    
+    @RequestMapping(method = RequestMethod.POST, value = "/expressOne/{expressId}")
+    @ResponseBody
+    public ResultData expressOne(@PathVariable("expressId") String expressId,@RequestBody ExpressForm form) {
+    	  ResultData resultData=new ResultData();
+    	  List<Express> itemForms = form.getExpressItem();
+    	  String expressNumber=form.getExpressNumber();
+    	  Iterator<Express> iter = itemForms.iterator(); 
+    	  while (iter.hasNext()) { 
+    		  Express item=iter.next();
+              String id= item.getExpressId();
+              if (expressId.equals(id)) {
+            	  String linkId = item.getLinkId();
+            	  if (!StringUtils.isEmpty(linkId) && linkId.startsWith("ORI")) {
+            		  Express4Agent express = new Express4Agent(expressNumber, item.getSenderName(), item.getSenderPhone(), item.getSenderAddress(), item.getReceiverName(), item.getReceiverPhone(), item.getReceiverAddress(), item.getGoodsName());
+            		  OrderItem temp = new OrderItem();
+                      Map<String, Object> condition = new HashMap<>();
+                      condition.put("orderItemId", linkId);
+                      ResultData fetchResponse = orderService.fetchOrderItem(condition);
+                      if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                          temp = ((List<OrderItem>) fetchResponse.getData()).get(0);
+                          temp.setStatus(OrderItemStatus.SHIPPED);
+                          express.setItem(temp);
+                          expressService.createExpress(express);
+                          orderService.updateOrderItem(temp);
+                          condition.clear();
+                          condition.put("orderId", temp.getOrder().getOrderId());
+                          fetchResponse = orderService.fetchOrder(condition);
+                          if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                              Order order = ((List<Order>) fetchResponse.getData()).get(0);
+                              List<OrderItem> items=order.getOrderItems();
+                              boolean flag=true;
+                              for (OrderItem orderItem:items) {
+								  if (orderItem.getStatus()!=OrderItemStatus.SHIPPED) {
+									 flag=false;
+									 break;
+								  }
+							  }
+                              if (flag) {
+                            	  order.setStatus(OrderStatus.FULLY_SHIPMENT);
+                                  orderService.modifyOrder(order);
+							  }else{
+								  order.setStatus(OrderStatus.PATIAL_SHIPMENT);
+                                  orderService.modifyOrder(order);
+							  }
+                              
+                          }
+                      }
+
+            	  }else if(linkId.startsWith("CUO")) {
+            		  Express4Customer express = new Express4Customer(expressNumber, item.getSenderName(), item.getSenderPhone(), item.getSenderAddress(), item.getReceiverName(), item.getReceiverPhone(), item.getReceiverAddress(), item.getGoodsName());
+            		  CustomerOrder temp = new CustomerOrder();
+                      Map<String, Object> condition = new HashMap<>();
+                      condition.put("orderId", linkId);
+                      ResultData fetchResponse = orderService.fetchCustomerOrder(condition);
+                      if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                          temp = ((List<CustomerOrder>) fetchResponse.getData()).get(0);
+                          temp.setStatus(OrderItemStatus.SHIPPED);
+                          express.setOrder(temp);
+                          expressService.createExpress(express);
+                          orderService.updateCustomerOrder(temp);
+                      }
+            	  }
+            	 iter.remove(); 
+				 break; 
+			  }
+          }
+    	resultData.setData(itemForms);
+    	return resultData;
+    }
 
     @RequestMapping(method = RequestMethod.POST, value = "/orderItem/{orderId}")
     @ResponseBody

@@ -10,16 +10,18 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-12 col-lg-12"><button type="button" class="btn btn-success" id="print" onclick=print()>下载excel文件</button></div>
+        <div class="col-md-12 col-lg-12"><button type="button" class="btn btn-success" id="download" onclick=download()>下载excel文件</button></div>
         <br>
         <div class="col-md-12 col-lg-12" id="main">
             #foreach($expressItem in ${expressList})
-                <div class="" id="express-form">
+                <div class="table bs-callout" id=$expressItem.expressId>
                     <div id="basic-express-info" class="table bs-callout">
                         <div class="row">
                             <div class="col-xs-2 col-md-2 col-lg-2">快递单号</div>
                             <div class="col-xs-5 col-md-5 col-lg-5"
-                                 id=$expressItem.expressId>$expressItem.expressNumber</div>
+                                 id=$expressItem.expressId>
+                                 $expressItem.expressNumber &nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-info" id=$expressItem.expressId onclick=delivery(this)>单独发货</button>
+                            </div>
                             <div class="col-xs-2 col-md-2 col-lg-2">日期</div>
                             <div class="col-xs-3 col-md-3 col-lg-3">$!date.format(
                                 'yyyy-MM-dd',$!expressItem.createAt)</div>
@@ -62,15 +64,37 @@
         </div>
     </div>
 </div>
-
+<div class="modal fade" id="express_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">x</button>
+                <h4 class="modal-title">设置起始快递单号</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" id="express_form">
+                    <p class="form-group">
+                        <label class="col-sm-4 col-md-4 col-lg-3">快递单号:</label>&nbsp;&nbsp;
+                        <input type="number" id="expressId" name="expressId" autocomplete="off" onkeyup="value=value.replace(/[^\d]/g,'')"/>
+                    </p>
+                    <p class="form-group">
+                        <label class="col-sm-12 col-md-12 col-lg-12">*输入快递单号后点击发货，就会单独把这一个订单项的状态修改为已发货</label>
+                    </p>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="express_confirm">发货</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
-
-
-    function print() {
-      
-
-        var data = {"expressItem":${expressList}, "expressNumber": $("#expressId").val()};
+    var data;
+    var data2;
+    function download() {
+     
         $.ajax({
             type: "POST",
             url: "${path.concat('/order/expressData')}",
@@ -86,10 +110,44 @@
         });
 
     }
-
-    function download() {
-        window.location.href = "${path.concat('/order/exportExcel')}";
+    var id;
+    function delivery(obj){   	
+    	id=obj.id;
+    	$("#expressId").val("");
+    	$("#express_modal").modal('show');    
     }
+    
+    $("#express_modal").find("#express_confirm").click(function(){
+ 	   
+  	  var expressNumber=$("#expressId").val();
+  	  if(expressNumber!=""){
+  	         $("#express_modal").modal('hide'); 
+  	         var removeId="#"+id;
+  	         $(removeId).remove();  
+  	         if(data2!=null){
+  	        	 data=data2;
+  	         }else{
+  	        	 data = {"expressItem":${expressList}, "expressNumber": expressNumber};
+  	         }	  	        
+             $.ajax({
+                 type: "POST",
+                 url: "${path.concat('/order/expressOne/')}"+id,
+                 data: JSON.stringify(data),
+                 processData: false,
+                 contentType: "application/json",
+                 success: function (result) {
+                	 data2 = {"expressItem":result.data, "expressNumber": expressNumber};
+                	 if(result.data==""){
+                		 $("#download").remove(); 
+                	 }
+                 }
+             });
+  	  }else{
+  	    
+  	  }
+  });
+
+
 
 
 </script>
