@@ -361,8 +361,8 @@ public class IndentServiceImpl implements IndentService {
 					 }
 				}else{
 					row.createCell((short) 9).setCellValue("否");
-					row.createCell((short) 10).setCellValue("否");
-					row.createCell((short) 11).setCellValue("否");
+					row.createCell((short) 10).setCellValue("");
+					row.createCell((short) 11).setCellValue("");
 				}
                 j++;
             }
