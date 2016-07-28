@@ -1,5 +1,7 @@
 package selling.sunshine.dao;
 
+import java.util.Map;
+
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.utils.ResultData;
 
@@ -9,17 +11,17 @@ import selling.sunshine.utils.ResultData;
 public interface StatisticDao {
     ResultData queryOrderSum();
     
-    ResultData orderStatistics();
+    ResultData orderStatistics(Map<String, Object> condition);
     
     ResultData orderStatisticsByPage(DataTableParam param);
     
     ResultData agentGoodsMonthByPage(DataTableParam param);
     
-    ResultData agentGoodsMonth();
+    ResultData agentGoodsMonth(Map<String, Object> condition);
     
     ResultData agentGoodsByPage(DataTableParam param);
     
-    ResultData agentGoods();
+    ResultData agentGoods(Map<String, Object> condition);
     
     ResultData orderMonth();
     

@@ -4,6 +4,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 import com.mysql.fabric.xmlrpc.base.Array;
 
@@ -50,10 +51,10 @@ public class StatisticDaoImpl extends BaseDao implements StatisticDao {
     }
 
 	@Override
-	public ResultData orderStatistics() {
+	public ResultData orderStatistics(Map<String, Object> condition) {
 		ResultData result = new ResultData();
 		try {
-		   List<OrderStatistics> list=sqlSession.selectList("selling.statistic.sumOrderMonth");
+		   List<OrderStatistics> list=sqlSession.selectList("selling.statistic.sumOrderMonth",condition);
 		   result.setData(list);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -63,10 +64,10 @@ public class StatisticDaoImpl extends BaseDao implements StatisticDao {
         return result;
 	}
 	
-	private List<OrderStatistics> orderStatisticsByPage(int start, int length){
+	private List<OrderStatistics> orderStatisticsByPage(Map<String, Object> condition,int start, int length){
 		List<OrderStatistics> result = new ArrayList<>();
         try {
-            result = sqlSession.selectList("selling.statistic.sumOrderMonth", null, new RowBounds(start, length));
+            result = sqlSession.selectList("selling.statistic.sumOrderMonth", condition, new RowBounds(start, length));
         } catch (Exception e) {
             logger.error(e.getMessage());
         } finally {
@@ -74,10 +75,10 @@ public class StatisticDaoImpl extends BaseDao implements StatisticDao {
         }
 	}
 	
-	private List<AgentGoods> agentGoodsMonthByPage(int start, int length){
+	private List<AgentGoods> agentGoodsMonthByPage(Map<String, Object> condition,int start, int length){
 		List<AgentGoods> result = new ArrayList<>();
         try {
-            result = sqlSession.selectList("selling.statistic.sumAgentGoodsMonth", null, new RowBounds(start, length));
+            result = sqlSession.selectList("selling.statistic.sumAgentGoodsMonth", condition, new RowBounds(start, length));
         } catch (Exception e) {
             logger.error(e.getMessage());
         } finally {
@@ -85,10 +86,10 @@ public class StatisticDaoImpl extends BaseDao implements StatisticDao {
         }
 	}
 	
-	private List<AgentGoods> agentGoodsByPage(int start, int length){
+	private List<AgentGoods> agentGoodsByPage(Map<String, Object> condition,int start, int length){
 		List<AgentGoods> result = new ArrayList<>();
         try {
-            result = sqlSession.selectList("selling.statistic.sumAgentGoods", null, new RowBounds(start, length));
+            result = sqlSession.selectList("selling.statistic.sumAgentGoods", condition, new RowBounds(start, length));
         } catch (Exception e) {
             logger.error(e.getMessage());
         } finally {
@@ -100,7 +101,12 @@ public class StatisticDaoImpl extends BaseDao implements StatisticDao {
 	public ResultData orderStatisticsByPage(DataTableParam param) {
 		ResultData result = new ResultData();
 		DataTablePage<OrderStatistics> page = new DataTablePage<>();
-		ResultData total = orderStatistics();
+		Map<String, Object> condition=new HashMap<>();
+		if (!StringUtils.isEmpty(param.getsSearch())) {  			
+	           String searchParam=param.getsSearch();
+	       	   condition.put("search", "%"+searchParam+"%");
+	    }
+		ResultData total = orderStatistics(condition);
         if (total.getResponseCode() != ResponseCode.RESPONSE_OK) {
             result.setResponseCode(ResponseCode.RESPONSE_ERROR);
             result.setDescription(total.getDescription());
@@ -108,7 +114,7 @@ public class StatisticDaoImpl extends BaseDao implements StatisticDao {
         }
         page.setiTotalRecords(((List) total.getData()).size());
         page.setiTotalDisplayRecords(((List) total.getData()).size());
-        List<OrderStatistics> current=orderStatisticsByPage( param.getiDisplayStart(), param.getiDisplayLength());
+        List<OrderStatistics> current=orderStatisticsByPage(condition,param.getiDisplayStart(), param.getiDisplayLength());
         if (current.size() == 0) {
             result.setResponseCode(ResponseCode.RESPONSE_NULL);
         }
@@ -121,7 +127,12 @@ public class StatisticDaoImpl extends BaseDao implements StatisticDao {
 	public ResultData agentGoodsMonthByPage(DataTableParam param) {
 		ResultData result = new ResultData();
 		DataTablePage<AgentGoods> page = new DataTablePage<>();
-		ResultData total = agentGoodsMonth();
+		Map<String, Object> condition=new HashMap<>();
+		if (!StringUtils.isEmpty(param.getsSearch())) {  			
+	           String searchParam=param.getsSearch();
+	       	   condition.put("search", "%"+searchParam+"%");
+	    }
+		ResultData total = agentGoodsMonth(condition);
         if (total.getResponseCode() != ResponseCode.RESPONSE_OK) {
             result.setResponseCode(ResponseCode.RESPONSE_ERROR);
             result.setDescription(total.getDescription());
@@ -129,7 +140,7 @@ public class StatisticDaoImpl extends BaseDao implements StatisticDao {
         }
         page.setiTotalRecords(((List) total.getData()).size());
         page.setiTotalDisplayRecords(((List) total.getData()).size());
-        List<AgentGoods> current=agentGoodsMonthByPage( param.getiDisplayStart(), param.getiDisplayLength());
+        List<AgentGoods> current=agentGoodsMonthByPage( condition,param.getiDisplayStart(), param.getiDisplayLength());
         if (current.size() == 0) {
             result.setResponseCode(ResponseCode.RESPONSE_NULL);
         }
@@ -139,10 +150,10 @@ public class StatisticDaoImpl extends BaseDao implements StatisticDao {
 	}
 
 	@Override
-	public ResultData agentGoodsMonth() {
+	public ResultData agentGoodsMonth(Map<String, Object> condition) {
 		ResultData result = new ResultData();
 		try {
-		   List<AgentGoods> list=sqlSession.selectList("selling.statistic.sumAgentGoodsMonth");
+		   List<AgentGoods> list=sqlSession.selectList("selling.statistic.sumAgentGoodsMonth",condition);
 		   result.setData(list);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -153,10 +164,10 @@ public class StatisticDaoImpl extends BaseDao implements StatisticDao {
 	}
 	
 	@Override
-	public ResultData agentGoods() {
+	public ResultData agentGoods(Map<String, Object> condition) {
 		ResultData result = new ResultData();
 		try {
-		   List<AgentGoods> list=sqlSession.selectList("selling.statistic.sumAgentGoods");
+		   List<AgentGoods> list=sqlSession.selectList("selling.statistic.sumAgentGoods",condition);
 		   result.setData(list);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -170,7 +181,12 @@ public class StatisticDaoImpl extends BaseDao implements StatisticDao {
 	public ResultData agentGoodsByPage(DataTableParam param) {
 		ResultData result = new ResultData();
 		DataTablePage<AgentGoods> page = new DataTablePage<>();
-		ResultData total = agentGoods();
+		Map<String, Object> condition=new HashMap<>();
+		if (!StringUtils.isEmpty(param.getsSearch())) {  			
+	           String searchParam=param.getsSearch();
+	       	   condition.put("search", "%"+searchParam+"%");
+	    }
+		ResultData total = agentGoods(condition);
         if (total.getResponseCode() != ResponseCode.RESPONSE_OK) {
             result.setResponseCode(ResponseCode.RESPONSE_ERROR);
             result.setDescription(total.getDescription());
@@ -178,7 +194,7 @@ public class StatisticDaoImpl extends BaseDao implements StatisticDao {
         }
         page.setiTotalRecords(((List) total.getData()).size());
         page.setiTotalDisplayRecords(((List) total.getData()).size());
-        List<AgentGoods> current=agentGoodsByPage( param.getiDisplayStart(), param.getiDisplayLength());
+        List<AgentGoods> current=agentGoodsByPage(condition, param.getiDisplayStart(), param.getiDisplayLength());
         if (current.size() == 0) {
             result.setResponseCode(ResponseCode.RESPONSE_NULL);
         }

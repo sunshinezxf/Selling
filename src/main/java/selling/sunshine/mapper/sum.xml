@@ -63,7 +63,7 @@
     
 
    
-   <select id="sumOrderMonth" resultMap="orderMonthVo">
+   <select id="sumOrderMonth" parameterType="java.util.Map" resultMap="orderMonthVo">
       select agent_name,payedQuantity,unPayedQuantity,finishedQuantity,totalQuantity from(select agent_id as id,sum(quantity) as payedQuantity from(
          select agent_id,sum(q1) as quantity from(
             select if(isnull(order_id),0,1) as q1,agent.agent_id from agent 
@@ -144,10 +144,10 @@ select if(isnull(order_id),0,1)as q2, agent.agent_id from agent
 ) t2 group by agent_id
 )total3 group by id) totalTable,agent 
 where payedTable.id=unPayedTable.id and payedTable.id=finishedTable.id and payedTable.id=agent.agent_id and payedTable.id=totalTable.id
-and agent.agent_granted=1 and agent.block_flag=0
+and agent.agent_granted=1 and agent.block_flag=0 <if test="search !=null and search != ''">AND agent.agent_name LIKE #{search}</if>
    </select>
    
-  <select id="sumAgentGoodsMonth"  resultMap="agentGoodsVo">
+  <select id="sumAgentGoodsMonth"  parameterType="java.util.Map" resultMap="agentGoodsVo">
   select * from(select agent_name,goods_name,quantity,price from(select agentId,goodsId, sum(quantity) as quantity ,sum(price) as price from(select `order`.agent_id as agentId,order_item.goods_id as goodsId,
        sum(order_item.goods_quantity) as quantity,sum(order_item.order_item_price) as price from `order`
 	left join order_item
@@ -162,10 +162,10 @@ select agent_id as agentId,goods_id as goodsId,
          and date_format(create_time,'%Y-%m')=date_format(now(),'%Y-%m')
          group by agent_id,goods_id) t1 group by agentId,goodsId) t2
 left join agent on t2.agentId=agent.agent_id 
-left join goods on t2.goodsId=goods.goods_id) t3 where agent_name is not null;
+left join goods on t2.goodsId=goods.goods_id) t3 where agent_name is not null <if test="search !=null and search != ''">AND agent_name LIKE #{search}</if>
   </select>
   
-<select id="sumAgentGoods"  resultMap="agentGoodsVo">
+<select id="sumAgentGoods"  parameterType="java.util.Map" resultMap="agentGoodsVo">
   select * from(select agent_name,goods_name,quantity,price from(select agentId,goodsId, sum(quantity) as quantity ,sum(price) as price from(select `order`.agent_id as agentId,order_item.goods_id as goodsId,
        sum(order_item.goods_quantity) as quantity,sum(order_item.order_item_price) as price from `order`
 	left join order_item
@@ -178,7 +178,7 @@ select agent_id as agentId,goods_id as goodsId,
          where order_status in(1,2,3)
          group by agent_id,goods_id) t1 group by agentId,goodsId) t2
 left join agent on t2.agentId=agent.agent_id 
-left join goods on t2.goodsId=goods.goods_id) t3 where agent_name is not null;
+left join goods on t2.goodsId=goods.goods_id) t3 where agent_name is not null <if test="search !=null and search != ''"> AND agent_name LIKE #{search}</if>
   </select>
   
 <select id="orderMonth" resultMap="orderMonthVO">
