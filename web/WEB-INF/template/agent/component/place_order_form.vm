@@ -211,7 +211,8 @@
         $.each(order_item_list, function(i, val){
         	var name = $(val).children(".order_item_body").children().eq(2).find(".weui_cell_ft").text();
         	var quantity = $(val).children(".order_item_body").children().eq(3).find(".weui_cell_ft").text();
-        	var price = $(val).children(".order_item_body").children().eq(8).val();
+        	var price = $(val).children(".order_item_body").children().eq(9).val();
+
         	if(order_info_list[name] == undefined) {
         		order_info_list[name] = new Object();
         		order_info_list[name]['quantity'] = parseInt(quantity);

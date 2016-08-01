@@ -947,10 +947,11 @@ public class AgentController {
             String address = form.getAddress()[i];
             int goodsQuantity = Integer.parseInt(form.getGoodsQuantity()[i]);//商品数量
             double orderItemPrice = 0;//OrderItem总价
+            String description = form.getDescription()[i];
             Map<String, Object> goodsCondition = new HashMap<>();//查询商品价格
             goodsCondition.put("goodsId", goodsId);
             ResultData goodsData = commodityService.fetchGoods4Agent(goodsCondition);
-            Goods4Agent goods = null;
+            Goods4Agent goods;
             if (goodsData.getResponseCode() == ResponseCode.RESPONSE_OK) {
                 List<Goods4Agent> goodsList = (List) goodsData.getData();
                 if (goodsList.size() != 1) {
@@ -968,7 +969,7 @@ public class AgentController {
             }
             orderItemPrice = goods.getAgentPrice() * goodsQuantity;//得到一个OrderItem的总价
             order_price += orderItemPrice;//累加Order总价
-            OrderItem orderItem = new OrderItem(customerId, goodsId, goodsQuantity, orderItemPrice, address);//构造OrderItem
+            OrderItem orderItem = new OrderItem(customerId, goodsId, goodsQuantity, orderItemPrice, address, description);//构造OrderItem
             orderItems.add(orderItem);
         }
         order.setOrderItems(orderItems);//构造Order
@@ -982,12 +983,12 @@ public class AgentController {
                 order.setStatus(OrderStatus.SUBMITTED);
                 break;
             case "gift":
-                Map<String, Object> condition = new HashMap<String, Object>();
+                Map<String, Object> condition = new HashMap<>();
                 condition.put("agentId", user.getAgent().getAgentId());
                 ResultData fetchGiftConfigResponse = agentService.fetchAgentGift(condition);
                 if (fetchGiftConfigResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
                     logger.error(fetchGiftConfigResponse.getDescription());
-                    giftConfigs = new ArrayList<GiftConfig>();
+                    giftConfigs = new ArrayList<>();
                 } else {
                     giftConfigs = (List<GiftConfig>) fetchGiftConfigResponse.getData();
                 }
@@ -1028,7 +1029,7 @@ public class AgentController {
                     attr.addFlashAttribute("prompt", prompt);
                     view.setViewName("redirect:/agent/prompt");
                 } else {
-                    Prompt prompt = new Prompt("提示", "赠送成功，但是需要审核", "/agent/order/manage/2");
+                    Prompt prompt = new Prompt("提示", "赠送申请成功，审核通过后即可送出", "/agent/order/manage/2");
                     attr.addFlashAttribute("prompt", prompt);
                     view.setViewName("redirect:/agent/prompt");
                 }
@@ -1382,13 +1383,13 @@ public class AgentController {
         view.setViewName("/agent/etc/contact");
         return view;
     }
-    
-    @RequestMapping(method = RequestMethod.GET, value="/modifyinfo")
-    public ModelAndView modifyInfo(){
-    	ModelAndView view = new ModelAndView();
-    	WechatConfig.oauthWechat(view, "/agent/etc/modify_info");
-    	view.setViewName("/agent/etc/modify_info");
-    	return view;
+
+    @RequestMapping(method = RequestMethod.GET, value = "/modifyinfo")
+    public ModelAndView modifyInfo() {
+        ModelAndView view = new ModelAndView();
+        WechatConfig.oauthWechat(view, "/agent/etc/modify_info");
+        view.setViewName("/agent/etc/modify_info");
+        return view;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/modifypassword")
@@ -1437,7 +1438,7 @@ public class AgentController {
             return view;
         }
     }
-    
+
     @RequestMapping(method = RequestMethod.GET, value = "/modifyscale")
     public ModelAndView modifyScale() {
         ModelAndView view = new ModelAndView();
@@ -1446,7 +1447,7 @@ public class AgentController {
         if (user == null || user.getAgent() == null) {
             view.setViewName("/agent/login");
             return view;
-        } 
+        }
         Map<String, Object> condition = new HashMap<String, Object>();
         selling.sunshine.model.lite.Agent agent = user.getAgent();
         condition.put("agentId", agent.getAgentId());
@@ -1457,42 +1458,42 @@ public class AgentController {
         view.setViewName("/agent/etc/modify_scale");
         return view;
     }
-    
+
     @RequestMapping(method = RequestMethod.POST, value = "/modifyscale")
     public ModelAndView modifyScale(@Valid ScaleForm form, BindingResult result) {
-    	 ModelAndView view = new ModelAndView();
-         if (result.hasErrors() || StringUtils.isEmpty(form.getScale())) {
-             Prompt prompt = new Prompt(PromptCode.WARNING, "提示信息", "尊敬的代理商，您输入的群规模有误,请重新尝试", "/agent/modifyscale");
-             view.addObject("prompt", prompt);
-             WechatConfig.oauthWechat(view, "/agent/prompt");
-             view.setViewName("/agent/prompt");
-             return view;
-         }
-         Subject subject = SecurityUtils.getSubject();
-         User user = (User) subject.getPrincipal();
-         if (user == null || user.getAgent() == null) {
-             view.setViewName("/agent/login");
-             return view;
-         }
-         Map<String, Object> condition = new HashMap<String, Object>();
-         selling.sunshine.model.lite.Agent agent = user.getAgent();
-         condition.put("agentId", agent.getAgentId());
-         condition.put("blockFlag", false);
-         Agent target = ((List<Agent>) agentService.fetchAgent(condition).getData()).get(0);
-         target.setClaimScale(form.getScale());
-         ResultData modifyScaleData = agentService.modifyScale(target);
-         if (modifyScaleData.getResponseCode() != ResponseCode.RESPONSE_OK) {
-             Prompt prompt = new Prompt(PromptCode.WARNING, "提示信息", "修改群规模失败,请重新尝试", "/agent/modifyscale");
-             view.addObject("prompt", prompt);
-             WechatConfig.oauthWechat(view, "/agent/prompt");
-             view.setViewName("/agent/prompt");
-             return view;
-         }
-         Prompt prompt = new Prompt(PromptCode.SUCCESS, "成功", "修改群规模成功", "/agent/me");
-         view.addObject("prompt", prompt);
-         WechatConfig.oauthWechat(view, "/agent/prompt");
-         view.setViewName("/agent/prompt");
-         return view;
+        ModelAndView view = new ModelAndView();
+        if (result.hasErrors() || StringUtils.isEmpty(form.getScale())) {
+            Prompt prompt = new Prompt(PromptCode.WARNING, "提示信息", "尊敬的代理商，您输入的群规模有误,请重新尝试", "/agent/modifyscale");
+            view.addObject("prompt", prompt);
+            WechatConfig.oauthWechat(view, "/agent/prompt");
+            view.setViewName("/agent/prompt");
+            return view;
+        }
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        if (user == null || user.getAgent() == null) {
+            view.setViewName("/agent/login");
+            return view;
+        }
+        Map<String, Object> condition = new HashMap<String, Object>();
+        selling.sunshine.model.lite.Agent agent = user.getAgent();
+        condition.put("agentId", agent.getAgentId());
+        condition.put("blockFlag", false);
+        Agent target = ((List<Agent>) agentService.fetchAgent(condition).getData()).get(0);
+        target.setClaimScale(form.getScale());
+        ResultData modifyScaleData = agentService.modifyScale(target);
+        if (modifyScaleData.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            Prompt prompt = new Prompt(PromptCode.WARNING, "提示信息", "修改群规模失败,请重新尝试", "/agent/modifyscale");
+            view.addObject("prompt", prompt);
+            WechatConfig.oauthWechat(view, "/agent/prompt");
+            view.setViewName("/agent/prompt");
+            return view;
+        }
+        Prompt prompt = new Prompt(PromptCode.SUCCESS, "成功", "修改群规模成功", "/agent/me");
+        view.addObject("prompt", prompt);
+        WechatConfig.oauthWechat(view, "/agent/prompt");
+        view.setViewName("/agent/prompt");
+        return view;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/prompt")

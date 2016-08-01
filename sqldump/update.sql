@@ -107,5 +107,10 @@ AFTER `refund_trigger_amount`;
 ##2016年7月20日更新
 ALTER TABLE `back_operation_log` CHANGE COLUMN `operation_event` `operation_event` VARCHAR(255);
 
+##2016年8月1日更新
+ALTER TABLE `selling`.`order_item`
+ADD COLUMN `order_item_description` VARCHAR(100) NULL AFTER `order_item_price`;
+
+
 
 
