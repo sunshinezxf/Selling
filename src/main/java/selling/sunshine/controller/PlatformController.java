@@ -195,8 +195,7 @@ public class PlatformController {
         	}
         	view.addObject("monthlyGoods", monthlyGoods);
 		}else{
-			Vendition monthlyGoods=new Vendition();
-        	view.addObject("monthlyGoods", monthlyGoods);
+			//无记录
 		}
         
         condition.clear();
@@ -208,8 +207,7 @@ public class PlatformController {
         	}
         	view.addObject("totalGoods", totalGoods);
 		}else{
-			Vendition totalGoods=new Vendition();
-        	view.addObject("totalGoods", totalGoods);
+			//无记录
 		}
         
         condition.clear();
@@ -221,8 +219,7 @@ public class PlatformController {
         	List<Vendition> payedRecord=(List<Vendition>)resultData.getData();
         	view.addObject("payedRecord", payedRecord);
 		}else{
-			Vendition payedRecord=new Vendition();
-        	view.addObject("payedRecord", payedRecord);
+			//无记录
 		}
         
         condition.clear();
@@ -234,8 +231,7 @@ public class PlatformController {
         	List<Vendition> shippedRecord=(List<Vendition>)resultData.getData();
         	view.addObject("shippedRecord", shippedRecord);
 		}else{
-			Vendition shippedRecord=new Vendition();
-        	view.addObject("shippedRecord", shippedRecord);
+			//无记录
 		}
         
         condition.clear();
@@ -246,8 +242,7 @@ public class PlatformController {
         	List<Vendition> giftRecord=(List<Vendition>)resultData.getData();
         	view.addObject("giftRecord", giftRecord);
 		}else{
-			Vendition giftRecord=new Vendition();
-        	view.addObject("giftRecord", giftRecord);
+			//无记录
 		}
         
         resultData = statisticService.topThreeAgent();

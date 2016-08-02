@@ -313,7 +313,7 @@ where 1 = 1
 <if test="monthly != null">
 	and date_format(create_time,'%Y-%m')=date_format(now(),'%Y-%m')
 </if>
-group by goods_id, order_type;
+group by goods_id, order_type order by goods_quantity;
         
 </select>
    
