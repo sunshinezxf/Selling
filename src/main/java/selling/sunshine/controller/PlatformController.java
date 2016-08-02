@@ -217,7 +217,7 @@ public class PlatformController {
         condition.clear();
         condition.put("monthly", true);
         condition.put("type", 0);
-        List<Integer> status = new ArrayList<>();
+        List<Integer> status = new ArrayList<Integer>();
         status.add(1);
         condition.put("status", status);
         resultData=statisticService.purchaseRecord(condition);
@@ -226,6 +226,7 @@ public class PlatformController {
         	view.addObject("payedRecord", payedRecord);
 		}else{
 			//无记录
+			logger.debug("lalalalallalalala");
 		}
         
         condition.clear();

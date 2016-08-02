@@ -303,17 +303,17 @@ from purchase_record_view
 where 1 = 1
 <if test="status != null and status != ''">
 	and record_status in 
-	<foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+	<foreach collection="status" item="item" index="index" open="(" close=")" separator=",">
 		#{item}
 	</foreach>
 </if>
-<if test="type != null and type != ''">
+<if test="type != null">
 	and order_type = #{type}
 </if>
 <if test="monthly != null">
 	and date_format(create_time,'%Y-%m')=date_format(now(),'%Y-%m')
 </if>
-group by goods_id, order_type order by goods_quantity;
+group by goods_id, order_type order by goods_quantity desc;
         
 </select>
    
