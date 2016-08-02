@@ -333,7 +333,7 @@ public class OrderController {
             List<Order> list = (List<Order>) fetchResponse.getData();
             for (Order order : list) {
                 for (OrderItem item : order.getOrderItems()) {
-                	if (item.getStatus()==OrderItemStatus.PAYED) {
+                    if (item.getStatus() == OrderItemStatus.PAYED) {
                         Customer customer = item.getCustomer();
                         Goods4Agent goods = item.getGoods();
                         Express4Agent express = new Express4Agent("尚未设置",
@@ -345,7 +345,7 @@ public class OrderController {
                         express.setLinkId(item.getOrderItemId());
                         express.setGoodsQuantity(item.getGoodsQuantity());
                         expresses.add(express);
-					}
+                    }
 
                 }
             }
@@ -399,18 +399,18 @@ public class OrderController {
             // 若不一致，则将不一致的那一项删除，并且把钱退回给代理商并告知他
             // 同时，根据不同情况修改order的状态和orderItem的状态
             for (OrderItem item : order.getOrderItems()) {
-            	if (item.getStatus()==OrderItemStatus.PAYED) {
-                Customer customer = item.getCustomer();
-                Goods4Agent goods = item.getGoods();
-                Express4Agent express = new Express4Agent("尚未设置",
-                        PlatformConfig.getValue("sender_name"),
-                        PlatformConfig.getValue("sender_phone"),
-                        PlatformConfig.getValue("sender_address"),
-                        customer.getName(), customer.getPhone().getPhone(),
-                        customer.getAddress().getAddress(), goods.getName());
-                express.setLinkId(item.getOrderItemId());
-                express.setGoodsQuantity(item.getGoodsQuantity());
-                expressList.add(express);
+                if (item.getStatus() == OrderItemStatus.PAYED) {
+                    Customer customer = item.getCustomer();
+                    Goods4Agent goods = item.getGoods();
+                    Express4Agent express = new Express4Agent("尚未设置",
+                            PlatformConfig.getValue("sender_name"),
+                            PlatformConfig.getValue("sender_phone"),
+                            PlatformConfig.getValue("sender_address"),
+                            customer.getName(), customer.getPhone().getPhone(),
+                            customer.getAddress().getAddress(), goods.getName());
+                    express.setLinkId(item.getOrderItemId());
+                    express.setGoodsQuantity(item.getGoodsQuantity());
+                    expressList.add(express);
                 }
             }
         } else {
@@ -638,75 +638,75 @@ public class OrderController {
         os.close();
         return null;
     }
-    
+
     @RequestMapping(method = RequestMethod.POST, value = "/expressOne/{expressId}")
     @ResponseBody
-    public ResultData expressOne(@PathVariable("expressId") String expressId,@RequestBody ExpressForm form) {
-    	  ResultData resultData=new ResultData();
-    	  List<Express> itemForms = form.getExpressItem();
-    	  String expressNumber=form.getExpressNumber();
-    	  Iterator<Express> iter = itemForms.iterator(); 
-    	  while (iter.hasNext()) { 
-    		  Express item=iter.next();
-              String id= item.getExpressId();
-              if (expressId.equals(id)) {
-            	  String linkId = item.getLinkId();
-            	  if (!StringUtils.isEmpty(linkId) && linkId.startsWith("ORI")) {
-            		  Express4Agent express = new Express4Agent(expressNumber, item.getSenderName(), item.getSenderPhone(), item.getSenderAddress(), item.getReceiverName(), item.getReceiverPhone(), item.getReceiverAddress(), item.getGoodsName());
-            		  OrderItem temp = new OrderItem();
-                      Map<String, Object> condition = new HashMap<>();
-                      condition.put("orderItemId", linkId);
-                      ResultData fetchResponse = orderService.fetchOrderItem(condition);
-                      if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-                          temp = ((List<OrderItem>) fetchResponse.getData()).get(0);
-                          temp.setStatus(OrderItemStatus.SHIPPED);
-                          express.setItem(temp);
-                          expressService.createExpress(express);
-                          orderService.updateOrderItem(temp);
-                          condition.clear();
-                          condition.put("orderId", temp.getOrder().getOrderId());
-                          fetchResponse = orderService.fetchOrder(condition);
-                          if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-                              Order order = ((List<Order>) fetchResponse.getData()).get(0);
-                              List<OrderItem> items=order.getOrderItems();
-                              boolean flag=true;
-                              for (OrderItem orderItem:items) {
-								  if (orderItem.getStatus()!=OrderItemStatus.SHIPPED) {
-									 flag=false;
-									 break;
-								  }
-							  }
-                              if (flag) {
-                            	  order.setStatus(OrderStatus.FULLY_SHIPMENT);
-                                  orderService.modifyOrder(order);
-							  }else{
-								  order.setStatus(OrderStatus.PATIAL_SHIPMENT);
-                                  orderService.modifyOrder(order);
-							  }
-                              
-                          }
-                      }
+    public ResultData expressOne(@PathVariable("expressId") String expressId, @RequestBody ExpressForm form) {
+        ResultData resultData = new ResultData();
+        List<Express> itemForms = form.getExpressItem();
+        String expressNumber = form.getExpressNumber();
+        Iterator<Express> iter = itemForms.iterator();
+        while (iter.hasNext()) {
+            Express item = iter.next();
+            String id = item.getExpressId();
+            if (expressId.equals(id)) {
+                String linkId = item.getLinkId();
+                if (!StringUtils.isEmpty(linkId) && linkId.startsWith("ORI")) {
+                    Express4Agent express = new Express4Agent(expressNumber, item.getSenderName(), item.getSenderPhone(), item.getSenderAddress(), item.getReceiverName(), item.getReceiverPhone(), item.getReceiverAddress(), item.getGoodsName());
+                    OrderItem temp = new OrderItem();
+                    Map<String, Object> condition = new HashMap<>();
+                    condition.put("orderItemId", linkId);
+                    ResultData fetchResponse = orderService.fetchOrderItem(condition);
+                    if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                        temp = ((List<OrderItem>) fetchResponse.getData()).get(0);
+                        temp.setStatus(OrderItemStatus.SHIPPED);
+                        express.setItem(temp);
+                        expressService.createExpress(express);
+                        orderService.updateOrderItem(temp);
+                        condition.clear();
+                        condition.put("orderId", temp.getOrder().getOrderId());
+                        fetchResponse = orderService.fetchOrder(condition);
+                        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                            Order order = ((List<Order>) fetchResponse.getData()).get(0);
+                            List<OrderItem> items = order.getOrderItems();
+                            boolean flag = true;
+                            for (OrderItem orderItem : items) {
+                                if (orderItem.getStatus() != OrderItemStatus.SHIPPED) {
+                                    flag = false;
+                                    break;
+                                }
+                            }
+                            if (flag) {
+                                order.setStatus(OrderStatus.FULLY_SHIPMENT);
+                                orderService.modifyOrder(order);
+                            } else {
+                                order.setStatus(OrderStatus.PATIAL_SHIPMENT);
+                                orderService.modifyOrder(order);
+                            }
 
-            	  }else if(linkId.startsWith("CUO")) {
-            		  Express4Customer express = new Express4Customer(expressNumber, item.getSenderName(), item.getSenderPhone(), item.getSenderAddress(), item.getReceiverName(), item.getReceiverPhone(), item.getReceiverAddress(), item.getGoodsName());
-            		  CustomerOrder temp = new CustomerOrder();
-                      Map<String, Object> condition = new HashMap<>();
-                      condition.put("orderId", linkId);
-                      ResultData fetchResponse = orderService.fetchCustomerOrder(condition);
-                      if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-                          temp = ((List<CustomerOrder>) fetchResponse.getData()).get(0);
-                          temp.setStatus(OrderItemStatus.SHIPPED);
-                          express.setOrder(temp);
-                          expressService.createExpress(express);
-                          orderService.updateCustomerOrder(temp);
-                      }
-            	  }
-            	 iter.remove(); 
-				 break; 
-			  }
-          }
-    	resultData.setData(itemForms);
-    	return resultData;
+                        }
+                    }
+
+                } else if (linkId.startsWith("CUO")) {
+                    Express4Customer express = new Express4Customer(expressNumber, item.getSenderName(), item.getSenderPhone(), item.getSenderAddress(), item.getReceiverName(), item.getReceiverPhone(), item.getReceiverAddress(), item.getGoodsName());
+                    CustomerOrder temp = new CustomerOrder();
+                    Map<String, Object> condition = new HashMap<>();
+                    condition.put("orderId", linkId);
+                    ResultData fetchResponse = orderService.fetchCustomerOrder(condition);
+                    if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                        temp = ((List<CustomerOrder>) fetchResponse.getData()).get(0);
+                        temp.setStatus(OrderItemStatus.SHIPPED);
+                        express.setOrder(temp);
+                        expressService.createExpress(express);
+                        orderService.updateCustomerOrder(temp);
+                    }
+                }
+                iter.remove();
+                break;
+            }
+        }
+        resultData.setData(itemForms);
+        return resultData;
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/orderItem/{orderId}")
@@ -737,7 +737,7 @@ public class OrderController {
         resultData.setData(result);
         return resultData;
     }
-    
+
     @RequestMapping(method = RequestMethod.POST, value = "/orderItem2/{orderId}")
     @ResponseBody
     public ResultData overviewOrderItem2(@PathVariable("orderId") String orderId) {
@@ -746,14 +746,14 @@ public class OrderController {
         condition.put("orderId", orderId);
         ResultData orderData = orderService.fetchOrder(condition);
         Order order = ((List<Order>) orderData.getData()).get(0);
-        List<OrderItem> orderItems=order.getOrderItems();
-        Iterator<OrderItem> iterator=orderItems.iterator();
+        List<OrderItem> orderItems = order.getOrderItems();
+        Iterator<OrderItem> iterator = orderItems.iterator();
         while (iterator.hasNext()) {
-        	OrderItem orderItem=iterator.next();
-        	if (orderItem.getStatus()!=OrderItemStatus.PAYED) {
-				iterator.remove();
-			}			
-		}
+            OrderItem orderItem = iterator.next();
+            if (orderItem.getStatus() != OrderItemStatus.PAYED) {
+                iterator.remove();
+            }
+        }
         order.setOrderItems(orderItems);
         double totalPrices = order.getPrice();
         Map<String, Object> goods_quantity_Map = new HashMap<>();
@@ -774,6 +774,23 @@ public class OrderController {
         result.put("goods_quantity_Map", goods_quantity_Map);
         resultData.setData(result);
         return resultData;
+    }
+
+    //intended to replace the two method above
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value = "/{orderId}/item}")
+    public ResultData viewItem(@PathVariable("orderId") String orderId) {
+        ResultData result = new ResultData();
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("orderId", orderId);
+        List<Integer> status = new ArrayList<>(Arrays.asList(OrderStatus.PAYED.getCode(), OrderStatus.PATIAL_SHIPMENT.getCode(), OrderStatus.FULLY_SHIPMENT.getCode(), OrderStatus.FINISHIED.getCode()));
+        condition.put("status", status);
+        ResultData response = orderService.fetchOrder(condition);
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            Order order = ((List<Order>) response.getData()).get(0);
+
+        }
+        return result;
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/customerOrder/{orderId}")
@@ -812,22 +829,22 @@ public class OrderController {
                 .fetchCustomerOrder(condition).getData();
 
         Map<String, Object> dataMap = new HashMap<>();
-        List<Order> orderList2=new ArrayList<>();
-        if (orderList!=null) {
-        	for (Order order:orderList) {
-                List<OrderItem> orderItems=order.getOrderItems();
-                Iterator<OrderItem> iterator=orderItems.iterator();
+        List<Order> orderList2 = new ArrayList<>();
+        if (orderList != null) {
+            for (Order order : orderList) {
+                List<OrderItem> orderItems = order.getOrderItems();
+                Iterator<OrderItem> iterator = orderItems.iterator();
                 while (iterator.hasNext()) {
-                	OrderItem orderItem=iterator.next();
-                	if (orderItem.getStatus()!=OrderItemStatus.PAYED) {
-        				iterator.remove();
-        			}			
-        		}
+                    OrderItem orderItem = iterator.next();
+                    if (orderItem.getStatus() != OrderItemStatus.PAYED) {
+                        iterator.remove();
+                    }
+                }
                 order.setOrderItems(orderItems);
                 orderList2.add(order);
-    		}
-		}
-       
+            }
+        }
+
         dataMap.put("orderList", orderList2);
         dataMap.put("customerOrderList", customerOrderList);
         resultData.setData(dataMap);
