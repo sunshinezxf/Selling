@@ -8,14 +8,14 @@
         </div>
     </div>
    <div class="row">
-        <div class="col-md-12 col-lg-12">
+        <div class="col-sm-12 col-md-12 col-lg-12">
             本月总计购买商品：
         #if(${monthlyGoods})
             <table class="table table-bordered">
                  <tr>
-                    <th>商品名</th>
-                    <th>总盒数</th>
-                    <th>总价</th>
+                    <th class="col-sm-4 col-md-4 col-lg-4">商品名</th>
+                    <th class="col-sm-4 col-md-4 col-lg-4">总盒数</th>
+                    <th class="col-sm-4 col-md-4 col-lg-4">总价</th>
                 </tr>
             #foreach($goods in ${monthlyGoods})
                 <tr>
@@ -32,9 +32,9 @@
         #if(${totalGoods})
             <table class="table table-bordered">
                 <tr>
-                    <th>商品名</th>
-                    <th>总盒数</th>
-                    <th>总价</th>
+                    <th class="col-sm-4 col-md-4 col-lg-4">商品名</th>
+                    <th class="col-sm-4 col-md-4 col-lg-4">总盒数</th>
+                    <th class="col-sm-4 col-md-4 col-lg-4">总价</th>
                 </tr>
             #foreach($goods in ${totalGoods})
                 <tr>
@@ -57,9 +57,9 @@
         #if(${payedRecord})
             <table class="table table-bordered">
                 <tr>
-                    <th>商品名</th>
-                    <th>总盒数</th>
-                    <th>总价</th>
+                    <th class="col-sm-4 col-md-4 col-lg-4">商品名</th>
+                    <th class="col-sm-4 col-md-4 col-lg-4">总盒数</th>
+                    <th class="col-sm-4 col-md-4 col-lg-4">总价</th>
                 </tr>
                 #foreach($goods in ${payedRecord})
                 <tr>
@@ -74,9 +74,9 @@
         #if(${shippedRecord})
             <table class="table table-bordered">
                 <tr>
-                    <th>商品名</th>
-                    <th>总盒数</th>
-                    <th>总价</th>
+                    <th class="col-sm-4 col-md-4 col-lg-4">商品名</th>
+                    <th class="col-sm-4 col-md-4 col-lg-4">总盒数</th>
+                    <th class="col-sm-4 col-md-4 col-lg-4">总价</th>
                 </tr>
                 #foreach($goods in ${shippedRecord})
                 <tr>
@@ -91,9 +91,9 @@
         #if(${giftRecord})
             <table class="table table-bordered">
                 <tr>
-                    <th>商品名</th>
-                    <th>总盒数</th>
-                    <th>总价</th>
+                    <th class="col-sm-4 col-md-4 col-lg-4">商品名</th>
+                    <th class="col-sm-4 col-md-4 col-lg-4">总盒数</th>
+                    <th class="col-sm-4 col-md-4 col-lg-4">总价</th>
                 </tr>
                 #foreach($goods in ${giftRecord})
                 <tr>
