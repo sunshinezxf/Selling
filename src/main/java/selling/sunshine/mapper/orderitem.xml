@@ -61,7 +61,7 @@
     </insert>
 
     <select id="query" parameterType="java.util.Map" resultMap="orderItemVo">
-        SELECT order_item_id, order_item_status, goods_quantity, order_item_price, receive_address, customer_id,
+        SELECT order_item_id, order_item_status, goods_quantity, order_item_price, receive_address, order_item_description, customer_id,
         goods_id, order_id, block_flag, create_time
         FROM order_item
         WHERE 1 = 1
@@ -121,6 +121,9 @@
             </if>
             <if test="orderItemPrice != null">
                 order_item_price = #{orderItemPrice},
+            </if>
+            <if test="description != null">
+                order_item_description = #{description},
             </if>
             <if test="goods != null and goods.goodsId != null and goods.goodsId != ''">
                 goods_id = #{goods.goodsId},

@@ -121,4 +121,12 @@ public class OrderItem extends Entity {
     public void setReceiveAddress(String receiveAddress) {
         this.receiveAddress = receiveAddress;
     }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

@@ -1,134 +1,158 @@
 <form id="place_order_form">
-<div id="place_order_panel">
-    <div class="order_content">
-        <div class="panel">
-           <div class="hd">
-                <h1 class="page_title">订单详情</h1>
-            </div>
-            <div class="bd">
-                <div class="weui_panel">
-                   <div class="weui_cells_title" id="orderId">订单号：${order.orderId}</div>
-                	#if (${status} == "SAVED" && ${operation} == "MODIFY")
-                   <div class="weui_cells weui_cells_access clear-margin-top">
-                        <div class="weui_cell" >
-                            <div class="weui_cell_bd weui_cell_primary">
-                                <a id="add_order_btn" class="weui_btn weui_btn_plain_primary">添加订货单</a>
+    <div id="place_order_panel">
+        <div class="order_content">
+            <div class="panel">
+                <div class="hd">
+                    <h1 class="page_title">订单详情</h1>
+                </div>
+                <div class="bd">
+                    <div class="weui_panel">
+                        <div class="weui_cells_title" id="orderId">订单号：${order.orderId}</div>
+                        #if (${status} == "SAVED" && ${operation} == "MODIFY")
+                            <div class="weui_cells weui_cells_access clear-margin-top">
+                                <div class="weui_cell">
+                                    <div class="weui_cell_bd weui_cell_primary">
+                                        <a id="add_order_btn" class="weui_btn weui_btn_plain_primary">添加订货单</a>
+                                    </div>
+                                </div>
                             </div>
+                        #end
+                        <div class="list-cell" id="order_item_list">
+                            #foreach($orderItem in ${order.orderItems})
+                                <div class="weui_cells_access">
+                                    <div class="weui_cell order_item_head">
+                                        <div class="weui_cell_bd weui_cell_primary">${orderItem.customer.name}</div>
+                                        <div class="weui_cell_ft">
+                                            <span>${orderItem.goods.name}</span>&nbsp;x<span>${orderItem.goodsQuantity}</span>&nbsp;(<span>${orderItem.orderItemPrice}</span>元)&nbsp;
+                                        </div>
+                                    </div>
+                                    <div class="order_item_body" style="display:none;">
+                                        <a class="weui_cell">
+                                            <div class="weui_cell_bd weui_cell_primary">
+                                                <p>客户信息</p>
+                                            </div>
+                                            <div class="weui_cell_ft">
+                                                <span>${orderItem.customer.name}</span>(<span>${orderItem.customer.phone.phone}</span>)
+                                            </div>
+                                        </a>
+                                        <a class="weui_cell">
+                                            <div class="weui_cell_bd weui_cell_primary">
+                                                <p>收货地址</p>
+                                            </div>
+                                            <div class="weui_cell_ft address">${orderItem.receiveAddress}</div>
+                                        </a>
+                                        <a class="weui_cell">
+                                            <div class="weui_cell_bd weui_cell_primary">
+                                                <p>商品名称</p>
+                                            </div>
+                                            <div class="weui_cell_ft">${orderItem.goods.name}</div>
+                                        </a>
+                                        <a class="weui_cell">
+                                            <div class="weui_cell_bd weui_cell_primary quantity">
+                                                <p>数量</p>
+                                            </div>
+                                            <div class="weui_cell_ft quantity">${orderItem.goodsQuantity}</div>
+                                        </a>
+                                        #if(${orderItem.description})
+                                            <a class="weui_cell">
+                                                <div class="weui_cell_bd weui_cell_primary">
+                                                    <label class="weui_label">备注</label>
+                                                </div>
+                                                <div class="weui_cell_ft description">$!{orderItem.description}</div>
+                                            </a>
+                                        #end
+                                        #if(${operation} == "VIEW" && ${status} != "SUBMITTED" && ${status} != "SAVED")
+                                            <div class="weui_cell weui_cells_tips clear-margin-top">
+                                                #if(${orderItem.status} == "SHIPPED" || ${orderItem.status} ==
+                                                    "RECEIVED")
+                                                    <div class="weui_cell_bd weui_cell_primary">已发货</div>
+                                                    <div class="express_btn">
+                                                        <a class="weui_btn weui_btn_mini weui_btn_plain_primary">&nbsp物流信息&nbsp</a>
+                                                    </div>
+                                                #elseif(${orderItem.status} != "EXCHANGED")
+                                                    <div class="weui_cell_bd weui_cell_primary">未发货</div>
+                                                #else
+                                                    <div class="weui_cell_bd weui_cell_primary">已退货</div>
+                                                #end
+                                            </div>
+                                        #else
+                                            <div class="weui_cell weui_cells_tips clear-margin-top">
+                                                金额:${orderItem.orderItemPrice}元
+                                            </div>
+                                        #end
+                                        #if(${status} == "SAVED" && ${operation} == "MODIFY")
+                                            <div class="weui_cells_tips delete">删除</div>
+                                        #end
+                                        <input class="goods_quantity" type="hidden" name="goodsQuantity"
+                                               value="${orderItem.goodsQuantity}"/>
+                                        <input class="goods_id" type="hidden" name="goodsId"
+                                               value="${orderItem.goods.goodsId}"/>
+                                        <input class="order_item_price" type="hidden" name="orderItemPrice"
+                                               value="${orderItem.goods.agentPrice}"/>
+                                        <input class="customer_id" type="hidden" name="customerId"
+                                               value="${orderItem.customer.customerId}"/>
+                                        <input class="order_item_id" type="hidden" name="orderItemId"
+                                               value="${orderItem.orderItemId}"/>
+                                        <input class="order_item_address" type="hidden" name="address"
+                                               value="${orderItem.receiveAddress}">
+                                        <input type="hidden" name="description" value="${orderItem.description}"/>
+                                    </div>
+                                </div>
+                            #end
                         </div>
                     </div>
+                    #if(${status} == "SUBMITTED" && ${operation} == "VIEW")
+                        <div class="weui_btn_area">
+                            <a class="weui_btn weui_btn_warn" id="cancel_order_btn">取消订单</a>
+                        </div>
+                    #elseif(${status} == "SAVED" && ${operation} == "VIEW")
+                        <div class="weui_btn_area">
+                            <a class="weui_btn weui_btn_warn" id="cancel_order_btn">取消订单</a>
+                        </div>
                     #end
-                    <div class="list-cell" id="order_item_list">
-                    	#foreach($orderItem in ${order.orderItems})
-                		<div class="weui_cells_access">
-			        		<div class="weui_cell order_item_head">
-			        			<div class="weui_cell_bd weui_cell_primary">${orderItem.customer.name}</div>
-			        			<div class="weui_cell_ft"><span>${orderItem.goods.name}</span>&nbsp;x<span>${orderItem.goodsQuantity}</span>&nbsp;(<span>${orderItem.orderItemPrice}</span>元)&nbsp;</div>
-			        		</div>
-			        		<div class="order_item_body" style="display:none;">
-				        		<a class="weui_cell">
-					       			<div class="weui_cell_bd weui_cell_primary">
-					        			<p>客户信息</p>
-					        		</div>
-					        		<div class="weui_cell_ft"><span>${orderItem.customer.name}</span>(<span>${orderItem.customer.phone.phone}</span>)</div>
-					    		</a> 
-					    		<a class="weui_cell">
-					       			<div class="weui_cell_bd weui_cell_primary">
-					        			<p>收货地址</p>
-					        		</div>
-					        		<div class="weui_cell_ft address">${orderItem.receiveAddress}</div>
-					    		</a>
-					        	<a class="weui_cell">
-					        		<div class="weui_cell_bd weui_cell_primary">
-					        			<p>商品名称</p> 
-					        		</div>
-					     			<div class="weui_cell_ft">${orderItem.goods.name}</div> 
-					    		</a>
-					    		<a class="weui_cell"> 
-					        		<div class="weui_cell_bd weui_cell_primary quantity"> 
-					        			<p>数量</p> 
-					        		</div> 
-					        		<div class="weui_cell_ft quantity">${orderItem.goodsQuantity}</div>
-					        	</a>
-					    		#if(${operation} == "VIEW" && ${status} != "SUBMITTED" && ${status} != "SAVED")
-					    			<div class="weui_cell weui_cells_tips clear-margin-top">
-						    			#if(${orderItem.status} == "SHIPPED" || ${orderItem.status} == "RECEIVED")
-						    			<div class="weui_cell_bd weui_cell_primary">已发货</div>
-						    			<div class="express_btn">
-						                    <a class="weui_btn weui_btn_mini weui_btn_plain_primary">&nbsp物流信息&nbsp</a>
-						                </div>
-						                #elseif(${orderItem.status} != "EXCHANGED")
-						                <div class="weui_cell_bd weui_cell_primary">未发货</div>
-						                #else
-						                <div class="weui_cell_bd weui_cell_primary">已退货</div>
-						                #end
-					    			</div>
-					    		#else
-					    			<div class="weui_cell weui_cells_tips clear-margin-top">金额:${orderItem.orderItemPrice}元 </div>
-					    		#end
-					    		#if(${status} == "SAVED" && ${operation} == "MODIFY")
-					    		<div class="weui_cells_tips delete">删除</div>
-					    		#end
-					    		<input class="goods_quantity" type="hidden" name="goodsQuantity" value="${orderItem.goodsQuantity}"/> 
-					    		<input class="goods_id" type="hidden" name="goodsId" value="${orderItem.goods.goodsId}"/> 
-					    		<input class="order_item_price" type="hidden" name="orderItemPrice" value="${orderItem.goods.agentPrice}"/>
-					    		<input class="customer_id" type="hidden" name="customerId" value="${orderItem.customer.customerId}"/>
-					    		<input class="order_item_id" type="hidden" name="orderItemId" value="${orderItem.orderItemId}"/>
-					    		<input class="order_item_address" type="hidden" name="address" value="${orderItem.receiveAddress}">
-					    	</div>
-						</div>
-                    	#end
+                    <div class="weui_btn_area">
+                        <a class="weui_btn weui_btn_default" id="return_order_btn">返回</a>
                     </div>
                 </div>
-              	#if(${status} == "SUBMITTED" && ${operation} == "VIEW")
-                <div class="weui_btn_area">
-                    <a class="weui_btn weui_btn_warn" id="cancel_order_btn">取消订单</a>
-                </div>
-                #elseif(${status} == "SAVED" && ${operation} == "VIEW")
-                <div class="weui_btn_area">
-                    <a class="weui_btn weui_btn_warn" id="cancel_order_btn">取消订单</a>
-                </div>
-                #end
-                <div class="weui_btn_area">
-                	<a class="weui_btn weui_btn_default" id="return_order_btn">返回</a>
+            </div>
+        </div>
+        <div class="order_summary" id="order_summary" style="display:none">
+            <div class="weui_panel">
+                <div class="weui_cell">
+                    <div class="weui_cell_bd weui_cell_primary">
+                        <div id="total_goods">
+                        </div>
+                        <p id="total_goods_price">共计:0元
+
+                        <p>
+                    </div>
+                    #if(${status} == "SAVED" && ${operation} == "MODIFY")
+                        <div class="weui_cell_ft">
+                            <a class="weui_btn weui_btn_mini weui_btn_plain_primary" id="save_order_btn">&nbsp&nbsp&nbsp保存&nbsp&nbsp&nbsp</a>
+                        </div>
+                        &nbsp
+                    #end
+                    #if(${status} == "SAVED" && ${operation} == "VIEW")
+                        <div class="weui_cell_ft">
+                            <a class="weui_btn weui_btn_mini weui_btn_plain_primary" id="modify_order_btn">&nbsp&nbsp&nbsp修改&nbsp&nbsp&nbsp</a>
+                        </div>
+                        &nbsp
+                    #end
+                    #if(${status} == "SAVED")
+                        <div class="weui_cell_ft">
+                            <a class="weui_btn weui_btn_mini weui_btn_primary" id="place_order_btn">&nbsp&nbsp&nbsp下单&nbsp&nbsp&nbsp</a>
+                        </div>
+                    #elseif(${status} == "SUBMITTED")
+                        <div class="weui_cell_ft">
+                            <a class="weui_btn weui_btn_mini weui_btn_primary" id="place_order_btn">&nbsp&nbsp&nbsp付款&nbsp&nbsp&nbsp</a>
+                        </div>
+                    #end
                 </div>
             </div>
         </div>
     </div>
-   <div class="order_summary" id="order_summary" style="display:none">
-        <div class="weui_panel">
-            <div class="weui_cell">
-            	<div class="weui_cell_bd weui_cell_primary">
-            		<div id="total_goods">
-            		</div>		
-            		<p id="total_goods_price" >共计:0元<p>
-            	</div>
-            	#if(${status} == "SAVED" && ${operation} == "MODIFY")
-                <div class="weui_cell_ft">
-                    <a class="weui_btn weui_btn_mini weui_btn_plain_primary" id="save_order_btn">&nbsp&nbsp&nbsp保存&nbsp&nbsp&nbsp</a>
-                </div>
-                &nbsp
-                #end
-            	#if(${status} == "SAVED" && ${operation} == "VIEW")
-                <div class="weui_cell_ft">
-                    <a class="weui_btn weui_btn_mini weui_btn_plain_primary" id="modify_order_btn">&nbsp&nbsp&nbsp修改&nbsp&nbsp&nbsp</a>
-                </div>
-                &nbsp
-                #end
-            	#if(${status} == "SAVED")
-            	<div class="weui_cell_ft">
-            		<a class="weui_btn weui_btn_mini weui_btn_primary" id="place_order_btn">&nbsp&nbsp&nbsp下单&nbsp&nbsp&nbsp</a>
-            	</div>
-            	#elseif(${status} == "SUBMITTED")
-            	<div class="weui_cell_ft">
-            		<a class="weui_btn weui_btn_mini weui_btn_primary" id="place_order_btn">&nbsp&nbsp&nbsp付款&nbsp&nbsp&nbsp</a>
-            	</div>
-            	#end
-            </div>
-        </div>
-    </div>
-</div>
-<input type="hidden" name="orderId" value="${order.orderId}"/>
-<input type="hidden" name="openId" value="${wechat}">
+    <input type="hidden" name="orderId" value="${order.orderId}"/>
+    <input type="hidden" name="openId" value="${wechat}">
 </form>
 <div class="weui_dialog_confirm" id="address_dialog" style="display: none;">
     <div class="weui_mask"></div>
@@ -137,8 +161,8 @@
         <div class="weui_dialog_bd"></div>
         <div class="weui_dialog_ft">
             <a href="javascript:;" class="weui_btn_dialog default" style="display:none">修改</a>
-        	<a href="javascript:;" class="weui_btn_dialog primary">确定</a>
-    	<iframe id="tmp_downloadhelper_iframe" style="display: none;"></iframe>
+            <a href="javascript:;" class="weui_btn_dialog primary">确定</a>
+            <iframe id="tmp_downloadhelper_iframe" style="display: none;"></iframe>
         </div>
     </div>
 </div>
@@ -150,216 +174,217 @@
         <div class="weui_dialog_ft">
             <a href="javascript:;" class="weui_btn_dialog default">返回</a>
             <a href="javascript:;" class="weui_btn_dialog primary">确定</a>
-        <iframe id="tmp_downloadhelper_iframe" style="display: none;"></iframe></div>
-	</div>
+            <iframe id="tmp_downloadhelper_iframe" style="display: none;"></iframe>
+        </div>
+    </div>
 </div>
 #if(${status} == "SAVED" && ${operation} == "MODIFY")
-#parse("/agent/order/add_order_item.vm")
+    #parse("/agent/order/add_order_item.vm")
 #end
 <script>
-	//立了一个flag，判断是新增还是修改订单
-	isAdd = true;
-	$(document).ready(function(){
-		$("#add_order_item").hide();
-		$.calculate();
-		
-		//将地址数据和客户ID存入dom节点中,并添加显示函数，必须放在地址字符串截取前
-		$.each($(".address"), function(i, val){
-			$(val).parent(".weui_cell").data("address", $(val).html());
-			$(val).parent(".weui_cell").data("customerId", $(val).closest(".order_item_body").find(".customer_id").val());
-			$(val).parent(".weui_cell").bind("click",$.showAddress);
-		});
-		//为每个查看物流按钮添加点击事件
-		$.each($(".express_btn"), function(i, val){
-			$(val).on("click",function(){
-				var orderItemId = $(this).parents(".order_item_body").find(".order_item_id").val();
-				window.location = "${path.concat("/order/viewexpress/agent/")}" + orderItemId;
-			})
-		});
-		
-		//添加窗口滑动事件
-        $(".order_item_head").on("click",function(){
-        	$(this).next().slideToggle();
+    //立了一个flag，判断是新增还是修改订单
+    isAdd = true;
+    $(document).ready(function () {
+        $("#add_order_item").hide();
+        $.calculate();
+
+        //将地址数据和客户ID存入dom节点中,并添加显示函数，必须放在地址字符串截取前
+        $.each($(".address"), function (i, val) {
+            $(val).parent(".weui_cell").data("address", $(val).html());
+            $(val).parent(".weui_cell").data("customerId", $(val).closest(".order_item_body").find(".customer_id").val());
+            $(val).parent(".weui_cell").bind("click", $.showAddress);
         });
-				
-		//地址字符串截取
-		$.addressBeautify();
-		
-		#if(${status} == "SAVED" && ${operation} == "MODIFY")
-			//添加事件
-			//地址修改事件
-			$("#address_dialog").find(".weui_btn_dialog.default").show();
-			
-			var order_item_list = $("#order_item_list").children();
-			$.each(order_item_list, function(i, val){
-				//客户修改事件
-				$(val).children(".order_item_body").children().eq(0).on("click", function(){
-		    		isAdd = false;
-		    		current_modify_dom = this;
-		    		customer_id = $(this).parent(".order_item_body").find(".customer_id").val();
-    				customer_name = $(this).find(".weui_cell_ft span").eq(0).html();
-    				customer_phone = $(this).find(".weui_cell_ft span").eq(1).html();
-		    		$.init_customer_list();
-		    		$("#place_order_panel").hide();
-		    		$("#customer_option").fadeIn();
-		    	});
-		    	//商品修改事件
-		    	$(val).children(".order_item_body").children().eq(2).on("click", function(){
-		    		isAdd = false;
-		    		current_modify_dom = this;
-		    		goods_id = $(this).parent(".order_item_body").find(".goods_id").val();
-    				goods_name = $(this).find(".weui_cell_ft").html();
-					goods_price = parseFloat($(this).parent(".order_item_body").find(".order_item_price").val());
-					$.init_goods_list();
-		    		$("#place_order_panel").hide();
-		    		$("#goods_option").fadeIn();
-		    	});
-		    	//数量修改事件
-		    	$(val).children(".order_item_body").children().eq(3).on("click",function(){
-		    		current_modify_dom = this;
-		    		goods_id = $(this).parent(".order_item_body").find(".goods_id").val();
-    				goods_name = $(this).find(".weui_cell_ft").html();
-					goods_price = parseFloat($(this).parent(".order_item_body").find(".order_item_price").val());
-					var goods_quantity = $(this).find(".weui_cell_ft").html();
-    				$("#quantity_modify").find(".weui_input").val(goods_quantity);
-		    		$("#place_order_panel").hide();
-		    		$.init_quantity_modify();
-		    		$("#quantity_modify").fadeIn();
-		    	});
-		    	 //添加删除事件
-		        $(val).children(".order_item_body").children().eq(5).on("click",function(){
-		    		$(this).closest(".weui_cells_access").remove();
-		    		$.calculate();
-		        });
-			});
-		#end
-	});
-    
+        //为每个查看物流按钮添加点击事件
+        $.each($(".express_btn"), function (i, val) {
+            $(val).on("click", function () {
+                var orderItemId = $(this).parents(".order_item_body").find(".order_item_id").val();
+                window.location = "${path.concat("/order/viewexpress/agent/")}" + orderItemId;
+            })
+        });
+
+        //添加窗口滑动事件
+        $(".order_item_head").on("click", function () {
+            $(this).next().slideToggle();
+        });
+
+        //地址字符串截取
+        $.addressBeautify();
+
+        #if(${status} == "SAVED" && ${operation} == "MODIFY")
+            //添加事件
+            //地址修改事件
+            $("#address_dialog").find(".weui_btn_dialog.default").show();
+
+            var order_item_list = $("#order_item_list").children();
+            $.each(order_item_list, function (i, val) {
+                //客户修改事件
+                $(val).children(".order_item_body").children().eq(0).on("click", function () {
+                    isAdd = false;
+                    current_modify_dom = this;
+                    customer_id = $(this).parent(".order_item_body").find(".customer_id").val();
+                    customer_name = $(this).find(".weui_cell_ft span").eq(0).html();
+                    customer_phone = $(this).find(".weui_cell_ft span").eq(1).html();
+                    $.init_customer_list();
+                    $("#place_order_panel").hide();
+                    $("#customer_option").fadeIn();
+                });
+                //商品修改事件
+                $(val).children(".order_item_body").children().eq(2).on("click", function () {
+                    isAdd = false;
+                    current_modify_dom = this;
+                    goods_id = $(this).parent(".order_item_body").find(".goods_id").val();
+                    goods_name = $(this).find(".weui_cell_ft").html();
+                    goods_price = parseFloat($(this).parent(".order_item_body").find(".order_item_price").val());
+                    $.init_goods_list();
+                    $("#place_order_panel").hide();
+                    $("#goods_option").fadeIn();
+                });
+                //数量修改事件
+                $(val).children(".order_item_body").children().eq(3).on("click", function () {
+                    current_modify_dom = this;
+                    goods_id = $(this).parent(".order_item_body").find(".goods_id").val();
+                    goods_name = $(this).find(".weui_cell_ft").html();
+                    goods_price = parseFloat($(this).parent(".order_item_body").find(".order_item_price").val());
+                    var goods_quantity = $(this).find(".weui_cell_ft").html();
+                    $("#quantity_modify").find(".weui_input").val(goods_quantity);
+                    $("#place_order_panel").hide();
+                    $.init_quantity_modify();
+                    $("#quantity_modify").fadeIn();
+                });
+                //添加删除事件
+                $(val).children(".order_item_body").children().eq(5).on("click", function () {
+                    $(this).closest(".weui_cells_access").remove();
+                    $.calculate();
+                });
+            });
+        #end
+    });
+
     $("#add_order_btn").click(function () {
-    	isAdd = true;
-    	//判断是否选择过商品，如果没有就给个默认的
-    	if(typeof goods_id == "undefined"){
-    		var goods_dom = $("#goods_option").children(".weui_cells").children(".goods").eq(0);
-    		if(goods_dom != null){
-    			goods_id = goods_dom.attr("id");
-    			goods_name = goods_dom.find(".weui_cell_bd").children("span").eq(0).html();
-	        	goods_price = goods_dom.find(".weui_cell_bd").children("span").eq(1).html();
-    			$("#goods").find(".weui_cell_bd").html("<p>" + goods_name + "</p>");
-	        	$("#price").html("单价：" + goods_price + "元");
-    		}
-    	}
-    	$.init_add_order_item();
+        isAdd = true;
+        //判断是否选择过商品，如果没有就给个默认的
+        if (typeof goods_id == "undefined") {
+            var goods_dom = $("#goods_option").children(".weui_cells").children(".goods").eq(0);
+            if (goods_dom != null) {
+                goods_id = goods_dom.attr("id");
+                goods_name = goods_dom.find(".weui_cell_bd").children("span").eq(0).html();
+                goods_price = goods_dom.find(".weui_cell_bd").children("span").eq(1).html();
+                $("#goods").find(".weui_cell_bd").html("<p>" + goods_name + "</p>");
+                $("#price").html("单价：" + goods_price + "元");
+            }
+        }
+        $.init_add_order_item();
         $("#add_order_item").fadeIn();
         $("#place_order_panel").hide();
     });
-    $("#place_order_btn").click(function(){
-    	if(!$.check_order()){
-    		return;
-    	}
-    	$("#place_order_form").attr("action", "${path.concat('/order/modify/submit')}");
-    	$("#place_order_form").attr("method","post");
-    	$("#place_order_form").submit();
+    $("#place_order_btn").click(function () {
+        if (!$.check_order()) {
+            return;
+        }
+        $("#place_order_form").attr("action", "${path.concat('/order/modify/submit')}");
+        $("#place_order_form").attr("method", "post");
+        $("#place_order_form").submit();
     });
-    #if(${status} == "SAVED" && ${operation} == "VIEW")
-	$("#modify_order_btn").click(function(){
-		window.location = "${path.concat('/agent/order/modify/')}" + "${order.orderId}";
-	});
-    #end
-    $("#cancel_order_btn").click(function(){
-    	$("#delete_dialog").fadeIn();
+        #if(${status} == "SAVED" && ${operation} == "VIEW")
+        $("#modify_order_btn").click(function () {
+            window.location = "${path.concat('/agent/order/modify/')}" + "${order.orderId}";
+        });
+        #end
+    $("#cancel_order_btn").click(function () {
+        $("#delete_dialog").fadeIn();
     });
-    $("#return_order_btn").click(function(){
-    	#if(${status} == "SAVED" && ${operation} == "VIEW")
-    		window.location = "${path.concat('/agent/order/manage/0')}";
-    	#elseif(${status} == "SUBMITTED" && ${operation} == "VIEW")
-    		window.location = "${path.concat('/agent/order/manage/1')}";
-    	#elseif(${status} == "FINISHIED" && ${operation} == "VIEW")
-    		window.location = "${path.concat('/agent/order/manage/3')}";
-    	#else
-    		window.location = "${path.concat('/agent/order/manage/2')}";
-    	#end
+    $("#return_order_btn").click(function () {
+        #if(${status} == "SAVED" && ${operation} == "VIEW")
+            window.location = "${path.concat('/agent/order/manage/0')}";
+        #elseif(${status} == "SUBMITTED" && ${operation} == "VIEW")
+            window.location = "${path.concat('/agent/order/manage/1')}";
+        #elseif(${status} == "FINISHIED" && ${operation} == "VIEW")
+            window.location = "${path.concat('/agent/order/manage/3')}";
+        #else
+            window.location = "${path.concat('/agent/order/manage/2')}";
+        #end
     });
-    $("#delete_dialog").find(".weui_btn_dialog.default").click(function(){
-    	$("#delete_dialog").hide();
+    $("#delete_dialog").find(".weui_btn_dialog.default").click(function () {
+        $("#delete_dialog").hide();
     });
-    
-    $("#delete_dialog").find(".weui_btn_dialog.primary").click(function(){
-    	window.location = "${path.concat('/order/cancel/')}" + "${order.orderId}";
+
+    $("#delete_dialog").find(".weui_btn_dialog.primary").click(function () {
+        window.location = "${path.concat('/order/cancel/')}" + "${order.orderId}";
     });
-    $("#save_order_btn").click(function(){
-    	if(!$.check_order()){
-    		return;
-    	}
-    	$("#place_order_form").attr("action", "${path.concat('/order/modify/save')}");
-    	$("#place_order_form").attr("method","post");
-    	$("#place_order_form").submit();
+    $("#save_order_btn").click(function () {
+        if (!$.check_order()) {
+            return;
+        }
+        $("#place_order_form").attr("action", "${path.concat('/order/modify/save')}");
+        $("#place_order_form").attr("method", "post");
+        $("#place_order_form").submit();
     });
-    $.check_order = function(){
-    	if($("#order_item_list").children().size() == 0) {
-    		$("#dialog").find(".weui_dialog_bd").html("还没有创建订单");
-    		$("#dialog").fadeIn();
-    		return false;
-    	}
-    	return true;
+    $.check_order = function () {
+        if ($("#order_item_list").children().size() == 0) {
+            $("#dialog").find(".weui_dialog_bd").html("还没有创建订单");
+            $("#dialog").fadeIn();
+            return false;
+        }
+        return true;
     }
-     //计算总价
-    $.calculate = function(){
-    	var order_info_list = new Object();
+    //计算总价
+    $.calculate = function () {
+        var order_info_list = new Object();
         var order_item_list = $("#order_item_list").children();
-        $.each(order_item_list, function(i, val){
-        	var name = $(val).children(".order_item_body").children().eq(2).find(".weui_cell_ft").text();
-        	var quantity = $(val).children(".order_item_body").find(".goods_quantity").val();
-        	var price = $(val).children(".order_item_body").find(".order_item_price").val();
-        	if(order_info_list[name] == undefined) {
-        		order_info_list[name] = new Object();
-        		order_info_list[name]['quantity'] = parseInt(quantity);
-        		order_info_list[name]['order_item_price'] = parseFloat(price) * quantity ;
-        	} else {
-        		order_info_list[name]['quantity'] += parseInt(quantity);
-        		order_info_list[name]['order_item_price'] += parseFloat(price) * quantity;
-        	}
+        $.each(order_item_list, function (i, val) {
+            var name = $(val).children(".order_item_body").children().eq(2).find(".weui_cell_ft").text();
+            var quantity = $(val).children(".order_item_body").find(".goods_quantity").val();
+            var price = $(val).children(".order_item_body").find(".order_item_price").val();
+            if (order_info_list[name] == undefined) {
+                order_info_list[name] = new Object();
+                order_info_list[name]['quantity'] = parseInt(quantity);
+                order_info_list[name]['order_item_price'] = parseFloat(price) * quantity;
+            } else {
+                order_info_list[name]['quantity'] += parseInt(quantity);
+                order_info_list[name]['order_item_price'] += parseFloat(price) * quantity;
+            }
         });
         $("#total_goods").empty();
         var total_price = 0;
-        for(var order_info in order_info_list) {
-        	total_price += order_info_list[order_info]['order_item_price'];
-        	$("#total_goods").prepend("<p class='weui_media_text'>" 
-        		+ order_info + ":" + order_info_list[order_info]['quantity'] +
- 				"件")
+        for (var order_info in order_info_list) {
+            total_price += order_info_list[order_info]['order_item_price'];
+            $("#total_goods").prepend("<p class='weui_media_text'>"
+                    + order_info + ":" + order_info_list[order_info]['quantity'] +
+                    "件")
         }
         $("#total_goods_price").html("共计:" + total_price + "元");
-         //判断是否总价是0，决定显示保存按钮与否
-        if(total_price == 0){
-        	$("#save_order_btn").hide();
-        	$("#order_summary").hide();
+        //判断是否总价是0，决定显示保存按钮与否
+        if (total_price == 0) {
+            $("#save_order_btn").hide();
+            $("#order_summary").hide();
         } else {
-        	$("#save_order_btn").fadeIn();
-        	$("#order_summary").fadeIn();
+            $("#save_order_btn").fadeIn();
+            $("#order_summary").fadeIn();
         }
     }
     //地址美化长度
-    $.addressBeautify = function(){
-   		var order_item_list = $("#order_item_list").children();
-    	$.each(order_item_list,function(i, val){
-			var address = $(val).children(".order_item_body").children().eq(1).find(".weui_cell_ft").html();
-			$(val).children(".order_item_body").children().eq(1).find(".weui_cell_ft").html($.utf8Substr(address,25));
-		});
-	}
-	
-	$.showAddress = function(){
-		$("#address_dialog").find(".weui_dialog_title").html($(this).data("address"));
-		address_dom = this;
-		$("#address_dialog").fadeIn();
-	}
+    $.addressBeautify = function () {
+        var order_item_list = $("#order_item_list").children();
+        $.each(order_item_list, function (i, val) {
+            var address = $(val).children(".order_item_body").children().eq(1).find(".weui_cell_ft").html();
+            $(val).children(".order_item_body").children().eq(1).find(".weui_cell_ft").html($.utf8Substr(address, 25));
+        });
+    }
 
-	$("#address_dialog").find(".weui_btn_dialog.primary").click(function(){
-    	$("#address_dialog").hide();
+    $.showAddress = function () {
+        $("#address_dialog").find(".weui_dialog_title").html($(this).data("address"));
+        address_dom = this;
+        $("#address_dialog").fadeIn();
+    }
+
+    $("#address_dialog").find(".weui_btn_dialog.primary").click(function () {
+        $("#address_dialog").hide();
     });
-    
-    $("#address_dialog").find(".weui_btn_dialog.default").click(function(){
-    	$("#address_dialog").hide();
-    	$("#place_order_panel").hide();
-    	$.show_address_modify();
-	});
-    
+
+    $("#address_dialog").find(".weui_btn_dialog.default").click(function () {
+        $("#address_dialog").hide();
+        $("#place_order_panel").hide();
+        $.show_address_modify();
+    });
+
 </script>

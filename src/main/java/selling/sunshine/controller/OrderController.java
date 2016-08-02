@@ -914,9 +914,10 @@ public class OrderController {
             String customerId = form.getCustomerId()[i];// 顾客ID
             String orderItemId = form.getOrderItemId()[i];// 订单项ID
             String address = form.getAddress()[i];
+            String description = form.getDescription()[i];
             int goodsQuantity = Integer.parseInt(form.getGoodsQuantity()[i]);// 商品数量
             double orderItemPrice = 0;// OrderItem总价
-            Map<String, Object> goodsCondition = new HashMap<String, Object>();// 查询商品价格
+            Map<String, Object> goodsCondition = new HashMap<>();// 查询商品价格
             goodsCondition.put("goodsId", goodsId);
             ResultData goodsData = commodityService
                     .fetchGoods4Customer(goodsCondition);
@@ -941,7 +942,7 @@ public class OrderController {
             orderItemPrice = goods.getAgentPrice() * goodsQuantity;// 得到一个OrderItem的总价
             total_price += orderItemPrice;// 累加金额
             OrderItem orderItem = new OrderItem(customerId, goodsId,
-                    goodsQuantity, orderItemPrice, address);// 构造OrderItem
+                    goodsQuantity, orderItemPrice, address, description);// 构造OrderItem
             orderItem.setOrderItemId(orderItemId);// 传入OrderItemID
             orderItems.add(orderItem);
         }
