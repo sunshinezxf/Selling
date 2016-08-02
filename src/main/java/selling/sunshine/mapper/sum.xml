@@ -44,6 +44,14 @@
         <result property="agentName" column="agent_name"></result>
         <result property="quantity" column="quantity"></result>
     </resultMap>
+    
+    <resultMap id="purchaserRecordViewVo" type="selling.sunshine.model.sum.Vendition">
+        <result property="goodsId" column="goodsId"></result>
+        <result property="goodsName" column="goodsName"></result>
+        <result property="orderType" column="orderType"></result>
+        <result property="goodsQuantity" column="goodsQuantity"></result>
+        <result property="recordPrice" column="recordPrice"></result>
+    </resultMap>
 
     <select id="sum4order" resultMap="sum4OrderVo">
         select goods_id, goods_name, goods_quantity, sum(item_num) as num from (
@@ -286,6 +294,26 @@ select agent_id,sum(quantity) as quantity from customer_order
         where agent_id is not null
         group by agent_id
         order by quantity desc) t2,agent where t2.agent_id=agent.agent_id;
+        
+</select>
+
+<select id="purchaserRecordView" resultMap="purchaserRecordViewVo">
+select goods_id as goodsId, goods_name as goodsName, order_type as orderType, sum(goods_quantity) as goodsQuantity, sum(record_price) as recordPrice
+from purchase_record_view
+where 1 = 1
+<if test="status != null and status != ''">
+	and record_status in 
+	<foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+		#{item}
+	</foreach>
+</if>
+<if test="type != null and type != ''">
+	and order_type = #{type}
+</if>
+<if test="monthly != null">
+	and date_format(create_time,'%Y-%m')=date_format(now(),'%Y-%m')
+</if>
+group by goods_id, order_type;
         
 </select>
    

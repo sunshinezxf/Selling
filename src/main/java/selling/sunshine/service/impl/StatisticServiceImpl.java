@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import selling.sunshine.dao.StatisticDao;
 import selling.sunshine.model.sum.OrderMonth;
 import selling.sunshine.model.sum.Sum4Order;
+import selling.sunshine.model.sum.Vendition;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.StatisticService;
 import selling.sunshine.utils.ResponseCode;
@@ -171,6 +172,22 @@ public class StatisticServiceImpl implements StatisticService {
 		result.setResponseCode(response.getResponseCode());
         if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
             if (((List) response.getData()).size() == 0) {
+                result.setResponseCode(ResponseCode.RESPONSE_NULL);
+            }
+            result.setData(response.getData());
+        } else if (response.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
+            result.setDescription(response.getDescription());
+        }
+        return result;
+	}
+	
+	@Override
+	public ResultData purchaseRecord(Map<String, Object> condition) {
+		ResultData result = new ResultData();
+		ResultData response=statisticDao.purchaseRecord(condition);
+		result.setResponseCode(response.getResponseCode());
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            if (((List<Vendition>) response.getData()).size() == 0) {
                 result.setResponseCode(ResponseCode.RESPONSE_NULL);
             }
             result.setData(response.getData());

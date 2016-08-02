@@ -294,6 +294,20 @@ public class StatisticDaoImpl extends BaseDao implements StatisticDao {
 		}
 		return result;
 	}
+	
+	@Override
+	public ResultData purchaseRecord(Map<String, Object> condition) {
+		ResultData result = new ResultData();
+		try {
+			List<OrderMonth> list=sqlSession.selectList("selling.statistic.purchaserRecordView",condition);
+			result.setData(list);
+		} catch (Exception e) {
+			 logger.error(e.getMessage());
+	         result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+	         result.setDescription(e.getMessage());
+		}
+		return result;
+	}
 
 
 }

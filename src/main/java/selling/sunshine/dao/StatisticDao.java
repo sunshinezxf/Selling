@@ -28,4 +28,6 @@ public interface StatisticDao {
     ResultData orderByYear();
     
     ResultData topThreeAgent();
+    
+    ResultData purchaseRecord(Map<String, Object> condition);
 }

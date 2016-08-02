@@ -9,8 +9,14 @@
     </div>
    <div class="row">
         <div class="col-md-12 col-lg-12">
-            本月总计购买商品${orderMonth.quantity}盒，共计${orderMonth.price}元<br>
-            累计购买商品${orderMonth.totalQuantity}盒，共计${orderMonth.totalPrice}元<br>
+            本月总计购买
+        #foreach($goods in ${monthlyGoods})
+                        商品名：{goods.goodsName} 总盒数：{goods.goodsQuantity} 总价：{goods.recordPrice}<br>
+        #end
+            累计购买商品
+        #foreach($goods in ${totalGoods})
+                        商品名：{goods.goodsName} 总盒数：{goods.goodsQuantity} 总价：{goods.recordPrice}<br>
+        #end
             总计已注册的代理商有${orderMonth.totalNum}人，本月新注册代理商${orderMonth.num}人
         </div>
     </div>
@@ -18,8 +24,18 @@
     <div class="row">
         <div class="col-md-12 col-lg-12">
             本月已付款（未发货）订单：${orderMonth.payedMonth}笔<br>
+        #foreach($goods in ${payedRecord})
+                         商品名：{goods.goodsName} 总盒数：{goods.goodsQuantity}<br>
+        #end
+    <br>
             本月已发货订单（包含已结束）：${orderMonth.shippedMonth}笔<br>
-            本月已赠送订单：${orderMonth.giftMonth}笔
+        #foreach($goods in ${shippedRecord})
+                        商品名：{goods.goodsName} 总盒数：{goods.goodsQuantity}<br>
+        #end
+            本月已赠送订单：${orderMonth.giftMonth}笔<br>
+        #foreach($goods in ${giftRecord})
+                        商品名：{goods.goodsName} 总盒数：{goods.goodsQuantity}<br>
+        #end
         </div>
     </div>
     <hr>
