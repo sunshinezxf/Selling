@@ -31,6 +31,8 @@ import selling.sunshine.utils.ResultData;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -213,7 +215,9 @@ public class PlatformController {
         condition.clear();
         condition.put("monthly", true);
         condition.put("type", "0");
-        condition.put("status", "(1)");
+        List<Integer> status = new ArrayList<>();
+        status.add(1);
+        condition.put("status", status);
         resultData=statisticService.purchaseRecord(condition);
         if (resultData.getResponseCode()==ResponseCode.RESPONSE_OK) {
         	List<Vendition> payedRecord=(List<Vendition>)resultData.getData();
@@ -225,7 +229,10 @@ public class PlatformController {
         condition.clear();
         condition.put("monthly", true);
         condition.put("type", "0");
-        condition.put("status", "(2,3)");
+        status.clear();
+        status.add(2);
+        status.add(3);
+        condition.put("status", status);
         resultData=statisticService.purchaseRecord(condition);
         if (resultData.getResponseCode()==ResponseCode.RESPONSE_OK) {
         	List<Vendition> shippedRecord=(List<Vendition>)resultData.getData();
