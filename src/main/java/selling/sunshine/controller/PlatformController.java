@@ -19,6 +19,7 @@ import selling.sunshine.model.Role;
 import selling.sunshine.model.User;
 import selling.sunshine.model.sum.OrderMonth;
 import selling.sunshine.model.sum.TopThreeAgent;
+import selling.sunshine.model.sum.Vendition;
 import selling.sunshine.service.AdminService;
 import selling.sunshine.service.LogService;
 import selling.sunshine.service.RoleService;
@@ -171,7 +172,9 @@ public class PlatformController {
     @RequestMapping(method = RequestMethod.GET, value = "/dashboard")
     public ModelAndView dashboard() {
         ModelAndView view = new ModelAndView();
+        Map<String, Object> condition = new HashMap<>();
         ResultData resultData = new ResultData();
+        
         resultData=statisticService.orderMonth();
         if (resultData.getResponseCode()==ResponseCode.RESPONSE_OK) {
         	OrderMonth orderMonth=((List<OrderMonth>)resultData.getData()).get(0);
@@ -182,6 +185,71 @@ public class PlatformController {
 			OrderMonth orderMonth=new OrderMonth();
         	view.addObject("orderMonth", orderMonth);
 		}
+        
+        condition.put("monthly", true);
+        resultData=statisticService.purchaseRecord(condition);
+        if (resultData.getResponseCode()==ResponseCode.RESPONSE_OK) {
+        	List<Vendition> monthlyGoods=(List<Vendition>)resultData.getData();
+        	for(int i=0;i<monthlyGoods.size();i++){
+        		monthlyGoods.get(i).setRecordPrice(((int)(monthlyGoods.get(i).getRecordPrice()*100)*1.0/100));
+        	}
+        	view.addObject("monthlyGoods", monthlyGoods);
+		}else{
+			Vendition monthlyGoods=new Vendition();
+        	view.addObject("monthlyGoods", monthlyGoods);
+		}
+        
+        condition.clear();
+        resultData=statisticService.purchaseRecord(condition);
+        if (resultData.getResponseCode()==ResponseCode.RESPONSE_OK) {
+        	List<Vendition> totalGoods=(List<Vendition>)resultData.getData();
+        	for(int i=0;i<totalGoods.size();i++){
+        		totalGoods.get(i).setRecordPrice(((int)(totalGoods.get(i).getRecordPrice()*100)*1.0/100));
+        	}
+        	view.addObject("totalGoods", totalGoods);
+		}else{
+			Vendition totalGoods=new Vendition();
+        	view.addObject("totalGoods", totalGoods);
+		}
+        
+        condition.clear();
+        condition.put("monthly", true);
+        condition.put("type", "0");
+        condition.put("status", "(1)");
+        resultData=statisticService.purchaseRecord(condition);
+        if (resultData.getResponseCode()==ResponseCode.RESPONSE_OK) {
+        	List<Vendition> payedRecord=(List<Vendition>)resultData.getData();
+        	view.addObject("payedRecord", payedRecord);
+		}else{
+			Vendition payedRecord=new Vendition();
+        	view.addObject("payedRecord", payedRecord);
+		}
+        
+        condition.clear();
+        condition.put("monthly", true);
+        condition.put("type", "0");
+        condition.put("status", "(2,3)");
+        resultData=statisticService.purchaseRecord(condition);
+        if (resultData.getResponseCode()==ResponseCode.RESPONSE_OK) {
+        	List<Vendition> shippedRecord=(List<Vendition>)resultData.getData();
+        	view.addObject("shippedRecord", shippedRecord);
+		}else{
+			Vendition shippedRecord=new Vendition();
+        	view.addObject("shippedRecord", shippedRecord);
+		}
+        
+        condition.clear();
+        condition.put("monthly", true);
+        condition.put("type", "1");
+        resultData=statisticService.purchaseRecord(condition);
+        if (resultData.getResponseCode()==ResponseCode.RESPONSE_OK) {
+        	List<Vendition> giftRecord=(List<Vendition>)resultData.getData();
+        	view.addObject("giftRecord", giftRecord);
+		}else{
+			Vendition giftRecord=new Vendition();
+        	view.addObject("giftRecord", giftRecord);
+		}
+        
         resultData = statisticService.topThreeAgent();
         if (resultData.getResponseCode()==ResponseCode.RESPONSE_OK) {
         	List<Object> list=(List<Object>)resultData.getData();

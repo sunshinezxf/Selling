@@ -111,6 +111,13 @@ ALTER TABLE `back_operation_log` CHANGE COLUMN `operation_event` `operation_even
 ALTER TABLE `selling`.`order_item`
 ADD COLUMN `order_item_description` VARCHAR(100) NULL AFTER `order_item_price`;
 
+create view purchase_record_view as select * from(
+select g.goods_id as goods_id, g.goods_name as goods_name, o.order_type as order_type, oi.order_item_status as record_status, oi.goods_quantity as goods_quantity, oi.order_item_price as record_price, oi.create_time as create_time from order_item oi  
+left join `order` o on oi.order_id = o.order_id left join goods g on oi.goods_id = g.goods_id where oi.order_item_status >= 1 
+union all 
+select g.goods_id as goods_id, g.goods_name as goods_name, 0 as order_type, co.order_status as record_status, co.quantity as goods_quantity, co.total_price as record_price, co.create_time as create_time from customer_order co 
+left join goods g on co.goods_id = g.goods_id where co.order_status >= 1) temp
+
 
 
 

@@ -1,5 +1,7 @@
 package selling.sunshine.service;
 
+import java.util.Map;
+
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.utils.ResultData;
 
@@ -20,4 +22,6 @@ public interface StatisticService {
     ResultData orderByYear();
     
     ResultData topThreeAgent();
+    
+    ResultData purchaseRecord(Map<String, Object> condition);
 }
