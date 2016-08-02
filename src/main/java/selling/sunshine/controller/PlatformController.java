@@ -189,6 +189,7 @@ public class PlatformController {
 		}
         
         condition.put("monthly", true);
+        condition.put("type", 0);
         resultData=statisticService.purchaseRecord(condition);
         if (resultData.getResponseCode()==ResponseCode.RESPONSE_OK) {
         	List<Vendition> monthlyGoods=(List<Vendition>)resultData.getData();
@@ -201,6 +202,7 @@ public class PlatformController {
 		}
         
         condition.clear();
+        condition.put("type", 0);
         resultData=statisticService.purchaseRecord(condition);
         if (resultData.getResponseCode()==ResponseCode.RESPONSE_OK) {
         	List<Vendition> totalGoods=(List<Vendition>)resultData.getData();
@@ -214,7 +216,7 @@ public class PlatformController {
         
         condition.clear();
         condition.put("monthly", true);
-        condition.put("type", "0");
+        condition.put("type", 0);
         List<Integer> status = new ArrayList<>();
         status.add(1);
         condition.put("status", status);
@@ -228,7 +230,7 @@ public class PlatformController {
         
         condition.clear();
         condition.put("monthly", true);
-        condition.put("type", "0");
+        condition.put("type", 0);
         status.clear();
         status.add(2);
         status.add(3);
@@ -243,7 +245,7 @@ public class PlatformController {
         
         condition.clear();
         condition.put("monthly", true);
-        condition.put("type", "1");
+        condition.put("type", 1);
         resultData=statisticService.purchaseRecord(condition);
         if (resultData.getResponseCode()==ResponseCode.RESPONSE_OK) {
         	List<Vendition> giftRecord=(List<Vendition>)resultData.getData();

@@ -16,6 +16,7 @@ import selling.sunshine.model.sum.OrderSeries;
 import selling.sunshine.model.sum.OrderStatistics;
 import selling.sunshine.model.sum.Sum4Order;
 import selling.sunshine.model.sum.TopThreeAgent;
+import selling.sunshine.model.sum.Vendition;
 import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.utils.ResponseCode;
@@ -299,7 +300,7 @@ public class StatisticDaoImpl extends BaseDao implements StatisticDao {
 	public ResultData purchaseRecord(Map<String, Object> condition) {
 		ResultData result = new ResultData();
 		try {
-			List<OrderMonth> list=sqlSession.selectList("selling.statistic.purchaserRecordView",condition);
+			List<Vendition> list=sqlSession.selectList("selling.statistic.purchaseRecordView",condition);
 			result.setData(list);
 		} catch (Exception e) {
 			 logger.error(e.getMessage());

@@ -45,12 +45,12 @@
         <result property="quantity" column="quantity"></result>
     </resultMap>
     
-    <resultMap id="purchaserRecordViewVo" type="selling.sunshine.model.sum.Vendition">
-        <result property="goodsId" column="goodsId"></result>
-        <result property="goodsName" column="goodsName"></result>
-        <result property="orderType" column="orderType"></result>
-        <result property="goodsQuantity" column="goodsQuantity"></result>
-        <result property="recordPrice" column="recordPrice"></result>
+    <resultMap id="purchaseRecordViewVo" type="selling.sunshine.model.sum.Vendition">
+        <result property="goodsId" column="good_id"></result>
+        <result property="goodsName" column="goods_name"></result>
+        <result property="orderType" column="order_type"></result>
+        <result property="goodsQuantity" column="goods_quantity"></result>
+        <result property="recordPrice" column="record_price"></result>
     </resultMap>
 
     <select id="sum4order" resultMap="sum4OrderVo">
@@ -297,8 +297,8 @@ select agent_id,sum(quantity) as quantity from customer_order
         
 </select>
 
-<select id="purchaserRecordView" resultMap="purchaserRecordViewVo">
-select goods_id as goodsId, goods_name as goodsName, order_type as orderType, sum(goods_quantity) as goodsQuantity, sum(record_price) as recordPrice
+<select id="purchaseRecordView" resultMap="purchaseRecordViewVo">
+select goods_id, goods_name, order_type, sum(goods_quantity) as goods_quantity, sum(record_price) as record_price
 from purchase_record_view
 where 1 = 1
 <if test="status != null and status != ''">
