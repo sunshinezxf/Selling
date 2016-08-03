@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import selling.sunshine.dao.BillDao;
+import selling.sunshine.dao.ChargeDao;
 import selling.sunshine.model.CustomerOrderBill;
 import selling.sunshine.model.DepositBill;
 import selling.sunshine.model.OrderBill;
@@ -35,6 +36,9 @@ public class BillServiceImpl implements BillService {
 
     @Autowired
     private BillDao billDao;
+
+    @Autowired
+    private ChargeDao chargeDao;
 
     @Override
     public ResultData createDepositBill(DepositBill bill, String openId) {
@@ -219,7 +223,8 @@ public class BillServiceImpl implements BillService {
             Thread thread = new Thread() {
                 @Override
                 public void run() {
-                    super.run();
+                    selling.sunshine.model.Charge info = new selling.sunshine.model.Charge(charge);
+                    chargeDao.insertCharge(info);
                 }
             };
             thread.start();

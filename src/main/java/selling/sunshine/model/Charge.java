@@ -17,6 +17,10 @@ public class Charge extends Entity {
         this.orderNo = orderNo;
     }
 
+    public Charge(com.pingplusplus.model.Charge charge) {
+        this(charge.getId(), charge.getOrderNo());
+    }
+
     public String getChargeId() {
         return chargeId;
     }
