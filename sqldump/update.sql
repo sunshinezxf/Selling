@@ -129,5 +129,13 @@ create view purchase_item as
 
 create view purchase_record_view as select * from purchase_item;
 
+##2016年8月3日更新
+ALTER TABLE `selling`.`express_customer`
+ADD COLUMN `description` VARCHAR(100) NULL AFTER `goods_name`;
+
+ALTER TABLE `selling`.`express_agent`
+ADD COLUMN `description` VARCHAR(100) NULL AFTER `goods_name`;
+
+
 
 

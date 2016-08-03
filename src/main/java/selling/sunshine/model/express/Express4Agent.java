@@ -1,5 +1,6 @@
 package selling.sunshine.model.express;
 
+import org.springframework.util.StringUtils;
 import selling.sunshine.model.OrderItem;
 
 /**
@@ -34,6 +35,9 @@ public class Express4Agent extends Express {
 
     public void setItem(OrderItem item) {
         this.item = item;
+        if(!StringUtils.isEmpty(item.getDescription())) {
+            setDescription(item.getDescription());
+        }
         this.setLinkId(item.getOrderItemId());
     }
 }

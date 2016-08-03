@@ -518,6 +518,7 @@ public class OrderController {
         NPOIFSFileSystem pkg = new NPOIFSFileSystem(file);
         Workbook workbook = new HSSFWorkbook(pkg.getRoot(), true);
         for (int row = 3, i = 0; i < expresseList.size(); i++, row++) {
+            Express express = expresseList.get(i);
             Sheet sheet = workbook.getSheetAt(0);
             Row current = sheet.createRow(row);
             Cell senderName = current.createCell(2);
@@ -529,20 +530,25 @@ public class OrderController {
             Cell receiverName = current.createCell(8);
             receiverName.setCellValue(expresseList.get(i).getReceiverName());
             Cell receiverPhone = current.createCell(9);
-            receiverPhone.setCellValue(expresseList.get(i).getReceiverPhone());
+            receiverPhone.setCellValue(express.getReceiverPhone());
             Cell receiverAddress = current.createCell(13);
-            receiverAddress.setCellValue(expresseList.get(i).getReceiverAddress());
+            receiverAddress.setCellValue(express.getReceiverAddress());
             Cell goods = current.createCell(14);
-            goods.setCellValue(expresseList.get(i).getGoodsName());
+            goods.setCellValue(express.getGoodsName());
             Cell description = current.createCell(22);
-            description.setCellValue(String.valueOf(expresseList.get(i).getGoodsQuantity()) + "盒");
+            StringBuffer descriptionContent = new StringBuffer();
+            descriptionContent.append(express.getGoodsQuantity()).append("盒");
+            if (!StringUtils.isEmpty(express.getDescription())) {
+                descriptionContent.append(", ").append(express.getDescription());
+            }
+            description.setCellValue(descriptionContent.toString());
             Cell orderNo = current.createCell(37);
             if (expresseList.get(i).getLinkId().startsWith("ORI")) {
-                Express4Agent express = (Express4Agent) expresseList.get(i);
-                orderNo.setCellValue(express.getItem().getOrderItemId());
+                Express4Agent ea = (Express4Agent) express;
+                orderNo.setCellValue(ea.getItem().getOrderItemId());
             } else {
-                Express4Customer express = (Express4Customer) expresseList.get(i);
-                orderNo.setCellValue(express.getOrder().getOrderId());
+                Express4Customer ec = (Express4Customer) express;
+                orderNo.setCellValue(ec.getOrder().getOrderId());
             }
 
         }
