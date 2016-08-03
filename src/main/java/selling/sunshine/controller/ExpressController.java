@@ -162,12 +162,11 @@ public class ExpressController {
                             csvList.get(row)[20], csvList.get(row)[0],
                             csvList.get(row)[1], address,
                             csvList.get(row)[27]);
-                    CustomerOrder temp = new CustomerOrder();
                     Map<String, Object> condition = new HashMap<>();
                     condition.put("orderId", linkID);
                     ResultData fetchResponse = orderService.fetchCustomerOrder(condition);
                     if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-                        temp = ((List<CustomerOrder>) fetchResponse.getData()).get(0);
+                        CustomerOrder temp = ((List<CustomerOrder>) fetchResponse.getData()).get(0);
                         temp.setStatus(OrderItemStatus.SHIPPED);
                         express.setOrder(temp);
                         expressService.createExpress(express);
