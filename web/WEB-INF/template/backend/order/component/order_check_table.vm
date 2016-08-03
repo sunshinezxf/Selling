@@ -487,7 +487,8 @@
                 var node = "<tr><th>客户</th><th>产品</th><th>数量</th><th>价格</th><th>备注</th></tr>";
                 for (var i = 0; i < result.data.order.orderItems.length; i++) {
                     var orderItem = result.data.order.orderItems[i];
-                    node += "<tr><td>" + orderItem.customer.name + "</td><td>" + orderItem.goods.name + "</td><td>" + orderItem.goodsQuantity + "</td><td>" + orderItem.orderItemPrice + "</td><td>" + orderItem.description + "</td></tr>";
+
+                    node += "<tr><td>" + orderItem.customer.name + "</td><td>" + orderItem.goods.name + "</td><td>" + orderItem.goodsQuantity + "</td><td>" + orderItem.orderItemPrice + "</td><td>" + (orderItem.description == null) ? "" : orderItem.description + "</td></tr>";
                 }
                 $("#model_table").append(node);
                 document.getElementById("model_total").innerHTML = "总计:&nbsp;" + result.data.totalPrices + "元";

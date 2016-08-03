@@ -11,6 +11,7 @@
         <result property="receiverName" column="receiver_name"></result>
         <result property="receiverPhone" column="receiver_phone"></result>
         <result property="receiverAddress" column="receiver_address"></result>
+        <result property="description" column="description"></result>
         <result property="goodsName" column="goods_name"></result>
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
@@ -25,6 +26,7 @@
         <result property="receiverName" column="receiver_name"></result>
         <result property="receiverPhone" column="receiver_phone"></result>
         <result property="receiverAddress" column="receiver_address"></result>
+        <result property="description" column="description"></result>
         <result property="goodsName" column="goods_name"></result>
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
@@ -40,6 +42,7 @@
         <result property="receiverName" column="receiver_name"></result>
         <result property="receiverPhone" column="receiver_phone"></result>
         <result property="receiverAddress" column="receiver_address"></result>
+        <result property="description" column="description"></result>
         <result property="goodsName" column="goods_name"></result>
         <result property="createAt" column="create_time"></result>
         <association property="order" column="orderId = customer_order_id" select="customerOrderQuery"></association>
@@ -78,21 +81,21 @@
 
     <insert id="insertExpress4Agent" parameterType="selling.sunshine.model.express.Express4Agent"
             useGeneratedKeys="false">
-        INSERT INTO express_agent(express_id, order_item_id, express_no, sender_name, sender_phone, sender_address, receiver_name, receiver_phone, receiver_address, goods_name, block_flag, create_time)
-        VALUES (#{expressId}, #{item.orderItemId}, #{expressNumber}, #{senderName}, #{senderPhone}, #{senderAddress}, #{receiverName}, #{receiverPhone}, #{receiverAddress}, #{goodsName}, #{blockFlag}, #{createAt})
+        INSERT INTO express_agent(express_id, order_item_id, express_no, sender_name, sender_phone, sender_address, receiver_name, receiver_phone, receiver_address, description, goods_name, block_flag, create_time)
+        VALUES (#{expressId}, #{item.orderItemId}, #{expressNumber}, #{senderName}, #{senderPhone}, #{senderAddress}, #{receiverName}, #{receiverPhone}, #{receiverAddress}, #{description}, #{goodsName}, #{blockFlag}, #{createAt})
     </insert>
 
     <insert id="insertExpress4Customer" parameterType="selling.sunshine.model.express.Express4Customer"
             useGeneratedKeys="false">
-        INSERT INTO express_customer(express_id, customer_order_id, express_no, sender_name, sender_phone, sender_address, receiver_name, receiver_phone, receiver_address, goods_name, block_flag, create_time)
-        VALUES (#{expressId}, #{order.orderId}, #{expressNumber}, #{senderName}, #{senderPhone}, #{senderAddress}, #{receiverName}, #{receiverPhone}, #{receiverAddress}, #{goodsName}, #{blockFlag}, #{createAt})
+        INSERT INTO express_customer(express_id, customer_order_id, express_no, sender_name, sender_phone, sender_address, receiver_name, receiver_phone, receiver_address, description, goods_name, block_flag, create_time)
+        VALUES (#{expressId}, #{order.orderId}, #{expressNumber}, #{senderName}, #{senderPhone}, #{senderAddress}, #{receiverName}, #{receiverPhone}, #{receiverAddress}, #{description}, #{goodsName}, #{blockFlag}, #{createAt})
     </insert>
 
     <select id="query" parameterType="java.util.Map" resultMap="expressVo">
-        SELECT express_id, link_id, express_no, sender_name, sender_phone, sender_address, receiver_name, receiver_phone, receiver_address, goods_name, block_flag, create_time
-        FROM (SELECT express_id, order_item_id AS link_id, express_no, sender_name, sender_phone, sender_address,
+        SELECT express_id, link_id, express_no, sender_name, sender_phone, sender_address, receiver_name, receiver_phone, receiver_address, description, goods_name, block_flag, create_time
+        FROM (SELECT express_id, order_item_id AS link_id, express_no, sender_name, sender_phone, sender_address, description,
         receiver_name, receiver_phone,
-        receiver_address, goods_name, block_flag, create_time
+        receiver_address, description, goods_name, block_flag, create_time
         FROM express_agent
         WHERE 1 = 1
         <if test="expressId != null and expressId != ''">
@@ -111,7 +114,7 @@
         UNION ALL
         SELECT express_id, customer_order_id AS link_id, express_no, sender_name, sender_phone, sender_address,
         receiver_name, receiver_phone,
-        receiver_address, goods_name, block_flag, create_time
+        receiver_address, description, goods_name, block_flag, create_time
         FROM express_customer
         WHERE 1 = 1
         <if test="expressId != null and expressId != ''">
@@ -136,7 +139,7 @@
     </select>
 
     <select id="query4Agent" parameterType="java.util.Map" resultMap="express4AgentVo">
-        SELECT express_id, order_item_id, express_no, sender_name, sender_phone, sender_address, receiver_name,
+        SELECT express_id, order_item_id, express_no, sender_name, sender_phone, sender_address, description, receiver_name,
         receiver_phone, receiver_address, goods_name, block_flag, create_time
         FROM express_agent
         WHERE 1 = 1
@@ -152,7 +155,7 @@
     </select>
 
     <select id="query4Customer" parameterType="java.util.Map" resultMap="express4CustomerVo">
-        SELECT express_id, customer_order_id, express_no, sender_name, sender_phone, sender_address, receiver_name,
+        SELECT express_id, customer_order_id, express_no, sender_name, sender_phone, sender_address, description, receiver_name,
         receiver_phone, receiver_address, goods_name, block_flag, create_time
         FROM express_customer
         WHERE 1 = 1
