@@ -947,7 +947,10 @@ public class AgentController {
             String address = form.getAddress()[i];
             int goodsQuantity = Integer.parseInt(form.getGoodsQuantity()[i]);//商品数量
             double orderItemPrice = 0;//OrderItem总价
-            String description = form.getDescription()[i];
+            String description = "";
+            if (!StringUtils.isEmpty(form.getDescription()) && form.getDescription().length >= i + 1) {
+                description = form.getDescription()[i];
+            }
             Map<String, Object> goodsCondition = new HashMap<>();//查询商品价格
             goodsCondition.put("goodsId", goodsId);
             ResultData goodsData = commodityService.fetchGoods4Agent(goodsCondition);
