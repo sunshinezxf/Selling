@@ -28,5 +28,6 @@
         <mapper resource="selling/sunshine/mapper/credit.xml"/>
         <mapper resource="selling/sunshine/mapper/withdraw.xml"/>
         <mapper resource="selling/sunshine/mapper/sum.xml"/>
+        <mapper resource="selling/sunshine/mapper/charge.xml"/>
     </mappers>
 </configuration>
