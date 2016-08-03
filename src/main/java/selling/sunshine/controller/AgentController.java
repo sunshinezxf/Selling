@@ -602,7 +602,7 @@ public class AgentController {
                 }
             }
             ResultData createResponse = null;
-            if (form.getAgentId() != null && !form.getAgentId().equals("")) {
+            if (!StringUtils.isEmpty(form.getAgentId())) {
                 agent.setAgentId(form.getAgentId());
                 agent.setBlockFlag(false);
                 agent.setPassword(Encryption.md5(agent.getPassword()));
