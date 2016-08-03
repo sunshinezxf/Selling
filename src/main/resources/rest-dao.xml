@@ -77,4 +77,8 @@
     <bean id="billDao" class="selling.sunshine.dao.impl.BillDaoImpl">
         <property name="sqlSession" ref="sqlSession"></property>
     </bean>
+
+    <bean id="chargeDao" class="selling.sunshine.dao.impl.ChargeDaoImpl">
+        <property name="sqlSession" ref="sqlSession"></property>
+    </bean>
 </beans>

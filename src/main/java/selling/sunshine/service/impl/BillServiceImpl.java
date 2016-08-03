@@ -216,6 +216,13 @@ public class BillServiceImpl implements BillService {
         try {
             Charge charge = Charge.create(params);
             result.setData(charge);
+            Thread thread = new Thread() {
+                @Override
+                public void run() {
+                    super.run();
+                }
+            };
+            thread.start();
         } catch (Exception e) {
             logger.error(e.getMessage());
             result.setResponseCode(ResponseCode.RESPONSE_ERROR);

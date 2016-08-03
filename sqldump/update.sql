@@ -136,6 +136,23 @@ ADD COLUMN `description` VARCHAR(100) NULL AFTER `goods_name`;
 ALTER TABLE `selling`.`express_agent`
 ADD COLUMN `description` VARCHAR(100) NULL AFTER `goods_name`;
 
+-- -----------------------------------------------------
+-- Table `selling`.`charge`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `selling`.`charge` (
+  `charge_id` VARCHAR(45) NOT NULL,
+  `order_no` VARCHAR(20) NOT NULL,
+  `block_flag` TINYINT(1) NOT NULL DEFAULT '0',
+  `create_time` DATETIME NOT NULL,
+  PRIMARY KEY (`charge_id`),
+  INDEX `fk_charge_customer_order_bill1_idx` (`order_no` ASC),
+  CONSTRAINT `fk_charge_customer_order_bill1`
+  FOREIGN KEY (`order_no`)
+  REFERENCES `selling`.`customer_order_bill` (`bill_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+  ENGINE = InnoDB
+  DEFAULT CHARACTER SET = utf8;
 
 
 
