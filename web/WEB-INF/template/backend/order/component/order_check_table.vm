@@ -254,13 +254,8 @@
                                 },
                                 {
                                     title: "操作", "mRender": function (data, type, full) {
-<<<<<<< Updated upstream
-                                    var operation = "";
-                                    var detail_button = " <button type='button' id='" + full.orderId + "' class='btn btn-success' onclick=detail(this) data-toggle='modal' data-target='#order_item_modal'>详情</button> ";
-=======
                                     var  operation="";
                                     var detail_button = " <button type='button' id='" + full.orderId + "' class='btn btn-success' onclick=detail(this) data-toggle='modal' data-target='#customer_order_item_modal'>详情</button> ";
->>>>>>> Stashed changes
                                     operation += detail_button;
                                     operation += "<button type='button' class='btn btn-success' id='" + full.orderId + "' onclick=expressCustomerOrder(this)>发货</button>";
                                     return operation;
@@ -448,21 +443,12 @@
                         },
                         {
                             title: "操作", "mRender": function (data, type, full) {
-<<<<<<< Updated upstream
                             var operation = "";
-                            var detail_button = " <button type='button' id='" + full.orderId + "' class='btn btn-success' onclick=detail(this) data-toggle='modal' data-target='#order_item_modal'>详情</button> ";
+                            var detail_button = " <button type='button' id='" + full.orderId + "' class='btn btn-success' onclick=detail(this) data-toggle='modal' data-target='#customer_order_item_modal'>详情</button> ";
                             operation += detail_button;
                             operation += "<button type='button' class='btn btn-success' id='" + full.orderId + "' onclick=expressCustomerOrder(this)>发货</button>";
                             return operation;
                         }
-=======
-                                    var  operation="";
-                                    var detail_button = " <button type='button' id='" + full.orderId + "' class='btn btn-success' onclick=detail(this) data-toggle='modal' data-target='#customer_order_item_modal'>详情</button> ";
-                                    operation += detail_button;
-                                    operation += "<button type='button' class='btn btn-success' id='" + full.orderId + "' onclick=expressCustomerOrder(this)>发货</button>";
-                                    return operation;
-                            }
->>>>>>> Stashed changes
                         }
                     ],
                     "language": {
@@ -498,7 +484,6 @@
                     f.removeChild(childs[i]);
                 }
 
-<<<<<<< Updated upstream
                 var node = "<tr><th>客户</th><th>产品</th><th>数量</th><th>价格</th><th>备注</th></tr>";
                 for (var i = 0; i < result.data.order.orderItems.length; i++) {
                     var orderItem = result.data.order.orderItems[i];
@@ -518,11 +503,11 @@
             $.post("${path.concat('/order/customerOrder/')}" + obj.id, function (result) {
                 var customerorder = result.data;
                 if (customerorder.agent == null) {
-                    document.getElementById("model_p").innerHTML = "无代理商"
+                    document.getElementById("customer_model_p").innerHTML = "无代理商"
                 } else {
-                    document.getElementById("model_p").innerHTML = "代理商：" + customerorder.agent.name;
+                    document.getElementById("customer_model_p").innerHTML = "代理商：" + customerorder.agent.name;
                 }
-                var f = document.getElementById("model_table");
+                var f = document.getElementById("customer_model_table");
                 var childs = f.childNodes;
                 for (var i = childs.length - 1; i >= 0; i--) {
                     f.removeChild(childs[i]);
@@ -530,49 +515,11 @@
 
                 var node = "<tr><th>客户</th><th>产品</th><th>数量</th><th>价格</th></tr>";
                 node += "<tr><td>" + customerorder.receiverName + "</td><td>" + customerorder.goods.name + "</td><td>" + customerorder.quantity + "</td><td>" + customerorder.totalPrice + "</td></tr>";
-                $("#model_table").append(node);
-                document.getElementById("model_total").style.display = "none";
-                document.getElementById("model_quantity").style.display = "none";
+                $("#customer_model_table").append(node);
+                document.getElementById("customer_model_total").style.display = "none";
+                document.getElementById("customer_model_quantity").style.display = "none";
             });
         }
-=======
-            var node = "<tr><th>客户</th><th>产品</th><th>数量</th><th>价格</th></tr>";
-            for (var i = 0; i < result.data.order.orderItems.length; i++) {
-                var orderItem = result.data.order.orderItems[i];
-                node += "<tr><td>" + orderItem.customer.name + "</td><td>" + orderItem.goods.name + "</td><td>" + orderItem.goodsQuantity + "</td><td>" + orderItem.orderItemPrice + "</td></tr>";
-            }
-            $("#model_table").append(node);
-            document.getElementById("model_total").innerHTML = "总计:&nbsp;" + result.data.totalPrices + "元";
-            var node1 = "";
-            for (var key in result.data.goods_quantity_Map) {
-                node1 += "商品:&nbsp;" + key + "&nbsp;&nbsp;&nbsp;&nbsp;总共:&nbsp;" + result.data.goods_quantity_Map[key] + "件<br>"
-            }
-            document.getElementById("model_quantity").innerHTML = node1;
-            document.getElementById("model_total").style.display="";
-            document.getElementById("model_quantity").style.display="";
-        });
-       }else{
-           $.post("${path.concat('/order/customerOrder/')}" + obj.id, function (result) {
-               var customerorder=result.data;
-               if(customerorder.agent==null){
-                  document.getElementById("customer_model_p").innerHTML = "无代理商"
-               }else{
-                  document.getElementById("customer_model_p").innerHTML = "代理商："+customerorder.agent.name;
-               }  
-               var f = document.getElementById("customer_model_table");
-               var childs = f.childNodes;
-               for (var i = childs.length - 1; i >= 0; i--) {
-                  f.removeChild(childs[i]);
-               }
-
-               var node = "<tr><th>客户</th><th>产品</th><th>数量</th><th>价格</th></tr>";          
-               node += "<tr><td>" + customerorder.receiverName + "</td><td>" + customerorder.goods.name + "</td><td>" +customerorder.quantity + "</td><td>" + customerorder.totalPrice + "</td></tr>";
-               $("#customer_model_table").append(node);
-               document.getElementById("customer_model_total").style.display="none";
-               document.getElementById("customer_model_quantity").style.display="none";
-           });
-       }
->>>>>>> Stashed changes
 
     }
 
