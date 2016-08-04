@@ -133,6 +133,9 @@
                 /order/customerpay = anon
                 /order/viewexpress/** = anon
 
+                /reimburse/inform = anon
+                /reimburse/apply = roles["admin, express"]
+
                 /statistic/** = roles["admin, express"]
 
                 /wechat = anon
