@@ -25,8 +25,8 @@
                 <button type="button" id="cancel_order" class="btn btn-default detail">取消订单</button>
                 <button type="button" class="btn btn-primary detail" data-dismiss="modal">确认</button>
                 <button type="button" class="btn btn-default cancel" data-dismiss="modal">否，不再取消</button>
-                <button type="button" id="reimburse_btn" class="btn btn-primary cancel" data-dismiss="modal">是，发起退款</button>
-                <button type="button" class="btn btn-primary reimburse" data-dismiss="modal">确认</button>
+                <button type="button" id="reimburse_btn" class="btn btn-primary cancel">是，发起退款</button>
+                <button type="button" id="confirm" class="btn btn-primary reimburse" data-dismiss="modal">确认</button>
             </div>
         </div>
     </div>
@@ -63,7 +63,6 @@
     });
     
     $("#reimburse_btn").click(function(){
-        $(".cancel").hide();
         var orderId = $("#customer_order_id").text();;
         //alert(orderId);
         if (orderId) {
@@ -72,10 +71,12 @@
                 orderId: orderId,
             };
             $.post(url, param, function (result) {
-                if (result.responseCode != "RESPONSE_OK") {
+                if (result.responseCode == "RESPONSE_OK") {
+                    $(".cancel").hide();
                     $(".reimburse").show();
                     $(".reimburse_success").show();
                 } else {
+                    $(".cancel").hide();
                     $(".reimburse").show();
                     $(".reimburse_failed").show();
                 }
@@ -84,6 +85,10 @@
         } else {
             //无订单号
         }
+    });
+    
+    $("#confirm").click(function(){
+        window.location.reload();
     });
     
     $("#customer_order_item_modal").on("show.bs.modal", function () {
