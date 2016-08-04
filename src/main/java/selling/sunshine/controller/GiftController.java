@@ -5,11 +5,13 @@ import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+import selling.sunshine.form.gift.ApplyForm;
 import selling.sunshine.model.Admin;
 import selling.sunshine.model.BackOperationLog;
 import selling.sunshine.model.User;
@@ -24,6 +26,7 @@ import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -104,6 +107,16 @@ public class GiftController {
             view.addObject("goods", list);
         }
         view.setViewName("/agent/gift/apply");
+        return view;
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "apply")
+    public ModelAndView apply(@Valid ApplyForm form, BindingResult result) {
+        ModelAndView view = new ModelAndView();
+        if (result.hasErrors()) {
+            view.setViewName("/agent/gift/apply");
+            return view;
+        }
         return view;
     }
 }
