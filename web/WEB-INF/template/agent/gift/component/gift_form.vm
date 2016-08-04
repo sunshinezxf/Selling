@@ -1,56 +1,64 @@
-<div class="panel" id="gift_apply_panel">
-    <div class="hd">
-        <h1 class="page_title">赠送申请</h1>
-        <p class="page_desc">代理商:${agent.getName()}&nbsp;欢迎您!</p>
-    </div>
-    <div class="bd">
-        <div class="weui_cells">
-            <form id="apply_form">
-                <div class="weui_cell">
-                    <div class="weui_cell_hd">
-                        <label class="weui_label">赠送产品</label>
-                    </div>
-                    <div class="weui_cell_bd weui_cell_primary">
-                        <select id="goods_type">
-                            <option value="" selected="selected">请选择</option>
-                            #foreach($item in ${goods})
-                            <option value="${item.goodsId}">${item.name}</option>
-                            #end
-                        </select>
-                    </div>
-                    <div class="weui_cell_hd">
-                        <label class="weui_label">意向购买人数</label>
-                    </div>
-                    <div class="weui_cell_bd weui_cell_primary">
-                        <input id="customer_quantity" name="cus_quantity" class="weui_input" type="tel" placeholder="请填写意向购买人数"
-                               autocomplete="off"/>
-                    </div>
-                    <div class="weui_cell_hd">
-                        <label class="weui_label">申请盒数</label>
-                    </div>
-                    <div class="weui_cell_bd weui_cell_primary">
-                        <input id="goods_quantity" name="go_quantity" class="weui_input" type="tel" placeholder="请填写申请盒数"
-                               autocomplete="off"/>
-                    </div>
-                    <div class="weui_cell_hd">
-                        <label class="weui_label">上月购买数量</label>
-                    </div>
-                    <div class="weui_cell_bd weui_cell_primary">
-                        <input id="last_month_quantity" name="lastmon_quantity" class="weui_input" type="tel" value="1" readonly/>
-                    </div>
-                    <div class="weui_cell_hd">
-                        <label class="weui_label">累计购买数量</label>
-                    </div>
-                    <div class="weui_cell_bd weui_cell_primary">
-                        <input id="total_quantity" name="to_quantity" class="weui_input" type="tel" value="2" readonly/>
-                    </div>
-                </div>
-            </form>
+<div class="weui_cells">
+    <form id="apply_form">
+        <div class="weui_cell">
+            <div class="weui_cell_hd">
+                <label class="weui_label">代理商</label>
+            </div>
+            <div class="weui_cell_ft weui_cell_primary">
+                <input id="agent_name" name="agent_name" class="weui_input" type="text" value="${name}" readonly/>
+            </div>
         </div>
-        <div id="next_div" class="weui_btn_area">
-            <button type="button" class="weui_btn weui_btn_disabled weui_btn_default" id="apply_btn" disabled="disabled">
+        <div class="weui_cell">
+            <div class="weui_cell_hd">
+                <label class="weui_label">赠送产品</label>
+            </div>
+            <div class="weui_cell_ft weui_cell_primary">
+                <select id="goods_id">
+                    <option value="" selected="selected">请选择</option>
+                    #foreach($item in ${goods})
+                    <option value="${item.goodsId}">${item.name}</option>
+                    #end
+                </select>
+            </div>
+        </div>
+        <div class="weui_cell">
+            <div class="weui_cell_hd">
+                <label class="weui_label">意向人数</label>
+            </div>
+            <div class="weui_cell_ft weui_cell_primary">
+                <input id="customer_quantity" name="customer_quantity" class="weui_input" type="tel" placeholder="请填写意向购买人数"
+                           autocomplete="off"/>
+            </div>
+        </div>
+        <div class="weui_cell">
+            <div class="weui_cell_hd">
+                <label class="weui_label">申请盒数</label>
+            </div>
+            <div class="weui_cell_ft weui_cell_primary">
+                <input id="goods_quantity" name="goods_quantity" class="weui_input" type="tel" placeholder="请填写申请盒数"
+                           autocomplete="off"/>
+            </div>
+        </div>
+        <div class="weui_cell">
+            <div class="weui_cell_hd">
+                <label class="weui_label">上月销量</label>
+            </div>
+            <div class="weui_cell_ft weui_cell_primary">
+                <input id="last_month_sales" name="last_month_sales" class="weui_input" type="tel" value="1" readonly/>
+            </div>
+        </div>
+        <div class="weui_cell">
+            <div class="weui_cell_hd">
+                <label class="weui_label">累计销量</label>
+            </div>
+            <div class="weui_cell_ft weui_cell_primary">
+                <input id="total_sales" name="total_sales" class="weui_input" type="tel" value="2" readonly/>
+            </div>
+        </div>
+    </form>
+</div>
+<div id="next_div" class="weui_btn_area">
+    <button type="button" class="weui_btn weui_btn_disabled weui_btn_default" id="apply_btn" disabled="disabled">
             提交赠送申请
-            </button>
-        </div>
-    </div>
+    </button>
 </div>
