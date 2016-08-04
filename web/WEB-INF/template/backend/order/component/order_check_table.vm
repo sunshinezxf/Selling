@@ -514,6 +514,7 @@
             });
         } else {
             $.post("${path.concat('/order/customerOrder/')}" + obj.id, function (result) {
+                $("#customer_order_id").text(obj.id);
                 var customerorder = result.data;
                 if (customerorder.agent == null) {
                     document.getElementById("customer_model_p").innerHTML = "无代理商"

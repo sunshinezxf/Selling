@@ -3,19 +3,30 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">x</button>
-                <h4 class="modal-title">订单详情</h4>
+                <h4 class="modal-title detail">订单详情</h4>
+                <h4 class="modal-title cancel">订单取消</h4>
+                <h4 class="modal-title reimburse">申请退款</h4>
+                <p id="customer_order_id"></p>
             </div>
             <div class="modal-body">
-                <p class="text-info" id="customer_model_p"></p>
-                <table class="table table-striped" id="customer_model_table">
+                <p class="text-info detail" id="customer_model_p"></p>
+                <table class="table table-striped detail" id="customer_model_table">
                       
                 </table>
-                <p class="text-info" id="customer_model_total" ></p>
-                <p class="text-info" id="customer_model_quantity"></p>
+                <p class="text-info detail" id="customer_model_total" ></p>
+                <p class="text-info detail" id="customer_model_quantity"></p>
+                
+                <h4 class="text-info cancel">是否确定取消该订单？</h4>
+                <p class="text-danger cancel">提醒：取消订单后，款项将按原路退还给顾客，订单无法再恢复</p>
+                <h4 class="text-info reimburse_success">退款申请已成功提交！</h4>
+                <h4 class="text-info reimburse_failed">退款申请提交失败！</h4>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">取消订单</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal">确认</button>
+                <button type="button" id="cancel_order" class="btn btn-default detail">取消订单</button>
+                <button type="button" class="btn btn-primary detail" data-dismiss="modal">确认</button>
+                <button type="button" class="btn btn-default cancel" data-dismiss="modal">否，不再取消</button>
+                <button type="button" id="reimburse_btn" class="btn btn-primary cancel" data-dismiss="modal">是，发起退款</button>
+                <button type="button" class="btn btn-primary reimburse" data-dismiss="modal">确认</button>
             </div>
         </div>
     </div>
@@ -26,6 +37,8 @@
             show: false,
             keyboard: true
         });
+        
+        $("#customer_order_id").hide();
     });
     
     function expressDetail(obj){
@@ -43,5 +56,49 @@
          
          });
     }
+    
+    $("#cancel_order").click(function(){
+        $(".detail").hide();
+        $(".cancel").show();
+    });
+    
+    $("#reimburse_btn").click(function(){
+        $(".cancel").hide();
+        var orderId = $("#customer_order_id").text();;
+        //alert(orderId);
+        if (orderId) {
+            var url = '${path.concat('/reimburse/apply')}';
+            var param = {
+                orderId: orderId,
+            };
+            $.post(url, param, function (result) {
+                if (result.responseCode != "RESPONSE_OK") {
+                    $(".reimburse").show();
+                    $(".reimburse_success").show();
+                } else {
+                    $(".reimburse").show();
+                    $(".reimburse_failed").show();
+                }
+        
+            });
+        } else {
+            //无订单号
+        }
+    });
+    
+    $("#customer_order_item_modal").on("show.bs.modal", function () {
+        $(".cancel").hide();
+        $(".reimburse").hide();
+        $(".reimburse_success").hide();
+        $(".reimburse_failed").hide();
+    });
+
+    $("#customer_order_item_modal").on("hidden.bs.modal", function () {
+        $(".detail").show();
+        $(".cancel").hide();
+        $(".reimburse").hide();
+        $(".reimburse_success").hide();
+        $(".reimburse_failed").hide();
+    });
  
 </script>
