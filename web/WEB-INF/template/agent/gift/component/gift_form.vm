@@ -13,7 +13,7 @@
                 <label class="weui_label">赠送产品</label>
             </div>
             <div class="weui_cell_ft weui_cell_primary">
-                <select id="goods_id">
+                <select id="goods_id" class="goods_type">
                     <option value="" selected="selected">请选择</option>
                     #foreach($item in ${goods})
                     <option value="${item.goodsId}">${item.name}</option>
@@ -57,8 +57,133 @@
         </div>
     </form>
 </div>
-<div id="next_div" class="weui_btn_area">
+<div id="apply_div" class="weui_btn_area">
     <button type="button" class="weui_btn weui_btn_disabled weui_btn_default" id="apply_btn" disabled="disabled">
             提交赠送申请
     </button>
 </div>
+
+<div class="weui_dialog_alert" id="dialog" style="display: none;">
+    <div class="weui_mask"></div>
+    <div class="weui_dialog">
+        <div class="weui_dialog_hd"><strong class="weui_dialog_title">消息</strong></div>
+        <div class="weui_dialog_bd"></div>
+        <div class="weui_dialog_ft">
+            <a href="javascript:;" class="weui_btn_dialog primary">确定</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#goods_id").change(function () {
+            var goodsId=$("#goods_id").val();
+            if(not_null(goodsId)){
+                var url="${path.concat('//agent/"+goodsId+"/volume')}";
+                $.post(url,function(result){
+                    
+                });
+            }
+            if (validate()) {
+                active();
+            } else {
+                inactive();
+            }
+        });
+        
+        $('#customer_quantity').on('input propertychange', function () {
+            if (validate()) {
+                active();
+            } else {
+                inactive();
+            }
+        });
+        
+        $('#goods_quantity').on('input propertychange', function () {
+            if (validate()) {
+                active();
+            } else {
+                inactive();
+            }
+        });
+        
+        $("#customer_quantity").blur(function () {
+            if (not_null($("#customer_quantity").val())) {
+                if (isNaN($("#customer_quantity").val())) {
+                    $("#dialog").find(".weui_dialog_bd").html("意向购买人数请填写数字！");
+                    $("#dialog").fadeIn();
+                    $("#customer_quantity").val("");
+                    inactive();
+                }
+            }
+        });
+        
+        $("#goods_quantity").blur(function () {
+            if (not_null($("#goods_quantity").val())) {
+                if (isNaN($("#goods_quantity").val())) {
+                    $("#dialog").find(".weui_dialog_bd").html("申请盒数请填写数字！");
+                    $("#dialog").fadeIn();
+                    $("#goods_quantity").val("");
+                    inactive();
+                }
+            }
+        });
+    });
+    
+    $("#apply_btn").click(function(){
+        if (isNaN($("#customer_quantity").val())) {
+            $("#dialog").find(".weui_dialog_bd").html("意向购买人数请填写数字！");
+            $("#dialog").fadeIn();
+            $("#customer_quantity").val("");
+            inactive();
+        }else{
+            if (isNaN($("#goods_quantity").val())) {
+                $("#dialog").find(".weui_dialog_bd").html("申请盒数请填写数字！");
+                $("#dialog").fadeIn();
+                $("#goods_quantity").val("");
+                inactive();
+            }else{
+                //提交表单
+                $("#apply_form").attr("action", "${path.concat('/')}");
+                $("#apply_form").attr("method", "post");
+                $("#apply_form").submit();
+            }
+        }
+    });
+
+    function validate(){
+        var goodsId=$("#goods_id").val();
+        var customerQuantity=$("#customer_quantity").val();
+        var goodsQuantity=$("#goods_quantity").val();
+        if(not_null(goodsId)&&not_null(customerQuantity)&&not_null(goodsQuantity)){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    
+    function active(){
+        $("#apply_btn").removeAttr("disabled");
+        $("#apply_btn").removeClass("weui_btn_disabled");
+        $("#apply_btn").removeClass("weui_btn_default");
+        $("#apply_btn").addClass("weui_btn_primary");
+    }
+    
+    function inactive(){
+        $("#apply_btn").attr("disabled", "disabled");
+        $("#apply_btn").removeClass("weui_btn_primary");
+        $("#apply_btn").addClass("weui_btn_disabled");
+        $("#apply_btn").addClass("weui_btn_default");
+    }
+    
+    function not_null(item) {
+        if (item == null || item == "" || item.length <= 0) {
+            return false;
+        }
+        return true;
+    }
+    
+    $("#dialog").find(".weui_btn_dialog.primary").click(function () {
+        $("#dialog").hide();
+    });
+</script>

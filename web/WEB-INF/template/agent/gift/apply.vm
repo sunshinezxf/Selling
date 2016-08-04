@@ -12,7 +12,7 @@
         <div class="hd">
             <h1 class="page_title">赠送申请</h1>
         </div>
-        <div class="hd">
+        <div class="bd">
             #parse("/agent/gift/component/gift_form.vm")
         </div>
         #parse("/agent/component/navigate.vm")

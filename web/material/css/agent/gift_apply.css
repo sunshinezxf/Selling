@@ -1,3 +1,22 @@
+.hd{
+	padding-bottom:0;
+}
+
 .weui_input{
 	text-align:right;
+	color:#000040;
+}
+
+.goods_type{
+	color:#000040;
+	height:2em;
+	padding-left:0.5em;
+	padding-right:1.5em;
+	font-size:0.9em;
+    border: solid 0.0625em #c0c0c0;
+    appearance:none;
+    -moz-appearance:none;
+    -webkit-appearance:none;
+    background: url("../../images/arrow.png") no-repeat scroll right center transparent;
+    select::-ms-expand { display: none; }
 }
