@@ -82,7 +82,6 @@ public class GiftController {
         User user = (User) subject.getPrincipal();
         if (user == null) {
             resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
-            ;
             return resultData;
         }
         Admin admin = user.getAdmin();
@@ -105,6 +104,14 @@ public class GiftController {
         if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
             List<Goods4Agent> list = (List<Goods4Agent>) response.getData();
             view.addObject("goods", list);
+        }
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        if (user != null && user.getAgent() != null) {
+            view.addObject("name", user.getAgent().getName());
+        } else {
+            view.setViewName("redirect:/agent/login");
+            return view;
         }
         view.setViewName("/agent/gift/apply");
         return view;
