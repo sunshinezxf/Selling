@@ -3,6 +3,7 @@ package selling.sunshine.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.pingplusplus.model.Event;
 import com.pingplusplus.model.Webhooks;
+import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,14 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import selling.sunshine.model.Charge;
-import selling.sunshine.model.CustomerOrder;
-import selling.sunshine.model.CustomerOrderBill;
-import selling.sunshine.model.OrderItemStatus;
-import selling.sunshine.service.BillService;
-import selling.sunshine.service.ChargeService;
-import selling.sunshine.service.OrderService;
-import selling.sunshine.service.ToolService;
+import selling.sunshine.model.*;
+import selling.sunshine.service.*;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
@@ -48,6 +43,9 @@ public class ReimburseController {
 
     @Autowired
     private ToolService toolService;
+
+    @Autowired
+    private LogService logService;
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/inform")
@@ -83,8 +81,14 @@ public class ReimburseController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/apply")
-    public ResultData reimburse(String orderId) {
+    public ResultData reimburse(HttpServletRequest request, String orderId) {
         ResultData result = new ResultData();
+        User user = (User) SecurityUtils.getSubject();
+        Admin admin = user.getAdmin();
+        BackOperationLog backOperationLog = new BackOperationLog(
+                admin.getUsername(), toolService.getIP(request), "管理员" + admin.getUsername() + "发起对客户订单:" + orderId + "退款处理");
+        logService.createbackOperationLog(backOperationLog);
+
         Map<String, Object> condition = new HashMap<>();
         condition.put("orderId", orderId);
         condition.put("status", 1);
