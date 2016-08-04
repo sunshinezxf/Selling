@@ -1,67 +1,71 @@
 <form id="place_order_form">
-<div id="place_order_panel">
-    <div class="order_content">
-        <div class="panel">
-           <div class="hd">
-           		#if(${operation} == "GIFT")
-           		<h1 class="page_title">群员赠送</h1>
-           		#else
-                <h1 class="page_title">群员订单</h1>
-                #end
-                #if(${hasConfig})
-					 #if(!${isNextMonth})
-					 	#set($payDay = $shipDay - 1)
-					 	<p class="page_desc">本月${payDay}号之前下单，将在${shipDay}号发货</p>
-					 #else
-					 	#if($shipDay == 1)
-					 		<p class="page_desc">月底前下单，将在下月1号发货</p>
-					 	#else
-					 		#set($payDay = $shipDay - 1)
-					 		<p class="page_desc">下月${payDay}号之前下单,将在下月${shipDay}号发货</p>
-					 	#end
-					 #end
-                 #end
-            </div>
-            <div class="bd">
-                <div class="bd spacing" >
-                   <a id="add_order_btn" class="weui_btn weui_btn_plain_primary">添加订货单</a>
+    <div id="place_order_panel">
+        <div class="order_content">
+            <div class="panel">
+                <div class="hd">
+                    #if(${operation} == "GIFT")
+                        <h1 class="page_title">群员赠送</h1>
+                    #else
+                        <h1 class="page_title">群员订单</h1>
+                    #end
+                    #if(${hasConfig})
+                        #if(!${isNextMonth})
+                            #set($payDay = $shipDay - 1)
+                            <p class="page_desc">本月${payDay}号之前下单，将在${shipDay}号发货</p>
+                        #else
+                            #if($shipDay == 1)
+                                <p class="page_desc">月底前下单，将在下月1号发货</p>
+                            #else
+                                #set($payDay = $shipDay - 1)
+                                <p class="page_desc">下月${payDay}号之前下单,将在下月${shipDay}号发货</p>
+                            #end
+                        #end
+                    #end
                 </div>
-                <div class="weui_panel">
-                    <div class="list-cell" id="order_item_list">
-                       <!-- 改成了动态添加 -->
+                <div class="bd">
+                    <div class="bd spacing">
+                        <a id="add_order_btn" class="weui_btn weui_btn_plain_primary">添加订货单</a>
+                        <a id="view_sum_btn" class="weui_btn weui_btn_plain_primary"
+                           href="${path.concat('/agent/order/overview')}">查看订单统计</a>
+                    </div>
+                    <div class="weui_panel">
+                        <div class="list-cell" id="order_item_list">
+                            <!-- 改成了动态添加 -->
+                        </div>
+                    </div>
+                    <div class="weui_btn_area">
                     </div>
                 </div>
-                <div class="weui_btn_area">
+            </div>
+        </div>
+        <div class="order_summary" id="order_summary" style="display:none">
+            <div class="weui_panel">
+                <div class="weui_cell">
+                    <div class="weui_cell_bd weui_cell_primary">
+                        <div id="total_goods">
+                        </div>
+                        #if(${operation} != "GIFT")
+                            <p id="total_goods_price">共计:0元<p>
+                        #end
+                    </div>
+                    #if(${operation} == "GIFT")
+                        <div class="weui_cell_ft">
+                            <a class="weui_btn weui_btn_mini weui_btn_primary" id="gift_order_btn">&nbsp&nbsp&nbsp赠送&nbsp&nbsp&nbsp</a>
+                        </div>
+                    #else
+                        <div class="weui_cell_ft">
+                            <a class="weui_btn weui_btn_mini weui_btn_plain_primary" style="display:none;"
+                               id="save_order_btn">&nbsp&nbsp&nbsp保存&nbsp&nbsp&nbsp</a>
+                        </div>
+                        &nbsp;
+                        <div class="weui_cell_ft">
+                            <a class="weui_btn weui_btn_mini weui_btn_primary" id="place_order_btn">&nbsp&nbsp&nbsp下单&nbsp&nbsp&nbsp</a>
+                        </div>
+                    #end
                 </div>
             </div>
         </div>
     </div>
-    <div class="order_summary" id="order_summary" style="display:none">
-        <div class="weui_panel">
-            <div class="weui_cell">
-            	<div class="weui_cell_bd weui_cell_primary">
-            		<div id="total_goods">
-            		</div>
-            		#if(${operation} != "GIFT")
-            		<p id="total_goods_price" >共计:0元<p>
-            		#end
-            	</div>
-            	#if(${operation} == "GIFT")
-            	<div class="weui_cell_ft">
-            		<a class="weui_btn weui_btn_mini weui_btn_primary" id="gift_order_btn">&nbsp&nbsp&nbsp赠送&nbsp&nbsp&nbsp</a>
-            	</div>
-            	#else
-            	<div class="weui_cell_ft">
-            		<a class="weui_btn weui_btn_mini weui_btn_plain_primary" style="display:none;" id="save_order_btn">&nbsp&nbsp&nbsp保存&nbsp&nbsp&nbsp</a>
-            	</div>&nbsp;
-            	<div class="weui_cell_ft">
-            		<a class="weui_btn weui_btn_mini weui_btn_primary" id="place_order_btn">&nbsp&nbsp&nbsp下单&nbsp&nbsp&nbsp</a>
-            	</div>
-            	#end
-            </div>
-        </div>
-    </div>
-</div>
 </form>
 <div class="weui_dialog_confirm" id="address_dialog" style="display: none;">
     <div class="weui_mask"></div>
@@ -70,7 +74,7 @@
         <div class="weui_dialog_bd"></div>
         <div class="weui_dialog_ft">
             <a href="javascript:;" class="weui_btn_dialog default">修改</a>
-        	<a href="javascript:;" class="weui_btn_dialog primary">确定</a>
+            <a href="javascript:;" class="weui_btn_dialog primary">确定</a>
         </div>
     </div>
 </div>
@@ -83,7 +87,7 @@
             <a href="javascript:;" class="weui_btn_dialog default">离开</a>
             <a href="javascript:;" class="weui_btn_dialog primary">保存</a>
         </div>
-	</div>
+    </div>
 </div>
 #if(${operation} == "GIFT")
 <div class="weui_dialog_confirm" id="gift_dialog" style="display:none;">
@@ -95,207 +99,211 @@
             <a href="javascript:;" class="weui_btn_dialog default">返回</a>
             <a href="javascript:;" class="weui_btn_dialog primary">赠送</a>
         </div>
-	</div>
+    </div>
 </div>
 #end
 #parse("/agent/order/add_order_item.vm")
 <script>
-	//立了一个flag，判断是新增还是修改订单
-	isAdd = true;
+    //立了一个flag，判断是新增还是修改订单
+    isAdd = true;
     $("#add_order_item").hide();
-    
+
     $("#add_order_btn").click(function () {
-    	isAdd = true;
-    	//判断是否选择过商品，如果没有就给个默认的
-    	if(typeof goods_id == "undefined"){
-    		var goods_dom = $("#goods_option").children(".weui_cells").children(".goods").eq(0);
-    		if(goods_dom != null){
-    			goods_id = goods_dom.attr("id");
-    			goods_name = goods_dom.find(".weui_cell_bd").children("span").eq(0).html();
-	        	goods_price = goods_dom.find(".weui_cell_bd").children("span").eq(1).html();
-    			$("#goods").find(".weui_cell_bd").html("<p>" + goods_name + "</p>");
-	        	$("#price").html("单价：" + goods_price + "元");
-    		}
-    	}
-    	$.init_add_order_item();
+        if ($("#view_sum_btn").length > 0) {
+            alert(JSON.stringify($("#view_sum_btn")));
+            $("#view_sum_btn").remove();
+        }
+        isAdd = true;
+        //判断是否选择过商品，如果没有就给个默认的
+        if (typeof goods_id == "undefined") {
+            var goods_dom = $("#goods_option").children(".weui_cells").children(".goods").eq(0);
+            if (goods_dom != null) {
+                goods_id = goods_dom.attr("id");
+                goods_name = goods_dom.find(".weui_cell_bd").children("span").eq(0).html();
+                goods_price = goods_dom.find(".weui_cell_bd").children("span").eq(1).html();
+                $("#goods").find(".weui_cell_bd").html("<p>" + goods_name + "</p>");
+                $("#price").html("单价：" + goods_price + "元");
+            }
+        }
+        $.init_add_order_item();
         $("#add_order_item").fadeIn();
         $("#place_order_panel").hide();
     });
-    $("#place_order_btn").click(function(){
-    	if(!$.check_order()){
-    		return;
-    	}
-    	$("#place_order_form").attr("action", "${path.concat('/agent/order/place/submit')}");
-    	$("#place_order_form").attr("method","post");
-    	$("#place_order_form").submit();
+    $("#place_order_btn").click(function () {
+        if (!$.check_order()) {
+            return;
+        }
+        $("#place_order_form").attr("action", "${path.concat('/agent/order/place/submit')}");
+        $("#place_order_form").attr("method", "post");
+        $("#place_order_form").submit();
     });
 
-    $("#save_order_btn").click(function(){
-    	if(!$.check_order()){
-    		return;
-    	}
-    	$("#place_order_form").attr("action", "${path.concat('/agent/order/place/save')}");
-    	$("#place_order_form").attr("method","post");
-    	$("#place_order_form").submit();
+    $("#save_order_btn").click(function () {
+        if (!$.check_order()) {
+            return;
+        }
+        $("#place_order_form").attr("action", "${path.concat('/agent/order/place/save')}");
+        $("#place_order_form").attr("method", "post");
+        $("#place_order_form").submit();
     });
-    #if(${operation} == "GIFT")
-    $("#gift_order_btn").click(function(){
-    	if(!$.check_order()){
-    		return;
-    	}
-    	if(!$.check_gift()){
-    		$("#dialog").find(".weui_dialog_bd").html("商品超过赠送额度");
-    		$("#dialog").fadeIn();
-    		return;
-    	}
-    	var total_num = $.check_num();
-    	$("#gift_dialog").find(".weui_dialog_title").html("将赠出" + total_num + "件商品");
-    	$("#gift_dialog").show();
-    	
-    });
-    $("#gift_dialog").find(".weui_btn_dialog.primary").click(function(){
-    	$("#gift_dialog").find(".weui_btn_dialog.primary").unbind("click");
-    	$("#place_order_form").attr("action", "${path.concat('/agent/order/place/gift')}");
-    	$("#place_order_form").attr("method","post");
-    	$("#place_order_form").submit();
-    });
-    $("#gift_dialog").find(".weui_btn_dialog.default").click(function(){
-    	$("#gift_dialog").hide();
-	});
-	$.check_num = function(){
-		var order_item_list = $("#order_item_list").children();
-		var total_num = 0;
-		$.each(order_item_list, function(i, val){
-        	var quantity = $(val).children(".order_item_body").children().eq(3).find(".weui_cell_ft").text();
-        	total_num += parseInt(quantity);
+        #if(${operation} == "GIFT")
+        $("#gift_order_btn").click(function () {
+            if (!$.check_order()) {
+                return;
+            }
+            if (!$.check_gift()) {
+                $("#dialog").find(".weui_dialog_bd").html("商品超过赠送额度");
+                $("#dialog").fadeIn();
+                return;
+            }
+            var total_num = $.check_num();
+            $("#gift_dialog").find(".weui_dialog_title").html("将赠出" + total_num + "件商品");
+            $("#gift_dialog").show();
+
         });
-        return total_num;
-	}
-    $.check_gift = function(){
-    	var lessThan = false;
-    	var giftConfigs = eval('('+'${giftConfigs}'+')');
-    	var order_info_list = new Object();
-        var order_item_list = $("#order_item_list").children();
-        $.each(order_item_list, function(i, val){
-        	var name = $(val).children(".order_item_body").children().eq(2).find(".weui_cell_ft").text();
-        	var quantity = $(val).children(".order_item_body").children().eq(3).find(".weui_cell_ft").text();
-        	var id = $(val).children(".order_item_body").children().eq(7).val();
-        	lessThan = false;
-        	for(var i in giftConfigs){
-        		if(giftConfigs[i]['goods']['goodsId'] == id){
-        			lessThan = true;
-        			giftConfigs[i]['amount'] -= parseInt(quantity);
-        			if(giftConfigs[i]['amount'] < 0){
-        				lessThan = false;
-        				break;
-        			}
-        		}
-        	}
+        $("#gift_dialog").find(".weui_btn_dialog.primary").click(function () {
+            $("#gift_dialog").find(".weui_btn_dialog.primary").unbind("click");
+            $("#place_order_form").attr("action", "${path.concat('/agent/order/place/gift')}");
+            $("#place_order_form").attr("method", "post");
+            $("#place_order_form").submit();
         });
-        return lessThan;
+        $("#gift_dialog").find(".weui_btn_dialog.default").click(function () {
+            $("#gift_dialog").hide();
+        });
+        $.check_num = function () {
+            var order_item_list = $("#order_item_list").children();
+            var total_num = 0;
+            $.each(order_item_list, function (i, val) {
+                var quantity = $(val).children(".order_item_body").children().eq(3).find(".weui_cell_ft").text();
+                total_num += parseInt(quantity);
+            });
+            return total_num;
+        }
+        $.check_gift = function () {
+            var lessThan = false;
+            var giftConfigs = eval('(' + '${giftConfigs}' + ')');
+            var order_info_list = new Object();
+            var order_item_list = $("#order_item_list").children();
+            $.each(order_item_list, function (i, val) {
+                var name = $(val).children(".order_item_body").children().eq(2).find(".weui_cell_ft").text();
+                var quantity = $(val).children(".order_item_body").children().eq(3).find(".weui_cell_ft").text();
+                var id = $(val).children(".order_item_body").children().eq(7).val();
+                lessThan = false;
+                for (var i in giftConfigs) {
+                    if (giftConfigs[i]['goods']['goodsId'] == id) {
+                        lessThan = true;
+                        giftConfigs[i]['amount'] -= parseInt(quantity);
+                        if (giftConfigs[i]['amount'] < 0) {
+                            lessThan = false;
+                            break;
+                        }
+                    }
+                }
+            });
+            return lessThan;
+        }
+        #end
+    $.check_order = function () {
+        if ($("#order_item_list").children().size() == 0) {
+            $("#dialog").find(".weui_dialog_bd").html("还没有创建订单");
+            $("#dialog").fadeIn();
+            return false;
+        }
+        return true;
     }
-    #end
-    $.check_order = function(){
-    	if($("#order_item_list").children().size() == 0) {
-    		$("#dialog").find(".weui_dialog_bd").html("还没有创建订单");
-    		$("#dialog").fadeIn();
-    		return false;
-    	}
-    	return true;
-    }
-    
+
     //计算总价
-    $.calculate = function(){
-    	var order_info_list = new Object();
+    $.calculate = function () {
+        var order_info_list = new Object();
         var order_item_list = $("#order_item_list").children();
-        $.each(order_item_list, function(i, val){
-        	var name = $(val).children(".order_item_body").children().eq(2).find(".weui_cell_ft").text();
-        	var quantity = $(val).children(".order_item_body").children().eq(3).find(".weui_cell_ft").text();
-        	var price = $(val).children(".order_item_body").children().eq(9).val();
+        $.each(order_item_list, function (i, val) {
+            var name = $(val).children(".order_item_body").children().eq(2).find(".weui_cell_ft").text();
+            var quantity = $(val).children(".order_item_body").children().eq(3).find(".weui_cell_ft").text();
+            var price = $(val).children(".order_item_body").children().eq(9).val();
 
-        	if(order_info_list[name] == undefined) {
-        		order_info_list[name] = new Object();
-        		order_info_list[name]['quantity'] = parseInt(quantity);
-        		order_info_list[name]['order_item_price'] = parseFloat(price) * quantity ;
-        	} else {
-        		order_info_list[name]['quantity'] += parseInt(quantity);
-        		order_info_list[name]['order_item_price'] += parseFloat(price) * quantity;
-        	}
+            if (order_info_list[name] == undefined) {
+                order_info_list[name] = new Object();
+                order_info_list[name]['quantity'] = parseInt(quantity);
+                order_info_list[name]['order_item_price'] = parseFloat(price) * quantity;
+            } else {
+                order_info_list[name]['quantity'] += parseInt(quantity);
+                order_info_list[name]['order_item_price'] += parseFloat(price) * quantity;
+            }
         });
         $("#total_goods").empty();
         var total_price = 0;
-        for(var order_info in order_info_list) {
-        	total_price += order_info_list[order_info]['order_item_price'];
-        	$("#total_goods").prepend("<p class='weui_media_text'>" 
-        		+ order_info + ":" + order_info_list[order_info]['quantity'] +
- 				"件")
+        for (var order_info in order_info_list) {
+            total_price += order_info_list[order_info]['order_item_price'];
+            $("#total_goods").prepend("<p class='weui_media_text'>"
+                    + order_info + ":" + order_info_list[order_info]['quantity'] +
+                    "件")
         }
         #if(${operation} != "GIFT")
-        $("#total_goods_price").html("共计:" + total_price + "元");
+            $("#total_goods_price").html("共计:" + total_price + "元");
         #end
         //判断是否总价是0，决定显示保存和下单按钮与否
-        if(total_price == 0){
-        	$("#save_order_btn").hide();
-        	$("#order_summary").hide();
+        if (total_price == 0) {
+            $("#save_order_btn").hide();
+            $("#order_summary").hide();
         } else {
-        	$("#save_order_btn").fadeIn();
-        	$("#order_summary").fadeIn();
+            $("#save_order_btn").fadeIn();
+            $("#order_summary").fadeIn();
         }
     }
     //地址美化长度
-    $.addressBeautify = function(){
-   		var order_item_list = $("#order_item_list").children();
-    	$.each(order_item_list,function(i, val){
-			var address = $(val).children(".order_item_body").children().eq(1).find(".weui_cell_ft").html();
-			$(val).children(".order_item_body").children().eq(1).find(".weui_cell_ft").html($.utf8Substr(address,25));
-		});
-	}
-	
-	$.showAddress = function(){
-		$("#address_dialog").find(".weui_dialog_title").html($(this).data("address"));
-		address_dom = this;
-		$("#address_dialog").fadeIn();
-	}
-
-	$("#address_dialog").find(".weui_btn_dialog.primary").click(function(){
-    	$("#address_dialog").hide();
-    });
-    
-    $("#address_dialog").find(".weui_btn_dialog.default").click(function(){
-    	$("#address_dialog").hide();
-    	$("#place_order_panel").hide();
-    	$.show_address_modify();
-	});
-    
-    $.check_order_leave = function(URL){
-    	#if(${operation} == "GIFT")
-    	return true;
-    	#else
-    	if($("#order_item_list").children().size() != 0) {
-    		targetURL = URL;
-    		$("#leave_dialog").fadeIn();
-    		return false;
-    	}
-    	return true;
-    	#end
+    $.addressBeautify = function () {
+        var order_item_list = $("#order_item_list").children();
+        $.each(order_item_list, function (i, val) {
+            var address = $(val).children(".order_item_body").children().eq(1).find(".weui_cell_ft").html();
+            $(val).children(".order_item_body").children().eq(1).find(".weui_cell_ft").html($.utf8Substr(address, 25));
+        });
     }
-    
-    $("#leave_dialog").find(".weui_btn_dialog.default").click(function(){
-    	$("#leave_dialog").hide(function(){
-    		if(typeof targetURL != "undefined"){
-    			window.location.href = targetURL;
-    		} else {
-    			window.location.href = "${path.concat('/agent/me/index')}";
-    		}
-    	});
+
+    $.showAddress = function () {
+        $("#address_dialog").find(".weui_dialog_title").html($(this).data("address"));
+        address_dom = this;
+        $("#address_dialog").fadeIn();
+    }
+
+    $("#address_dialog").find(".weui_btn_dialog.primary").click(function () {
+        $("#address_dialog").hide();
     });
-    
-    $("#leave_dialog").find(".weui_btn_dialog.primary").click(function(){
-    	if(!$.check_order()){
-    		return;
-    	}
-    	$("#place_order_form").attr("action", "${path.concat('/agent/order/place/save')}");
-    	$("#place_order_form").attr("method","post");
-    	$("#place_order_form").submit();
+
+    $("#address_dialog").find(".weui_btn_dialog.default").click(function () {
+        $("#address_dialog").hide();
+        $("#place_order_panel").hide();
+        $.show_address_modify();
+    });
+
+    $.check_order_leave = function (URL) {
+        #if(${operation} == "GIFT")
+            return true;
+        #else
+            if ($("#order_item_list").children().size() != 0) {
+                targetURL = URL;
+                $("#leave_dialog").fadeIn();
+                return false;
+            }
+            return true;
+        #end
+    }
+
+    $("#leave_dialog").find(".weui_btn_dialog.default").click(function () {
+        $("#leave_dialog").hide(function () {
+            if (typeof targetURL != "undefined") {
+                window.location.href = targetURL;
+            } else {
+                window.location.href = "${path.concat('/agent/me/index')}";
+            }
+        });
+    });
+
+    $("#leave_dialog").find(".weui_btn_dialog.primary").click(function () {
+        if (!$.check_order()) {
+            return;
+        }
+        $("#place_order_form").attr("action", "${path.concat('/agent/order/place/save')}");
+        $("#place_order_form").attr("method", "post");
+        $("#place_order_form").submit();
     });
 </script>
