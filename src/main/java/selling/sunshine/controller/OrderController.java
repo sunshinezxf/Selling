@@ -937,7 +937,10 @@ public class OrderController {
             String customerId = form.getCustomerId()[i];// 顾客ID
             String orderItemId = form.getOrderItemId()[i];// 订单项ID
             String address = form.getAddress()[i];
-            String description = form.getDescription()[i];
+            String description = "";
+            if (!StringUtils.isEmpty(form.getDescription()) && form.getDescription().length >= i + 1) {
+                description = form.getDescription()[i];
+            }
             int goodsQuantity = Integer.parseInt(form.getGoodsQuantity()[i]);// 商品数量
             double orderItemPrice = 0;// OrderItem总价
             Map<String, Object> goodsCondition = new HashMap<>();// 查询商品价格

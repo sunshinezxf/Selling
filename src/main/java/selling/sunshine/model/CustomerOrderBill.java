@@ -1,7 +1,5 @@
 package selling.sunshine.model;
 
-import selling.sunshine.model.lite.Agent;
-
 public class CustomerOrderBill extends Bill{
 	private CustomerOrder customerOrder;
 	

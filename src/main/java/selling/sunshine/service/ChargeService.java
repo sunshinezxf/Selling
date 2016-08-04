@@ -1,5 +1,7 @@
 package selling.sunshine.service;
 
+import selling.sunshine.model.Charge;
+import selling.sunshine.model.CustomerOrderBill;
 import selling.sunshine.utils.ResultData;
 
 import java.util.Map;
@@ -9,4 +11,6 @@ import java.util.Map;
  */
 public interface ChargeService {
     ResultData fectchCharge(Map<String, Object> condition);
+
+    ResultData reimburse(Charge charge);
 }
