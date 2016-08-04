@@ -26,6 +26,9 @@
 	        </div>
 	    	#end
 	    </div>
+	    <div class="weui_btn_area">
+	        <a href="${path.concat('/gift/apply')}" type="button" class="weui_btn weui_btn_primary" id="apply_btn">申请赠送</a>
+	    </div>
     </div>
     #parse("/agent/component/navigate.vm")
     </div>
@@ -56,5 +59,7 @@ $.check_gift = function(){
 	});
 	return rtn;
 }
+
+$("#info_me").addClass("weui_bar_item_on");
 </script>
 </html>
