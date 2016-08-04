@@ -53,16 +53,16 @@
           </p>
         </div>
         #if(${credit}!="")
-            <div class="col-md-12 col-lg-12">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <p>身份证正反面照片：</p>
 
-                <div class="col-xs-6 col-md-6 col-lg-6">
+                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                     <img src= ${path.concat('')}${credit.frontPath} class="img-rounded"
-                         style="width:441px;height:358px;">
+                         style="width:100%;">
                 </div>
-                <div class="col-xs-6 col-md-6 col-lg-6">
+                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                     <img src= ${path.concat('')}${credit.backPath} class="img-rounded"
-                         style="width:441px;height:358px;">
+                         style="width:100%">
                 </div>
             </div>
         #else
@@ -70,8 +70,8 @@
                 <p>当前用户没有上传身份证正反面照片</p>
             </div>
         #end
-        <div class="col-md-12 col-lg-12">
-            <br/>
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <br>
             <button type="button" class="btn btn-primary" id="check_confirm">确认授权</button>
             <button type="button" class="btn btn-warning" data-toggle='modal' data-target='#agent_grant_modal'>审核不通过</button>
         </div>
