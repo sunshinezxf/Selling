@@ -17,6 +17,7 @@ import selling.sunshine.model.gift.GiftConfig;
 import selling.sunshine.model.goods.Goods4Agent;
 import selling.sunshine.model.lite.Agent;
 import selling.sunshine.service.AgentService;
+import selling.sunshine.service.CommodityService;
 import selling.sunshine.service.LogService;
 import selling.sunshine.service.ToolService;
 import selling.sunshine.utils.ResponseCode;
@@ -38,6 +39,9 @@ public class GiftController {
 
     @Autowired
     private ToolService toolService;
+
+    @Autowired
+    private CommodityService commodityService;
 
     @Autowired
     private LogService logService;
@@ -92,8 +96,14 @@ public class GiftController {
     @RequestMapping(method = RequestMethod.GET, value = "/apply")
     public ModelAndView apply() {
         ModelAndView view = new ModelAndView();
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("blockFlag", false);
+        ResultData response = commodityService.fetchGoods4Agent(condition);
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            List<Goods4Agent> list = (List<Goods4Agent>) response.getData();
+            view.addObject("goods", list);
+        }
         view.setViewName("/agent/gift/apply");
         return view;
     }
-
 }
