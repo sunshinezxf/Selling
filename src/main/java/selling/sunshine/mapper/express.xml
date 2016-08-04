@@ -93,7 +93,7 @@
 
     <select id="query" parameterType="java.util.Map" resultMap="expressVo">
         SELECT express_id, link_id, express_no, sender_name, sender_phone, sender_address, receiver_name, receiver_phone, receiver_address, description, goods_name, block_flag, create_time
-        FROM (SELECT express_id, order_item_id AS link_id, express_no, sender_name, sender_phone, sender_address, description,
+        FROM (SELECT express_id, order_item_id AS link_id, express_no, sender_name, sender_phone, sender_address,
         receiver_name, receiver_phone,
         receiver_address, description, goods_name, block_flag, create_time
         FROM express_agent
