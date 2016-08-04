@@ -19,7 +19,7 @@
                 <h4 class="text-info cancel">是否确定取消该订单？</h4>
                 <p class="text-danger cancel">提醒：取消订单后，款项将按原路退还给顾客，订单无法再恢复</p>
                 <h4 class="text-info reimburse_success">退款申请已成功提交！</h4>
-                <h4 class="text-info reimburse_failed">退款申请提交失败！</h4>
+                <h4 class="text-info reimburse_failed">该订单无法退款！</h4>
             </div>
             <div class="modal-footer">
                 <button type="button" id="cancel_order" class="btn btn-default detail">取消订单</button>

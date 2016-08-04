@@ -110,7 +110,6 @@
 
     $("#add_order_btn").click(function () {
         if ($("#view_sum_btn").length > 0) {
-            alert(JSON.stringify($("#view_sum_btn")));
             $("#view_sum_btn").remove();
         }
         isAdd = true;

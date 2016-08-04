@@ -1,9 +1,15 @@
 package selling.sunshine.controller;
 
-import com.alibaba.fastjson.JSONObject;
-import com.pingplusplus.model.Event;
-import com.pingplusplus.model.Webhooks;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,17 +18,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import selling.sunshine.model.*;
-import selling.sunshine.service.*;
+
+import com.alibaba.fastjson.JSONObject;
+import com.pingplusplus.model.Event;
+import com.pingplusplus.model.Webhooks;
+
+import selling.sunshine.model.Admin;
+import selling.sunshine.model.BackOperationLog;
+import selling.sunshine.model.Charge;
+import selling.sunshine.model.CustomerOrder;
+import selling.sunshine.model.CustomerOrderBill;
+import selling.sunshine.model.OrderItemStatus;
+import selling.sunshine.model.User;
+import selling.sunshine.service.BillService;
+import selling.sunshine.service.ChargeService;
+import selling.sunshine.service.LogService;
+import selling.sunshine.service.OrderService;
+import selling.sunshine.service.ToolService;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by sunshine on 8/3/16.
@@ -83,7 +97,8 @@ public class ReimburseController {
     @RequestMapping(method = RequestMethod.POST, value = "/apply")
     public ResultData reimburse(HttpServletRequest request, String orderId) {
         ResultData result = new ResultData();
-        User user = (User) SecurityUtils.getSubject();
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
         Admin admin = user.getAdmin();
         BackOperationLog backOperationLog = new BackOperationLog(
                 admin.getUsername(), toolService.getIP(request), "管理员" + admin.getUsername() + "发起对客户订单:" + orderId + "退款处理");
