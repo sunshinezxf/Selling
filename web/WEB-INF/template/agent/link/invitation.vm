@@ -28,12 +28,12 @@
             </div>
         </div>
         <div class="panel" style="text-align:center;">
-	        <a class="weui_panel_ft" style="color:#586C94;" href="${path.concat('/agent/viewinvite')}">
-			        查看已邀请的代理商
-			</a>
-		</div>
+            <a class="weui_panel_ft" style="color:#586C94;" href="${path.concat('/agent/viewinvite')}">
+                查看下级代理商
+            </a>
+        </div>
     </div>
-    
+
     <div id="toast" style="display: none;">
         <div class="weui_mask_transparent"></div>
         <div class="weui_toast">
