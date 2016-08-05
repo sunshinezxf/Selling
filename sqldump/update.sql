@@ -154,5 +154,27 @@ CREATE TABLE IF NOT EXISTS `selling`.`charge` (
   ENGINE = InnoDB
   DEFAULT CHARACTER SET = utf8;
 
+##2016年8月5日更新
+create view volume_item(agent_id, goods_id, quantity, create_time)
+as select o.agent_id as agent_id, oi.goods_id as goods_id, oi.goods_quantity as quantity, oi.create_time as create_time
+   from order_item oi left join `order` o on oi.order_id = o.order_id
+   where oi.order_item_status in (1, 2, 3)
+   group by o.agent_id, oi.goods_id
+   union all
+   select co.agent_id as agent_id, co.goods_id as goods_id, co.quantity as quantity, co.create_time as create_time
+   from customer_order co
+   where co.order_status in (1, 2, 3)
+         and co.agent_id is not null
+   group by co.agent_id, co.goods_id;
+
+create view last_volume_view(agent_id, goods_id, quantity)
+as select agent_id, goods_id, sum(quantity) AS quantity
+   from volume_item
+   where date_format(create_time, '%Y-%m') = date_format(date_sub(curdate(), interval 1 month), '%Y-%m');
+
+create view total_volume_view(agent_id, goods_id, quantity)
+as select agent_id, goods_id, sum(quantity) AS quantity
+   from volume_item
+
 
 
