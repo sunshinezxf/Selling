@@ -45,14 +45,14 @@
     <bean id="poolTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="poolDetail"></property>
         <property name="cronExpression">
-            <value>0 10 17 1 * ?</value>
+            <value>0 10 0 1 * ?</value>
         </property>
     </bean>
 
     <bean id="refundTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="refundDetail"></property>
         <property name="cronExpression">
-            <value>0 0 0 15 * ?</value>
+            <value>0 10 0 8 * ?</value>
         </property>
     </bean>
 
