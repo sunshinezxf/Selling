@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="volume">
+    <resultMap id="volumeVo" type="selling.sunshine.model.sum.Volume">
+        <result property="agentId" column="agent_id"></result>
+        <result property="goodsId" column="goods_id"></result>
+        <result property="quantity" column="quantity"></result>
+    </resultMap>
+
+    <select id="queryLast" parameterType="java.util.Map" resultMap="volumeVo">
+        SELECT agent_id, goods_id, quantity
+        FROM last_volume_view
+        WHERE 1 = 1
+        <if test="agentId != null">
+            AND agent_id = #{agentId}
+        </if>
+        <if test="goodsId != null">
+            AND goods_id = #{goodsId}
+        </if>
+    </select>
+
+    <select id="queryTotal" parameterType="java.util.Map" resultMap="volumeVo">
+        SELECT agent_id, goods_id, quantity
+        FROM total_volume_view
+        WHERE 1 = 1
+        <if test="agentId != null">
+            AND agent_id = #{agentId}
+        </if>
+        <if test="goodsId != null">
+            AND goods_id = #{goodsId}
+        </if>
+    </select>
+</mapper>

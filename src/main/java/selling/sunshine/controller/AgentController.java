@@ -1,6 +1,7 @@
 package selling.sunshine.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
@@ -17,6 +18,7 @@ import selling.sunshine.model.*;
 import selling.sunshine.model.gift.GiftConfig;
 import selling.sunshine.model.goods.Goods4Agent;
 import selling.sunshine.model.sum.TotalQuantityAll;
+import selling.sunshine.model.sum.Volume;
 import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.*;
@@ -69,6 +71,9 @@ public class AgentController {
 
     @Autowired
     private WithdrawService withdrawService;
+
+    @Autowired
+    private StatisticService statisticService;
 
     @Autowired
     private LogService logService;
@@ -2061,5 +2066,36 @@ public class AgentController {
         view.addObject("agentName", agent.getName());
         view.setViewName("/backend/agent/giftconfig");
         return view;
+    }
+
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.GET, value = "/{goodsId}/volume")
+    public ResultData volume(@PathVariable("goodsId") String goodsId) {
+        ResultData result = new ResultData();
+        JSONObject data = new JSONObject();
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        if (user == null || user.getAgent() == null) {
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            return result;
+        }
+        selling.sunshine.model.lite.Agent agent = user.getAgent();
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("agentId", agent.getAgentId());
+        condition.put("goodsId", goodsId);
+        ResultData response = statisticService.fetchLastVolume(condition);
+        Volume last = new Volume(agent.getAgentId(), goodsId, 0);
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            last = ((List<Volume>) response.getData()).get(0);
+        }
+        data.put("last", last);
+        response = statisticService.fetchTotalVolume(condition);
+        Volume total = new Volume(agent.getAgentId(), goodsId, 0);
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            total = ((List<Volume>) response.getData()).get(0);
+        }
+        data.put("total", total);
+        result.setData(data);
+        return result;
     }
 }

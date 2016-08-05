@@ -29,5 +29,6 @@
         <mapper resource="selling/sunshine/mapper/withdraw.xml"/>
         <mapper resource="selling/sunshine/mapper/sum.xml"/>
         <mapper resource="selling/sunshine/mapper/charge.xml"/>
+        <mapper resource="selling/sunshine/mapper/agent/volume.xml"></mapper>
     </mappers>
 </configuration>
