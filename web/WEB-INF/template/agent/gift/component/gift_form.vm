@@ -84,19 +84,24 @@
                     if(result.responseCode=="RESPONSE_OK"){
                         $('#last_month_sales').val(result.data.last.quantity);
                         $('#total_sales').val(result.data.total.quantity);
+                        if (validate()) {
+                            active();
+                        } else {
+                            inactive();
+                        }
                     }else{
                         alert("不存在该商品！");
+                        $('#last_month_sales').val("");
+                        $('#total_sales').val("");
+                        inactive();
                     }
                 });
             }else{
                 $('#last_month_sales').val("");
                 $('#total_sales').val("");
-            }
-            if (validate()) {
-                active();
-            } else {
                 inactive();
             }
+            
         });
         
         $('#customer_quantity').on('input propertychange', function () {
@@ -163,7 +168,9 @@
         var goodsId=$("#goods_id").val();
         var customerQuantity=$("#customer_quantity").val();
         var goodsQuantity=$("#goods_quantity").val();
-        if(not_null(goodsId)&&not_null(customerQuantity)&&not_null(goodsQuantity)){
+        var lastSales=$("#last_month_sales").val();
+        var totalSales=$("#total_sales").val();
+        if(not_null(goodsId)&&not_null(customerQuantity)&&not_null(goodsQuantity)&&not_null(lastSales)&&not_null(totalSales)){
             return true;
         }else{
             return false;
