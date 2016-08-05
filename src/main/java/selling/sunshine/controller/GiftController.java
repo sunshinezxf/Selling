@@ -22,6 +22,7 @@ import selling.sunshine.service.AgentService;
 import selling.sunshine.service.CommodityService;
 import selling.sunshine.service.LogService;
 import selling.sunshine.service.ToolService;
+import selling.sunshine.utils.Prompt;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
@@ -124,6 +125,9 @@ public class GiftController {
             view.setViewName("/agent/gift/apply");
             return view;
         }
+        Prompt prompt = new Prompt("操作提示", "您的赠送申请已提交,请等待审批", "/agent/gift");
+        view.addObject("prompt", prompt);
+        view.setViewName("/agent/prompt");
         return view;
     }
 }
