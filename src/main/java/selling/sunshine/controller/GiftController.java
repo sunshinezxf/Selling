@@ -15,6 +15,7 @@ import selling.sunshine.form.gift.ApplyForm;
 import selling.sunshine.model.Admin;
 import selling.sunshine.model.BackOperationLog;
 import selling.sunshine.model.User;
+import selling.sunshine.model.gift.GiftApply;
 import selling.sunshine.model.gift.GiftConfig;
 import selling.sunshine.model.goods.Goods4Agent;
 import selling.sunshine.model.lite.Agent;
@@ -23,6 +24,7 @@ import selling.sunshine.service.CommodityService;
 import selling.sunshine.service.LogService;
 import selling.sunshine.service.ToolService;
 import selling.sunshine.utils.Prompt;
+import selling.sunshine.utils.PromptCode;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 
@@ -118,15 +120,27 @@ public class GiftController {
         return view;
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "apply")
+    @RequestMapping(method = RequestMethod.POST, value = "/apply")
     public ModelAndView apply(@Valid ApplyForm form, BindingResult result) {
         ModelAndView view = new ModelAndView();
         if (result.hasErrors()) {
             view.setViewName("/agent/gift/apply");
             return view;
         }
-        Prompt prompt = new Prompt("操作提示", "您的赠送申请已提交,请等待审批", "/agent/gift");
-        view.addObject("prompt", prompt);
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        Agent agent = user.getAgent();
+        Goods4Agent goods = new Goods4Agent();
+        goods.setGoodsId(form.getGoodsId());
+        GiftApply apply = new GiftApply(Integer.parseInt(form.getPotential()), Integer.parseInt(form.getApplyLine()), agent, goods);
+        ResultData response = agentService.createGiftApply(apply);
+        if (response.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            Prompt prompt = new Prompt(PromptCode.DANGER, "操作提示", "您的赠送申请提交失败", "/agent/gift");
+            view.addObject("prompt", prompt);
+        } else {
+            Prompt prompt = new Prompt("操作提示", "您的赠送申请已提交,请等待审批", "/agent/gift");
+            view.addObject("prompt", prompt);
+        }
         view.setViewName("/agent/prompt");
         return view;
     }

@@ -1,6 +1,6 @@
 package selling.sunshine.model.gift;
 
-import selling.sunshine.model.Agent;
+import selling.sunshine.model.lite.Agent;
 import selling.sunshine.model.Entity;
 import selling.sunshine.model.goods.Goods4Agent;
 
@@ -13,17 +13,24 @@ public class GiftApply extends Entity {
     private int line;
     private Agent agent;
     private Goods4Agent goods;
+    private GiftApplyStatus status;
 
     private GiftApply() {
         super();
     }
 
-    private GiftApply(int potential, int line, Agent agent, Goods4Agent goods) {
+    public GiftApply(int potential, int line, Agent agent, Goods4Agent goods) {
         this();
         this.potential = potential;
         this.line = line;
         this.agent = agent;
         this.goods = goods;
+        this.status = GiftApplyStatus.APPLYED;
+    }
+
+    public GiftApply(int potential, int line, Agent agent, Goods4Agent goods, GiftApplyStatus status) {
+        this(potential, line, agent, goods);
+        this.status = status;
     }
 
     public String getApplyId() {
@@ -64,5 +71,13 @@ public class GiftApply extends Entity {
 
     public void setGoods(Goods4Agent goods) {
         this.goods = goods;
+    }
+
+    public GiftApplyStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(GiftApplyStatus status) {
+        this.status = status;
     }
 }

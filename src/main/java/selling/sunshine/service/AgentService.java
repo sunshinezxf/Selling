@@ -4,6 +4,7 @@ import selling.sunshine.model.Agent;
 import selling.sunshine.model.BankCard;
 import selling.sunshine.model.Credit;
 import selling.sunshine.model.WithdrawRecord;
+import selling.sunshine.model.gift.GiftApply;
 import selling.sunshine.model.gift.GiftConfig;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.utils.ResultData;
@@ -56,4 +57,6 @@ public interface AgentService {
     ResultData updateAgentGift(List<GiftConfig> giftConfigs);
     
     ResultData createAgentGift(GiftConfig giftConfig);
+
+    ResultData createGiftApply(GiftApply apply);
 }

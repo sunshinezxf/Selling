@@ -186,7 +186,7 @@
             $.each(order_item_list, function (i, val) {
                 var name = $(val).children(".order_item_body").children().eq(2).find(".weui_cell_ft").text();
                 var quantity = $(val).children(".order_item_body").children().eq(3).find(".weui_cell_ft").text();
-                var id = $(val).children(".order_item_body").children().eq(7).val();
+                var id = $(val).children(".order_item_body").children().eq(8).val();
                 lessThan = false;
                 for (var i in giftConfigs) {
                     if (giftConfigs[i]['goods']['goodsId'] == id) {

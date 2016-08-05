@@ -10,16 +10,16 @@ public class ApplyForm {
     private String goodsId;
 
     @NotNull
-    private int lastQuantity;
+    private String lastQuantity;
 
     @NotNull
-    private int totalQuantity;
+    private String totalQuantity;
 
     @NotNull
-    private int potential;
+    private String potential;
 
     @NotNull
-    private int applyLine;
+    private String applyLine;
 
     public String getGoodsId() {
         return goodsId;
@@ -29,35 +29,35 @@ public class ApplyForm {
         this.goodsId = goodsId;
     }
 
-    public int getLastQuantity() {
+    public String getLastQuantity() {
         return lastQuantity;
     }
 
-    public void setLastQuantity(int lastQuantity) {
+    public void setLastQuantity(String lastQuantity) {
         this.lastQuantity = lastQuantity;
     }
 
-    public int getTotalQuantity() {
+    public String getTotalQuantity() {
         return totalQuantity;
     }
 
-    public void setTotalQuantity(int totalQuantity) {
+    public void setTotalQuantity(String totalQuantity) {
         this.totalQuantity = totalQuantity;
     }
 
-    public int getPotential() {
+    public String getPotential() {
         return potential;
     }
 
-    public void setPotential(int potential) {
+    public void setPotential(String potential) {
         this.potential = potential;
     }
 
-    public int getApplyLine() {
+    public String getApplyLine() {
         return applyLine;
     }
 
-    public void setApplyLine(int applyLine) {
+    public void setApplyLine(String applyLine) {
         this.applyLine = applyLine;
     }
 }
