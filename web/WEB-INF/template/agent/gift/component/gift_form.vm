@@ -13,7 +13,7 @@
                 <label class="weui_label">赠送产品</label>
             </div>
             <div class="weui_cell_ft weui_cell_primary">
-                <select id="goods_id" class="goods_type">
+                <select id="goods_id" name="goodsId" class="goods_type">
                     <option value="" selected="selected">请选择</option>
                     #foreach($item in ${goods})
                     <option value="${item.goodsId}">${item.name}</option>
@@ -26,7 +26,7 @@
                 <label class="weui_label">意向人数</label>
             </div>
             <div class="weui_cell_ft weui_cell_primary">
-                <input id="customer_quantity" name="customer_quantity" class="weui_input" type="tel" placeholder="请填写意向购买人数"
+                <input id="customer_quantity" name="potential" class="weui_input" type="tel" placeholder="请填写意向购买人数"
                            autocomplete="off"/>
             </div>
         </div>
@@ -35,7 +35,7 @@
                 <label class="weui_label">申请盒数</label>
             </div>
             <div class="weui_cell_ft weui_cell_primary">
-                <input id="goods_quantity" name="goods_quantity" class="weui_input" type="tel" placeholder="请填写申请盒数"
+                <input id="goods_quantity" name="applyLine" class="weui_input" type="tel" placeholder="请填写申请盒数"
                            autocomplete="off"/>
             </div>
         </div>
@@ -44,7 +44,7 @@
                 <label class="weui_label">上月销量</label>
             </div>
             <div class="weui_cell_ft weui_cell_primary">
-                <input id="last_month_sales" name="last_month_sales" class="weui_input" type="tel" value="1" readonly/>
+                <input id="last_month_sales" name="lastQuantity" class="weui_input" type="tel" value="" readonly/>
             </div>
         </div>
         <div class="weui_cell">
@@ -52,7 +52,7 @@
                 <label class="weui_label">累计销量</label>
             </div>
             <div class="weui_cell_ft weui_cell_primary">
-                <input id="total_sales" name="total_sales" class="weui_input" type="tel" value="2" readonly/>
+                <input id="total_sales" name="totalQuantity" class="weui_input" type="tel" value="" readonly/>
             </div>
         </div>
     </form>
@@ -81,7 +81,12 @@
             if(not_null(goodsId)){
                 var url="${path.concat('//agent/"+goodsId+"/volume')}";
                 $.post(url,function(result){
-                    
+                    if(result.responseCode=="RESPONSE_OK"){
+                        $('#last_month_sales').val(result.data.last.quantity);
+                        $('#total_sales').val(result.data.total.quantity);
+                    }else{
+                        alert("不存在该商品！");
+                    }
                 });
             }
             if (validate()) {
@@ -144,7 +149,7 @@
                 inactive();
             }else{
                 //提交表单
-                $("#apply_form").attr("action", "${path.concat('/')}");
+                $("#apply_form").attr("action", "${path.concat('/gift/apply')}");
                 $("#apply_form").attr("method", "post");
                 $("#apply_form").submit();
             }
