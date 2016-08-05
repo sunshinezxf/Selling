@@ -18,6 +18,9 @@ public class ApplyForm {
     @NotNull
     private int potential;
 
+    @NotNull
+    private int applyLine;
+
     public String getGoodsId() {
         return goodsId;
     }
@@ -48,5 +51,13 @@ public class ApplyForm {
 
     public void setPotential(int potential) {
         this.potential = potential;
+    }
+
+    public int getApplyLine() {
+        return applyLine;
+    }
+
+    public void setApplyLine(int applyLine) {
+        this.applyLine = applyLine;
     }
 }
