@@ -10,7 +10,7 @@
         </div>
         <div class="weui_cell">
             <div class="weui_cell_hd">
-                <label class="weui_label">赠送产品</label>
+                <label class="weui_label">赠送商品</label>
             </div>
             <div class="weui_cell_ft weui_cell_primary">
                 <select id="goods_id" name="goodsId" class="goods_type">
@@ -44,7 +44,7 @@
                 <label class="weui_label">上月销量</label>
             </div>
             <div class="weui_cell_ft weui_cell_primary">
-                <input id="last_month_sales" name="lastQuantity" class="weui_input" type="tel" value="" readonly/>
+                <input id="last_month_sales" name="lastQuantity" class="weui_input" type="tel" value="" placeholder="选择商品后可见" readonly/>
             </div>
         </div>
         <div class="weui_cell">
@@ -52,7 +52,7 @@
                 <label class="weui_label">累计销量</label>
             </div>
             <div class="weui_cell_ft weui_cell_primary">
-                <input id="total_sales" name="totalQuantity" class="weui_input" type="tel" value="" readonly/>
+                <input id="total_sales" name="totalQuantity" class="weui_input" type="tel" value="" placeholder="选择商品后可见" readonly/>
             </div>
         </div>
     </form>
@@ -79,8 +79,8 @@
         $("#goods_id").change(function () {
             var goodsId=$("#goods_id").val();
             if(not_null(goodsId)){
-                var url="${path.concat('//agent/"+goodsId+"/volume')}";
-                $.post(url,function(result){
+                var url="${path.concat('/agent/"+goodsId+"/volume')}";
+                $.get(url,function(result){
                     if(result.responseCode=="RESPONSE_OK"){
                         $('#last_month_sales').val(result.data.last.quantity);
                         $('#total_sales').val(result.data.total.quantity);
@@ -88,6 +88,9 @@
                         alert("不存在该商品！");
                     }
                 });
+            }else{
+                $('#last_month_sales').val("");
+                $('#total_sales').val("");
             }
             if (validate()) {
                 active();
