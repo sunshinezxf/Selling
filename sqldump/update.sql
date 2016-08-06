@@ -176,5 +176,29 @@ create view total_volume_view(agent_id, goods_id, quantity)
 as select agent_id, goods_id, sum(quantity) AS quantity
    from volume_item
 
+##2016年8月6日更新
+CREATE TABLE IF NOT EXISTS `selling`.`gift_apply` (
+  `gift_apply_id` VARCHAR(20) NOT NULL,
+  `agent_id` VARCHAR(20) NOT NULL,
+  `goods_id` VARCHAR(20) NOT NULL,
+  `potential` INT NOT NULL,
+  `apply_line` INT NOT NULL,
+  `apply_status` TINYINT(8) NOT NULL DEFAULT 0,
+  `block_flag` TINYINT(1) NOT NULL DEFAULT 0,
+  `create_time` DATETIME NOT NULL,
+  PRIMARY KEY (`gift_apply_id`),
+  INDEX `fk_gift_apply_agent1_idx` (`agent_id` ASC),
+  INDEX `fk_gift_apply_goods1_idx` (`goods_id` ASC),
+  CONSTRAINT `fk_gift_apply_agent1`
+  FOREIGN KEY (`agent_id`)
+  REFERENCES `selling`.`agent` (`agent_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_gift_apply_goods1`
+  FOREIGN KEY (`goods_id`)
+  REFERENCES `selling`.`goods` (`goods_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+  ENGINE = InnoDB;
 
 

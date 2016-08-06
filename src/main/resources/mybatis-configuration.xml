@@ -30,5 +30,6 @@
         <mapper resource="selling/sunshine/mapper/sum.xml"/>
         <mapper resource="selling/sunshine/mapper/charge.xml"/>
         <mapper resource="selling/sunshine/mapper/agent/volume.xml"></mapper>
+        <mapper resource="selling/sunshine/mapper/gift/apply.xml"></mapper>
     </mappers>
 </configuration>
