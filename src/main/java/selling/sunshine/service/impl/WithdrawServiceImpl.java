@@ -149,7 +149,8 @@ public class WithdrawServiceImpl implements WithdrawService {
             Cell amount = current.createCell(2);
             amount.setCellValue(item.getAmount());
             Cell createAt = current.createCell(3);
-            createAt.setCellValue(item.getCreateAt());
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            createAt.setCellValue(format.format(item.getCreateAt()));
             Cell channel = current.createCell(4);
             channel.setCellValue("wx_pub");
             Cell account = current.createCell(5);
@@ -158,7 +159,7 @@ public class WithdrawServiceImpl implements WithdrawService {
         Row row = sheet.getRow(1);
         Cell total = row.createCell(2);
         total.setCellValue(sum);
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         Calendar instance = Calendar.getInstance();
         Cell time = row.createCell(5);
         time.setCellValue(format.format(instance.getTime()));

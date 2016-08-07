@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.pingplusplus.model.Event;
 import com.pingplusplus.model.Webhooks;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
@@ -24,6 +25,9 @@ import selling.sunshine.utils.ResultData;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -80,7 +84,32 @@ public class WithdrawController {
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/check/download")
-    public String download() {
+    public String download(HttpServletResponse response) throws UnsupportedEncodingException {
+        Map<String, Object> condition = new HashMap<>();
+        List<Integer> status = new ArrayList<>();
+        status.add(0);
+        condition.put("status", status);
+        condition.put("blockFlag", true);
+        ResultData result = withdrawService.fetchWithdrawRecord(condition);
+        if (result.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            return null;
+        }
+        List<WithdrawRecord> list = (List<WithdrawRecord>) result.getData();
+        result = withdrawService.produceApply(list);
+        if (result.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            response.setContentType("application/x-download;charset=utf-8");
+            response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode("提现申请单.xlsx", "utf-8"));
+            try {
+                OutputStream out = response.getOutputStream();
+                Workbook workbook = (Workbook) result.getData();
+                workbook.write(out);
+                out.flush();
+                out.close();
+            } catch (Exception e) {
+                logger.error(e.getMessage());
+                return null;
+            }
+        }
         return null;
     }
 

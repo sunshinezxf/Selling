@@ -14,7 +14,7 @@
             <div class="col-md-12 col-lg-12">
                 <span>当前总申请提现金额为：${money}元&nbsp;
                 #if(${money} - 0 > 1)
-                    <a type="button" class="btn btn-primary btn-success">提现申请下载</a></span>
+                    <a type="button" class="btn btn-primary btn-success" href="${path.concat('/withdraw/check/download')}">提现申请下载</a></span>
                 #end
                 <br>
             </div>
