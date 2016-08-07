@@ -78,6 +78,12 @@ public class WithdrawController {
         return result;
     }
 
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.GET, value = "/check/download")
+    public String download() {
+        return null;
+    }
+
     @RequestMapping(method = RequestMethod.GET, value = "/overview")
     public ModelAndView overview() {
         ModelAndView view = new ModelAndView();
