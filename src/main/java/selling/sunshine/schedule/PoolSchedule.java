@@ -20,9 +20,7 @@ public class PoolSchedule {
     private RefundService refundService;
 
     public void schedule() {
-
     	orderService.poolOrder();
     	refundService.refundRecord();
-
     } 
 }

@@ -124,6 +124,8 @@
 
                 /gather/** = roles["admin, finance"]
 
+                /gift/apply = roles[agent]
+
                 /indent/** = roles["admin", "finance"]
 
                 /order/adminpay = roles[admin]
@@ -132,6 +134,9 @@
                 /order/customerOrder/overview = roles["admin, express"]
                 /order/customerpay = anon
                 /order/viewexpress/** = anon
+
+                /reimburse/inform = anon
+                /reimburse/apply = roles["admin, express"]
 
                 /statistic/** = roles["admin, express"]
 

@@ -23,9 +23,19 @@
                 <p>数量:&nbsp</p>
             </div>
             <div class="weui_cell_bd weui_cell_primary">
-            	<input class="weui_input" id="goods_quantity" list="num_list" type="tel" pattern="[0-9]*" placeholder="请输入数量" readonly="readonly" value="1">
+                <input class="weui_input" id="goods_quantity" list="num_list" type="tel" pattern="[0-9]*"
+                       placeholder="请输入数量" readonly="readonly" value="1">
             </div>
         </a>
+        <a class="weui_cell" id="description">
+            <div class="weui_cell_hd">
+                <label class="weui_label">备注</label>
+            </div>
+            <div class="weui_cell_bd weui_cell_primary">
+                <input id="item_description" class="weui_input" type="text" placeholder="请填写额外的备注信息">
+            </div>
+        </a>
+
         <div id="price" class="weui_cell weui_cells_tips clear-margin-top">
             金额:元
         </div>
@@ -39,7 +49,7 @@
     <div class="weui_mask_transition" id="mask" style="display: none;"></div>
     <div class="weui_actionsheet" id="weui_actionsheet">
         <div class="weui_actionsheet_menu">
-         	<div class="weui_actionsheet_cell" id="actionsheet_cancel">其他</div>
+            <div class="weui_actionsheet_cell" id="actionsheet_cancel">其他</div>
             <div class="weui_actionsheet_cell" id="actionsheet_1">1</div>
             <div class="weui_actionsheet_cell" id="actionsheet_2">2</div>
             <div class="weui_actionsheet_cell" id="actionsheet_3">3</div>
@@ -52,28 +62,29 @@
 #parse("/agent/component/address_list.vm")
 #parse("/agent/component/num.vm")
 <div class="weui_dialog_alert" id="dialog" style="display: none;">
-	    <div class="weui_mask"></div>
-	    <div class="weui_dialog">
-	        <div class="weui_dialog_hd"><strong class="weui_dialog_title">消息</strong></div>
-	        <div class="weui_dialog_bd"></div>
-	        <div class="weui_dialog_ft">
-	            <a href="javascript:;" class="weui_btn_dialog primary">确定</a>
-	        </div>
-	    </div>
+    <div class="weui_mask"></div>
+    <div class="weui_dialog">
+        <div class="weui_dialog_hd"><strong class="weui_dialog_title">消息</strong></div>
+        <div class="weui_dialog_bd"></div>
+        <div class="weui_dialog_ft">
+            <a href="javascript:;" class="weui_btn_dialog primary">确定</a>
+        </div>
+    </div>
 </div>
 <script>
     $("#add_confirm_btn").click(function () {
-    	if(!$.check()){
-    		return;
-    	}
-    	
-    	//添加一栏
+        if (!$.check()) {
+            return;
+        }
+
+        //添加一栏
         $("#add_order_item").hide();
-        var place_order_item = 
-        	"<div class='weui_cells_access'> \
-        		<div class='weui_cell order_item_head'> \
-        			<div class='weui_cell_bd weui_cell_primary'>" + customer_name + "</div> \
-        			<div class='weui_cell_ft'><span>" + goods_name + "</span>&nbsp;x<span>" + $("#goods_quantity").val() + "</span>&nbsp;(<span>" +  goods_price* parseInt($("#goods_quantity").val())+ "</span>元)&nbsp;</div> \
+        var item_description = $("#item_description").val();
+        var place_order_item =
+                "<div class='weui_cells_access'> \
+                    <div class='weui_cell order_item_head'> \
+                        <div class='weui_cell_bd weui_cell_primary'>" + customer_name + "</div> \
+        			<div class='weui_cell_ft'><span>" + goods_name + "</span>&nbsp;x<span>" + $("#goods_quantity").val() + "</span>&nbsp;(<span>" + goods_price * parseInt($("#goods_quantity").val()) + "</span>元)&nbsp;</div> \
         		</div> \
         		<div class='order_item_body' style='display:none;'> \
 		        	<a class='weui_cell'> \
@@ -100,6 +111,12 @@
 				        </div> \
 				        <div class='weui_cell_ft quantity'>" + $("#goods_quantity").val() + "</div> \
 			        </a> \
+			        <a class='weui_cell'>\
+                        <div class='weui_cell_hd'>\
+                            <label class='weui_label'>备注</label>\
+                        </div>\
+                        <div class='weui_cell_bd weui_cell_primary description'>" + item_description + "</div>\
+                    </a>\
 			    	<div class='weui_cell weui_cells_tips clear-margin-top'> \
 			     	金额:" + goods_price * $("#goods_quantity").val() + "元 \
 			    	</div> \
@@ -109,176 +126,180 @@
 			    	<input class='order_item_price' type='hidden' name='orderItemPrice' value='" + goods_price + "'/> \
 			    	<input class='customer_id' type='hidden' name='customerId' value='" + customer_id + "'/> \
 			    	<input class='order_item_id' type='hidden' name='orderItemId' value='0'/> \
-			    	<input class='order_item_address' type='hidden' name='address' value='" +customer_address + "'> \
+			    	<input class='order_item_address' type='hidden' name='address' value='" + customer_address + "'> \
+                    <input class='order_item_description' type='hidden' name='description' value='" + item_description + "'>\
 		    	</div> \
 			</div>";
+        $("#item_description").val("");
         $("#order_item_list").prepend(place_order_item);
         //添加修改事件
         var order_item_list = $("#order_item_list").children();
         //添加窗口滑动事件
-        $(order_item_list).eq(0).children(".order_item_head").on("click",function(){
-        	$(order_item_list).eq(0).children(".order_item_body").slideToggle();
+        $(order_item_list).eq(0).children(".order_item_head").on("click", function () {
+            $(order_item_list).eq(0).children(".order_item_body").slideToggle();
         });
-         
+
         //客户修改事件
-    	$(order_item_list).eq(0).children(".order_item_body").children().eq(0).on("click", function(){
-    		isAdd = false;
-    		current_modify_dom = this;
-    		customer_id = $(this).parent(".order_item_body").find(".customer_id").val();
-    		customer_name = $(this).find(".weui_cell_ft span").eq(0).html();
-    		customer_phone = $(this).find(".weui_cell_ft span").eq(1).html();
-    		$.init_customer_list();
-    		$("#place_order_panel").hide();
-    		$("#customer_option").fadeIn();
-    	});
-    	//商品修改事件
-    	$(order_item_list).eq(0).children(".order_item_body").children().eq(2).on("click", function(){
-    		isAdd = false;
-    		current_modify_dom = this;
-    		goods_id = $(this).parent(".order_item_body").find(".goods_id").val();
-    		goods_name = $(this).find(".weui_cell_ft").html();
-			goods_price = parseFloat($(this).parent(".order_item_body").find(".order_item_price").val());
-			$.init_goods_list();
-    		$("#place_order_panel").hide();
-    		$("#goods_option").fadeIn();
-    	});
-    	//数量修改事件
-    	$(order_item_list).eq(0).children(".order_item_body").children().eq(3).on("click",function(){
-    		current_modify_dom = this;
-    		goods_id = $(this).parent(".order_item_body").find(".goods_id").val();
-    		goods_name = $(this).find(".weui_cell_ft").html();
-			goods_price = parseFloat($(this).parent(".order_item_body").find(".order_item_price").val());
-			var goods_quantity = $(this).find(".weui_cell_ft").html();
-    		$("#quantity_modify").find(".weui_input").val(goods_quantity);
-    		$("#place_order_panel").hide();
-    		$.init_quantity_modify();
-    		$("#quantity_modify").fadeIn();
-    	});
-        
-        //添加删除事件
-        $(order_item_list).eq(0).find(".weui_cells_tips.delete").on("click",function(){
-    		$(this).closest(".weui_cells_access").remove();
-    		$.calculate();
+        $(order_item_list).eq(0).children(".order_item_body").children().eq(0).on("click", function () {
+            isAdd = false;
+            current_modify_dom = this;
+            customer_id = $(this).parent(".order_item_body").find(".customer_id").val();
+            customer_name = $(this).find(".weui_cell_ft span").eq(0).html();
+            customer_phone = $(this).find(".weui_cell_ft span").eq(1).html();
+            $.init_customer_list();
+            $("#place_order_panel").hide();
+            $("#customer_option").fadeIn();
         });
-        
+        //商品修改事件
+        $(order_item_list).eq(0).children(".order_item_body").children().eq(2).on("click", function () {
+            isAdd = false;
+            current_modify_dom = this;
+            goods_id = $(this).parent(".order_item_body").find(".goods_id").val();
+            goods_name = $(this).find(".weui_cell_ft").html();
+            goods_price = parseFloat($(this).parent(".order_item_body").find(".order_item_price").val());
+            $.init_goods_list();
+            $("#place_order_panel").hide();
+            $("#goods_option").fadeIn();
+        });
+        //数量修改事件
+        $(order_item_list).eq(0).children(".order_item_body").children().eq(3).on("click", function () {
+            current_modify_dom = this;
+            goods_id = $(this).parent(".order_item_body").find(".goods_id").val();
+            goods_name = $(this).find(".weui_cell_ft").html();
+            goods_price = parseFloat($(this).parent(".order_item_body").find(".order_item_price").val());
+            var goods_quantity = $(this).find(".weui_cell_ft").html();
+            $("#quantity_modify").find(".weui_input").val(goods_quantity);
+            $("#place_order_panel").hide();
+            $.init_quantity_modify();
+            $("#quantity_modify").fadeIn();
+        });
+
+        //添加删除事件
+        $(order_item_list).eq(0).find(".weui_cells_tips.delete").on("click", function () {
+            $(this).closest(".weui_cells_access").remove();
+            $.calculate();
+        });
+
         //将地址数据存入dom节点中,并添加显示函数，必须放在地址字符串截取前
         var address_cell = $(order_item_list).eq(0).find(".address").parent(".weui_cell");
-		address_cell.data("address", address_cell.find(".address").html());
-		address_cell.data("customerId", $(address_cell).closest(".order_item_body").find(".customer_id").val());
-		address_cell.bind("click",$.showAddress);
-		
+        address_cell.data("address", address_cell.find(".address").html());
+        address_cell.data("customerId", $(address_cell).closest(".order_item_body").find(".customer_id").val());
+        address_cell.bind("click", $.showAddress);
+
         //地址字符串截取长度
         $.addressBeautify();
-        
+
         //计算总价
         $.calculate();
-        
+
         //切换页面之前把所有展开的订单项收起来
-        $.each($(order_item_list),function(i ,val){
-        	$(val).children(".order_item_body").slideUp();
+        $.each($(order_item_list), function (i, val) {
+            $(val).children(".order_item_body").slideUp();
         });
-        
+
         //切换页面
         $("#add_order_item").hide();
-        $("#place_order_panel").fadeIn();  
-        
+        $("#place_order_panel").fadeIn();
+
         //重置本页面
         $("#customer").find(".weui_cell_bd.weui_cell_primary").html("客户姓名");
         $("#phone").find(".weui_cell_bd.weui_cell_primary").html("手机号");
         customer_name = "";
         customer_id = null;
+        item_description = "";
     });
 
     $("#add_cancel_btn").click(function () {
-     	//重置本页面
-    	$("#customer").find(".weui_cell_bd.weui_cell_primary").html("客户姓名");
+        //重置本页面
+        $("#customer").find(".weui_cell_bd.weui_cell_primary").html("客户姓名");
         $("#phone").find(".weui_cell_bd.weui_cell_primary").html("手机号");
         customer_name = "";
         customer_id = null;
+        item_description = "";
         $("#add_order_item").hide();
         $("#place_order_panel").fadeIn();
     });
-    $("#customer").click(function(){
-    	$.init_customer_list();
-    	$("#add_order_item").hide();
-    	$("#customer_option").fadeIn();
+    $("#customer").click(function () {
+        $.init_customer_list();
+        $("#add_order_item").hide();
+        $("#customer_option").fadeIn();
     });
-    
-    $("#goods").click(function(){
-    	$.init_goods_list();
-    	$("#add_order_item").hide();
-    	$("#goods_option").fadeIn();
+
+    $("#goods").click(function () {
+        $.init_goods_list();
+        $("#add_order_item").hide();
+        $("#goods_option").fadeIn();
     });
-    $.check = function(){
-    	if(typeof customer_name == "undefined" || customer_name == "" || typeof customer_id == "undefined") {
-    		$("#dialog").find(".weui_dialog_bd").html("没有选择客户");
-    		$("#dialog").fadeIn();
-    		return false;
-    	}
-    	if(typeof goods_name == "undefined" || customer_name == "" || typeof goods_id == "undefined") {
-    		$("#dialog").find(".weui_dialog_bd").html("没有选择商品");
-    		$("#dialog").fadeIn();
-    		return false;
-    	}
-    	var reNum =/^[0-9]*$/;
-      	if(!reNum.test($("#goods_quantity").val()) || $("#goods_quantity").val() == "" ||  $("#goods_quantity").val() == "0"){
-    		$("#dialog").find(".weui_dialog_bd").html("数量格式不正确");
-    		$("#dialog").fadeIn();
-    		return false;
-    	}
-    	return true;
+    $.check = function () {
+        if (typeof customer_name == "undefined" || customer_name == "" || typeof customer_id == "undefined") {
+            $("#dialog").find(".weui_dialog_bd").html("没有选择客户");
+            $("#dialog").fadeIn();
+            return false;
+        }
+        if (typeof goods_name == "undefined" || customer_name == "" || typeof goods_id == "undefined") {
+            $("#dialog").find(".weui_dialog_bd").html("没有选择商品");
+            $("#dialog").fadeIn();
+            return false;
+        }
+        var reNum = /^[0-9]*$/;
+        if (!reNum.test($("#goods_quantity").val()) || $("#goods_quantity").val() == "" || $("#goods_quantity").val() == "0") {
+            $("#dialog").find(".weui_dialog_bd").html("数量格式不正确");
+            $("#dialog").fadeIn();
+            return false;
+        }
+        return true;
     }
-    
-    $("#dialog").find(".weui_btn_dialog.primary").click(function(){
-    	$("#dialog").hide();
+
+    $("#dialog").find(".weui_btn_dialog.primary").click(function () {
+        $("#dialog").hide();
     });
-    
-    $.init_add_order_item = function(){
-    	$("#goods_quantity").on("focusin",$.toggleNumSheet);
-    	$('#goods_quantity').attr('readonly','readonly');
+
+    $.init_add_order_item = function () {
+        $("#goods_quantity").on("focusin", $.toggleNumSheet);
+        $('#goods_quantity').attr('readonly', 'readonly');
     }
     //弹数量sheet
-    $.toggleNumSheet = function(){
-   		var mask = $('#mask');
-            var weuiActionsheet = $('#weui_actionsheet');
-            weuiActionsheet.addClass('weui_actionsheet_toggle');
-            mask.show()
+    $.toggleNumSheet = function () {
+        var mask = $('#mask');
+        var weuiActionsheet = $('#weui_actionsheet');
+        weuiActionsheet.addClass('weui_actionsheet_toggle');
+        mask.show()
                 .focus()//加focus是为了触发一次页面的重排(reflow or layout thrashing),使mask的transition动画得以正常触发
                 .addClass('weui_fade_toggle').one('click', function () {
-                hideActionSheet(weuiActionsheet, mask);
-            });
-            $('#actionsheet_1').one('click',function(){
-            	$('#goods_quantity').val(1);
-            	hideActionSheet(weuiActionsheet, mask);
-            });
-            $('#actionsheet_2').one('click',function(){
-            	$('#goods_quantity').val(2);
-            	hideActionSheet(weuiActionsheet, mask);
-            });
-            $('#actionsheet_3').one('click',function(){
-            	$('#goods_quantity').val(3);
-            	hideActionSheet(weuiActionsheet, mask);
-            });
-            $('#actionsheet_4').one('click',function(){
-            	$('#goods_quantity').val(4);
-            	hideActionSheet(weuiActionsheet, mask);
-            });
-            $('#actionsheet_cancel').one('click', function () {
-                hideActionSheet(weuiActionsheet, mask);
-                $('#goods_quantity').removeAttr('readonly');
-                $("#goods_quantity").unbind("focusin",$.toggleNumSheet);
-                $("#goods_quantity").focus();
-            });
-            mask.unbind('transitionend').unbind('webkitTransitionEnd');
+                    hideActionSheet(weuiActionsheet, mask);
+                });
+        $('#actionsheet_1').one('click', function () {
+            $('#goods_quantity').val(1);
+            hideActionSheet(weuiActionsheet, mask);
+        });
+        $('#actionsheet_2').one('click', function () {
+            $('#goods_quantity').val(2);
+            hideActionSheet(weuiActionsheet, mask);
+        });
+        $('#actionsheet_3').one('click', function () {
+            $('#goods_quantity').val(3);
+            hideActionSheet(weuiActionsheet, mask);
+        });
+        $('#actionsheet_4').one('click', function () {
+            $('#goods_quantity').val(4);
+            hideActionSheet(weuiActionsheet, mask);
+        });
+        $('#actionsheet_cancel').one('click', function () {
+            hideActionSheet(weuiActionsheet, mask);
+            $('#goods_quantity').removeAttr('readonly');
+            $("#goods_quantity").unbind("focusin", $.toggleNumSheet);
+            $("#goods_quantity").focus();
+        });
+        mask.unbind('transitionend').unbind('webkitTransitionEnd');
 
-            function hideActionSheet(weuiActionsheet, mask) {
-                weuiActionsheet.removeClass('weui_actionsheet_toggle');
-                mask.removeClass('weui_fade_toggle');
-                mask.on('transitionend', function () {
-                    mask.hide();
-                }).on('webkitTransitionEnd', function () {
-                    mask.hide();
-                })
-            }
+        function hideActionSheet(weuiActionsheet, mask) {
+            weuiActionsheet.removeClass('weui_actionsheet_toggle');
+            mask.removeClass('weui_fade_toggle');
+            mask.on('transitionend', function () {
+                mask.hide();
+            }).on('webkitTransitionEnd', function () {
+                mask.hide();
+            })
+        }
     }
 </script>

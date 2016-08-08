@@ -25,6 +25,7 @@
         <result property="goodsQuantity" column="goods_quantity"></result>
         <result property="orderItemPrice" column="order_item_price"></result>
         <result property="receiveAddress" column="receive_address"></result>
+        <result property="description" column="order_item_description"></result>
         <result property="status" column="order_item_status"
                 typeHandler="selling.sunshine.handler.mybatis.order.OrderItemStatusHandler"></result>
         <result property="createAt" column="create_time"></result>
@@ -136,7 +137,7 @@
     </update>
 
     <select id="orderItemQuery" parameterType="java.util.Map" resultMap="orderItemVo">
-    	SELECT order_item_id, receive_address, customer_id, goods_id, goods_quantity, order_item_price, order_id, order_item_status,create_time
+    	SELECT order_item_id, receive_address, customer_id, goods_id, goods_quantity, order_item_price, order_item_description, order_id, order_item_status,create_time
     	from order_item
     	where order_id = #{orderId}
     </select>
@@ -151,14 +152,14 @@
         SELECT customer_phone_id, phone, block_flag, create_time
         FROM customer_phone
         WHERE customer_id = #{customerId}
-        AND block_flag = 0
+        AND block_flag = FALSE
     </select>
 
     <select id="addressQuery" parameterType="java.util.Map" resultMap="addressVo">
         SELECT customer_address_id, address, block_flag, create_time
         FROM customer_address
         WHERE customer_id = #{customerId}
-        AND block_flag = 0
+        AND block_flag = FALSE
     </select>
 
     <select id="goods4AgentQuery" parameterType="java.util.Map" resultMap="goods4AgentVo">

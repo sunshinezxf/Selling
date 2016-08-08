@@ -10,6 +10,12 @@
         </div>
     </div>
     <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <a type="button" class="btn btn-primary btn-success" href="">返现报表下载</a>
+        </div>
+    </div>
+    <br>
+    <div class="row">
         <div class="col-md-12 col-lg-12">
             <table id="refund_record_month_table" class="table table-striped table-bordered" cellspacing="0"
                    width="100%">
@@ -61,7 +67,11 @@
                 }
                 },
                 {title: "预期返现金额(元)", "mData": "refundAmount"},
-                {title: "返现比例(元／件)", "mData": "refundPercent"},
+                {title: "盒数(盒)", "mRender": function(data, type, full) {
+                	var content = full.refundAmount/full.refundPercent;
+                	return content;
+                }},
+                {title: "返现比例(元/盒)", "mData": "refundPercent"},
                 {title: "内容", "mData": "refundDescription"}
             ],
             "language": {

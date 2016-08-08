@@ -191,9 +191,6 @@
     });
 </script>
 <script>
-    var photo_num = 0;
-    var click_num1 = 0;
-    var click_num2 = 0;
     var forbidden=false;
     $(document).ready(function () {
         var ua = navigator.userAgent.toLowerCase();
@@ -276,7 +273,6 @@
     });
 
     function checkFront() {
-        photo_num++;
         $("#fileinput_wrp1").removeClass("weui_uploader_input_wrp");
         $("#fileinput_wrp1").addClass("new_weui_uploader_input_wrp");
         if (identity_validate()) {
@@ -287,7 +283,6 @@
     }
 
     function checkBack() {
-        photo_num++;
         $("#fileinput_wrp2").removeClass("weui_uploader_input_wrp");
         $("#fileinput_wrp2").addClass("new_weui_uploader_input_wrp");
         if (identity_validate()) {
@@ -341,7 +336,7 @@
     }
 
     function identity_validate() {
-        if (photo_num == 2)
+        if (not_null($("#front").val())&&not_null($("#back").val()))
             return true;
         return false;
     }
@@ -354,11 +349,9 @@
     }
 
     $("#fileinput_wrp1").delegate("img", "click", function () {
-        photo_num--;
         $("#fileinput_id1").click();
     });
     $("#fileinput_wrp2").delegate("img", "click", function () {
-        photo_num--;
         $("#fileinput_id2").click();
     });
 
@@ -377,6 +370,8 @@
     }).on("filebatchselected", function (event, files) {
         $(this).fileinput("upload");
         forbidden=true;
+        $("#front").val("");
+        second_inactive();
     })
             .on("fileuploaded", function (event, result) {
                 if (result.response.responseCode == "RESPONSE_OK") {
@@ -404,6 +399,8 @@
     }).on("filebatchselected", function (event, files) {
         $(this).fileinput("upload");
         forbidden=true;
+        $("#back").val("");
+        second_inactive();
     })
             .on("fileuploaded", function (event, result) {
                 if (result.response.responseCode == "RESPONSE_OK") {
@@ -427,8 +424,9 @@
             sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
             sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
             success: function (res) {
-                click_num1++;
                 forbidden=true;
+                $("#front").val("");
+                second_inactive();
                 var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
                 $.each(localIds, function (i, n) {
                     wx.uploadImage({
@@ -441,9 +439,6 @@
                             $("#wx_wrp1").addClass("new_weui_uploader_input_wrp");
                             $("#wx_img1").attr("src", localIds);
                             $("#front").val(serverId);
-                            if (click_num1 == 1) {
-                                photo_num++;
-                            }
                             if (identity_validate()) {
                                 second_active();
                             } else {
@@ -461,8 +456,9 @@
             sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
             sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
             success: function (res) {
-                click_num2++;
                 forbidden=true;
+                $("#back").val("");
+                second_inactive();
                 var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
                 $.each(localIds, function (i, n) {
                     wx.uploadImage({
@@ -475,9 +471,6 @@
                             $("#wx_wrp2").addClass("new_weui_uploader_input_wrp");
                             $("#wx_img2").attr("src", localIds);
                             $("#back").val(serverId);
-                            if (click_num2 == 1) {
-                                photo_num++;
-                            }
                             if (identity_validate()) {
                                 second_active();
                             } else {
@@ -491,6 +484,13 @@
     });
     
     document.addEventListener("touchmove",function(e){
+        if(forbidden){
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    },false);
+    
+    document.addEventListener("touchstart",function(e){
         if(forbidden){
             e.preventDefault();
             e.stopPropagation();

@@ -1,5 +1,6 @@
 package selling.sunshine.model.express;
 
+import org.springframework.util.StringUtils;
 import selling.sunshine.model.Entity;
 
 /**
@@ -15,6 +16,7 @@ public class Express extends Entity implements Comparable<Express> {
     private String receiverPhone;
     private String receiverAddress;
     private String goodsName;
+    private String description;
     private String linkId;
     private int goodsQuantity;
 
@@ -130,6 +132,14 @@ public class Express extends Entity implements Comparable<Express> {
 
     public void setGoodsName(String goodsName) {
         this.goodsName = goodsName;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getLinkId() {

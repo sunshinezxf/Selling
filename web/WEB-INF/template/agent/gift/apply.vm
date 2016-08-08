@@ -1,0 +1,25 @@
+#parse("/common/util.vm")
+<html lang="zh_CN">
+<html>
+<head>
+    #parse("/agent/component/init.vm")
+    #parse("/agent/component/init_gift_apply.vm")
+    <title>赠送申请</title>
+</head>
+<body ontouchstart>
+<div class="container">
+    <div class="tabbar">
+        <div class="hd">
+            <h1 class="page_title">赠送申请</h1>
+        </div>
+        <div class="bd">
+            #parse("/agent/gift/component/gift_form.vm")
+        </div>
+        #parse("/agent/component/navigate.vm")
+    </div>
+</div>
+</body>
+</html>
+<script>
+    $("#info_me").addClass("weui_bar_item_on");
+</script>

@@ -32,6 +32,7 @@
     </div>
 </div>
 #parse("/backend/order/component/order_item_modal.vm")
+#parse("/backend/order/component/customer_order_item_modal.vm")
 #parse("/backend/express/component/express_detail_modal.vm")
 <script>
 
@@ -109,9 +110,9 @@
                     }
                 }
                 document.getElementById("total").innerHTML = "待处理订单累计：<strong>" + orderNum + "笔</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' class='btn btn-info' onclick=expressAll()>一键发货</button><br>";
-                 #*   
-                document.getElementById("total").innerHTML = "待处理订单累计：<strong>" + orderNum + "笔</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' class='btn btn-info' onclick=expressAll()>一键发货</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' class='btn btn-info' onclick=downloadExcel()>一键下载Excel表格</button><br>";
-                 *#
+            #*
+           document.getElementById("total").innerHTML = "待处理订单累计：<strong>" + orderNum + "笔</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' class='btn btn-info' onclick=expressAll()>一键发货</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' class='btn btn-info' onclick=downloadExcel()>一键下载Excel表格</button><br>";
+            *#
                 if (result.data.orderList != null) {
                     var node = "<table id='payed_order_table' class='table table-striped table-bordered' cellspacing='0' width='100%'></table>";
                     $("#check_order_table").append(node);
@@ -155,12 +156,12 @@
                             },
                             {
                                 title: "订单类型", "mRender": function (data, type, full) {
-                                    if(full.type=='ORDINARY'){
-                                       return "订单";
-                                    }else{
-                                       return "赠品";
-                                    }
+                                if (full.type == 'ORDINARY') {
+                                    return "订单";
+                                } else {
+                                    return "赠品";
                                 }
+                            }
                             },
                             {
                                 title: "操作", "mRender": function (data, type, full) {
@@ -253,8 +254,8 @@
                                 },
                                 {
                                     title: "操作", "mRender": function (data, type, full) {
-                                    var  operation="";
-                                    var detail_button = " <button type='button' id='" + full.orderId + "' class='btn btn-success' onclick=detail(this) data-toggle='modal' data-target='#order_item_modal'>详情</button> ";
+                                    var operation = "";
+                                    var detail_button = " <button type='button' id='" + full.orderId + "' class='btn btn-success' onclick=detail(this) data-toggle='modal' data-target='#customer_order_item_modal'>详情</button> ";
                                     operation += detail_button;
                                     operation += "<button type='button' class='btn btn-success' id='" + full.orderId + "' onclick=expressCustomerOrder(this)>发货</button>";
                                     return operation;
@@ -346,14 +347,14 @@
                         }
                         },
                         {
-                                title: "订单类型", "mRender": function (data, type, full) {
-                                    if(full.type=='ORDINARY'){
-                                       return "订单";
-                                    }else{
-                                       return "赠品";
-                                    }
-                                }
-                            },
+                            title: "订单类型", "mRender": function (data, type, full) {
+                            if (full.type == 'ORDINARY') {
+                                return "订单";
+                            } else {
+                                return "赠品";
+                            }
+                        }
+                        },
                         {
                             title: "操作", "mRender": function (data, type, full) {
                             var operation = "";
@@ -442,12 +443,12 @@
                         },
                         {
                             title: "操作", "mRender": function (data, type, full) {
-                                    var  operation="";
-                                    var detail_button = " <button type='button' id='" + full.orderId + "' class='btn btn-success' onclick=detail(this) data-toggle='modal' data-target='#order_item_modal'>详情</button> ";
-                                    operation += detail_button;
-                                    operation += "<button type='button' class='btn btn-success' id='" + full.orderId + "' onclick=expressCustomerOrder(this)>发货</button>";
-                                    return operation;
-                            }
+                            var operation = "";
+                            var detail_button = " <button type='button' id='" + full.orderId + "' class='btn btn-success' onclick=detail(this) data-toggle='modal' data-target='#customer_order_item_modal'>详情</button> ";
+                            operation += detail_button;
+                            operation += "<button type='button' class='btn btn-success' id='" + full.orderId + "' onclick=expressCustomerOrder(this)>发货</button>";
+                            return operation;
+                        }
                         }
                     ],
                     "language": {
@@ -473,52 +474,66 @@
         }
     }
     function detail(obj) {
-       if(obj.id.startsWith("ODR")){
-          $.post("${path.concat('/order/orderItem2/')}" + obj.id, function (result) {
-            document.getElementById("model_p").innerHTML = "代理商：" + result.data.order.agent.name;
+        if (obj.id.startsWith("ODR")) {
+            $.post("${path.concat('/order/orderItem2/')}" + obj.id, function (result) {
+                document.getElementById("model_p").innerHTML = "代理商：" + result.data.order.agent.name;
 
-            var f = document.getElementById("model_table");
-            var childs = f.childNodes;
-            for (var i = childs.length - 1; i >= 0; i--) {
-                f.removeChild(childs[i]);
-            }
+                var f = document.getElementById("model_table");
+                var childs = f.childNodes;
+                for (var i = childs.length - 1; i >= 0; i--) {
+                    f.removeChild(childs[i]);
+                }
 
-            var node = "<tr><th>客户</th><th>产品</th><th>数量</th><th>价格</th></tr>";
-            for (var i = 0; i < result.data.order.orderItems.length; i++) {
-                var orderItem = result.data.order.orderItems[i];
-                node += "<tr><td>" + orderItem.customer.name + "</td><td>" + orderItem.goods.name + "</td><td>" + orderItem.goodsQuantity + "</td><td>" + orderItem.orderItemPrice + "</td></tr>";
-            }
-            $("#model_table").append(node);
-            document.getElementById("model_total").innerHTML = "总计:&nbsp;" + result.data.totalPrices + "元";
-            var node1 = "";
-            for (var key in result.data.goods_quantity_Map) {
-                node1 += "商品:&nbsp;" + key + "&nbsp;&nbsp;&nbsp;&nbsp;总共:&nbsp;" + result.data.goods_quantity_Map[key] + "件<br>"
-            }
-            document.getElementById("model_quantity").innerHTML = node1;
-            document.getElementById("model_total").style.display="";
-            document.getElementById("model_quantity").style.display="";
-        });
-       }else{
-           $.post("${path.concat('/order/customerOrder/')}" + obj.id, function (result) {
-               var customerorder=result.data;
-               if(customerorder.agent==null){
-                  document.getElementById("model_p").innerHTML = "无代理商"
-               }else{
-                  document.getElementById("model_p").innerHTML = "代理商："+customerorder.agent.name;
-               }  
-               var f = document.getElementById("model_table");
-               var childs = f.childNodes;
-               for (var i = childs.length - 1; i >= 0; i--) {
-                  f.removeChild(childs[i]);
-               }
+                var node = "<tr><th>客户</th><th>产品</th><th>数量</th><th>价格</th><th>备注</th></tr>";
+                for (var i = 0; i < result.data.order.orderItems.length; i++) {
+                    var orderItem = result.data.order.orderItems[i];
+                    var temp = "<tr><td>";
+                    temp += orderItem.customer.name;
+                    temp += "</td><td>";
+                    temp += orderItem.goods.name;
+                    temp += "</td><td>";
+                    temp += orderItem.goodsQuantity;
+                    temp += "</td><td>";
+                    temp += orderItem.orderItemPrice;
+                    temp += "</td><td>";
+                    if (orderItem.description != null) {
+                        temp += orderItem.description;
+                    }
+                    temp += "</td></tr>";
+                    node += temp;
+                }
+                $("#model_table").append(node);
+                document.getElementById("model_total").innerHTML = "总计:&nbsp;" + result.data.totalPrices + "元";
+                var node1 = "";
+                for (var key in result.data.goods_quantity_Map) {
+                    node1 += "商品:&nbsp;" + key + "&nbsp;&nbsp;&nbsp;&nbsp;总共:&nbsp;" + result.data.goods_quantity_Map[key] + "件<br>"
+                }
+                document.getElementById("model_quantity").innerHTML = node1;
+                document.getElementById("model_total").style.display = "";
+                document.getElementById("model_quantity").style.display = "";
+            });
+        } else {
+            $.post("${path.concat('/order/customerOrder/')}" + obj.id, function (result) {
+                $("#customer_order_id").text(obj.id);
+                var customerorder = result.data;
+                if (customerorder.agent == null) {
+                    document.getElementById("customer_model_p").innerHTML = "无代理商"
+                } else {
+                    document.getElementById("customer_model_p").innerHTML = "代理商：" + customerorder.agent.name;
+                }
+                var f = document.getElementById("customer_model_table");
+                var childs = f.childNodes;
+                for (var i = childs.length - 1; i >= 0; i--) {
+                    f.removeChild(childs[i]);
+                }
 
-               var node = "<tr><th>客户</th><th>产品</th><th>数量</th><th>价格</th></tr>";          
-               node += "<tr><td>" + customerorder.receiverName + "</td><td>" + customerorder.goods.name + "</td><td>" +customerorder.quantity + "</td><td>" + customerorder.totalPrice + "</td></tr>";
-               $("#model_table").append(node);
-               document.getElementById("model_total").style.display="none";
-               document.getElementById("model_quantity").style.display="none";
-           });
-       }
+                var node = "<tr><th>客户</th><th>产品</th><th>数量</th><th>价格</th></tr>";
+                node += "<tr><td>" + customerorder.receiverName + "</td><td>" + customerorder.goods.name + "</td><td>" + customerorder.quantity + "</td><td>" + customerorder.totalPrice + "</td></tr>";
+                $("#customer_model_table").append(node);
+                document.getElementById("customer_model_total").style.display = "none";
+                document.getElementById("customer_model_quantity").style.display = "none";
+            });
+        }
 
     }
 

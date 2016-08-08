@@ -12,6 +12,7 @@ public class OrderItem extends Entity {
     private int goodsQuantity;
     private double orderItemPrice;
     private String receiveAddress;
+    private String description;
     private Customer customer;
     private Goods4Agent goods;
     private Order order;
@@ -35,21 +36,26 @@ public class OrderItem extends Entity {
         this(customerId, goodsId, goodsQuantity, orderItemPrice);
         this.receiveAddress = receiveAddress;
     }
-    
-    public OrderItem(CustomerOrder customerOrder){
-    	this.orderItemId = customerOrder.getOrderId();
-    	this.status = customerOrder.getStatus();
-    	this.goodsQuantity = customerOrder.getQuantity();
-    	this.orderItemPrice = customerOrder.getTotalPrice();
-    	this.receiveAddress = customerOrder.getReceiverAddress();
-    	Customer customer = new Customer();
-    	CustomerPhone phone = new CustomerPhone();
-    	phone.setPhone(customerOrder.getReceiverPhone());
-    	customer.setName(customerOrder.getReceiverName());
-    	customer.setPhone(phone);
-    	this.customer = customer;
-    	this.goods = new Goods4Agent(customerOrder.getGoods());
-    	this.setCreateAt(customerOrder.getCreateAt());
+
+    public OrderItem(String customerId, String goodsId, int goodsQuantity, double orderItemPrice, String receiveAddress, String description) {
+        this(customerId, goodsId, goodsQuantity, orderItemPrice, receiveAddress);
+        this.description = description;
+    }
+
+    public OrderItem(CustomerOrder customerOrder) {
+        this.orderItemId = customerOrder.getOrderId();
+        this.status = customerOrder.getStatus();
+        this.goodsQuantity = customerOrder.getQuantity();
+        this.orderItemPrice = customerOrder.getTotalPrice();
+        this.receiveAddress = customerOrder.getReceiverAddress();
+        Customer customer = new Customer();
+        CustomerPhone phone = new CustomerPhone();
+        phone.setPhone(customerOrder.getReceiverPhone());
+        customer.setName(customerOrder.getReceiverName());
+        customer.setPhone(phone);
+        this.customer = customer;
+        this.goods = new Goods4Agent(customerOrder.getGoods());
+        this.setCreateAt(customerOrder.getCreateAt());
     }
 
     public String getOrderItemId() {
@@ -114,5 +120,13 @@ public class OrderItem extends Entity {
 
     public void setReceiveAddress(String receiveAddress) {
         this.receiveAddress = receiveAddress;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

@@ -8,9 +8,45 @@
         </div>
     </div>
    <div class="row">
-        <div class="col-md-12 col-lg-12">
-            本月总计购买商品${orderMonth.quantity}盒，共计${orderMonth.price}元<br>
-            累计购买商品${orderMonth.totalQuantity}盒，共计${orderMonth.totalPrice}元<br>
+        <div class="col-sm-12 col-md-12 col-lg-12">
+            本月总计购买商品：
+        #if(${monthlyGoods})
+            <table class="table table-bordered">
+                 <tr>
+                    <th class="col-sm-4 col-md-4 col-lg-4">商品名</th>
+                    <th class="col-sm-4 col-md-4 col-lg-4">总盒数</th>
+                    <th class="col-sm-4 col-md-4 col-lg-4">总价</th>
+                </tr>
+            #foreach($goods in ${monthlyGoods})
+                <tr>
+                    <td>${goods.goodsName}</td>
+                    <td>${goods.goodsQuantity}</td>
+                    <td>${goods.recordPrice}</td>
+                </tr>
+            #end
+            </table>
+        #else
+            当月暂无商品购买记录<br>
+        #end
+            累计购买商品：
+        #if(${totalGoods})
+            <table class="table table-bordered">
+                <tr>
+                    <th class="col-sm-4 col-md-4 col-lg-4">商品名</th>
+                    <th class="col-sm-4 col-md-4 col-lg-4">总盒数</th>
+                    <th class="col-sm-4 col-md-4 col-lg-4">总价</th>
+                </tr>
+            #foreach($goods in ${totalGoods})
+                <tr>
+                    <td>${goods.goodsName}</td>
+                    <td>${goods.goodsQuantity}</td>
+                    <td>${goods.recordPrice}</td>
+                </tr>
+            #end
+            </table>
+        #else
+            暂无商品购买记录<br>
+        #end
             总计已注册的代理商有${orderMonth.totalNum}人，本月新注册代理商${orderMonth.num}人
         </div>
     </div>
@@ -18,8 +54,56 @@
     <div class="row">
         <div class="col-md-12 col-lg-12">
             本月已付款（未发货）订单：${orderMonth.payedMonth}笔<br>
+        #if(${payedRecord})
+            <table class="table table-bordered">
+                <tr>
+                    <th class="col-sm-4 col-md-4 col-lg-4">商品名</th>
+                    <th class="col-sm-4 col-md-4 col-lg-4">总盒数</th>
+                    <th class="col-sm-4 col-md-4 col-lg-4">总价</th>
+                </tr>
+                #foreach($goods in ${payedRecord})
+                <tr>
+                    <td>${goods.goodsName}</td>
+                    <td>${goods.goodsQuantity}</td>
+                    <td>${goods.recordPrice}</td>
+                </tr>
+                #end
+            </table>
+        #end
             本月已发货订单（包含已结束）：${orderMonth.shippedMonth}笔<br>
-            本月已赠送订单：${orderMonth.giftMonth}笔
+        #if(${shippedRecord})
+            <table class="table table-bordered">
+                <tr>
+                    <th class="col-sm-4 col-md-4 col-lg-4">商品名</th>
+                    <th class="col-sm-4 col-md-4 col-lg-4">总盒数</th>
+                    <th class="col-sm-4 col-md-4 col-lg-4">总价</th>
+                </tr>
+                #foreach($goods in ${shippedRecord})
+                <tr>
+                    <td>${goods.goodsName}</td>
+                    <td>${goods.goodsQuantity}</td>
+                    <td>${goods.recordPrice}</td>
+                </tr>
+                #end
+            </table>
+        #end
+            本月已赠送订单：${orderMonth.giftMonth}笔<br>
+        #if(${giftRecord})
+            <table class="table table-bordered">
+                <tr>
+                    <th class="col-sm-4 col-md-4 col-lg-4">商品名</th>
+                    <th class="col-sm-4 col-md-4 col-lg-4">总盒数</th>
+                    <th class="col-sm-4 col-md-4 col-lg-4">总价</th>
+                </tr>
+                #foreach($goods in ${giftRecord})
+                <tr>
+                    <td>${goods.goodsName}</td>
+                    <td>${goods.goodsQuantity}</td>
+                    <td>${goods.recordPrice}</td>
+                </tr>
+                #end
+            </table>
+        #end
         </div>
     </div>
     <hr>

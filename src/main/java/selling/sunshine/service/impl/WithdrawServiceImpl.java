@@ -2,6 +2,10 @@ package selling.sunshine.service.impl;
 
 import com.pingplusplus.Pingpp;
 import com.pingplusplus.model.Transfer;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +17,10 @@ import selling.sunshine.service.WithdrawService;
 import selling.sunshine.utils.PlatformConfig;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
+import selling.sunshine.utils.WorkBookUtil;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -122,6 +129,41 @@ public class WithdrawServiceImpl implements WithdrawService {
             }
             result.setData(money);
         }
+        return result;
+    }
+
+    @Override
+    public ResultData produceApply(List<WithdrawRecord> list) {
+        ResultData result = new ResultData();
+        Workbook workbook = WorkBookUtil.getWithdrawApplyTemplate();
+        int index = 3;
+        double sum = 0;
+        Sheet sheet = workbook.getSheetAt(0);
+        for (WithdrawRecord item : list) {
+            sum += item.getAmount();
+            Row current = sheet.createRow(index);
+            Cell withdrawNo = current.createCell(0);
+            withdrawNo.setCellValue(item.getWithdrawId());
+            Cell agentName = current.createCell(1);
+            agentName.setCellValue(item.getAgent().getName());
+            Cell amount = current.createCell(2);
+            amount.setCellValue(item.getAmount());
+            Cell createAt = current.createCell(3);
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            createAt.setCellValue(format.format(item.getCreateAt()));
+            Cell channel = current.createCell(4);
+            channel.setCellValue("wx_pub");
+            Cell account = current.createCell(5);
+            account.setCellValue(item.getOpenId());
+        }
+        Row row = sheet.getRow(1);
+        Cell total = row.createCell(2);
+        total.setCellValue(sum);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        Calendar instance = Calendar.getInstance();
+        Cell time = row.createCell(5);
+        time.setCellValue(format.format(instance.getTime()));
+        result.setData(workbook);
         return result;
     }
 }
