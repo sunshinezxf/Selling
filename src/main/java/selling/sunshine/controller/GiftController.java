@@ -144,4 +144,11 @@ public class GiftController {
         view.setViewName("/agent/prompt");
         return view;
     }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/check")
+    public ModelAndView check() {
+        ModelAndView view = new ModelAndView();
+
+        return view;
+    }
 }
