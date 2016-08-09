@@ -7,16 +7,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import selling.sunshine.form.gift.ApplyForm;
 import selling.sunshine.model.Admin;
 import selling.sunshine.model.BackOperationLog;
 import selling.sunshine.model.User;
 import selling.sunshine.model.gift.GiftApply;
+import selling.sunshine.model.gift.GiftApplyStatus;
 import selling.sunshine.model.gift.GiftConfig;
 import selling.sunshine.model.goods.Goods4Agent;
 import selling.sunshine.model.lite.Agent;
@@ -166,6 +164,46 @@ public class GiftController {
         ResultData fetchResponse = agentService.fetchGiftApply(condition, param);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             result = (DataTablePage<GiftApply>) fetchResponse.getData();
+        }
+        return result;
+    }
+
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.GET, value = "/apply/{applyId}")
+    public ResultData view(@PathVariable("applyId") String applyId) {
+        ResultData result = new ResultData();
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("applyId", applyId);
+        ResultData response = agentService.fetchGiftApply(condition);
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(((List<GiftApply>) response.getData()).get(0));
+        } else {
+            result.setResponseCode(ResponseCode.RESPONSE_NULL);
+        }
+        return result;
+    }
+
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value = "/apply/decline")
+    public ResultData decline(String applyId) {
+        ResultData result = new ResultData();
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("applyId", applyId);
+        ResultData response = agentService.fetchGiftApply(condition);
+        if (response.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            response.setDescription(response.getDescription());
+        }
+        GiftApply apply = ((List<GiftApply>) response.getData()).get(0);
+        if (apply.getStatus() != GiftApplyStatus.APPLYED) {
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription("该申请已经被处理");
+            return result;
+        }
+        apply.setStatus(GiftApplyStatus.REJECTED);
+        response = agentService.declineGiftApply(apply);
+        if (response.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            result.setDescription(response.getDescription());
         }
         return result;
     }

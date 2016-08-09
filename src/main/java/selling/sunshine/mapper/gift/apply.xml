@@ -41,4 +41,15 @@
             AND block_flag = #{blockFlag}
         </if>
     </select>
+
+    <update id="block" parameterType="selling.sunshine.model.gift.GiftApply">
+        UPDATE gift_apply
+        <set>
+            <if test="status != null">
+                apply_status #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler}
+            </if>
+            gift_apply_id = #{applyId}
+        </set>
+        WHERE gift_apply_id = #{applyId}
+    </update>
 </mapper>

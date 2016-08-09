@@ -83,6 +83,23 @@ public class GiftApplyDaoImpl extends BaseDao implements GiftApplyDao {
         return result;
     }
 
+    @Override
+    public ResultData blockGiftApply(GiftApply apply) {
+        ResultData result = new ResultData();
+        synchronized (lock) {
+            try {
+                sqlSession.update("selling.gift.apply.block", apply);
+                result.setData(apply);
+            } catch (Exception e) {
+                logger.error(e.getMessage());
+                result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+                result.setDescription(e.getMessage());
+            } finally {
+                return result;
+            }
+        }
+    }
+
     private List<GiftApply> queryGiftApplyByPage(Map<String, Object> condition, int start, int length) {
         List<GiftApply> result = new ArrayList<>();
         try {

@@ -371,6 +371,21 @@ public class AgentServiceImpl implements AgentService {
     }
 
     @Override
+    public ResultData fetchGiftApply(Map<String, Object> condition) {
+        ResultData result = new ResultData();
+        ResultData response = giftApplyDao.queryGiftApply(condition);
+        result.setResponseCode(response.getResponseCode());
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            if (((List<GiftApply>) response.getData()).isEmpty()) {
+                result.setResponseCode(ResponseCode.RESPONSE_NULL);
+            }
+        } else {
+            response.setDescription(response.getDescription());
+        }
+        return result;
+    }
+
+    @Override
     public ResultData fetchGiftApply(Map<String, Object> condition, DataTableParam param) {
         ResultData result = new ResultData();
         ResultData queryResponse = giftApplyDao.queryGiftApplyByPage(condition, param);
@@ -379,6 +394,19 @@ public class AgentServiceImpl implements AgentService {
             result.setData(queryResponse.getData());
         } else if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
             result.setDescription(queryResponse.getDescription());
+        }
+        return result;
+    }
+
+    @Override
+    public ResultData declineGiftApply(GiftApply apply) {
+        ResultData result = new ResultData();
+        ResultData response = giftApplyDao.blockGiftApply(apply);
+        result.setResponseCode(response.getResponseCode());
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(response.getData());
+        } else {
+            result.setDescription(response.getDescription());
         }
         return result;
     }
