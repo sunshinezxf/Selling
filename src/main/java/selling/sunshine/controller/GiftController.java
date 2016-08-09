@@ -133,7 +133,7 @@ public class GiftController {
         Agent agent = user.getAgent();
         Goods4Agent goods = new Goods4Agent();
         goods.setGoodsId(form.getGoodsId());
-        GiftApply apply = new GiftApply(Integer.parseInt(form.getPotential()), Integer.parseInt(form.getApplyLine()), agent, goods);
+        GiftApply apply = new GiftApply(Integer.parseInt(form.getPotential()), Integer.parseInt(form.getApplyLine()), agent, goods, Integer.parseInt(form.getLastQuantity()), Integer.parseInt(form.getTotalQuantity()));
         ResultData response = agentService.createGiftApply(apply);
         if (response.getResponseCode() != ResponseCode.RESPONSE_OK) {
             Prompt prompt = new Prompt(PromptCode.DANGER, "操作提示", "您的赠送申请提交失败", "/agent/gift");

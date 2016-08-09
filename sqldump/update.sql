@@ -201,4 +201,9 @@ CREATE TABLE IF NOT EXISTS `selling`.`gift_apply` (
     ON UPDATE NO ACTION)
   ENGINE = InnoDB;
 
+##2016年8月9日更新
+ALTER TABLE `selling`.`gift_apply`
+ADD COLUMN `last_quantity` INT NOT NULL DEFAULT 0 AFTER `apply_line`,
+ADD COLUMN `total_quantity` INT NOT NULL DEFAULT 0 AFTER `last_quantity`;
+
 
