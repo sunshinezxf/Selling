@@ -28,7 +28,7 @@
             AND gift_apply_id = #{applyId}
         </if>
         <if test="status != null">
-            AND status IN
+            AND apply_status IN
             <foreach collection="status" index="index" item="item" open="(" close=")" separator=",">
                 #{item}
             </foreach>
