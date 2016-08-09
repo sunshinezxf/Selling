@@ -41,6 +41,4 @@ public interface AgentDao {
     ResultData updateAgentGift(GiftConfig config);
 
     ResultData updateAgentGift(List<GiftConfig> list);
-
-    ResultData insertGiftApply(GiftApply apply);
 }

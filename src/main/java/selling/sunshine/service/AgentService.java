@@ -59,4 +59,6 @@ public interface AgentService {
     ResultData createAgentGift(GiftConfig giftConfig);
 
     ResultData createGiftApply(GiftApply apply);
+
+    ResultData fetchGiftApply(Map<String, Object> condition, DataTableParam param);
 }

@@ -81,4 +81,8 @@
     <bean id="chargeDao" class="selling.sunshine.dao.impl.ChargeDaoImpl">
         <property name="sqlSession" ref="sqlSession"></property>
     </bean>
+
+    <bean id="giftApplyDao" class="selling.sunshine.dao.impl.GiftApplyDaoImpl">
+        <property name="sqlSession" ref="sqlSession"></property>
+    </bean>
 </beans>

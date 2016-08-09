@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import selling.sunshine.dao.AgentDao;
 import selling.sunshine.dao.BankCardDao;
+import selling.sunshine.dao.GiftApplyDao;
 import selling.sunshine.dao.WithdrawDao;
 import selling.sunshine.model.Agent;
 import selling.sunshine.model.BankCard;
@@ -34,6 +35,9 @@ public class AgentServiceImpl implements AgentService {
 
     @Autowired
     private AgentDao agentDao;
+
+    @Autowired
+    private GiftApplyDao giftApplyDao;
 
     @Autowired
     private WithdrawDao withdrawDao;
@@ -356,12 +360,25 @@ public class AgentServiceImpl implements AgentService {
     @Override
     public ResultData createGiftApply(GiftApply apply) {
         ResultData result = new ResultData();
-        ResultData response = agentDao.insertGiftApply(apply);
+        ResultData response = giftApplyDao.insertGiftApply(apply);
         result.setResponseCode(response.getResponseCode());
         if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
             result.setData(response.getData());
         } else {
             result.setDescription(response.getDescription());
+        }
+        return result;
+    }
+
+    @Override
+    public ResultData fetchGiftApply(Map<String, Object> condition, DataTableParam param) {
+        ResultData result = new ResultData();
+        ResultData queryResponse = giftApplyDao.queryGiftApplyByPage(condition, param);
+        result.setResponseCode(queryResponse.getResponseCode());
+        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(queryResponse.getData());
+        } else if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
+            result.setDescription(queryResponse.getDescription());
         }
         return result;
     }

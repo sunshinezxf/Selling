@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="selling.gift.apply">
-    <resultMap id="giftApplyGift" type="selling.sunshine.model.gift.GiftApply">
+    <resultMap id="giftApplyVo" type="selling.sunshine.model.gift.GiftApply">
         <result property="applyId" column="gift_apply_id"></result>
         <result property="potential" column="potential"></result>
         <result property="line" column="apply_line"></result>
@@ -17,4 +17,28 @@
         INSERT INTO gift_apply(gift_apply_id, goods_id, agent_id, potential, apply_line, apply_status, block_flag, create_time)
         VALUES (#{applyId}, #{goods.goodsId}, #{agent.agentId}, #{potential}, #{line}, #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler}, #{blockFlag}, #{createAt})
     </insert>
+
+    <select id="query" parameterType="java.util.Map" resultMap="giftApplyVo">
+        SELECT gift_apply_id, goods_id, agent_id, potential, apply_line, apply_status, block_flag, create_time
+        FROM gift_apply
+        WHERE 1 = 1
+        <if test="applyId != null">
+            AND gift_apply_id = #{applyId}
+        </if>
+        <if test="status != null">
+            AND status IN
+            <foreach collection="status" index="index" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="goodsId != null">
+            AND goods_id = #{goodsId}
+        </if>
+        <if test="agentId != null">
+            AND agent_id = #{agentId}
+        </if>
+        <if test="blockFlag != null">
+            AND block_flag = #{blockFlag}
+        </if>
+    </select>
 </mapper>

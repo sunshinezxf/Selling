@@ -5,6 +5,7 @@ import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +20,8 @@ import selling.sunshine.model.gift.GiftApply;
 import selling.sunshine.model.gift.GiftConfig;
 import selling.sunshine.model.goods.Goods4Agent;
 import selling.sunshine.model.lite.Agent;
+import selling.sunshine.pagination.DataTablePage;
+import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.AgentService;
 import selling.sunshine.service.CommodityService;
 import selling.sunshine.service.LogService;
@@ -30,9 +33,7 @@ import selling.sunshine.utils.ResultData;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/gift")
@@ -148,7 +149,24 @@ public class GiftController {
     @RequestMapping(method = RequestMethod.GET, value = "/check")
     public ModelAndView check() {
         ModelAndView view = new ModelAndView();
-
+        view.setViewName("/backend/agent/gift/check");
         return view;
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/check")
+    public DataTablePage<GiftApply> check(DataTableParam param) {
+        DataTablePage<GiftApply> result = new DataTablePage<>();
+        if (StringUtils.isEmpty(param)) {
+            return result;
+        }
+        Map<String, Object> condition = new HashMap<>();
+        List<Integer> status = new ArrayList<>(Arrays.asList(0));
+        condition.put("status", status);
+        condition.put("blockFlag", false);
+        ResultData fetchResponse = agentService.fetchGiftApply(condition, param);
+        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result = (DataTablePage<GiftApply>) fetchResponse.getData();
+        }
+        return result;
     }
 }
