@@ -10,37 +10,37 @@
                     <table class="table col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <tr>
                             <td scope="row">代理商</td>
-                            <td></td>
+                            <td id="agent_name"></td>
                         </tr>
                         <tr>
                             <td scope="row">赠送产品</td>
-                            <td></td>
+                            <td id="goods_name"></td>
                         </tr>
                         <tr>
                             <td scope="row">意向购买人数</td>
-                            <td></td>
+                            <td id="potential"></td>
                         </tr>
                         <tr>
                             <td scope="row">申请盒数</td>
-                            <td></td>
+                            <td id="line"></td>
                         </tr>
                         <tr>
                             <td scope="row">上月销量</td>
-                            <td></td>
+                            <td id="last_quantity"></td>
                         </tr>
                         <tr>
                             <td scope="row">累积销量</td>
-                            <td></td>
+                            <td id="total_quantity"></td>
                         </tr>
                         <tr>
                             <td scope="row">申请时间</td>
-                            <td></td>
+                            <td id="apply_time"></td>
                         </tr>
                     </table>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal" id="confirm">确认</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">确认</button>
             </div>
         </div>
     </div>

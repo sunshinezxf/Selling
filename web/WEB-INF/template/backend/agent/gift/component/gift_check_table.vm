@@ -1,7 +1,7 @@
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id-target="agent-management">
     <div class="row">
         <div class="col-md-12 col-lg-12">
-            <h1><i class="fa fa-home"></i> 代理审核 </h1>
+            <h1><i class="fa fa-home"></i> 赠送申请 </h1>
             <ol class="breadcrumb">
                 <li><a href="${path.concat('/dashboard')}">首页</a></li>
                 <li><a data-toggle="collapse" data-parent="#accordion" href="#agent-management">代理管理</a></li>
@@ -18,6 +18,7 @@
     </div>
 </div>
 #parse("/backend/agent/gift/component/gift_detail_modal.vm")
+#parse("/backend/agent/gift/component/reject_modal.vm")
 <script>
     $(document).ready(function () {
         $("#check_gift_table").DataTable({
@@ -33,7 +34,7 @@
             "bProcessing": true,
             "bServerSide": true,
             "bInfoFiltered": false,
-           // "sAjaxSource": '${path.concat('/agent/check')}',
+            "sAjaxSource": '${path.concat('/gift/check')}',
             "infoFiltered": false,
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                 $(nRow).removeClass('dataTable');
@@ -52,11 +53,11 @@
                 })
             },
             columns: [
-                {title: "姓名", "mData": "name"},
-                {title: "赠送商品", "mData": "goods"},
+                {title: "姓名", "mData": "agent.name"},
+                {title: "赠送商品", "mData": "goods.name"},
                 {
                     title: "意向人数/申请盒数", "mRender": function (data, type, full) {
-                        var  quantity= full.potential+"/"+full.apply;
+                        var  quantity= full.potential+"/"+full.line;
                         return quantity;
                     }
                 },
@@ -68,12 +69,12 @@
                 {
                     title: "操作", "mRender": function (data, type, full) {
                     var operation = "";
-                    var detail_btn = "<button type='button' class='btn btn-info btn-group-sm' id='" + full.agentId + "' onclick=setId(this) data-toggle='modal' data-target='#gift_detail_modal'>详情</button>&nbsp;"
+                    var detail_btn = "<button type='button' class='btn btn-info btn-group-sm' id='" + full.applyId + "' onclick=detail(this) data-toggle='modal' data-target='#gift_detail_modal'>详情</button>&nbsp;"
                     operation += detail_btn;
-                    var giftCofigUrl = "${path.concat('/agent/gift/')}" + full.agentId;
-                    var giftCofig_btn = "<button type='button' class='btn btn-success btn-group-sm' onclick=\"javascript:location.href='" + giftCofigUrl + "'\">赠送</button>&nbsp;"
-                    operation += giftCofig_btn;
-                    var reject_btn = "<button type='button' class='btn btn-warning btn-group-sm' id='" + full.agentId + "' onclick=setId(this)>回绝</button>&nbsp;"
+                    var giftConfigUrl = "${path.concat('/agent/gift/')}" + full.agent.agentId;
+                    var giftConfig_btn = "<a type='button' class='btn btn-success btn-group-sm' href='" + giftConfigUrl + "'>赠送</a>&nbsp;"
+                    operation += giftConfig_btn;
+                    var reject_btn = "<button type='button' class='btn btn-warning btn-group-sm' id='" + full.applyId + "' onclick=reject(this) data-toggle='modal' data-target='#reject_modal'>回绝</button>&nbsp;"
                     operation += reject_btn;
                     return operation;
                 }
@@ -86,7 +87,7 @@
                 "info": "从 _START_ 到 _END_, 共 _TOTAL_ 条数据",
                 "infoEmpty": "暂无数据",
                 "infoFiltered": "数据表中共 _MAX_ 条记录)",
-                "zeroRecords": "当前没有需要审核的代理",
+                "zeroRecords": "当前没有赠送申请",
                 "search": "搜索:",
                 "paginate": {
                     "first": "首页",
@@ -97,9 +98,32 @@
             }
         });
 
-        var id;
-        function setId(obj){
-            id=obj.id;
-        }
     });
+    
+    function detail(obj){
+        var applyId=obj.id;
+        if(applyId){
+            var url="${path.concat('/gift/apply/')}"+applyId;
+            $.get(url,function(result){
+               if(result.responseCode=="RESPONSE_OK"){
+                    $("#agent_name").text(result.data.agent.name);
+                    $("#goods_name").text(result.data.goods.name);
+                    $("#potential").text(result.data.potential);
+                    $("#line").text(result.data.line);
+                    $("#last_quantity").text(result.data.last);
+                    $("#total_quantity").text(result.data.total);
+                    $("#apply_time").text((new Date(result.data.createAt)).format("yyyy/MM/dd"));
+                }else{
+                    alert(result.description);
+                } 
+            });
+        }else{
+            alert("不存在该赠送申请!");
+        }
+    }
+        
+    function reject(obj){
+        var applyId=obj.id;
+        $("#apply_id").text(applyId);
+    }
 </script>
