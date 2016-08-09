@@ -1,0 +1,55 @@
+<div class="modal fade" id="gift_detail_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">x</button>
+                <h4 class="modal-title">赠送申请详情</h4>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <tr>
+                            <td scope="row">代理商</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td scope="row">赠送产品</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td scope="row">意向购买人数</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td scope="row">申请盒数</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td scope="row">上月销量</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td scope="row">累积销量</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td scope="row">申请时间</td>
+                            <td></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="confirm">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        $("#gift_detail_modal").modal({
+            show: false,
+            keyboard: true
+        });
+    });
+</script>
