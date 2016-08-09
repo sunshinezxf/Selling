@@ -103,7 +103,7 @@ public class GiftApplyDaoImpl extends BaseDao implements GiftApplyDao {
     private List<GiftApply> queryGiftApplyByPage(Map<String, Object> condition, int start, int length) {
         List<GiftApply> result = new ArrayList<>();
         try {
-            result = sqlSession.selectList("selling.agent.query", condition, new RowBounds(start, length));
+            result = sqlSession.selectList("selling.gift.apply.query", condition, new RowBounds(start, length));
         } catch (Exception e) {
             logger.error(e.getMessage());
         } finally {
