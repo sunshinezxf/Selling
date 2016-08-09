@@ -11,8 +11,24 @@
         <result property="total" column="total_quantity"></result>
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
-        <association property="goods" column="goodsId = goods_id"></association>
-        <association property="agent" column="agentId = agent_id"></association>
+        <association property="goods" column="goodsId = goods_id" select="agentLiteQuery"></association>
+        <association property="agent" column="agentId = agent_id" select="goods4AgentQuery"></association>
+    </resultMap>
+
+    <resultMap id="agentLiteVo" type="selling.sunshine.model.lite.Agent">
+        <result property="agentId" column="agent_id"></result>
+        <result property="name" column="agent_name"></result>
+        <result property="phone" column="agent_phone"></result>
+    </resultMap>
+
+    <resultMap id="goods4AgentVo" type="selling.sunshine.model.goods.Goods4Agent">
+        <result property="goodsId" column="goods_id"></result>
+        <result property="name" column="goods_name"></result>
+        <result property="description" column="goods_description"></result>
+        <result property="customerPrice" column="prime_price"></result>
+        <result property="agentPrice" column="agent_price"></result>
+        <result property="blockFlag" column="block_flag"></result>
+        <result property="createAt" column="create_time"></result>
     </resultMap>
 
     <insert id="insert" parameterType="selling.sunshine.model.gift.GiftApply" useGeneratedKeys="false">
@@ -21,7 +37,8 @@
     </insert>
 
     <select id="query" parameterType="java.util.Map" resultMap="giftApplyVo">
-        SELECT gift_apply_id, goods_id, agent_id, potential, apply_line, apply_status, last_quantity, total_quantity, block_flag, create_time
+        SELECT gift_apply_id, goods_id, agent_id, potential, apply_line, apply_status, last_quantity, total_quantity,
+        block_flag, create_time
         FROM gift_apply
         WHERE 1 = 1
         <if test="applyId != null">
@@ -54,4 +71,16 @@
         </set>
         WHERE gift_apply_id = #{applyId}
     </update>
+
+    <select id="agentLiteQuery" parameterType="java.util.Map" resultMap="agentLiteVo">
+        SELECT agent_id, agent_name, agent_phone
+        FROM agent
+        WHERE agent_id = #{agentId}
+    </select>
+
+    <select id="goods4AgentQuery" parameterType="java.util.Map" resultMap="goods4AgentVo">
+        SELECT goods_id, goods_name, goods_description, agent_price, block_flag, create_time
+        FROM goods
+        WHERE goods_id = #{goodsId}
+    </select>
 </mapper>
