@@ -21,7 +21,7 @@
     </insert>
 
     <select id="query" parameterType="java.util.Map" resultMap="giftApplyVo">
-        SELECT gift_apply_id, goods_id, agent_id, potential, apply_line, apply_status, last, total, block_flag, create_time
+        SELECT gift_apply_id, goods_id, agent_id, potential, apply_line, apply_status, last_quantity, total_quantity, block_flag, create_time
         FROM gift_apply
         WHERE 1 = 1
         <if test="applyId != null">
