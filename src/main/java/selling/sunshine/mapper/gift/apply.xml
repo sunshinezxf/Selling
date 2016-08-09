@@ -65,7 +65,7 @@
         UPDATE gift_apply
         <set>
             <if test="status != null">
-                apply_status #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler},
+                apply_status = #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler},
             </if>
             gift_apply_id = #{applyId}
         </set>
