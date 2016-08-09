@@ -379,6 +379,7 @@ public class AgentServiceImpl implements AgentService {
             if (((List<GiftApply>) response.getData()).isEmpty()) {
                 result.setResponseCode(ResponseCode.RESPONSE_NULL);
             }
+            result.setData(response.getData());
         } else {
             response.setDescription(response.getDescription());
         }

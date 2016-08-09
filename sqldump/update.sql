@@ -174,7 +174,7 @@ as select agent_id, goods_id, sum(quantity) AS quantity
 
 create view total_volume_view(agent_id, goods_id, quantity)
 as select agent_id, goods_id, sum(quantity) AS quantity
-   from volume_item
+   from volume_item;
 
 ##2016年8月6日更新
 CREATE TABLE IF NOT EXISTS `selling`.`gift_apply` (
