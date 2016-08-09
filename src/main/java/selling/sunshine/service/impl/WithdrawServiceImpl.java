@@ -155,6 +155,7 @@ public class WithdrawServiceImpl implements WithdrawService {
             channel.setCellValue("wx_pub");
             Cell account = current.createCell(5);
             account.setCellValue(item.getOpenId());
+            index ++;
         }
         Row row = sheet.getRow(1);
         Cell total = row.createCell(2);
