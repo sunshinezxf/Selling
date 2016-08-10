@@ -58,7 +58,7 @@
                 })
             },
             columns: [
-                {title: "编号", "mData": "refundRecordId"},
+                {title: "编号", "mData": "recordId"},
                 {title: "代理商", "mData": "agent.name"},
                 {title: "商品", "mData": "orderPool.goods.name"},
                 {
@@ -66,13 +66,13 @@
                     return ((new Date(full.createAt)).format("yyyy/MM/dd"));
                 }
                 },
-                {title: "预期返现金额(元)", "mData": "refundAmount"},
+                {title: "预期返现金额(元)", "mData": "amount"},
                 {title: "盒数(盒)", "mRender": function(data, type, full) {
-                	var content = full.refundAmount/full.refundPercent;
+                	var content = full.amount/full.percent;
                 	return content;
                 }},
-                {title: "返现比例(元/盒)", "mData": "refundPercent"},
-                {title: "内容", "mData": "refundDescription"}
+                {title: "返现比例(元/盒)", "mData": "percent"},
+                {title: "内容", "mData": "description"}
             ],
             "language": {
                 "processing": "正在加载中",
