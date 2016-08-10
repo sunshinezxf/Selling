@@ -16,6 +16,8 @@
                         <li><a class="sub-nav" href="${path.concat('/agent/overview')}"><i class="fa fa-tasks"></i>
                             代理概览</a>
                         </li>
+                        <li><a class="sub-nav" href="${path.concat('/gift/check')}"><i class="fa fa-edit"></i>
+                            赠送申请</a></li>
                     </ul>
                 </li>
             #end

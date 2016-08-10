@@ -124,6 +124,24 @@ public class WorkBookUtil {
         return workbook;
     }
 
+    public static Workbook getWithdrawApplyTemplate() {
+        Workbook workbook = null;
+        String path = WorkBookUtil.class.getResource("/").getPath();
+        int index = path.lastIndexOf("/WEB-INF/classes/");
+        String parent = path.substring(0, index);
+        File file = new File(parent + PlatformConfig.getValue("withdraw_apply_template"));
+        if (!file.exists()) {
+            logger.error("提现申请模板文件不存在");
+        }
+        try {
+            OPCPackage pkg = OPCPackage.open(file);
+            workbook = new XSSFWorkbook(pkg);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        return workbook;
+    }
+
     public static boolean createIndentTemplate(String context) {
         int length = 7;
         try {

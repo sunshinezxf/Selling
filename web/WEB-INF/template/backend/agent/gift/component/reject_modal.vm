@@ -1,0 +1,47 @@
+<div class="modal fade" id="reject_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">x</button>
+                <h4 class="modal-title">回绝申请</h4>
+                <p id="apply_id"></p>
+            </div>
+            <div class="modal-body">
+                <h4>是否确认回绝该申请？</h4>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">否，不回绝</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="confirm">是，回绝</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        $("#reject_modal").modal({
+            show: false,
+            keyboard: true
+        });
+        
+        $("#apply_id").hide();
+    });
+    
+    $("#confirm").click(function(){
+        //传给后台applyId
+        var applyId=$("#apply_id").text();
+        if(applyId){
+            var url="${path.concat('/gift/apply/decline')}";
+            var param={applyId:applyId};
+            $.post(url,param,function(result){
+               if(result.responseCode=="RESPONSE_OK"){
+                   //alert(JSON.stringify(result));
+                   window.location.reload();
+               }else{
+                   alert(result.description);
+               }
+            });
+        }else{
+            alert("id不存在");
+        }
+    });
+</script>

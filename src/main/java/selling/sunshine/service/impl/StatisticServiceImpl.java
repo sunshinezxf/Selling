@@ -1,18 +1,17 @@
 package selling.sunshine.service.impl;
 
 import com.alibaba.fastjson.JSON;
-
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import selling.sunshine.dao.StatisticDao;
 import selling.sunshine.model.sum.OrderMonth;
 import selling.sunshine.model.sum.Sum4Order;
+import selling.sunshine.model.sum.Vendition;
+import selling.sunshine.model.sum.Volume;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.StatisticService;
 import selling.sunshine.utils.ResponseCode;
@@ -69,14 +68,14 @@ public class StatisticServiceImpl implements StatisticService {
                 int index = 0;
                 while (quantityIterator.hasNext()) {
                     int temp = quantityIterator.next();
-                    if(sum.size() >= index + 1) {
-                    	Sum4Order current = sum.get(index);
-                    	if (current.getQuantity() == temp) {
-                    		val.add(current.getNum());
-                    		index++;
-                    	}else {
-                    		val.add(0);
-                    	}
+                    if (sum.size() >= index + 1) {
+                        Sum4Order current = sum.get(index);
+                        if (current.getQuantity() == temp) {
+                            val.add(current.getNum());
+                            index++;
+                        } else {
+                            val.add(0);
+                        }
                     } else {
                         val.add(0);
                     }
@@ -93,50 +92,50 @@ public class StatisticServiceImpl implements StatisticService {
         return result;
     }
 
-	@Override
-	public ResultData orderStatisticsByPage(DataTableParam param) {
-		ResultData result = new ResultData();
-		ResultData queryResponse=statisticDao.orderStatisticsByPage(param);
-		result.setResponseCode(queryResponse.getResponseCode());
-		if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-			result.setData(queryResponse.getData());
-		} else {
-			result.setDescription(queryResponse.getDescription());
-		}
-		return result;
-	}
+    @Override
+    public ResultData orderStatisticsByPage(DataTableParam param) {
+        ResultData result = new ResultData();
+        ResultData queryResponse = statisticDao.orderStatisticsByPage(param);
+        result.setResponseCode(queryResponse.getResponseCode());
+        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(queryResponse.getData());
+        } else {
+            result.setDescription(queryResponse.getDescription());
+        }
+        return result;
+    }
 
-	@Override
-	public ResultData agentGoodsMonthByPage(DataTableParam param) {
-		ResultData result = new ResultData();
-		ResultData queryResponse=statisticDao.agentGoodsMonthByPage(param);
-		result.setResponseCode(queryResponse.getResponseCode());
-		if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-			result.setData(queryResponse.getData());
-		} else {
-			result.setDescription(queryResponse.getDescription());
-		}
-		return result;
-	}
+    @Override
+    public ResultData agentGoodsMonthByPage(DataTableParam param) {
+        ResultData result = new ResultData();
+        ResultData queryResponse = statisticDao.agentGoodsMonthByPage(param);
+        result.setResponseCode(queryResponse.getResponseCode());
+        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(queryResponse.getData());
+        } else {
+            result.setDescription(queryResponse.getDescription());
+        }
+        return result;
+    }
 
-	@Override
-	public ResultData agentGoodsByPage(DataTableParam param) {
-		ResultData result = new ResultData();
-		ResultData queryResponse=statisticDao.agentGoodsByPage(param);
-		result.setResponseCode(queryResponse.getResponseCode());
-		if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-			result.setData(queryResponse.getData());
-		} else {
-			result.setDescription(queryResponse.getDescription());
-		}
-		return result;
-	}
+    @Override
+    public ResultData agentGoodsByPage(DataTableParam param) {
+        ResultData result = new ResultData();
+        ResultData queryResponse = statisticDao.agentGoodsByPage(param);
+        result.setResponseCode(queryResponse.getResponseCode());
+        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(queryResponse.getData());
+        } else {
+            result.setDescription(queryResponse.getDescription());
+        }
+        return result;
+    }
 
-	@Override
-	public ResultData orderMonth() {
-		ResultData result = new ResultData();
-		ResultData response=statisticDao.orderMonth();
-		result.setResponseCode(response.getResponseCode());
+    @Override
+    public ResultData orderMonth() {
+        ResultData result = new ResultData();
+        ResultData response = statisticDao.orderMonth();
+        result.setResponseCode(response.getResponseCode());
         if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
             if (((List<OrderMonth>) response.getData()).size() == 0) {
                 result.setResponseCode(ResponseCode.RESPONSE_NULL);
@@ -146,13 +145,13 @@ public class StatisticServiceImpl implements StatisticService {
             result.setDescription(response.getDescription());
         }
         return result;
-	}
+    }
 
-	@Override
-	public ResultData orderByYear() {
-		ResultData result = new ResultData();
-		ResultData response=statisticDao.orderByYear();
-		result.setResponseCode(response.getResponseCode());
+    @Override
+    public ResultData orderByYear() {
+        ResultData result = new ResultData();
+        ResultData response = statisticDao.orderByYear();
+        result.setResponseCode(response.getResponseCode());
         if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
             if (((List) response.getData()).size() == 0) {
                 result.setResponseCode(ResponseCode.RESPONSE_NULL);
@@ -162,13 +161,13 @@ public class StatisticServiceImpl implements StatisticService {
             result.setDescription(response.getDescription());
         }
         return result;
-	}
+    }
 
-	@Override
-	public ResultData topThreeAgent() {
-		ResultData result = new ResultData();
-		ResultData response=statisticDao.topThreeAgent();
-		result.setResponseCode(response.getResponseCode());
+    @Override
+    public ResultData topThreeAgent() {
+        ResultData result = new ResultData();
+        ResultData response = statisticDao.topThreeAgent();
+        result.setResponseCode(response.getResponseCode());
         if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
             if (((List) response.getData()).size() == 0) {
                 result.setResponseCode(ResponseCode.RESPONSE_NULL);
@@ -178,5 +177,53 @@ public class StatisticServiceImpl implements StatisticService {
             result.setDescription(response.getDescription());
         }
         return result;
-	}
+    }
+
+    @Override
+    public ResultData purchaseRecord(Map<String, Object> condition) {
+        ResultData result = new ResultData();
+        ResultData response = statisticDao.purchaseRecord(condition);
+        result.setResponseCode(response.getResponseCode());
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            if (((List<Vendition>) response.getData()).size() == 0) {
+                result.setResponseCode(ResponseCode.RESPONSE_NULL);
+            }
+            result.setData(response.getData());
+        } else if (response.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
+            result.setDescription(response.getDescription());
+        }
+        return result;
+    }
+
+    @Override
+    public ResultData fetchLastVolume(Map<String, Object> condition) {
+        ResultData result = new ResultData();
+        ResultData response = statisticDao.queryLastVolume(condition);
+        result.setResponseCode(response.getResponseCode());
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            if (((List<Volume>) response.getData()).isEmpty()) {
+                result.setResponseCode(ResponseCode.RESPONSE_NULL);
+            }
+            result.setData(response.getData());
+        } else {
+            response.setDescription(response.getDescription());
+        }
+        return result;
+    }
+
+    @Override
+    public ResultData fetchTotalVolume(Map<String, Object> condition) {
+        ResultData result = new ResultData();
+        ResultData response = statisticDao.queryLastVolume(condition);
+        result.setResponseCode(response.getResponseCode());
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            if (((List<Volume>) response.getData()).isEmpty()) {
+                result.setResponseCode(ResponseCode.RESPONSE_NULL);
+            }
+            result.setData(response.getData());
+        } else {
+            response.setDescription(response.getDescription());
+        }
+        return result;
+    }
 }

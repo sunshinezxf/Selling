@@ -157,7 +157,6 @@ public class DeliverController {
             out.close();
             out.flush();
             file.delete();
-
         } catch (IOException e) {
             e.printStackTrace();
         }

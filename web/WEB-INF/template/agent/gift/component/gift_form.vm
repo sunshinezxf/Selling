@@ -1,0 +1,204 @@
+<div class="weui_cells">
+    <form id="apply_form">
+        <div class="weui_cell">
+            <div class="weui_cell_hd">
+                <label class="weui_label">代理商</label>
+            </div>
+            <div class="weui_cell_ft weui_cell_primary">
+                <input id="agent_name" name="agent_name" class="weui_input" type="text" value="${name}" readonly/>
+            </div>
+        </div>
+        <div class="weui_cell">
+            <div class="weui_cell_hd">
+                <label class="weui_label">赠送商品</label>
+            </div>
+            <div class="weui_cell_ft weui_cell_primary">
+                <select id="goods_id" name="goodsId" class="goods_type">
+                    <option value="" selected="selected">请选择</option>
+                    #foreach($item in ${goods})
+                    <option value="${item.goodsId}">${item.name}</option>
+                    #end
+                </select>
+            </div>
+        </div>
+        <div class="weui_cell">
+            <div class="weui_cell_hd">
+                <label class="weui_label">意向人数</label>
+            </div>
+            <div class="weui_cell_ft weui_cell_primary">
+                <input id="customer_quantity" name="potential" class="weui_input" type="tel" placeholder="请填写意向购买人数"
+                           autocomplete="off"/>
+            </div>
+        </div>
+        <div class="weui_cell">
+            <div class="weui_cell_hd">
+                <label class="weui_label">申请盒数</label>
+            </div>
+            <div class="weui_cell_ft weui_cell_primary">
+                <input id="goods_quantity" name="applyLine" class="weui_input" type="tel" placeholder="请填写申请盒数"
+                           autocomplete="off"/>
+            </div>
+        </div>
+        <div class="weui_cell">
+            <div class="weui_cell_hd">
+                <label class="weui_label">上月销量</label>
+            </div>
+            <div class="weui_cell_ft weui_cell_primary">
+                <input id="last_month_sales" name="lastQuantity" class="weui_input" type="tel" value="" placeholder="选择商品后可见" readonly/>
+            </div>
+        </div>
+        <div class="weui_cell">
+            <div class="weui_cell_hd">
+                <label class="weui_label">累计销量</label>
+            </div>
+            <div class="weui_cell_ft weui_cell_primary">
+                <input id="total_sales" name="totalQuantity" class="weui_input" type="tel" value="" placeholder="选择商品后可见" readonly/>
+            </div>
+        </div>
+    </form>
+</div>
+<div id="apply_div" class="weui_btn_area">
+    <button type="button" class="weui_btn weui_btn_disabled weui_btn_default" id="apply_btn" disabled="disabled">
+            提交赠送申请
+    </button>
+</div>
+
+<div class="weui_dialog_alert" id="dialog" style="display: none;">
+    <div class="weui_mask"></div>
+    <div class="weui_dialog">
+        <div class="weui_dialog_hd"><strong class="weui_dialog_title">消息</strong></div>
+        <div class="weui_dialog_bd"></div>
+        <div class="weui_dialog_ft">
+            <a href="javascript:;" class="weui_btn_dialog primary">确定</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#goods_id").change(function () {
+            var goodsId=$("#goods_id").val();
+            if(not_null(goodsId)){
+                var url="${path.concat('/agent/"+goodsId+"/volume')}";
+                $.get(url,function(result){
+                    if(result.responseCode=="RESPONSE_OK"){
+                        $('#last_month_sales').val(result.data.last.quantity);
+                        $('#total_sales').val(result.data.total.quantity);
+                        if (validate()) {
+                            active();
+                        } else {
+                            inactive();
+                        }
+                    }else{
+                        alert("不存在该商品！");
+                        $('#last_month_sales').val("");
+                        $('#total_sales').val("");
+                        inactive();
+                    }
+                });
+            }else{
+                $('#last_month_sales').val("");
+                $('#total_sales').val("");
+                inactive();
+            }
+            
+        });
+        
+        $('#customer_quantity').on('input propertychange', function () {
+            if (validate()) {
+                active();
+            } else {
+                inactive();
+            }
+        });
+        
+        $('#goods_quantity').on('input propertychange', function () {
+            if (validate()) {
+                active();
+            } else {
+                inactive();
+            }
+        });
+        
+        $("#customer_quantity").blur(function () {
+            if (not_null($("#customer_quantity").val())) {
+                if (isNaN($("#customer_quantity").val())) {
+                    $("#dialog").find(".weui_dialog_bd").html("意向购买人数请填写数字！");
+                    $("#dialog").fadeIn();
+                    $("#customer_quantity").val("");
+                    inactive();
+                }
+            }
+        });
+        
+        $("#goods_quantity").blur(function () {
+            if (not_null($("#goods_quantity").val())) {
+                if (isNaN($("#goods_quantity").val())) {
+                    $("#dialog").find(".weui_dialog_bd").html("申请盒数请填写数字！");
+                    $("#dialog").fadeIn();
+                    $("#goods_quantity").val("");
+                    inactive();
+                }
+            }
+        });
+    });
+    
+    $("#apply_btn").click(function(){
+        if (isNaN($("#customer_quantity").val())) {
+            $("#dialog").find(".weui_dialog_bd").html("意向购买人数请填写数字！");
+            $("#dialog").fadeIn();
+            $("#customer_quantity").val("");
+            inactive();
+        }else{
+            if (isNaN($("#goods_quantity").val())) {
+                $("#dialog").find(".weui_dialog_bd").html("申请盒数请填写数字！");
+                $("#dialog").fadeIn();
+                $("#goods_quantity").val("");
+                inactive();
+            }else{
+                //提交表单
+                $("#apply_form").attr("action", "${path.concat('/gift/apply')}");
+                $("#apply_form").attr("method", "post");
+                $("#apply_form").submit();
+            }
+        }
+    });
+
+    function validate(){
+        var goodsId=$("#goods_id").val();
+        var customerQuantity=$("#customer_quantity").val();
+        var goodsQuantity=$("#goods_quantity").val();
+        var lastSales=$("#last_month_sales").val();
+        var totalSales=$("#total_sales").val();
+        if(not_null(goodsId)&&not_null(customerQuantity)&&not_null(goodsQuantity)&&not_null(lastSales)&&not_null(totalSales)){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    
+    function active(){
+        $("#apply_btn").removeAttr("disabled");
+        $("#apply_btn").removeClass("weui_btn_disabled");
+        $("#apply_btn").removeClass("weui_btn_default");
+        $("#apply_btn").addClass("weui_btn_primary");
+    }
+    
+    function inactive(){
+        $("#apply_btn").attr("disabled", "disabled");
+        $("#apply_btn").removeClass("weui_btn_primary");
+        $("#apply_btn").addClass("weui_btn_disabled");
+        $("#apply_btn").addClass("weui_btn_default");
+    }
+    
+    function not_null(item) {
+        if (item == null || item == "" || item.length <= 0) {
+            return false;
+        }
+        return true;
+    }
+    
+    $("#dialog").find(".weui_btn_dialog.primary").click(function () {
+        $("#dialog").hide();
+    });
+</script>

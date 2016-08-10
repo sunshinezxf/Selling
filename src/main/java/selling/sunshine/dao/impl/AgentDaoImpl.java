@@ -11,6 +11,7 @@ import selling.sunshine.model.Agent;
 import selling.sunshine.model.Credit;
 import selling.sunshine.model.Role;
 import selling.sunshine.model.User;
+import selling.sunshine.model.gift.GiftApply;
 import selling.sunshine.model.gift.GiftConfig;
 import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
@@ -166,11 +167,11 @@ public class AgentDaoImpl extends BaseDao implements AgentDao {
             }
         }
     }
-    
 
-	@Override
-	public ResultData updateAgentScale(Agent agent) {
-		ResultData result = new ResultData();
+
+    @Override
+    public ResultData updateAgentScale(Agent agent) {
+        ResultData result = new ResultData();
         synchronized (lock) {
             try {
                 sqlSession.update("selling.agent.updateScale", agent);
@@ -183,7 +184,7 @@ public class AgentDaoImpl extends BaseDao implements AgentDao {
                 return result;
             }
         }
-	}
+    }
 
 
     /**
@@ -271,21 +272,21 @@ public class AgentDaoImpl extends BaseDao implements AgentDao {
             }
         }
     }
-    
+
     @Override
-	public ResultData updateCredit(Credit credit) {
-    	 ResultData result = new ResultData();
-         try {
-             sqlSession.update("selling.agent.credit.update", credit);
-             result.setData(credit);
-         } catch (Exception e) {
-             logger.error(e.getMessage());
-             result.setResponseCode(ResponseCode.RESPONSE_ERROR);
-             result.setDescription(e.getMessage());
-         } finally {
-             return result;
-         }
-	}
+    public ResultData updateCredit(Credit credit) {
+        ResultData result = new ResultData();
+        try {
+            sqlSession.update("selling.agent.credit.update", credit);
+            result.setData(credit);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription(e.getMessage());
+        } finally {
+            return result;
+        }
+    }
 
     @Transactional
     @Override
@@ -342,9 +343,9 @@ public class AgentDaoImpl extends BaseDao implements AgentDao {
     public ResultData updateAgentGift(List<GiftConfig> list) {
         ResultData result = new ResultData();
         try {
-        	for(GiftConfig config : list){
-        		sqlSession.update("selling.agent.gift.update", config);
-        	}
+            for (GiftConfig config : list) {
+                sqlSession.update("selling.agent.gift.update", config);
+            }
             result.setData(list);
         } catch (Exception e) {
             logger.error(e.getMessage());

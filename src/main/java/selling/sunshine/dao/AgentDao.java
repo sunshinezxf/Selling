@@ -2,6 +2,7 @@ package selling.sunshine.dao;
 
 import selling.sunshine.model.Agent;
 import selling.sunshine.model.Credit;
+import selling.sunshine.model.gift.GiftApply;
 import selling.sunshine.model.gift.GiftConfig;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.utils.ResultData;
@@ -22,7 +23,7 @@ public interface AgentDao {
     ResultData updateAgent(Agent agent);
 
     ResultData updateAgentCoffer(Agent agent);
-    
+
     ResultData updateAgentScale(Agent agent);
 
     ResultData unbindAgent(String openId);
@@ -30,9 +31,9 @@ public interface AgentDao {
     ResultData queryCredit(Map<String, Object> condition);
 
     ResultData insertCredit(Credit credit);
-    
+
     ResultData updateCredit(Credit credit);
-    
+
     ResultData insertAgentGift(GiftConfig config);
 
     ResultData queryAgentGift(Map<String, Object> condition);

@@ -6,11 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import selling.sunshine.dao.AgentDao;
 import selling.sunshine.dao.BankCardDao;
+import selling.sunshine.dao.GiftApplyDao;
 import selling.sunshine.dao.WithdrawDao;
 import selling.sunshine.model.Agent;
 import selling.sunshine.model.BankCard;
 import selling.sunshine.model.Credit;
 import selling.sunshine.model.WithdrawRecord;
+import selling.sunshine.model.gift.GiftApply;
 import selling.sunshine.model.gift.GiftConfig;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.AgentService;
@@ -35,14 +37,17 @@ public class AgentServiceImpl implements AgentService {
     private AgentDao agentDao;
 
     @Autowired
+    private GiftApplyDao giftApplyDao;
+
+    @Autowired
     private WithdrawDao withdrawDao;
 
     @Autowired
     private BankCardDao bankCardDao;
-    
+
     @Autowired
     private MessageService messageService;
-    
+
     @Override
     public ResultData login(Agent agent) {
         ResultData result = new ResultData();
@@ -130,8 +135,8 @@ public class AgentServiceImpl implements AgentService {
             result.setDescription("账户余额不足");
             return result;
         }
-        int coffer100 = (int)(agent.getCoffer() * 100);
-        int money100 = (int)(money * 100);
+        int coffer100 = (int) (agent.getCoffer() * 100);
+        int money100 = (int) (money * 100);
         double cofferNew = (coffer100 - money100) * 1.0 / 100;
         agent.setCoffer(cofferNew);
         ResultData updateResponse = agentDao.updateAgentCoffer(agent);
@@ -183,19 +188,19 @@ public class AgentServiceImpl implements AgentService {
         }
         return result;
     }
-    
+
     @Override
-	public ResultData modifyScale(Agent agent) {
-    	 ResultData result = new ResultData();
-         ResultData updateResponse = agentDao.updateAgentScale(agent);
-         result.setResponseCode(updateResponse.getResponseCode());
-         if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-             result.setData(updateResponse.getData());
-         } else {
-             result.setDescription(updateResponse.getDescription());
-         }
-         return result;
-	}
+    public ResultData modifyScale(Agent agent) {
+        ResultData result = new ResultData();
+        ResultData updateResponse = agentDao.updateAgentScale(agent);
+        result.setResponseCode(updateResponse.getResponseCode());
+        if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(updateResponse.getData());
+        } else {
+            result.setDescription(updateResponse.getDescription());
+        }
+        return result;
+    }
 
     @Override
     public ResultData fetchCredit(Map<String, Object> condition) {
@@ -212,11 +217,11 @@ public class AgentServiceImpl implements AgentService {
         }
         return result;
     }
-    
+
     @Override
-	public ResultData updateCredit(Credit credit) {
-    	ResultData result = new ResultData();
-		ResultData updateResponse = agentDao.updateCredit(credit);
+    public ResultData updateCredit(Credit credit) {
+        ResultData result = new ResultData();
+        ResultData updateResponse = agentDao.updateCredit(credit);
         result.setResponseCode(updateResponse.getResponseCode());
         if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             result.setData(credit);
@@ -224,37 +229,37 @@ public class AgentServiceImpl implements AgentService {
             result.setDescription(updateResponse.getDescription());
         }
         return result;
-	}
-    
-    @Override
-	public ResultData fetchBankCard(Map<String, Object> condition) {
-    	ResultData result = new ResultData();
-    	ResultData queryResponse = bankCardDao.queryBankCard(condition);
-    	result.setResponseCode(queryResponse.getResponseCode());
-    	if(queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK){
-    		if(((List<BankCard>)queryResponse.getData()).size() == 0){
-    			result.setResponseCode(ResponseCode.RESPONSE_NULL);
-    		}
-    		result.setData(queryResponse.getData());
-    	} else if(queryResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR){
-    		result.setDescription(queryResponse.getDescription());
-    	}
-		return result;
-	}
-    
+    }
 
-	@Override
-	public ResultData modifyBankCard(BankCard bankCard) {
-		ResultData result = new ResultData();
-		ResultData modifyResponse = bankCardDao.updateBankCard(bankCard);
-		result.setResponseCode(modifyResponse.getResponseCode());
-		if(modifyResponse.getResponseCode() == ResponseCode.RESPONSE_OK){
-			result.setData(modifyResponse.getData());
-		} else {
-			result.setDescription(modifyResponse.getDescription());
-		}
-		return result;
-	}
+    @Override
+    public ResultData fetchBankCard(Map<String, Object> condition) {
+        ResultData result = new ResultData();
+        ResultData queryResponse = bankCardDao.queryBankCard(condition);
+        result.setResponseCode(queryResponse.getResponseCode());
+        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            if (((List<BankCard>) queryResponse.getData()).size() == 0) {
+                result.setResponseCode(ResponseCode.RESPONSE_NULL);
+            }
+            result.setData(queryResponse.getData());
+        } else if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
+            result.setDescription(queryResponse.getDescription());
+        }
+        return result;
+    }
+
+
+    @Override
+    public ResultData modifyBankCard(BankCard bankCard) {
+        ResultData result = new ResultData();
+        ResultData modifyResponse = bankCardDao.updateBankCard(bankCard);
+        result.setResponseCode(modifyResponse.getResponseCode());
+        if (modifyResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(modifyResponse.getData());
+        } else {
+            result.setDescription(modifyResponse.getDescription());
+        }
+        return result;
+    }
 
     @Override
     public ResultData createCredit(Credit credit) {
@@ -269,7 +274,7 @@ public class AgentServiceImpl implements AgentService {
 
         return result;
     }
-    
+
 
     @Override
     public ResultData applyWithdraw(WithdrawRecord record) {
@@ -297,25 +302,25 @@ public class AgentServiceImpl implements AgentService {
         return result;
     }
 
-	@Override
-	public ResultData fetchAgentGift(Map<String, Object> condition) {
-		ResultData result = new ResultData();
-    	ResultData queryResponse = agentDao.queryAgentGift(condition);
-    	result.setResponseCode(queryResponse.getResponseCode());
-    	if(queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK){
-    		if(((List<GiftConfig>)queryResponse.getData()).size() == 0){
-    			result.setResponseCode(ResponseCode.RESPONSE_NULL);
-    		}
-    		result.setData(queryResponse.getData());
-    	} else if(queryResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR){
-    		result.setDescription(queryResponse.getDescription());
-    	}
-		return result;
-	}
+    @Override
+    public ResultData fetchAgentGift(Map<String, Object> condition) {
+        ResultData result = new ResultData();
+        ResultData queryResponse = agentDao.queryAgentGift(condition);
+        result.setResponseCode(queryResponse.getResponseCode());
+        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            if (((List<GiftConfig>) queryResponse.getData()).size() == 0) {
+                result.setResponseCode(ResponseCode.RESPONSE_NULL);
+            }
+            result.setData(queryResponse.getData());
+        } else if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
+            result.setDescription(queryResponse.getDescription());
+        }
+        return result;
+    }
 
-	@Override
-	public ResultData updateAgentGift(GiftConfig giftConfig) {
-		ResultData result = new ResultData();
+    @Override
+    public ResultData updateAgentGift(GiftConfig giftConfig) {
+        ResultData result = new ResultData();
         ResultData updateResponse = agentDao.updateAgentGift(giftConfig);
         result.setResponseCode(updateResponse.getResponseCode());
         if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
@@ -324,12 +329,12 @@ public class AgentServiceImpl implements AgentService {
             result.setDescription(updateResponse.getDescription());
         }
         return result;
-	}
-	
-	@Override
-	public ResultData updateAgentGift(List<GiftConfig> giftConfigs){
-		ResultData result = new ResultData();
-		ResultData updateResponse = agentDao.updateAgentGift(giftConfigs);
+    }
+
+    @Override
+    public ResultData updateAgentGift(List<GiftConfig> giftConfigs) {
+        ResultData result = new ResultData();
+        ResultData updateResponse = agentDao.updateAgentGift(giftConfigs);
         result.setResponseCode(updateResponse.getResponseCode());
         if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             result.setData(giftConfigs);
@@ -337,10 +342,10 @@ public class AgentServiceImpl implements AgentService {
             result.setDescription(updateResponse.getDescription());
         }
         return result;
-	}
+    }
 
-	@Override
-	public ResultData createAgentGift(GiftConfig giftConfig) {
+    @Override
+    public ResultData createAgentGift(GiftConfig giftConfig) {
         ResultData result = new ResultData();
         ResultData insertResponse = agentDao.insertAgentGift(giftConfig);
         result.setResponseCode(insertResponse.getResponseCode());
@@ -350,6 +355,60 @@ public class AgentServiceImpl implements AgentService {
             result.setDescription(insertResponse.getDescription());
         }
         return result;
-	}
+    }
 
+    @Override
+    public ResultData createGiftApply(GiftApply apply) {
+        ResultData result = new ResultData();
+        ResultData response = giftApplyDao.insertGiftApply(apply);
+        result.setResponseCode(response.getResponseCode());
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(response.getData());
+        } else {
+            result.setDescription(response.getDescription());
+        }
+        return result;
+    }
+
+    @Override
+    public ResultData fetchGiftApply(Map<String, Object> condition) {
+        ResultData result = new ResultData();
+        ResultData response = giftApplyDao.queryGiftApply(condition);
+        result.setResponseCode(response.getResponseCode());
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            if (((List<GiftApply>) response.getData()).isEmpty()) {
+                result.setResponseCode(ResponseCode.RESPONSE_NULL);
+            }
+            result.setData(response.getData());
+        } else {
+            response.setDescription(response.getDescription());
+        }
+        return result;
+    }
+
+    @Override
+    public ResultData fetchGiftApply(Map<String, Object> condition, DataTableParam param) {
+        ResultData result = new ResultData();
+        ResultData queryResponse = giftApplyDao.queryGiftApplyByPage(condition, param);
+        result.setResponseCode(queryResponse.getResponseCode());
+        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(queryResponse.getData());
+        } else if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
+            result.setDescription(queryResponse.getDescription());
+        }
+        return result;
+    }
+
+    @Override
+    public ResultData declineGiftApply(GiftApply apply) {
+        ResultData result = new ResultData();
+        ResultData response = giftApplyDao.blockGiftApply(apply);
+        result.setResponseCode(response.getResponseCode());
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(response.getData());
+        } else {
+            result.setDescription(response.getDescription());
+        }
+        return result;
+    }
 }

@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.pingplusplus.model.Event;
 import com.pingplusplus.model.Webhooks;
-
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
@@ -13,12 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
-import selling.sunshine.model.Admin;
-import selling.sunshine.model.BackOperationLog;
-import selling.sunshine.model.User;
-import selling.sunshine.model.WithdrawRecord;
-import selling.sunshine.model.WithdrawStatus;
+import selling.sunshine.model.*;
 import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.LogService;
@@ -30,6 +25,9 @@ import selling.sunshine.utils.ResultData;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -48,7 +46,7 @@ public class WithdrawController {
 
     @Autowired
     private ToolService toolService;
-    
+
     @Autowired
     private LogService logService;
 
@@ -82,6 +80,37 @@ public class WithdrawController {
             result = (DataTablePage<WithdrawRecord>) fetchResponse.getData();
         }
         return result;
+    }
+
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.GET, value = "/check/download")
+    public String download(HttpServletResponse response) throws UnsupportedEncodingException {
+        Map<String, Object> condition = new HashMap<>();
+        List<Integer> status = new ArrayList<>();
+        status.add(0);
+        condition.put("status", status);
+        condition.put("blockFlag", true);
+        ResultData result = withdrawService.fetchWithdrawRecord(condition);
+        if (result.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            return null;
+        }
+        List<WithdrawRecord> list = (List<WithdrawRecord>) result.getData();
+        result = withdrawService.produceApply(list);
+        if (result.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            response.setContentType("application/x-download;charset=utf-8");
+            response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode("提现申请单.xlsx", "utf-8"));
+            try {
+                OutputStream out = response.getOutputStream();
+                Workbook workbook = (Workbook) result.getData();
+                workbook.write(out);
+                out.flush();
+                out.close();
+            } catch (Exception e) {
+                logger.error(e.getMessage());
+                return null;
+            }
+        }
+        return null;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/overview")
@@ -172,12 +201,11 @@ public class WithdrawController {
             result.put("categories", categories);
             result.put("data", data);
         }
-
         return result;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{withdrawId}/send")
-    public ModelAndView send(@PathVariable("withdrawId") String withdrawId,HttpServletRequest request) {
+    public ModelAndView send(@PathVariable("withdrawId") String withdrawId, HttpServletRequest request) {
         ModelAndView view = new ModelAndView();
         Map<String, Object> condition = new HashMap<>();
         condition.put("withdrawId", withdrawId);
@@ -194,12 +222,12 @@ public class WithdrawController {
                 Subject subject = SecurityUtils.getSubject();
                 User user = (User) subject.getPrincipal();
                 if (user == null) {
-                	 view.setViewName("redirect:/withdraw/check");
-                     return view;
+                    view.setViewName("redirect:/withdraw/check");
+                    return view;
                 }
                 Admin admin = user.getAdmin();
                 BackOperationLog backOperationLog = new BackOperationLog(
-                        admin.getUsername(), toolService.getIP(request) ,"管理员" + admin.getUsername() + "确认了提现金额申请");
+                        admin.getUsername(), toolService.getIP(request), "管理员" + admin.getUsername() + "确认了提现申请: 提现代理商为" + record.getAgent().getName() + ", 提现金额为" + record.getAmount());
                 logService.createbackOperationLog(backOperationLog);
                 view.setViewName("redirect:/withdraw/check");
                 return view;

@@ -416,15 +416,28 @@
                 f.removeChild(childs[i]);
             }
 
-            var node = "<tr><th>客户</th><th>产品</th><th>数量</th><th>价格</th><th>快递单</th></tr>";
+            var node = "<tr><th>客户</th><th>产品</th><th>数量</th><th>价格</th><th>备注</th><th>快递单</th></tr>";
             for (var i = 0; i < result.data.order.orderItems.length; i++) {
                 var orderItem = result.data.order.orderItems[i];
-                node += "<tr><td>" + orderItem.customer.name + "</td><td>" + orderItem.goods.name + "</td><td>" + orderItem.goodsQuantity + "</td><td>" + orderItem.orderItemPrice + "</td>";
-                if (orderItem.status == "SHIPPED" || orderItem.status == "RECEIVED") {
-                    node += "<td><button type='button' class='btn btn-success' id='" + orderItem.orderItemId + "' onclick=expressDetail(this)>快递单详情</button></td></tr>";
-                } else {
-                    node += "<td>无快递单</td></tr>";
+                var temp = "<tr><td>";
+                temp += orderItem.customer.name;
+                temp += "</td><td>";
+                temp += orderItem.goods.name;
+                temp += "</td><td>";
+                temp += orderItem.goodsQuantity;
+                temp += "</td><td>";
+                temp += orderItem.orderItemPrice;
+                temp += "</td><td>";
+                if (orderItem.description != null) {
+                    temp += orderItem.description;
                 }
+                temp += "</td>";
+                if (orderItem.status == "SHIPPED" || orderItem.status == "RECEIVED") {
+                    temp += "<td><button type='button' class='btn btn-success' id='" + orderItem.orderItemId + "' onclick=expressDetail(this)>快递单详情</button></td></tr>";
+                } else {
+                    temp += "<td>无快递单</td></tr>";
+                }
+                node += temp;
             }
             $("#model_table").append(node);
             document.getElementById("model_total").innerHTML = "总计:&nbsp;" + result.data.totalPrices + "元";
