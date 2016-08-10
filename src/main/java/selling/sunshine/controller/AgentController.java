@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import selling.sunshine.form.*;
 import selling.sunshine.model.*;
+import selling.sunshine.model.cashback.CashBackRecord;
 import selling.sunshine.model.gift.GiftConfig;
 import selling.sunshine.model.goods.Goods4Agent;
 import selling.sunshine.model.sum.TotalQuantityAll;
@@ -1363,7 +1364,7 @@ public class AgentController {
         if (fetchRefundRecordResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
             return view;
         }
-        List<RefundRecord> refundRecords = (List<RefundRecord>) fetchRefundRecordResponse.getData();
+        List<CashBackRecord> refundRecords = (List<CashBackRecord>) fetchRefundRecordResponse.getData();
         view.addObject("refundRecords", refundRecords);
         WechatConfig.oauthWechat(view, "/agent/account/statement");
         view.setViewName("/agent/account/statement");
@@ -1958,7 +1959,7 @@ public class AgentController {
 
 
         //代理商返现信息
-        List<RefundRecord> refundRecordList = (List<RefundRecord>) refundService.fetchRefundRecord(condition).getData();
+        List<CashBackRecord> refundRecordList = (List<CashBackRecord>) refundService.fetchRefundRecord(condition).getData();
         //代理商提现信息
         List<Integer> status = new ArrayList<Integer>();
         status.add(1);

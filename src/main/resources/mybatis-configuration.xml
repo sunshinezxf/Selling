@@ -23,7 +23,7 @@
         <mapper resource="selling/sunshine/mapper/orderbill.xml"/>
         <mapper resource="selling/sunshine/mapper/orderpool.xml"/>
         <mapper resource="selling/sunshine/mapper/follower.xml"/>
-        <mapper resource="selling/sunshine/mapper/refundrecord.xml"/>
+        <mapper resource="selling/sunshine/mapper/cashbackrecord.xml"/>
         <mapper resource="selling/sunshine/mapper/express.xml"/>
         <mapper resource="selling/sunshine/mapper/credit.xml"/>
         <mapper resource="selling/sunshine/mapper/withdraw.xml"/>

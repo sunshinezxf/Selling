@@ -206,4 +206,8 @@ ALTER TABLE `selling`.`gift_apply`
 ADD COLUMN `last_quantity` INT NOT NULL DEFAULT 0 AFTER `apply_line`,
 ADD COLUMN `total_quantity` INT NOT NULL DEFAULT 0 AFTER `last_quantity`;
 
+##2016年8月10日更新
+ALTER TABLE `selling`.`refund_record`
+ADD COLUMN `refund_level` TINYINT(2) NOT NULL DEFAULT 0 AFTER `refund_amount`;
+
 
