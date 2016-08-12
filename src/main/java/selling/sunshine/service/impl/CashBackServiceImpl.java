@@ -37,4 +37,11 @@ public class CashBackServiceImpl implements CashBackService {
         }
         return result;
     }
+
+    @Override
+    public ResultData fetchCashBack(Map<String, Object> condition, DataTableParam param) {
+        ResultData result = new ResultData();
+
+        return result;
+    }
 }

@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import selling.sunshine.dao.BaseDao;
 import selling.sunshine.dao.CashBackDao;
+import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
@@ -42,7 +43,22 @@ public class CashBackDaoImpl extends BaseDao implements CashBackDao {
     @Override
     public ResultData queryMonthlyByPage(Map<String, Object> condition, DataTableParam param) {
         ResultData result = new ResultData();
-
+        DataTablePage<CashBack4AgentPerMonth> page = new DataTablePage<>();
+        page.setsEcho(param.getsEcho());
+        ResultData total = queryMonthly(condition);
+        if (total.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription(total.getDescription());
+            return result;
+        }
+        page.setiTotalRecords(((List) total.getData()).size());
+        page.setiTotalDisplayRecords(((List) total.getData()).size());
+        List<CashBack4AgentPerMonth> current = queryMonthlyByPage(condition, param.getiDisplayStart(), param.getiDisplayLength());
+        if (current.size() == 0) {
+            result.setResponseCode(ResponseCode.RESPONSE_NULL);
+        }
+        page.setData(current);
+        result.setData(page);
         return result;
     }
 

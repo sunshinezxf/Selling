@@ -13,6 +13,7 @@ import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.CashBackService;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
+import selling.sunshine.vo.cashback.CashBack4Agent;
 import selling.sunshine.vo.cashback.CashBack4AgentPerMonth;
 
 import java.util.HashMap;
@@ -55,5 +56,14 @@ public class CashBackController {
         ModelAndView view = new ModelAndView();
         view.setViewName("/backend/refund/cashback_overview");
         return view;
+    }
+
+    public DataTablePage<CashBack4Agent> overview(DataTableParam param) {
+        DataTablePage<CashBack4Agent> result = new DataTablePage<>(param);
+        if (StringUtils.isEmpty(param)) {
+            return result;
+        }
+        Map<String, Object> condition = new HashMap<>();
+        return result;
     }
 }
