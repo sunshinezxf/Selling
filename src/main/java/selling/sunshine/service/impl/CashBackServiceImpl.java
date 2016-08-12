@@ -30,9 +30,6 @@ public class CashBackServiceImpl implements CashBackService {
         ResultData response = cashBackDao.queryMonthlyByPage(condition, param);
         result.setResponseCode(response.getResponseCode());
         if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            if (((List<CashBack4AgentPerMonth>) response.getData()).isEmpty()) {
-                result.setResponseCode(ResponseCode.RESPONSE_NULL);
-            }
             result.setData(response.getData());
         }
         return result;
