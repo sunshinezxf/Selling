@@ -12,8 +12,10 @@
 
     <resultMap id="cashBack4Agent" type="selling.sunshine.vo.cashback.CashBack4Agent">
         <result property="amount" column="amount"></result>
-        <result property="level" column="level"
-                typeHandler="selling.sunshine.handler.mybatis.cashback.LevelHandler"></result>
+        <result property="amount" column="amount"></result>
+        <result property="self" column="self"></result>
+        <result property="direct" column="direct"></result>
+        <result property="indirect" column="indirect"></result>
         <association property="agent" column="agentId = agent_id" select="agentLiteQuery"></association>
     </resultMap>
 
