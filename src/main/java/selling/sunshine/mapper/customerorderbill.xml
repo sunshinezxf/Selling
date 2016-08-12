@@ -52,7 +52,7 @@
             ORDER BY ${rule}
         </if>
         <if test="rule == null">
-            ORDER BY create_time DESC
+            ORDER BY create_time ASC
         </if>
     </select>
 
