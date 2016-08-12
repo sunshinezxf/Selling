@@ -69,11 +69,8 @@
                 {
                     title: "操作", "mRender": function (data, type, full) {
                     var operation = "";
-                    var detail_btn = "<button type='button' class='btn btn-info btn-group-sm' id='" + full.applyId + "' onclick=detail(this) data-toggle='modal' data-target='#gift_detail_modal'>详情</button>&nbsp;"
+                    var detail_btn = "<button type='button' class='btn btn-info btn-group-sm' id='" + full.applyId + "' onclick=detail(this) data-toggle='modal' data-target='#gift_detail_modal'>赠送</button>&nbsp;"
                     operation += detail_btn;
-                    var giftConfigUrl = "${path.concat('/agent/gift/')}" + full.agent.agentId;
-                    var giftConfig_btn = "<a type='button' class='btn btn-success btn-group-sm' href='" + giftConfigUrl + "'>赠送</a>&nbsp;"
-                    operation += giftConfig_btn;
                     var reject_btn = "<button type='button' class='btn btn-warning btn-group-sm' id='" + full.applyId + "' onclick=reject(this) data-toggle='modal' data-target='#reject_modal'>回绝</button>&nbsp;"
                     operation += reject_btn;
                     return operation;
@@ -106,6 +103,7 @@
             var url="${path.concat('/gift/apply/')}"+applyId;
             $.get(url,function(result){
                if(result.responseCode=="RESPONSE_OK"){
+                    $("#apply_gift_id").text(applyId);
                     $("#agent_name").text(result.data.agent.name);
                     $("#goods_name").text(result.data.goods.name);
                     $("#potential").text(result.data.potential);

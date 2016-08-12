@@ -2,7 +2,6 @@
 <html lang="zh_CN">
 <head>
     #parse("/backend/component/init.vm")
-    #parse("/backend/component/init_datatable.vm")
     <title>代理详情</title>
 </head>
 <body>
