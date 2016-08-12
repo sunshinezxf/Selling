@@ -117,7 +117,7 @@ select g.goods_id as goods_id, g.goods_name as goods_name, o.order_type as order
 left join `order` o on oi.order_id = o.order_id left join goods g on oi.goods_id = g.goods_id where oi.order_item_status in (1, 2, 3)
 union all
 select g.goods_id as goods_id, g.goods_name as goods_name, 0 as order_type, co.order_status as record_status, co.quantity as goods_quantity, co.total_price as record_price, co.create_time as create_time from customer_order co
-left join goods g on co.goods_id = g.goods_id where co.order_status in (1, 2, 3)) temp
+left join goods g on co.goods_id = g.goods_id where co.order_status in (1, 2, 3)) temp;
 
 ##mysql 5.6, 5.5 use the following
 create view purchase_item as
@@ -224,5 +224,15 @@ as (select rr.agent_id, date_format(op.pool_date, '%Y-%m') as cash_back_month, s
 create view cashback_month_view(agent_id, cash_back_month, amount, level)
 as select agent_id, cash_back_month, amount, level from cashback_sum_view
 where cash_back_month = date_format(date_sub(curdate(), interval 1 month), '%Y-%m');
+
+##2016年8月12日更新
+create or replace view volume_item(agent_id, goods_id, quantity, price ,create_time,order_type)
+as select o.agent_id as agent_id, oi.goods_id as goods_id, oi.goods_quantity as quantity,oi.order_item_price as price, oi.create_time as create_time,o.order_type as order_type
+   from order_item oi left join `order` o on oi.order_id = o.order_id
+   where oi.order_item_status in (1, 2, 3)
+   union all
+   select co.agent_id as agent_id, co.goods_id as goods_id, co.quantity as quantity,co.total_price as price,co.create_time as create_time,0 as order_type
+   from customer_order co
+   where co.order_status in (1, 2, 3) and co.agent_id is not null;
 
 
