@@ -66,6 +66,9 @@
         <if test="rule != null and rule != ''">
             ORDER BY ${rule}
         </if>
+        <if test="rule == null">
+            ORDER BY create_time DESC
+        </if>
     </select>
 
     <insert id="insert" parameterType="selling.sunshine.model.OrderBill" useGeneratedKeys="false">
