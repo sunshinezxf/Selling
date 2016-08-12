@@ -7,6 +7,7 @@ public class Volume {
     private String agentId;
     private String goodsId;
     private int quantity;
+    private double price;
 
     public Volume() {
 
@@ -18,7 +19,15 @@ public class Volume {
         this.quantity = quantity;
     }
 
-    public String getAgentId() {
+    public Volume(String agentId, String goodsId, int quantity, double price) {
+		super();
+		this.agentId = agentId;
+		this.goodsId = goodsId;
+		this.quantity = quantity;
+		this.price = price;
+	}
+
+	public String getAgentId() {
         return agentId;
     }
 
@@ -41,4 +50,14 @@ public class Volume {
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
+
+	public double getPrice() {
+		return price;
+	}
+
+	public void setPrice(double price) {
+		this.price = price;
+	}
+    
+    
 }

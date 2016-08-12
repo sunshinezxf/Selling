@@ -196,9 +196,9 @@ public class StatisticServiceImpl implements StatisticService {
     }
 
     @Override
-    public ResultData fetchLastVolume(Map<String, Object> condition) {
+    public ResultData fetchVolume(Map<String, Object> condition) {
         ResultData result = new ResultData();
-        ResultData response = statisticDao.queryLastVolume(condition);
+        ResultData response = statisticDao.queryVolume(condition);
         result.setResponseCode(response.getResponseCode());
         if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
             if (((List<Volume>) response.getData()).isEmpty()) {
@@ -211,10 +211,10 @@ public class StatisticServiceImpl implements StatisticService {
         return result;
     }
 
-    @Override
-    public ResultData fetchTotalVolume(Map<String, Object> condition) {
-        ResultData result = new ResultData();
-        ResultData response = statisticDao.queryLastVolume(condition);
+	@Override
+	public ResultData queryAgentGoods(Map<String, Object> condition) {
+		ResultData result = new ResultData();
+        ResultData response = statisticDao.queryAgentGoods(condition);
         result.setResponseCode(response.getResponseCode());
         if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
             if (((List<Volume>) response.getData()).isEmpty()) {
@@ -225,5 +225,7 @@ public class StatisticServiceImpl implements StatisticService {
             response.setDescription(response.getDescription());
         }
         return result;
-    }
+	}
+
+
 }

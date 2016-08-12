@@ -6,28 +6,44 @@
         <result property="goodsId" column="goods_id"></result>
         <result property="quantity" column="quantity"></result>
     </resultMap>
+    
+   <resultMap id="agentGoodsVo" type="selling.sunshine.model.sum.Volume">
+        <result property="agentId" column="agent_id"></result>
+        <result property="goodsId" column="goods_id"></result>
+        <result property="quantity" column="quantity"></result>
+        <result property="price" column="price"></result>
+    </resultMap>
 
-    <select id="queryLast" parameterType="java.util.Map" resultMap="volumeVo">
-        SELECT agent_id, goods_id, quantity
-        FROM last_volume_view
-        WHERE 1 = 1
+    <select id="query" parameterType="java.util.Map" resultMap="volumeVo">
+        select agent_id, goods_id, sum(quantity) AS quantity
+        FROM volume_item
+        WHERE 1 = 1 AND order_type='0'
         <if test="agentId != null">
             AND agent_id = #{agentId}
         </if>
         <if test="goodsId != null">
             AND goods_id = #{goodsId}
         </if>
+        <if test="month != null">
+            AND date_format(create_time, '%Y-%m') = date_format(date_sub(curdate(), interval #{month} month), '%Y-%m');
+        </if>      
     </select>
-
-    <select id="queryTotal" parameterType="java.util.Map" resultMap="volumeVo">
-        SELECT agent_id, goods_id, quantity
-        FROM total_volume_view
-        WHERE 1 = 1
+    
+    <select id="agentGoods" parameterType="java.util.Map" resultMap="agentGoodsVo">
+        select *from(
+        select agent_id, goods_id, sum(quantity) AS quantity,sum(price) AS price
+        FROM volume_item
+        WHERE 1 = 1 AND order_type='0'
+        <if test="totalMonth != null">
+            AND date_format(create_time, '%Y-%m') > date_format(date_sub(curdate(), interval #{totalMonth} month), '%Y-%m');
+        </if>  
+        GROUP BY agent_id, goods_id) t
         <if test="agentId != null">
             AND agent_id = #{agentId}
         </if>
         <if test="goodsId != null">
             AND goods_id = #{goodsId}
-        </if>
+        </if>;
     </select>
+
 </mapper>

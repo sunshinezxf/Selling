@@ -25,7 +25,8 @@ public interface StatisticService {
 
     ResultData purchaseRecord(Map<String, Object> condition);
 
-    ResultData fetchLastVolume(Map<String, Object> condition);
+    ResultData fetchVolume(Map<String, Object> condition);
+    
+    ResultData queryAgentGoods(Map<String, Object> condition);
 
-    ResultData fetchTotalVolume(Map<String, Object> condition);
 }

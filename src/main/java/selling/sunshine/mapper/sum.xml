@@ -272,7 +272,8 @@ union all
 select agent_id,sum(quantity) as quantity from customer_order 
         where order_status in(1,2,3)
 		and date_format(create_time,'%Y-%m')=date_format(now(),'%Y-%m')
-        group by agent_id) t1
+        group by agent_id
+) t1
         where agent_id is not null
         group by agent_id
         order by quantity desc) t2,agent where t2.agent_id=agent.agent_id;
@@ -290,7 +291,8 @@ select agent_id,sum(goods_quantity) as quantity from order_item
 union all
 select agent_id,sum(quantity) as quantity from customer_order 
         where order_status in(1,2,3)
-        group by agent_id) t1
+        group by agent_id
+) t1
         where agent_id is not null
         group by agent_id
         order by quantity desc) t2,agent where t2.agent_id=agent.agent_id;
