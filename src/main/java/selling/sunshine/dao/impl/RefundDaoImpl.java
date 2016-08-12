@@ -11,7 +11,8 @@ import selling.sunshine.dao.RefundDao;
 import selling.sunshine.model.Agent;
 import selling.sunshine.model.OrderPool;
 import selling.sunshine.model.RefundConfig;
-import selling.sunshine.model.RefundRecord;
+import selling.sunshine.model.cashback.CashBackLevel;
+import selling.sunshine.model.cashback.CashBackRecord;
 import selling.sunshine.model.goods.Goods4Agent;
 import selling.sunshine.model.sum.TotalQuantityAll;
 import selling.sunshine.pagination.DataTablePage;
@@ -81,7 +82,7 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
         ResultData result = new ResultData();
         condition = handle(condition);
         try {
-            List<RefundRecord> list = sqlSession.selectList("selling.refund.record.query", condition);
+            List<CashBackRecord> list = sqlSession.selectList("selling.refund.record.query", condition);
             result.setData(list);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -95,9 +96,7 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
     public ResultData refundRecord() {
         ResultData result = new ResultData();
         Calendar now = Calendar.getInstance();
-        int year = now.get(Calendar.YEAR);
-        int month = now.get(Calendar.MONTH) + 1;
-        int day = now.get(Calendar.DAY_OF_MONTH);
+        String time = new SimpleDateFormat("yyyy年MM月dd日").format(now.getTime());
         try {
             Map<String, Object> condition = new HashMap<>();
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM");
@@ -107,29 +106,25 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
             condition.put("blockFlag", false);
             condition.put("date", currentDate + "%");
             List<OrderPool> poolList = sqlSession.selectList("selling.order.pool.query", condition);
-            if (poolList.size() > 0) {
-//				Set<OrderPool> h = new HashSet<OrderPool>(poolList);
-//				poolList.clear();
-//				poolList.addAll(h);
+            if (!poolList.isEmpty()) {
                 for (int j = 0; j < poolList.size(); j++) {
                     // 返现要求：连续几个月达到返现数量标准
                     String date = dateFormat.format(poolList.get(j).getPoolDate());
                     RefundConfig refundConfig = poolList.get(j).getRefundConfig();
                     int monthConfig = refundConfig.getMonthConfig();
-                    Map<String, Object> con = new HashMap<>();
                     boolean monthFlag = false;
                     for (int i = 1; i < monthConfig; i++) {
                         Date d = poolList.get(j).getPoolDate();
                         Calendar calendar = Calendar.getInstance();
                         calendar.setTime(d);
                         calendar.add(Calendar.MONTH, -i);
-                        con.clear();
-                        con.put("agentId", poolList.get(j).getAgent().getAgentId());
-                        con.put("goodsId", poolList.get(j).getGoods().getGoodsId());
-                        con.put("date", dateFormat.format(calendar.getTime()) + "%");
-                        con.put("blockFlag", false);
+                        condition.clear();
+                        condition.put("agentId", poolList.get(j).getAgent().getAgentId());
+                        condition.put("goodsId", poolList.get(j).getGoods().getGoodsId());
+                        condition.put("date", dateFormat.format(calendar.getTime()) + "%");
+                        condition.put("blockFlag", false);
                         // 若其中某一个月的返现数量没有达标，则返现不成功
-                        if (sqlSession.selectList("selling.order.pool.query", con).size() == 0) {
+                        if (sqlSession.selectList("selling.order.pool.query", condition).isEmpty()) {
                             monthFlag = true;
                             break;
                         }
@@ -139,105 +134,105 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
                     } else {
                         // 连续几个月都达到了返现标准，生成返现记录
                         Agent agent = poolList.get(j).getAgent();
-                        RefundRecord refundRecord = new RefundRecord();
-                        refundRecord.setRefundRecordId(IDGenerator.generate("RFR"));
+                        CashBackRecord refundRecord = new CashBackRecord();
+                        refundRecord.setRecordId(IDGenerator.generate("RFR"));
                         if (agent.getUpperAgent() != null) {
                             // 上级代理商要获得社群拓展奖励的前提是自己当月购买数量也达到返现标准
-                            Map<String, Object> conMap = new HashMap<>();
-                            conMap.put("agentId", agent.getUpperAgent().getAgentId());
-                            conMap.put("goodsId", poolList.get(j).getGoods().getGoodsId());
-                            conMap.put("poolDate", poolList.get(j).getPoolDate());
+                            condition.clear();
+                            condition.put("agentId", agent.getUpperAgent().getAgentId());
+                            condition.put("goodsId", poolList.get(j).getGoods().getGoodsId());
+                            condition.put("poolDate", poolList.get(j).getPoolDate());
                             boolean blockFlag = true;
-                            if (sqlSession.selectList("selling.order.pool.query", conMap).size() != 0) {
-                                blockFlag = ((OrderPool) sqlSession.selectList("selling.order.pool.query", conMap)
-                                        .get(0)).isBlockFlag();
+                            if (!sqlSession.selectList("selling.order.pool.query", condition).isEmpty()) {
+                                blockFlag = ((OrderPool) sqlSession.selectList("selling.order.pool.query", condition).get(0)).isBlockFlag();
                             }
-                            RefundRecord refundRecordLevel2 = new RefundRecord();
-                            refundRecordLevel2.setRefundRecordId(IDGenerator.generate("RFR"));
+                            CashBackRecord refundRecordLevel2 = new CashBackRecord();
+                            refundRecordLevel2.setRecordId(IDGenerator.generate("RFR"));
                             Map<String, Object> level2Con = new HashMap<>();
                             level2Con.put("agentId", agent.getUpperAgent().getAgentId());
                             Agent agentLevel2 = (Agent) sqlSession.selectList("selling.agent.query", level2Con).get(0);
                             if (agentLevel2.getUpperAgent() != null) {
-                                conMap.clear();
-                                conMap.put("agentId", agentLevel2.getUpperAgent().getAgentId());
-                                conMap.put("goodsId", poolList.get(j).getGoods().getGoodsId());
-                                conMap.put("poolDate", poolList.get(j).getPoolDate());
-                                conMap.clear();
-                                if (sqlSession.selectList("selling.order.pool.query", conMap).size() != 0) {
-                                    boolean blockFlag2 = ((OrderPool) sqlSession
-                                            .selectList("selling.order.pool.query", conMap).get(0)).isBlockFlag();
+                                condition.clear();
+                                condition.put("agentId", agentLevel2.getUpperAgent().getAgentId());
+                                condition.put("goodsId", poolList.get(j).getGoods().getGoodsId());
+                                condition.put("poolDate", poolList.get(j).getPoolDate());
+                                if (!sqlSession.selectList("selling.order.pool.query", condition).isEmpty()) {
+                                    boolean blockFlag2 = ((OrderPool) sqlSession.selectList("selling.order.pool.query", condition).get(0)).isBlockFlag();
                                     if (!blockFlag2) {
                                         Map<String, Object> level3Con = new HashMap<>();
                                         level3Con.put("agentId", agentLevel2.getUpperAgent().getAgentId());
                                         Agent agentLevel3 = (Agent) sqlSession
                                                 .selectList("selling.agent.query", level3Con).get(0);
-                                        RefundRecord refundRecordLevel3 = new RefundRecord();
-                                        refundRecordLevel3.setRefundRecordId(IDGenerator.generate("RFR"));
-                                        refundRecordLevel3.setRefundAmount(
+                                        CashBackRecord refundRecordLevel3 = new CashBackRecord();
+                                        refundRecordLevel3.setRecordId(IDGenerator.generate("RFR"));
+                                        refundRecordLevel3.setAmount(
                                                 poolList.get(j).getQuantity() * refundConfig.getLevel3Percent());
-                                        refundRecordLevel3.setRefundPercent(refundConfig.getLevel3Percent());
+                                        refundRecordLevel3.setPercent(refundConfig.getLevel3Percent());
                                         refundRecordLevel3.setOrderPool(poolList.get(j));
                                         refundRecordLevel3.setAgent(new selling.sunshine.model.lite.Agent(agentLevel3));
                                         refundRecordLevel3
-                                                .setRefundName(year + "年" + month + "月" + day + "日" + "社群拓展奖励账单");
-                                        refundRecordLevel3.setRefundDescription("代理商" + agentLevel3.getName() + "与代理商"
+                                                .setTitle(time + "社群拓展奖励账单");
+                                        refundRecordLevel3.setDescription("代理商" + agentLevel3.getName() + "与代理商"
                                                 + agent.getName() + "间接关联，获得代理商" + agent.getName() + "在" + date + "购买"
                                                 + poolList.get(j).getGoods().getName() + "的社群拓展奖励，奖励"
-                                                + refundRecordLevel3.getRefundAmount() + "元");
+                                                + refundRecordLevel3.getAmount() + "元");
+                                        refundRecordLevel3.setLevel(CashBackLevel.INDIRECT);
                                         refundRecordLevel3.setBlockFlag(false);
                                         sqlSession.insert("selling.refund.record.insert", refundRecordLevel3);
                                     }
                                 }
                                 // 当前agent为三级代理商
-                                refundRecord.setRefundAmount(poolList.get(j).getRefundAmount());
-                                refundRecord.setRefundPercent(refundConfig.getLevel1Percent());
-                                refundRecord.setRefundDescription("代理商" + agent.getName() + "在" + date + "购买"
+                                refundRecord.setAmount(poolList.get(j).getRefundAmount());
+                                refundRecord.setPercent(refundConfig.getLevel1Percent());
+                                refundRecord.setDescription("代理商" + agent.getName() + "在" + date + "购买"
                                         + poolList.get(j).getGoods().getName() + "达到返现标准，返现"
-                                        + refundRecord.getRefundAmount() + "元");
+                                        + refundRecord.getAmount() + "元");
                                 //
 
-                                refundRecordLevel2.setRefundAmount(
+                                refundRecordLevel2.setAmount(
                                         poolList.get(j).getQuantity() * refundConfig.getLevel2Percent());
-                                refundRecordLevel2.setRefundPercent(refundConfig.getLevel2Percent());
-                                refundRecordLevel2.setRefundDescription("代理商" + agentLevel2.getName() + "与代理商"
+                                refundRecordLevel2.setPercent(refundConfig.getLevel2Percent());
+                                refundRecordLevel2.setDescription("代理商" + agentLevel2.getName() + "与代理商"
                                         + agent.getName() + "直接关联，获得代理商" + agent.getName() + "在" + date + "购买"
                                         + poolList.get(j).getGoods().getName() + "的社群拓展奖励，奖励"
-                                        + refundRecordLevel2.getRefundAmount() + "元");
+                                        + refundRecordLevel2.getAmount() + "元");
 
                             } else {
                                 // 当前agent为二级代理商
-                                refundRecord.setRefundAmount(poolList.get(j).getRefundAmount());
-                                refundRecord.setRefundPercent(refundConfig.getLevel1Percent());
-                                refundRecord.setRefundDescription("代理商" + agent.getName() + "在" + date + "购买"
+                                refundRecord.setAmount(poolList.get(j).getRefundAmount());
+                                refundRecord.setPercent(refundConfig.getLevel1Percent());
+                                refundRecord.setDescription("代理商" + agent.getName() + "在" + date + "购买"
                                         + poolList.get(j).getGoods().getName() + "达到返现标准，返现"
-                                        + refundRecord.getRefundAmount() + "元");
+                                        + refundRecord.getAmount() + "元");
                                 //
-                                refundRecordLevel2.setRefundAmount(
+                                refundRecordLevel2.setAmount(
                                         poolList.get(j).getQuantity() * refundConfig.getLevel2Percent());
-                                refundRecordLevel2.setRefundPercent(refundConfig.getLevel2Percent());
-                                refundRecordLevel2.setRefundDescription("代理商" + agentLevel2.getName() + "与代理商"
+                                refundRecordLevel2.setPercent(refundConfig.getLevel2Percent());
+                                refundRecordLevel2.setDescription("代理商" + agentLevel2.getName() + "与代理商"
                                         + agent.getName() + "直接关联，获得代理商" + agent.getName() + "在" + date + "购买"
                                         + poolList.get(j).getGoods().getName() + "的社群拓展奖励，奖励"
-                                        + refundRecordLevel2.getRefundAmount() + "元");
+                                        + refundRecordLevel2.getAmount() + "元");
                             }
                             refundRecordLevel2.setOrderPool(poolList.get(j));
-                            refundRecordLevel2.setRefundName(year + "年" + month + "月" + day + "日" + "社群拓展奖励账单");
+                            refundRecordLevel2.setTitle(time + "社群拓展奖励账单");
                             refundRecordLevel2.setAgent(new selling.sunshine.model.lite.Agent(agentLevel2));
+                            refundRecordLevel2.setLevel(CashBackLevel.DIRECT);
                             refundRecordLevel2.setBlockFlag(false);
                             if (!blockFlag) {
                                 sqlSession.insert("selling.refund.record.insert", refundRecordLevel2);
                             }
                         } else {
                             // 当前agent为一级代理商
-                            refundRecord.setRefundAmount(poolList.get(j).getRefundAmount());
-                            refundRecord.setRefundPercent(refundConfig.getLevel1Percent());
-                            refundRecord.setRefundDescription(
+                            refundRecord.setAmount(poolList.get(j).getRefundAmount());
+                            refundRecord.setPercent(refundConfig.getLevel1Percent());
+                            refundRecord.setDescription(
                                     "代理商" + agent.getName() + "在" + date + "购买" + poolList.get(j).getGoods().getName()
-                                            + "达到返现标准，返现" + refundRecord.getRefundAmount() + "元");
+                                            + "达到返现标准，返现" + refundRecord.getAmount() + "元");
                         }
                         refundRecord.setOrderPool(poolList.get(j));
-                        refundRecord.setRefundName(year + "年" + month + "月" + day + "日" + "返现账单");
+                        refundRecord.setTitle(time + "日" + "返现账单");
                         refundRecord.setAgent(new selling.sunshine.model.lite.Agent(agent));
+                        refundRecord.setLevel(CashBackLevel.SELF);
                         refundRecord.setBlockFlag(false);
                         sqlSession.insert("selling.refund.record.insert", refundRecord);
                     }
@@ -259,14 +254,14 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
         try {
             Map<String, Object> condition = new HashMap<>();
             condition.put("blockFlag", false);
-            List<RefundRecord> refundRecordList = sqlSession.selectList("selling.refund.record.query", condition);
-            for (RefundRecord refundRecord : refundRecordList) {
+            List<CashBackRecord> refundRecordList = sqlSession.selectList("selling.refund.record.query", condition);
+            for (CashBackRecord refundRecord : refundRecordList) {
                 condition.clear();
                 condition.put("agentId", refundRecord.getAgent().getAgentId());
                 Agent agent = (Agent) sqlSession.selectList("selling.agent.query", condition).get(0);
                 // 更新agent的账户余额以及返现总额
-                agent.setCoffer(agent.getCoffer() + refundRecord.getRefundAmount());
-                agent.setAgentRefund(agent.getAgentRefund() + refundRecord.getRefundAmount());
+                agent.setCoffer(agent.getCoffer() + refundRecord.getAmount());
+                agent.setAgentRefund(agent.getAgentRefund() + refundRecord.getAmount());
                 sqlSession.update("selling.agent.update", agent);
             }
 
@@ -283,7 +278,7 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
     @Override
     public ResultData queryRefundRecordByPage(Map<String, Object> condition, DataTableParam param) {
         ResultData result = new ResultData();
-        DataTablePage<RefundRecord> page = new DataTablePage<RefundRecord>();
+        DataTablePage<CashBackRecord> page = new DataTablePage<>();
         page.setsEcho(param.getsEcho());
         logger.debug(JSONObject.toJSONString(condition));
 
@@ -299,9 +294,9 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
             result.setDescription(total.getDescription());
             return result;
         }
-        page.setiTotalRecords(((List<RefundRecord>) total.getData()).size());
-        page.setiTotalDisplayRecords(((List<RefundRecord>) total.getData()).size());
-        List<RefundRecord> current = queryRefundRecordByPage(condition, param.getiDisplayStart(),
+        page.setiTotalRecords(((List<CashBackRecord>) total.getData()).size());
+        page.setiTotalDisplayRecords(((List<CashBackRecord>) total.getData()).size());
+        List<CashBackRecord> current = queryRefundRecordByPage(condition, param.getiDisplayStart(),
                 param.getiDisplayLength());
         if (current.size() == 0) {
             result.setResponseCode(ResponseCode.RESPONSE_NULL);
@@ -311,8 +306,8 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
         return result;
     }
 
-    private List<RefundRecord> queryRefundRecordByPage(Map<String, Object> condition, int start, int length) {
-        List<RefundRecord> result = new ArrayList<>();
+    private List<CashBackRecord> queryRefundRecordByPage(Map<String, Object> condition, int start, int length) {
+        List<CashBackRecord> result = new ArrayList<>();
         try {
             result = sqlSession.selectList("selling.refund.record.query", condition, new RowBounds(start, length));
         } catch (Exception e) {

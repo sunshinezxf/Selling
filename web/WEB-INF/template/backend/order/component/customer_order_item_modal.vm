@@ -24,7 +24,7 @@
             <div class="modal-footer">
                 <button type="button" id="cancel_order" class="btn btn-default detail">取消订单</button>
                 <button type="button" class="btn btn-primary detail" data-dismiss="modal">确认</button>
-                <button type="button" class="btn btn-default cancel" data-dismiss="modal">否，不再取消</button>
+                <button type="button" id="undo_btn" class="btn btn-default cancel" data-dismiss="modal">否，不再取消</button>
                 <button type="button" id="reimburse_btn" class="btn btn-primary cancel">是，发起退款</button>
                 <button type="button" id="confirm" class="btn btn-primary reimburse" data-dismiss="modal">确认</button>
             </div>
@@ -66,6 +66,8 @@
         var orderId = $("#customer_order_id").text();;
         //alert(orderId);
         if (orderId) {
+            $("#reimburse_btn").attr("disabled","disabled");
+            $("#undo_btn").attr("disabled","disabled");
             var url = '${path.concat('/reimburse/apply')}';
             var param = {
                 orderId: orderId,

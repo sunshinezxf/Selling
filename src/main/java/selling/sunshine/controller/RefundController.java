@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import selling.sunshine.form.RefundConfigForm;
 import selling.sunshine.model.*;
+import selling.sunshine.model.cashback.CashBackRecord;
 import selling.sunshine.model.goods.Goods4Customer;
 import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
@@ -113,8 +114,8 @@ public class RefundController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/record/overview")
-    public DataTablePage<RefundRecord> refundRecordOverview(DataTableParam param) {
-        DataTablePage<RefundRecord> result = new DataTablePage<>(param);
+    public DataTablePage<CashBackRecord> refundRecordOverview(DataTableParam param) {
+        DataTablePage<CashBackRecord> result = new DataTablePage<>(param);
         if (StringUtils.isEmpty(param)) {
             return result;
         }
@@ -122,7 +123,7 @@ public class RefundController {
         condition.put("blockFlag", true);
         ResultData fetchResponse = refundService.fetchRefundRecordByPage(condition, param);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            result = (DataTablePage<RefundRecord>) fetchResponse.getData();
+            result = (DataTablePage<CashBackRecord>) fetchResponse.getData();
         }
         return result;
     }
@@ -135,8 +136,8 @@ public class RefundController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/record/month")
-    public DataTablePage<RefundRecord> refundRecordMonth(DataTableParam param) {
-        DataTablePage<RefundRecord> result = new DataTablePage<>(param);
+    public DataTablePage<CashBackRecord> refundRecordMonth(DataTableParam param) {
+        DataTablePage<CashBackRecord> result = new DataTablePage<>(param);
         if (StringUtils.isEmpty(param)) {
             return result;
         }
@@ -149,7 +150,7 @@ public class RefundController {
 
         ResultData fetchResponse = refundService.fetchRefundRecordByPage(condition, param);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            result = (DataTablePage<RefundRecord>) fetchResponse.getData();
+            result = (DataTablePage<CashBackRecord>) fetchResponse.getData();
         }
         return result;
     }

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="selling.cashback.summary">
+    <resultMap id="cashBack4AgentPerMonthVo" type="selling.sunshine.vo.cashback.CashBack4AgentPerMonth">
+        <result property="month" column="cash_back_month"></result>
+        <result property="amount" column="amount"></result>
+        <result property="level" column="level"
+                typeHandler="selling.sunshine.handler.mybatis.cashback.LevelHandler"></result>
+        <association property="agent" column="agentId = agent_id" select="agentLiteQuery"></association>
+    </resultMap>
+
+    <resultMap id="cashBack4Agent" type="selling.sunshine.vo.cashback.CashBack4Agent">
+        <result property="amount" column="amount"></result>
+        <result property="level" column="level"
+                typeHandler="selling.sunshine.handler.mybatis.cashback.LevelHandler"></result>
+        <association property="agent" column="agentId = agent_id" select="agentLiteQuery"></association>
+    </resultMap>
+
+    <resultMap id="agentLiteVo" type="selling.sunshine.model.lite.Agent">
+        <result property="agentId" column="agent_id"></result>
+        <result property="name" column="agent_name"></result>
+        <result property="phone" column="agent_phone"></result>
+    </resultMap>
+
+    <select id="query4Month" parameterType="java.util.Map" resultMap="cashBack4AgentPerMonthVo">
+        SELECT agent_id, cash_back_month, sum(amount), sum(CASE WHEN level = 0 THEN amount ELSE 0 END), sum(CASE WHEN
+        level = 1 THEN amount ELSE 0 END), sum(CASE WHEN level = 2 THEN amount ELSE 0 END), level
+        FROM cashback_month_view
+        WHERE 1 = 1
+        <if test="agentId != null">
+            AND agent_id = #{agent_id}
+        </if>
+        <choose>
+            <when test="month != null">
+                AND cash_back_month = #{month}
+            </when>
+            <otherwise>
+                AND cash_back_month = date_format(date_sub(curdate(), interval 1 month), '%Y-%m')
+            </otherwise>
+        </choose>
+        <if test="level != null">
+            AND level = #{level}
+        </if>
+    </select>
+
+    <select id="query" parameterType="java.util.Map" resultMap="cashBack4Agent">
+        SELECT agent_id, sum(amount), sum(CASE WHEN level = 0 THEN amount ELSE 0 END), sum(CASE WHEN level = 1 THEN amount ELSE 0 END), sum(CASE WHEN level = 2 THEN amount ELSE 0 END),  level
+        FROM cashback_month_view
+        WHERE 1 = 1
+        GROUP BY agent_id
+    </select>
+
+    <select id="agentLiteQuery" parameterType="java.util.Map" resultMap="agentLiteVo">
+        SELECT agent_id, agent_name, agent_phone
+        FROM agent
+        WHERE agent_id = #{agentId}
+    </select>
+</mapper>

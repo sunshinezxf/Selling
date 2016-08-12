@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="selling.refund.record">
-    <resultMap id="refundRecordVo" type="selling.sunshine.model.RefundRecord">
-        <result property="refundRecordId" column="refund_id"></result>
-        <result property="refundName" column="refund_name"></result>
-        <result property="refundPercent" column="refund_percent"></result>
-        <result property="refundAmount" column="refund_amount"></result>
-        <result property="refundDescription" column="refund_description"></result>
+    <resultMap id="refundRecordVo" type="selling.sunshine.model.cashback.CashBackRecord">
+        <result property="recordId" column="refund_id"></result>
+        <result property="title" column="refund_name"></result>
+        <result property="percent" column="refund_percent"></result>
+        <result property="amount" column="refund_amount"></result>
+        <result property="description" column="refund_description"></result>
+        <result property="level" column="refund_level"
+                typeHandler="selling.sunshine.handler.mybatis.cashback.LevelHandler"></result>
         <result property="createAt" column="create_time"></result>
         <result property="blockFlag" column="block_flag"></result>
         <association property="agent" column="agentId = agent_id" select="agentLiteQuery"></association>
@@ -33,13 +35,13 @@
         <result property="poolDate" column="pool_date"></result>
         <association property="goods" column="goodsId = goods_id" select="goods4AgentQuery"></association>
     </resultMap>
-    
+
     <resultMap id="statisticVo" type="java.util.Map">
         <result property="date" column="refundDate"></result>
         <result property="amount" column="amount"></result>
     </resultMap>
 
-    <insert id="insert" parameterType="selling.sunshine.model.RefundRecord" useGeneratedKeys="false">
+    <insert id="insert" parameterType="selling.sunshine.model.cashback.CashBackRecord" useGeneratedKeys="false">
         INSERT INTO refund_record
         <set>
             refund_id=#{refundRecordId},
@@ -60,6 +62,9 @@
             </if>
             <if test="agent != null and agent != ''">
                 agent_id = #{agent.agentId},
+            </if>
+            <if test="level != null">
+                refund_level = #{level, , typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler}
             </if>
             block_flag = #{blockFlag},
             create_time = #{createAt}
@@ -85,7 +90,8 @@
 
 
     <select id="query" parameterType="java.util.Map" resultMap="refundRecordVo">
-        SELECT refund_id,order_pool_id,refund_name,refund_percent,refund_amount,refund_description,agent_id,create_time,block_flag
+        SELECT
+        refund_id,order_pool_id,refund_name,refund_percent,refund_amount,refund_description,refund_level,agent_id,create_time,block_flag
         FROM refund_record
         WHERE 1 = 1
         <if test="refundRecordId != null and refundRecordId != ''">
@@ -103,7 +109,7 @@
         <if test="refundDescription !=null and refundDescription != ''">
             AND refund_description LIKE #{refundDescription}
         </if>
-        
+
         ORDER BY create_time
     </select>
 
@@ -112,15 +118,15 @@
 		FROM goods
 		WHERE goods_id = #{goodsId}
 	</select>
-	
-	<update id="updateBatch">
-	   UPDATE refund_record
-	   <set>
+
+    <update id="updateBatch">
+        UPDATE refund_record
+        <set>
             block_flag = true
-	   </set>
-	   WHERE block_flag = false
-	</update>
-	
+        </set>
+        WHERE block_flag = false
+    </update>
+
     <select id="statistic" parameterType="java.util.Map" resultMap="statisticVo">
       SELECT DATE_FORMAT(refund_record.create_time,'%Y-%m') AS refundDate,sum(refund_amount) AS amount 
       FROM refund_record  

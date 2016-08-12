@@ -125,6 +125,8 @@
                 /gather/** = roles["admin, finance"]
 
                 /gift/apply = roles[agent]
+                /gift/check = roles["admin, auditor"]
+                /gift/apply/decline = roles["admin, auditor"]
 
                 /indent/** = roles["admin", "finance"]
 

@@ -174,7 +174,7 @@ as select agent_id, goods_id, sum(quantity) AS quantity
 
 create view total_volume_view(agent_id, goods_id, quantity)
 as select agent_id, goods_id, sum(quantity) AS quantity
-   from volume_item
+   from volume_item;
 
 ##2016年8月6日更新
 CREATE TABLE IF NOT EXISTS `selling`.`gift_apply` (
@@ -200,5 +200,29 @@ CREATE TABLE IF NOT EXISTS `selling`.`gift_apply` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
   ENGINE = InnoDB;
+
+##2016年8月9日更新
+ALTER TABLE `selling`.`gift_apply`
+ADD COLUMN `last_quantity` INT NOT NULL DEFAULT 0 AFTER `apply_line`,
+ADD COLUMN `total_quantity` INT NOT NULL DEFAULT 0 AFTER `last_quantity`;
+
+##2016年8月10日更新
+ALTER TABLE `selling`.`refund_record`
+ADD COLUMN `refund_level` TINYINT(2) NOT NULL DEFAULT 0 AFTER `refund_amount`;
+
+update refund_record set refund_level = 1 where refund_percent = 20;
+
+update refund_record set refund_level = 2 where refund_percent = 10;
+
+create view cashback_sum_view(agent_id, cash_back_month, amount, level)
+as (select rr.agent_id, date_format(op.pool_date, '%Y-%m') as cash_back_month, sum(rr.refund_amount), rr.refund_level
+    from refund_record rr left join order_pool op on rr.order_pool_id = op.pool_id
+    group by rr.agent_id, rr.refund_level, date_format(op.pool_date, '%Y-%m')
+);
+
+
+create view cashback_month_view(agent_id, cash_back_month, amount, level)
+as select agent_id, cash_back_month, amount, level from cashback_sum_view
+where cash_back_month = date_format(date_sub(curdate(), interval 1 month), '%Y-%m');
 
 

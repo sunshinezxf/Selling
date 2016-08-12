@@ -355,22 +355,4 @@ public class AgentDaoImpl extends BaseDao implements AgentDao {
             return result;
         }
     }
-
-    @Override
-    public ResultData insertGiftApply(GiftApply apply) {
-        ResultData result = new ResultData();
-        apply.setApplyId(IDGenerator.generate("GFA"));
-        synchronized (lock) {
-            try {
-                sqlSession.insert("selling.gift.apply.insert", apply);
-                result.setData(apply);
-            } catch (Exception e) {
-                logger.error(e.getMessage());
-                result.setResponseCode(ResponseCode.RESPONSE_ERROR);
-                result.setDescription(e.getMessage());
-            } finally {
-                return result;
-            }
-        }
-    }
 }
