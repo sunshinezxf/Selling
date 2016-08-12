@@ -1,6 +1,5 @@
 package selling.sunshine.vo.cashback;
 
-import selling.sunshine.model.cashback.CashBackLevel;
 import selling.sunshine.model.lite.Agent;
 
 /**
@@ -8,8 +7,14 @@ import selling.sunshine.model.lite.Agent;
  */
 public class CashBack4Agent {
     private Agent agent;
+
     private double amount;
-    private CashBackLevel level;
+
+    private double self;
+
+    private double direct;
+
+    private double indirect;
 
     public Agent getAgent() {
         return agent;
@@ -27,11 +32,27 @@ public class CashBack4Agent {
         this.amount = amount;
     }
 
-    public CashBackLevel getLevel() {
-        return level;
+    public double getSelf() {
+        return self;
     }
 
-    public void setLevel(CashBackLevel level) {
-        this.level = level;
+    public void setSelf(double self) {
+        this.self = self;
+    }
+
+    public double getDirect() {
+        return direct;
+    }
+
+    public void setDirect(double direct) {
+        this.direct = direct;
+    }
+
+    public double getIndirect() {
+        return indirect;
+    }
+
+    public void setIndirect(double indirect) {
+        this.indirect = indirect;
     }
 }
