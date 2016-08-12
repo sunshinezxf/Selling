@@ -32,7 +32,7 @@ public class CashBackController {
     @RequestMapping(method = RequestMethod.GET, value = "/month")
     public ModelAndView monthly() {
         ModelAndView view = new ModelAndView();
-        view.setViewName("/backend/refund/refund_record_month");
+        view.setViewName("/backend/refund/cashback_month_detail");
         return view;
     }
 
@@ -50,4 +50,10 @@ public class CashBackController {
         return result;
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/overview")
+    public ModelAndView overview() {
+        ModelAndView view = new ModelAndView();
+        view.setViewName("/backend/refund/cashback_overview");
+        return view;
+    }
 }
