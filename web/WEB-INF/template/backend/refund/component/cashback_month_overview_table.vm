@@ -39,7 +39,7 @@
             "bProcessing": true,
             "bServerSide": true,
             "bInfoFiltered": false,
-            //"sAjaxSource": '${path.concat('/refund/record/month')}',
+            "sAjaxSource": '${path.concat('/cashback/month')}',
             "infoFiltered": false,
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                 $(nRow).removeClass('dataTable');
@@ -59,19 +59,19 @@
                 })
             },
             columns: [
-                {title: "代理商", "mData": ""},
-                {title: "月份", "mData": ""},
-                {title: "返现金额(元)", "mData": ""},
+                {title: "代理商", "mData": "agent.name"},
+                {title: "月份", "mData": "month"},
+                {title: "返现金额(元)", "mData": "amount"},
                 {
                     title: "明细(自销/直接/间接)", "mRender": function(data,type,full){
-                        var detail=full.level1+"/"+full.level2+"/"+full.level3;
+                        var detail=full.self+"/"+full.direct+"/"+full.indirect;
                         return detail;
                     }
                 },
                 {
                     title: "操作", "mRender": function(data,type,full){
                         var operation="";
-                        var detail_btn = "<a type='button' class='btn btn-info btn-group-sm' href="${path.concat('/')}">详情</a>&nbsp;"
+                        var detail_btn = "<a type='button' class='btn btn-info btn-group-sm' href='${path.concat("/cashback/month")}'>详情</a>&nbsp;"
                         operation += detail_btn;
                         return operation; 
                     }
