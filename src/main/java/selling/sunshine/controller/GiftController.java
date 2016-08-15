@@ -70,7 +70,7 @@ public class GiftController {
     public ModelAndView giftConfig(@Valid ConfigForm form, BindingResult result, HttpServletRequest request) {
         ModelAndView view = new ModelAndView();
         if (result.hasErrors()) {
-            view.setViewName("redirect:/gift/apply");
+            view.setViewName("redirect:/gift/check");
             return view;
         }
         Map<String, Object> condition = new HashMap<>();
@@ -85,7 +85,7 @@ public class GiftController {
             GiftConfig giftConfig = new GiftConfig(agent, goods, Integer.parseInt(form.getAmount()));
             response = agentService.createAgentGift(giftConfig);
             if (response.getResponseCode() != ResponseCode.RESPONSE_OK) {
-                view.setViewName("redirect:/gift/apply");
+                view.setViewName("redirect:/gift/check");
                 return view;
             }
         } else if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
@@ -106,7 +106,7 @@ public class GiftController {
         BackOperationLog backOperationLog = new BackOperationLog(
                 admin.getUsername(), toolService.getIP(request), "管理员" + admin.getUsername() + "修改了代理商" + agent.getName() + "的赠送配置");
         logService.createbackOperationLog(backOperationLog);
-        view.setViewName("redirect:/gift/apply");
+        view.setViewName("redirect:/gift/check");
         return view;
     }
 
