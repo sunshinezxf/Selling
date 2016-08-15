@@ -45,7 +45,7 @@
                     <div class="form-group">
                         <label for="gift_quantity" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 control-label" style="text-align:left;">配置赠送盒数</label>
                         <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
-                            <input type="tel" class="form-control" id="gift_quantity" name="amount" placeholder="请输入赠送盒数">
+                            <input type="tel" class="form-control" id="gift_quantity" name="amount" placeholder="请输入赠送盒数" autocomplete="off">
                         </div>
                     </div>
                 </form>
