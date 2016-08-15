@@ -54,7 +54,7 @@ public class CashBackController {
     @RequestMapping(method = RequestMethod.GET, value = "/overview")
     public ModelAndView overview() {
         ModelAndView view = new ModelAndView();
-        view.setViewName("/backend/refund/cashback_overview");
+        view.setViewName("/backend/refund/refund_record");
         return view;
     }
 
@@ -64,6 +64,10 @@ public class CashBackController {
             return result;
         }
         Map<String, Object> condition = new HashMap<>();
+        ResultData response = cashBackService.fetchCashBack(condition, param);
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result = (DataTablePage<CashBack4Agent>) response.getData();
+        }
         return result;
     }
 }

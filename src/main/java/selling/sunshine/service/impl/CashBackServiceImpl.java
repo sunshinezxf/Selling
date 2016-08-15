@@ -9,9 +9,7 @@ import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.CashBackService;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
-import selling.sunshine.vo.cashback.CashBack4AgentPerMonth;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,6 +29,8 @@ public class CashBackServiceImpl implements CashBackService {
         result.setResponseCode(response.getResponseCode());
         if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
             result.setData(response.getData());
+        } else {
+            result.setDescription(response.getDescription());
         }
         return result;
     }
@@ -38,7 +38,13 @@ public class CashBackServiceImpl implements CashBackService {
     @Override
     public ResultData fetchCashBack(Map<String, Object> condition, DataTableParam param) {
         ResultData result = new ResultData();
-
+        ResultData response = cashBackDao.queryByPage(condition, param);
+        result.setResponseCode(response.getResponseCode());
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(response.getData());
+        } else {
+            result.setDescription(response.getDescription());
+        }
         return result;
     }
 }
