@@ -110,7 +110,7 @@
     var context=rank.getContext("2d");
     var ranking="${ranking}";
     var total="${totalNum}";
-    alert(ranking);
+    //alert(ranking);
     var topRate=parseInt((ranking/total)*100);
     if(topRate>50){
         $('.rank').hide();
