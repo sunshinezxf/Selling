@@ -1,11 +1,11 @@
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id-target="statement-management">
     <div class="row">
         <div class="col-md-12 col-lg-12">
-            <h1><i class="fa fa-home"></i> 返现记录 </h1>
+            <h1><i class="fa fa-home"></i>历史返现记录 </h1>
             <ol class="breadcrumb">
                 <li><a href="${path.concat('/dashboard')}">首页</a></li>
                 <li><a data-toggle="collapse" data-parent="#accordion" href="#statement-management">返现管理</a></li>
-                <li class="active">返现记录</li>
+                <li class="active">历史返现记录</li>
             </ol>
         </div>
     </div>
@@ -31,7 +31,7 @@
             "bProcessing": true,
             "bServerSide": true,
             "bInfoFiltered": false,
-            "sAjaxSource": '${path.concat('/refund/record/overview')}',
+            //"sAjaxSource": '${path.concat('/refund/record/overview')}',
             "infoFiltered": false,
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                 $(nRow).removeClass('dataTable');
@@ -51,17 +51,14 @@
                 })
             },
             columns: [
-                {title: "编号", "mData": "refundRecordId"},
                 {title: "代理商", "mData": "agent.name"},
-                {title: "商品", "mData": "orderPool.goods.name"},
+                {title: "返现总额(元)", "mData": "refundAmount"},
                 {
-                    title: "日期", "mRender": function (data, type, full) {
-                    return ((new Date(full.createAt)).format("yyyy/MM/dd"));
-                }
+                    title: "返现明细(自销/直接/间接)", "mRender": function(data,type,full){
+                        var detail=full.self+"/"+full.direct+"/"+full.indirect;
+                        return detail;
+                    }
                 },
-                {title: "返现金额(元)", "mData": "refundAmount"},
-                {title: "返现比例(元／件)", "mData": "refundPercent"},
-                {title: "内容", "mData": "refundDescription"}
             ],
             "language": {
                 "processing": "正在加载中",
@@ -70,7 +67,7 @@
                 "info": "从 _START_ 到 _END_, 共 _TOTAL_ 条数据",
                 "infoEmpty": "暂无数据",
                 "infoFiltered": "数据表中共 _MAX_ 条记录)",
-                "zeroRecords": "没有返现记录",
+                "zeroRecords": "当前无历史返现记录",
                 "search": "搜索:",
                 "paginate": {
                     "first": "首页",
