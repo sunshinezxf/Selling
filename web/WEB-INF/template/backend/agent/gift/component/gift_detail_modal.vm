@@ -41,11 +41,11 @@
             </div>
             <div class="modal-footer">
                 <form id="gift_quantity_form" class="form-horizontal">
-                    <p id="apply_gift_id" name=""></p>
+                    <p id="apply_gift_id" name="applyId"></p>
                     <div class="form-group">
                         <label for="gift_quantity" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 control-label" style="text-align:left;">配置赠送盒数</label>
                         <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
-                            <input type="tel" class="form-control" id="gift_quantity" name="" placeholder="请输入赠送盒数">
+                            <input type="tel" class="form-control" id="gift_quantity" name="amount" placeholder="请输入赠送盒数">
                         </div>
                     </div>
                 </form>
@@ -79,7 +79,7 @@
     });
     
     $("#present_btn").click(function(){
-        $("#gift_quantity_form").attr("action","${path.concat('/')}");
+        $("#gift_quantity_form").attr("action","${path.concat('/gift/apply/handle')}");
         $("#gift_quantity_form").attr("method","post");
         $("#gift_quantity_form").submit();
         window.location.reload();
