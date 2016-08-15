@@ -49,7 +49,7 @@
         SELECT agent_id, sum(amount) as amount, sum(CASE WHEN level = 0 THEN amount ELSE 0 END) as self, sum(CASE WHEN level = 1 THEN amount ELSE 0 END) as direct, sum(CASE WHEN level = 2 THEN amount ELSE 0 END) as indirect
         FROM cashback_month_view
         WHERE 1 = 1
-        AND cash_back_month lt; date_format(date_sub(curdate(), interval 1 month), '%Y-%m')
+        AND cash_back_month &lt; date_format(date_sub(curdate(), interval 1 month), '%Y-%m')
         GROUP BY agent_id
     </select>
 

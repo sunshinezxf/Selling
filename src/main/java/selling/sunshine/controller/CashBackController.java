@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import selling.sunshine.pagination.DataTablePage;
@@ -58,6 +59,8 @@ public class CashBackController {
         return view;
     }
 
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value = "/overview")
     public DataTablePage<CashBack4Agent> overview(DataTableParam param) {
         DataTablePage<CashBack4Agent> result = new DataTablePage<>(param);
         if (StringUtils.isEmpty(param)) {
