@@ -1946,6 +1946,13 @@ public class AgentController {
         resultData.setData(dataMap);
         return resultData;
     }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/detail")
+    public ModelAndView detail() {
+    	ModelAndView view=new ModelAndView();
+    	view.setViewName("/backend/agent/detail");
+		return view;    	
+    }
 
     @RequestMapping(method = RequestMethod.POST, value = "/detail/{agentId}")
     @ResponseBody
