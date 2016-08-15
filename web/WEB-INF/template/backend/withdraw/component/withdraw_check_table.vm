@@ -25,6 +25,25 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="dialog_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">x</button>
+                <h4 class="modal-title">提示</h4>
+            </div>
+            <div class="modal-body">
+               <p class="form-group">
+                   请确保该笔提现金额已经打到相应渠道的商户账户后再点击确认！！！
+               </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="dialog_confirm">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
     $(document).ready(function () {
         $("#check_withdraw_table").DataTable({
@@ -70,12 +89,10 @@
                     title: "操作", "mRender": function (data, type, full) {
                     var operation = "";
                     if (full.status == "APPLY") {
-                        var pay_button = "<button type='button' id='" + full.withdrawId + "' class='btn btn-info btn-group-sm grant' >确认金额</button>&nbsp;";
+                        var pay_button = "<button type='button' id='" + full.withdrawId + "' class='btn btn-info btn-group-sm grant' onclick=dialog(this) data-toggle='modal' data-target='#dialog_modal'>确认金额</button>&nbsp;";
                         operation += pay_button;
                     }
-                    $("#" + full.withdrawId).on('click', function () {
-                        window.location.href = "${path.concat('/withdraw/')}" + full.withdrawId + '/send';
-                    });
+
                     return operation;
                 }
                 }
@@ -97,5 +114,20 @@
                 }
             }
         });
+    });
+    
+    $("#dialog_modal").modal({
+        show: false,
+        keyboard: true
+    });
+    
+    var id;
+    
+    function dialog(obj){
+    	id=obj.id;
+    }
+    
+    $("#dialog_confirm").on('click', function () {
+    	 window.location.href = "${path.concat('/withdraw/')}" + id + '/send';
     });
 </script>
