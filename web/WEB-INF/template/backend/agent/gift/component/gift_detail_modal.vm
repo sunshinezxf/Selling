@@ -41,7 +41,7 @@
             </div>
             <div class="modal-footer">
                 <form id="gift_quantity_form" class="form-horizontal">
-                    <p id="apply_gift_id" name="applyId"></p>
+                    <input type="hidden" id="apply_gift_id" name="applyId"></input>
                     <div class="form-group">
                         <label for="gift_quantity" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 control-label" style="text-align:left;">配置赠送盒数</label>
                         <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
@@ -66,8 +66,6 @@
             $("#gift_quantity").val("");
             inactive();
         });
-        
-        $("#apply_gift_id").hide();
         
         $("#gift_quantity").on("input propertychange",function(){
             if(validate()){
