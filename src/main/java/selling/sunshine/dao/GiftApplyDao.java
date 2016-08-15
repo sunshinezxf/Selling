@@ -14,6 +14,8 @@ public interface GiftApplyDao {
 
     ResultData queryGiftApply(Map<String, Object> condition);
 
+    ResultData updateGiftApply(GiftApply apply);
+
     ResultData queryGiftApplyByPage(Map<String, Object> condition, DataTableParam param);
 
     ResultData blockGiftApply(GiftApply apply);

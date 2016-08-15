@@ -9,6 +9,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import selling.sunshine.form.gift.ApplyConfigForm;
 import selling.sunshine.form.gift.ApplyForm;
 import selling.sunshine.form.gift.ConfigForm;
 import selling.sunshine.model.Admin;
@@ -219,5 +220,42 @@ public class GiftController {
             result.setDescription(response.getDescription());
         }
         return result;
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/apply/handle")
+    public ModelAndView handleApply(@Valid ApplyConfigForm form, BindingResult result) {
+        ModelAndView view = new ModelAndView();
+        if (result.hasErrors()) {
+            view.setViewName("redirect:/gift/check");
+            return view;
+        }
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("applyId", form.getApplyId());
+        ResultData response = agentService.fetchGiftApply(condition);
+        if (response.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            view.setViewName("redirect:/gift/check");
+            return view;
+        }
+        GiftApply apply = ((List<GiftApply>) response.getData()).get(0);
+        condition.clear();
+        condition.put("agentId", apply.getAgent().getAgentId());
+        condition.put("goodsId", apply.getGoods().getGoodsId());
+        response = agentService.fetchAgentGift(condition);
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            GiftConfig config = ((List<GiftConfig>) response.getData()).get(0);
+            config.setAmount(Integer.parseInt(form.getAmount()));
+            agentService.updateAgentGift(config);
+        } else if (response.getResponseCode() == ResponseCode.RESPONSE_NULL) {
+            Agent agent = new Agent();
+            agent.setAgentId(apply.getAgent().getAgentId());
+            Goods4Agent goods = new Goods4Agent();
+            goods.setGoodsId(apply.getGoods().getGoodsId());
+            GiftConfig config = new GiftConfig(agent, goods, Integer.parseInt(form.getAmount()));
+            agentService.createAgentGift(config);
+        }
+        apply.setStatus(GiftApplyStatus.PROCESSED);
+
+        view.setViewName("redirect:/gift/check");
+        return view;
     }
 }
