@@ -63,18 +63,19 @@
                 {title: "月份", "mData": "month"},
                 {title: "返现金额(元)", "mData": "amount"},
                 {
-                    title: "明细(自销/直接/间接)", "mRender": function(data,type,full){
-                        var detail=full.self+"/"+full.direct+"/"+full.indirect;
-                        return detail;
-                    }
+                    title: "明细(自销/直接/间接)", "mRender": function (data, type, full) {
+                    var detail = full.self + "/" + full.direct + "/" + full.indirect;
+                    return detail;
+                }
                 },
                 {
-                    title: "操作", "mRender": function(data,type,full){
-                        var operation="";
-                        var detail_btn = "<a type='button' class='btn btn-info btn-group-sm' href='${path.concat("/cashback/month")}'>详情</a>&nbsp;"
-                        operation += detail_btn;
-                        return operation; 
-                    }
+                    title: "操作", "mRender": function (data, type, full) {
+                    var operation = "";
+                    var url = "${path.concat('/cashback')}" + "/" + full.agent.agentId + "/month"
+                    var detail_btn = "<a type='button' class='btn btn-info btn-group-sm' href='" + url + "'>详情</a>&nbsp;"
+                    operation += detail_btn;
+                    return operation;
+                }
                 }
             ],
             "language": {
