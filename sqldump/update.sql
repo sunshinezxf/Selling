@@ -236,3 +236,4 @@ as select o.agent_id as agent_id, oi.goods_id as goods_id, oi.goods_quantity as 
    where co.order_status in (1, 2, 3) and co.agent_id is not null;
 
 
+
