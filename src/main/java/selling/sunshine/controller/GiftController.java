@@ -254,7 +254,7 @@ public class GiftController {
             agentService.createAgentGift(config);
         }
         apply.setStatus(GiftApplyStatus.PROCESSED);
-
+        agentService.updateGiftApply(apply);
         view.setViewName("redirect:/gift/check");
         return view;
     }
