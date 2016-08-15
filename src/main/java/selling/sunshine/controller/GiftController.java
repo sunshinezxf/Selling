@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import selling.sunshine.form.gift.ApplyForm;
+import selling.sunshine.form.gift.ConfigForm;
 import selling.sunshine.model.Admin;
 import selling.sunshine.model.BackOperationLog;
 import selling.sunshine.model.User;
@@ -61,40 +62,48 @@ public class GiftController {
         return resultData;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/config/{agentId}/{goodsId}/{amount}")
-    public ResultData giftConfig(@PathVariable("agentId") String agentId, @PathVariable("goodsId") String goodsId, @PathVariable("amount") int amount, HttpServletRequest request) {
-        ResultData resultData = new ResultData();
-        Map<String, Object> condition = new HashMap<String, Object>();
-        condition.put("agentId", agentId);
-        condition.put("goodsId", goodsId);
-        ResultData queryData = agentService.fetchAgentGift(condition);
-        if (queryData.getResponseCode() == ResponseCode.RESPONSE_NULL) {
+    @RequestMapping(method = RequestMethod.POST, value = "/config")
+    public ModelAndView giftConfig(@Valid ConfigForm form, BindingResult result, HttpServletRequest request) {
+        ModelAndView view = new ModelAndView();
+        if (result.hasErrors()) {
+            view.setViewName("redirect:/gift/apply");
+            return view;
+        }
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("agentId", form.getAgentId());
+        condition.put("goodsId", form.getGoodsId());
+        ResultData response = agentService.fetchAgentGift(condition);
+        if (response.getResponseCode() == ResponseCode.RESPONSE_NULL) {
             Agent agent = new Agent();
-            agent.setAgentId(agentId);
+            agent.setAgentId(form.getAgentId());
             Goods4Agent goods = new Goods4Agent();
-            goods.setGoodsId(goodsId);
-            GiftConfig giftConfig = new GiftConfig(agent, goods, amount);
-            resultData = agentService.createAgentGift(giftConfig);
-        } else {
-            GiftConfig giftConfig = ((List<GiftConfig>) queryData.getData()).get(0);
-            giftConfig.setAmount(amount);
-            resultData = agentService.updateAgentGift(giftConfig);
+            goods.setGoodsId(form.getGoodsId());
+            GiftConfig giftConfig = new GiftConfig(agent, goods, Integer.parseInt(form.getAmount()));
+            response = agentService.createAgentGift(giftConfig);
+            if (response.getResponseCode() != ResponseCode.RESPONSE_OK) {
+                view.setViewName("redirect:/gift/apply");
+                return view;
+            }
+        } else if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            GiftConfig giftConfig = ((List<GiftConfig>) response.getData()).get(0);
+            giftConfig.setAmount(Integer.parseInt(form.getAmount()));
+            agentService.updateAgentGift(giftConfig);
         }
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
-        if (user == null) {
-            resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
-            return resultData;
+        if (user == null || user.getAdmin() == null) {
+            view.setViewName("redirect:/login");
+            return view;
         }
         Admin admin = user.getAdmin();
         condition.clear();
-        condition.put("agentId", agentId);
+        condition.put("agentId", form.getAgentId());
         selling.sunshine.model.Agent agent = ((List<selling.sunshine.model.Agent>) agentService.fetchAgent(condition).getData()).get(0);
         BackOperationLog backOperationLog = new BackOperationLog(
                 admin.getUsername(), toolService.getIP(request), "管理员" + admin.getUsername() + "修改了代理商" + agent.getName() + "的赠送配置");
         logService.createbackOperationLog(backOperationLog);
-
-        return resultData;
+        view.setViewName("redirect:/gift/apply");
+        return view;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/apply")
