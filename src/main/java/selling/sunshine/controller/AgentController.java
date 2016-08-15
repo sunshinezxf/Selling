@@ -20,6 +20,7 @@ import selling.sunshine.model.gift.GiftConfig;
 import selling.sunshine.model.goods.Goods4Agent;
 import selling.sunshine.model.sum.TotalQuantityAll;
 import selling.sunshine.model.sum.Volume;
+import selling.sunshine.model.sum.VolumeTotal;
 import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.*;
@@ -1971,23 +1972,10 @@ public class AgentController {
         //累计销售信息
         queryData=statisticService.queryAgentGoods(condition);
         if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
-        	List<Volume> volumeTotalList=(List<Volume>)queryData.getData();
+        	List<VolumeTotal> volumeTotalList=(List<VolumeTotal>)queryData.getData();
         	view.addObject("volumeTotalList", volumeTotalList);
 		}
-        //月销售信息
-        condition.put("totalMonth", 1);
-        queryData=statisticService.queryAgentGoods(condition);
-        if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
-        	List<Volume> volumeMonthList=(List<Volume>)queryData.getData();
-        	view.addObject("volumeMonthList", volumeMonthList);
-		}
-        //年销售信息
-        condition.put("totalMonth", 12);
-        queryData=statisticService.queryAgentGoods(condition);
-        if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
-        	List<Volume> volumeYearList=(List<Volume>)queryData.getData();
-        	view.addObject("volumeYearList", volumeYearList);
-		}
+
         
         //排名
         condition.clear();
