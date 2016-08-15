@@ -58,8 +58,8 @@
                     <td class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                         <p>身份证照片：</p>
                         #if(${credit})
-                        <img src="${credit.frontPath}"/>
-                        <img src="${credit.backPath}"/>
+                        <img src="${credit.frontPath}" class="col-xs-3 col-sm-3 col-md-3 col-lg-3"/>
+                        <img src="${credit.backPath}" class="col-xs-3 col-sm-3 col-md-3 col-lg-3"/>
                         #else
                                                                         无身份证照片
                         #end
@@ -79,12 +79,14 @@
                                     <th>年销量</th>
                                     <th>累计销量</th>
                                 </tr>
+                                #foreach($sales in ${volumeTotalList})
                                 <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td>${sales.goods.name}</td>
+                                    <td>${sales.monthQuantity}</td>
+                                    <td>${sales.yearQuantity}</td>
+                                    <td>${sales.totalQuantity}</td>
                                 </tr>
+                                #end
                             </table>
                         </div>
                         #if(${agent.agentRefund}!=0)
