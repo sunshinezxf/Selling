@@ -50,14 +50,14 @@ select t3.agent_id,t3.goods_id,
 from 
        (select agent_id, goods_id, sum(quantity) AS total_quantity,sum(price) AS total_price
         FROM volume_item
-        WHERE 1 = 1 AND order_type='0'  <if test="agentId != null"> AND t3.agentId=#{agentId}</if>
+        WHERE 1 = 1 AND order_type='0'  <if test="agentId != null"> AND agent_id=#{agentId}</if>
         GROUP BY agent_id, goods_id) t3 
 left join 
        (
         select agent_id, goods_id, sum(quantity) AS year_quantity,sum(price) AS year_price
         FROM volume_item
         WHERE 1 = 1 AND order_type='0'
-            AND date_format(create_time, '%Y-%m') > date_format(date_sub(curdate(), interval 12 month),'%Y-%m') <if test="agentId != null"> AND t3.agentId=#{agentId}</if>
+            AND date_format(create_time, '%Y-%m') > date_format(date_sub(curdate(), interval 12 month),'%Y-%m') <if test="agentId != null"> AND agent_id=#{agentId}</if>
         GROUP BY agent_id, goods_id) t2
 on t3.agent_id=t2.agent_id and t3.goods_id=t2.goods_id
 left join 
@@ -65,7 +65,7 @@ left join
         select agent_id, goods_id, sum(quantity) AS month_quantity,sum(price) AS month_price
         FROM volume_item
         WHERE 1 = 1 AND order_type='0'
-            AND date_format(create_time, '%Y-%m') > date_format(date_sub(curdate(), interval 1 month),'%Y-%m') <if test="agentId != null"> AND t3.agentId=#{agentId}</if>
+            AND date_format(create_time, '%Y-%m') > date_format(date_sub(curdate(), interval 1 month),'%Y-%m') <if test="agentId != null"> AND agent_id=#{agentId}</if>
         GROUP BY agent_id, goods_id) t1
 on t3.agent_id=t1.agent_id and t3.goods_id=t1.goods_id 
 
