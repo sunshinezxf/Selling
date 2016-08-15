@@ -10,3 +10,7 @@
 .basic_info,.basic_info>tbody>tr,.basic_info>tbody>tr>td{
 	border:none;
 }
+
+img{
+	width:100%;
+}
