@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:task="http://www.springframework.org/schema/task" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/task
+		http://www.springframework.org/schema/task/spring-task-3.0.xsd
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <bean id="propertyConfigurer"
+          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:log4j.properties</value>
+                <value>classpath:configuration.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
+
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="${jdbc_url}"/>
+        <property name="username" value="${mysql_username}"/>
+        <property name="password" value="${mysql_password}"/>
+        <property name="maxActive" value="100"/>
+        <property name="maxIdle" value="30"/>
+        <property name="maxWait" value="500"/>
+        <property name="defaultAutoCommit" value="true"/>
+    </bean>
+
+    <bean id="transactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="configLocation" value="classpath:mybatis-configuration.xml"/>
+        <property name="dataSource" ref="dataSource"/>
+        <property name="transactionFactory">
+            <bean class="org.apache.ibatis.transaction.managed.ManagedTransactionFactory"/>
+        </property>
+    </bean>
+
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+
+    </bean>
+
+    <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate" scope="prototype">
+        <constructor-arg index="0" ref="sqlSessionFactory"/>
+        <constructor-arg index="1" value="BATCH"/>
+    </bean>
+
+    <bean id="roleAuth" class="selling.sunshine.filter.SellingAuthorizationFilter"></bean>
+
+    <bean id="shiroEhcacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+        <property name="cacheManagerConfigFile" value="classpath:encache-shiro.xml"/>
+    </bean>
+
+    <bean id="shiroRealm" class="selling.sunshine.security.ShiroRealm"></bean>
+
+    <bean id="oAuthRealm" class="selling.sunshine.security.OAuthRealm"></bean>
+
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <property name="realms">
+            <list>
+                <ref bean="shiroRealm"></ref>
+                <ref bean="oAuthRealm"></ref>
+            </list>
+        </property>
+        <property name="cacheManager" ref="shiroEhcacheManager"/>
+    </bean>
+
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean" depends-on="roleAuth">
+        <property name="securityManager" ref="securityManager"/>
+        <property name="loginUrl" value="/login"/>
+        <property name="unauthorizedUrl" value="/login"/>
+        <property name="filters">
+            <map>
+                <entry key="roles" value-ref="roleAuth"></entry>
+            </map>
+        </property>
+        <property name="filterChainDefinitions">
+            <value>
+                / = anon
+                /login = anon
+                /logout = anon
+                /plugins/** = anon
+                /material/** = anon
+                /agent/register = anon
+                /agent/login = anon
+                /agent/prompt = anon
+
+                /account/** = anon
+                /account/info = anon
+
+                /agent/check = roles["admin, auditor"]
+                /agent/grant = roles["admin, auditor"]
+                /agent/overview = roles["admin, auditor"]
+
+                /agent/** = anon
+
+                /bill/inform = anon
+
+                /dashboard = roles[admin]
+
+                /express/queryExpress/* = anon
+
+                /commodity/create = roles[admin]
+                /commodity/edit/** = roles[admin]
+                /commodity/overview = roles["admin, auditor"]
+                /commodity/** = anon
+
+                /credit/upload = anon
+
+                /customer/place = anon
+                /customer/consult = anon
+                /customer/order/search = anon
+                /customer/overview = roles[admin]
+                /customer/add = roles[agent]
+                /customer/modify = roles[agent]
+
+                /deliver/** = roles["admin, finance"]
+
+                /gather/** = roles["admin, finance"]
+
+                /gift/apply = roles[agent]
+                /gift/check = roles["admin, auditor"]
+                /gift/apply/decline = roles["admin, auditor"]
+
+                /indent/** = roles["admin", "finance"]
+
+                /order/adminpay = roles[admin]
+                /order/check = roles["admin, express"]
+                /order/overview = roles["admin, express"]
+                /order/customerOrder/overview = roles["admin, express"]
+                /order/customerpay = anon
+                /order/viewexpress/** = anon
+
+                /reimburse/inform = anon
+                /reimburse/apply = roles["admin, express"]
+
+                /statistic/** = roles["admin, express"]
+
+                /wechat = anon
+
+                /material/css/** = anon
+                /material/protocol/** = anon
+                /material/images/** = anon
+                /material/js/** = anon
+
+                /message/** = roles["admin, auditor"]
+
+                /payment/** = anon
+
+                /withdraw/check = roles["admin, finance"]
+                /withdraw/overview = roles["admin, finance"]
+
+                /withdraw/inform = anon
+
+                /** = authc
+            </value>
+        </property>
+    </bean>
+
+
+    <task:annotation-driven/>
+    <import resource="rest-controller.xml"/>
+    <import resource="rest-service.xml"/>
+    <import resource="rest-dao.xml"/>
+</beans>
