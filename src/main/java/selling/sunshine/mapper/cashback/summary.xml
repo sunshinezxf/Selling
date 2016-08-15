@@ -32,7 +32,7 @@
         FROM cashback_month_view
         WHERE 1 = 1
         <if test="agentId != null">
-            AND agent_id = #{agent_id}
+            AND agent_id = #{agentId}
         </if>
         <choose>
             <when test="month != null">

@@ -16,6 +16,8 @@ import selling.sunshine.utils.ResultData;
 import selling.sunshine.vo.cashback.CashBack4Agent;
 import selling.sunshine.vo.cashback.CashBack4AgentPerMonth;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,6 +60,10 @@ public class CashBackController {
     @RequestMapping(method = RequestMethod.GET, value = "/{agentId}/month")
     public ModelAndView cashback(@PathVariable("agentId") String agentId) {
         ModelAndView view = new ModelAndView();
+        Calendar current = Calendar.getInstance();
+        current.add(Calendar.MONTH, -1);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月");
+        view.addObject("month", format.format(current.getTime()));
         Map<String, Object> condition = new HashMap<>();
         condition.put("agentId", agentId);
         ResultData response = agentService.fetchAgent(condition);
@@ -67,6 +73,13 @@ public class CashBackController {
         }
         Agent agent = ((List<Agent>) response.getData()).get(0);
         view.addObject("agent", agent);
+        response = cashBackService.fetchCashBackPerMonth(condition);
+        if (response.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            view.setViewName("redirect:/cashback/month");
+            return view;
+        }
+        CashBack4AgentPerMonth cashback = ((List<CashBack4AgentPerMonth>) response.getData()).get(0);
+        view.addObject("cashback", cashback);
         view.setViewName("/backend/refund/cashback_month_detail");
         return view;
     }
