@@ -10,34 +10,89 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
-            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                <p>姓名：</p>
-                <p>手机号：</p>
-                <p>地址：</p>
-                <p>累积返现：</p>
-            </div>
-            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                <p>性别：</p>
-                <p>微信号：</p>
-                <p>群规模：</p>
-                <p>上级代理：</p>
-            </div>
-        </div>
-        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-            <p>身份证照片</p>
-            <img src=""/>
-            <img src=""/>
+        <div class="rank">
+            <canvas id="rank" width="95px" height="95px"></canvas>
         </div>
     </div>
-    <div class="row">
-        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-            
-        </div>
-        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-            
+    <div class="row personal_info">
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <tr>
+                    <td class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                        <div class="table-responsive">
+                            <table class="table basic_info">
+                                <tr>
+                                    <td class="col-xs-3 col-sm-3 col-md-3 col-lg-3">姓名：</td>
+                                    <td class="col-xs-3 col-sm-3 col-md-3 col-lg-3">性别：</td>
+                                </tr>
+                                <tr>
+                                    <td>手机号：</td>
+                                    <td>微信号：</td>
+                                </tr>
+                                <tr>
+                                    <td>群规模：</td>
+                                    <td>地址：</td>
+                                </tr>
+                                <tr>
+                                    <td>累积返现：</td>
+                                    <td>上级代理：</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </td>
+                    <td class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                        <p>身份证照片：</p>
+                        <img src=""/>
+                        <img src=""/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <h4>拓展信息</h4>
+                    </td>
+                    <td>
+                        <h4>销售情况</h4>
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th>商品名</th>
+                                    <th>月销量</th>
+                                    <th>年销量</th>
+                                    <th>累计销量</th>
+                                </tr>
+                                <tr>
+                                    <td rowspan=""></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div>返现总额：
+                            <a href="${path.concat('/')}">明细</a>
+                        </div>
+                    </td>
+                </tr>
+            </table>
         </div>
     </div>
 </div>
 <script>
+    var rank=document.getElementById("rank");
+    var context=rank.getContext("2d");
+    
+    var width=rank.width/2;
+    var height=rank.height/2;
+    context.lineWidth=3;
+    context.strokeStyle="#FFCC66";
+    context.beginPath();
+    context.arc(width,height,40,0,Math.PI * 2);
+    context.stroke();
+    
+    context.font="18px Arial";
+    context.textBaseLine="middle";
+    context.textAlign="center";
+    context.lineWidth=1;
+    context.strokeStyle="#FFCC66";
+    context.strokeText("Top:20%",width,height+5);
 </script>
