@@ -55,8 +55,8 @@
                         <a class="dropdown-toggle" data-toggle="dropdown" role="button"
                            aria-haspopup="true" aria-expanded="true">返现管理 <span class="caret"></span></a>
                         <ul class="dropdown-menu nav nav-pills nav-stacked">
-                            <li><a class="menu" href="${path.concat('/refund/record/month')}">当月返现</a></li>
-                            <li><a class="menu" href="${path.concat('/refund/record/overview')}">返现记录</a></li>
+                            <li><a class="menu" href="${path.concat('/cashback/month')}">当月返现</a></li>
+                            <li><a class="menu" href="${path.concat('/cashback/overview')}">返现记录</a></li>
                         </ul>
                     </li>
                 #end
