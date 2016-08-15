@@ -54,12 +54,16 @@ public class GiftController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/{agentId}/{goodsId}")
     public ResultData agentGift(@PathVariable("agentId") String agentId, @PathVariable("goodsId") String goodsId) {
-        ResultData resultData = new ResultData();
-        Map<String, Object> condition = new HashMap<String, Object>();
+        ResultData result = new ResultData();
+        Map<String, Object> condition = new HashMap<>();
         condition.put("agentId", agentId);
         condition.put("goodsId", goodsId);
-        resultData = agentService.fetchAgentGift(condition);
-        return resultData;
+        ResultData response = agentService.fetchAgentGift(condition);
+        result.setResponseCode(response.getResponseCode());
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(response.getData());
+        }
+        return result;
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/config")
