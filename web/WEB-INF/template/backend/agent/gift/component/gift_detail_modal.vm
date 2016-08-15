@@ -80,7 +80,6 @@
         $("#gift_quantity_form").attr("action","${path.concat('/gift/apply/handle')}");
         $("#gift_quantity_form").attr("method","post");
         $("#gift_quantity_form").submit();
-        window.location.reload();
     });
     
     function validate(){
