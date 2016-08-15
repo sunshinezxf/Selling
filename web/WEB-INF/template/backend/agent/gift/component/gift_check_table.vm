@@ -103,7 +103,7 @@
             var url="${path.concat('/gift/apply/')}"+applyId;
             $.get(url,function(result){
                if(result.responseCode=="RESPONSE_OK"){
-                    $("#apply_gift_id").text(applyId);
+                    $("#apply_gift_id").val(applyId);
                     $("#agent_name").text(result.data.agent.name);
                     $("#goods_name").text(result.data.goods.name);
                     $("#potential").text(result.data.potential);
