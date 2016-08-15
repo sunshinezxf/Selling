@@ -1,6 +1,6 @@
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id-target="agent-management">
     <div class="row">
-        <div class="col-md-12 col-lg-12">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <h1><i class="fa fa-home"></i> 代理概览 </h1>
             <ol class="breadcrumb">
                 <li><a href="${path.concat('/dashboard')}">首页</a></li>
@@ -9,4 +9,35 @@
             </ol>
         </div>
     </div>
+    <div class="row">
+        <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                <p>姓名：</p>
+                <p>手机号：</p>
+                <p>地址：</p>
+                <p>累积返现：</p>
+            </div>
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                <p>性别：</p>
+                <p>微信号：</p>
+                <p>群规模：</p>
+                <p>上级代理：</p>
+            </div>
+        </div>
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+            <p>身份证照片</p>
+            <img src=""/>
+            <img src=""/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+            
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+            
+        </div>
+    </div>
 </div>
+<script>
+</script>

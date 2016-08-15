@@ -31,7 +31,7 @@
             "bProcessing": true,
             "bServerSide": true,
             "bInfoFiltered": false,
-            //"sAjaxSource": '${path.concat('/refund/record/overview')}',
+            "sAjaxSource": '${path.concat('/cashback/overview')}',
             "infoFiltered": false,
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                 $(nRow).removeClass('dataTable');
@@ -57,6 +57,14 @@
                     title: "返现明细(自销/直接/间接)", "mRender": function(data,type,full){
                         var detail=full.self+"/"+full.direct+"/"+full.indirect;
                         return detail;
+                    }
+                },
+                {
+                    title: "操作", "mRender": function(data,type,full){
+                        var operation="";
+                        var detail_btn="<a type='button' class='btn btn-info btn-group-sm' href='${path.concat("/")}'>详情</a>&nbsp;";
+                        opretion+=detail_btn;
+                        return operation;
                     }
                 },
             ],
