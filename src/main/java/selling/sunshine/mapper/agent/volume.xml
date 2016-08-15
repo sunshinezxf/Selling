@@ -9,13 +9,22 @@
 
     <resultMap id="agentGoodsVo" type="selling.sunshine.model.sum.VolumeTotal">
         <result property="agentId" column="agent_id"></result>
-        <result property="goodsId" column="goods_id"></result>
+        <association property="goods" column="goodsId = goods_id" select="goods4AgentQuery"></association>
         <result property="totalQuantity" column="total_quantity"></result>
         <result property="totalPrice" column="total_price"></result>
         <result property="yearQuantity" column="year_quantity"></result>
         <result property="yearPrice" column="year_price"></result>
         <result property="monthQuantity" column="month_quantity"></result>
         <result property="monthPrice" column="month_price"></result>
+    </resultMap>
+    
+    <resultMap id="goods4AgentVo" type="selling.sunshine.model.goods.Goods4Agent">
+        <result property="goodsId" column="goods_id"></result>
+        <result property="name" column="goods_name"></result>
+        <result property="description" column="goods_description"></result>
+        <result property="agentPrice" column="agent_price"></result>
+        <result property="blockFlag" column="block_flag"></result>
+        <result property="createAt" column="create_time"></result>
     </resultMap>
 
     <select id="query" parameterType="java.util.Map" resultMap="volumeVo">
@@ -60,7 +69,7 @@ left join
         GROUP BY agent_id, goods_id) t1
 on t3.agent_id=t1.agent_id and t3.goods_id=t1.goods_id 
  <if test="agentId != null">
- WHERE agentId=#{agentId}
+ WHERE t3.agentId=#{agentId}
  </if>;
     </select>
 
@@ -89,6 +98,12 @@ on t3.agent_id=t1.agent_id and t3.goods_id=t1.goods_id
             select sum(quantity) as quantity from customer_order
             where order_status in(1,2,3) and agent_id=#{agentId}) t2);
         </if>
+    </select>
+    
+    <select id="goods4AgentQuery" parameterType="java.util.Map" resultMap="goods4AgentVo">
+        SELECT goods_id, goods_name, goods_description, prime_price, agent_price, block_flag, create_time
+        FROM goods
+        WHERE goods_id = #{goodsId}
     </select>
 
 </mapper>

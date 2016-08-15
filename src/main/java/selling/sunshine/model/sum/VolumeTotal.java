@@ -1,9 +1,11 @@
 package selling.sunshine.model.sum;
 
+import selling.sunshine.model.goods.Goods4Agent;
+
 public class VolumeTotal {
 
 	private String agentId;
-	private String goodsId;
+	private Goods4Agent goods;
 	private int totalQuantity;
 	private double totalPrice;
 	private int yearQuantity;
@@ -17,14 +19,6 @@ public class VolumeTotal {
 
 	public void setAgentId(String agentId) {
 		this.agentId = agentId;
-	}
-
-	public String getGoodsId() {
-		return goodsId;
-	}
-
-	public void setGoodsId(String goodsId) {
-		this.goodsId = goodsId;
 	}
 
 	public int getTotalQuantity() {
@@ -74,5 +68,15 @@ public class VolumeTotal {
 	public void setMonthPrice(double monthPrice) {
 		this.monthPrice = monthPrice;
 	}
+
+	public Goods4Agent getGoods() {
+		return goods;
+	}
+
+	public void setGoods(Goods4Agent goods) {
+		this.goods = goods;
+	}
+	
+	
 
 }
