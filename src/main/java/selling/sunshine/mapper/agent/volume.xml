@@ -87,7 +87,7 @@ on t3.agent_id=t1.agent_id and t3.goods_id=t1.goods_id
             ) t1
             where agent_id is not null
             group by agent_id
-            order by quantity desc) t where quantity > (select sum(quantity) as quantity from(
+            order by quantity desc) t where quantity > (select ifnull(sum(quantity),0) as quantity from(
             select sum(goods_quantity) as quantity from order_item
             left join `order` on `order`.order_id=order_item.order_id
             where order_item.order_item_status in(1,2,3)
