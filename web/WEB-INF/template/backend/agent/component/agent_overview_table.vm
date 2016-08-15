@@ -117,7 +117,7 @@
             columns: [
                 {
                     title: "姓名", "mRender": function (data, type, full) {
-                    var operation = "<a id='" + full.agentId + "' onclick=detail(this) data-toggle='modal' data-target='#agent_detail_modal'>" + full.name + "</a>";
+                    var operation = "<a id='" + full.agentId + "' href='${path.concat("/agent/detail")}'+full.agentId>"+full.name+"</a>";
                     return operation;
                 }
                 },
