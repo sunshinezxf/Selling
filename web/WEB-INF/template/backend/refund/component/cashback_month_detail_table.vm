@@ -13,85 +13,91 @@
     </div>
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <h3>代理商：${agent.name}</h3>
+            <h4>代理商：${agent.name}</h4>
 
-            <h3>返现月份：${month}</h3>
+            <h4>返现月份：${month}</h4>
 
-            <h3>返现总额：${cashback.amount}</h3>
+            <h4>返现总额：${cashback.amount}元</h4>
         </div>
     </div>
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <h3>三级返现明细</h3>
+            <h4>三级返现明细：</h4>
 
             <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4>自销</h4>
+                <div class="panel-heading" style="background-color:#fff">
+                    <h4 class="col-xs-6 col-sm-6 col-md-6 col-lg-6">返现来源：自销</h4>
                     <h4>返现金额：</h4>
                 </div>
-                <div class="table-responsive">
-                    <table class="table table-bordered">
-                        <tr>
-                            <th>商品名</th>
-                            <th>销量(盒)</th>
-                            <th>返现比例(元/盒)</th>
-                            <th>返现金额(元)</th>
-                        </tr>
-                        <tr>
-                            <td>三七粉</td>
-                            <td>10</td>
-                            <td>85(元/盒)</td>
-                            <td>850(元)</td>
-                        </tr>
-                    </table>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <tr>
+                                <th>商品名</th>
+                                <th>销量(盒)</th>
+                                <th>返现比例(元/盒)</th>
+                                <th>返现金额(元)</th>
+                            </tr>
+                            <tr>
+                                <td>三七粉</td>
+                                <td>10</td>
+                                <td>85(元/盒)</td>
+                                <td>850(元)</td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
             </div>
             <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4>直接代理</h4>
+                <div class="panel-heading" style="background-color:#fff">
+                    <h4 class="col-xs-6 col-sm-6 col-md-6 col-lg-6">返现来源：直接代理</h4>
                     <h4>返现金额：</h4>
                 </div>
-                <div class="table-responsive">
-                    <table class="table table-bordered">
-                        <tr>
-                            <th>商品名</th>
-                            <th>代理商</th>
-                            <th>销量(盒)</th>
-                            <th>返现比例(元/盒)</th>
-                            <th>返现金额(元)</th>
-                        </tr>
-                        <tr>
-                            <td rowspan="1">三七粉</td>
-                            <td>刘嘉</td>
-                            <td>10</td>
-                            <td>20(元/盒)</td>
-                            <td>200(元)</td>
-                        </tr>
-                    </table>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <tr>
+                                <th>商品名</th>
+                                <th>代理商</th>
+                                <th>销量(盒)</th>
+                                <th>返现比例(元/盒)</th>
+                                <th>返现金额(元)</th>
+                            </tr>
+                            <tr>
+                                <td rowspan="1">三七粉</td>
+                                <td>刘嘉</td>
+                                <td>10</td>
+                                <td>20(元/盒)</td>
+                                <td>200(元)</td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
             </div>
             <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4>间接代理</h4>
+                <div class="panel-heading" style="background-color:#fff">
+                    <h4 class="col-xs-6 col-sm-6 col-md-6 col-lg-6">返现来源：间接代理</h4>
                     <h4>返现金额：</h4>
                 </div>
-                <div class="table-responsive">
-                    <table class="table table-bordered">
-                        <tr>
-                            <th>商品名</th>
-                            <th>代理商</th>
-                            <th>销量(盒)</th>
-                            <th>返现比例(元/盒)</th>
-                            <th>返现金额(元)</th>
-                        </tr>
-                        <tr>
-                            <td rowspan="1">三七粉</td>
-                            <td>陈振宇</td>
-                            <td>10</td>
-                            <td>10(元/盒)</td>
-                            <td>100(元)</td>
-                        </tr>
-                    </table>
+                <div class="panel-body"> 
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <tr>
+                                <th>商品名</th>
+                                <th>代理商</th>
+                                <th>销量(盒)</th>
+                                <th>返现比例(元/盒)</th>
+                                <th>返现金额(元)</th>
+                            </tr>
+                            <tr>
+                                <td rowspan="1">三七粉</td>
+                                <td>陈振宇</td>
+                                <td>10</td>
+                                <td>10(元/盒)</td>
+                                <td>100(元)</td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
