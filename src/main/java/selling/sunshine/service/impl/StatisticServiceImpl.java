@@ -211,9 +211,9 @@ public class StatisticServiceImpl implements StatisticService {
         return result;
     }
 
-	@Override
-	public ResultData queryAgentGoods(Map<String, Object> condition) {
-		ResultData result = new ResultData();
+    @Override
+    public ResultData queryAgentGoods(Map<String, Object> condition) {
+        ResultData result = new ResultData();
         ResultData response = statisticDao.queryAgentGoods(condition);
         result.setResponseCode(response.getResponseCode());
         if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
@@ -225,11 +225,11 @@ public class StatisticServiceImpl implements StatisticService {
             response.setDescription(response.getDescription());
         }
         return result;
-	}
+    }
 
-	@Override
-	public ResultData agentRanking(Map<String, Object> condition) {
-		ResultData result = new ResultData();
+    @Override
+    public ResultData agentRanking(Map<String, Object> condition) {
+        ResultData result = new ResultData();
         ResultData response = statisticDao.agentRanking(condition);
         result.setResponseCode(response.getResponseCode());
         if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
@@ -238,7 +238,7 @@ public class StatisticServiceImpl implements StatisticService {
             response.setDescription(response.getDescription());
         }
         return result;
-	}
+    }
 
 
 }
