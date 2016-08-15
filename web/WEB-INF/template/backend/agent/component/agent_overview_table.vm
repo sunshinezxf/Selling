@@ -117,7 +117,8 @@
             columns: [
                 {
                     title: "姓名", "mRender": function (data, type, full) {
-                    var operation = "<a id='" + full.agentId + "' href='${path.concat("/agent/detail")}'+full.agentId>"+full.name+"</a>";
+                    var url="${path.concat('/agent/detail/')}"+full.agentId;
+                    var operation = "<a id='" + full.agentId + "' href='" + url + "'>"+full.name+"</a>";
                     return operation;
                 }
                 },

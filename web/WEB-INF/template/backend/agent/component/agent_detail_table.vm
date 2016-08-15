@@ -22,28 +22,47 @@
                         <div class="table-responsive">
                             <table class="table basic_info">
                                 <tr>
-                                    <td class="col-xs-3 col-sm-3 col-md-3 col-lg-3">姓名：</td>
-                                    <td class="col-xs-3 col-sm-3 col-md-3 col-lg-3">性别：</td>
+                                    <td class="col-xs-3 col-sm-3 col-md-3 col-lg-3">姓名：${agent.name}</td>
+                                    #if(${agent.gender}=="M")
+                                    <td class="col-xs-3 col-sm-3 col-md-3 col-lg-3">性别：男</td>
+                                    #else
+                                    <td class="col-xs-3 col-sm-3 col-md-3 col-lg-3">性别：女</td>
+                                    #end
                                 </tr>
                                 <tr>
-                                    <td>手机号：</td>
-                                    <td>微信号：</td>
+                                    <td>手机号：${agent.phone}</td>
+                                    #if(${agent.wechat})
+                                    <td>微信号：${agent.wechat}</td>
+                                    #else
+                                    <td>微信号：无</td>
+                                    #end
                                 </tr>
                                 <tr>
-                                    <td>群规模：</td>
-                                    <td>地址：</td>
+                                    #if(${agent.claimScale})
+                                    <td>群规模：${agent.claimScale}</td>
+                                    #else
+                                    <td>群规模：0</td>
+                                    #end
+                                    #if(${agent.upperAgent})
+                                    <td>上级代理：${agent.upperAgent.name}</td>
+                                    #else
+                                    <td>上级代理：无</td>
+                                    #end
                                 </tr>
                                 <tr>
-                                    <td>累积返现：</td>
-                                    <td>上级代理：</td>
+                                    <td colspan="2">地址：${agent.address}</td>
                                 </tr>
                             </table>
                         </div>
                     </td>
                     <td class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                         <p>身份证照片：</p>
-                        <img src=""/>
-                        <img src=""/>
+                        #if(${credit})
+                        <img src="${credit.frontPath}" class="col-xs-3 col-sm-3 col-md-3 col-lg-3"/>
+                        <img src="${credit.backPath}" class="col-xs-3 col-sm-3 col-md-3 col-lg-3"/>
+                        #else
+                                                                        无身份证照片
+                        #end
                     </td>
                 </tr>
                 <tr>
@@ -60,17 +79,26 @@
                                     <th>年销量</th>
                                     <th>累计销量</th>
                                 </tr>
+                                #foreach($sales in ${volumeTotalList})
                                 <tr>
-                                    <td rowspan=""></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td>${sales.goods.name}</td>
+                                    <td>${sales.monthQuantity}</td>
+                                    <td>${sales.yearQuantity}</td>
+                                    <td>${sales.totalQuantity}</td>
                                 </tr>
+                                #end
                             </table>
                         </div>
-                        <div>返现总额：
+                        #if(${agent.agentRefund}!=0)
+                        <div>
+                                                                                    累积返现：${agent.agentRefund}&nbsp;
                             <a href="${path.concat('/')}">明细</a>
                         </div>
+                        #else
+                        <div>
+                                                                                    累积返现：0
+                        </div>
+                        #end
                     </td>
                 </tr>
             </table>
@@ -80,6 +108,19 @@
 <script>
     var rank=document.getElementById("rank");
     var context=rank.getContext("2d");
+    var ranking="${ranking}";
+    var total="${totalNum}";
+    alert(ranking);
+    var topRate=parseInt((ranking/total)*100);
+    if(topRate>50){
+        $('.rank').hide();
+    }else{
+        if(topRate%5==0){
+            topRate=(parseInt(topRate/5))*5;
+        }else{
+            topRate=(parseInt(topRate/5)+1)*5;
+        }
+    }
     
     var width=rank.width/2;
     var height=rank.height/2;
@@ -94,5 +135,5 @@
     context.textAlign="center";
     context.lineWidth=1;
     context.strokeStyle="#FFCC66";
-    context.strokeText("Top:20%",width,height+5);
+    context.strokeText("Top:"+topRate+"%",width,height+5);
 </script>
