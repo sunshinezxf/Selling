@@ -84,7 +84,7 @@
 <script>
     $(document).ready(function () {
         $("#overview_agent_table").DataTable({
-            searching: false,
+            searching: true,
             ordering: false,
             paging: true,
             "sPaginationType": "full_numbers",

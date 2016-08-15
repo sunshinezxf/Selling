@@ -170,7 +170,7 @@ select agent_id as agentId,goods_id as goodsId,
          and date_format(create_time,'%Y-%m')=date_format(now(),'%Y-%m')
          group by agent_id,goods_id) t1 group by agentId,goodsId) t2
 left join agent on t2.agentId=agent.agent_id 
-left join goods on t2.goodsId=goods.goods_id) t3 where agent_name is not null <if test="search !=null and search != ''">AND agent_name LIKE #{search}</if>
+left join goods on t2.goodsId=goods.goods_id) t3 where agent_name is not null <if test="search !=null and search != ''">AND agent_name LIKE #{search}</if> ORDER BY quantity DESC
   </select>
   
 <select id="sumAgentGoods"  parameterType="java.util.Map" resultMap="agentGoodsVo">
@@ -186,7 +186,7 @@ select agent_id as agentId,goods_id as goodsId,
          where order_status in(1,2,3)
          group by agent_id,goods_id) t1 group by agentId,goodsId) t2
 left join agent on t2.agentId=agent.agent_id 
-left join goods on t2.goodsId=goods.goods_id) t3 where agent_name is not null <if test="search !=null and search != ''"> AND agent_name LIKE #{search}</if>
+left join goods on t2.goodsId=goods.goods_id) t3 where agent_name is not null <if test="search !=null and search != ''"> AND agent_name LIKE #{search}</if> ORDER BY quantity DESC
   </select>
   
 <select id="orderMonth" resultMap="orderMonthVO">
@@ -260,7 +260,7 @@ select DATE_FORMAT(create_time,'%Y-%m') as orderDate,count(*) as num from custom
 </select>
 
 <select id="topThreeAgentMonth" resultMap="topThreeAgentVo">
-select agent_name,quantity from(
+select agent.agent_id,agent_name,quantity from(
 select agent_id,sum(quantity) as quantity from(
 select agent_id,sum(goods_quantity) as quantity from order_item 
        left join `order` on `order`.order_id=order_item.order_id 
@@ -272,7 +272,8 @@ union all
 select agent_id,sum(quantity) as quantity from customer_order 
         where order_status in(1,2,3)
 		and date_format(create_time,'%Y-%m')=date_format(now(),'%Y-%m')
-        group by agent_id) t1
+        group by agent_id
+) t1
         where agent_id is not null
         group by agent_id
         order by quantity desc) t2,agent where t2.agent_id=agent.agent_id;
@@ -280,7 +281,7 @@ select agent_id,sum(quantity) as quantity from customer_order
 </select>
 
 <select id="topThreeAgent" resultMap="topThreeAgentVo">
-select agent_name,quantity from(
+select agent.agent_id,agent_name,quantity from(
 select agent_id,sum(quantity) as quantity from(
 select agent_id,sum(goods_quantity) as quantity from order_item 
        left join `order` on `order`.order_id=order_item.order_id 
@@ -290,7 +291,8 @@ select agent_id,sum(goods_quantity) as quantity from order_item
 union all
 select agent_id,sum(quantity) as quantity from customer_order 
         where order_status in(1,2,3)
-        group by agent_id) t1
+        group by agent_id
+) t1
         where agent_id is not null
         group by agent_id
         order by quantity desc) t2,agent where t2.agent_id=agent.agent_id;
@@ -313,7 +315,7 @@ where 1 = 1
 <if test="monthly != null">
 	and date_format(create_time,'%Y-%m')=date_format(now(),'%Y-%m')
 </if>
-group by goods_id, order_type order by goods_quantity desc;
+group by goods_id, goods_name, order_type order by goods_quantity desc;
         
 </select>
    

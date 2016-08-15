@@ -1,4 +1,4 @@
-package selling.sunshine.controller;
+  package selling.sunshine.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -1946,16 +1946,64 @@ public class AgentController {
         resultData.setData(dataMap);
         return resultData;
     }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/detail")
+    public ModelAndView detail() {
+    	ModelAndView view=new ModelAndView();
+    	view.setViewName("/backend/agent/detail");
+		return view;    	
+    }
 
     @RequestMapping(method = RequestMethod.POST, value = "/detail/{agentId}")
     @ResponseBody
     public ResultData detail(@PathVariable String agentId) {
         ResultData resultData = new ResultData();
         Map<String, Object> dataMap = new HashMap<>();
+        ResultData queryData=new ResultData();
         //代理商个人信息
         Map<String, Object> condition = new HashMap<>();
         condition.put("agentId", agentId);
-        Agent agent = ((List<Agent>) agentService.fetchAgent(condition).getData()).get(0);
+        queryData=agentService.fetchAgent(condition);
+        if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
+        	 Agent agent = ((List<Agent>) queryData.getData()).get(0);
+        	 dataMap.put("agent", agent);
+		}
+        //代理商身份证照片
+        queryData=agentService.fetchCredit(condition);
+        if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
+			Credit credit=((List<Credit>)queryData.getData()).get(0);
+			 dataMap.put("credit", credit);
+		}
+        //代理商统计信息
+        //累计销售信息
+        queryData=statisticService.queryAgentGoods(condition);
+        if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
+        	List<Volume> volumeTotalList=(List<Volume>)queryData.getData();
+        	dataMap.put("volumeTotalList", volumeTotalList);
+		}
+        //月销售信息
+        condition.put("totalMonth", 1);
+        queryData=statisticService.queryAgentGoods(condition);
+        if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
+        	List<Volume> volumeMonthList=(List<Volume>)queryData.getData();
+        	dataMap.put("volumeMonthList", volumeMonthList);
+		}
+        //年销售信息
+        condition.put("totalMonth", 12);
+        queryData=statisticService.queryAgentGoods(condition);
+        if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
+        	List<Volume> volumeYearList=(List<Volume>)queryData.getData();
+        	dataMap.put("volumeYearList", volumeYearList);
+		}
+        
+        //排名
+        condition.clear();
+        condition.put("agentId", agentId);
+        queryData=statisticService.agentRanking(condition);
+        if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
+        	int ranking=(int)queryData.getData();
+        	dataMap.put("ranking", ranking);
+		}
 
 
         //代理商返现信息
@@ -1972,7 +2020,7 @@ public class AgentController {
         List<Order> orderList = (List<Order>) orderService.fetchOrder(condition).getData();
 
 
-        dataMap.put("agent", agent);
+       
         dataMap.put("orderList", orderList);
         dataMap.put("refundRecordList", refundRecordList);
         dataMap.put("withdrawRecordList", withdrawRecordList);
@@ -2084,18 +2132,19 @@ public class AgentController {
         Map<String, Object> condition = new HashMap<>();
         condition.put("agentId", agent.getAgentId());
         condition.put("goodsId", goodsId);
-        ResultData response = statisticService.fetchLastVolume(condition);
-        Volume last = new Volume(agent.getAgentId(), goodsId, 0);
-        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            last = ((List<Volume>) response.getData()).get(0);
-        }
-        data.put("last", last);
-        response = statisticService.fetchTotalVolume(condition);
+        ResultData response = statisticService.fetchVolume(condition);
         Volume total = new Volume(agent.getAgentId(), goodsId, 0);
         if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
             total = ((List<Volume>) response.getData()).get(0);
         }
         data.put("total", total);
+        condition.put("month", 1);
+        response = statisticService.fetchVolume(condition);
+        Volume last = new Volume(agent.getAgentId(), goodsId, 0);
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            last = ((List<Volume>) response.getData()).get(0);
+        }
+        data.put("last", last);
         result.setData(data);
         return result;
     }

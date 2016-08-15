@@ -302,11 +302,11 @@ public class StatisticDaoImpl extends BaseDao implements StatisticDao {
     }
 
     @Override
-    public ResultData queryLastVolume(Map<String, Object> condition) {
+    public ResultData queryVolume(Map<String, Object> condition) {
         ResultData result = new ResultData();
         try {
             condition = handle(condition);
-            List<Volume> list = sqlSession.selectList("selling.volume.queryLast", condition);
+            List<Volume> list = sqlSession.selectList("selling.volume.query", condition);
             result.setData(list);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -316,12 +316,11 @@ public class StatisticDaoImpl extends BaseDao implements StatisticDao {
         return result;
     }
 
-    @Override
-    public ResultData queryTotalVolume(Map<String, Object> condition) {
-        ResultData result = new ResultData();
+	@Override
+	public ResultData queryAgentGoods(Map<String, Object> condition) {
+		ResultData result = new ResultData();
         try {
-            condition = handle(condition);
-            List<Volume> list = sqlSession.selectList("selling.volume.queryTotal", condition);
+            List<Volume> list = sqlSession.selectList("selling.volume.agentGoods", condition);
             result.setData(list);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -329,5 +328,21 @@ public class StatisticDaoImpl extends BaseDao implements StatisticDao {
             result.setDescription(e.getMessage());
         }
         return result;
-    }
+	}
+
+	@Override
+	public ResultData agentRanking(Map<String, Object> condition) {
+		ResultData result = new ResultData();
+        try {
+            // 待写
+        	int ranking=(int)sqlSession.selectOne("selling.volume.agentRanking", condition);
+        	result.setData(ranking);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription(e.getMessage());
+        }
+		return result;
+	}
+
 }

@@ -85,9 +85,13 @@
         <if test="blockFlag != null">
             AND block_flag = #{blockFlag}
         </if>
+        <if test="search !=null and search != ''">
+            AND (agent_name LIKE #{search} OR DATE_FORMAT(create_time,'%Y-%m-%D') LIKE #{search} OR agent_phone LIKE #{search})
+        </if>
         <if test="rule != null and rule != ''">
             ORDER BY ${rule}
         </if>
+
     </select>
 
     <update id="update" parameterType="selling.sunshine.model.Agent" useGeneratedKeys="false">
