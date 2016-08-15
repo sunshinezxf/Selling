@@ -42,6 +42,7 @@
                 AND cash_back_month = date_format(date_sub(curdate(), interval 1 month), '%Y-%m')
             </otherwise>
         </choose>
+        GROUP BY agent_id, cash_back_month
     </select>
 
     <select id="query" parameterType="java.util.Map" resultMap="cashBack4Agent">

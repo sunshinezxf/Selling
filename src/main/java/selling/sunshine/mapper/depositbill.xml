@@ -56,6 +56,9 @@
         <if test="rule != null and rule != ''">
             ORDER BY ${rule}
         </if>
+        <if test="rule == null">
+            ORDER BY create_time ASC
+        </if>
     </select>
 
     <update id="update" parameterType="selling.sunshine.model.DepositBill" useGeneratedKeys="false">

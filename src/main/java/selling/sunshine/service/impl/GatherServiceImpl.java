@@ -4,20 +4,10 @@ import org.apache.poi.ss.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import selling.sunshine.dao.AgentDao;
-import selling.sunshine.dao.BillDao;
-import selling.sunshine.dao.CustomerDao;
-import selling.sunshine.dao.CustomerOrderDao;
-import selling.sunshine.dao.OrderDao;
-import selling.sunshine.dao.OrderItemDao;
+import selling.sunshine.dao.*;
 import selling.sunshine.model.*;
 import selling.sunshine.service.GatherService;
-import selling.sunshine.utils.IDGenerator;
-import selling.sunshine.utils.PlatformConfig;
-import selling.sunshine.utils.ResponseCode;
-import selling.sunshine.utils.ResultData;
-import selling.sunshine.utils.WorkBookUtil;
+import selling.sunshine.utils.*;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -35,7 +25,7 @@ public class GatherServiceImpl implements GatherService {
 
     @Autowired
     private OrderDao orderDao;
-    
+
     @Autowired
     private CustomerDao customerDao;
 
@@ -44,7 +34,7 @@ public class GatherServiceImpl implements GatherService {
 
     @Autowired
     private AgentDao agentDao;
-    
+
     @Autowired
     private BillDao billDao;
 
@@ -124,7 +114,7 @@ public class GatherServiceImpl implements GatherService {
                     }
                 }
             } else if (item instanceof DepositBill) {
-            	DepositBill temp = (DepositBill) item;
+                DepositBill temp = (DepositBill) item;
                 String time = format.format(temp.getCreateAt());
                 StringBuffer sb = new StringBuffer(parent).append(directory).append(File.separator).append(time);
                 File file = new File(sb.toString());
@@ -158,12 +148,12 @@ public class GatherServiceImpl implements GatherService {
         Cell orderNoCell = orderNo.getCell(2);
         orderNoCell.setCellValue(bill.getOrder().getOrderId());
         Cell channel = orderNo.getCell(5);
-        if(bill.getChannel().equals("wx_pub")){
-        	channel.setCellValue("微信付款");
-        }else if(bill.getChannel().equals("coffer")){
-        	channel.setCellValue("余额付款");
+        if (bill.getChannel().equals("wx_pub")) {
+            channel.setCellValue("微信付款");
+        } else if (bill.getChannel().equals("coffer")) {
+            channel.setCellValue("余额付款");
         } else {
-        	channel.setCellValue("");
+            channel.setCellValue("");
         }
         Row price = sheet.getRow(3);
         Cell priceCell = price.getCell(2);
@@ -213,10 +203,10 @@ public class GatherServiceImpl implements GatherService {
         Cell orderNoCell = orderNo.getCell(2);
         orderNoCell.setCellValue(item.getOrderId());
         Cell channel = orderNo.getCell(5);
-        if(bill.getChannel().equals("wx_pub")){
-        	channel.setCellValue("微信付款");
+        if (bill.getChannel().equals("wx_pub")) {
+            channel.setCellValue("微信付款");
         } else {
-        	channel.setCellValue("");
+            channel.setCellValue("");
         }
         Row price = sheet.getRow(3);
         Cell priceCell = price.getCell(2);
@@ -245,10 +235,10 @@ public class GatherServiceImpl implements GatherService {
         sellManInfo.setCellValue("无");
         return template;
     }
-    
+
     private Workbook produce(Workbook template, DepositBill bill) {
-    	selling.sunshine.model.lite.Agent agent = bill.getAgent();
-    	Sheet sheet = template.getSheetAt(0);
+        selling.sunshine.model.lite.Agent agent = bill.getAgent();
+        Sheet sheet = template.getSheetAt(0);
         Row time = sheet.getRow(1);
         Cell receiverTime = time.getCell(2);
         SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日");
@@ -259,10 +249,10 @@ public class GatherServiceImpl implements GatherService {
         Cell orderNoCell = orderNo.getCell(2);
         orderNoCell.setCellValue(bill.getBillId());
         Cell channel = orderNo.getCell(5);
-        if(bill.getChannel().equals("wx_pub")){
-        	channel.setCellValue("充值");
+        if (bill.getChannel().equals("wx_pub")) {
+            channel.setCellValue("充值");
         } else {
-        	channel.setCellValue("");
+            channel.setCellValue("");
         }
         Row price = sheet.getRow(3);
         Cell priceCell = price.getCell(2);
@@ -300,9 +290,9 @@ public class GatherServiceImpl implements GatherService {
         return template;
     }
 
-	@Override
-	public ResultData produceSummary(List list) {
-		ResultData result = new ResultData();
+    @Override
+    public ResultData produceSummary(List list) {
+        ResultData result = new ResultData();
         String path = IndentServiceImpl.class.getResource("/").getPath();
         int index = path.lastIndexOf("/WEB-INF/classes/");
         String parent = path.substring(0, index);
@@ -316,9 +306,9 @@ public class GatherServiceImpl implements GatherService {
         int row = 1;
         for (Object item : list) {
             if (item instanceof OrderBill) {
-            	OrderBill bill = (OrderBill) item;
-            	Order order = null;
-            	Map<String, Object> condition = new HashMap<>();
+                OrderBill bill = (OrderBill) item;
+                Order order = null;
+                Map<String, Object> condition = new HashMap<>();
                 condition.put("orderId", bill.getOrder().getOrderId());
                 ResultData queryResponse = orderDao.queryOrder(condition);
                 if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK && !((List<Order>) queryResponse.getData()).isEmpty()) {
@@ -333,12 +323,12 @@ public class GatherServiceImpl implements GatherService {
                 Cell orderNoCell = current.createCell(2);
                 orderNoCell.setCellValue(order.getOrderId());
                 Cell channel = current.createCell(3);
-                if(bill.getChannel().equals("wx_pub")){
-                	channel.setCellValue("微信付款");
-                }else if(bill.getChannel().equals("coffer")){
-                	channel.setCellValue("余额付款");
+                if (bill.getChannel().equals("wx_pub")) {
+                    channel.setCellValue("微信付款");
+                } else if (bill.getChannel().equals("coffer")) {
+                    channel.setCellValue("余额付款");
                 } else {
-                	channel.setCellValue("");
+                    channel.setCellValue("");
                 }
                 Cell priceCell = current.createCell(4);
                 priceCell.setCellValue(bill.getBillAmount());
@@ -368,11 +358,25 @@ public class GatherServiceImpl implements GatherService {
                 sellPrice4.setCellValue(bill.getBillAmount());
                 Cell sellManInfo = current.createCell(13);
                 sellManInfo.setCellValue(order.getAgent().getName());
+                Cell num = current.createCell(14);
+                condition.clear();
+                condition.put("orderId", bill.getOrder().getOrderId());
+                queryResponse = orderDao.queryOrder(condition);
+                if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                    Order o = ((List<Order>) queryResponse.getData()).get(0);
+                    int accumulate = 0;
+                    for (OrderItem i : o.getOrderItems()) {
+                        accumulate += i.getGoodsQuantity();
+                    }
+                    num.setCellValue(accumulate);
+                } else {
+                    num.setCellValue("");
+                }
                 row++;
             } else if (item instanceof CustomerOrderBill) {
-            	CustomerOrderBill bill = (CustomerOrderBill) item;
-            	CustomerOrder order = null;
-            	Map<String, Object> condition = new HashMap<>();
+                CustomerOrderBill bill = (CustomerOrderBill) item;
+                CustomerOrder order = null;
+                Map<String, Object> condition = new HashMap<>();
                 condition.put("orderId", bill.getCustomerOrder().getOrderId());
                 List<Integer> status = new ArrayList<>();
                 status.add(1);
@@ -393,12 +397,12 @@ public class GatherServiceImpl implements GatherService {
                 Cell orderNoCell = current.createCell(2);
                 orderNoCell.setCellValue(order.getOrderId());
                 Cell channel = current.createCell(3);
-                if(bill.getChannel().equals("wx_pub")){
-                	channel.setCellValue("微信付款");
-                }else if(bill.getChannel().equals("coffer")){
-                	channel.setCellValue("余额付款");
+                if (bill.getChannel().equals("wx_pub")) {
+                    channel.setCellValue("微信付款");
+                } else if (bill.getChannel().equals("coffer")) {
+                    channel.setCellValue("余额付款");
                 } else {
-                	channel.setCellValue("");
+                    channel.setCellValue("");
                 }
                 Cell priceCell = current.createCell(4);
                 priceCell.setCellValue(bill.getBillAmount());
@@ -420,9 +424,11 @@ public class GatherServiceImpl implements GatherService {
                 sellPrice4.setCellValue(bill.getBillAmount());
                 Cell sellManInfo = current.createCell(13);
                 sellManInfo.setCellValue("无");
+                Cell num = current.createCell(14);
+                num.setCellValue(order.getQuantity());
                 row++;
-            } else if (item instanceof DepositBill){
-            	DepositBill bill = (DepositBill) item;
+            } else if (item instanceof DepositBill) {
+                DepositBill bill = (DepositBill) item;
                 Row current = sheet.createRow(row);
                 Cell noCell = current.createCell(0);
                 noCell.setCellValue("NO." + bill.getBillId());
@@ -432,12 +438,12 @@ public class GatherServiceImpl implements GatherService {
                 Cell orderNoCell = current.createCell(2);
                 orderNoCell.setCellValue(bill.getBillId());
                 Cell channel = current.createCell(3);
-                if(bill.getChannel().equals("wx_pub")){
-                	channel.setCellValue("微信付款");
-                }else if(bill.getChannel().equals("coffer")){
-                	channel.setCellValue("余额付款");
+                if (bill.getChannel().equals("wx_pub")) {
+                    channel.setCellValue("微信付款");
+                } else if (bill.getChannel().equals("coffer")) {
+                    channel.setCellValue("余额付款");
                 } else {
-                	channel.setCellValue("");
+                    channel.setCellValue("");
                 }
                 Cell priceCell = current.createCell(4);
                 priceCell.setCellValue(bill.getBillAmount());
@@ -467,6 +473,8 @@ public class GatherServiceImpl implements GatherService {
                 sellPrice4.setCellValue(bill.getBillAmount());
                 Cell sellManInfo = current.createCell(13);
                 sellManInfo.setCellValue("无");
+                Cell description = current.createCell(15);
+                description.setCellValue("账户充值");
                 row++;
             }
         }
@@ -484,5 +492,5 @@ public class GatherServiceImpl implements GatherService {
             return result;
         }
         return result;
-	}
+    }
 }
