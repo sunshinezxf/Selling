@@ -44,4 +44,6 @@
     <bean id="gatherService" class="selling.sunshine.service.impl.GatherServiceImpl"></bean>
 
     <bean id="chargeService" class="selling.sunshine.service.impl.ChargeServiceImpl"></bean>
+
+    <bean id="cashBackService" class="selling.sunshine.service.impl.CashBackServiceImpl"></bean>
 </beans>

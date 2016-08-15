@@ -1,5 +1,7 @@
 package selling.sunshine.service.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import selling.sunshine.dao.AdminDao;
@@ -20,6 +22,7 @@ import java.util.Map;
  */
 @Service
 public class AdminServiceImpl implements AdminService {
+    private Logger logger = LoggerFactory.getLogger(AdminServiceImpl.class);
 
     @Autowired
     private AdminDao adminDao;

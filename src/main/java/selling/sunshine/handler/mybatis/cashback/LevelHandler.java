@@ -29,8 +29,8 @@ public class LevelHandler extends BaseTypeHandler<CashBackLevel> {
     }
 
     @Override
-    public void setNonNullParameter(PreparedStatement preparedStatement, int i, CashBackLevel c, JdbcType jdbcType) throws SQLException {
-        preparedStatement.setInt(i, c.getCode());
+    public void setNonNullParameter(PreparedStatement preparedStatement, int i, CashBackLevel billStatus, JdbcType jdbcType) throws SQLException {
+        preparedStatement.setInt(i, billStatus.getCode());
     }
 
     @Override
