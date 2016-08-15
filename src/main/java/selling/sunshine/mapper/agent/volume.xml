@@ -9,13 +9,13 @@
 
     <resultMap id="agentGoodsVo" type="selling.sunshine.model.sum.VolumeTotal">
         <result property="agentId" column="agent_id"></result>
-        <association property="goods" column="goodsId = goods_id" select="goods4AgentQuery"></association>
         <result property="totalQuantity" column="total_quantity"></result>
         <result property="totalPrice" column="total_price"></result>
         <result property="yearQuantity" column="year_quantity"></result>
         <result property="yearPrice" column="year_price"></result>
         <result property="monthQuantity" column="month_quantity"></result>
         <result property="monthPrice" column="month_price"></result>
+        <association property="goods" column="goodsId = goods_id" select="goods4AgentQuery"></association>
     </resultMap>
     
     <resultMap id="goods4AgentVo" type="selling.sunshine.model.goods.Goods4Agent">
