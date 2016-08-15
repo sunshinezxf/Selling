@@ -28,5 +28,7 @@ public interface StatisticService {
     ResultData fetchVolume(Map<String, Object> condition);
     
     ResultData queryAgentGoods(Map<String, Object> condition);
+    
+    ResultData agentRanking(Map<String, Object> condition);
 
 }

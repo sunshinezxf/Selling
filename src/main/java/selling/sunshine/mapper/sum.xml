@@ -260,7 +260,7 @@ select DATE_FORMAT(create_time,'%Y-%m') as orderDate,count(*) as num from custom
 </select>
 
 <select id="topThreeAgentMonth" resultMap="topThreeAgentVo">
-select agent_name,quantity from(
+select agent.agent_id,agent_name,quantity from(
 select agent_id,sum(quantity) as quantity from(
 select agent_id,sum(goods_quantity) as quantity from order_item 
        left join `order` on `order`.order_id=order_item.order_id 
@@ -281,7 +281,7 @@ select agent_id,sum(quantity) as quantity from customer_order
 </select>
 
 <select id="topThreeAgent" resultMap="topThreeAgentVo">
-select agent_name,quantity from(
+select agent.agent_id,agent_name,quantity from(
 select agent_id,sum(quantity) as quantity from(
 select agent_id,sum(goods_quantity) as quantity from order_item 
        left join `order` on `order`.order_id=order_item.order_id 
@@ -315,7 +315,7 @@ where 1 = 1
 <if test="monthly != null">
 	and date_format(create_time,'%Y-%m')=date_format(now(),'%Y-%m')
 </if>
-group by goods_id, order_type order by goods_quantity desc;
+group by goods_id, goods_name, order_type order by goods_quantity desc;
         
 </select>
    

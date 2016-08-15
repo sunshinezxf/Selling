@@ -1,4 +1,4 @@
-package selling.sunshine.controller;
+  package selling.sunshine.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -1968,6 +1968,7 @@ public class AgentController {
 			 dataMap.put("credit", credit);
 		}
         //代理商统计信息
+        //累计销售信息
         queryData=statisticService.queryAgentGoods(condition);
         if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
         	List<Volume> volumeTotalList=(List<Volume>)queryData.getData();
@@ -1987,9 +1988,17 @@ public class AgentController {
         	List<Volume> volumeYearList=(List<Volume>)queryData.getData();
         	dataMap.put("volumeYearList", volumeYearList);
 		}
-
+        
+        //排名
         condition.clear();
         condition.put("agentId", agentId);
+        queryData=statisticService.agentRanking(condition);
+        if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
+        	int ranking=(int)queryData.getData();
+        	dataMap.put("ranking", ranking);
+		}
+
+
         //代理商返现信息
         List<CashBackRecord> refundRecordList = (List<CashBackRecord>) refundService.fetchRefundRecord(condition).getData();
         //代理商提现信息

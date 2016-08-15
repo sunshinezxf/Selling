@@ -45,5 +45,32 @@
             AND goods_id = #{goodsId}
         </if>;
     </select>
+    
+    <select id="agentRanking" parameterType="java.util.Map" resultType="java.lang.Integer">
+        <if test="agentId != null">
+            select count(1)+1 as num from (
+select agent_id,sum(quantity) as quantity from(
+select agent_id,sum(goods_quantity) as quantity from order_item 
+       left join `order` on `order`.order_id=order_item.order_id 
+        where order_item.order_item_status in(1,2,3)
+        and `order`.order_type=0 
+        group by `order`.agent_id
+union all
+select agent_id,sum(quantity) as quantity from customer_order 
+        where order_status in(1,2,3)
+        group by agent_id
+) t1
+        where agent_id is not null
+        group by agent_id
+        order by quantity desc) t where quantity > (select sum(quantity) as quantity from(
+select sum(goods_quantity) as quantity from order_item 
+       left join `order` on `order`.order_id=order_item.order_id 
+	   where order_item.order_item_status in(1,2,3)
+	   and `order`.order_type=0 and `order`.agent_id=#{agentId}
+	union all
+select sum(quantity) as quantity from customer_order 
+        where order_status in(1,2,3) and agent_id=#{agentId}) t2);
+        </if>
+    </select>
 
 </mapper>

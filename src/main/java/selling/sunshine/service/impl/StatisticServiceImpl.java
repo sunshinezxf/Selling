@@ -227,5 +227,18 @@ public class StatisticServiceImpl implements StatisticService {
         return result;
 	}
 
+	@Override
+	public ResultData agentRanking(Map<String, Object> condition) {
+		ResultData result = new ResultData();
+        ResultData response = statisticDao.agentRanking(condition);
+        result.setResponseCode(response.getResponseCode());
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(response.getData());
+        } else {
+            response.setDescription(response.getDescription());
+        }
+        return result;
+	}
+
 
 }

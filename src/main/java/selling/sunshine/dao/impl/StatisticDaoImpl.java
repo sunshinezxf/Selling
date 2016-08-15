@@ -331,10 +331,12 @@ public class StatisticDaoImpl extends BaseDao implements StatisticDao {
 	}
 
 	@Override
-	public ResultData agentRanking(String agentId) {
+	public ResultData agentRanking(Map<String, Object> condition) {
 		ResultData result = new ResultData();
         try {
-            // 代写
+            // 待写
+        	int ranking=(int)sqlSession.selectOne("selling.volume.agentRanking", condition);
+        	result.setData(ranking);
         } catch (Exception e) {
             logger.error(e.getMessage());
             result.setResponseCode(ResponseCode.RESPONSE_ERROR);

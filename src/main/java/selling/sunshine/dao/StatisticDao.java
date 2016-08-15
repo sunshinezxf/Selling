@@ -35,6 +35,6 @@ public interface StatisticDao {
     
     ResultData queryAgentGoods(Map<String, Object> condition);
     
-    ResultData agentRanking(String agentId);
+    ResultData agentRanking(Map<String, Object> condition);
 
 }

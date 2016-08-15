@@ -99,6 +99,10 @@ public class AgentDaoImpl extends BaseDao implements AgentDao {
         ResultData result = new ResultData();
         DataTablePage<Agent> page = new DataTablePage<>(param);
         condition = handle(condition);
+        if (!StringUtils.isEmpty(param.getsSearch())) {  
+            String searchParam=param.getsSearch().replace("/", "-");
+        	   condition.put("search", "%"+searchParam+"%");
+ 		}
         ResultData total = queryAgent(condition);
         if (total.getResponseCode() != ResponseCode.RESPONSE_OK) {
             result.setResponseCode(ResponseCode.RESPONSE_ERROR);
