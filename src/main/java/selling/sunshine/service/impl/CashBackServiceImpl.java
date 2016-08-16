@@ -104,7 +104,7 @@ public class CashBackServiceImpl implements CashBackService {
             produce(detail, item);
 
             totalCashback += item.getAmount();
-            Row current = sheet.getRow(row);
+            Row current = sheet.createRow(row);
             Cell agent = current.createCell(0);
             agent.setCellValue(item.getAgent().getName());
             Cell total = current.createCell(1);

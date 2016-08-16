@@ -137,7 +137,7 @@ public class CashBackController {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MONTH, -1);
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String date = dateFormat.format(calendar);
+        String date = dateFormat.format(calendar.getTime());
         String summaryPath = produceResponse.getData().toString();
 
         String path = DeliverController.class.getResource("/").getPath();
