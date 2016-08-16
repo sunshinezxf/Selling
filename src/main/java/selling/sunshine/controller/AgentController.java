@@ -1,6 +1,7 @@
   package selling.sunshine.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -20,6 +21,7 @@ import selling.sunshine.model.gift.GiftConfig;
 import selling.sunshine.model.goods.Goods4Agent;
 import selling.sunshine.model.sum.TotalQuantityAll;
 import selling.sunshine.model.sum.Volume;
+import selling.sunshine.model.sum.VolumeTotal;
 import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.*;
@@ -1947,18 +1949,11 @@ public class AgentController {
         return resultData;
     }
     
-    @RequestMapping(method = RequestMethod.GET, value = "/detail")
-    public ModelAndView detail() {
+    @RequestMapping(method = RequestMethod.GET, value = "/detail/{agentId}")
+    @ResponseBody
+    public ModelAndView detail(@PathVariable String agentId) {
     	ModelAndView view=new ModelAndView();
     	view.setViewName("/backend/agent/detail");
-		return view;    	
-    }
-
-    @RequestMapping(method = RequestMethod.POST, value = "/detail/{agentId}")
-    @ResponseBody
-    public ResultData detail(@PathVariable String agentId) {
-        ResultData resultData = new ResultData();
-        Map<String, Object> dataMap = new HashMap<>();
         ResultData queryData=new ResultData();
         //代理商个人信息
         Map<String, Object> condition = new HashMap<>();
@@ -1966,122 +1961,229 @@ public class AgentController {
         queryData=agentService.fetchAgent(condition);
         if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
         	 Agent agent = ((List<Agent>) queryData.getData()).get(0);
-        	 dataMap.put("agent", agent);
+        	 view.addObject("agent", agent);
+		}
+        
+        //顾客人数
+        queryData=customerService.fetchCustomer(condition);
+        if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
+       	   int customerNum = ((List<Customer>) queryData.getData()).size();
+       	   view.addObject("customerNum", customerNum);
+		}else {
+		   view.addObject("customerNum", 0);
 		}
         //代理商身份证照片
         queryData=agentService.fetchCredit(condition);
         if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
 			Credit credit=((List<Credit>)queryData.getData()).get(0);
-			 dataMap.put("credit", credit);
+			 view.addObject("credit", credit);
 		}
         //代理商统计信息
         //累计销售信息
         queryData=statisticService.queryAgentGoods(condition);
         if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
-        	List<Volume> volumeTotalList=(List<Volume>)queryData.getData();
-        	dataMap.put("volumeTotalList", volumeTotalList);
+        	List<VolumeTotal> volumeTotalList=(List<VolumeTotal>)queryData.getData();
+        	view.addObject("volumeTotalList", volumeTotalList);
 		}
-        //月销售信息
-        condition.put("totalMonth", 1);
-        queryData=statisticService.queryAgentGoods(condition);
-        if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
-        	List<Volume> volumeMonthList=(List<Volume>)queryData.getData();
-        	dataMap.put("volumeMonthList", volumeMonthList);
-		}
-        //年销售信息
-        condition.put("totalMonth", 12);
-        queryData=statisticService.queryAgentGoods(condition);
-        if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
-        	List<Volume> volumeYearList=(List<Volume>)queryData.getData();
-        	dataMap.put("volumeYearList", volumeYearList);
-		}
+
         
         //排名
         condition.clear();
+        queryData=agentService.fetchAgent(condition);
+        if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
+        	 int totalNum = ((List<Agent>) queryData.getData()).size();
+        	 view.addObject("totalNum", totalNum);
+		}
         condition.put("agentId", agentId);
         queryData=statisticService.agentRanking(condition);
         if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
         	int ranking=(int)queryData.getData();
-        	dataMap.put("ranking", ranking);
+        	view.addObject("ranking", ranking);
 		}
-
-
-        //代理商返现信息
-        List<CashBackRecord> refundRecordList = (List<CashBackRecord>) refundService.fetchRefundRecord(condition).getData();
-        //代理商提现信息
-        List<Integer> status = new ArrayList<Integer>();
-        status.add(1);
-        condition.put("status", status);
-        List<WithdrawRecord> withdrawRecordList = (List<WithdrawRecord>) withdrawService.fetchWithdrawRecord(condition).getData();
-        condition.clear();
-        condition.put("agentId", agentId);
-        condition.put("date", "3");
-        //代理商订单信息
-        List<Order> orderList = (List<Order>) orderService.fetchOrder(condition).getData();
-
-
-       
-        dataMap.put("orderList", orderList);
-        dataMap.put("refundRecordList", refundRecordList);
-        dataMap.put("withdrawRecordList", withdrawRecordList);
-        resultData.setData(dataMap);
-        return resultData;
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value = "/subordinate/{agentId}")
-    public ModelAndView subordinate(@PathVariable String agentId) {
-
-        ModelAndView view = new ModelAndView();
-        view.setViewName("/backend/agent/subordinate");
-        view.addObject("agentId", agentId);
-
         return view;
+    }
+    
 
+//    @RequestMapping(method = RequestMethod.POST, value = "/detail/{agentId}")
+//    @ResponseBody
+//    public ResultData detail(@PathVariable String agentId) {
+//        ResultData resultData = new ResultData();
+//        Map<String, Object> dataMap = new HashMap<>();
+//        ResultData queryData=new ResultData();
+//        //代理商个人信息
+//        Map<String, Object> condition = new HashMap<>();
+//        condition.put("agentId", agentId);
+//        queryData=agentService.fetchAgent(condition);
+//        if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
+//        	 Agent agent = ((List<Agent>) queryData.getData()).get(0);
+//        	 dataMap.put("agent", agent);
+//		}
+//        //代理商身份证照片
+//        queryData=agentService.fetchCredit(condition);
+//        if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
+//			Credit credit=((List<Credit>)queryData.getData()).get(0);
+//			 dataMap.put("credit", credit);
+//		}
+//        //代理商统计信息
+//        //累计销售信息
+//        queryData=statisticService.queryAgentGoods(condition);
+//        if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
+//        	List<Volume> volumeTotalList=(List<Volume>)queryData.getData();
+//        	dataMap.put("volumeTotalList", volumeTotalList);
+//		}
+//        //月销售信息
+//        condition.put("totalMonth", 1);
+//        queryData=statisticService.queryAgentGoods(condition);
+//        if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
+//        	List<Volume> volumeMonthList=(List<Volume>)queryData.getData();
+//        	dataMap.put("volumeMonthList", volumeMonthList);
+//		}
+//        //年销售信息
+//        condition.put("totalMonth", 12);
+//        queryData=statisticService.queryAgentGoods(condition);
+//        if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
+//        	List<Volume> volumeYearList=(List<Volume>)queryData.getData();
+//        	dataMap.put("volumeYearList", volumeYearList);
+//		}
+//        
+//        //排名
+//        condition.clear();
+//        condition.put("agentId", agentId);
+//        queryData=statisticService.agentRanking(condition);
+//        if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
+//        	int ranking=(int)queryData.getData();
+//        	dataMap.put("ranking", ranking);
+//		}
+//
+//
+//        //代理商返现信息
+//        List<CashBackRecord> refundRecordList = (List<CashBackRecord>) refundService.fetchRefundRecord(condition).getData();
+//        //代理商提现信息
+//        List<Integer> status = new ArrayList<Integer>();
+//        status.add(1);
+//        condition.put("status", status);
+//        List<WithdrawRecord> withdrawRecordList = (List<WithdrawRecord>) withdrawService.fetchWithdrawRecord(condition).getData();
+//        condition.clear();
+//        condition.put("agentId", agentId);
+//        condition.put("date", "3");
+//        //代理商订单信息
+//        List<Order> orderList = (List<Order>) orderService.fetchOrder(condition).getData();
+//
+//
+//       
+//        dataMap.put("orderList", orderList);
+//        dataMap.put("refundRecordList", refundRecordList);
+//        dataMap.put("withdrawRecordList", withdrawRecordList);
+//        resultData.setData(dataMap);
+//        return resultData;
+//    }
+
+//    @RequestMapping(method = RequestMethod.GET, value = "/subordinate/{agentId}")
+//    public ModelAndView subordinate(@PathVariable String agentId) {
+//
+//        ModelAndView view = new ModelAndView();
+//        view.setViewName("/backend/agent/subordinate");
+//        view.addObject("agentId", agentId);
+//
+//        return view;
+//
+//    }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/subordinate/{agentId}")
+    public JSONArray subordinate(@PathVariable String agentId) {
+    	JSONArray data=new JSONArray();
+    	JSONObject jsonObject=new JSONObject();
+    	Map<String, Object> condition = new HashMap<>();
+    	condition.put("agentId", agentId);
+    	ResultData queryData=agentService.fetchAgent(condition);
+        if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
+        	//当前代理商
+       	    Agent agent = ((List<Agent>) queryData.getData()).get(0);  
+       	    jsonObject.put("name", agent.getName());
+       	    jsonObject.put("id", agent.getAgentId());
+       	    JSONArray children=new JSONArray();
+       	    //查询下级代理商
+       	    selling.sunshine.model.lite.Agent agent2 = new selling.sunshine.model.lite.Agent();
+       	    agent2.setAgentId(agentId);
+       	    condition.clear();
+       	    condition.put("upperAgent", agent2);
+       	    queryData=agentService.fetchAgent(condition);
+       	
+       	    if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
+       	    	//下级代理商列表
+       	    	List<Agent> directAgentList = (List<Agent>)queryData.getData();       	    	      	    	
+       	    	for(Agent agent3:directAgentList){   
+           	    	JSONObject jsonObject2=new JSONObject();
+           	    	jsonObject2.put("name", agent3.getName());
+               	    jsonObject2.put("id", agent3.getAgentId());
+       	    	    agent2.setAgentId(agent3.getAgentId());
+       	    	    condition.put("upperAgent", agent2);
+       	    	    queryData=agentService.fetchAgent(condition);
+       	    	    JSONArray children2=new JSONArray();
+       	    	    if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
+       	    	        //下下级代理商列表
+       	    	    	List<Agent> indirectAgentList = (List<Agent>)queryData.getData();
+       	    	    	
+       	    	    	for(Agent agent4:indirectAgentList){   
+       	    	    		JSONObject jsonObject3=new JSONObject();
+       	    	    		jsonObject3.put("name", agent4.getName());
+       	               	    jsonObject3.put("id", agent4.getAgentId());
+       	               	    children2.add(jsonObject3);
+       	    	    	}
+       	    	        jsonObject2.put("children", children2);
+       	    	    }
+       	    	    children.add(jsonObject2);
+       	    	}       	    	
+       	    }
+       	  jsonObject.put("children", children);
+		}      
+        data.add(jsonObject);
+    	return data;
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/subordinateData/{agentId}")
-    public ResultData subordinateData(@PathVariable String agentId) {
-        ResultData resultData = new ResultData();
-        Map<String, Object> dataMap = new HashMap<>();
-        Map<String, Object> agentMap = new HashMap<>();
-        Map<String, Object> condition = new HashMap<>();
-
-        selling.sunshine.model.lite.Agent agent = new selling.sunshine.model.lite.Agent();
-        agent.setAgentId(agentId);
-        condition.put("upperAgent", agent);
-        List<SortRule> orderBy = new ArrayList<>();
-        orderBy.add(new SortRule("agent_name", "desc"));
-        condition.put("sort", orderBy);
-        List<Agent> agentList = (List<Agent>) agentService.fetchAgent(condition).getData();
-        for (int i = 0; i < agentList.size(); i++) {
-            condition.clear();
-            selling.sunshine.model.lite.Agent agent3 = new selling.sunshine.model.lite.Agent();
-            agent3.setAgentId(agentList.get(i).getAgentId());
-            condition.put("upperAgent", agent3);
-            agentMap.put(agentList.get(i).getAgentId(), (List<Agent>) agentService.fetchAgent(condition).getData());
-        }
-
-        Map<String, Object> condition2 = new HashMap<>();
-        condition2.put("agentId", agentId);
-        Agent agent2 = ((List<Agent>) agentService.fetchAgent(condition2).getData()).get(0);
-        Map<String, Integer> map = new HashMap<>();
-        int k = 2;
-        for (int i = 0; i < agentList.size(); i++) {
-            if (map.get(agentList.get(i).getName()) == null) {
-                map.put(agentList.get(i).getName(), 1);
-                k = 2;
-            } else {
-                agentList.get(i).setName(agentList.get(i).getName() + k);
-                k++;
-            }
-        }
-        dataMap.put("agentList", agentList);
-        dataMap.put("agent", agent2);
-        dataMap.put("agentMap", agentMap);
-        resultData.setData(dataMap);
-        return resultData;
-
-    }
+//    @RequestMapping(method = RequestMethod.POST, value = "/subordinateData/{agentId}")
+//    public ResultData subordinateData(@PathVariable String agentId) {
+//        ResultData resultData = new ResultData();
+//        Map<String, Object> dataMap = new HashMap<>();
+//        Map<String, Object> agentMap = new HashMap<>();
+//        Map<String, Object> condition = new HashMap<>();
+//
+//        selling.sunshine.model.lite.Agent agent = new selling.sunshine.model.lite.Agent();
+//        agent.setAgentId(agentId);
+//        condition.put("upperAgent", agent);
+//        List<SortRule> orderBy = new ArrayList<>();
+//        orderBy.add(new SortRule("agent_name", "desc"));
+//        condition.put("sort", orderBy);
+//        List<Agent> agentList = (List<Agent>) agentService.fetchAgent(condition).getData();
+//        for (int i = 0; i < agentList.size(); i++) {
+//            condition.clear();
+//            selling.sunshine.model.lite.Agent agent3 = new selling.sunshine.model.lite.Agent();
+//            agent3.setAgentId(agentList.get(i).getAgentId());
+//            condition.put("upperAgent", agent3);
+//            agentMap.put(agentList.get(i).getAgentId(), (List<Agent>) agentService.fetchAgent(condition).getData());
+//        }
+//
+//        Map<String, Object> condition2 = new HashMap<>();
+//        condition2.put("agentId", agentId);
+//        Agent agent2 = ((List<Agent>) agentService.fetchAgent(condition2).getData()).get(0);
+//        Map<String, Integer> map = new HashMap<>();
+//        int k = 2;
+//        for (int i = 0; i < agentList.size(); i++) {
+//            if (map.get(agentList.get(i).getName()) == null) {
+//                map.put(agentList.get(i).getName(), 1);
+//                k = 2;
+//            } else {
+//                agentList.get(i).setName(agentList.get(i).getName() + k);
+//                k++;
+//            }
+//        }
+//        dataMap.put("agentList", agentList);
+//        dataMap.put("agent", agent2);
+//        dataMap.put("agentMap", agentMap);
+//        resultData.setData(dataMap);
+//        return resultData;
+//
+//    }
 
 	/*
      * 购买商品时验证代理商是否存在

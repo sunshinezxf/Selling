@@ -9,6 +9,8 @@ import java.util.Map;
  * Created by sunshine on 8/12/16.
  */
 public interface CashBackService {
+    ResultData fetchCashBackPerMonth(Map<String, Object> condition);
+
     ResultData fetchCashBackPerMonth(Map<String, Object> condition, DataTableParam param);
 
     ResultData fetchCashBack(Map<String, Object> condition, DataTableParam param);

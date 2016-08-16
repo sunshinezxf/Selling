@@ -6,16 +6,29 @@
         <result property="goodsId" column="goods_id"></result>
         <result property="quantity" column="quantity"></result>
     </resultMap>
-    
-   <resultMap id="agentGoodsVo" type="selling.sunshine.model.sum.Volume">
+
+    <resultMap id="agentGoodsVo" type="selling.sunshine.model.sum.VolumeTotal">
         <result property="agentId" column="agent_id"></result>
+        <result property="totalQuantity" column="total_quantity"></result>
+        <result property="totalPrice" column="total_price"></result>
+        <result property="yearQuantity" column="year_quantity"></result>
+        <result property="yearPrice" column="year_price"></result>
+        <result property="monthQuantity" column="month_quantity"></result>
+        <result property="monthPrice" column="month_price"></result>
+        <association property="goods" column="goodsId = goods_id" select="goods4AgentQuery"></association>
+    </resultMap>
+    
+    <resultMap id="goods4AgentVo" type="selling.sunshine.model.goods.Goods4Agent">
         <result property="goodsId" column="goods_id"></result>
-        <result property="quantity" column="quantity"></result>
-        <result property="price" column="price"></result>
+        <result property="name" column="goods_name"></result>
+        <result property="description" column="goods_description"></result>
+        <result property="agentPrice" column="agent_price"></result>
+        <result property="blockFlag" column="block_flag"></result>
+        <result property="createAt" column="create_time"></result>
     </resultMap>
 
     <select id="query" parameterType="java.util.Map" resultMap="volumeVo">
-        select agent_id, goods_id, sum(quantity) AS quantity
+        select agent_id, goods_id, ifnull(sum(quantity), 0) AS quantity
         FROM volume_item
         WHERE 1 = 1 AND order_type='0'
         <if test="agentId != null">
@@ -26,51 +39,69 @@
         </if>
         <if test="month != null">
             AND date_format(create_time, '%Y-%m') = date_format(date_sub(curdate(), interval #{month} month), '%Y-%m');
-        </if>      
+        </if>
     </select>
-    
+
     <select id="agentGoods" parameterType="java.util.Map" resultMap="agentGoodsVo">
-        select *from(
-        select agent_id, goods_id, sum(quantity) AS quantity,sum(price) AS price
+select t3.agent_id,t3.goods_id,
+	   ifnull(t3.total_quantity,0) as total_quantity,ifnull(t3.total_price,0) as total_price,
+       ifnull(t2.year_quantity,0) as year_quantity,ifnull(t2.year_price,0) as year_price,
+	   ifnull(t1.month_quantity,0) as month_quantity,ifnull(t1.month_price,0) as month_price
+from 
+       (select agent_id, goods_id, sum(quantity) AS total_quantity,sum(price) AS total_price
+        FROM volume_item
+        WHERE 1 = 1 AND order_type='0'  <if test="agentId != null"> AND agent_id=#{agentId}</if>
+        GROUP BY agent_id, goods_id) t3 
+left join 
+       (
+        select agent_id, goods_id, sum(quantity) AS year_quantity,sum(price) AS year_price
         FROM volume_item
         WHERE 1 = 1 AND order_type='0'
-        <if test="totalMonth != null">
-            AND date_format(create_time, '%Y-%m') > date_format(date_sub(curdate(), interval #{totalMonth} month), '%Y-%m');
-        </if>  
-        GROUP BY agent_id, goods_id) t
-        <if test="agentId != null">
-            AND agent_id = #{agentId}
-        </if>
-        <if test="goodsId != null">
-            AND goods_id = #{goodsId}
-        </if>;
+            AND date_format(create_time, '%Y-%m') > date_format(date_sub(curdate(), interval 12 month),'%Y-%m') <if test="agentId != null"> AND agent_id=#{agentId}</if>
+        GROUP BY agent_id, goods_id) t2
+on t3.agent_id=t2.agent_id and t3.goods_id=t2.goods_id
+left join 
+       (
+        select agent_id, goods_id, sum(quantity) AS month_quantity,sum(price) AS month_price
+        FROM volume_item
+        WHERE 1 = 1 AND order_type='0'
+            AND date_format(create_time, '%Y-%m') > date_format(date_sub(curdate(), interval 1 month),'%Y-%m') <if test="agentId != null"> AND agent_id=#{agentId}</if>
+        GROUP BY agent_id, goods_id) t1
+on t3.agent_id=t1.agent_id and t3.goods_id=t1.goods_id 
+
     </select>
-    
+
     <select id="agentRanking" parameterType="java.util.Map" resultType="java.lang.Integer">
         <if test="agentId != null">
             select count(1)+1 as num from (
-select agent_id,sum(quantity) as quantity from(
-select agent_id,sum(goods_quantity) as quantity from order_item 
-       left join `order` on `order`.order_id=order_item.order_id 
-        where order_item.order_item_status in(1,2,3)
-        and `order`.order_type=0 
-        group by `order`.agent_id
-union all
-select agent_id,sum(quantity) as quantity from customer_order 
-        where order_status in(1,2,3)
-        group by agent_id
-) t1
-        where agent_id is not null
-        group by agent_id
-        order by quantity desc) t where quantity > (select sum(quantity) as quantity from(
-select sum(goods_quantity) as quantity from order_item 
-       left join `order` on `order`.order_id=order_item.order_id 
-	   where order_item.order_item_status in(1,2,3)
-	   and `order`.order_type=0 and `order`.agent_id=#{agentId}
-	union all
-select sum(quantity) as quantity from customer_order 
-        where order_status in(1,2,3) and agent_id=#{agentId}) t2);
+            select agent_id,sum(quantity) as quantity from(
+            select agent_id,sum(goods_quantity) as quantity from order_item
+            left join `order` on `order`.order_id=order_item.order_id
+            where order_item.order_item_status in(1,2,3)
+            and `order`.order_type=0
+            group by `order`.agent_id
+            union all
+            select agent_id,sum(quantity) as quantity from customer_order
+            where order_status in(1,2,3)
+            group by agent_id
+            ) t1
+            where agent_id is not null
+            group by agent_id
+            order by quantity desc) t where quantity > (select ifnull(sum(quantity),0) as quantity from(
+            select sum(goods_quantity) as quantity from order_item
+            left join `order` on `order`.order_id=order_item.order_id
+            where order_item.order_item_status in(1,2,3)
+            and `order`.order_type=0 and `order`.agent_id=#{agentId}
+            union all
+            select sum(quantity) as quantity from customer_order
+            where order_status in(1,2,3) and agent_id=#{agentId}) t2);
         </if>
+    </select>
+    
+    <select id="goods4AgentQuery" parameterType="java.util.Map" resultMap="goods4AgentVo">
+        SELECT goods_id, goods_name, goods_description, prime_price, agent_price, block_flag, create_time
+        FROM goods
+        WHERE goods_id = #{goodsId}
     </select>
 
 </mapper>

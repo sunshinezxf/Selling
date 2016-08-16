@@ -117,7 +117,8 @@
             columns: [
                 {
                     title: "姓名", "mRender": function (data, type, full) {
-                    var operation = "<a id='" + full.agentId + "' onclick=detail(this) data-toggle='modal' data-target='#agent_detail_modal'>" + full.name + "</a>";
+                    var url="${path.concat('/agent/detail/')}"+full.agentId;
+                    var operation = "<a id='" + full.agentId + "' href='" + url + "'>"+full.name+"</a>";
                     return operation;
                 }
                 },
@@ -154,27 +155,6 @@
                             var customerNum = "<a href='${path.concat(
                                         '/customer/overview/')}" + full.agentId + "'>" + result.data.customerNum + "</a>";
                             option += customerNum;
-                        }
-                    });
-                    return option;
-                }
-                },
-                {
-                    title: "下级代理商", "mRender": function (data, type, full) {
-                    var url = "${path.concat('/agent/statistics/')}" + full.agentId;
-                    var option = "";
-                    $.ajax({
-                        type: "post",
-                        url: url,
-                        async: false,
-                        success: function (result) {
-                            if (result.data.agentNum == 0) {
-                                option += "无";
-                                return option;
-                            }
-                            var agentNum = "<a href='${path.concat(
-                                        '/agent/subordinate/')}" + full.agentId + "''>" + result.data.agentNum + "</a>";
-                            option += agentNum;
                         }
                     });
                     return option;

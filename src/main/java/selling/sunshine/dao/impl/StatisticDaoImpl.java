@@ -320,7 +320,7 @@ public class StatisticDaoImpl extends BaseDao implements StatisticDao {
 	public ResultData queryAgentGoods(Map<String, Object> condition) {
 		ResultData result = new ResultData();
         try {
-            List<Volume> list = sqlSession.selectList("selling.volume.agentGoods", condition);
+            List<VolumeTotal> list = sqlSession.selectList("selling.volume.agentGoods", condition);
             result.setData(list);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -334,8 +334,7 @@ public class StatisticDaoImpl extends BaseDao implements StatisticDao {
 	public ResultData agentRanking(Map<String, Object> condition) {
 		ResultData result = new ResultData();
         try {
-            // 待写
-        	int ranking=(int)sqlSession.selectOne("selling.volume.agentRanking", condition);
+        	int ranking=(Integer)sqlSession.selectOne("selling.volume.agentRanking", condition);
         	result.setData(ranking);
         } catch (Exception e) {
             logger.error(e.getMessage());

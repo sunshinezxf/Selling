@@ -387,6 +387,19 @@ public class AgentServiceImpl implements AgentService {
     }
 
     @Override
+    public ResultData updateGiftApply(GiftApply apply) {
+        ResultData result = new ResultData();
+        ResultData response = giftApplyDao.updateGiftApply(apply);
+        result.setResponseCode(response.getResponseCode());
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(response.getData());
+        } else {
+            result.setDescription(response.getDescription());
+        }
+        return result;
+    }
+
+    @Override
     public ResultData fetchGiftApply(Map<String, Object> condition, DataTableParam param) {
         ResultData result = new ResultData();
         ResultData queryResponse = giftApplyDao.queryGiftApplyByPage(condition, param);

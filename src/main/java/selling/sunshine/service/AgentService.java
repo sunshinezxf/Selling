@@ -62,6 +62,8 @@ public interface AgentService {
 
     ResultData fetchGiftApply(Map<String, Object> condition);
 
+    ResultData updateGiftApply(GiftApply apply);
+
     ResultData fetchGiftApply(Map<String, Object> condition, DataTableParam param);
 
     ResultData declineGiftApply(GiftApply apply);

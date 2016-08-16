@@ -38,8 +38,10 @@
                     </p>
                     <p class="form-group">
                         <label class="col-sm-4 col-md-4 col-lg-3">当前可赠送数量:</label>&nbsp;&nbsp;
-                        <input type="number" id="config_number" name="config_number" value="0" autocomplete="off"/>&nbsp;<span>件</span>
+                        <input type="number" id="config_number" name="amount" value="0" autocomplete="off"/>&nbsp;<span>件</span>
                     </p>
+                    <input type="hidden" id="config_agent_id" name="agentId"/>
+                    <input type="hidden" id="config_goods_id" name="goodsId"/>
                 </form>
             </div>
             <div class="modal-footer">
@@ -83,9 +85,9 @@
             },
             columns: [
                 {
-                    title: "代理商", "mRender": function (data, type, full) {                  
-                       return "${agentName}";
-                    }
+                    title: "代理商", "mRender": function (data, type, full) {
+                    return "${agentName}";
+                }
                 },
                 {title: "商品名称", "mData": "name"},
                 {title: "代理价格", "mData": "agentPrice"},
@@ -94,7 +96,7 @@
                 },
                 {
                     title: "当前可赠送数量(件)", "mRender": function (data, type, full) {
-                    var url="${path.concat('/gift/')}${agentId}/"+full.goodsId;
+                    var url = "${path.concat('/gift/')}${agentId}/" + full.goodsId;
                     var option = "";
                     $.ajax({
                         type: "get",
@@ -114,16 +116,21 @@
                 },
                 {
                     title: "操作", "mRender": function (data, type, full) {
-                       var operation = "";
-                       var update_button = "<button type='button' class='btn btn-success btn-group-sm' id='" + full.goodsId + "' data-toggle='modal' data-target='#config_modal'>修改</button>&nbsp;"
-                       operation += update_button;
+                    var operation = "";
+                    var update_button = "<button type='button' class='btn btn-success btn-group-sm' id='" + full.goodsId + "' data-toggle='modal' data-target='#config_modal'>修改</button>&nbsp;"
+                    operation += update_button;
                     $("#" + full.goodsId).on('click', function () {
+                        $("#config_number").val("");
+                        $("#config_agent_id").val("");
+                        $("#config_goods_id").val("");
                         var goodsId = full.goodsId;
                         $("#goods_id").val(goodsId);
                         var goodsname = full.name;
                         $("#goods_name").text(goodsname);
                         $("#agent_name").text("${agentName}");
-                        var url = "${path.concat('/gift/')}${agentId}/"+full.goodsId;
+                        $("#config_agent_id").val("${agentId}");
+                        $("#config_goods_id").val(goodsId);
+                        var url = "${path.concat('/gift/')}" + "${agentId}" + "/" + full.goodsId;
                         $.ajax({
                             type: "get",
                             url: url,
@@ -138,7 +145,7 @@
                     });
 
                     return operation;
-                    }
+                }
                 }
             ],
             "language": {
@@ -166,27 +173,20 @@
             }
         });
     });
-    
+
     $(function () {
         $("#config_modal").modal({
             show: false,
             keyboard: true
         });
     });
-    
+
     $("#config_confirm").on('click', function () {
         if ($("#goods_id").val() == "") {
             return;
         }
-        var url = "${path.concat('/gift/config/')}${agentId}/"+ $("#goods_id").val()+"/"+$("#config_number").val();
-        $.ajax({
-           type: "get",
-           url: url,
-           async: true,
-           success: function (result) {
-                var giftCofigUrl="${path.concat('/agent/gift/')}${agentId}";
-                window.location.href=giftCofigUrl;               
-           }
-        });
+        $("#config_form").attr("method", "post");
+        $("#config_form").attr("action", "${path.concat('/gift/config')}");
+        $("#config_form").submit();
     });
 </script>
