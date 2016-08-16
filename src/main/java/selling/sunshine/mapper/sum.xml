@@ -170,7 +170,10 @@ select agent_id as agentId,goods_id as goodsId,
          and date_format(create_time,'%Y-%m')=date_format(now(),'%Y-%m')
          group by agent_id,goods_id) t1 group by agentId,goodsId) t2
 left join agent on t2.agentId=agent.agent_id 
-left join goods on t2.goodsId=goods.goods_id) t3 where agent_name is not null <if test="search !=null and search != ''">AND agent_name LIKE #{search}</if> ORDER BY quantity DESC
+left join goods on t2.goodsId=goods.goods_id) t3 where agent_name is not null 
+<if test="search !=null and search != ''">
+ AND (agent_name LIKE #{search} OR goods_name LIKE #{search} OR quantity LIKE #{search} OR price LIKE #{search})
+</if> ORDER BY quantity DESC
   </select>
   
 <select id="sumAgentGoods"  parameterType="java.util.Map" resultMap="agentGoodsVo">
@@ -186,7 +189,10 @@ select agent_id as agentId,goods_id as goodsId,
          where order_status in(1,2,3)
          group by agent_id,goods_id) t1 group by agentId,goodsId) t2
 left join agent on t2.agentId=agent.agent_id 
-left join goods on t2.goodsId=goods.goods_id) t3 where agent_name is not null <if test="search !=null and search != ''"> AND agent_name LIKE #{search}</if> ORDER BY quantity DESC
+left join goods on t2.goodsId=goods.goods_id) t3 where agent_name is not null 
+<if test="search !=null and search != ''"> 
+ AND (agent_name LIKE #{search} OR goods_name LIKE #{search} OR quantity LIKE #{search} OR price LIKE #{search})
+</if> ORDER BY quantity DESC
   </select>
   
 <select id="orderMonth" resultMap="orderMonthVO">
