@@ -142,6 +142,42 @@ public class WorkBookUtil {
         return workbook;
     }
 
+    public static Workbook getCashbackSummaryTemplate() {
+        Workbook workbook = null;
+        String path = WorkBookUtil.class.getResource("/").getPath();
+        int index = path.lastIndexOf("/WEB-INF/classes/");
+        String parent = path.substring(0, index);
+        File file = new File(parent + PlatformConfig.getValue("cashback_summary_template"));
+        if (!file.exists()) {
+            logger.error("返现清单模板文件不存在");
+        }
+        try {
+            OPCPackage pkg = OPCPackage.open(file);
+            workbook = new XSSFWorkbook(pkg);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        return workbook;
+    }
+
+    public static Workbook getCashbackDetailTemplate() {
+        Workbook workbook = null;
+        String path = WorkBookUtil.class.getResource("/").getPath();
+        int index = path.lastIndexOf("/WEB-INF/classes/");
+        String parent = path.substring(0, index);
+        File file = new File(parent + PlatformConfig.getValue("cashback_detail_template"));
+        if (!file.exists()) {
+            logger.error("返现详单模板文件不存在");
+        }
+        try {
+            OPCPackage pkg = OPCPackage.open(file);
+            workbook = new XSSFWorkbook(pkg);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        return workbook;
+    }
+
     public static boolean createIndentTemplate(String context) {
         int length = 7;
         try {
@@ -195,12 +231,6 @@ public class WorkBookUtil {
             logger.error(e.getMessage());
             return false;
         }
-        return true;
-    }
-
-    public static boolean generateExpress(String context) {
-        int length = 38;
-
         return true;
     }
 

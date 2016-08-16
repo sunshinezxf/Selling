@@ -61,8 +61,14 @@
         <if test="agentId != null and agentId != ''">
             AND agent_id = #{agentId}
         </if>
-        <if test="upperAgent != null and upperAgent != ''">
-            AND upper_agent_id = #{upperAgent.agentId}
+        <if test="upperAgentId != null and upperAgentId != ''">
+            AND upper_agent_id = #{upperAgentId}
+        </if>
+        <if test="upperAgentIds != null and upperAgentIds != ''">
+            AND upper_agent_id IN
+            <foreach collection="upperAgentIds" index="index" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
         </if>
         <if test="name != null and name != ''">
             AND agent_name = #{name}
@@ -86,7 +92,8 @@
             AND block_flag = #{blockFlag}
         </if>
         <if test="search !=null and search != ''">
-            AND (agent_name LIKE BINARY #{search} OR create_time LIKE BINARY #{search} OR agent_phone LIKE BINARY #{search})
+            AND (agent_name LIKE BINARY #{search} OR create_time LIKE BINARY #{search} OR agent_phone LIKE BINARY
+            #{search})
         </if>
         <if test="rule != null and rule != ''">
             ORDER BY ${rule}
@@ -142,15 +149,15 @@
         </set>
         WHERE agent_id = #{agentId}
     </update>
-    
-	<update id="updateScale" parameterType="selling.sunshine.model.Agent" useGeneratedKeys="false">
+
+    <update id="updateScale" parameterType="selling.sunshine.model.Agent" useGeneratedKeys="false">
         UPDATE agent
         <set>
             scale = #{claimScale}
         </set>
         WHERE agent_id = #{agentId}
     </update>
-    
+
     <update id="unbind">
         UPDATE agent
         <set>

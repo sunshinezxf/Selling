@@ -35,7 +35,7 @@ public class ExpressDaoImpl extends BaseDao implements ExpressDao {
         synchronized (lock) {
             try {
                 express.setExpressId(IDGenerator.generate("EPA"));
-                sqlSession.insert("selling.express.insertExpress4Agent",express);
+                sqlSession.insert("selling.express.insertExpress4Agent", express);
                 result.setData(express);
             } catch (Exception e) {
                 logger.error(e.getMessage());
@@ -54,7 +54,7 @@ public class ExpressDaoImpl extends BaseDao implements ExpressDao {
         synchronized (lock) {
             try {
                 express.setExpressId(IDGenerator.generate("EPC"));
-                sqlSession.insert("selling.express.insertExpress4Customer",express);
+                sqlSession.insert("selling.express.insertExpress4Customer", express);
                 result.setData(express);
             } catch (Exception e) {
                 logger.error(e.getMessage());

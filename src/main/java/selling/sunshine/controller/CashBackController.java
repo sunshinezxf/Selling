@@ -105,4 +105,20 @@ public class CashBackController {
         }
         return result;
     }
+
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value = "/produce")
+    public ResultData produce() {
+        ResultData result = new ResultData();
+        Map<String, Object> condition = new HashMap<>();
+        ResultData response = cashBackService.fetchCashBackPerMonth(condition);
+        if (response.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            result.setResponseCode(response.getResponseCode());
+            result.setDescription(response.getDescription());
+            return result;
+        }
+        List<CashBack4AgentPerMonth> list = (List<CashBack4AgentPerMonth>) response.getData();
+
+        return result;
+    }
 }

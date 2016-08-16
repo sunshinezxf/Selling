@@ -2,7 +2,9 @@ package selling.sunshine.service;
 
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.utils.ResultData;
+import selling.sunshine.vo.cashback.CashBack4AgentPerMonth;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -14,4 +16,6 @@ public interface CashBackService {
     ResultData fetchCashBackPerMonth(Map<String, Object> condition, DataTableParam param);
 
     ResultData fetchCashBack(Map<String, Object> condition, DataTableParam param);
+
+    ResultData produce(List<CashBack4AgentPerMonth> list);
 }

@@ -10,9 +10,15 @@ public class CashBack4Agent {
 
     private double amount;
 
+    private int sPieces;
+
     private double self;
 
+    private int dPieces;
+
     private double direct;
+
+    private int iPieces;
 
     private double indirect;
 
@@ -54,5 +60,29 @@ public class CashBack4Agent {
 
     public void setIndirect(double indirect) {
         this.indirect = indirect;
+    }
+
+    public int getsPieces() {
+        return sPieces;
+    }
+
+    public void setsPieces(int sPieces) {
+        this.sPieces = sPieces;
+    }
+
+    public int getdPieces() {
+        return dPieces;
+    }
+
+    public void setdPieces(int dPieces) {
+        this.dPieces = dPieces;
+    }
+
+    public int getiPieces() {
+        return iPieces;
+    }
+
+    public void setiPieces(int iPieces) {
+        this.iPieces = iPieces;
     }
 }
