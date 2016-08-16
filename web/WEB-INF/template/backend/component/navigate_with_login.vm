@@ -78,6 +78,7 @@
                             <li><a class="menu" href="${path.concat('/indent/overview')}">订货单</a></li>
                             <li><a class="menu" href="${path.concat('/deliver/overview')}">发货单</a></li>
                             <li><a class="menu" href="${path.concat('/gather/overview')}">收款单</a></li>
+                            <li><a class="menu" href="${path.concat('/withdraw/overviewreport')}">提现单</a></li>
                         </ul>
                     </li>
                 #end
