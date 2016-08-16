@@ -1963,6 +1963,15 @@ public class AgentController {
         	 Agent agent = ((List<Agent>) queryData.getData()).get(0);
         	 view.addObject("agent", agent);
 		}
+        
+        //顾客人数
+        queryData=customerService.fetchCustomer(condition);
+        if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
+       	   int customerNum = ((List<Customer>) queryData.getData()).size();
+       	   view.addObject("customerNum", customerNum);
+		}else {
+		   view.addObject("customerNum", 0);
+		}
         //代理商身份证照片
         queryData=agentService.fetchCredit(condition);
         if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
@@ -2080,7 +2089,7 @@ public class AgentController {
 //
 //    }
     
-    @RequestMapping(method = RequestMethod.POST, value = "/subordinate/{agentId}")
+    @RequestMapping(method = RequestMethod.GET, value = "/subordinate/{agentId}")
     public JSONArray subordinate(@PathVariable String agentId) {
     	JSONArray data=new JSONArray();
     	JSONObject jsonObject=new JSONObject();
@@ -2115,7 +2124,7 @@ public class AgentController {
        	    	        //下下级代理商列表
        	    	    	List<Agent> indirectAgentList = (List<Agent>)queryData.getData();
        	    	    	
-       	    	    	for(Agent agent4:directAgentList){   
+       	    	    	for(Agent agent4:indirectAgentList){   
        	    	    		JSONObject jsonObject3=new JSONObject();
        	    	    		jsonObject3.put("name", agent4.getName());
        	               	    jsonObject3.put("id", agent4.getAgentId());

@@ -161,27 +161,6 @@
                 }
                 },
                 {
-                    title: "下级代理商", "mRender": function (data, type, full) {
-                    var url = "${path.concat('/agent/statistics/')}" + full.agentId;
-                    var option = "";
-                    $.ajax({
-                        type: "post",
-                        url: url,
-                        async: false,
-                        success: function (result) {
-                            if (result.data.agentNum == 0) {
-                                option += "无";
-                                return option;
-                            }
-                            var agentNum = "<a href='${path.concat(
-                                        '/agent/subordinate/')}" + full.agentId + "''>" + result.data.agentNum + "</a>";
-                            option += agentNum;
-                        }
-                    });
-                    return option;
-                }
-                },
-                {
                     title: "操作", "mRender": function (data, type, full) {
                     var operation = "";
                     var giftCofigUrl = "${path.concat('/agent/gift/')}" + full.agentId;
