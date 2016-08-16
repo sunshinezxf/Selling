@@ -25,18 +25,18 @@
             <h4>三级返现明细：</h4>
 
             <div class="panel panel-default">
-                <div class="panel-heading" style="background-color:#fff">
+                <div class="panel-heading">
                     <h4 class="col-xs-6 col-sm-6 col-md-6 col-lg-6">返现来源：自销</h4>
                     <h4>返现金额：</h4>
                 </div>
                 <div class="panel-body">
                     <div class="table-responsive">
-                        <table class="table table-bordered">
+                        <table class="table">
                             <tr>
-                                <th>商品名</th>
-                                <th>销量(盒)</th>
-                                <th>返现比例(元/盒)</th>
-                                <th>返现金额(元)</th>
+                                <th class="col-xs-3 col-sm-3 col-md-3 col-lg-3">商品名</th>
+                                <th class="col-xs-3 col-sm-3 col-md-3 col-lg-3">销量(盒)</th>
+                                <th class="col-xs-4 col-sm-4 col-md-4 col-lg-4">返现比例(元/盒)</th>
+                                <th class="col-xs-2 col-sm-2 col-md-2 col-lg-2">返现金额(元)</th>
                             </tr>
                             <tr>
                                 <td>三七粉</td>
@@ -49,19 +49,19 @@
                 </div>
             </div>
             <div class="panel panel-default">
-                <div class="panel-heading" style="background-color:#fff">
+                <div class="panel-heading">
                     <h4 class="col-xs-6 col-sm-6 col-md-6 col-lg-6">返现来源：直接代理</h4>
                     <h4>返现金额：</h4>
                 </div>
                 <div class="panel-body">
                     <div class="table-responsive">
-                        <table class="table table-bordered">
+                        <table class="table">
                             <tr>
-                                <th>商品名</th>
-                                <th>代理商</th>
-                                <th>销量(盒)</th>
-                                <th>返现比例(元/盒)</th>
-                                <th>返现金额(元)</th>
+                                <th class="col-xs-3 col-sm-3 col-md-3 col-lg-3">商品名</th>
+                                <th class="col-xs-2 col-sm-2 col-md-2 col-lg-2">代理商</th>
+                                <th class="col-xs-2 col-sm-2 col-md-2 col-lg-2">销量(盒)</th>
+                                <th class="col-xs-3 col-sm-3 col-md-3 col-lg-3">返现比例(元/盒)</th>
+                                <th class="col-xs-2 col-sm-2 col-md-2 col-lg-2">返现金额(元)</th>
                             </tr>
                             <tr>
                                 <td rowspan="1">三七粉</td>
@@ -75,19 +75,19 @@
                 </div>
             </div>
             <div class="panel panel-default">
-                <div class="panel-heading" style="background-color:#fff">
+                <div class="panel-heading">
                     <h4 class="col-xs-6 col-sm-6 col-md-6 col-lg-6">返现来源：间接代理</h4>
                     <h4>返现金额：</h4>
                 </div>
                 <div class="panel-body"> 
                     <div class="table-responsive">
-                        <table class="table table-bordered">
+                        <table class="table">
                             <tr>
-                                <th>商品名</th>
-                                <th>代理商</th>
-                                <th>销量(盒)</th>
-                                <th>返现比例(元/盒)</th>
-                                <th>返现金额(元)</th>
+                                <th class="col-xs-3 col-sm-3 col-md-3 col-lg-3">商品名</th>
+                                <th class="col-xs-2 col-sm-2 col-md-2 col-lg-2">代理商</th>
+                                <th class="col-xs-2 col-sm-2 col-md-2 col-lg-2">销量(盒)</th>
+                                <th class="col-xs-2 col-sm-3 col-md-3 col-lg-3">返现比例(元/盒)</th>
+                                <th class="col-xs-2 col-sm-2 col-md-2 col-lg-2">返现金额(元)</th>
                             </tr>
                             <tr>
                                 <td rowspan="1">三七粉</td>
