@@ -64,9 +64,11 @@
                 <tr>
                     <td>
                         <h4>拓展信息</h4>
+                        <div id="tree"></div>
                     </td>
                     <td>
                         <h4>销售情况</h4>
+                        #if(${volumeTotalList})
                         <div class="table-responsive">
                             <table class="table table-bordered">
                                 <tr>
@@ -85,6 +87,9 @@
                                 #end
                             </table>
                         </div>
+                        #else
+                                                                        暂无销售记录
+                        #end
                         #if(${agent.agentRefund}!=0)
                         <div>
                                                                                     累积返现：${agent.agentRefund}&nbsp;
@@ -140,7 +145,12 @@
         }else{
             $("#wechat").text("无");
         }
-        
+           
+        var url="${path.concat('/agent/subordinate/')}"+"${agent.agentId}";
+        $("#tree").tree({
+            dataUrl: url,
+            selectable: false,
+        });
     });
 
 </script>
