@@ -11,12 +11,15 @@ import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.AgentService;
 import selling.sunshine.service.CashBackService;
+import selling.sunshine.utils.IDGenerator;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
+import selling.sunshine.utils.ZipCompressor;
 import selling.sunshine.vo.cashback.CashBack4Agent;
 import selling.sunshine.vo.cashback.CashBack4AgentPerMonth;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -118,6 +121,30 @@ public class CashBackController {
             return result;
         }
         List<CashBack4AgentPerMonth> list = (List<CashBack4AgentPerMonth>) response.getData();
+        ResultData produceResponse=cashBackService.produce(list);
+        Calendar calendar=Calendar.getInstance();
+        calendar.add(Calendar.MONTH, -1);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String date = dateFormat.format(calendar);
+        String summaryPath=produceResponse.getData().toString();
+     
+        String path = DeliverController.class.getResource("/").getPath();
+        String os = System.getProperty("os.name").toLowerCase();
+        if (os.indexOf("windows") >= 0) {
+            path = path.substring(1);
+        }
+        int index = path.lastIndexOf("/WEB-INF/classes/");
+        String parent = path.substring(0, index);
+        String directory = "/material/journal/cashback";
+        
+        List<String> pathList = new ArrayList<String>();
+        StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(date.replaceAll("-", ""));
+        pathList.add(sb.toString());
+        pathList.add((new StringBuffer(parent).append(summaryPath)).toString());
+        String zipName = IDGenerator.generate("CashBack");
+        StringBuffer sb2 = new StringBuffer(parent).append(directory).append("/").append(zipName + ".zip");
+        ZipCompressor zipCompressor = new ZipCompressor(sb2.toString());
+        zipCompressor.compress(pathList);
 
         return result;
     }
