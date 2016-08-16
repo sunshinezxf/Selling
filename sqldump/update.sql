@@ -234,6 +234,7 @@ as select o.agent_id as agent_id, oi.goods_id as goods_id, oi.goods_quantity as 
    select co.agent_id as agent_id, co.goods_id as goods_id, co.quantity as quantity,co.total_price as price,co.create_time as create_time,0 as order_type
    from customer_order co
    where co.order_status in (1, 2, 3) and co.agent_id is not null;
+   
 
 
 
