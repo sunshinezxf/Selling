@@ -1,6 +1,7 @@
   package selling.sunshine.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -2080,7 +2081,8 @@ public class AgentController {
 //    }
     
     @RequestMapping(method = RequestMethod.POST, value = "/subordinate/{agentId}")
-    public JSONObject subordinate(@PathVariable String agentId) {
+    public JSONArray subordinate(@PathVariable String agentId) {
+    	JSONArray data=new JSONArray();
     	JSONObject jsonObject=new JSONObject();
     	Map<String, Object> condition = new HashMap<>();
     	condition.put("agentId", agentId);
@@ -2088,27 +2090,46 @@ public class AgentController {
         if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
         	//当前代理商
        	    Agent agent = ((List<Agent>) queryData.getData()).get(0);  
+       	    jsonObject.put("name", agent.getName());
+       	    jsonObject.put("id", agent.getAgentId());
+       	    JSONArray children=new JSONArray();
        	    //查询下级代理商
        	    selling.sunshine.model.lite.Agent agent2 = new selling.sunshine.model.lite.Agent();
        	    agent2.setAgentId(agentId);
        	    condition.clear();
        	    condition.put("upperAgent", agent2);
        	    queryData=agentService.fetchAgent(condition);
+       	
        	    if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
        	    	//下级代理商列表
-       	    	List<Agent> directAgentList = (List<Agent>)queryData.getData();
-       	    	for(Agent agent3:directAgentList){   	    		
+       	    	List<Agent> directAgentList = (List<Agent>)queryData.getData();       	    	      	    	
+       	    	for(Agent agent3:directAgentList){   
+           	    	JSONObject jsonObject2=new JSONObject();
+           	    	jsonObject2.put("name", agent3.getName());
+               	    jsonObject2.put("id", agent3.getAgentId());
        	    	    agent2.setAgentId(agent3.getAgentId());
        	    	    condition.put("upperAgent", agent2);
        	    	    queryData=agentService.fetchAgent(condition);
+       	    	    JSONArray children2=new JSONArray();
        	    	    if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
        	    	        //下下级代理商列表
        	    	    	List<Agent> indirectAgentList = (List<Agent>)queryData.getData();
+       	    	    	
+       	    	    	for(Agent agent4:directAgentList){   
+       	    	    		JSONObject jsonObject3=new JSONObject();
+       	    	    		jsonObject3.put("name", agent4.getName());
+       	               	    jsonObject3.put("id", agent4.getAgentId());
+       	               	    children2.add(jsonObject3);
+       	    	    	}
+       	    	        jsonObject2.put("children", children2);
        	    	    }
-       	    	}
+       	    	    children.add(jsonObject2);
+       	    	}       	    	
        	    }
-		}
-    	return jsonObject;
+       	  jsonObject.put("children", children);
+		}      
+        data.add(jsonObject);
+    	return data;
     }
 
 //    @RequestMapping(method = RequestMethod.POST, value = "/subordinateData/{agentId}")
