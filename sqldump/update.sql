@@ -308,6 +308,7 @@ AS
   WHERE cash_back_month = date_format(date_sub(curdate(), INTERVAL 1 MONTH), '%Y-%m');
 
 ##2016年8月12日更新
+
 CREATE OR REPLACE VIEW volume_item(agent_id, goods_id, quantity, price, create_time, order_type)
 AS SELECT
      o.agent_id          AS agent_id,
@@ -328,6 +329,7 @@ AS SELECT
      0              AS order_type
    FROM customer_order co
    WHERE co.order_status IN (1, 2, 3) AND co.agent_id IS NOT NULL;
+
 
 
 
