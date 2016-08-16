@@ -2068,60 +2068,92 @@ public class AgentController {
 //        return resultData;
 //    }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/subordinate/{agentId}")
-    public ModelAndView subordinate(@PathVariable String agentId) {
-
-        ModelAndView view = new ModelAndView();
-        view.setViewName("/backend/agent/subordinate");
-        view.addObject("agentId", agentId);
-
-        return view;
-
+//    @RequestMapping(method = RequestMethod.GET, value = "/subordinate/{agentId}")
+//    public ModelAndView subordinate(@PathVariable String agentId) {
+//
+//        ModelAndView view = new ModelAndView();
+//        view.setViewName("/backend/agent/subordinate");
+//        view.addObject("agentId", agentId);
+//
+//        return view;
+//
+//    }
+    
+    @RequestMapping(method = RequestMethod.POST, value = "/subordinate/{agentId}")
+    public JSONObject subordinate(@PathVariable String agentId) {
+    	JSONObject jsonObject=new JSONObject();
+    	Map<String, Object> condition = new HashMap<>();
+    	condition.put("agentId", agentId);
+    	ResultData queryData=agentService.fetchAgent(condition);
+        if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
+        	//当前代理商
+       	    Agent agent = ((List<Agent>) queryData.getData()).get(0);  
+       	    //查询下级代理商
+       	    selling.sunshine.model.lite.Agent agent2 = new selling.sunshine.model.lite.Agent();
+       	    agent2.setAgentId(agentId);
+       	    condition.clear();
+       	    condition.put("upperAgent", agent2);
+       	    queryData=agentService.fetchAgent(condition);
+       	    if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
+       	    	//下级代理商列表
+       	    	List<Agent> directAgentList = (List<Agent>)queryData.getData();
+       	    	for(Agent agent3:directAgentList){   	    		
+       	    	    agent2.setAgentId(agent3.getAgentId());
+       	    	    condition.put("upperAgent", agent2);
+       	    	    queryData=agentService.fetchAgent(condition);
+       	    	    if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
+       	    	        //下下级代理商列表
+       	    	    	List<Agent> indirectAgentList = (List<Agent>)queryData.getData();
+       	    	    }
+       	    	}
+       	    }
+		}
+    	return jsonObject;
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/subordinateData/{agentId}")
-    public ResultData subordinateData(@PathVariable String agentId) {
-        ResultData resultData = new ResultData();
-        Map<String, Object> dataMap = new HashMap<>();
-        Map<String, Object> agentMap = new HashMap<>();
-        Map<String, Object> condition = new HashMap<>();
-
-        selling.sunshine.model.lite.Agent agent = new selling.sunshine.model.lite.Agent();
-        agent.setAgentId(agentId);
-        condition.put("upperAgent", agent);
-        List<SortRule> orderBy = new ArrayList<>();
-        orderBy.add(new SortRule("agent_name", "desc"));
-        condition.put("sort", orderBy);
-        List<Agent> agentList = (List<Agent>) agentService.fetchAgent(condition).getData();
-        for (int i = 0; i < agentList.size(); i++) {
-            condition.clear();
-            selling.sunshine.model.lite.Agent agent3 = new selling.sunshine.model.lite.Agent();
-            agent3.setAgentId(agentList.get(i).getAgentId());
-            condition.put("upperAgent", agent3);
-            agentMap.put(agentList.get(i).getAgentId(), (List<Agent>) agentService.fetchAgent(condition).getData());
-        }
-
-        Map<String, Object> condition2 = new HashMap<>();
-        condition2.put("agentId", agentId);
-        Agent agent2 = ((List<Agent>) agentService.fetchAgent(condition2).getData()).get(0);
-        Map<String, Integer> map = new HashMap<>();
-        int k = 2;
-        for (int i = 0; i < agentList.size(); i++) {
-            if (map.get(agentList.get(i).getName()) == null) {
-                map.put(agentList.get(i).getName(), 1);
-                k = 2;
-            } else {
-                agentList.get(i).setName(agentList.get(i).getName() + k);
-                k++;
-            }
-        }
-        dataMap.put("agentList", agentList);
-        dataMap.put("agent", agent2);
-        dataMap.put("agentMap", agentMap);
-        resultData.setData(dataMap);
-        return resultData;
-
-    }
+//    @RequestMapping(method = RequestMethod.POST, value = "/subordinateData/{agentId}")
+//    public ResultData subordinateData(@PathVariable String agentId) {
+//        ResultData resultData = new ResultData();
+//        Map<String, Object> dataMap = new HashMap<>();
+//        Map<String, Object> agentMap = new HashMap<>();
+//        Map<String, Object> condition = new HashMap<>();
+//
+//        selling.sunshine.model.lite.Agent agent = new selling.sunshine.model.lite.Agent();
+//        agent.setAgentId(agentId);
+//        condition.put("upperAgent", agent);
+//        List<SortRule> orderBy = new ArrayList<>();
+//        orderBy.add(new SortRule("agent_name", "desc"));
+//        condition.put("sort", orderBy);
+//        List<Agent> agentList = (List<Agent>) agentService.fetchAgent(condition).getData();
+//        for (int i = 0; i < agentList.size(); i++) {
+//            condition.clear();
+//            selling.sunshine.model.lite.Agent agent3 = new selling.sunshine.model.lite.Agent();
+//            agent3.setAgentId(agentList.get(i).getAgentId());
+//            condition.put("upperAgent", agent3);
+//            agentMap.put(agentList.get(i).getAgentId(), (List<Agent>) agentService.fetchAgent(condition).getData());
+//        }
+//
+//        Map<String, Object> condition2 = new HashMap<>();
+//        condition2.put("agentId", agentId);
+//        Agent agent2 = ((List<Agent>) agentService.fetchAgent(condition2).getData()).get(0);
+//        Map<String, Integer> map = new HashMap<>();
+//        int k = 2;
+//        for (int i = 0; i < agentList.size(); i++) {
+//            if (map.get(agentList.get(i).getName()) == null) {
+//                map.put(agentList.get(i).getName(), 1);
+//                k = 2;
+//            } else {
+//                agentList.get(i).setName(agentList.get(i).getName() + k);
+//                k++;
+//            }
+//        }
+//        dataMap.put("agentList", agentList);
+//        dataMap.put("agent", agent2);
+//        dataMap.put("agentMap", agentMap);
+//        resultData.setData(dataMap);
+//        return resultData;
+//
+//    }
 
 	/*
      * 购买商品时验证代理商是否存在

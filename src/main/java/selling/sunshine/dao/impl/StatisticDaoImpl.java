@@ -334,7 +334,7 @@ public class StatisticDaoImpl extends BaseDao implements StatisticDao {
 	public ResultData agentRanking(Map<String, Object> condition) {
 		ResultData result = new ResultData();
         try {
-        	int ranking=(int)sqlSession.selectOne("selling.volume.agentRanking", condition);
+        	int ranking=(Integer)sqlSession.selectOne("selling.volume.agentRanking", condition);
         	result.setData(ranking);
         } catch (Exception e) {
             logger.error(e.getMessage());
