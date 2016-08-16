@@ -7,10 +7,13 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import selling.sunshine.model.Agent;
+import selling.sunshine.model.cashback.CashBackLevel;
+import selling.sunshine.model.cashback.CashBackRecord;
 import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.AgentService;
 import selling.sunshine.service.CashBackService;
+import selling.sunshine.service.RefundService;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 import selling.sunshine.vo.cashback.CashBack4Agent;
@@ -35,6 +38,9 @@ public class CashBackController {
 
     @Autowired
     private AgentService agentService;
+
+    @Autowired
+    private RefundService refundService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/month")
     public ModelAndView monthly() {
@@ -80,6 +86,16 @@ public class CashBackController {
         }
         CashBack4AgentPerMonth cashback = ((List<CashBack4AgentPerMonth>) response.getData()).get(0);
         view.addObject("cashback", cashback);
+        condition.clear();
+        condition.put("agentId", cashback.getAgent().getAgentId());
+        condition.put("level", CashBackLevel.SELF.getCode());
+        response = refundService.fetchRefundRecord(condition);
+        if (response.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            view.setViewName("redirect:/cashback/month");
+            return view;
+        }
+        List<CashBackRecord> self = ((List<CashBackRecord>) response.getData());
+        view.addObject("self", self);
         view.setViewName("/backend/refund/cashback_month_detail");
         return view;
     }
