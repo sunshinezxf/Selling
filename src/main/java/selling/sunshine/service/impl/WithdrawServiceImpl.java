@@ -14,11 +14,14 @@ import selling.sunshine.dao.WithdrawDao;
 import selling.sunshine.model.WithdrawRecord;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.WithdrawService;
+import selling.sunshine.utils.IDGenerator;
 import selling.sunshine.utils.PlatformConfig;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 import selling.sunshine.utils.WorkBookUtil;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -167,4 +170,61 @@ public class WithdrawServiceImpl implements WithdrawService {
         result.setData(workbook);
         return result;
     }
+
+	@Override
+	public ResultData produceSummary(List<WithdrawRecord> list) {
+		ResultData result = new ResultData();
+        String path = WithdrawServiceImpl.class.getResource("/").getPath();
+        int index = path.lastIndexOf("/WEB-INF/classes/");
+        String parent = path.substring(0, index);
+        String directory = "/material/journal/withdraw";
+        File file = new File(parent + directory);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        Workbook workbook = WorkBookUtil.getWithdrawApplyTemplate();
+        int indexRow = 3;
+        double sum = 0;
+        Sheet sheet = workbook.getSheetAt(0);
+        for (WithdrawRecord item : list) {
+            sum += item.getAmount();
+            Row current = sheet.createRow(indexRow);
+            Cell withdrawNo = current.createCell(0);
+            withdrawNo.setCellValue(item.getWithdrawId());
+            Cell agentName = current.createCell(1);
+            agentName.setCellValue(item.getAgent().getName());
+            Cell amount = current.createCell(2);
+            amount.setCellValue(item.getAmount());
+            Cell createAt = current.createCell(3);
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            createAt.setCellValue(format.format(item.getCreateAt()));
+            Cell channel = current.createCell(4);
+            channel.setCellValue("wx_pub");
+            Cell account = current.createCell(5);
+            account.setCellValue(item.getOpenId());
+            indexRow ++;
+        }
+        Row row = sheet.getRow(1);
+        Cell total = row.createCell(2);
+        total.setCellValue(sum);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        Calendar instance = Calendar.getInstance();
+        Cell time = row.createCell(5);
+        time.setCellValue(format.format(instance.getTime()));
+        
+        String name = IDGenerator.generate("SUMMARY");
+        StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append("提现统计清单_").append(name).append(".xlsx");
+        try {
+            FileOutputStream out = new FileOutputStream(sb.toString());
+            workbook.write(out);
+            out.close();
+            result.setData(new StringBuffer(directory).append("/").append("提现统计清单_").append(name).append(".xlsx").toString());
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription(e.getMessage());
+            return result;
+        }
+        return result;
+	}
 }

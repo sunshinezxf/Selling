@@ -14,3 +14,7 @@
 img{
 	width:100%;
 }
+
+ul.jqtree-tree ul.jqtree_common {
+	margin-left:30px;
+}

@@ -11,24 +11,39 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import selling.sunshine.form.SortRule;
+import selling.sunshine.form.TimeRangeForm;
 import selling.sunshine.model.*;
 import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.LogService;
 import selling.sunshine.service.ToolService;
 import selling.sunshine.service.WithdrawService;
+import selling.sunshine.utils.DateUtils;
+import selling.sunshine.utils.IDGenerator;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
+import selling.sunshine.utils.ZipCompressor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -112,6 +127,51 @@ public class WithdrawController {
         }
         return null;
     }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/download/{fileName}/{tempFileName}")
+	public String downloadRecord(@PathVariable("fileName") String fileName,@PathVariable("tempFileName") String tempFileName, HttpServletRequest request,
+			HttpServletResponse response) throws UnsupportedEncodingException {
+		// 1.设置文件ContentType类型，这样设置，会自动判断下载文件类型
+		response.setContentType("multipart/form-data");
+		// 2.设置文件头：最后一个参数是设置下载文件名
+		response.setHeader("Content-Disposition", "attachment;fileName=" + URLEncoder.encode("提现单报表_"+fileName+".zip", "utf-8"));
+		OutputStream out;
+		// 通过文件路径获得File对象
+		String path = WithdrawController.class.getResource("/").getPath();
+		String os = System.getProperty("os.name").toLowerCase();
+		if (os.indexOf("windows") >= 0) {
+			path = path.substring(1);
+		}
+		int index = path.lastIndexOf("/WEB-INF/classes/");
+		String parent = path.substring(0, index);
+		String directory = "/material/journal/withdraw";
+		StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(tempFileName + ".zip");
+		File file = new File(sb.toString());
+        try {
+            FileInputStream fis = new FileInputStream(file);
+            BufferedInputStream buff = new BufferedInputStream(fis);
+            byte[] b = new byte[1024];// 相当于我们的缓存
+            long k = 0;// 该值用于计算当前实际下载了多少字节
+
+            // 3.通过response获取OutputStream对象(out)
+            out = response.getOutputStream();
+            // 开始循环下载
+            while (k < file.length()) {
+                int j = buff.read(b, 0, 1024);
+                k += j;
+                out.write(b, 0, j);
+            }
+            buff.close();
+            fis.close();
+            out.close();
+            out.flush();
+            file.delete();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
 
     @RequestMapping(method = RequestMethod.GET, value = "/overview")
     public ModelAndView overview() {
@@ -145,6 +205,87 @@ public class WithdrawController {
         }
         return result;
     }
+    
+    /**
+     * 提现单报表
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "/overviewreport")
+    public ModelAndView withdraw() {
+        ModelAndView view = new ModelAndView();
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("blockFlag", false);
+        List<Integer> status = new ArrayList<>();
+        status.add(1);
+        condition.put("status", status);
+        List<SortRule> rule = new ArrayList<>();
+        rule.add(new SortRule("create_time", "asc"));
+        condition.put("sort", rule);
+        ResultData queryResponse = withdrawService.fetchWithdrawRecord(condition);
+        Timestamp createAt = null;
+        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+        	WithdrawRecord record = ((List<WithdrawRecord>)queryResponse.getData()).get(0);
+            createAt = record.getCreateAt();
+        }
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        view.addObject("start", format.format(createAt));
+        view.setViewName("/backend/finance/withdraw");
+        return view;
+    }
+    
+    /**
+     * 提现单报表
+     */
+    @RequestMapping(method = RequestMethod.POST, value = "/overviewreport")
+    public ResultData withdraw(@Valid TimeRangeForm form, BindingResult result) {
+        ResultData data = new ResultData();
+        boolean empty = true;
+        if (result.hasErrors()) {
+            data.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            return data;
+        }
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("start", form.getStart());
+        condition.put("end", form.getEnd());
+        List<Integer> status = new ArrayList<>();
+        status.add(1);
+        condition.put("status", status);
+        condition.put("blockFlag", false);
+        ResultData queryResponse = withdrawService.fetchWithdrawRecord(condition);
+        List<WithdrawRecord> total = new ArrayList<WithdrawRecord>();
+        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            empty = false;
+            List<WithdrawRecord> list = (List<WithdrawRecord>) queryResponse.getData();
+            total.addAll(list);
+            withdrawService.produceApply(list);
+        }
+        if (empty) {
+            data.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            return data;
+        }
+        
+        ResultData resultData=withdrawService.produceSummary(total);
+        String summaryPath=resultData.getData().toString();
+
+        String path = WithdrawController.class.getResource("/").getPath();
+        String os = System.getProperty("os.name").toLowerCase();
+        if (os.indexOf("windows") >= 0) {
+            path = path.substring(1);
+        }
+        int index = path.lastIndexOf("/WEB-INF/classes/");
+        String parent = path.substring(0, index);
+        String directory = "/material/journal/withdraw";
+        List<String> pathList = new ArrayList<String>();
+        pathList.add((new StringBuffer(parent).append(summaryPath)).toString());
+        String zipName = IDGenerator.generate("Withdraw");
+        StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(zipName + ".zip");
+        ZipCompressor zipCompressor = new ZipCompressor(sb.toString());
+        zipCompressor.compress(pathList);
+        File file=new File((new StringBuffer(parent).append(summaryPath)).toString());
+        file.delete();
+        data.setData(zipName);
+        return data;
+    }
+
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/inform")

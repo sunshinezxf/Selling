@@ -82,6 +82,10 @@
         <if test="agentId != null">
             AND agent_id = #{agentId}
         </if>
+        <if test="start != null and end != null and start != '' and end != ''">
+            AND (date_format(create_time, '%Y-%m-%d') &gt;= #{start} AND date_format(create_time, '%Y-%m-%d') &lt;=
+            #{end})
+        </if>
         <if test="rule != null">
             ORDER BY ${rule}
         </if>

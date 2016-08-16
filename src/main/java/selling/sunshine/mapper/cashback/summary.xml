@@ -5,17 +5,22 @@
         <result property="month" column="cash_back_month"></result>
         <result property="amount" column="amount"></result>
         <result property="self" column="self"></result>
+        <result property="sPieces" column="s_pieces"></result>
         <result property="direct" column="direct"></result>
+        <result property="dPieces" column="d_pieces"></result>
         <result property="indirect" column="indirect"></result>
+        <result property="iPieces" column="i_pieces"></result>
         <association property="agent" column="agentId = agent_id" select="agentLiteQuery"></association>
     </resultMap>
 
     <resultMap id="cashBack4Agent" type="selling.sunshine.vo.cashback.CashBack4Agent">
         <result property="amount" column="amount"></result>
-        <result property="amount" column="amount"></result>
         <result property="self" column="self"></result>
+        <result property="sPieces" column="s_pieces"></result>
         <result property="direct" column="direct"></result>
+        <result property="dPieces" column="d_pieces"></result>
         <result property="indirect" column="indirect"></result>
+        <result property="iPieces" column="i_pieces"></result>
         <association property="agent" column="agentId = agent_id" select="agentLiteQuery"></association>
     </resultMap>
 
@@ -26,9 +31,13 @@
     </resultMap>
 
     <select id="query4Month" parameterType="java.util.Map" resultMap="cashBack4AgentPerMonthVo">
-        SELECT agent_id, cash_back_month, sum(amount) as amount, sum(CASE WHEN level = 0 THEN amount ELSE 0 END) as
-        self, sum(CASE WHEN
-        level = 1 THEN amount ELSE 0 END) as direct, sum(CASE WHEN level = 2 THEN amount ELSE 0 END) as indirect
+        SELECT agent_id, cash_back_month, sum(amount) as amount,
+        sum(CASE WHEN level = 0 THEN amount ELSE 0 END) as self,
+        sum(CASE WHEN level = 0 THEN quantity ELSE 0 END) as s_pieces,
+        sum(CASE WHEN level = 1 THEN amount ELSE 0 END) as direct,
+        sum(CASE WHEN level = 1 THEN quantity ELSE 0 END) as d_pieces,
+        sum(CASE WHEN level = 2 THEN amount ELSE 0 END) as indirect,
+        sum(CASE WHEN level = 2 THEN quantity ELSE 0 END) as i_pieces
         FROM cashback_month_view
         WHERE 1 = 1
         <if test="agentId != null">
@@ -46,7 +55,13 @@
     </select>
 
     <select id="query" parameterType="java.util.Map" resultMap="cashBack4Agent">
-        SELECT agent_id, sum(amount) as amount, sum(CASE WHEN level = 0 THEN amount ELSE 0 END) as self, sum(CASE WHEN level = 1 THEN amount ELSE 0 END) as direct, sum(CASE WHEN level = 2 THEN amount ELSE 0 END) as indirect
+        SELECT agent_id, sum(amount) as amount,
+        sum(CASE WHEN level = 0 THEN amount ELSE 0 END) as self,
+        sum(CASE WHEN level = 0 THEN quantity ELSE 0 END) as s_pieces,
+        sum(CASE WHEN level = 1 THEN amount ELSE 0 END) as direct,
+        sum(CASE WHEN level = 1 THEN quantity ELSE 0 END) as d_pieces,
+        sum(CASE WHEN level = 2 THEN amount ELSE 0 END) as indirect,
+        sum(CASE WHEN level = 2 THEN quantity ELSE 0 END) as i_pieces
         FROM cashback_month_view
         WHERE 1 = 1
         AND cash_back_month &lt; date_format(date_sub(curdate(), interval 1 month), '%Y-%m')

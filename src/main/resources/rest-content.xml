@@ -155,6 +155,8 @@
 
                 /withdraw/check = roles["admin, finance"]
                 /withdraw/overview = roles["admin, finance"]
+                
+                /withdraw/overviewreport = roles["admin, finance"]
 
                 /withdraw/inform = anon
 

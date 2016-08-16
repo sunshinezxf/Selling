@@ -104,6 +104,8 @@
                         </li>
                         <li><a class="sub-nav" href="${path.concat("/gather/overview")}"><i class="fa fa-tasks"></i> 收款单</a>
                         </li>
+                        <li><a class="sub-nav" href="${path.concat("/withdraw/overviewreport")}"><i class="fa fa-tasks"></i> 提现单</a>
+                        </li>
                     </ul>
                 </li>
             #end

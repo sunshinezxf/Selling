@@ -1,7 +1,7 @@
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id-target="agent-management">
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <h1><i class="fa fa-home"></i> 代理概览 </h1>
+            <h1><i class="fa fa-home"></i> 代理商个人详情 </h1>
             <ol class="breadcrumb">
                 <li><a href="${path.concat('/dashboard')}">首页</a></li>
                 <li><a data-toggle="collapse" data-parent="#accordion" href="#agent-management">代理管理</a></li>
@@ -10,6 +10,7 @@
         </div>
     </div>
     <div class="row">
+        <a type="button" class="btn btn-primary" href="${path.concat('/agent/overview')}">返回</a>
         <div class="rank">
             <canvas id="rank" width="95px" height="95px"></canvas>
         </div>
@@ -47,6 +48,13 @@
                                 </tr>
                                 <tr>
                                     <td colspan="2">地址：${agent.address}</td>
+                                </tr>
+                                <tr>
+                                    #if(${customerNum}==0)
+                                    <td colspan="2">顾客人数：0</td>
+                                    #else
+                                    <td colspan="2">顾客人数：<a href="${path.concat('/customer/overview/')}${agent.agentId}">${customerNum}</a></td>
+                                    #end
                                 </tr>
                             </table>
                         </div>
