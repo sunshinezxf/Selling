@@ -2,6 +2,7 @@
 <html lang="zh_CN">
 <head>
     #parse("/backend/component/init.vm")
+    #parse("/backend/component/init_panel.vm")
     <title>返现管理</title>
 </head>
 <body>
