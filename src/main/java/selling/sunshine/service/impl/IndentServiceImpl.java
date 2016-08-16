@@ -38,7 +38,7 @@ public class IndentServiceImpl implements IndentService {
 
     @Autowired
     private OrderDao orderDao;
-    
+
     @Autowired
     private ExpressDao expressDao;
 
@@ -314,21 +314,21 @@ public class IndentServiceImpl implements IndentService {
                 } else {
                     row.createCell((short) 9).setCellValue("");
                 }
-                if (orderItem.getStatus()==OrderItemStatus.SHIPPED || orderItem.getStatus()==OrderItemStatus.RECEIVED || orderItem.getStatus()==OrderItemStatus.EXCHANGED) {
-                	 row.createCell((short) 10).setCellValue("是");
-                	 condition.clear();
-                	 condition.put("orderItemId", orderItem.getOrderItemId());
-                	 ResultData queryData=expressDao.queryExpress4Agent(condition);
-                	 if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
-                		 Express4Agent express4Agent=((List<Express4Agent>)queryData.getData()).get(0);
-                		 row.createCell((short) 11).setCellValue(new SimpleDateFormat("yyyy-MM-dd").format(express4Agent.getCreateAt()));
-                    	 row.createCell((short) 12).setCellValue(express4Agent.getExpressNumber());
-					 }
-				}else{
-					row.createCell((short) 10).setCellValue("否");
-					row.createCell((short) 11).setCellValue("");
-					row.createCell((short) 12).setCellValue("");
-				}
+                if (orderItem.getStatus() == OrderItemStatus.SHIPPED || orderItem.getStatus() == OrderItemStatus.RECEIVED || orderItem.getStatus() == OrderItemStatus.EXCHANGED) {
+                    row.createCell((short) 10).setCellValue("是");
+                    condition.clear();
+                    condition.put("orderItemId", orderItem.getOrderItemId());
+                    ResultData queryData = expressDao.queryExpress4Agent(condition);
+                    if (queryData.getResponseCode() == ResponseCode.RESPONSE_OK && !((List)queryData.getData()).isEmpty()) {
+                        Express4Agent express4Agent = ((List<Express4Agent>) queryData.getData()).get(0);
+                        row.createCell((short) 11).setCellValue(new SimpleDateFormat("yyyy-MM-dd").format(express4Agent.getCreateAt()));
+                        row.createCell((short) 12).setCellValue(express4Agent.getExpressNumber());
+                    }
+                } else {
+                    row.createCell((short) 10).setCellValue("否");
+                    row.createCell((short) 11).setCellValue("");
+                    row.createCell((short) 12).setCellValue("");
+                }
                 k++;
             } else if (list.get(i) instanceof CustomerOrder) {
                 row = sheet2.createRow((int) j);
@@ -349,21 +349,21 @@ public class IndentServiceImpl implements IndentService {
                 row.createCell((short) 7).setCellValue(customerOrder.getTotalPrice());
                 cell = row.createCell((short) 8);
                 cell.setCellValue(new SimpleDateFormat("yyyy-MM-dd").format(customerOrder.getCreateAt()));
-                if (customerOrder.getStatus()==OrderItemStatus.SHIPPED || customerOrder.getStatus()==OrderItemStatus.RECEIVED || customerOrder.getStatus()==OrderItemStatus.EXCHANGED) {
-               	 row.createCell((short) 9).setCellValue("是");
-               	 Map<String, Object> condition = new HashMap<>();
-               	 condition.put("orderId", customerOrder.getOrderId());
-               	 ResultData queryData=expressDao.queryExpress4Customer(condition);
-               	 if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
-               		 Express4Customer express=((List<Express4Customer>)queryData.getData()).get(0);
-               		 row.createCell((short) 10).setCellValue(new SimpleDateFormat("yyyy-MM-dd").format(express.getCreateAt()));
-                   	 row.createCell((short) 11).setCellValue(express.getExpressNumber());
-					 }
-				}else{
-					row.createCell((short) 9).setCellValue("否");
-					row.createCell((short) 10).setCellValue("");
-					row.createCell((short) 11).setCellValue("");
-				}
+                if (customerOrder.getStatus() == OrderItemStatus.SHIPPED || customerOrder.getStatus() == OrderItemStatus.RECEIVED || customerOrder.getStatus() == OrderItemStatus.EXCHANGED) {
+                    row.createCell((short) 9).setCellValue("是");
+                    Map<String, Object> condition = new HashMap<>();
+                    condition.put("orderId", customerOrder.getOrderId());
+                    ResultData queryData = expressDao.queryExpress4Customer(condition);
+                    if (queryData.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                        Express4Customer express = ((List<Express4Customer>) queryData.getData()).get(0);
+                        row.createCell((short) 10).setCellValue(new SimpleDateFormat("yyyy-MM-dd").format(express.getCreateAt()));
+                        row.createCell((short) 11).setCellValue(express.getExpressNumber());
+                    }
+                } else {
+                    row.createCell((short) 9).setCellValue("否");
+                    row.createCell((short) 10).setCellValue("");
+                    row.createCell((short) 11).setCellValue("");
+                }
                 j++;
             }
 
