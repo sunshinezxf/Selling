@@ -61,6 +61,9 @@
         <if test="agentId != null and agentId != ''">
             AND agent_id = #{agentId}
         </if>
+        <if test="upperAgent != null and upperAgent.agentId != null">
+            AND upper_agent_id = #{upperAgent.agentId}
+        </if>
         <if test="upperAgentId != null and upperAgentId != ''">
             AND upper_agent_id = #{upperAgentId}
         </if>
