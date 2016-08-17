@@ -42,8 +42,8 @@
                                     <tr>
                                         <td>${item.orderPool.goods.name}</td>
                                         <td>${item.orderPool.quantity}</td>
-                                        <td>${item.percent}(元/盒)</td>
-                                        <td>${item.amount}(元)</td>
+                                        <td>${item.percent}</td>
+                                        <td>${item.amount}</td>
                                     </tr>
                                 #end
                             </table>
@@ -72,8 +72,8 @@
                                         <td>${item.orderPool.goods.name}</td>
                                         <td>${item.orderPool.agent.name}</td>
                                         <td>${item.orderPool.quantity}</td>
-                                        <td>${item.percent}(元/盒)</td>
-                                        <td>${item.amount}(元)</td>
+                                        <td>${item.percent}</td>
+                                        <td>${item.amount}</td>
                                     </tr>
                                 #end
                             </table>
@@ -102,8 +102,8 @@
                                         <td>${item.orderPool.goods.name}</td>
                                         <td>${item.orderPool.agent.name}</td>
                                         <td>${item.orderPool.quantity}</td>
-                                        <td>${item.percent}(元/盒)</td>
-                                        <td>${item.amount}(元)</td>
+                                        <td>${item.percent}</td>
+                                        <td>${item.amount}</td>
                                     </tr>
                                 #end
                             </table>
