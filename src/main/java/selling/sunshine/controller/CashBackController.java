@@ -50,7 +50,7 @@ public class CashBackController {
         ModelAndView view = new ModelAndView();
         Map<String, Object> condition = new HashMap<>();
         ResultData response = cashBackService.fetchCashBackPerMonth(condition);
-        if (response.getData() == ResponseCode.RESPONSE_OK) {
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
             double total = 0;
             List<CashBack4AgentPerMonth> list = (List<CashBack4AgentPerMonth>) response.getData();
             for (CashBack4AgentPerMonth item : list) {
