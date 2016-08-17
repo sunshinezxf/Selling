@@ -21,8 +21,18 @@ import selling.sunshine.utils.ZipCompressor;
 import selling.sunshine.vo.cashback.CashBack4Agent;
 import selling.sunshine.vo.cashback.CashBack4AgentPerMonth;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Created by sunshine on 8/12/16.
@@ -135,21 +145,21 @@ public class CashBackController {
     }
 
     @ResponseBody
-    @RequestMapping(method = RequestMethod.POST, value = "/produce")
-    public ResultData produce() {
-        ResultData result = new ResultData();
+    @RequestMapping(method = RequestMethod.GET, value = "/produce")
+    public String produce(HttpServletRequest request,
+            HttpServletResponse response) throws UnsupportedEncodingException {
+    	
+        
         Map<String, Object> condition = new HashMap<>();
-        ResultData response = cashBackService.fetchCashBackPerMonth(condition);
-        if (response.getResponseCode() != ResponseCode.RESPONSE_OK) {
-            result.setResponseCode(response.getResponseCode());
-            result.setDescription(response.getDescription());
-            return result;
+        ResultData result = cashBackService.fetchCashBackPerMonth(condition);
+        if (result.getResponseCode() != ResponseCode.RESPONSE_OK) {          
+            return "";
         }
-        List<CashBack4AgentPerMonth> list = (List<CashBack4AgentPerMonth>) response.getData();
+        List<CashBack4AgentPerMonth> list = (List<CashBack4AgentPerMonth>) result.getData();
         ResultData produceResponse = cashBackService.produce(list);
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MONTH, -1);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM");
         String date = dateFormat.format(calendar.getTime());
         String summaryPath = produceResponse.getData().toString();
 
@@ -165,12 +175,43 @@ public class CashBackController {
         List<String> pathList = new ArrayList<String>();
         StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(date.replaceAll("-", ""));
         pathList.add(sb.toString());
-        pathList.add((new StringBuffer(parent).append(summaryPath)).toString());
-        String zipName = IDGenerator.generate("CashBack");
+        pathList.add(summaryPath);
+        String zipName = "月度返现报表";
         StringBuffer sb2 = new StringBuffer(parent).append(directory).append("/").append(zipName + ".zip");
         ZipCompressor zipCompressor = new ZipCompressor(sb2.toString());
         zipCompressor.compress(pathList);
+        
+        File file1=new File(summaryPath);
+        file1.delete();
+        
+   	    // 1.设置文件ContentType类型，这样设置，会自动判断下载文件类型
+        response.setContentType("multipart/form-data");
+        // 2.设置文件头：最后一个参数是设置下载文件名
+        response.setHeader("Content-Disposition", "attachment;fileName=" + URLEncoder.encode( zipName+ ".zip", "utf-8"));
+        OutputStream out;
+        File file = new File(sb2.toString());
+        try {
+            FileInputStream fis = new FileInputStream(file);
+            BufferedInputStream buff = new BufferedInputStream(fis);
+            byte[] b = new byte[1024];// 相当于我们的缓存
+            long k = 0;// 该值用于计算当前实际下载了多少字节
 
-        return result;
+            // 3.通过response获取OutputStream对象(out)
+            out = response.getOutputStream();
+            // 开始循环下载
+            while (k < file.length()) {
+                int j = buff.read(b, 0, 1024);
+                k += j;
+                out.write(b, 0, j);
+            }
+            buff.close();
+            fis.close();
+            out.close();
+            out.flush();
+            file.delete();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 }

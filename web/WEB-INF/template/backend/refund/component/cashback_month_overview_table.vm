@@ -11,7 +11,7 @@
     </div>
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <a type="button" class="btn btn-primary btn-success" href="">本月返现报表下载</a>
+            <a type="button" id="produce" class="btn btn-primary btn-success" href="${path.concat('/cashback/produce')}">本月返现报表下载</a>
         </div>
     </div>
     <br>
@@ -24,6 +24,7 @@
         </div>
     </div>
 </div>
+
 <script>
     $(document).ready(function () {
         $("#refund_record_month_table").DataTable({
@@ -96,4 +97,5 @@
             }
         });
     });
+    
 </script>
