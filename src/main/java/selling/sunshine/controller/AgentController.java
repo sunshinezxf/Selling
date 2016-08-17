@@ -2003,92 +2003,6 @@ public class AgentController {
         return view;
     }
     
-
-//    @RequestMapping(method = RequestMethod.POST, value = "/detail/{agentId}")
-//    @ResponseBody
-//    public ResultData detail(@PathVariable String agentId) {
-//        ResultData resultData = new ResultData();
-//        Map<String, Object> dataMap = new HashMap<>();
-//        ResultData queryData=new ResultData();
-//        //代理商个人信息
-//        Map<String, Object> condition = new HashMap<>();
-//        condition.put("agentId", agentId);
-//        queryData=agentService.fetchAgent(condition);
-//        if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
-//        	 Agent agent = ((List<Agent>) queryData.getData()).get(0);
-//        	 dataMap.put("agent", agent);
-//		}
-//        //代理商身份证照片
-//        queryData=agentService.fetchCredit(condition);
-//        if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
-//			Credit credit=((List<Credit>)queryData.getData()).get(0);
-//			 dataMap.put("credit", credit);
-//		}
-//        //代理商统计信息
-//        //累计销售信息
-//        queryData=statisticService.queryAgentGoods(condition);
-//        if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
-//        	List<Volume> volumeTotalList=(List<Volume>)queryData.getData();
-//        	dataMap.put("volumeTotalList", volumeTotalList);
-//		}
-//        //月销售信息
-//        condition.put("totalMonth", 1);
-//        queryData=statisticService.queryAgentGoods(condition);
-//        if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
-//        	List<Volume> volumeMonthList=(List<Volume>)queryData.getData();
-//        	dataMap.put("volumeMonthList", volumeMonthList);
-//		}
-//        //年销售信息
-//        condition.put("totalMonth", 12);
-//        queryData=statisticService.queryAgentGoods(condition);
-//        if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
-//        	List<Volume> volumeYearList=(List<Volume>)queryData.getData();
-//        	dataMap.put("volumeYearList", volumeYearList);
-//		}
-//        
-//        //排名
-//        condition.clear();
-//        condition.put("agentId", agentId);
-//        queryData=statisticService.agentRanking(condition);
-//        if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
-//        	int ranking=(int)queryData.getData();
-//        	dataMap.put("ranking", ranking);
-//		}
-//
-//
-//        //代理商返现信息
-//        List<CashBackRecord> refundRecordList = (List<CashBackRecord>) refundService.fetchRefundRecord(condition).getData();
-//        //代理商提现信息
-//        List<Integer> status = new ArrayList<Integer>();
-//        status.add(1);
-//        condition.put("status", status);
-//        List<WithdrawRecord> withdrawRecordList = (List<WithdrawRecord>) withdrawService.fetchWithdrawRecord(condition).getData();
-//        condition.clear();
-//        condition.put("agentId", agentId);
-//        condition.put("date", "3");
-//        //代理商订单信息
-//        List<Order> orderList = (List<Order>) orderService.fetchOrder(condition).getData();
-//
-//
-//       
-//        dataMap.put("orderList", orderList);
-//        dataMap.put("refundRecordList", refundRecordList);
-//        dataMap.put("withdrawRecordList", withdrawRecordList);
-//        resultData.setData(dataMap);
-//        return resultData;
-//    }
-
-//    @RequestMapping(method = RequestMethod.GET, value = "/subordinate/{agentId}")
-//    public ModelAndView subordinate(@PathVariable String agentId) {
-//
-//        ModelAndView view = new ModelAndView();
-//        view.setViewName("/backend/agent/subordinate");
-//        view.addObject("agentId", agentId);
-//
-//        return view;
-//
-//    }
-    
     @RequestMapping(method = RequestMethod.GET, value = "/subordinate/{agentId}")
     public JSONArray subordinate(@PathVariable String agentId) {
     	JSONArray data=new JSONArray();
@@ -2111,7 +2025,7 @@ public class AgentController {
        	
        	    if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
        	    	//下级代理商列表
-       	    	List<Agent> directAgentList = (List<Agent>)queryData.getData();       	    	      	    	
+       	    	List<Agent> directAgentList = (List<Agent>)queryData.getData();   
        	    	for(Agent agent3:directAgentList){   
            	    	JSONObject jsonObject2=new JSONObject();
            	    	jsonObject2.put("name", agent3.getName());
@@ -2136,7 +2050,7 @@ public class AgentController {
        	    	}       	    	
        	    }
        	  jsonObject.put("children", children);
-		}      
+		}   
         data.add(jsonObject);
     	return data;
     }
