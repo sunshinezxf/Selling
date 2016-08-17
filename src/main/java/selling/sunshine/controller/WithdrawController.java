@@ -225,9 +225,9 @@ public class WithdrawController {
         if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
         	WithdrawRecord record = ((List<WithdrawRecord>)queryResponse.getData()).get(0);
             createAt = record.getCreateAt();
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            view.addObject("start", format.format(createAt));
         }
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        view.addObject("start", format.format(createAt));
         view.setViewName("/backend/finance/withdraw");
         return view;
     }
