@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import selling.sunshine.dao.AgentDao;
 import selling.sunshine.dao.CashBackDao;
 import selling.sunshine.dao.RefundDao;
-import selling.sunshine.model.Agent;
+import selling.sunshine.model.cashback.CashBackLevel;
 import selling.sunshine.model.cashback.CashBackRecord;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.CashBackService;
@@ -24,7 +24,10 @@ import selling.sunshine.vo.cashback.CashBack4AgentPerMonth;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by sunshine on 8/12/16.
@@ -156,45 +159,74 @@ public class CashBackServiceImpl implements CashBackService {
         Row title = sheet.getRow(0);
         Cell agent = title.createCell(1);
         agent.setCellValue(cashback.getAgent().getName());
-        title = sheet.getRow(1);
-        Cell month = title.createCell(1);
+        Cell month = title.createCell(3);
         month.setCellValue(cashback.getMonth());
-        title = sheet.getRow(2);
-        Cell total = title.createCell(1);
+        Cell total = title.createCell(5);
         total.setCellValue(cashback.getAmount());
-        Row self = sheet.createRow(4);
-        Cell type = self.createCell(0);
-        type.setCellValue("自销");
-        Cell piece = self.createCell(1);
-        piece.setCellValue(cashback.getsPieces());
-        Cell amount = self.createCell(2);
-        amount.setCellValue(cashback.getSelf());
         Map<String, Object> condition = new HashMap<>();
-        condition.put("upperAgentId", cashback.getAgent().getAgentId());
-        ResultData response = agentDao.queryAgent(condition);
-        int row = 5;
-        if (response.getResponseCode() == ResponseCode.RESPONSE_OK && !((List) response.getData()).isEmpty()) {
-            List<String> list = new ArrayList<>();
-            for (Agent a : (List<Agent>) response.getData()) {
-                list.add(a.getAgentId());
+        int row = 2;
+        condition.put("agentId", cashback.getAgent().getAgentId());
+        condition.put("level", CashBackLevel.SELF.getCode());
+        ResultData response = refundDao.queryRefundRecord(condition);
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK && !((List<CashBackRecord>) response.getData()).isEmpty()) {
+            List<CashBackRecord> list = (List<CashBackRecord>) response.getData();
+            for (CashBackRecord record : list) {
+                Row r = sheet.createRow(row);
+                Cell type = r.createCell(0);
+                type.setCellValue("自销");
+                Cell name = r.createCell(1);
+                name.setCellValue(record.getOrderPool().getAgent().getName());
+                Cell goods = r.createCell(2);
+                goods.setCellValue(record.getOrderPool().getGoods().getName());
+                Cell quantity = r.createCell(3);
+                quantity.setCellValue(record.getOrderPool().getQuantity());
+                Cell percent = r.createCell(4);
+                percent.setCellValue(record.getPercent());
+                Cell amount = r.createCell(5);
+                amount.setCellValue(record.getAmount());
+                row++;
             }
-            condition.clear();
-            condition.put("agentIds", list);
-            response = refundDao.queryRefundRecord(condition);
-            if (response.getResponseCode() == ResponseCode.RESPONSE_OK && !((List<CashBackRecord>) response.getData()).isEmpty()) {
-                List<CashBackRecord> records = (List<CashBackRecord>) response.getData();
-                for (CashBackRecord record : records) {
-                    Row current = sheet.createRow(row);
-                    type = current.createCell(0);
-                    type.setCellValue("一级返现");
-                    agent = current.createCell(1);
-                    agent.setCellValue(record.getAgent().getName());
-                    piece = current.createCell(2);
-                    piece.setCellValue(record.getOrderPool().getQuantity());
-                    amount = current.createCell(3);
-                    amount.setCellValue(record.getAmount());
-                    row++;
-                }
+        }
+        condition.put("level", CashBackLevel.DIRECT.getCode());
+        response = refundDao.queryRefundRecord(condition);
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK && !((List<CashBackRecord>) response.getData()).isEmpty()) {
+            List<CashBackRecord> list = (List<CashBackRecord>) response.getData();
+            for (CashBackRecord record : list) {
+                Row r = sheet.createRow(row);
+                Cell type = r.createCell(0);
+                type.setCellValue("直接奖励");
+                Cell name = r.createCell(1);
+                name.setCellValue(record.getOrderPool().getAgent().getName());
+                Cell goods = r.createCell(2);
+                goods.setCellValue(record.getOrderPool().getGoods().getName());
+                Cell quantity = r.createCell(3);
+                quantity.setCellValue(record.getOrderPool().getQuantity());
+                Cell percent = r.createCell(4);
+                percent.setCellValue(record.getPercent());
+                Cell amount = r.createCell(5);
+                amount.setCellValue(record.getAmount());
+                row++;
+            }
+        }
+        condition.put("level", CashBackLevel.INDIRECT.getCode());
+        response = refundDao.queryRefundRecord(condition);
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK && !((List<CashBackRecord>) response.getData()).isEmpty()) {
+            List<CashBackRecord> list = (List<CashBackRecord>) response.getData();
+            for (CashBackRecord record : list) {
+                Row r = sheet.createRow(row);
+                Cell type = r.createCell(0);
+                type.setCellValue("间接奖励");
+                Cell name = r.createCell(1);
+                name.setCellValue(record.getOrderPool().getAgent().getName());
+                Cell goods = r.createCell(2);
+                goods.setCellValue(record.getOrderPool().getGoods().getName());
+                Cell quantity = r.createCell(3);
+                quantity.setCellValue(record.getOrderPool().getQuantity());
+                Cell percent = r.createCell(4);
+                percent.setCellValue(record.getPercent());
+                Cell amount = r.createCell(5);
+                amount.setCellValue(record.getAmount());
+                row++;
             }
         }
         String path = IndentServiceImpl.class.getResource("/").getPath();
