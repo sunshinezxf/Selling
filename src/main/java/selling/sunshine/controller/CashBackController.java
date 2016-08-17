@@ -95,6 +95,19 @@ public class CashBackController {
         }
         List<CashBackRecord> self = ((List<CashBackRecord>) response.getData());
         view.addObject("self", self);
+        condition.clear();
+        condition.put("upperAgentId", cashback.getAgent().getAgentId());
+        response = agentService.fetchAgent(condition);
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            List<Agent> list = (List<Agent>) response.getData();
+            List<String> upperAgentIds = new ArrayList<>();
+            for (Agent a : list) {
+                upperAgentIds.add(a.getAgentId());
+            }
+            condition.clear();
+            condition.put("agentIds", upperAgentIds);
+            condition.put("level", CashBackLevel.DIRECT.getCode());
+        }
         view.setViewName("/backend/refund/cashback_month_detail");
         return view;
     }
