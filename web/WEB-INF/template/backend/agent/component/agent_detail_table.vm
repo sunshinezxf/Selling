@@ -12,7 +12,7 @@
     <div class="row">
         <a type="button" class="btn btn-primary" href="${path.concat('/agent/overview')}">返回</a>
         <div class="rank">
-            <canvas id="rank" width="95px" height="95px"></canvas>
+            <canvas id="rank" width="93px" height="93px"></canvas>
         </div>
     </div>
     <div class="row personal_info">
@@ -136,15 +136,15 @@
         context.lineWidth=3;
         context.strokeStyle="#FFCC66";
         context.beginPath();
-        context.arc(width,height,40,0,Math.PI * 2);
+        context.arc(width,height,37,0,Math.PI * 2);
         context.stroke();
     
-        context.font="18px Arial";
+        context.font="17px Arial";
         context.textBaseLine="middle";
         context.textAlign="center";
         context.lineWidth=1;
         context.strokeStyle="#FFCC66";
-        context.strokeText("Top:"+topRate+"%",width,height+5);
+        context.strokeText("Top:"+topRate+"%",width,height+4);
     
         var wechat="${agent.wechat}";
         if(wechat&&wechat.slice(-1)!="}"){
