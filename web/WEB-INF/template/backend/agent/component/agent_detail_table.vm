@@ -101,7 +101,7 @@
                         #if(${agent.agentRefund}!=0)
                         <div>
                                                                                     累积返现：${agent.agentRefund}&nbsp;
-                            <a href="${path.concat('/')}">明细</a>
+                            ##<a href="${path.concat('/')}">明细</a>
                         </div>
                         #else
                         <div>
