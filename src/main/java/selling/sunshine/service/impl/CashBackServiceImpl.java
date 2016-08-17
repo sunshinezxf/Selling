@@ -128,11 +128,11 @@ public class CashBackServiceImpl implements CashBackService {
         Row r = sheet.getRow(1);
         Cell month = r.createCell(1);
         Calendar calendar = Calendar.getInstance();
-        Cell time = r.createCell(5);
+        Cell time = r.createCell(7);
         time.setCellValue(new SimpleDateFormat("yyyy-MM-dd").format(calendar.getTime()));
         calendar.add(Calendar.MONTH, -1);
         month.setCellValue(new SimpleDateFormat("yyyy-MM").format(calendar.getTime()));
-        Cell total = r.createCell(3);
+        Cell total = r.createCell(4);
         total.setCellValue(totalCashback);
         String name = IDGenerator.generate("Cashback");
         StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append("月度返现清单_").append(name).append(".xlsx");

@@ -147,9 +147,7 @@ public class CashBackController {
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/produce")
-    public String produce(HttpServletRequest request,
-                          HttpServletResponse response) throws UnsupportedEncodingException {
-
+    public String produce(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
 
         Map<String, Object> condition = new HashMap<>();
         ResultData result = cashBackService.fetchCashBackPerMonth(condition);
@@ -173,7 +171,7 @@ public class CashBackController {
         String parent = path.substring(0, index);
         String directory = "/material/journal/cashback";
 
-        List<String> pathList = new ArrayList<String>();
+        List<String> pathList = new ArrayList<>();
         StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(date.replaceAll("-", ""));
         pathList.add(sb.toString());
         pathList.add(summaryPath);
