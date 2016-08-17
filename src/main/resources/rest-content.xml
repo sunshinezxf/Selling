@@ -87,16 +87,32 @@
                 /logout = anon
                 /plugins/** = anon
                 /material/** = anon
-                /agent/register = anon
-                /agent/login = anon
-                /agent/prompt = anon
 
                 /account/** = anon
                 /account/info = anon
+                /account/charge/*/prompt = roles[agent]
+                /account/withdraw = roles[agent]
+                /account/deposit = roles[agent]
+                /admin/modify/* = roles[admin]
+                /admin/delete/* = roles[admin]
+                /admin/overview = roles[admin]
 
                 /agent/check = roles["admin, auditor"]
+                /agent/check/* = roles["admin, auditor"]
+                /agent/list/* = roles["admin, auditor"]
+                /agent/gift/* = roles[admin]
                 /agent/grant = roles["admin, auditor"]
+                /agent/login = anon
+                /agent/me = anon
+                /agent/modifypassword = roles[agent]
+                /agent/modifyscale = roles[agent]
+                /agent/order/modify/* = roles[agent]
+                /agent/order/place = roles[agent]
+                /agent/order/place/** = roles[agent]
                 /agent/overview = roles["admin, auditor"]
+                /agent/prompt = anon
+                /agent/register = anon
+                /agent/setUpperAgent/** = roles[admin]
 
                 /agent/** = anon
 
@@ -155,7 +171,7 @@
 
                 /withdraw/check = roles["admin, finance"]
                 /withdraw/overview = roles["admin, finance"]
-                
+
                 /withdraw/overviewreport = roles["admin, finance"]
 
                 /withdraw/inform = anon

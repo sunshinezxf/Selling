@@ -48,6 +48,16 @@ public class CashBackController {
     @RequestMapping(method = RequestMethod.GET, value = "/month")
     public ModelAndView monthly() {
         ModelAndView view = new ModelAndView();
+        Map<String, Object> condition = new HashMap<>();
+        ResultData response = cashBackService.fetchCashBackPerMonth(condition);
+        if (response.getData() == ResponseCode.RESPONSE_OK) {
+            double total = 0;
+            List<CashBack4AgentPerMonth> list = (List<CashBack4AgentPerMonth>) response.getData();
+            for (CashBack4AgentPerMonth item : list) {
+                total += item.getAmount();
+            }
+            view.addObject("total", total);
+        }
         view.setViewName("/backend/refund/refund_record_month");
         return view;
     }

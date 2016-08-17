@@ -1,7 +1,6 @@
 package selling.sunshine.controller;
 
 import com.alibaba.fastjson.JSONObject;
-
 import com.pingplusplus.model.Charge;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -56,8 +55,7 @@ public class AccountController {
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         if (user == null) {
-            WechatConfig.oauthWechat(view, "/agent/login");
-            view.setViewName("/agent/login");
+            view.setViewName("redirect:/agent/login");
             return view;
         }
         //获取agent的详细信息
@@ -65,7 +63,7 @@ public class AccountController {
         condition.put("agentId", user.getAgent().getAgentId());
         Agent target = ((List<Agent>) agentService.fetchAgent(condition).getData()).get(0);
         view.addObject("agent", target);
-        WechatConfig.oauthWechat(view, "/agent/account/info");
+        WechatConfig.oauthWechat(view, "/account/info");
         view.setViewName("/agent/account/info");
         return view;
     }
@@ -76,8 +74,7 @@ public class AccountController {
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         if (user == null) {
-            WechatConfig.oauthWechat(view, "/agent/login");
-            view.setViewName("/agent/login");
+            view.setViewName("redirect:/agent/login");
             return view;
         }
         Map<String, Object> condition = new HashMap<>();
@@ -108,8 +105,7 @@ public class AccountController {
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         if (user == null) {
-            WechatConfig.oauthWechat(view, "/agent/login");
-            view.setViewName("/agent/login");
+            view.setViewName("redirect:/agent/login");
             return view;
         }
         Map<String, Object> condition = new HashMap<>();
@@ -187,8 +183,7 @@ public class AccountController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/charge/{billId}/prompt")
-    public ModelAndView prompt(@PathVariable("billId") String billId,
-                               String result) {
+    public ModelAndView prompt(@PathVariable("billId") String billId, String result) {
         ModelAndView view = new ModelAndView();
         Prompt prompt;
         if (billId.startsWith("DPB")) {

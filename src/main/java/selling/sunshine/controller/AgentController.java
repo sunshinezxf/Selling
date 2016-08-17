@@ -1,4 +1,4 @@
-  package selling.sunshine.controller;
+package selling.sunshine.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -675,8 +675,7 @@ public class AgentController {
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         if (user == null || user.getAgent() == null) {
-            WechatConfig.oauthWechat(view, "/agent/login");
-            view.setViewName("/agent/login");
+            view.setViewName("redirect:/agent/login");
             return view;
         }
         view.addObject("agent", user.getAgent());
@@ -1825,26 +1824,6 @@ public class AgentController {
         return view;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/credit/{agentId}")
-    public ModelAndView credit(@PathVariable("agentId") String agentId) {
-        ModelAndView view = new ModelAndView();
-        if (StringUtils.isEmpty(agentId)) {
-            view.setViewName("redirect:/agent/overview");
-            return view;
-        }
-        Agent agent = new Agent();
-        agent.setAgentId(agentId);
-        agent.setGranted(false);
-        ResultData updateResponse = agentService.updateAgent(agent);
-        if (updateResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
-            view.setViewName("redirect:/agent/overview");
-            return view;
-        }
-        view.setViewName("redirect:/agent/overview");
-        return view;
-    }
-
-
     @RequestMapping(method = RequestMethod.GET, value = "/overview")
     public ModelAndView overview() {
         ModelAndView view = new ModelAndView();
@@ -1948,114 +1927,114 @@ public class AgentController {
         resultData.setData(dataMap);
         return resultData;
     }
-    
+
     @RequestMapping(method = RequestMethod.GET, value = "/detail/{agentId}")
     @ResponseBody
     public ModelAndView detail(@PathVariable String agentId) {
-    	ModelAndView view=new ModelAndView();
-    	view.setViewName("/backend/agent/detail");
-        ResultData queryData=new ResultData();
+        ModelAndView view = new ModelAndView();
+        view.setViewName("/backend/agent/detail");
+        ResultData queryData = new ResultData();
         //代理商个人信息
         Map<String, Object> condition = new HashMap<>();
         condition.put("agentId", agentId);
-        queryData=agentService.fetchAgent(condition);
-        if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
-        	 Agent agent = ((List<Agent>) queryData.getData()).get(0);
-        	 view.addObject("agent", agent);
-		}
-        
+        queryData = agentService.fetchAgent(condition);
+        if (queryData.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            Agent agent = ((List<Agent>) queryData.getData()).get(0);
+            view.addObject("agent", agent);
+        }
+
         //顾客人数
-        queryData=customerService.fetchCustomer(condition);
-        if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
-       	   int customerNum = ((List<Customer>) queryData.getData()).size();
-       	   view.addObject("customerNum", customerNum);
-		}else {
-		   view.addObject("customerNum", 0);
-		}
+        queryData = customerService.fetchCustomer(condition);
+        if (queryData.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            int customerNum = ((List<Customer>) queryData.getData()).size();
+            view.addObject("customerNum", customerNum);
+        } else {
+            view.addObject("customerNum", 0);
+        }
         //代理商身份证照片
-        queryData=agentService.fetchCredit(condition);
-        if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
-			Credit credit=((List<Credit>)queryData.getData()).get(0);
-			 view.addObject("credit", credit);
-		}
+        queryData = agentService.fetchCredit(condition);
+        if (queryData.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            Credit credit = ((List<Credit>) queryData.getData()).get(0);
+            view.addObject("credit", credit);
+        }
         //代理商统计信息
         //累计销售信息
-        queryData=statisticService.queryAgentGoods(condition);
-        if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
-        	List<VolumeTotal> volumeTotalList=(List<VolumeTotal>)queryData.getData();
-        	view.addObject("volumeTotalList", volumeTotalList);
-		}
+        queryData = statisticService.queryAgentGoods(condition);
+        if (queryData.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            List<VolumeTotal> volumeTotalList = (List<VolumeTotal>) queryData.getData();
+            view.addObject("volumeTotalList", volumeTotalList);
+        }
 
-        
+
         //排名
         condition.clear();
         condition.put("blockFlag", false);
         condition.put("granted", true);
-        queryData=agentService.fetchAgent(condition);
-        if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
-        	 int totalNum = ((List<Agent>) queryData.getData()).size();
-        	 view.addObject("totalNum", totalNum);
-		}
+        queryData = agentService.fetchAgent(condition);
+        if (queryData.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            int totalNum = ((List<Agent>) queryData.getData()).size();
+            view.addObject("totalNum", totalNum);
+        }
         condition.clear();
         condition.put("agentId", agentId);
-        queryData=statisticService.agentRanking(condition);
-        if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
-        	int ranking=(int)queryData.getData();
-        	view.addObject("ranking", ranking);
-		}
+        queryData = statisticService.agentRanking(condition);
+        if (queryData.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            int ranking = (int) queryData.getData();
+            view.addObject("ranking", ranking);
+        }
         return view;
     }
-    
+
     @RequestMapping(method = RequestMethod.GET, value = "/subordinate/{agentId}")
     public JSONArray subordinate(@PathVariable String agentId) {
-    	JSONArray data=new JSONArray();
-    	JSONObject jsonObject=new JSONObject();
-    	Map<String, Object> condition = new HashMap<>();
-    	condition.put("agentId", agentId);
-    	ResultData queryData=agentService.fetchAgent(condition);
-        if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
-        	//当前代理商
-       	    Agent agent = ((List<Agent>) queryData.getData()).get(0);  
-       	    jsonObject.put("name", agent.getName());
-       	    jsonObject.put("id", agent.getAgentId());
-       	    JSONArray children=new JSONArray();
-       	    //查询下级代理商
-       	    selling.sunshine.model.lite.Agent agent2 = new selling.sunshine.model.lite.Agent();
-       	    agent2.setAgentId(agentId);
-       	    condition.clear();
-       	    condition.put("upperAgent", agent2);
-       	    queryData=agentService.fetchAgent(condition);
-       	
-       	    if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
-       	    	//下级代理商列表
-       	    	List<Agent> directAgentList = (List<Agent>)queryData.getData();   
-       	    	for(Agent agent3:directAgentList){   
-           	    	JSONObject jsonObject2=new JSONObject();
-           	    	jsonObject2.put("name", agent3.getName());
-               	    jsonObject2.put("id", agent3.getAgentId());
-       	    	    agent2.setAgentId(agent3.getAgentId());
-       	    	    condition.put("upperAgent", agent2);
-       	    	    queryData=agentService.fetchAgent(condition);
-       	    	    JSONArray children2=new JSONArray();
-       	    	    if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
-       	    	        //下下级代理商列表
-       	    	    	List<Agent> indirectAgentList = (List<Agent>)queryData.getData();
-       	    	    	
-       	    	    	for(Agent agent4:indirectAgentList){   
-       	    	    		JSONObject jsonObject3=new JSONObject();
-       	    	    		jsonObject3.put("name", agent4.getName());
-       	               	    jsonObject3.put("id", agent4.getAgentId());
-       	               	    children2.add(jsonObject3);
-       	    	    	}
-       	    	        jsonObject2.put("children", children2);
-       	    	    }
-       	    	    children.add(jsonObject2);
-       	    	}       	    	
-       	    }
-       	  jsonObject.put("children", children);
-		}   
+        JSONArray data = new JSONArray();
+        JSONObject jsonObject = new JSONObject();
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("agentId", agentId);
+        ResultData queryData = agentService.fetchAgent(condition);
+        if (queryData.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            //当前代理商
+            Agent agent = ((List<Agent>) queryData.getData()).get(0);
+            jsonObject.put("name", agent.getName());
+            jsonObject.put("id", agent.getAgentId());
+            JSONArray children = new JSONArray();
+            //查询下级代理商
+            selling.sunshine.model.lite.Agent agent2 = new selling.sunshine.model.lite.Agent();
+            agent2.setAgentId(agentId);
+            condition.clear();
+            condition.put("upperAgent", agent2);
+            queryData = agentService.fetchAgent(condition);
+
+            if (queryData.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                //下级代理商列表
+                List<Agent> directAgentList = (List<Agent>) queryData.getData();
+                for (Agent agent3 : directAgentList) {
+                    JSONObject jsonObject2 = new JSONObject();
+                    jsonObject2.put("name", agent3.getName());
+                    jsonObject2.put("id", agent3.getAgentId());
+                    agent2.setAgentId(agent3.getAgentId());
+                    condition.put("upperAgent", agent2);
+                    queryData = agentService.fetchAgent(condition);
+                    JSONArray children2 = new JSONArray();
+                    if (queryData.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                        //下下级代理商列表
+                        List<Agent> indirectAgentList = (List<Agent>) queryData.getData();
+
+                        for (Agent agent4 : indirectAgentList) {
+                            JSONObject jsonObject3 = new JSONObject();
+                            jsonObject3.put("name", agent4.getName());
+                            jsonObject3.put("id", agent4.getAgentId());
+                            children2.add(jsonObject3);
+                        }
+                        jsonObject2.put("children", children2);
+                    }
+                    children.add(jsonObject2);
+                }
+            }
+            jsonObject.put("children", children);
+        }
         data.add(jsonObject);
-    	return data;
+        return data;
     }
 
 

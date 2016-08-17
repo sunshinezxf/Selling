@@ -201,7 +201,7 @@ CREATE TABLE IF NOT EXISTS `selling`.`charge` (
   DEFAULT CHARACTER SET = utf8;
 
 ##2016年8月5日更新
-CREATE VIEW volume_item(agent_id, goods_id, quantity, create_time)
+CREATE OR REPLACE VIEW volume_item(agent_id, goods_id, quantity, create_time)
 AS SELECT
      o.agent_id        AS agent_id,
      oi.goods_id       AS goods_id,
@@ -221,7 +221,7 @@ AS SELECT
          AND co.agent_id IS NOT NULL
    GROUP BY co.agent_id, co.goods_id;
 
-CREATE VIEW last_volume_view(agent_id, goods_id, quantity)
+CREATE OR REPLACE VIEW last_volume_view(agent_id, goods_id, quantity)
 AS
   SELECT
     agent_id,
@@ -230,7 +230,7 @@ AS
   FROM volume_item
   WHERE date_format(create_time, '%Y-%m') = date_format(date_sub(curdate(), INTERVAL 1 MONTH), '%Y-%m');
 
-CREATE VIEW total_volume_view(agent_id, goods_id, quantity)
+CREATE OR REPLACE VIEW total_volume_view(agent_id, goods_id, quantity)
 AS
   SELECT
     agent_id,
