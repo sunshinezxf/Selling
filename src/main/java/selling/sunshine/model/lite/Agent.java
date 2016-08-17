@@ -17,12 +17,12 @@ public class Agent {
         this.name = name;
         this.phone = phone;
     }
-    
+
     public Agent(selling.sunshine.model.Agent agent) {
-    	if(agent == null){
-    		return;
-    	}
-    	this.agentId=agent.getAgentId();
+        if (agent == null) {
+            return;
+        }
+        this.agentId = agent.getAgentId();
         this.name = agent.getName();
         this.phone = agent.getPhone();
     }

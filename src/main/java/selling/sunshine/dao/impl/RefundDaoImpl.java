@@ -133,7 +133,10 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
                         continue;
                     } else {
                         // 连续几个月都达到了返现标准，生成返现记录
-                        Agent agent = poolList.get(j).getAgent();
+                        selling.sunshine.model.lite.Agent agentLite = poolList.get(j).getAgent();
+                        condition.clear();
+                        condition.put("agentId", agentLite.getAgentId());
+                        Agent agent = sqlSession.selectOne("selling.agent.query", condition);
                         CashBackRecord refundRecord = new CashBackRecord();
                         refundRecord.setRecordId(IDGenerator.generate("RFR"));
                         if (agent.getUpperAgent() != null) {

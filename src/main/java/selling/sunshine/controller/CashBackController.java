@@ -1,5 +1,6 @@
 package selling.sunshine.controller;
 
+import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,25 +15,18 @@ import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.AgentService;
 import selling.sunshine.service.CashBackService;
 import selling.sunshine.service.RefundService;
-import selling.sunshine.utils.IDGenerator;
 import selling.sunshine.utils.ResponseCode;
 import selling.sunshine.utils.ResultData;
 import selling.sunshine.utils.ZipCompressor;
 import selling.sunshine.vo.cashback.CashBack4Agent;
 import selling.sunshine.vo.cashback.CashBack4AgentPerMonth;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * Created by sunshine on 8/12/16.
@@ -96,6 +90,7 @@ public class CashBackController {
         CashBack4AgentPerMonth cashback = ((List<CashBack4AgentPerMonth>) response.getData()).get(0);
         view.addObject("cashback", cashback);
         condition.clear();
+        //获取自销的返现记录详情
         condition.put("agentId", cashback.getAgent().getAgentId());
         condition.put("level", CashBackLevel.SELF.getCode());
         response = refundService.fetchRefundRecord(condition);
@@ -106,17 +101,23 @@ public class CashBackController {
         List<CashBackRecord> self = ((List<CashBackRecord>) response.getData());
         view.addObject("self", self);
         condition.clear();
-        condition.put("upperAgentId", cashback.getAgent().getAgentId());
-        response = agentService.fetchAgent(condition);
+        //获取所有的直接拓展代理的返现详情
+        condition.put("agentId", agentId);
+        condition.put("level", CashBackLevel.DIRECT.getCode());
+        response = refundService.fetchRefundRecord(condition);
         if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            List<Agent> list = (List<Agent>) response.getData();
-            List<String> upperAgentIds = new ArrayList<>();
-            for (Agent a : list) {
-                upperAgentIds.add(a.getAgentId());
-            }
-            condition.clear();
-            condition.put("agentIds", upperAgentIds);
-            condition.put("level", CashBackLevel.DIRECT.getCode());
+            List<CashBackRecord> direct = (List<CashBackRecord>) response.getData();
+            view.addObject("direct", direct);
+        }
+        condition.clear();
+        //获取所有的间接拓展代理的返现详情
+        condition.put("agentId", agentId);
+        condition.put("level", CashBackLevel.INDIRECT.getCode());
+        response = refundService.fetchRefundRecord(condition);
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            List<CashBackRecord> indirect = (List<CashBackRecord>) response.getData();
+            logger.debug("JSON CONTENT:" + JSON.toJSONString(indirect));
+            view.addObject("indirect", indirect);
         }
         view.setViewName("/backend/refund/cashback_month_detail");
         return view;
@@ -147,12 +148,12 @@ public class CashBackController {
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/produce")
     public String produce(HttpServletRequest request,
-            HttpServletResponse response) throws UnsupportedEncodingException {
-    	
-        
+                          HttpServletResponse response) throws UnsupportedEncodingException {
+
+
         Map<String, Object> condition = new HashMap<>();
         ResultData result = cashBackService.fetchCashBackPerMonth(condition);
-        if (result.getResponseCode() != ResponseCode.RESPONSE_OK) {          
+        if (result.getResponseCode() != ResponseCode.RESPONSE_OK) {
             return "";
         }
         List<CashBack4AgentPerMonth> list = (List<CashBack4AgentPerMonth>) result.getData();
@@ -180,14 +181,14 @@ public class CashBackController {
         StringBuffer sb2 = new StringBuffer(parent).append(directory).append("/").append(zipName + ".zip");
         ZipCompressor zipCompressor = new ZipCompressor(sb2.toString());
         zipCompressor.compress(pathList);
-        
-        File file1=new File(summaryPath);
+
+        File file1 = new File(summaryPath);
         file1.delete();
-        
-   	    // 1.设置文件ContentType类型，这样设置，会自动判断下载文件类型
+
+        // 1.设置文件ContentType类型，这样设置，会自动判断下载文件类型
         response.setContentType("multipart/form-data");
         // 2.设置文件头：最后一个参数是设置下载文件名
-        response.setHeader("Content-Disposition", "attachment;fileName=" + URLEncoder.encode( zipName+ ".zip", "utf-8"));
+        response.setHeader("Content-Disposition", "attachment;fileName=" + URLEncoder.encode(zipName + ".zip", "utf-8"));
         OutputStream out;
         File file = new File(sb2.toString());
         try {

@@ -34,6 +34,7 @@
         <result property="orderPoolId" column="pool_id"></result>
         <result property="poolDate" column="pool_date"></result>
         <result property="quantity" column="quantity"></result>
+        <association property="agent" column="agentId = agent_id" select="agentLiteQuery"></association>
         <association property="goods" column="goodsId = goods_id" select="goods4AgentQuery"></association>
     </resultMap>
 
@@ -80,7 +81,7 @@
 
 
     <select id="orderPoolQuery" parameterType="java.util.Map" resultMap="orderPoolVo">
-        SELECT pool_id, goods_id, quantity, pool_date
+        SELECT pool_id, agent_id, goods_id, quantity, pool_date
         FROM order_pool
         WHERE 1 = 1
         <if test="orderPoolId != null and orderPoolId != ''">
@@ -109,6 +110,9 @@
         </if>
         <if test="blockFlag != null">
             AND block_flag = #{blockFlag}
+        </if>
+        <if test="level != null">
+            AND refund_level = #{level}
         </if>
         <if test="createAt !=null and createAt != ''">
             AND create_time LIKE #{createAt}

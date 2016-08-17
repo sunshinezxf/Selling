@@ -51,58 +51,66 @@
                     </div>
                 </div>
             #end
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="col-xs-6 col-sm-6 col-md-6 col-lg-6">返现来源：直接代理</h4>
-                    <h4>返现金额：${cashback.direct}元</h4>
-                </div>
-                <div class="panel-body">
-                    <div class="table-responsive">
-                        <table class="table">
-                            <tr>
-                                <th class="col-xs-3 col-sm-3 col-md-3 col-lg-3">商品名</th>
-                                <th class="col-xs-2 col-sm-2 col-md-2 col-lg-2">代理商</th>
-                                <th class="col-xs-2 col-sm-2 col-md-2 col-lg-2">销量(盒)</th>
-                                <th class="col-xs-3 col-sm-3 col-md-3 col-lg-3">返现比例(元/盒)</th>
-                                <th class="col-xs-2 col-sm-2 col-md-2 col-lg-2">返现金额(元)</th>
-                            </tr>
-                            <tr>
-                                <td rowspan="1">三七粉</td>
-                                <td>刘嘉</td>
-                                <td>10</td>
-                                <td>20(元/盒)</td>
-                                <td>200(元)</td>
-                            </tr>
-                        </table>
+            #if(${direct})
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="col-xs-6 col-sm-6 col-md-6 col-lg-6">返现来源：直接代理</h4>
+                        <h4>返现金额：${cashback.direct}元</h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <tr>
+                                    <th class="col-xs-3 col-sm-3 col-md-3 col-lg-3">商品名</th>
+                                    <th class="col-xs-2 col-sm-2 col-md-2 col-lg-2">代理商</th>
+                                    <th class="col-xs-2 col-sm-2 col-md-2 col-lg-2">销量(盒)</th>
+                                    <th class="col-xs-3 col-sm-3 col-md-3 col-lg-3">返现比例(元/盒)</th>
+                                    <th class="col-xs-2 col-sm-2 col-md-2 col-lg-2">返现金额(元)</th>
+                                </tr>
+                                #foreach($item in ${direct})
+                                    <tr>
+                                        <td>${item.orderPool.goods.name}</td>
+                                        <td>${item.orderPool.agent.name}</td>
+                                        <td>${item.orderPool.quantity}</td>
+                                        <td>${item.percent}(元/盒)</td>
+                                        <td>${item.amount}(元)</td>
+                                    </tr>
+                                #end
+                            </table>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="col-xs-6 col-sm-6 col-md-6 col-lg-6">返现来源：间接代理</h4>
-                    <h4>返现金额：${cashback.indirect}元</h4>
-                </div>
-                <div class="panel-body">
-                    <div class="table-responsive">
-                        <table class="table">
-                            <tr>
-                                <th class="col-xs-3 col-sm-3 col-md-3 col-lg-3">商品名</th>
-                                <th class="col-xs-2 col-sm-2 col-md-2 col-lg-2">代理商</th>
-                                <th class="col-xs-2 col-sm-2 col-md-2 col-lg-2">销量(盒)</th>
-                                <th class="col-xs-2 col-sm-3 col-md-3 col-lg-3">返现比例(元/盒)</th>
-                                <th class="col-xs-2 col-sm-2 col-md-2 col-lg-2">返现金额(元)</th>
-                            </tr>
-                            <tr>
-                                <td rowspan="1">三七粉</td>
-                                <td>陈振宇</td>
-                                <td>10</td>
-                                <td>10(元/盒)</td>
-                                <td>100(元)</td>
-                            </tr>
-                        </table>
+            #end
+            #if(${indirect})
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="col-xs-6 col-sm-6 col-md-6 col-lg-6">返现来源：间接代理</h4>
+                        <h4>返现金额：${cashback.indirect}元</h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <tr>
+                                    <th class="col-xs-3 col-sm-3 col-md-3 col-lg-3">商品名</th>
+                                    <th class="col-xs-2 col-sm-2 col-md-2 col-lg-2">代理商</th>
+                                    <th class="col-xs-2 col-sm-2 col-md-2 col-lg-2">销量(盒)</th>
+                                    <th class="col-xs-2 col-sm-3 col-md-3 col-lg-3">返现比例(元/盒)</th>
+                                    <th class="col-xs-2 col-sm-2 col-md-2 col-lg-2">返现金额(元)</th>
+                                </tr>
+                                #foreach($item in ${indirect})
+                                    <tr>
+                                        <td>${item.orderPool.goods.name}</td>
+                                        <td>${item.orderPool.agent.name}</td>
+                                        <td>${item.orderPool.quantity}</td>
+                                        <td>${item.percent}(元/盒)</td>
+                                        <td>${item.amount}(元)</td>
+                                    </tr>
+                                #end
+                            </table>
+                        </div>
                     </div>
                 </div>
-            </div>
+            #end
         </div>
     </div>
 </div>
