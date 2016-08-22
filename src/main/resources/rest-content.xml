@@ -107,8 +107,7 @@
                 /agent/modifypassword = roles[agent]
                 /agent/modifyscale = roles[agent]
                 /agent/order/modify/* = roles[agent]
-                /agent/order/place = roles[agent]
-                /agent/order/place/** = roles[agent]
+                /agent/order/place = anon
                 /agent/overview = roles["admin, auditor"]
                 /agent/prompt = anon
                 /agent/register = anon
