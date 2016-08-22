@@ -354,7 +354,7 @@ public class IndentServiceImpl implements IndentService {
                     Map<String, Object> condition = new HashMap<>();
                     condition.put("orderId", customerOrder.getOrderId());
                     ResultData queryData = expressDao.queryExpress4Customer(condition);
-                    if (queryData.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                    if (queryData.getResponseCode() == ResponseCode.RESPONSE_OK && !((List)queryData.getData()).isEmpty()) {
                         Express4Customer express = ((List<Express4Customer>) queryData.getData()).get(0);
                         row.createCell((short) 10).setCellValue(new SimpleDateFormat("yyyy-MM-dd").format(express.getCreateAt()));
                         row.createCell((short) 11).setCellValue(express.getExpressNumber());
