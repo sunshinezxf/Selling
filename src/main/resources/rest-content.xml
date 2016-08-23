@@ -137,6 +137,11 @@
 
                 /deliver/** = roles["admin, finance"]
 
+                /event/create = roles[admin]
+                /event/overview = roles[admin]
+                /event/* = roles[admin]
+                /event/*/ = anon
+
                 /gather/** = roles["admin, finance"]
 
                 /gift/apply = roles[agent]

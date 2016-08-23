@@ -5,11 +5,10 @@ import common.sunshine.model.Entity;
 import java.util.Calendar;
 
 /**
- * 赠送活动
  * 活动默认从当前时间开始,默认持续时间为7天
  * Created by sunshine on 8/23/16.
  */
-public class Event extends Entity {
+public abstract class Event extends Entity {
     private final int DURATION = 7;
 
     private String eventId;
@@ -24,6 +23,16 @@ public class Event extends Entity {
         this.start = Calendar.getInstance();
         this.end = Calendar.getInstance();
         this.end.add(Calendar.DATE, DURATION);
+    }
+
+    public Event(Calendar start, Calendar end) {
+        this.start = start;
+        this.end = end;
+    }
+
+    public Event(String title, Calendar start, Calendar end) {
+        this(start, end);
+        this.title = title;
     }
 
     public String getEventId() {
