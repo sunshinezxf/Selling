@@ -1,6 +1,6 @@
 package selling.sunshine.dao;
 
-import selling.sunshine.model.Role;
+import common.sunshine.model.selling.user.Role;
 import common.sunshine.utils.ResultData;
 
 import java.util.Map;

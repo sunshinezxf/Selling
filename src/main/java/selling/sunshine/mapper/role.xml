@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="selling.role">
-    <resultMap id="roleVo" type="selling.sunshine.model.Role">
+    <resultMap id="roleVo" type="common.sunshine.model.selling.user.Role">
         <result property="roleId" column="role_id"></result>
         <result property="name" column="role_name"></result>
         <result property="description" column="role_description"></result>
@@ -10,7 +10,7 @@
     </resultMap>
 
     <!-- insert record in table role -->
-    <insert id="insert" parameterType="selling.sunshine.model.Role" useGeneratedKeys="false">
+    <insert id="insert" parameterType="common.sunshine.model.selling.user.Role" useGeneratedKeys="false">
         INSERT INTO role(role_id, role_name, role_description, block_flag, create_time)
         VALUES (#{roleId}, #{name}, #{description}, #{blockFlag}, #{createAt})
     </insert>

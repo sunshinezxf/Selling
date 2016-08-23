@@ -1,8 +1,9 @@
 package selling.sunshine.model.gift;
 
-import selling.sunshine.model.Entity;
-import selling.sunshine.model.goods.Goods4Agent;
-import selling.sunshine.model.lite.Agent;
+import common.sunshine.model.Entity;
+import common.sunshine.model.selling.agent.lite.Agent;
+import selling.sunshine.model.gift.support.GiftApplyStatus;
+import common.sunshine.model.selling.goods.Goods4Agent;
 
 /**
  * Created by sunshine on 8/5/16.

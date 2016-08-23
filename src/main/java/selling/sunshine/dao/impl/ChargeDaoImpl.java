@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import common.sunshine.dao.BaseDao;
 import selling.sunshine.dao.ChargeDao;
-import selling.sunshine.model.Charge;
+import common.sunshine.model.selling.charge.Charge;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
 

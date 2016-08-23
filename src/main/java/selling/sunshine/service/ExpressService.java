@@ -1,7 +1,7 @@
 package selling.sunshine.service;
 
-import selling.sunshine.model.express.Express4Agent;
-import selling.sunshine.model.express.Express4Customer;
+import common.sunshine.model.selling.express.Express4Agent;
+import common.sunshine.model.selling.express.Express4Customer;
 import common.sunshine.utils.ResultData;
 
 import java.util.Map;

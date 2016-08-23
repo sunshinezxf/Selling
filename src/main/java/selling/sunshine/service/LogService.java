@@ -3,7 +3,7 @@ package selling.sunshine.service;
 import java.util.Map;
 
 import selling.sunshine.model.BackOperationLog;
-import selling.sunshine.pagination.MobilePageParam;
+import common.sunshine.pagination.MobilePageParam;
 import common.sunshine.utils.ResultData;
 
 public interface LogService {

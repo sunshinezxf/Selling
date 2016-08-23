@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="selling.user">
-    <resultMap id="roleVo" type="selling.sunshine.model.Role">
+    <resultMap id="roleVo" type="common.sunshine.model.selling.user.Role">
         <result property="roleId" column="role_id"></result>
         <result property="name" column="role_name"></result>
         <result property="description" column="role_description"></result>
@@ -9,19 +9,19 @@
         <result property="createAt" column="create_time"></result>
     </resultMap>
 
-    <resultMap id="adminVo" type="selling.sunshine.model.Admin">
+    <resultMap id="adminVo" type="common.sunshine.model.selling.admin.Admin">
         <result property="adminId" column="manager_id"></result>
         <result property="username" column="manager_username"></result>
         <result property="password" column="manager_password"></result>
     </resultMap>
 
-    <resultMap id="agentLiteVo" type="selling.sunshine.model.lite.Agent">
+    <resultMap id="agentLiteVo" type="common.sunshine.model.selling.agent.lite.Agent">
         <result property="agentId" column="agent_id"></result>
         <result property="name" column="agent_name"></result>
         <result property="phone" column="agent_phone"></result>
     </resultMap>
 
-    <resultMap id="userVo" type="selling.sunshine.model.User">
+    <resultMap id="userVo" type="common.sunshine.model.selling.user.User">
         <result property="userId" column="user_id"></result>
         <result property="username" column="username"></result>
         <result property="password" column="password"></result>
@@ -33,7 +33,7 @@
     </resultMap>
 
     <!-- insert user record in table user -->
-    <insert id="insert" parameterType="selling.sunshine.model.User"
+    <insert id="insert" parameterType="common.sunshine.model.selling.user.User"
             useGeneratedKeys="false">
         INSERT INTO user
         <set>
@@ -52,7 +52,7 @@
         </set>
     </insert>
 
-    <update id="update" parameterType="selling.sunshine.model.User">
+    <update id="update" parameterType="common.sunshine.model.selling.user.User">
         UPDATE user
         <set>
             password = #{password}
@@ -109,7 +109,7 @@
 		WHERE agent_id = #{agentId}
 	</select>
 
-    <delete id="delete" parameterType="selling.sunshine.model.User">
+    <delete id="delete" parameterType="common.sunshine.model.selling.user.User">
         DELETE FROM user
         WHERE 1=1
         <if test="userId != null and userId != ''">

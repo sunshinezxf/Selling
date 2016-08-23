@@ -7,10 +7,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import common.sunshine.dao.BaseDao;
 import selling.sunshine.dao.GiftApplyDao;
-import selling.sunshine.model.Agent;
+import common.sunshine.model.selling.agent.Agent;
 import selling.sunshine.model.gift.GiftApply;
-import selling.sunshine.pagination.DataTablePage;
-import selling.sunshine.pagination.DataTableParam;
+import common.sunshine.pagination.DataTablePage;
+import common.sunshine.pagination.DataTableParam;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
 

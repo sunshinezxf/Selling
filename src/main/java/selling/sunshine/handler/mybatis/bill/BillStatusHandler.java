@@ -2,7 +2,7 @@ package selling.sunshine.handler.mybatis.bill;
 
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
-import selling.sunshine.model.BillStatus;
+import common.sunshine.model.selling.bill.support.BillStatus;
 
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;

@@ -2,9 +2,9 @@ package selling.sunshine.service;
 
 import org.springframework.stereotype.Service;
 
-import selling.sunshine.model.goods.Goods4Customer;
-import selling.sunshine.model.goods.Thumbnail;
-import selling.sunshine.pagination.DataTableParam;
+import common.sunshine.model.selling.goods.Goods4Customer;
+import common.sunshine.model.selling.goods.Thumbnail;
+import common.sunshine.pagination.DataTableParam;
 import common.sunshine.utils.ResultData;
 
 import java.util.List;

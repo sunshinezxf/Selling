@@ -12,7 +12,7 @@ import selling.sunshine.model.sum.OrderMonth;
 import selling.sunshine.model.sum.Sum4Order;
 import selling.sunshine.model.sum.Vendition;
 import selling.sunshine.model.sum.Volume;
-import selling.sunshine.pagination.DataTableParam;
+import common.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.StatisticService;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;

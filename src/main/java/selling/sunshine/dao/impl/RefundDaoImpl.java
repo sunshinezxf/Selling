@@ -9,15 +9,15 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import common.sunshine.dao.BaseDao;
 import selling.sunshine.dao.RefundDao;
-import selling.sunshine.model.Agent;
+import common.sunshine.model.selling.agent.Agent;
 import selling.sunshine.model.OrderPool;
 import selling.sunshine.model.RefundConfig;
-import selling.sunshine.model.cashback.CashBackLevel;
+import selling.sunshine.model.cashback.support.CashBackLevel;
 import selling.sunshine.model.cashback.CashBackRecord;
-import selling.sunshine.model.goods.Goods4Agent;
+import common.sunshine.model.selling.goods.Goods4Agent;
 import selling.sunshine.model.sum.TotalQuantityAll;
-import selling.sunshine.pagination.DataTablePage;
-import selling.sunshine.pagination.DataTableParam;
+import common.sunshine.pagination.DataTablePage;
+import common.sunshine.pagination.DataTableParam;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
 
@@ -133,7 +133,7 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
                         continue;
                     } else {
                         // 连续几个月都达到了返现标准，生成返现记录
-                        selling.sunshine.model.lite.Agent agentLite = poolList.get(j).getAgent();
+                        common.sunshine.model.selling.agent.lite.Agent agentLite = poolList.get(j).getAgent();
                         condition.clear();
                         condition.put("agentId", agentLite.getAgentId());
                         Agent agent = sqlSession.selectOne("selling.agent.query", condition);
@@ -172,7 +172,7 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
                                                 poolList.get(j).getQuantity() * refundConfig.getLevel3Percent());
                                         refundRecordLevel3.setPercent(refundConfig.getLevel3Percent());
                                         refundRecordLevel3.setOrderPool(poolList.get(j));
-                                        refundRecordLevel3.setAgent(new selling.sunshine.model.lite.Agent(agentLevel3));
+                                        refundRecordLevel3.setAgent(new common.sunshine.model.selling.agent.lite.Agent(agentLevel3));
                                         refundRecordLevel3
                                                 .setTitle(time + "社群拓展奖励账单");
                                         refundRecordLevel3.setDescription("代理商" + agentLevel3.getName() + "与代理商"
@@ -218,7 +218,7 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
                             }
                             refundRecordLevel2.setOrderPool(poolList.get(j));
                             refundRecordLevel2.setTitle(time + "社群拓展奖励账单");
-                            refundRecordLevel2.setAgent(new selling.sunshine.model.lite.Agent(agentLevel2));
+                            refundRecordLevel2.setAgent(new common.sunshine.model.selling.agent.lite.Agent(agentLevel2));
                             refundRecordLevel2.setLevel(CashBackLevel.DIRECT);
                             refundRecordLevel2.setBlockFlag(false);
                             if (!blockFlag) {
@@ -234,7 +234,7 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
                         }
                         refundRecord.setOrderPool(poolList.get(j));
                         refundRecord.setTitle(time + "日" + "返现账单");
-                        refundRecord.setAgent(new selling.sunshine.model.lite.Agent(agent));
+                        refundRecord.setAgent(new common.sunshine.model.selling.agent.lite.Agent(agent));
                         refundRecord.setLevel(CashBackLevel.SELF);
                         refundRecord.setBlockFlag(false);
                         sqlSession.insert("selling.refund.record.insert", refundRecord);

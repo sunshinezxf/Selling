@@ -1,8 +1,9 @@
 package selling.sunshine.model.cashback;
 
-import selling.sunshine.model.Entity;
+import common.sunshine.model.Entity;
+import common.sunshine.model.selling.agent.lite.Agent;
 import selling.sunshine.model.OrderPool;
-import selling.sunshine.model.lite.Agent;
+import selling.sunshine.model.cashback.support.CashBackLevel;
 
 /**
  * Created by sunshine on 8/10/16.

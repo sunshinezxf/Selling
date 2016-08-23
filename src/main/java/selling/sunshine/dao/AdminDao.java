@@ -1,8 +1,8 @@
 package selling.sunshine.dao;
 
-import selling.sunshine.model.Admin;
-import selling.sunshine.model.Role;
-import selling.sunshine.pagination.DataTableParam;
+import common.sunshine.model.selling.admin.Admin;
+import common.sunshine.model.selling.user.Role;
+import common.sunshine.pagination.DataTableParam;
 import common.sunshine.utils.ResultData;
 
 import java.util.Map;

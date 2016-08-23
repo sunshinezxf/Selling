@@ -8,10 +8,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import common.sunshine.dao.BaseDao;
 import selling.sunshine.dao.BillDao;
-import selling.sunshine.model.BillStatus;
-import selling.sunshine.model.CustomerOrderBill;
-import selling.sunshine.model.DepositBill;
-import selling.sunshine.model.OrderBill;
+import common.sunshine.model.selling.bill.support.BillStatus;
+import common.sunshine.model.selling.bill.CustomerOrderBill;
+import common.sunshine.model.selling.bill.DepositBill;
+import common.sunshine.model.selling.bill.OrderBill;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
 

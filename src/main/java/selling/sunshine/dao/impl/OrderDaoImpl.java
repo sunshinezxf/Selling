@@ -1,5 +1,6 @@
 package selling.sunshine.dao.impl;
 
+import common.sunshine.model.selling.agent.lite.Agent;
 import common.sunshine.utils.IDGenerator;
 import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
@@ -8,15 +9,15 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import common.sunshine.dao.BaseDao;
 import selling.sunshine.dao.OrderDao;
-import selling.sunshine.model.Order;
-import selling.sunshine.model.OrderItem;
+import common.sunshine.model.selling.order.Order;
+import common.sunshine.model.selling.order.OrderItem;
 import selling.sunshine.model.OrderPool;
 import selling.sunshine.model.RefundConfig;
-import selling.sunshine.model.goods.Goods4Agent;
-import selling.sunshine.pagination.DataTablePage;
-import selling.sunshine.pagination.DataTableParam;
-import selling.sunshine.pagination.MobilePage;
-import selling.sunshine.pagination.MobilePageParam;
+import common.sunshine.model.selling.goods.Goods4Agent;
+import common.sunshine.pagination.DataTablePage;
+import common.sunshine.pagination.DataTableParam;
+import common.sunshine.pagination.MobilePage;
+import common.sunshine.pagination.MobilePageParam;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
 
@@ -290,7 +291,7 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
                             .toString()));
                     pool.setQuantity(Integer.parseInt(resultList.get(i).get("quantity").toString()));
                     pool.setPoolDate(new Date(c.getTimeInMillis()));
-                    selling.sunshine.model.lite.Agent agent = new selling.sunshine.model.lite.Agent();
+                    Agent agent = new Agent();
                     agent.setAgentId((String) resultList.get(i).get("agent"));
                     pool.setAgent(agent);
                     Goods4Agent goods = new Goods4Agent();

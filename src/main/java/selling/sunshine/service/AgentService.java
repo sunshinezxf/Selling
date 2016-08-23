@@ -1,12 +1,12 @@
 package selling.sunshine.service;
 
-import selling.sunshine.model.Agent;
+import common.sunshine.model.selling.agent.Agent;
 import selling.sunshine.model.BankCard;
-import selling.sunshine.model.Credit;
+import common.sunshine.model.selling.agent.Credit;
 import selling.sunshine.model.WithdrawRecord;
 import selling.sunshine.model.gift.GiftApply;
 import selling.sunshine.model.gift.GiftConfig;
-import selling.sunshine.pagination.DataTableParam;
+import common.sunshine.pagination.DataTableParam;
 import common.sunshine.utils.ResultData;
 
 import java.util.List;

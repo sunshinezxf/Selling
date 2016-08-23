@@ -1,5 +1,11 @@
 package selling.sunshine.service.impl;
 
+import common.sunshine.model.selling.customer.Customer;
+import common.sunshine.model.selling.order.CustomerOrder;
+import common.sunshine.model.selling.order.Order;
+import common.sunshine.model.selling.order.OrderItem;
+import common.sunshine.model.selling.order.support.OrderItemStatus;
+import common.sunshine.model.selling.order.support.OrderType;
 import common.sunshine.utils.IDGenerator;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.*;
@@ -10,9 +16,8 @@ import org.springframework.stereotype.Service;
 import selling.sunshine.dao.CustomerDao;
 import selling.sunshine.dao.ExpressDao;
 import selling.sunshine.dao.OrderDao;
-import selling.sunshine.model.*;
-import selling.sunshine.model.express.Express4Agent;
-import selling.sunshine.model.express.Express4Customer;
+import common.sunshine.model.selling.express.Express4Agent;
+import common.sunshine.model.selling.express.Express4Customer;
 import selling.sunshine.service.IndentService;
 import selling.sunshine.utils.PlatformConfig;
 import common.sunshine.utils.ResponseCode;

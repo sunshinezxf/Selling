@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import selling.sunshine.dao.CustomerDao;
-import selling.sunshine.model.Customer;
-import selling.sunshine.model.CustomerPhone;
-import selling.sunshine.pagination.DataTableParam;
+import common.sunshine.model.selling.customer.Customer;
+import common.sunshine.model.selling.customer.CustomerPhone;
+import common.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.CustomerService;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;

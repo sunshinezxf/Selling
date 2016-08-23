@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import selling.sunshine.dao.BackOperationLogDao;
 import selling.sunshine.model.BackOperationLog;
-import selling.sunshine.pagination.MobilePageParam;
+import common.sunshine.pagination.MobilePageParam;
 import selling.sunshine.service.LogService;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;

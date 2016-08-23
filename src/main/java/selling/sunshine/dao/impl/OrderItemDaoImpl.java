@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import common.sunshine.dao.BaseDao;
 import selling.sunshine.dao.OrderItemDao;
-import selling.sunshine.model.OrderItem;
+import common.sunshine.model.selling.order.OrderItem;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
 

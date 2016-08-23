@@ -24,7 +24,7 @@
         <association property="agent" column="agentId = agent_id" select="agentLiteQuery"></association>
     </resultMap>
 
-    <resultMap id="agentLiteVo" type="selling.sunshine.model.lite.Agent">
+    <resultMap id="agentLiteVo" type="common.sunshine.model.selling.agent.lite.Agent">
         <result property="agentId" column="agent_id"></result>
         <result property="name" column="agent_name"></result>
         <result property="phone" column="agent_phone"></result>

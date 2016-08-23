@@ -1,12 +1,18 @@
 package selling.sunshine.service.impl;
 
+import common.sunshine.model.selling.bill.CustomerOrderBill;
+import common.sunshine.model.selling.bill.DepositBill;
+import common.sunshine.model.selling.bill.OrderBill;
+import common.sunshine.model.selling.order.CustomerOrder;
+import common.sunshine.model.selling.order.Order;
+import common.sunshine.model.selling.order.OrderItem;
 import common.sunshine.utils.IDGenerator;
 import org.apache.poi.ss.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import selling.sunshine.dao.*;
-import selling.sunshine.model.*;
+import common.sunshine.model.selling.agent.Agent;
 import selling.sunshine.service.GatherService;
 import selling.sunshine.utils.PlatformConfig;
 import common.sunshine.utils.ResponseCode;
@@ -140,7 +146,7 @@ public class GatherServiceImpl implements GatherService {
         return result;
     }
 
-    private Workbook produce(Workbook template, selling.sunshine.model.lite.Agent agent, OrderBill bill) {
+    private Workbook produce(Workbook template, common.sunshine.model.selling.agent.lite.Agent agent, OrderBill bill) {
         Sheet sheet = template.getSheetAt(0);
         Row time = sheet.getRow(1);
         Cell receiverTime = time.getCell(2);
@@ -241,7 +247,7 @@ public class GatherServiceImpl implements GatherService {
     }
 
     private Workbook produce(Workbook template, DepositBill bill) {
-        selling.sunshine.model.lite.Agent agent = bill.getAgent();
+        common.sunshine.model.selling.agent.lite.Agent agent = bill.getAgent();
         Sheet sheet = template.getSheetAt(0);
         Row time = sheet.getRow(1);
         Cell receiverTime = time.getCell(2);

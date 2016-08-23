@@ -1,6 +1,6 @@
 package selling.sunshine.dao;
 
-import selling.sunshine.pagination.DataTableParam;
+import common.sunshine.pagination.DataTableParam;
 import common.sunshine.utils.ResultData;
 
 import java.util.Map;

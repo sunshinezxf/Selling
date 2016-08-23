@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
-import selling.sunshine.model.Agent;
+import common.sunshine.model.selling.agent.Agent;
 import selling.sunshine.service.AgentService;
 import selling.sunshine.service.MessageService;
 import common.sunshine.utils.ResponseCode;

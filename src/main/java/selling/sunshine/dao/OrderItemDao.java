@@ -1,6 +1,6 @@
 package selling.sunshine.dao;
 
-import selling.sunshine.model.OrderItem;
+import common.sunshine.model.selling.order.OrderItem;
 import common.sunshine.utils.ResultData;
 
 import java.util.List;

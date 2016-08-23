@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import common.sunshine.dao.BaseDao;
 import selling.sunshine.dao.RoleDao;
-import selling.sunshine.model.Role;
+import common.sunshine.model.selling.user.Role;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
 

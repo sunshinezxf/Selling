@@ -3,6 +3,17 @@ package selling.sunshine.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import common.sunshine.model.selling.admin.Admin;
+import common.sunshine.model.selling.agent.Credit;
+import common.sunshine.model.selling.customer.Customer;
+import common.sunshine.model.selling.customer.CustomerPhone;
+import common.sunshine.model.selling.order.CustomerOrder;
+import common.sunshine.model.selling.order.Order;
+import common.sunshine.model.selling.order.OrderItem;
+import common.sunshine.model.selling.order.support.OrderItemStatus;
+import common.sunshine.model.selling.order.support.OrderStatus;
+import common.sunshine.model.selling.order.support.OrderType;
+import common.sunshine.model.selling.user.User;
 import common.sunshine.utils.Encryption;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
@@ -20,14 +31,15 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import selling.sunshine.form.*;
 import selling.sunshine.model.*;
+import common.sunshine.model.selling.agent.Agent;
 import selling.sunshine.model.cashback.CashBackRecord;
 import selling.sunshine.model.gift.GiftConfig;
-import selling.sunshine.model.goods.Goods4Agent;
+import common.sunshine.model.selling.goods.Goods4Agent;
 import selling.sunshine.model.sum.TotalQuantityAll;
 import selling.sunshine.model.sum.Volume;
 import selling.sunshine.model.sum.VolumeTotal;
-import selling.sunshine.pagination.DataTablePage;
-import selling.sunshine.pagination.DataTableParam;
+import common.sunshine.pagination.DataTablePage;
+import common.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.*;
 import selling.sunshine.utils.*;
 
@@ -467,7 +479,7 @@ public class AgentController {
             return view;
         }
         Map<String, Object> condition = new HashMap<String, Object>();
-        selling.sunshine.model.lite.Agent agentlite = new selling.sunshine.model.lite.Agent();
+        common.sunshine.model.selling.agent.lite.Agent agentlite = new common.sunshine.model.selling.agent.lite.Agent();
         agentlite.setAgentId(user.getAgent().getAgentId());
         condition.put("upperAgent", agentlite);
         ResultData fetchAgentsResponse = agentService.fetchAgent(condition);
@@ -597,7 +609,7 @@ public class AgentController {
                 condition.put("blockFlag", false);
                 ResultData agentResponse = agentService.fetchAgent(condition);
                 if (agentResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-                    agent.setUpperAgent(new selling.sunshine.model.lite.Agent(((List<Agent>) agentResponse.getData()).get(0)));
+                    agent.setUpperAgent(new common.sunshine.model.selling.agent.lite.Agent(((List<Agent>) agentResponse.getData()).get(0)));
                 }
             }
             if (agent.getUpperAgent() == null) {
@@ -636,7 +648,7 @@ public class AgentController {
                 } else {
                     back = form.getBack();
                 }
-                Credit credit = new Credit(front, back, new selling.sunshine.model.lite.Agent(agent));
+                Credit credit = new Credit(front, back, new common.sunshine.model.selling.agent.lite.Agent(agent));
                 if (form.getAgentId() != null && !form.getAgentId().equals("")) {
                     agentService.updateCredit(credit);
                 } else {
@@ -644,7 +656,7 @@ public class AgentController {
                 }
             } else {
                 //进行非微信上传身份证的操作
-                Credit credit = new Credit(form.getFront(), form.getBack(), new selling.sunshine.model.lite.Agent(agent));
+                Credit credit = new Credit(form.getFront(), form.getBack(), new common.sunshine.model.selling.agent.lite.Agent(agent));
                 if (form.getAgentId() != null && !form.getAgentId().equals("")) {
                     agentService.updateCredit(credit);
                 } else {
@@ -1127,7 +1139,7 @@ public class AgentController {
         view.addObject("wait", wait);
         //以下是下级代理商的信息
         condition.clear();
-        selling.sunshine.model.lite.Agent agentlite = new selling.sunshine.model.lite.Agent();
+        common.sunshine.model.selling.agent.lite.Agent agentlite = new common.sunshine.model.selling.agent.lite.Agent();
         agentlite.setAgentId(user.getAgent().getAgentId());
         condition.put("upperAgent", agentlite);
         ResultData fetchAgentsResponse = agentService.fetchAgent(condition);
@@ -1428,7 +1440,7 @@ public class AgentController {
         User user = (User) subject.getPrincipal();
         Map<String, Object> condition = new HashMap<>();
         if (user != null) {
-            selling.sunshine.model.lite.Agent agent = user.getAgent();
+            common.sunshine.model.selling.agent.lite.Agent agent = user.getAgent();
             condition.put("agentId", agent.getAgentId());
             condition.put("blockFlag", false);
             Agent target = ((List<Agent>) agentService.fetchAgent(condition).getData()).get(0);
@@ -1463,7 +1475,7 @@ public class AgentController {
             return view;
         }
         Map<String, Object> condition = new HashMap<String, Object>();
-        selling.sunshine.model.lite.Agent agent = user.getAgent();
+        common.sunshine.model.selling.agent.lite.Agent agent = user.getAgent();
         condition.put("agentId", agent.getAgentId());
         condition.put("blockFlag", false);
         Agent target = ((List<Agent>) agentService.fetchAgent(condition).getData()).get(0);
@@ -1490,7 +1502,7 @@ public class AgentController {
             return view;
         }
         Map<String, Object> condition = new HashMap<String, Object>();
-        selling.sunshine.model.lite.Agent agent = user.getAgent();
+        common.sunshine.model.selling.agent.lite.Agent agent = user.getAgent();
         condition.put("agentId", agent.getAgentId());
         condition.put("blockFlag", false);
         Agent target = ((List<Agent>) agentService.fetchAgent(condition).getData()).get(0);
@@ -1672,7 +1684,7 @@ public class AgentController {
         ResultData fetchResponse = agentService.fetchAgent(condition);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             Agent agent = ((List<Agent>) agentService.fetchAgent(condition).getData()).get(0);
-            selling.sunshine.model.lite.Agent upperAgent = new selling.sunshine.model.lite.Agent();
+            common.sunshine.model.selling.agent.lite.Agent upperAgent = new common.sunshine.model.selling.agent.lite.Agent();
             upperAgent.setAgentId(upperAgentId);
             agent.setUpperAgent(upperAgent);
             ResultData updateResponse = agentService.updateAgent(agent);
@@ -1765,7 +1777,7 @@ public class AgentController {
 
                 }
             }
-            selling.sunshine.model.lite.Agent upperAgent = new selling.sunshine.model.lite.Agent();
+            common.sunshine.model.selling.agent.lite.Agent upperAgent = new common.sunshine.model.selling.agent.lite.Agent();
             upperAgent.setAgentId(upperAgentId);
             agent.setUpperAgent(upperAgent);
             ResultData updateResponse = agentService.updateAgent(agent);
@@ -1892,7 +1904,7 @@ public class AgentController {
 
         //查询某个代理商的下级代理商数量
         Map<String, Object> condition2 = new HashMap<>();
-        selling.sunshine.model.lite.Agent agent = new selling.sunshine.model.lite.Agent();
+        common.sunshine.model.selling.agent.lite.Agent agent = new common.sunshine.model.selling.agent.lite.Agent();
         agent.setAgentId(agentId);
         condition2.put("upperAgent", agent);
         List<Agent> agentList = (List<Agent>) agentService.fetchAgent(condition2).getData();
@@ -2003,7 +2015,7 @@ public class AgentController {
             jsonObject.put("id", agent.getAgentId());
             JSONArray children = new JSONArray();
             //查询下级代理商
-            selling.sunshine.model.lite.Agent agent2 = new selling.sunshine.model.lite.Agent();
+            common.sunshine.model.selling.agent.lite.Agent agent2 = new common.sunshine.model.selling.agent.lite.Agent();
             agent2.setAgentId(agentId);
             condition.clear();
             condition.put("upperAgent", agent2);
@@ -2087,7 +2099,7 @@ public class AgentController {
             result.setResponseCode(ResponseCode.RESPONSE_ERROR);
             return result;
         }
-        selling.sunshine.model.lite.Agent agent = user.getAgent();
+        common.sunshine.model.selling.agent.lite.Agent agent = user.getAgent();
         Map<String, Object> condition = new HashMap<>();
         condition.put("agentId", agent.getAgentId());
         condition.put("goodsId", goodsId);

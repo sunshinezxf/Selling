@@ -1,6 +1,6 @@
 package selling.sunshine.service;
 
-import selling.sunshine.model.express.Express;
+import common.sunshine.model.selling.express.Express;
 import common.sunshine.utils.ResultData;
 
 import java.util.List;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="selling.agent">
-    <resultMap id="agentVo" type="selling.sunshine.model.Agent">
+    <resultMap id="agentVo" type="common.sunshine.model.selling.agent.Agent">
         <result property="agentId" column="agent_id"></result>
         <result property="coffer" column="agent_coffer"></result>
         <result property="name" column="agent_name"></result>
@@ -18,13 +18,13 @@
         <association property="upperAgent" column="agentId = upper_agent_id" select="agentLiteQuery"></association>
     </resultMap>
 
-    <resultMap id="agentLiteVo" type="selling.sunshine.model.lite.Agent">
+    <resultMap id="agentLiteVo" type="common.sunshine.model.selling.agent.lite.Agent">
         <result property="agentId" column="agent_id"></result>
         <result property="name" column="agent_name"></result>
         <result property="phone" column="agent_phone"></result>
     </resultMap>
 
-    <insert id="insert" parameterType="selling.sunshine.model.Agent" useGeneratedKeys="false">
+    <insert id="insert" parameterType="common.sunshine.model.selling.agent.Agent" useGeneratedKeys="false">
         INSERT INTO agent
         <set>
             <if test="upperAgent != null and upperAgent.agentId != null and upperAgent.agentId != ''">
@@ -104,7 +104,7 @@
 
     </select>
 
-    <update id="update" parameterType="selling.sunshine.model.Agent" useGeneratedKeys="false">
+    <update id="update" parameterType="common.sunshine.model.selling.agent.Agent" useGeneratedKeys="false">
         UPDATE agent
         <set>
             <if test="gender != null and gender != ''">
@@ -145,7 +145,7 @@
         WHERE agent_id = #{agentId}
     </update>
 
-    <update id="updateCoffer" parameterType="selling.sunshine.model.Agent" useGeneratedKeys="false">
+    <update id="updateCoffer" parameterType="common.sunshine.model.selling.agent.Agent" useGeneratedKeys="false">
         UPDATE agent
         <set>
             agent_coffer = #{coffer}
@@ -153,7 +153,7 @@
         WHERE agent_id = #{agentId}
     </update>
 
-    <update id="updateScale" parameterType="selling.sunshine.model.Agent" useGeneratedKeys="false">
+    <update id="updateScale" parameterType="common.sunshine.model.selling.agent.Agent" useGeneratedKeys="false">
         UPDATE agent
         <set>
             scale = #{claimScale}

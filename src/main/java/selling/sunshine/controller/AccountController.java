@@ -2,6 +2,11 @@ package selling.sunshine.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.pingplusplus.model.Charge;
+import common.sunshine.model.selling.agent.Agent;
+import common.sunshine.model.selling.bill.CustomerOrderBill;
+import common.sunshine.model.selling.bill.DepositBill;
+import common.sunshine.model.selling.bill.OrderBill;
+import common.sunshine.model.selling.user.User;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
 import org.apache.shiro.SecurityUtils;

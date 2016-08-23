@@ -2,7 +2,7 @@ package selling.sunshine.handler.mybatis.gift;
 
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
-import selling.sunshine.model.gift.GiftApplyStatus;
+import selling.sunshine.model.gift.support.GiftApplyStatus;
 
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;

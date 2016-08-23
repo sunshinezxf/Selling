@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="selling.customer.address">
-    <resultMap id="customerVo" type="selling.sunshine.model.Customer">
+    <resultMap id="customerVo" type="common.sunshine.model.selling.customer.Customer">
         <result property="customerId" column="customer_id"></result>
         <result property="name" column="customer_name"></result>
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
     </resultMap>
 
-    <resultMap id="addressVo" type="selling.sunshine.model.CustomerAddress">
+    <resultMap id="addressVo" type="common.sunshine.model.selling.customer.CustomerAddress">
         <result property="addressId" column="customer_address_id"></result>
         <result property="address" column="address"></result>
         <result property="blockFlag" column="block_flag"></result>
@@ -43,7 +43,7 @@
         WHERE customer_id = #{customerId}
     </select>
     
-    <update id="delete" parameterType="selling.sunshine.model.Customer">
+    <update id="delete" parameterType="common.sunshine.model.selling.customer.Customer">
     	UPDATE customer_address
     	<set>
     		block_flag = 1 
@@ -51,12 +51,12 @@
     	WHERE customer_id = #{customerId}
     </update>
 
-    <insert id="insert" parameterType="selling.sunshine.model.CustomerAddress" useGeneratedKeys="false">
+    <insert id="insert" parameterType="common.sunshine.model.selling.customer.CustomerAddress" useGeneratedKeys="false">
         INSERT INTO customer_address(customer_address_id, customer_id, address, block_flag, create_time)
         VALUES (#{addressId}, #{customer.customerId}, #{address}, #{blockFlag}, #{createAt})
     </insert>
 
-    <update id="block" parameterType="selling.sunshine.model.CustomerAddress" useGeneratedKeys="false">
+    <update id="block" parameterType="common.sunshine.model.selling.customer.CustomerAddress" useGeneratedKeys="false">
         UPDATE customer_address
         <set>
             block_flag = 1

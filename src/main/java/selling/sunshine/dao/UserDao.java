@@ -1,7 +1,7 @@
 package selling.sunshine.dao;
 
-import selling.sunshine.model.User;
-import selling.sunshine.pagination.DataTableParam;
+import common.sunshine.model.selling.user.User;
+import common.sunshine.pagination.DataTableParam;
 import common.sunshine.utils.ResultData;
 
 import java.util.Map;

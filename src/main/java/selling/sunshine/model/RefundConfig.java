@@ -1,7 +1,8 @@
 package selling.sunshine.model;
 
-import selling.sunshine.model.goods.Goods4Agent;
-import selling.sunshine.model.goods.Goods4Customer;
+import common.sunshine.model.Entity;
+import common.sunshine.model.selling.goods.Goods4Agent;
+import common.sunshine.model.selling.goods.Goods4Customer;
 
 /**
  * Created by sunshine on 5/17/16.
@@ -19,16 +20,16 @@ public class RefundConfig extends Entity {
         super();
     }
 
-    public RefundConfig(Goods4Customer goods, int amountTrigger, double level1Percent, double level2Percent, double level3Percent,int monthConfig) {
+    public RefundConfig(Goods4Customer goods, int amountTrigger, double level1Percent, double level2Percent, double level3Percent, int monthConfig) {
         this();
         this.goods = goods;
         this.amountTrigger = amountTrigger;
         this.level1Percent = level1Percent;
         this.level2Percent = level2Percent;
         this.level3Percent = level3Percent;
-        this.monthConfig=monthConfig;
+        this.monthConfig = monthConfig;
     }
-    
+
     public RefundConfig(Goods4Customer goods, int amountTrigger, double level1Percent, double level2Percent, double level3Percent) {
         this();
         this.goods = goods;
@@ -86,13 +87,13 @@ public class RefundConfig extends Entity {
         this.level3Percent = level3Percent;
     }
 
-	public int getMonthConfig() {
-		return monthConfig;
-	}
+    public int getMonthConfig() {
+        return monthConfig;
+    }
 
-	public void setMonthConfig(int monthConfig) {
-		this.monthConfig = monthConfig;
-	}
-    
-    
+    public void setMonthConfig(int monthConfig) {
+        this.monthConfig = monthConfig;
+    }
+
+
 }

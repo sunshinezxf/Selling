@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import selling.sunshine.form.AdminLoginForm;
-import selling.sunshine.model.Admin;
+import common.sunshine.model.selling.admin.Admin;
 import selling.sunshine.model.BackOperationLog;
-import selling.sunshine.model.User;
-import selling.sunshine.pagination.DataTablePage;
-import selling.sunshine.pagination.DataTableParam;
+import common.sunshine.model.selling.user.User;
+import common.sunshine.pagination.DataTablePage;
+import common.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.AdminService;
 import selling.sunshine.service.LogService;
 import selling.sunshine.service.ToolService;

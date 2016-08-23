@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="selling.express">
-    <resultMap id="expressVo" type="selling.sunshine.model.express.Express">
+    <resultMap id="expressVo" type="common.sunshine.model.selling.express.Express">
         <result property="expressId" column="express_id"></result>
         <result property="linkId" column="link_id"></result>
         <result property="expressNumber" column="express_no"></result>
@@ -17,7 +17,7 @@
         <result property="createAt" column="create_time"></result>
     </resultMap>
 
-    <resultMap id="express4AgentVo" type="selling.sunshine.model.express.Express4Agent">
+    <resultMap id="express4AgentVo" type="common.sunshine.model.selling.express.Express4Agent">
         <result property="expressId" column="express_id"></result>
         <result property="expressNumber" column="express_no"></result>
         <result property="senderName" column="sender_name"></result>
@@ -33,7 +33,7 @@
         <association property="item" column="orderItemId = order_item_id" select="orderItemQuery"></association>
     </resultMap>
 
-    <resultMap id="express4CustomerVo" type="selling.sunshine.model.express.Express4Customer">
+    <resultMap id="express4CustomerVo" type="common.sunshine.model.selling.express.Express4Customer">
         <result property="expressId" column="express_id"></result>
         <result property="expressNumber" column="express_no"></result>
         <result property="senderName" column="sender_name"></result>
@@ -48,13 +48,13 @@
         <association property="order" column="orderId = customer_order_id" select="customerOrderQuery"></association>
     </resultMap>
 
-    <resultMap id="orderVo" type="selling.sunshine.model.Order">
+    <resultMap id="orderVo" type="common.sunshine.model.selling.order.Order">
         <result property="orderId" column="order_id"></result>
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
     </resultMap>
 
-    <resultMap id="orderItemVo" type="selling.sunshine.model.OrderItem">
+    <resultMap id="orderItemVo" type="common.sunshine.model.selling.order.OrderItem">
         <result property="orderItemId" column="order_item_id"></result>
         <result property="status" column="order_item_status"
                 typeHandler="selling.sunshine.handler.mybatis.order.OrderItemStatusHandler"></result>
@@ -65,7 +65,7 @@
         <association property="order" column="orderId = order_id" select="orderQuery"></association>
     </resultMap>
 
-    <resultMap id="customerOrderVo" type="selling.sunshine.model.CustomerOrder">
+    <resultMap id="customerOrderVo" type="common.sunshine.model.selling.order.CustomerOrder">
         <result property="orderId" column="order_id"></result>
         <result property="wechat" column="wechat"></result>
         <result property="quantity" column="quantity"></result>
@@ -79,13 +79,13 @@
         <result property="createAt" column="create_time"></result>
     </resultMap>
 
-    <insert id="insertExpress4Agent" parameterType="selling.sunshine.model.express.Express4Agent"
+    <insert id="insertExpress4Agent" parameterType="common.sunshine.model.selling.express.Express4Agent"
             useGeneratedKeys="false">
         INSERT INTO express_agent(express_id, order_item_id, express_no, sender_name, sender_phone, sender_address, receiver_name, receiver_phone, receiver_address, description, goods_name, block_flag, create_time)
         VALUES (#{expressId}, #{item.orderItemId}, #{expressNumber}, #{senderName}, #{senderPhone}, #{senderAddress}, #{receiverName}, #{receiverPhone}, #{receiverAddress}, #{description}, #{goodsName}, #{blockFlag}, #{createAt})
     </insert>
 
-    <insert id="insertExpress4Customer" parameterType="selling.sunshine.model.express.Express4Customer"
+    <insert id="insertExpress4Customer" parameterType="common.sunshine.model.selling.express.Express4Customer"
             useGeneratedKeys="false">
         INSERT INTO express_customer(express_id, customer_order_id, express_no, sender_name, sender_phone, sender_address, receiver_name, receiver_phone, receiver_address, description, goods_name, block_flag, create_time)
         VALUES (#{expressId}, #{order.orderId}, #{expressNumber}, #{senderName}, #{senderPhone}, #{senderAddress}, #{receiverName}, #{receiverPhone}, #{receiverAddress}, #{description}, #{goodsName}, #{blockFlag}, #{createAt})

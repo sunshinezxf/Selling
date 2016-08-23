@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="selling.order.item">
-    <resultMap id="goods4AgentVo" type="selling.sunshine.model.goods.Goods4Agent">
+    <resultMap id="goods4AgentVo" type="common.sunshine.model.selling.goods.Goods4Agent">
         <result property="goodsId" column="goods_id"></result>
         <result property="name" column="goods_name"></result>
         <result property="description" column="goods_description"></result>
@@ -11,7 +11,7 @@
         <result property="createAt" column="create_time"></result>
     </resultMap>
 
-    <resultMap id="orderVo" type="selling.sunshine.model.Order">
+    <resultMap id="orderVo" type="common.sunshine.model.selling.order.Order">
         <result property="orderId" column="order_id"></result>
         <result property="blockFlag" column="block_flag"></result>
         <result property="type" column="order_type"
@@ -19,14 +19,14 @@
         <result property="createAt" column="create_time"></result>
     </resultMap>
 
-    <resultMap id="customerVo" type="selling.sunshine.model.Customer">
+    <resultMap id="customerVo" type="common.sunshine.model.selling.customer.Customer">
         <result property="customerId" column="customer_id"></result>
         <result property="name" column="customer_name"></result>
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
     </resultMap>
 
-    <resultMap id="orderItemVo" type="selling.sunshine.model.OrderItem">
+    <resultMap id="orderItemVo" type="common.sunshine.model.selling.order.OrderItem">
         <result property="orderItemId" column="order_item_id"></result>
         <result property="status" column="order_item_status"
                 typeHandler="selling.sunshine.handler.mybatis.order.OrderItemStatusHandler"></result>
@@ -55,7 +55,7 @@
         </foreach>
     </insert>
 
-    <insert id="insert" parameterType="selling.sunshine.model.OrderItem" useGeneratedKeys="false">
+    <insert id="insert" parameterType="common.sunshine.model.selling.order.OrderItem" useGeneratedKeys="false">
         INSERT INTO order_item(order_item_id, order_item_status, order_id, customer_id, goods_id, goods_quantity, order_item_price, receive_address, order_item_description, block_flag, create_time)
         VALUES (#{orderItemId}, #{status}, #{order.orderId}, #{customer.customerId}, #{goods.goodsId}, #{goodsQuantity}, #{orderItemPrice}, #{receiveAddress}, #{description}, #{blockFlag}, #{createAt})
     </insert>
@@ -107,7 +107,7 @@
         </if>
     </select>
 
-    <update id="update" parameterType="selling.sunshine.model.OrderItem" useGeneratedKeys="false">
+    <update id="update" parameterType="common.sunshine.model.selling.order.OrderItem" useGeneratedKeys="false">
         UPDATE order_item
         <set>
             <if test="status != null and status != ''">

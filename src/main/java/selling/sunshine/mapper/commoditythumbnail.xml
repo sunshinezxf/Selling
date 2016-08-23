@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="selling.goods.thumbnail">
-    <resultMap id="goodsThumbnailVo" type="selling.sunshine.model.goods.Thumbnail">
+    <resultMap id="goodsThumbnailVo" type="common.sunshine.model.selling.goods.Thumbnail">
         <result property="thumbnailId" column="thumbnail_id"></result>
         <result property="path" column="thumbnail_path"></result>
         <result property="blockFlag" column="block_flag"></result>
@@ -9,7 +9,7 @@
         <association property="goods" column="goodsId = goods_id" select="goods4CustomerQuery"></association>
     </resultMap>
 
-    <resultMap id="goods4CustomerVo" type="selling.sunshine.model.goods.Goods4Customer">
+    <resultMap id="goods4CustomerVo" type="common.sunshine.model.selling.goods.Goods4Customer">
         <result property="goodsId" column="goods_id"></result>
         <result property="name" column="goods_name"></result>
         <result property="description" column="goods_description"></result>
@@ -20,7 +20,7 @@
     </resultMap>
 
     <!-- 添加商品图片 -->
-    <insert id="insert" parameterType="selling.sunshine.model.goods.Thumbnail" useGeneratedKeys="false">
+    <insert id="insert" parameterType="common.sunshine.model.selling.goods.Thumbnail" useGeneratedKeys="false">
         INSERT INTO goods_thumbnail
         <set>
             <if test="thumbnailId != null">
@@ -65,7 +65,7 @@
      </select>
 
     <!-- 更新商品图片信息 -->
-    <update id="updateBatch" parameterType="selling.sunshine.model.goods.Goods4Customer" useGeneratedKeys="false">
+    <update id="updateBatch" parameterType="common.sunshine.model.selling.goods.Goods4Customer" useGeneratedKeys="false">
         UPDATE goods_thumbnail
         set goods_id = #{goodsId}
         WHERE thumbnail_id IN (
@@ -75,7 +75,7 @@
     </update>
     
         <!-- 更新商品图片信息 -->
-    <update id="update" parameterType="selling.sunshine.model.goods.Thumbnail" useGeneratedKeys="false">
+    <update id="update" parameterType="common.sunshine.model.selling.goods.Thumbnail" useGeneratedKeys="false">
         UPDATE goods_thumbnail
         set goods_id = #{goods.goodsId}
         WHERE thumbnail_id = #{thumbnailId}

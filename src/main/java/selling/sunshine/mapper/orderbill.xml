@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="selling.bill.order">
-    <resultMap id="orderBillVo" type="selling.sunshine.model.OrderBill">
+    <resultMap id="orderBillVo" type="common.sunshine.model.selling.bill.OrderBill">
         <result property="billId" column="bill_id"></result>
         <result property="billAmount" column="bill_amount"></result>
         <result property="channel" column="channel_name"></result>
@@ -14,13 +14,13 @@
         <association property="order" column="orderId = order_id" select="orderQuery"></association>
     </resultMap>
 
-    <resultMap id="agentLiteVo" type="selling.sunshine.model.lite.Agent">
+    <resultMap id="agentLiteVo" type="common.sunshine.model.selling.agent.lite.Agent">
         <result property="agentId" column="agent_id"></result>
         <result property="name" column="agent_name"></result>
         <result property="phone" column="agent_phone"></result>
     </resultMap>
 
-    <resultMap id="orderVo" type="selling.sunshine.model.Order">
+    <resultMap id="orderVo" type="common.sunshine.model.selling.order.Order">
         <result property="orderId" column="order_id"></result>
         <result property="status" column="order_status"
                 typeHandler="selling.sunshine.handler.mybatis.order.OrderStatusHandler"></result>
@@ -29,7 +29,7 @@
         <collection property="orderItems" column="orderId = order_id" select="orderItemQuery"></collection>
     </resultMap>
 
-    <resultMap id="orderItemVo" type="selling.sunshine.model.OrderItem">
+    <resultMap id="orderItemVo" type="common.sunshine.model.selling.order.OrderItem">
         <result property="orderItemId" column="order_item_id"></result>
         <result property="goodsQuantity" column="goods_quantity"></result>
         <result property="orderItemPrice" column="order_item_price"></result>
@@ -71,12 +71,12 @@
         </if>
     </select>
 
-    <insert id="insert" parameterType="selling.sunshine.model.OrderBill" useGeneratedKeys="false">
+    <insert id="insert" parameterType="common.sunshine.model.selling.bill.OrderBill" useGeneratedKeys="false">
         INSERT INTO order_bill(bill_id, agent_id, order_id, channel_name, client_ip, bill_amount, bill_status, block_flag, create_time)
         VALUES (#{billId}, #{agent.agentId}, #{order.orderId}, #{channel}, #{clientIp}, #{billAmount}, #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler}, #{blockFlag}, #{createAt})
     </insert>
 
-    <update id="update" parameterType="selling.sunshine.model.OrderBill" useGeneratedKeys="false">
+    <update id="update" parameterType="common.sunshine.model.selling.bill.OrderBill" useGeneratedKeys="false">
         UPDATE order_bill
         <set>
             <if test="agent.agentId != null and agent.agentId != ''">

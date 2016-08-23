@@ -1,5 +1,7 @@
 package selling.sunshine.model;
 
+import common.sunshine.model.Entity;
+
 /**
  * Created by sunshine on 5/13/16.
  */

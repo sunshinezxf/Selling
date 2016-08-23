@@ -1,6 +1,6 @@
 package selling.wechat.model;
 
-import selling.sunshine.model.Entity;
+import common.sunshine.model.Entity;
 
 /**
  * Created by sunshine on 5/25/16.

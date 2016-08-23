@@ -1,6 +1,6 @@
 package selling.sunshine.vo.cashback;
 
-import selling.sunshine.model.lite.Agent;
+import common.sunshine.model.selling.agent.lite.Agent;
 
 /**
  * Created by sunshine on 8/10/16.

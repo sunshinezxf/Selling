@@ -7,9 +7,9 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import common.sunshine.dao.BaseDao;
 import selling.sunshine.dao.ExpressDao;
-import selling.sunshine.model.express.Express;
-import selling.sunshine.model.express.Express4Agent;
-import selling.sunshine.model.express.Express4Customer;
+import common.sunshine.model.selling.express.Express;
+import common.sunshine.model.selling.express.Express4Agent;
+import common.sunshine.model.selling.express.Express4Customer;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
 

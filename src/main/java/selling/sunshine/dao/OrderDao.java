@@ -1,8 +1,8 @@
 package selling.sunshine.dao;
 
-import selling.sunshine.model.Order;
-import selling.sunshine.pagination.DataTableParam;
-import selling.sunshine.pagination.MobilePageParam;
+import common.sunshine.model.selling.order.Order;
+import common.sunshine.pagination.DataTableParam;
+import common.sunshine.pagination.MobilePageParam;
 import common.sunshine.utils.ResultData;
 
 import java.util.Map;

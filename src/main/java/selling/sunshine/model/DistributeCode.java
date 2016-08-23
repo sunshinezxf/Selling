@@ -1,6 +1,7 @@
 package selling.sunshine.model;
 
-import selling.sunshine.model.lite.Agent;
+import common.sunshine.model.Entity;
+import common.sunshine.model.selling.agent.lite.Agent;
 
 /**
  * Created by sunshine on 6/12/16.

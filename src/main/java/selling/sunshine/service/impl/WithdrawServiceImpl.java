@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import selling.sunshine.dao.WithdrawDao;
 import selling.sunshine.model.WithdrawRecord;
-import selling.sunshine.pagination.DataTableParam;
+import common.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.WithdrawService;
 import selling.sunshine.utils.PlatformConfig;
 import common.sunshine.utils.ResponseCode;

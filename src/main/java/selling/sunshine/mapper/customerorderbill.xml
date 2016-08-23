@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="selling.bill.customerOrder">
-    <resultMap id="customerOrderBillVo" type="selling.sunshine.model.CustomerOrderBill">
+    <resultMap id="customerOrderBillVo" type="common.sunshine.model.selling.bill.CustomerOrderBill">
         <result property="billId" column="bill_id"></result>
         <result property="billAmount" column="bill_amount"></result>
         <result property="channel" column="channel_name"></result>
@@ -13,7 +13,7 @@
         <association property="customerOrder" column="orderId = order_id" select="customerOrderQuery"></association>
     </resultMap>
 
-    <resultMap id="customerOrderVo" type="selling.sunshine.model.CustomerOrder">
+    <resultMap id="customerOrderVo" type="common.sunshine.model.selling.order.CustomerOrder">
         <result property="orderId" column="order_id"></result>
         <result property="wechat" column="wechat"></result>
         <result property="quantity" column="quantity"></result>
@@ -56,12 +56,12 @@
         </if>
     </select>
 
-    <insert id="insert" parameterType="selling.sunshine.model.CustomerOrderBill" useGeneratedKeys="false">
+    <insert id="insert" parameterType="common.sunshine.model.selling.bill.CustomerOrderBill" useGeneratedKeys="false">
         INSERT INTO customer_order_bill(bill_id,  order_id, channel_name, client_ip, bill_amount, bill_status, block_flag, create_time)
         VALUES (#{billId}, #{customerOrder.orderId}, #{channel}, #{clientIp}, #{billAmount}, #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler}, #{blockFlag}, #{createAt})
     </insert>
 
-    <update id="update" parameterType="selling.sunshine.model.CustomerOrderBill" useGeneratedKeys="false">
+    <update id="update" parameterType="common.sunshine.model.selling.bill.CustomerOrderBill" useGeneratedKeys="false">
         UPDATE customer_order_bill
         <set>
             <if test="customerOrder.orderId != null and customerOrder.orderId != ''">

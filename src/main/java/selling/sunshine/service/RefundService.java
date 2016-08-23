@@ -1,7 +1,7 @@
 package selling.sunshine.service;
 
 import selling.sunshine.model.RefundConfig;
-import selling.sunshine.pagination.DataTableParam;
+import common.sunshine.pagination.DataTableParam;
 import common.sunshine.utils.ResultData;
 
 import java.util.Map;

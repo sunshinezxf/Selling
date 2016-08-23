@@ -11,7 +11,7 @@
 		<result property="monthConfig" column="month_config"></result>
 	</resultMap>
 
-	<resultMap id="goods4AgentVo" type="selling.sunshine.model.goods.Goods4Agent">
+	<resultMap id="goods4AgentVo" type="common.sunshine.model.selling.goods.Goods4Agent">
 		<result property="goodsId" column="goods_id"></result>
 		<result property="name" column="goods_name"></result>
 		<result property="description" column="goods_description"></result>
@@ -20,13 +20,13 @@
 		<result property="createAt" column="create_time"></result>
 	</resultMap>
 	
-	<resultMap id="agentLiteVo" type="selling.sunshine.model.lite.Agent">
+	<resultMap id="agentLiteVo" type="common.sunshine.model.selling.agent.lite.Agent">
         <result property="agentId" column="agent_id"></result>
         <result property="name" column="agent_name"></result>
         <result property="phone" column="agent_phone"></result>
     </resultMap>
 
-	<resultMap id="agentVo" type="selling.sunshine.model.Agent">
+	<resultMap id="agentVo" type="common.sunshine.model.selling.agent.Agent">
 		<result property="agentId" column="agent_id"></result>
 		<result property="name" column="agent_name"></result>
 		<result property="gender" column="agent_gender"></result>

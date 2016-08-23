@@ -2,7 +2,7 @@ package selling.sunshine.handler.mybatis.order;
 
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
-import selling.sunshine.model.OrderType;
+import common.sunshine.model.selling.order.support.OrderType;
 
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;

@@ -13,7 +13,7 @@
         <association property="goods" column="goodsId = goods_id" select="goods4AgentQuery"></association>
     </resultMap>
 
-    <resultMap id="goods4AgentVo" type="selling.sunshine.model.goods.Goods4Agent">
+    <resultMap id="goods4AgentVo" type="common.sunshine.model.selling.goods.Goods4Agent">
         <result property="goodsId" column="goods_id"></result>
         <result property="name" column="goods_name"></result>
         <result property="description" column="goods_description"></result>

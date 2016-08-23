@@ -2,7 +2,7 @@ package selling.sunshine.handler.mybatis.cashback;
 
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
-import selling.sunshine.model.cashback.CashBackLevel;
+import selling.sunshine.model.cashback.support.CashBackLevel;
 
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;

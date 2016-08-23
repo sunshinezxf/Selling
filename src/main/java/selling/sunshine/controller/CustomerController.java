@@ -1,5 +1,12 @@
 package selling.sunshine.controller;
 
+import common.sunshine.model.selling.customer.Customer;
+import common.sunshine.model.selling.customer.CustomerAddress;
+import common.sunshine.model.selling.customer.CustomerPhone;
+import common.sunshine.model.selling.order.CustomerOrder;
+import common.sunshine.model.selling.order.Order;
+import common.sunshine.model.selling.order.OrderItem;
+import common.sunshine.model.selling.user.User;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
@@ -13,10 +20,10 @@ import selling.sunshine.form.CustomerAddressForm;
 import selling.sunshine.form.CustomerForm;
 import selling.sunshine.form.PurchaseForm;
 import common.sunshine.utils.SortRule;
-import selling.sunshine.model.*;
-import selling.sunshine.model.goods.Goods4Customer;
-import selling.sunshine.pagination.DataTablePage;
-import selling.sunshine.pagination.DataTableParam;
+import common.sunshine.model.selling.agent.Agent;
+import common.sunshine.model.selling.goods.Goods4Customer;
+import common.sunshine.pagination.DataTablePage;
+import common.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.AgentService;
 import selling.sunshine.service.CommodityService;
 import selling.sunshine.service.CustomerService;
@@ -117,7 +124,7 @@ public class CustomerController {
         }
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
-        selling.sunshine.model.lite.Agent agent = user.getAgent();
+        common.sunshine.model.selling.agent.lite.Agent agent = user.getAgent();
         Customer customer = new Customer(customerForm.getName(),
                 customerForm.getAddress(), customerForm.getPhone(), agent);
         resultData = customerService.createCustomer(customer);
@@ -146,7 +153,7 @@ public class CustomerController {
         }
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
-        selling.sunshine.model.lite.Agent agent = user.getAgent();
+        common.sunshine.model.selling.agent.lite.Agent agent = user.getAgent();
         Customer customer = new Customer(customerForm.getName(),
                 customerForm.getAddress(), customerForm.getPhone(), agent);
         customer.setCustomerId(customerId);
@@ -171,7 +178,7 @@ public class CustomerController {
         Map<String, Object> condition = new HashMap<>();
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
-        selling.sunshine.model.lite.Agent agent = user.getAgent();
+        common.sunshine.model.selling.agent.lite.Agent agent = user.getAgent();
         Customer customer = new Customer(null, customerAddressForm.getAddress(), null, agent);
         customer.setCustomerId(customerId);
         ResultData updateResponse = customerService.updateCustomer(customer);
@@ -286,7 +293,7 @@ public class CustomerController {
                         condition.put("customerBlockFlag", false);
                         ResultData response = customerService.fetchCustomerPhone(condition);
                         if (response.getResponseCode() == ResponseCode.RESPONSE_NULL) {
-                            selling.sunshine.model.lite.Agent agent = new selling.sunshine.model.lite.Agent();
+                            common.sunshine.model.selling.agent.lite.Agent agent = new common.sunshine.model.selling.agent.lite.Agent();
                             agent.setAgentId(agentId);
                             Customer customer = new Customer(customerName, address, phone, agent);
                             customerService.createCustomer(customer);
@@ -309,7 +316,7 @@ public class CustomerController {
         Goods4Customer goods = ((List<Goods4Customer>) fetchCommodityData.getData()).get(0);
         double goodsPrice = agent == null ? goods.getCustomerPrice() : goods.getAgentPrice();
         double totalPrice = goodsPrice * goodsQuantity;
-        selling.sunshine.model.lite.Agent agentLite = new selling.sunshine.model.lite.Agent(agent);
+        common.sunshine.model.selling.agent.lite.Agent agentLite = new common.sunshine.model.selling.agent.lite.Agent(agent);
         CustomerOrder customerOrder = new CustomerOrder(goods, goodsQuantity, customerName, phone, address, agentLite);
         customerOrder.setTotalPrice(totalPrice);
         customerOrder.setWechat(wechat);

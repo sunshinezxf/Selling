@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import common.sunshine.utils.SortRule;
-import selling.sunshine.model.CustomerOrder;
+import common.sunshine.model.selling.order.CustomerOrder;
 import selling.sunshine.service.OrderService;
 import selling.sunshine.utils.PlatformConfig;
 import common.sunshine.utils.ResponseCode;

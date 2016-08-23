@@ -1,6 +1,7 @@
 package selling.sunshine.model;
 
-import selling.sunshine.model.lite.Agent;
+import common.sunshine.model.Entity;
+import common.sunshine.model.selling.agent.lite.Agent;
 
 public class BankCard extends Entity {
     private String bankCardId;

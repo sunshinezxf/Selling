@@ -1,6 +1,6 @@
 package selling.sunshine.service;
 
-import selling.sunshine.pagination.DataTableParam;
+import common.sunshine.pagination.DataTableParam;
 import common.sunshine.utils.ResultData;
 import selling.sunshine.vo.cashback.CashBack4AgentPerMonth;
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="selling.bill.deposit">
-    <resultMap id="depositBillVo" type="selling.sunshine.model.DepositBill">
+    <resultMap id="depositBillVo" type="common.sunshine.model.selling.bill.DepositBill">
         <result property="billId" column="bill_id"></result>
         <result property="billAmount" column="bill_amount"></result>
         <result property="channel" column="channel_name"></result>
@@ -13,7 +13,7 @@
         <association property="agent" column="agentId = agent_id" select="agentLiteQuery"></association>
     </resultMap>
 
-    <resultMap id="agentLiteVo" type="selling.sunshine.model.lite.Agent">
+    <resultMap id="agentLiteVo" type="common.sunshine.model.selling.agent.lite.Agent">
         <result property="agentId" column="agent_id"></result>
         <result property="name" column="agent_name"></result>
         <result property="phone" column="agent_phone"></result>
@@ -25,7 +25,7 @@
         WHERE agent_id = #{agentId}
     </select>
 
-    <insert id="insert" parameterType="selling.sunshine.model.DepositBill" useGeneratedKeys="false">
+    <insert id="insert" parameterType="common.sunshine.model.selling.bill.DepositBill" useGeneratedKeys="false">
         INSERT INTO deposit_bill(bill_id, agent_id, channel_name, client_ip, bill_amount, bill_status, block_flag, create_time)
         VALUES (#{billId}, #{agent.agentId}, #{channel}, #{clientIp}, #{billAmount}, #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler}, #{blockFlag}, #{createAt})
     </insert>
@@ -61,7 +61,7 @@
         </if>
     </select>
 
-    <update id="update" parameterType="selling.sunshine.model.DepositBill" useGeneratedKeys="false">
+    <update id="update" parameterType="common.sunshine.model.selling.bill.DepositBill" useGeneratedKeys="false">
         UPDATE deposit_bill
         <set>
             <if test="agent.agentId != null and agent.agentId != ''">

@@ -8,13 +8,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import selling.sunshine.dao.AgentDao;
 import common.sunshine.dao.BaseDao;
-import selling.sunshine.model.Agent;
-import selling.sunshine.model.Credit;
-import selling.sunshine.model.Role;
-import selling.sunshine.model.User;
+import common.sunshine.model.selling.agent.Agent;
+import common.sunshine.model.selling.agent.Credit;
+import common.sunshine.model.selling.user.Role;
+import common.sunshine.model.selling.user.User;
 import selling.sunshine.model.gift.GiftConfig;
-import selling.sunshine.pagination.DataTablePage;
-import selling.sunshine.pagination.DataTableParam;
+import common.sunshine.pagination.DataTablePage;
+import common.sunshine.pagination.DataTableParam;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
 
@@ -51,7 +51,7 @@ public class AgentDaoImpl extends BaseDao implements AgentDao {
                 Role role = new Role();
                 role.setRoleId("ROL00000002");
                 user.setRole(role);
-                user.setAgent(new selling.sunshine.model.lite.Agent(agent));
+                user.setAgent(new common.sunshine.model.selling.agent.lite.Agent(agent));
                 sqlSession.insert("selling.user.insert", user);
                 result.setData(agent);
             } catch (Exception e) {
@@ -134,7 +134,7 @@ public class AgentDaoImpl extends BaseDao implements AgentDao {
                 sqlSession.update("selling.agent.update", agent);
                 if (!StringUtils.isEmpty(agent.getPassword())) {
                     User user = new User(agent.getPhone(), agent.getPassword());
-                    user.setAgent(new selling.sunshine.model.lite.Agent(agent));
+                    user.setAgent(new common.sunshine.model.selling.agent.lite.Agent(agent));
                     sqlSession.update("selling.user.update", user);
                 }
                 result.setData(agent);
@@ -157,7 +157,7 @@ public class AgentDaoImpl extends BaseDao implements AgentDao {
                 sqlSession.update("selling.agent.updateCoffer", agent);
                 if (!StringUtils.isEmpty(agent.getPassword())) {
                     User user = new User(agent.getPhone(), agent.getPassword());
-                    user.setAgent(new selling.sunshine.model.lite.Agent(agent));
+                    user.setAgent(new common.sunshine.model.selling.agent.lite.Agent(agent));
                     sqlSession.update("selling.user.update", user);
                 }
                 result.setData(agent);

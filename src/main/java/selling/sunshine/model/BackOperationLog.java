@@ -1,5 +1,7 @@
 package selling.sunshine.model;
 
+import common.sunshine.model.Entity;
+
 public class BackOperationLog extends Entity {
 	private String logId;
 	private String adminInfo;

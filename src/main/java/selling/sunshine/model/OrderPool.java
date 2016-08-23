@@ -1,8 +1,9 @@
 package selling.sunshine.model;
 
-import selling.sunshine.model.goods.Goods4Agent;
-import selling.sunshine.model.goods.Goods4Customer;
-import selling.sunshine.model.lite.Agent;
+import common.sunshine.model.Entity;
+import common.sunshine.model.selling.goods.Goods4Agent;
+import common.sunshine.model.selling.goods.Goods4Customer;
+import common.sunshine.model.selling.agent.lite.Agent;
 
 import java.sql.Date;
 

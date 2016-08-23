@@ -1,6 +1,6 @@
 package selling.sunshine.model.sum;
 
-import selling.sunshine.model.goods.Goods4Agent;
+import common.sunshine.model.selling.goods.Goods4Agent;
 
 public class VolumeTotal {
 

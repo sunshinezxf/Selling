@@ -10,9 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import selling.sunshine.dao.BillDao;
 import selling.sunshine.dao.ChargeDao;
-import selling.sunshine.model.CustomerOrderBill;
-import selling.sunshine.model.DepositBill;
-import selling.sunshine.model.OrderBill;
+import common.sunshine.model.selling.bill.CustomerOrderBill;
+import common.sunshine.model.selling.bill.DepositBill;
+import common.sunshine.model.selling.bill.OrderBill;
 import selling.sunshine.service.BillService;
 import selling.sunshine.utils.PlatformConfig;
 import common.sunshine.utils.ResponseCode;
@@ -223,7 +223,7 @@ public class BillServiceImpl implements BillService {
             Thread thread = new Thread() {
                 @Override
                 public void run() {
-                    selling.sunshine.model.Charge info = new selling.sunshine.model.Charge(charge);
+                    common.sunshine.model.selling.charge.Charge info = new common.sunshine.model.selling.charge.Charge(charge);
                     chargeDao.insertCharge(info);
                 }
             };

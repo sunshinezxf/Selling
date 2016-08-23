@@ -2,7 +2,7 @@ package selling.sunshine.form;
 
 import java.util.List;
 
-import selling.sunshine.model.express.Express;
+import common.sunshine.model.selling.express.Express;
 
 public class ExpressForm {
 

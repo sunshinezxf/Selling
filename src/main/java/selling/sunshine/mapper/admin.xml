@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="selling.admin">
     <!-- 查询管理员信息所使用的对象关系映射模型 -->
-    <resultMap id="adminVo" type="selling.sunshine.model.Admin">
+    <resultMap id="adminVo" type="common.sunshine.model.selling.admin.Admin">
         <result property="adminId" column="manager_id"></result>
         <result property="username" column="manager_username"></result>
         <result property="password" column="manager_password"></result>
@@ -25,12 +25,12 @@
     </select>
 
     <!-- 插入单条记录 -->
-    <insert id="insert" parameterType="selling.sunshine.model.Admin" useGeneratedKeys="false">
+    <insert id="insert" parameterType="common.sunshine.model.selling.admin.Admin" useGeneratedKeys="false">
         INSERT INTO manager(manager_id, manager_username, manager_password)
         VALUES (#{adminId}, #{username}, #{password})
     </insert>
 
-    <update id="update" parameterType="selling.sunshine.model.Admin" useGeneratedKeys="false">
+    <update id="update" parameterType="common.sunshine.model.selling.admin.Admin" useGeneratedKeys="false">
         UPDATE manager
         <set>
             <if test="password != null and password != ''">
@@ -40,7 +40,7 @@
         WHERE manager_id = #{adminId}
     </update>
 
-    <delete id="delete" parameterType="selling.sunshine.model.Admin">
+    <delete id="delete" parameterType="common.sunshine.model.selling.admin.Admin">
         DELETE FROM manager
         WHERE 1=1
         <if test="adminId != null and adminId != ''">

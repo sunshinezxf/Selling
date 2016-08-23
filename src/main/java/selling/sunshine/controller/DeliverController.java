@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import common.sunshine.utils.SortRule;
 import selling.sunshine.form.TimeRangeForm;
-import selling.sunshine.model.express.Express;
+import common.sunshine.model.selling.express.Express;
 import selling.sunshine.service.DeliverService;
 import selling.sunshine.service.ExpressService;
 import selling.sunshine.service.OrderService;

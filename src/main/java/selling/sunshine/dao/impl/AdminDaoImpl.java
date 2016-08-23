@@ -8,11 +8,11 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import selling.sunshine.dao.AdminDao;
 import common.sunshine.dao.BaseDao;
-import selling.sunshine.model.Admin;
-import selling.sunshine.model.Role;
-import selling.sunshine.model.User;
-import selling.sunshine.pagination.DataTablePage;
-import selling.sunshine.pagination.DataTableParam;
+import common.sunshine.model.selling.admin.Admin;
+import common.sunshine.model.selling.user.Role;
+import common.sunshine.model.selling.user.User;
+import common.sunshine.pagination.DataTablePage;
+import common.sunshine.pagination.DataTableParam;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
 

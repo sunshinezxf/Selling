@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="selling.goods">
-    <resultMap id="goods4AgentVo" type="selling.sunshine.model.goods.Goods4Agent">
+    <resultMap id="goods4AgentVo" type="common.sunshine.model.selling.goods.Goods4Agent">
         <result property="goodsId" column="goods_id"></result>
         <result property="name" column="goods_name"></result>
         <result property="description" column="goods_description"></result>
@@ -10,7 +10,7 @@
         <result property="createAt" column="create_time"></result>
     </resultMap>
 
-    <resultMap id="goods4CustomerVo" type="selling.sunshine.model.goods.Goods4Customer">
+    <resultMap id="goods4CustomerVo" type="common.sunshine.model.selling.goods.Goods4Customer">
         <result property="goodsId" column="goods_id"></result>
         <result property="name" column="goods_name"></result>
         <result property="description" column="goods_description"></result>
@@ -21,7 +21,7 @@
         <collection property="thumbnails" column="goodsId = goods_id" select="thumbnailQuery"></collection>
     </resultMap>
 
-    <resultMap id="thumbnailVo" type="selling.sunshine.model.goods.Thumbnail">
+    <resultMap id="thumbnailVo" type="common.sunshine.model.selling.goods.Thumbnail">
         <result property="thumbnailId" column="thumbnail_id"></result>
         <result property="path" column="thumbnail_path"></result>
         <result property="blockFlag" column="block_flag"></result>
@@ -29,7 +29,7 @@
     </resultMap>
 
     <!-- insert record of goods -->
-    <insert id="insert" parameterType="selling.sunshine.model.goods.Goods4Customer" useGeneratedKeys="false">
+    <insert id="insert" parameterType="common.sunshine.model.selling.goods.Goods4Customer" useGeneratedKeys="false">
         INSERT INTO goods(goods_id, goods_name, prime_price, agent_price, goods_description, block_flag, create_time)
         VALUE (#{goodsId}, #{name}, #{customerPrice}, #{agentPrice}, #{description}, #{blockFlag}, #{createAt})
     </insert>
@@ -85,7 +85,7 @@
     </select>
 
     <!-- modify goods info -->
-    <update id="update" parameterType="selling.sunshine.model.goods.Goods4Customer">
+    <update id="update" parameterType="common.sunshine.model.selling.goods.Goods4Customer">
         UPDATE goods
         <set>
             <if test="name != null">
