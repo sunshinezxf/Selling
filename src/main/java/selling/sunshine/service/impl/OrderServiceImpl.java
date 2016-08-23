@@ -14,8 +14,8 @@ import selling.sunshine.model.OrderItem;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.pagination.MobilePageParam;
 import selling.sunshine.service.OrderService;
-import selling.sunshine.utils.ResponseCode;
-import selling.sunshine.utils.ResultData;
+import common.sunshine.utils.ResponseCode;
+import common.sunshine.utils.ResultData;
 
 import java.util.List;
 import java.util.Map;

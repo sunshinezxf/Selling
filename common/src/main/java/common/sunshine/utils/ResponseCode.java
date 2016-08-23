@@ -1,4 +1,4 @@
-package selling.sunshine.utils;
+package common.sunshine.utils;
 
 /**
  * Created by sunshine on 4/8/16.

@@ -2,7 +2,7 @@ package selling.sunshine.service;
 
 import java.util.List;
 
-import selling.sunshine.utils.ResultData;
+import common.sunshine.utils.ResultData;
 
 public interface GatherService {
 	ResultData generateGather();

@@ -1,17 +1,14 @@
 package selling.sunshine.dao.impl;
 
+import common.sunshine.utils.IDGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
-
-import com.alibaba.fastjson.JSON;
-
 import selling.sunshine.dao.BaseDao;
 import selling.sunshine.dao.OrderItemDao;
 import selling.sunshine.model.OrderItem;
-import selling.sunshine.utils.IDGenerator;
-import selling.sunshine.utils.ResponseCode;
-import selling.sunshine.utils.ResultData;
+import common.sunshine.utils.ResponseCode;
+import common.sunshine.utils.ResultData;
 
 import java.util.List;
 import java.util.Map;
@@ -57,9 +54,9 @@ public class OrderItemDaoImpl extends BaseDao implements OrderItemDao {
         }
     }
 
-	@Override
-	public ResultData updateOrderItem(OrderItem orderItem) {
-		ResultData result = new ResultData();
+    @Override
+    public ResultData updateOrderItem(OrderItem orderItem) {
+        ResultData result = new ResultData();
         synchronized (lock) {
             try {
                 sqlSession.update("selling.order.item.update", orderItem);
@@ -73,5 +70,5 @@ public class OrderItemDaoImpl extends BaseDao implements OrderItemDao {
                 return result;
             }
         }
-	}
+    }
 }

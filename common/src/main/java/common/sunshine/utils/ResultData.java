@@ -1,4 +1,4 @@
-package selling.sunshine.utils;
+package common.sunshine.utils;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;

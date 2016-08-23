@@ -1,11 +1,11 @@
 package selling.sunshine.dao.impl;
 
+import common.sunshine.utils.IDGenerator;
 import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
-
 import selling.sunshine.dao.BaseDao;
 import selling.sunshine.dao.CustomerOrderDao;
 import selling.sunshine.model.CustomerOrder;
@@ -14,9 +14,8 @@ import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.pagination.MobilePage;
 import selling.sunshine.pagination.MobilePageParam;
-import selling.sunshine.utils.IDGenerator;
-import selling.sunshine.utils.ResponseCode;
-import selling.sunshine.utils.ResultData;
+import common.sunshine.utils.ResponseCode;
+import common.sunshine.utils.ResultData;
 
 import java.util.ArrayList;
 import java.util.List;

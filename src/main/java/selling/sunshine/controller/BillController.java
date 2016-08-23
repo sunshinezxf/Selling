@@ -17,8 +17,8 @@ import selling.sunshine.service.AgentService;
 import selling.sunshine.service.BillService;
 import selling.sunshine.service.OrderService;
 import selling.sunshine.service.ToolService;
-import selling.sunshine.utils.ResponseCode;
-import selling.sunshine.utils.ResultData;
+import common.sunshine.utils.ResponseCode;
+import common.sunshine.utils.ResultData;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

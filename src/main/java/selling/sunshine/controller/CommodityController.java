@@ -22,8 +22,8 @@ import selling.sunshine.model.goods.Thumbnail;
 import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.*;
-import selling.sunshine.utils.ResponseCode;
-import selling.sunshine.utils.ResultData;
+import common.sunshine.utils.ResponseCode;
+import common.sunshine.utils.ResultData;
 import selling.sunshine.utils.WechatConfig;
 import selling.sunshine.utils.WechatUtil;
 

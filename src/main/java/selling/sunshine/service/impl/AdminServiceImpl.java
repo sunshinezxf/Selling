@@ -1,5 +1,6 @@
 package selling.sunshine.service.impl;
 
+import common.sunshine.utils.Encryption;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,9 +10,8 @@ import selling.sunshine.model.Admin;
 import selling.sunshine.model.Role;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.AdminService;
-import selling.sunshine.utils.Encryption;
-import selling.sunshine.utils.ResponseCode;
-import selling.sunshine.utils.ResultData;
+import common.sunshine.utils.ResponseCode;
+import common.sunshine.utils.ResultData;
 
 import java.util.HashMap;
 import java.util.List;

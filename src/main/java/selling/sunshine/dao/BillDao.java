@@ -3,7 +3,7 @@ package selling.sunshine.dao;
 import selling.sunshine.model.CustomerOrderBill;
 import selling.sunshine.model.DepositBill;
 import selling.sunshine.model.OrderBill;
-import selling.sunshine.utils.ResultData;
+import common.sunshine.utils.ResultData;
 
 import java.util.Map;
 

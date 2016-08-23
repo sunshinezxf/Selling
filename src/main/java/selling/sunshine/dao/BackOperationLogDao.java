@@ -2,7 +2,7 @@ package selling.sunshine.dao;
 
 import selling.sunshine.model.BackOperationLog;
 import selling.sunshine.pagination.MobilePageParam;
-import selling.sunshine.utils.ResultData;
+import common.sunshine.utils.ResultData;
 
 import java.util.Map;
 

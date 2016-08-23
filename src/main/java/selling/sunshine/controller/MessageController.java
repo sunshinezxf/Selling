@@ -10,8 +10,8 @@ import org.springframework.web.servlet.ModelAndView;
 import selling.sunshine.model.Agent;
 import selling.sunshine.service.AgentService;
 import selling.sunshine.service.MessageService;
-import selling.sunshine.utils.ResponseCode;
-import selling.sunshine.utils.ResultData;
+import common.sunshine.utils.ResponseCode;
+import common.sunshine.utils.ResultData;
 
 import java.util.*;
 

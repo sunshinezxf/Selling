@@ -1,5 +1,6 @@
 package selling.sunshine.service.impl;
 
+import common.sunshine.utils.IDGenerator;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.*;
 import org.slf4j.Logger;
@@ -9,12 +10,14 @@ import org.springframework.stereotype.Service;
 import selling.sunshine.dao.CustomerDao;
 import selling.sunshine.dao.ExpressDao;
 import selling.sunshine.dao.OrderDao;
-import selling.sunshine.dao.OrderItemDao;
 import selling.sunshine.model.*;
 import selling.sunshine.model.express.Express4Agent;
 import selling.sunshine.model.express.Express4Customer;
 import selling.sunshine.service.IndentService;
-import selling.sunshine.utils.*;
+import selling.sunshine.utils.PlatformConfig;
+import common.sunshine.utils.ResponseCode;
+import common.sunshine.utils.ResultData;
+import selling.sunshine.utils.WorkBookUtil;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -29,9 +32,6 @@ import java.util.Map;
 @Service
 public class IndentServiceImpl implements IndentService {
     private Logger logger = LoggerFactory.getLogger(IndentServiceImpl.class);
-
-    @Autowired
-    private OrderItemDao orderItemDao;
 
     @Autowired
     private CustomerDao customerDao;
@@ -319,7 +319,7 @@ public class IndentServiceImpl implements IndentService {
                     condition.clear();
                     condition.put("orderItemId", orderItem.getOrderItemId());
                     ResultData queryData = expressDao.queryExpress4Agent(condition);
-                    if (queryData.getResponseCode() == ResponseCode.RESPONSE_OK && !((List)queryData.getData()).isEmpty()) {
+                    if (queryData.getResponseCode() == ResponseCode.RESPONSE_OK && !((List) queryData.getData()).isEmpty()) {
                         Express4Agent express4Agent = ((List<Express4Agent>) queryData.getData()).get(0);
                         row.createCell((short) 11).setCellValue(new SimpleDateFormat("yyyy-MM-dd").format(express4Agent.getCreateAt()));
                         row.createCell((short) 12).setCellValue(express4Agent.getExpressNumber());
@@ -354,7 +354,7 @@ public class IndentServiceImpl implements IndentService {
                     Map<String, Object> condition = new HashMap<>();
                     condition.put("orderId", customerOrder.getOrderId());
                     ResultData queryData = expressDao.queryExpress4Customer(condition);
-                    if (queryData.getResponseCode() == ResponseCode.RESPONSE_OK && !((List)queryData.getData()).isEmpty()) {
+                    if (queryData.getResponseCode() == ResponseCode.RESPONSE_OK && !((List) queryData.getData()).isEmpty()) {
                         Express4Customer express = ((List<Express4Customer>) queryData.getData()).get(0);
                         row.createCell((short) 10).setCellValue(new SimpleDateFormat("yyyy-MM-dd").format(express.getCreateAt()));
                         row.createCell((short) 11).setCellValue(express.getExpressNumber());

@@ -15,8 +15,8 @@ import selling.sunshine.model.DepositBill;
 import selling.sunshine.model.OrderBill;
 import selling.sunshine.service.BillService;
 import selling.sunshine.utils.PlatformConfig;
-import selling.sunshine.utils.ResponseCode;
-import selling.sunshine.utils.ResultData;
+import common.sunshine.utils.ResponseCode;
+import common.sunshine.utils.ResultData;
 
 import java.util.HashMap;
 import java.util.List;

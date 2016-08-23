@@ -13,8 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import selling.sunshine.service.MessageService;
 import selling.sunshine.utils.PlatformConfig;
-import selling.sunshine.utils.ResponseCode;
-import selling.sunshine.utils.ResultData;
+import common.sunshine.utils.ResponseCode;
+import common.sunshine.utils.ResultData;
 
 import javax.ws.rs.core.MediaType;
 import java.util.Set;

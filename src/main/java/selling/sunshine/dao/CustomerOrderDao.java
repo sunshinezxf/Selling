@@ -3,7 +3,7 @@ package selling.sunshine.dao;
 import selling.sunshine.model.CustomerOrder;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.pagination.MobilePageParam;
-import selling.sunshine.utils.ResultData;
+import common.sunshine.utils.ResultData;
 
 import java.util.Map;
 

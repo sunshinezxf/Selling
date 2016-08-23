@@ -14,8 +14,8 @@ import selling.sunshine.model.sum.Vendition;
 import selling.sunshine.model.sum.Volume;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.StatisticService;
-import selling.sunshine.utils.ResponseCode;
-import selling.sunshine.utils.ResultData;
+import common.sunshine.utils.ResponseCode;
+import common.sunshine.utils.ResultData;
 
 import java.util.*;
 

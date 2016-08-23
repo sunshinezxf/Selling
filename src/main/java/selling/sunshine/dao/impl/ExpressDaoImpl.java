@@ -1,5 +1,6 @@
 package selling.sunshine.dao.impl;
 
+import common.sunshine.utils.IDGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -9,9 +10,8 @@ import selling.sunshine.dao.ExpressDao;
 import selling.sunshine.model.express.Express;
 import selling.sunshine.model.express.Express4Agent;
 import selling.sunshine.model.express.Express4Customer;
-import selling.sunshine.utils.IDGenerator;
-import selling.sunshine.utils.ResponseCode;
-import selling.sunshine.utils.ResultData;
+import common.sunshine.utils.ResponseCode;
+import common.sunshine.utils.ResultData;
 
 import java.util.List;
 import java.util.Map;

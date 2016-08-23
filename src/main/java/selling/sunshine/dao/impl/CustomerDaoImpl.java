@@ -1,5 +1,6 @@
 package selling.sunshine.dao.impl;
 
+import common.sunshine.utils.IDGenerator;
 import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,9 +13,8 @@ import selling.sunshine.model.CustomerAddress;
 import selling.sunshine.model.CustomerPhone;
 import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;
-import selling.sunshine.utils.IDGenerator;
-import selling.sunshine.utils.ResponseCode;
-import selling.sunshine.utils.ResultData;
+import common.sunshine.utils.ResponseCode;
+import common.sunshine.utils.ResultData;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -90,26 +90,26 @@ public class CustomerDaoImpl extends BaseDao implements CustomerDao {
                 CustomerPhone phone = customer.getPhone();
                 CustomerPhone currentPhone = sqlSession.selectOne("selling.customer.phone.query", condition);
                 if (phone != null) {
-                	if (currentPhone == null || (currentPhone != null && !currentPhone.getPhone().equals(phone.getPhone()))){
-                		phone.setPhoneId(IDGenerator.generate("PNM"));
+                    if (currentPhone == null || (currentPhone != null && !currentPhone.getPhone().equals(phone.getPhone()))) {
+                        phone.setPhoneId(IDGenerator.generate("PNM"));
                         phone.setCustomer(customer);
                         sqlSession.insert("selling.customer.phone.insert", phone);
-                        if(currentPhone != null){
-                    		sqlSession.update("selling.customer.phone.block", currentPhone);
-                    	}
-                	}
+                        if (currentPhone != null) {
+                            sqlSession.update("selling.customer.phone.block", currentPhone);
+                        }
+                    }
                 }
                 CustomerAddress address = customer.getAddress();
                 CustomerAddress currentAddress = sqlSession.selectOne("selling.customer.address.query", condition);
-                if(address != null){
-	                if (currentAddress == null || (currentAddress != null && !address.getAddress().equals(currentAddress.getAddress()))) {
-	                    address.setAddressId(IDGenerator.generate("ADR"));
-	                    address.setCustomer(customer);
-	                    sqlSession.insert("selling.customer.address.insert", address);
-	                    if (currentAddress != null) {
-		                    sqlSession.update("selling.customer.address.block", currentAddress);
-		                }
-	                }
+                if (address != null) {
+                    if (currentAddress == null || (currentAddress != null && !address.getAddress().equals(currentAddress.getAddress()))) {
+                        address.setAddressId(IDGenerator.generate("ADR"));
+                        address.setCustomer(customer);
+                        sqlSession.insert("selling.customer.address.insert", address);
+                        if (currentAddress != null) {
+                            sqlSession.update("selling.customer.address.block", currentAddress);
+                        }
+                    }
                 }
                 //查询当前持久化的客户信息
                 condition.remove("blockFlag");

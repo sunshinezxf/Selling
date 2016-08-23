@@ -2,10 +2,9 @@ package selling.sunshine.dao;
 
 import selling.sunshine.model.Agent;
 import selling.sunshine.model.Credit;
-import selling.sunshine.model.gift.GiftApply;
 import selling.sunshine.model.gift.GiftConfig;
 import selling.sunshine.pagination.DataTableParam;
-import selling.sunshine.utils.ResultData;
+import common.sunshine.utils.ResultData;
 
 import java.util.List;
 import java.util.Map;

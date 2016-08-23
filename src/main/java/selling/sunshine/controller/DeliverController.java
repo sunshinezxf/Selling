@@ -1,5 +1,6 @@
 package selling.sunshine.controller;
 
+import common.sunshine.utils.IDGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,10 @@ import selling.sunshine.model.express.Express;
 import selling.sunshine.service.DeliverService;
 import selling.sunshine.service.ExpressService;
 import selling.sunshine.service.OrderService;
-import selling.sunshine.utils.*;
+import selling.sunshine.utils.DateUtils;
+import common.sunshine.utils.ResponseCode;
+import common.sunshine.utils.ResultData;
+import selling.sunshine.utils.ZipCompressor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -85,11 +89,11 @@ public class DeliverController {
             data.setResponseCode(ResponseCode.RESPONSE_ERROR);
             return data;
         }
-        
-        ResultData resultData=deliverService.produceSummary(list);
-        String summaryPath=resultData.getData().toString();
-        
-        
+
+        ResultData resultData = deliverService.produceSummary(list);
+        String summaryPath = resultData.getData().toString();
+
+
         String path = DeliverController.class.getResource("/").getPath();
         String os = System.getProperty("os.name").toLowerCase();
         if (os.indexOf("windows") >= 0) {
@@ -112,7 +116,7 @@ public class DeliverController {
         StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(zipName + ".zip");
         ZipCompressor zipCompressor = new ZipCompressor(sb.toString());
         zipCompressor.compress(pathList);
-        File file=new File((new StringBuffer(parent).append(summaryPath)).toString());
+        File file = new File((new StringBuffer(parent).append(summaryPath)).toString());
         file.delete();
         data.setData(zipName);
         return data;

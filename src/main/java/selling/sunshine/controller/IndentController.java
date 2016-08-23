@@ -1,5 +1,6 @@
 package selling.sunshine.controller;
 
+import common.sunshine.utils.IDGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,10 @@ import selling.sunshine.model.CustomerOrder;
 import selling.sunshine.model.OrderItem;
 import selling.sunshine.service.IndentService;
 import selling.sunshine.service.OrderService;
-import selling.sunshine.utils.*;
+import selling.sunshine.utils.DateUtils;
+import common.sunshine.utils.ResponseCode;
+import common.sunshine.utils.ResultData;
+import selling.sunshine.utils.ZipCompressor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -108,9 +112,9 @@ public class IndentController {
             return data;
         }
         //indent generate summary indent xlsx
-        
-        ResultData resultData=indentService.produceSummary(total);
-        String summaryPath=resultData.getData().toString();
+
+        ResultData resultData = indentService.produceSummary(total);
+        String summaryPath = resultData.getData().toString();
 
         String path = IndentController.class.getResource("/").getPath();
         String os = System.getProperty("os.name").toLowerCase();
@@ -133,31 +137,30 @@ public class IndentController {
         StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(zipName + ".zip");
         ZipCompressor zipCompressor = new ZipCompressor(sb.toString());
         zipCompressor.compress(pathList);
-        File file=new File((new StringBuffer(parent).append(summaryPath)).toString());
+        File file = new File((new StringBuffer(parent).append(summaryPath)).toString());
         file.delete();
         data.setData(zipName);
         return data;
     }
 
-	@RequestMapping(method = RequestMethod.GET, value = "/download/{fileName}/{tempFileName}")
-	public String download(@PathVariable("fileName") String fileName,@PathVariable("tempFileName") String tempFileName, HttpServletRequest request,
-			HttpServletResponse response) throws UnsupportedEncodingException {
-		// 1.设置文件ContentType类型，这样设置，会自动判断下载文件类型
-		response.setContentType("multipart/form-data");
-		// 2.设置文件头：最后一个参数是设置下载文件名
-		response.setHeader("Content-Disposition", "attachment;fileName=" + URLEncoder.encode("订货单报表_"+fileName+".zip", "utf-8"));
-		OutputStream out;
-		// 通过文件路径获得File对象
-		String path = IndentController.class.getResource("/").getPath();
-		String os = System.getProperty("os.name").toLowerCase();
-		if (os.indexOf("windows") >= 0) {
-			path = path.substring(1);
-		}
-		int index = path.lastIndexOf("/WEB-INF/classes/");
-		String parent = path.substring(0, index);
-		String directory = "/material/journal/indent";
-		StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(tempFileName + ".zip");
-		File file = new File(sb.toString());
+    @RequestMapping(method = RequestMethod.GET, value = "/download/{fileName}/{tempFileName}")
+    public String download(@PathVariable("fileName") String fileName, @PathVariable("tempFileName") String tempFileName, HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
+        // 1.设置文件ContentType类型，这样设置，会自动判断下载文件类型
+        response.setContentType("multipart/form-data");
+        // 2.设置文件头：最后一个参数是设置下载文件名
+        response.setHeader("Content-Disposition", "attachment;fileName=" + URLEncoder.encode("订货单报表_" + fileName + ".zip", "utf-8"));
+        OutputStream out;
+        // 通过文件路径获得File对象
+        String path = IndentController.class.getResource("/").getPath();
+        String os = System.getProperty("os.name").toLowerCase();
+        if (os.indexOf("windows") >= 0) {
+            path = path.substring(1);
+        }
+        int index = path.lastIndexOf("/WEB-INF/classes/");
+        String parent = path.substring(0, index);
+        String directory = "/material/journal/indent";
+        StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(tempFileName + ".zip");
+        File file = new File(sb.toString());
         try {
             FileInputStream fis = new FileInputStream(file);
             BufferedInputStream buff = new BufferedInputStream(fis);

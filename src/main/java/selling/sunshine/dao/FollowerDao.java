@@ -1,6 +1,6 @@
 package selling.sunshine.dao;
 
-import selling.sunshine.utils.ResultData;
+import common.sunshine.utils.ResultData;
 import selling.wechat.model.Follower;
 
 /**

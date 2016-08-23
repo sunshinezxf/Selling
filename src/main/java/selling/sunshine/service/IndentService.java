@@ -1,6 +1,6 @@
 package selling.sunshine.service;
 
-import selling.sunshine.utils.ResultData;
+import common.sunshine.utils.ResultData;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package selling.sunshine.dao;
 
 import selling.sunshine.model.BankCard;
-import selling.sunshine.utils.ResultData;
+import common.sunshine.utils.ResultData;
 
 import java.util.Map;
 

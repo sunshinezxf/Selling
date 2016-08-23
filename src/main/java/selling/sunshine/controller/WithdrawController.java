@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.pingplusplus.model.Event;
 import com.pingplusplus.model.Webhooks;
+import common.sunshine.utils.IDGenerator;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -14,7 +15,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
 import selling.sunshine.form.SortRule;
 import selling.sunshine.form.TimeRangeForm;
 import selling.sunshine.model.*;
@@ -23,27 +23,18 @@ import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.LogService;
 import selling.sunshine.service.ToolService;
 import selling.sunshine.service.WithdrawService;
-import selling.sunshine.utils.DateUtils;
-import selling.sunshine.utils.IDGenerator;
-import selling.sunshine.utils.ResponseCode;
-import selling.sunshine.utils.ResultData;
+import common.sunshine.utils.ResponseCode;
+import common.sunshine.utils.ResultData;
 import selling.sunshine.utils.ZipCompressor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.URLEncoder;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -127,26 +118,26 @@ public class WithdrawController {
         }
         return null;
     }
-    
+
     @RequestMapping(method = RequestMethod.GET, value = "/download/{fileName}/{tempFileName}")
-	public String downloadRecord(@PathVariable("fileName") String fileName,@PathVariable("tempFileName") String tempFileName, HttpServletRequest request,
-			HttpServletResponse response) throws UnsupportedEncodingException {
-		// 1.设置文件ContentType类型，这样设置，会自动判断下载文件类型
-		response.setContentType("multipart/form-data");
-		// 2.设置文件头：最后一个参数是设置下载文件名
-		response.setHeader("Content-Disposition", "attachment;fileName=" + URLEncoder.encode("提现单报表_"+fileName+".zip", "utf-8"));
-		OutputStream out;
-		// 通过文件路径获得File对象
-		String path = WithdrawController.class.getResource("/").getPath();
-		String os = System.getProperty("os.name").toLowerCase();
-		if (os.indexOf("windows") >= 0) {
-			path = path.substring(1);
-		}
-		int index = path.lastIndexOf("/WEB-INF/classes/");
-		String parent = path.substring(0, index);
-		String directory = "/material/journal/withdraw";
-		StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(tempFileName + ".zip");
-		File file = new File(sb.toString());
+    public String downloadRecord(@PathVariable("fileName") String fileName, @PathVariable("tempFileName") String tempFileName, HttpServletRequest request,
+                                 HttpServletResponse response) throws UnsupportedEncodingException {
+        // 1.设置文件ContentType类型，这样设置，会自动判断下载文件类型
+        response.setContentType("multipart/form-data");
+        // 2.设置文件头：最后一个参数是设置下载文件名
+        response.setHeader("Content-Disposition", "attachment;fileName=" + URLEncoder.encode("提现单报表_" + fileName + ".zip", "utf-8"));
+        OutputStream out;
+        // 通过文件路径获得File对象
+        String path = WithdrawController.class.getResource("/").getPath();
+        String os = System.getProperty("os.name").toLowerCase();
+        if (os.indexOf("windows") >= 0) {
+            path = path.substring(1);
+        }
+        int index = path.lastIndexOf("/WEB-INF/classes/");
+        String parent = path.substring(0, index);
+        String directory = "/material/journal/withdraw";
+        StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(tempFileName + ".zip");
+        File file = new File(sb.toString());
         try {
             FileInputStream fis = new FileInputStream(file);
             BufferedInputStream buff = new BufferedInputStream(fis);
@@ -205,7 +196,7 @@ public class WithdrawController {
         }
         return result;
     }
-    
+
     /**
      * 提现单报表
      */
@@ -223,7 +214,7 @@ public class WithdrawController {
         ResultData queryResponse = withdrawService.fetchWithdrawRecord(condition);
         Timestamp createAt = null;
         if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-        	WithdrawRecord record = ((List<WithdrawRecord>)queryResponse.getData()).get(0);
+            WithdrawRecord record = ((List<WithdrawRecord>) queryResponse.getData()).get(0);
             createAt = record.getCreateAt();
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
             view.addObject("start", format.format(createAt));
@@ -231,7 +222,7 @@ public class WithdrawController {
         view.setViewName("/backend/finance/withdraw");
         return view;
     }
-    
+
     /**
      * 提现单报表
      */
@@ -262,9 +253,9 @@ public class WithdrawController {
             data.setResponseCode(ResponseCode.RESPONSE_ERROR);
             return data;
         }
-        
-        ResultData resultData=withdrawService.produceSummary(total);
-        String summaryPath=resultData.getData().toString();
+
+        ResultData resultData = withdrawService.produceSummary(total);
+        String summaryPath = resultData.getData().toString();
 
         String path = WithdrawController.class.getResource("/").getPath();
         String os = System.getProperty("os.name").toLowerCase();
@@ -280,7 +271,7 @@ public class WithdrawController {
         StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(zipName + ".zip");
         ZipCompressor zipCompressor = new ZipCompressor(sb.toString());
         zipCompressor.compress(pathList);
-        File file=new File((new StringBuffer(parent).append(summaryPath)).toString());
+        File file = new File((new StringBuffer(parent).append(summaryPath)).toString());
         file.delete();
         data.setData(zipName);
         return data;

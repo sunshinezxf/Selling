@@ -1,16 +1,14 @@
 package selling.sunshine.service.impl;
 
-import com.pingplusplus.model.Refund;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import selling.sunshine.dao.ChargeDao;
 import selling.sunshine.model.Charge;
-import selling.sunshine.model.CustomerOrderBill;
 import selling.sunshine.service.ChargeService;
-import selling.sunshine.utils.ResponseCode;
-import selling.sunshine.utils.ResultData;
+import common.sunshine.utils.ResponseCode;
+import common.sunshine.utils.ResultData;
 
 import java.util.HashMap;
 import java.util.List;

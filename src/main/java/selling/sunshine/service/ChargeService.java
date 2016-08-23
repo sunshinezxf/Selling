@@ -1,8 +1,7 @@
 package selling.sunshine.service;
 
 import selling.sunshine.model.Charge;
-import selling.sunshine.model.CustomerOrderBill;
-import selling.sunshine.utils.ResultData;
+import common.sunshine.utils.ResultData;
 
 import java.util.Map;
 

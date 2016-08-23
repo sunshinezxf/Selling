@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import selling.sunshine.model.Order;
 import selling.sunshine.model.sum.AgentGoods;
 import selling.sunshine.model.sum.OrderSeries;
 import selling.sunshine.model.sum.OrderStatistics;
@@ -21,8 +20,8 @@ import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.AgentService;
 import selling.sunshine.service.OrderService;
 import selling.sunshine.service.StatisticService;
-import selling.sunshine.utils.ResponseCode;
-import selling.sunshine.utils.ResultData;
+import common.sunshine.utils.ResponseCode;
+import common.sunshine.utils.ResultData;
 
 import java.util.ArrayList;
 import java.util.HashMap;

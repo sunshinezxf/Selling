@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 import selling.sunshine.dao.ShipmentDao;
 import selling.sunshine.model.ShipConfig;
 import selling.sunshine.service.ShipmentService;
-import selling.sunshine.utils.ResponseCode;
-import selling.sunshine.utils.ResultData;
+import common.sunshine.utils.ResponseCode;
+import common.sunshine.utils.ResultData;
 
 import java.util.List;
 import java.util.Map;

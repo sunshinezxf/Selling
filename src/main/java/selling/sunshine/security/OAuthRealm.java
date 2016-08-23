@@ -13,8 +13,8 @@ import selling.sunshine.model.Role;
 import selling.sunshine.model.User;
 import selling.sunshine.service.AgentService;
 import selling.sunshine.service.UserService;
-import selling.sunshine.utils.ResponseCode;
-import selling.sunshine.utils.ResultData;
+import common.sunshine.utils.ResponseCode;
+import common.sunshine.utils.ResultData;
 
 import java.util.HashMap;
 import java.util.List;

@@ -21,8 +21,8 @@ import selling.sunshine.service.CommodityService;
 import selling.sunshine.service.LogService;
 import selling.sunshine.service.RefundService;
 import selling.sunshine.service.ToolService;
-import selling.sunshine.utils.ResponseCode;
-import selling.sunshine.utils.ResultData;
+import common.sunshine.utils.ResponseCode;
+import common.sunshine.utils.ResultData;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;

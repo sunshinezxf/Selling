@@ -1,7 +1,7 @@
 package selling.sunshine.service;
 
 import org.springframework.web.multipart.MultipartFile;
-import selling.sunshine.utils.ResultData;
+import common.sunshine.utils.ResultData;
 
 /**
  * Created by sunshine on 6/2/16.

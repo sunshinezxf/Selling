@@ -1,5 +1,6 @@
 package selling.sunshine.service.impl;
 
+import common.sunshine.utils.Encryption;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,9 +9,8 @@ import selling.sunshine.dao.UserDao;
 import selling.sunshine.model.User;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.UserService;
-import selling.sunshine.utils.Encryption;
-import selling.sunshine.utils.ResponseCode;
-import selling.sunshine.utils.ResultData;
+import common.sunshine.utils.ResponseCode;
+import common.sunshine.utils.ResultData;
 
 import java.util.HashMap;
 import java.util.List;
@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResultData fetchUser(Map<String, Object> condition, DataTableParam param) {
         ResultData result = new ResultData();
-        ResultData queryResponse = userDao.queryUser(condition,param);
+        ResultData queryResponse = userDao.queryUser(condition, param);
         result.setResponseCode(queryResponse.getResponseCode());
         if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             result.setData(queryResponse.getData());

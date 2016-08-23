@@ -1,6 +1,5 @@
 package selling.sunshine.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
@@ -23,8 +22,8 @@ import selling.sunshine.model.express.Express4Customer;
 import selling.sunshine.service.ExpressService;
 import selling.sunshine.utils.DigestUtil;
 import selling.sunshine.utils.HttpUtil;
-import selling.sunshine.utils.ResponseCode;
-import selling.sunshine.utils.ResultData;
+import common.sunshine.utils.ResponseCode;
+import common.sunshine.utils.ResultData;
 
 import java.io.IOException;
 import java.util.ArrayList;

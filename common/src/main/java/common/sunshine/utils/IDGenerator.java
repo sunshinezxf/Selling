@@ -1,4 +1,4 @@
-package selling.sunshine.utils;
+package common.sunshine.utils;
 
 import java.util.Random;
 

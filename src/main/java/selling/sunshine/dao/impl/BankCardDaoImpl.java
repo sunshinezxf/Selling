@@ -1,5 +1,6 @@
 package selling.sunshine.dao.impl;
 
+import common.sunshine.utils.IDGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -7,9 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 import selling.sunshine.dao.BankCardDao;
 import selling.sunshine.dao.BaseDao;
 import selling.sunshine.model.BankCard;
-import selling.sunshine.utils.IDGenerator;
-import selling.sunshine.utils.ResponseCode;
-import selling.sunshine.utils.ResultData;
+import common.sunshine.utils.ResponseCode;
+import common.sunshine.utils.ResultData;
 
 import java.util.HashMap;
 import java.util.List;

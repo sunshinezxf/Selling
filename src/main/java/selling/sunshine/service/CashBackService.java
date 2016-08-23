@@ -1,7 +1,7 @@
 package selling.sunshine.service;
 
 import selling.sunshine.pagination.DataTableParam;
-import selling.sunshine.utils.ResultData;
+import common.sunshine.utils.ResultData;
 import selling.sunshine.vo.cashback.CashBack4AgentPerMonth;
 
 import java.util.List;

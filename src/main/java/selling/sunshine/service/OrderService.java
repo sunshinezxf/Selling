@@ -5,7 +5,7 @@ import selling.sunshine.model.Order;
 import selling.sunshine.model.OrderItem;
 import selling.sunshine.pagination.DataTableParam;
 import selling.sunshine.pagination.MobilePageParam;
-import selling.sunshine.utils.ResultData;
+import common.sunshine.utils.ResultData;
 
 import java.util.Map;
 

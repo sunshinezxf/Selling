@@ -1,5 +1,6 @@
 package selling.sunshine.dao.impl;
 
+import common.sunshine.utils.IDGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -11,9 +12,8 @@ import selling.sunshine.model.BillStatus;
 import selling.sunshine.model.CustomerOrderBill;
 import selling.sunshine.model.DepositBill;
 import selling.sunshine.model.OrderBill;
-import selling.sunshine.utils.IDGenerator;
-import selling.sunshine.utils.ResponseCode;
-import selling.sunshine.utils.ResultData;
+import common.sunshine.utils.ResponseCode;
+import common.sunshine.utils.ResultData;
 
 import java.util.HashMap;
 import java.util.List;
@@ -175,27 +175,27 @@ public class BillDaoImpl extends BaseDao implements BillDao {
         }
     }
 
-	@Override
-	public ResultData insertCustomerOrderBill(CustomerOrderBill bill) {
-		 ResultData result = new ResultData();
-	        synchronized (lock) {
-	            try {
-	                bill.setBillId(IDGenerator.generate("COB"));
-	                sqlSession.insert("selling.bill.customerOrder.insert", bill);
-	                result.setData(bill);
-	            } catch (Exception e) {
-	                logger.error(e.getMessage());
-	                result.setResponseCode(ResponseCode.RESPONSE_ERROR);
-	                result.setDescription(e.getMessage());
-	            } finally {
-	                return result;
-	            }
-	        }
-	}
+    @Override
+    public ResultData insertCustomerOrderBill(CustomerOrderBill bill) {
+        ResultData result = new ResultData();
+        synchronized (lock) {
+            try {
+                bill.setBillId(IDGenerator.generate("COB"));
+                sqlSession.insert("selling.bill.customerOrder.insert", bill);
+                result.setData(bill);
+            } catch (Exception e) {
+                logger.error(e.getMessage());
+                result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+                result.setDescription(e.getMessage());
+            } finally {
+                return result;
+            }
+        }
+    }
 
-	@Override
-	public ResultData queryCustomerOrderBill(Map<String, Object> condition) {
-		ResultData result = new ResultData();
+    @Override
+    public ResultData queryCustomerOrderBill(Map<String, Object> condition) {
+        ResultData result = new ResultData();
         try {
             List<OrderBill> list = sqlSession.selectList("selling.bill.customerOrder.query", condition);
             result.setData(list);
@@ -206,11 +206,11 @@ public class BillDaoImpl extends BaseDao implements BillDao {
         } finally {
             return result;
         }
-	}
+    }
 
-	@Override
-	public ResultData updateCustomerOrderBill(CustomerOrderBill bill) {
-		ResultData result = new ResultData();
+    @Override
+    public ResultData updateCustomerOrderBill(CustomerOrderBill bill) {
+        ResultData result = new ResultData();
         synchronized (lock) {
             try {
                 sqlSession.update("selling.bill.customerOrder.update", bill);
@@ -226,5 +226,5 @@ public class BillDaoImpl extends BaseDao implements BillDao {
                 return result;
             }
         }
-	}
+    }
 }

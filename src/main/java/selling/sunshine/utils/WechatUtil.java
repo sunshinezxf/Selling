@@ -2,6 +2,7 @@ package selling.sunshine.utils;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import common.sunshine.utils.IDGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import selling.wechat.model.Follower;
@@ -133,23 +134,23 @@ public class WechatUtil {
             return result;
         }
     }
-    
-    public static String downloadCredit(String media_id, String token, String base){
-    	logger.debug("creditdebug");
-    	String url = "https://api.weixin.qq.com/cgi-bin/media/get?access_token=" +  token + "&media_id=" + media_id;
-    	String result = "";
-    	logger.debug(url);
-    	try{
-    		URL address = new URL(url);
-    		HttpURLConnection connection = (HttpURLConnection) address.openConnection();
-    		connection.setRequestMethod("GET");
-    		connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-    		connection.setDoOutput(true);
-    		connection.setDoInput(true);
-    		System.setProperty("sun.net.client.defaultConnectTimeout", "30000");
+
+    public static String downloadCredit(String media_id, String token, String base) {
+        logger.debug("creditdebug");
+        String url = "https://api.weixin.qq.com/cgi-bin/media/get?access_token=" + token + "&media_id=" + media_id;
+        String result = "";
+        logger.debug(url);
+        try {
+            URL address = new URL(url);
+            HttpURLConnection connection = (HttpURLConnection) address.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            connection.setDoOutput(true);
+            connection.setDoInput(true);
+            System.setProperty("sun.net.client.defaultConnectTimeout", "30000");
             System.setProperty("sun.net.client.defaultReadTimeout", "30000");
             connection.connect();
-            InputStream is= connection.getInputStream();
+            InputStream is = connection.getInputStream();
             //路径处理
             String PATH = "/material/upload";
             Date current = new Date();
@@ -171,17 +172,17 @@ public class WechatUtil {
             byte[] data = new byte[1024];
             int len = 0;
             while ((len = is.read(data)) != -1) {
-            	fileOutputStream.write(data, 0, len);
+                fileOutputStream.write(data, 0, len);
             }
             //返回路径
             int index = temp.getPath().indexOf(SystemTeller.tellPath(PATH + "/" + time));
             result = temp.getPath().substring(index);
             logger.debug(result);
-    	} catch (Exception e){
-    		logger.debug(e.getMessage());
-    	} finally {
-    		return result;
-    	}
+        } catch (Exception e) {
+            logger.debug(e.getMessage());
+        } finally {
+            return result;
+        }
     }
 
     public static final String inputStream2String(InputStream in) throws IOException {

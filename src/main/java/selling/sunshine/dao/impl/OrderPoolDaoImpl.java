@@ -9,8 +9,8 @@ import org.slf4j.LoggerFactory;
 import selling.sunshine.dao.BaseDao;
 import selling.sunshine.dao.OrderPoolDao;
 import selling.sunshine.model.OrderPool;
-import selling.sunshine.utils.ResponseCode;
-import selling.sunshine.utils.ResultData;
+import common.sunshine.utils.ResponseCode;
+import common.sunshine.utils.ResultData;
 
 public class OrderPoolDaoImpl extends BaseDao implements OrderPoolDao {
 	private Logger logger = LoggerFactory.getLogger(OrderItemDaoImpl.class);

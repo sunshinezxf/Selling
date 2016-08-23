@@ -35,8 +35,8 @@ import selling.sunshine.service.ChargeService;
 import selling.sunshine.service.LogService;
 import selling.sunshine.service.OrderService;
 import selling.sunshine.service.ToolService;
-import selling.sunshine.utils.ResponseCode;
-import selling.sunshine.utils.ResultData;
+import common.sunshine.utils.ResponseCode;
+import common.sunshine.utils.ResultData;
 
 /**
  * Created by sunshine on 8/3/16.

@@ -5,8 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import selling.sunshine.dao.BaseDao;
 import selling.sunshine.dao.FollowerDao;
-import selling.sunshine.utils.ResponseCode;
-import selling.sunshine.utils.ResultData;
+import common.sunshine.utils.ResponseCode;
+import common.sunshine.utils.ResultData;
 import selling.wechat.model.Follower;
 
 /**
