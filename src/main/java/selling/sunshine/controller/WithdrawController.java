@@ -15,7 +15,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import selling.sunshine.form.SortRule;
+import common.sunshine.utils.SortRule;
 import selling.sunshine.form.TimeRangeForm;
 import selling.sunshine.model.*;
 import selling.sunshine.pagination.DataTablePage;

@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
-import selling.sunshine.dao.BaseDao;
+import common.sunshine.dao.BaseDao;
 import selling.sunshine.dao.StatisticDao;
 import selling.sunshine.model.sum.*;
 import selling.sunshine.pagination.DataTablePage;

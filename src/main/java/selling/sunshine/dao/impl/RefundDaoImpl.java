@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-import selling.sunshine.dao.BaseDao;
+import common.sunshine.dao.BaseDao;
 import selling.sunshine.dao.RefundDao;
 import selling.sunshine.model.Agent;
 import selling.sunshine.model.OrderPool;

@@ -1,4 +1,4 @@
-package selling.sunshine.form;
+package common.sunshine.utils;
 
 /**
  * Created by sunshine on 5/16/16.

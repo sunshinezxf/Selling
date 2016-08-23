@@ -4,7 +4,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
-import selling.sunshine.dao.BaseDao;
+import common.sunshine.dao.BaseDao;
 import selling.sunshine.dao.CashBackDao;
 import selling.sunshine.pagination.DataTablePage;
 import selling.sunshine.pagination.DataTableParam;

@@ -5,7 +5,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import selling.sunshine.dao.BackOperationLogDao;
-import selling.sunshine.dao.BaseDao;
+import common.sunshine.dao.BaseDao;
 import selling.sunshine.model.BackOperationLog;
 import selling.sunshine.pagination.MobilePage;
 import selling.sunshine.pagination.MobilePageParam;

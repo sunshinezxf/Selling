@@ -4,7 +4,7 @@ import common.sunshine.utils.IDGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
-import selling.sunshine.dao.BaseDao;
+import common.sunshine.dao.BaseDao;
 import selling.sunshine.dao.OrderItemDao;
 import selling.sunshine.model.OrderItem;
 import common.sunshine.utils.ResponseCode;

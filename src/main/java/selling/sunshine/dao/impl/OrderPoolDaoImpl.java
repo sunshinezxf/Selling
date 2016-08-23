@@ -6,7 +6,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import selling.sunshine.dao.BaseDao;
+import common.sunshine.dao.BaseDao;
 import selling.sunshine.dao.OrderPoolDao;
 import selling.sunshine.model.OrderPool;
 import common.sunshine.utils.ResponseCode;

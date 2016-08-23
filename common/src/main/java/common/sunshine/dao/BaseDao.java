@@ -1,8 +1,7 @@
-package selling.sunshine.dao;
+package common.sunshine.dao;
 
+import common.sunshine.utils.SortRule;
 import org.apache.ibatis.session.SqlSession;
-
-import selling.sunshine.form.SortRule;
 
 import javax.annotation.Resource;
 import java.util.List;

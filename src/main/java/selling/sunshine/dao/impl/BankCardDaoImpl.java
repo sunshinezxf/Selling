@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import selling.sunshine.dao.BankCardDao;
-import selling.sunshine.dao.BaseDao;
+import common.sunshine.dao.BaseDao;
 import selling.sunshine.model.BankCard;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;

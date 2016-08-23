@@ -12,7 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 import selling.sunshine.form.CustomerAddressForm;
 import selling.sunshine.form.CustomerForm;
 import selling.sunshine.form.PurchaseForm;
-import selling.sunshine.form.SortRule;
+import common.sunshine.utils.SortRule;
 import selling.sunshine.model.*;
 import selling.sunshine.model.goods.Goods4Customer;
 import selling.sunshine.pagination.DataTablePage;
