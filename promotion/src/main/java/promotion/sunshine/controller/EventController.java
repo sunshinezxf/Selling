@@ -19,7 +19,7 @@ public class EventController {
     @RequestMapping(method = RequestMethod.GET, value = "/{eventName}/")
     public ModelAndView view(@PathVariable("eventName") String eventName) {
         ModelAndView view = new ModelAndView();
-
+        
         return view;
     }
 }
