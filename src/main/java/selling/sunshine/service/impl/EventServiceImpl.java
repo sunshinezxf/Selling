@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import common.sunshine.model.selling.event.Event;
+import common.sunshine.model.selling.event.GiftEvent;
 import common.sunshine.pagination.DataTableParam;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
@@ -22,9 +22,9 @@ public class EventServiceImpl implements EventService {
 	private EventDao eventDao;
 
 	@Override
-	public ResultData createEvent(Event event) {
+	public ResultData createGiftEvent(GiftEvent event) {
 		ResultData result = new ResultData();
-		ResultData insertResponse = eventDao.insertEvent(event);
+		ResultData insertResponse = eventDao.insertGiftEvent(event);
 		result.setResponseCode(insertResponse.getResponseCode());
 		if (insertResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
 			result.setData(insertResponse.getData());
@@ -35,9 +35,9 @@ public class EventServiceImpl implements EventService {
 	}
 
 	@Override
-	public ResultData fetchEvent(Map<String, Object> condition) {
+	public ResultData fetchGiftEvent(Map<String, Object> condition) {
 		ResultData result = new ResultData();
-		ResultData queryResponse = eventDao.queryEvent(condition);
+		ResultData queryResponse = eventDao.queryGiftEvent(condition);
 		result.setResponseCode(queryResponse.getResponseCode());
 		if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
 			if (((List) queryResponse.getData()).isEmpty()) {
@@ -51,9 +51,9 @@ public class EventServiceImpl implements EventService {
 	}
 
 	@Override
-	public ResultData updateEvent(Event event) {
+	public ResultData updateGiftEvent(GiftEvent event) {
 		ResultData result = new ResultData();
-		ResultData updateResponse = eventDao.updateEvent(event);
+		ResultData updateResponse = eventDao.updateGiftEvent(event);
 		result.setResponseCode(updateResponse.getResponseCode());
 		if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
 			result.setData(updateResponse.getData());
@@ -64,9 +64,9 @@ public class EventServiceImpl implements EventService {
 	}
 
 	@Override
-	public ResultData fetchEventByPage(Map<String, Object> condition, DataTableParam param) {
+	public ResultData fetchGiftEventByPage(Map<String, Object> condition, DataTableParam param) {
 		ResultData result = new ResultData();
-		ResultData queryResponse = eventDao.queryEventByPage(condition, param);
+		ResultData queryResponse = eventDao.queryGiftEventByPage(condition, param);
 		result.setResponseCode(queryResponse.getResponseCode());
 		if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
 			if (((List) queryResponse.getData()).isEmpty()) {
