@@ -65,6 +65,20 @@
                 </li>
             #end
             #if($role == "admin")
+                <li><a class="menu" data-toggle="collapse" data-parent="#accordion" href="#event-management"><i
+                        class="fa fa-book"></i> 活动管理<i
+                        class="pull-right fa fa-caret-down"></i></a>
+                    <ul id="event-management" class="nav nav-collapse collapse">
+                        <li><a class="sub-nav" href="${path.concat('/event/create')}"><i class="fa fa-cog"></i>
+                            发布活动</a>
+                        </li>
+                        <li><a class="sub-nav" href="${path.concat('/event/overview')}"><i class="fa fa-cog"></i>
+                            活动列表</a>
+                        </li>
+                    </ul>
+                </li>
+            #end
+            #if($role == "admin")
                 <li><a class="menu" data-toggle="collapse" data-parent="#accordion" href="#statement-management"><i
                         class="fa fa-book"></i> 返现管理<i
                         class="pull-right fa fa-caret-down"></i></a>
@@ -147,17 +161,19 @@
     $("#agent-management").collapse('hide');
     $("#order-management").collapse('hide');
     $("#goods-management").collapse('hide');
+    $("#event-management").collapse('hide');
     $("#statement-management").collapse('hide');
     $("#withdraw-management").collapse('hide');
     $("#config-management").collapse('hide');
     $("#admin-management").collapse('hide');
     $("#finance-management").collapse('hide');
+   
     $(function () {
         var target_id = $(".main").attr("id-target");
         $("#" + target_id).collapse('show');
     });
 
-    var array = ["#agent-management", "#order-management", "#goods-management", "#statement-management", "#withdraw-management", "#config-management", "#admin-management", "#finance-management"];
+    var array = ["#agent-management", "#order-management", "#goods-management","#event-management", "#statement-management", "#withdraw-management", "#config-management", "#admin-management", "#finance-management"];
     $(".menu").click(function () {
         var menu_id = $(this).attr("href");
         $.each(array, function (i, value) {

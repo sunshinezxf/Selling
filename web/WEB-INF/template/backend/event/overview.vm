@@ -8,6 +8,7 @@
     #parse("/backend/component/navigate_with_login.vm")
 <div class="container-fluid">
     #parse("/backend/component/sidebar.vm")
+    #parse("/backend/event/component/event_overview_table.vm")
 </div>
 </body>
 </html>
