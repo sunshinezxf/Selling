@@ -16,5 +16,9 @@ public interface EventService {
 	ResultData updateGiftEvent(GiftEvent event);
 	
 	ResultData fetchGiftEventByPage(Map<String, Object> condition, DataTableParam param);
+	
+	ResultData fetchEventApplication(Map<String, Object> condition);
+	
+	ResultData fetchEventApplicationByPage(Map<String, Object> condition, DataTableParam param);
 
 }
