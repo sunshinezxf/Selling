@@ -29,8 +29,10 @@
         <mapper resource="selling/sunshine/mapper/withdraw.xml"/>
         <mapper resource="selling/sunshine/mapper/sum.xml"/>
         <mapper resource="selling/sunshine/mapper/charge.xml"/>
-        <mapper resource="selling/sunshine/mapper/agent/volume.xml"></mapper>
-        <mapper resource="selling/sunshine/mapper/gift/apply.xml"></mapper>
-        <mapper resource="selling/sunshine/mapper/cashback/summary.xml"></mapper>
+        <mapper resource="selling/sunshine/mapper/agent/volume.xml"/>
+        <mapper resource="selling/sunshine/mapper/gift/apply.xml"/>
+        <mapper resource="selling/sunshine/mapper/cashback/summary.xml"/>
+        <mapper resource="selling/sunshine/mapper/event/event.xml"/>
+        <mapper resource="selling/sunshine/mapper/event/eventapplication.xml"/>
     </mappers>
 </configuration>
