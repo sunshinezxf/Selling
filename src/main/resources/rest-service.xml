@@ -46,4 +46,6 @@
     <bean id="chargeService" class="selling.sunshine.service.impl.ChargeServiceImpl"></bean>
 
     <bean id="cashBackService" class="selling.sunshine.service.impl.CashBackServiceImpl"></bean>
+
+    <bean id="eventService" class="selling.sunshine.service.impl.EventServiceImpl"></bean>
 </beans>

@@ -10,10 +10,43 @@
         <result property="doneeGender" column="donee_gender"></result>
         <result property="doneeAddress" column="donee_address"></result>
         <result property="relation" column="relation"></result>
+        <result property="blockFlag" column="block_flag"></result>
+        <result property="createAt" column="create_time"></result>
     </resultMap>
 
     <insert id="insert" parameterType="common.sunshine.model.selling.event.EventApplication">
-        INSERT INTO event_application(application_id, donor_name, donor_phone, donee_name, donee_phone, donee_gender, donee_address, realtion)
-        VALUES (#{applicationId}, #{donorName}, #{donorPhone}, #{doneeName}, #{doneePhone}, #{doneeGender}, #{doneeAddress}, #{relation})
+        INSERT INTO event_application(application_id, donor_name, donor_phone, donee_name, donee_phone, donee_gender, donee_address, realtion, block_flag, create_time)
+        VALUES (#{applicationId}, #{donorName}, #{donorPhone}, #{doneeName}, #{doneePhone}, #{doneeGender}, #{doneeAddress}, #{relation}, #{blockFlag}, #{createAt})
     </insert>
+
+    <select id="query" parameterType="java.util.Map" resultMap="applicationVo">
+        SELECT application_id, donor_name, donor_phone, donee_name, donee_phone, donee_gender, donee_address, relation,
+        block_flag, create_time
+        FROM event_application
+        WHERE 1 = 1
+        <if test="applicationId != null">
+            AND application_id = #{applicationId}
+        </if>
+        <if test="donorName != null">
+            AND donor_name = #{donorName}
+        </if>
+        <if test="donorPhone != null">
+            AND donor_phone = #{donorPhone}
+        </if>
+        <if test="doneeName != null">
+            AND donee_name = #{doneeName}
+        </if>
+        <if test="doneePhone != null">
+            AND donee_phone = #{doneePhone}
+        </if>
+        <if test="relation != null">
+            AND relation = #{relation}
+        </if>
+        <if test="rule != null">
+            ORDER BY ${rule}
+        </if>
+        <if test="rule == null">
+            ORDER BY create_time DESC
+        </if>
+    </select>
 </mapper>
