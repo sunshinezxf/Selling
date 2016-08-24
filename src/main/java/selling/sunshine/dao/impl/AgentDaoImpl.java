@@ -1,6 +1,7 @@
 package selling.sunshine.dao.impl;
 
 import common.sunshine.utils.IDGenerator;
+
 import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 
 /**
  * 代理商与持久层交互实现类
