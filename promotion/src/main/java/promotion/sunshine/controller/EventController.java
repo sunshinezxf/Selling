@@ -1,5 +1,8 @@
 package promotion.sunshine.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +28,7 @@ public class EventController {
     @RequestMapping(method = RequestMethod.GET, value = "/{eventName}/")
     public ModelAndView view(@PathVariable("eventName") String eventName) {
         ModelAndView view = new ModelAndView();
-        
+        Map<String, Object> condition = new HashMap<String, Object>();
         return view;
     }
 }
