@@ -15,6 +15,16 @@ public class EventApplication extends Entity {
     private String doneeGender;
     private String doneeAddress;
     private String relation;
+    
+    public EventApplication(String donorName, String donorPhone, String doneeName, String doneePhone, String doneeGender, String doneeAddress, String relation){
+    	this.donorName = donorName;
+    	this.donorPhone = donorPhone;
+    	this.doneeName = doneeName;
+    	this.doneePhone = doneePhone;
+    	this.doneeGender = doneeGender;
+    	this.doneeAddress = doneeAddress;
+    	this.relation = relation;
+    }
 
     public String getApplicationId() {
         return applicationId;

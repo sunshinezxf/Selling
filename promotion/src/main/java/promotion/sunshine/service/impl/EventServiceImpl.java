@@ -31,4 +31,10 @@ public class EventServiceImpl implements EventService {
 		return result;
 	}
 
+	@Override
+	public ResultData insertEventApplication() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
