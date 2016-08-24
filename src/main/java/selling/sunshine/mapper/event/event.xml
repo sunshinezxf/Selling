@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="selling.event">
+    <resultMap id="giftEventVo" type="common.sunshine.model.selling.event.GiftEvent">
+        <result property="eventId" column="event_id"></result>
+        <result property="title" column="event_title"></result>
+        <result property="nickname" column="event_nickname"></result>
+        <result property="start" column="event_start"></result>
+        <result property="end" column="event_end"></result>
+        <result property="blockFlag" column="block_flag"></result>
+        <result property="createAt" column="create_time"></result>
+    </resultMap>
+
+    <insert id="insert" parameterType="common.sunshine.model.selling.event.GiftEvent" useGeneratedKeys="false">
+        INSERT INTO event(event_id, event_title, event_nickname, event_start, event_end, block_flag, create_time)
+        VALUES (#{eventId}, #{title}, #{nickname}, #{start}, #{end}, #{blockFlag}, #{createAt})
+    </insert>
+
+    <select id="query" parameterType="java.util.HashMap" resultMap="giftEventVo">
+        SELECT event_id, event_title, event_nickname, event_start, event_end, block_flag, create_time
+        FROM event
+        WHERE 1 = 1
+        <if test="eventId != null">
+            AND event_id = #{eventId}
+        </if>
+        <if test="title != null">
+            AND event_title = #{title}
+        </if>
+        <if test="blockFlag != null">
+            AND block_flag = #{blockFlag}
+        </if>
+    </select>
+</mapper>
