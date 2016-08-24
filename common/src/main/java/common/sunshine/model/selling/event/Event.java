@@ -15,6 +15,8 @@ public abstract class Event extends Entity {
 
     private String title;
 
+    private String nickname;
+
     private Calendar start;
 
     private Calendar end;
@@ -49,6 +51,14 @@ public abstract class Event extends Entity {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public Calendar getStart() {
