@@ -124,7 +124,7 @@
         if(topRate>50){
             $('.rank').hide();
         }else{ 
-            if(topRate%5==0){
+            if((topRate%5==0)&&(topRate!=0)){
                 topRate=(parseInt(topRate/5))*5;
             }else{
                 topRate=(parseInt(topRate/5)+1)*5;
