@@ -330,6 +330,101 @@ AS SELECT
    FROM customer_order co
    WHERE co.order_status IN (1, 2, 3) AND co.agent_id IS NOT NULL;
 
+##2016年8月24日
+-- -----------------------------------------------------
+-- Table `selling`.`event`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `selling`.`event` (
+  `event_id` VARCHAR(20) NOT NULL,
+  `event_nickname` VARCHAR(45) NOT NULL,
+  `event_start` DATETIME NOT NULL,
+  `event_end` DATETIME NOT NULL,
+  `block_flag` TINYINT(1) NOT NULL DEFAULT 0,
+  `create_time` DATETIME NOT NULL,
+  PRIMARY KEY (`event_id`))
+  ENGINE = InnoDB;
 
+
+-- -----------------------------------------------------
+-- Table `selling`.`event_application`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `selling`.`event_application` (
+  `application_id` VARCHAR(20) NOT NULL,
+  `event_id` VARCHAR(20) NOT NULL,
+  `donor_name` VARCHAR(45) NOT NULL,
+  `donor_phone` VARCHAR(45) NOT NULL,
+  `donee_name` VARCHAR(45) NOT NULL,
+  `donee_gender` VARCHAR(45) NOT NULL,
+  `donee_phone` VARCHAR(45) NOT NULL,
+  `donee_address` VARCHAR(45) NOT NULL,
+  `relation` VARCHAR(20) NOT NULL,
+  `block_flag` TINYINT(1) NOT NULL DEFAULT 0,
+  `create_time` DATETIME NOT NULL,
+  PRIMARY KEY (`application_id`),
+  INDEX `fk_event_application_event1_idx` (`event_id` ASC),
+  CONSTRAINT `fk_event_application_event1`
+  FOREIGN KEY (`event_id`)
+  REFERENCES `selling`.`event` (`event_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+  ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `selling`.`event_question`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `selling`.`event_question` (
+  `question_id` VARCHAR(20) NOT NULL,
+  `event_id` VARCHAR(20) NOT NULL,
+  `question_content` VARCHAR(100) NOT NULL,
+  `question_rank` TINYINT(1) NOT NULL,
+  `block_flag` TINYINT(1) NOT NULL DEFAULT 0,
+  `create_time` DATETIME NOT NULL,
+  PRIMARY KEY (`question_id`),
+  INDEX `fk_event_question_event1_idx` (`event_id` ASC),
+  CONSTRAINT `fk_event_question_event1`
+  FOREIGN KEY (`event_id`)
+  REFERENCES `selling`.`event` (`event_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+  ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `selling`.`question_option`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `selling`.`question_option` (
+  `option_id` VARCHAR(20) NOT NULL,
+  `question_id` VARCHAR(20) NOT NULL,
+  `option_value` VARCHAR(45) NOT NULL,
+  `block_flag` TINYINT(1) NOT NULL DEFAULT 0,
+  `create_time` DATETIME NOT NULL,
+  PRIMARY KEY (`option_id`),
+  INDEX `fk_question_option_event_question1_idx` (`question_id` ASC),
+  CONSTRAINT `fk_question_option_event_question1`
+  FOREIGN KEY (`question_id`)
+  REFERENCES `selling`.`event_question` (`question_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+  ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `selling`.`question_answer`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `selling`.`question_answer` (
+  `answer_id` VARCHAR(20) NOT NULL,
+  `application_id` VARCHAR(20) NOT NULL,
+  `option_id` VARCHAR(20) NOT NULL,
+  `block_flag` TINYINT(1) NOT NULL DEFAULT 0,
+  `create_time` DATETIME NOT NULL,
+  PRIMARY KEY (`answer_id`),
+  INDEX `fk_question_answer_event_application1_idx` (`application_id` ASC),
+  CONSTRAINT `fk_question_answer_event_application1`
+  FOREIGN KEY (`application_id`)
+  REFERENCES `selling`.`event_application` (`application_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+  ENGINE = InnoDB;
 
 
