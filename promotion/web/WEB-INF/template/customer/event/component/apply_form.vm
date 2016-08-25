@@ -1,0 +1,268 @@
+<div id="event_apply_area">
+	<form id="event_apply_form">
+        <div class="weui_cells">
+    	    #parse("/customer/event/component/donor_info.vm")
+    	    #parse("/customer/event/component/donee_info.vm")
+    	    #parse("/customer/event/component/questions.vm")
+    	    #parse("/customer/event/component/wishes.vm")
+        </div>
+    </form>
+</div>
+#parse("/customer/event/component/dialog.vm")
+<script>
+    $(document).ready(function(){
+    	$("#donee_info").hide();
+    	$("#questions").hide();
+    	$("#wishes").hide();
+
+    	$("#donor_name").on("input propertychange",function(){
+    		if(donor_validate())
+    			donor_active();
+    		else
+    			donor_inactive();
+    	});
+
+    	$("#donor_phone").on("input propertychange",function(){
+    		if(donor_validate())
+    			donor_active();
+    		else
+    			donor_inactive();
+    	});
+
+        $('#donor_phone').blur(function () {
+            var phone = $("#donor_phone").val();
+            if (!(/^1[3|4|5|7|8]\d{9}$/.test(phone))) {
+                $("#dialog").find(".weui_dialog_bd").html("手机号码有误，请重填！");
+                $("#dialog").fadeIn();
+                $("#donor_phone").val("");
+                donor_inactive();
+            }
+        });
+
+        $("#donee_name").on("input propertychange",function(){
+    		if(donee_validate())
+    			donee_active();
+    		else
+    			donee_inactive();
+    	});
+
+    	$("#gender").on("input propertychange",function(){
+    		if(donee_validate())
+    			donee_active();
+    		else
+    			donee_inactive();
+    	});
+
+    	$("#donee_phone").on("input propertychange",function(){
+    		if(donee_validate())
+    			donee_active();
+    		else
+    			donee_inactive();
+    	});
+
+        $('#donee_phone').blur(function () {
+            var phone = $("#donee_phone").val();
+            if (!(/^1[3|4|5|7|8]\d{9}$/.test(phone))) {
+                $("#dialog").find(".weui_dialog_bd").html("手机号码有误，请重填！");
+                $("#dialog").fadeIn();
+                $("#donee_phone").val("");
+                donee_inactive();
+            }
+        });
+
+        $("#donee_age").change(function(){
+            if(donee_validate())
+    			donee_active();
+    		else
+    			donee_inactive();
+        });
+
+        $("#address").on("input propertychange",function(){
+            if(donee_validate())
+    			donee_active();
+    		else
+    			donee_inactive();
+        });
+
+        $("#relation").change(function(){
+            if(donee_validate())
+    			donee_active();
+    		else
+    			donee_inactive();
+        });
+
+        $('#province').citySelect({
+            url: '${path.concat('/plugins/jquery/city.min.js')}',
+            required: false,
+            nodata: 'none',//当子集无数据时，隐藏select
+        });
+
+        $("#prov").change(function () {
+            $("#city").empty();
+            $("#dist").empty();
+            if(donee_validate())
+    			donee_active();
+    		else
+    			donee_inactive();
+        });
+
+        $("#city").change(function () {
+            $("#dist").empty();
+            if(donee_validate())
+    			donee_active();
+    		else
+    			donee_inactive();
+        });
+
+        $("#dist").change(function () {
+            if(donee_validate())
+    			donee_active();
+    		else
+    			donee_inactive();
+        });
+
+        $("#wishes_content").on("input propertychange",function(){
+        	var wishes=$("#wishes_content").val();
+            $("#written").html(wishes.length);
+            if(wishes.length>150)
+            	$("#wishes_content").val(wishes.substr(0,150));
+        });
+    });
+
+	$("#gender_selection").click(function () {
+        $("#event_apply_area").hide();
+        $("#gender_option").show();
+    });
+
+    $("#next_btn1").click(function(){
+    	var phone = $("#donor_phone").val();
+        if (!(/^1[3|4|5|7|8]\d{9}$/.test(phone))) {
+            $("#dialog").find(".weui_dialog_bd").html("手机号码有误，请重填！");
+            $("#dialog").fadeIn();
+            $("#donor_phone").val("");
+            donor_inactive();
+        }else{
+        	$("#donor_info").hide();
+        	$("#donee_info").show();
+        }
+    });
+
+    $("#next_btn2").click(function(){
+    	var phone = $("#donee_phone").val();
+        if (!(/^1[3|4|5|7|8]\d{9}$/.test(phone))) {
+            $("#dialog").find(".weui_dialog_bd").html("手机号码有误，请重填！");
+            $("#dialog").fadeIn();
+            $("#donee_phone").val("");
+            donee_inactive();
+        }else{
+        	var donee_address;
+        	if ($("#dist").is(":hidden")) {
+                if ($("#city").is(":hidden")) {
+                    donee_address = $("#prov").val() + $("#address").val();
+                } else {
+                    donee_address = $("#prov").val() + $("#city").val() + $("#address").val();
+                }
+            } else {
+                donee_address = $("#prov").val() + $("#city").val() + $("#dist").val() + $("#address").val();
+            }
+            $("#donee_address").val(donee_address);
+        	$("#donee_info").hide();
+        	$("#questions").show();
+        }
+    });
+
+    $("#next_btn3").click(function(){
+        $("#questions").hide();
+        $("#wishes").show();
+    });
+
+    $("#pre_btn1").click(function(){
+        $("#donee_info").hide();
+        $("#donor_info").show();
+    });
+
+    $("#pre_btn1").click(function(){
+        $("#donee_info").show();
+        $("#questions").hide();
+    });
+
+    $("#pre_btn3").click(function(){
+        $("#wishes").hide();
+        $("#questions").show();
+    });
+
+    $("#apply_btn").click(function(){
+        $("#event_apply_form").attr("action", "${path.concat('/event/giftapplication')}");
+        $("#event_apply_form").attr("method", "post");
+        $("#event_apply_form").submit();
+    });
+
+    $("#dialog").find(".weui_btn_dialog.primary").click(function () {
+        $("#dialog").hide();
+    });
+
+    function donor_validate(){
+    	var donorName=$("#donor_name").val();
+    	var donorPhone=$("#donor_phone").val();
+    	if(not_null(donorName)&&not_null(donorPhone))
+            return true;
+    	return false;
+    }
+
+    function donor_active(){
+        $("#next_btn1").removeAttr("disabled");
+        $("#next_btn1").removeClass("weui_btn_disabled");
+        $("#next_btn1").removeClass("weui_btn_default");
+        $("#next_btn1").addClass("weui_btn_plain_primary");
+    }
+
+    function donor_inactive(){
+    	$("#next_btn1").attr("disabled", "disabled");
+        $("#next_btn1").removeClass("weui_btn_plain_primary");
+        $("#next_btn1").addClass("weui_btn_disabled");
+        $("#next_btn1").addClass("weui_btn_default");
+    }
+
+    function donee_validate(){
+        var area;
+        if ($("#prov").val() == "北京" || $("#prov").val() == "天津" || $("#prov").val() == "上海" || $("#prov").val() == "重庆" || $("#prov").val() == "香港" || $("#prov").val() == "澳门" || $("#prov").val() == "台湾") {
+            area = $("#city").val();
+        } else {
+            if ($("#prov").val() == "国外") {
+                area = $("#prov").val();
+            } else {
+                area = $("#dist").val();
+            }
+        }
+        var address=$("#address").val();
+
+    	var doneeName=$("#donee_name").val();
+    	var doneeGender=$("#gender").val();
+    	var doneePhone=$("#donee_phone").val();
+    	var doneeAge=$("#donee_age").val();
+        var relation=$("#relation").val();
+    	if(not_null(doneeName)&&not_null(doneeGender)&&not_null(doneePhone)&&not_null(doneeAge)&&not_null(address)&&not_null(area)&&not_null(relation))
+            return true;
+    	return false;
+    }
+
+    function donee_active(){
+        $("#next_btn2").removeAttr("disabled");
+        $("#next_btn2").removeClass("weui_btn_disabled");
+        $("#next_btn2").removeClass("weui_btn_default");
+        $("#next_btn2").addClass("weui_btn_plain_primary");
+    }
+
+    function donee_inactive(){
+    	$("#next_btn2").attr("disabled", "disabled");
+        $("#next_btn2").removeClass("weui_btn_plain_primary");
+        $("#next_btn2").addClass("weui_btn_disabled");
+        $("#next_btn2").addClass("weui_btn_default");
+    }
+
+    function not_null(item) {
+        if (item == null || item == "" || item.length <= 0)
+            return false
+        return true;
+    }
+</script>

@@ -1,0 +1,81 @@
+<div id="donee_info">
+    <div class="weui_cell">
+        <div class="weui_cell_hd">
+            <label class="weui_label">姓名</label>
+        </div>
+        <div class="weui_cell_bd weui_cell_primary">
+            <input id="donee_name" name="donee_name" class="weui_input" type="text" placeholder="请填写受赠人姓名" autocomplete="off"/>
+        </div>
+    </div>
+    <a class="weui_cells_access weui_cell" id="gender_selection">
+        <div class="weui_cell_bd weui_cell_primary">
+            <p>称谓</p>
+        </div>
+        <div class="weui_cell_ft">
+            <input type="hidden" id="gender" name="donee_gender" value="M" autocomplete="off"/>
+            <span id="gender_description">
+            
+            </span>
+        </div>
+    </a>
+    <div class="weui_cell">
+        <div class="weui_cell_hd">
+            <label class="weui_label">手机</label>
+        </div>
+        <div class="weui_cell_bd weui_cell_primary">
+            <input id="donee_phone" name="donee_phone" class="weui_input" type="tel" placeholder="请填写受赠人手机号" autocomplete="off"/>
+        </div>
+    </div>
+    <div class="weui_cell">
+        <div class="weui_cell_hd">
+            <label class="weui_label">年龄</label>
+        </div>
+        <div class="weui_cell_bd weui_cell_primary">
+            <select class="weui_select" name="donee_age">
+                <option value="" selected>请选择受赠人年龄段</option>
+                <option value=""></option>
+                <option value=""></option>
+            </select>
+        </div>
+    </div>
+    <div class="weui_cell">
+        <div class="weui_cell_hd">
+            <label class="weui_label">地区</label>
+        </div>
+        <div class="weui_cell_bd weui_cell_primary">
+            <div id="province">
+                <select id="prov" class="prov"></select>
+                <select id="city" class="city" disabled="disabled" style="display:none"></select>
+                <select id="dist" class="dist" disabled="disabled" style="display:none"></select>
+            </div>
+        </div>
+    </div>
+    <div class="weui_cell">
+        <div class="weui_cell_hd">
+            <label class="weui_label">地址</label>
+        </div>
+        <div class="weui_cell_bd weui_cell_primary">
+            <input id="address" class="weui_input" type="text" placeholder="请填写受赠人详细地址" autocomplete="off"/>
+        </div>
+        <input type="hidden" id="donee_address" name="donee_address" value="" autocomplete="off"/>
+    </div>
+    <div class="weui_cell">
+        <div class="weui_cell_hd">
+            <label class="weui_label">与本人关系</label>
+        </div>
+        <div class="weui_cell_bd weui_cell_primary">
+            <select class="weui_select" name="relation">
+                <option value="" selected>请选择与受赠人关系</option>
+                <option value="">家人</option>
+                <option value="">同事</option>
+                <option value="">朋友</option>
+                <option value="">其他</option>
+            </select>
+        </div>
+    </div>
+    <div class="weui_btn_area">
+        <button type="button" class="weui_btn weui_btn_plain_primary" id="prev_btn1">上一步</button>
+        <button type="button" class="weui_btn weui_btn_disabled weui_btn_default" id="next_btn2" disabled="disabled">下一步</button>
+    </div>
+</div>
+#parse("/customer/event/component/gender_list.vm")
