@@ -53,4 +53,5 @@ public class EventQuestion extends Entity {
     public void setOptions(List<QuestionOption> options) {
         this.options = options;
     }
+
 }

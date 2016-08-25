@@ -12,6 +12,7 @@ public class EventApplication extends Entity {
     private Event event;
     private String donorName;
     private String donorPhone;
+    private String donorWechat;
     private String doneeName;
     private String doneePhone;
     private String doneeGender;
@@ -20,7 +21,7 @@ public class EventApplication extends Entity {
     private String wishes;
     private List<QuestionAnswer> answers;
 
-    public EventApplication(String donorName, String donorPhone, String doneeName, String doneePhone, String doneeGender, String doneeAddress, String relation, String wishes) {
+    public EventApplication(String donorName, String donorPhone, String doneeName, String doneePhone, String doneeGender, String doneeAddress, String relation, String wishes, String donorWechat) {
         this.donorName = donorName;
         this.donorPhone = donorPhone;
         this.doneeName = doneeName;
@@ -29,6 +30,7 @@ public class EventApplication extends Entity {
         this.doneeAddress = doneeAddress;
         this.relation = relation;
         this.wishes = wishes;
+        this.donorWechat = donorWechat;
     }
 
     public String getApplicationId() {
@@ -118,4 +120,14 @@ public class EventApplication extends Entity {
     public void setAnswers(List<QuestionAnswer> answers) {
         this.answers = answers;
     }
+
+	public String getDonorWechat() {
+		return donorWechat;
+	}
+
+	public void setDonorWechat(String donorWechat) {
+		this.donorWechat = donorWechat;
+	}
+
+    
 }

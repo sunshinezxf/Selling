@@ -57,4 +57,10 @@ public class EventDaoImpl extends BaseDao implements EventDao {
             }
         }	
     }
+
+	@Override
+	public ResultData queryEventApplication(Map<String, Object> condition) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
