@@ -21,6 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import common.sunshine.model.selling.event.Event;
 import common.sunshine.model.selling.event.EventApplication;
+import common.sunshine.model.selling.event.GiftEvent;
 import common.sunshine.model.selling.event.QuestionAnswer;
 import common.sunshine.model.selling.event.QuestionOption;
 import common.sunshine.utils.ResponseCode;
@@ -81,7 +82,7 @@ public class EventController {
             view.setViewName("/customer/event/prompt");
 			return view;
 		}
-		Event event = ((List<Event>) fetchEventResponse.getData()).get(0);
+		GiftEvent event = ((List<GiftEvent>) fetchEventResponse.getData()).get(0);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		if(now.before(event.getStart())){
 			Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "活动尚未开始", "");
