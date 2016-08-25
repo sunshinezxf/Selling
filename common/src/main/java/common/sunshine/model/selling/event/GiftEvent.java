@@ -6,15 +6,13 @@ import java.util.List;
  * Created by sunshine on 8/24/16.
  */
 public class GiftEvent extends Event {
-	 private List<EventQuestion> eventQuestions;
+    private List<EventQuestion> questions;
 
-	public List<EventQuestion> getEventQuestions() {
-		return eventQuestions;
-	}
+    public List<EventQuestion> getQuestions() {
+        return questions;
+    }
 
-	public void setEventQuestions(List<EventQuestion> eventQuestions) {
-		this.eventQuestions = eventQuestions;
-	}
-	 
-	 
+    public void setQuestions(List<EventQuestion> questions) {
+        this.questions = questions;
+    }
 }
