@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="selling.event.question.option">
+    <resultMap id="questionOptionVo" type="common.sunshine.model.selling.event.QuestionOption">
+        <result property="optionId" column="option_id"></result>
+        <result property="value" column="option_value"></result>
+        <result property="blockFlag" column="block_flag"></result>
+        <result property="createAt" column="create_time"></result>
+        <association property="question" column="questionId = question_id" select="questionQuery"></association>
+    </resultMap>
+
+    <resultMap id="questionVo" type="common.sunshine.model.selling.event.EventQuestion">
+        <result property="questionId" column="question_id"></result>
+        <result property="content" column="question_content"></result>
+        <result property="rank" column="question_rank"></result>
+        <result property="blockFlag" column="block_flag"></result>
+        <result property="createAt" column="create_time"></result>
+    </resultMap>
+
+    <insert id="insert" parameterType="common.sunshine.model.selling.event.QuestionOption">
+        INSERT INTO question_option(option_id, question_id, option_value, block_flag, create_time)
+        VALUES (#{optionId}, #{question.questionId}, #{value}, #{blockFlag}, #{createAt})
+    </insert>
+
+    <insert id="insertBatch" parameterType="java.util.List">
+        INSERT INTO question_option(option_id, question_id, option_value, block_flag, create_time)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.optionId}, #{item.question.questionId}, #{item.value}, #{item.blockFlag}, #{item.createAt})
+        </foreach>
+    </insert>
+
+    <select id="query" parameterType="java.util.Map" resultMap="questionOptionVo">
+        SELECT option_id, question_id, option_value, block_flag, create_time
+        FROM question_option
+        WHERE 1 = 1
+        <if test="optionId != null">
+            AND option_id = #{optionId}
+        </if>
+        <if test="questionId != null">
+            AND question_id = #{questionId}
+        </if>
+        <if test="blockFlag != null">
+            AND block_flag = #{blockFlag}
+        </if>
+    </select>
+
+    <select id="questionQuery" parameterType="java.util.Map" resultMap="questionVo">
+        SELECT question_id, question_content, question_rank, block_flag, create_time
+        FROM event_question
+        WHERE question_id = #{questionId}
+    </select>
+</mapper>

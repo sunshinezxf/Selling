@@ -2,7 +2,7 @@ package promotion.sunshine.form;
 
 import javax.validation.constraints.NotNull;
 
-public class EventForm {
+public class EventApplicationForm {
 	@NotNull
 	private String donor_name;
 	@NotNull
@@ -17,6 +17,10 @@ public class EventForm {
 	private String donee_address;
 	@NotNull
 	private String relation;
+	
+	private String wishes;
+	
+	private String optionId[];
 
 	public String getDonor_name() {
 		return donor_name;
@@ -72,6 +76,22 @@ public class EventForm {
 
 	public void setRelation(String relation) {
 		this.relation = relation;
+	}
+
+	public String getWishes() {
+		return wishes;
+	}
+
+	public void setWishes(String wishes) {
+		this.wishes = wishes;
+	}
+
+	public String[] getOptionId() {
+		return optionId;
+	}
+
+	public void setOptionId(String[] optionId) {
+		this.optionId = optionId;
 	}
 
 }

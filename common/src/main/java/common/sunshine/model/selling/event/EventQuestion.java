@@ -2,6 +2,8 @@ package common.sunshine.model.selling.event;
 
 import common.sunshine.model.Entity;
 
+import java.util.List;
+
 /**
  * Created by sunshine on 8/24/16.
  */
@@ -10,6 +12,7 @@ public class EventQuestion extends Entity {
     private Event event;
     private String content;
     private int rank;
+    private List<QuestionOption> options;
 
     public String getQuestionId() {
         return questionId;
@@ -42,4 +45,13 @@ public class EventQuestion extends Entity {
     public void setEvent(Event event) {
         this.event = event;
     }
+
+    public List<QuestionOption> getOptions() {
+        return options;
+    }
+
+    public void setOptions(List<QuestionOption> options) {
+        this.options = options;
+    }
+
 }

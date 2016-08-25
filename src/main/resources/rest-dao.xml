@@ -89,4 +89,8 @@
     <bean id="cashBackDao" class="selling.sunshine.dao.impl.CashBackDaoImpl">
         <property name="sqlSession" ref="sqlSession"></property>
     </bean>
+
+    <bean id="eventDao" class="selling.sunshine.dao.impl.EventDaoImpl">
+        <property name="sqlSession" ref="sqlSession"></property>
+    </bean>
 </beans>

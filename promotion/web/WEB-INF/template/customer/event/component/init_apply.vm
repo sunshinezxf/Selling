@@ -1,0 +1,2 @@
+<link rel="stylesheet" href="${path.concat('/material/css/customer/event/apply.css')}">
+<script type="text/javascript" src="${path.concat('/plugins/jquery/jquery.cityselect.js')}"></script>

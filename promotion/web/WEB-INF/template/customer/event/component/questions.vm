@@ -1,0 +1,38 @@
+<div id="questions">
+    <div class="weui_panel weui_panel_access">
+        <div class="weui_panel_bd">
+            <div class="weui_media_box weui_media_text">
+                <h4 class="weui_media_title">单选题</h4>
+                <div class="weui_cells weui_cells_radio">
+                    <label class="weui_cell weui_check_label" for="radio_answer">
+                        <div class="weui_cell_hd">
+                            <input type="radio" class="weui_check" name="radio1" id="radio_answer">
+                            <i class="weui_icon_checked"></i>
+                        </div>
+                        <div class="weui_cell_bd weui_cell_primary">
+                            <p>选项</p>
+                        </div>
+                    </label>
+                </div>
+            </div>
+            <div class="weui_media_box weui_media_text">
+                <h4 class="weui_media_title">多选题</h4>
+                <div class="weui_cells weui_cells_checkbox">
+                    <label class="weui_cell weui_check_label" for="checkbox_answer">
+                        <div class="weui_cell_hd">
+                            <input type="checkbox" class="weui_check" name="checkbox1" id="checkbox_answer">
+                            <i class="weui_icon_checked"></i>
+                        </div>
+                        <div class="weui_cell_bd weui_cell_primary">
+                            <p>选项</p>
+                        </div>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="weui_btn_area">
+        <button type="button" class="weui_btn weui_btn_plain_primary" id="prev_btn2">上一步</button>
+        <button type="button" class="weui_btn weui_btn_disabled weui_btn_default" id="next_btn3" disabled="disabled">下一步</button>
+    </div>
+</div>

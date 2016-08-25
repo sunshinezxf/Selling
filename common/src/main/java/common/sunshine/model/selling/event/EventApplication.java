@@ -2,6 +2,8 @@ package common.sunshine.model.selling.event;
 
 import common.sunshine.model.Entity;
 
+import java.util.List;
+
 /**
  * Created by sunshine on 8/24/16.
  */
@@ -10,11 +12,26 @@ public class EventApplication extends Entity {
     private Event event;
     private String donorName;
     private String donorPhone;
+    private String donorWechat;
     private String doneeName;
     private String doneePhone;
     private String doneeGender;
     private String doneeAddress;
     private String relation;
+    private String wishes;
+    private List<QuestionAnswer> answers;
+
+    public EventApplication(String donorName, String donorPhone, String doneeName, String doneePhone, String doneeGender, String doneeAddress, String relation, String wishes, String donorWechat) {
+        this.donorName = donorName;
+        this.donorPhone = donorPhone;
+        this.doneeName = doneeName;
+        this.doneePhone = doneePhone;
+        this.doneeGender = doneeGender;
+        this.doneeAddress = doneeAddress;
+        this.relation = relation;
+        this.wishes = wishes;
+        this.donorWechat = donorWechat;
+    }
 
     public String getApplicationId() {
         return applicationId;
@@ -87,4 +104,30 @@ public class EventApplication extends Entity {
     public void setRelation(String relation) {
         this.relation = relation;
     }
+
+    public String getWishes() {
+        return wishes;
+    }
+
+    public void setWishes(String wishes) {
+        this.wishes = wishes;
+    }
+
+    public List<QuestionAnswer> getAnswers() {
+        return answers;
+    }
+
+    public void setAnswers(List<QuestionAnswer> answers) {
+        this.answers = answers;
+    }
+
+	public String getDonorWechat() {
+		return donorWechat;
+	}
+
+	public void setDonorWechat(String donorWechat) {
+		this.donorWechat = donorWechat;
+	}
+
+    
 }

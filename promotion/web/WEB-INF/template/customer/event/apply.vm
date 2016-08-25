@@ -1,0 +1,18 @@
+#parse("/common/util.vm")
+<html lang="zh_CN">
+<head>
+    #parse("/customer/event/component/init.vm")
+    #parse("/customer/event/component/init_apply.vm")
+    <title>申请参加活动</title>
+</head>
+<body ontouchstart>
+    <div class="container">
+        <div class="hd">
+            <h1 class="page_title">我要参加</h1>
+        </div>
+        <div class="bd">
+            #parse("/customer/event/component/apply_form.vm")
+        </div>
+    </div>
+</body>
+</html>
