@@ -9,6 +9,23 @@
         <result property="end" column="event_end"></result>
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
+        <collection property="eventQuestion" column="eventId = event_id" select="eventQuestionQuery"></collection>
+    </resultMap>
+    
+    <resultMap id="eventQuestionVo" type="common.sunshine.model.selling.event.EventQuestion">
+    	<result property="questionId" column="question_id"></result>
+    	<result property="content" column="question_content"></result>
+    	<result property="rank" column="question_rank"></result>
+    	<result property="blockFlag" column="block_flag"></result>
+        <result property="createAt" column="create_time"></result>
+    	<collection property="questionOption" column="questionId = question_id" select="questionOptionQuery"></collection>
+    </resultMap>
+    
+    <resultMap id="questionOptionVo" type="common.sunshine.model.selling.event.QuestionOption">
+    	<result property="optionId" column="option_id"></result>
+    	<result property="value" column="option_value"></result>
+    	<result property="blockFlag" column="block_flag"></result>
+        <result property="createAt" column="create_time"></result>
     </resultMap>
 
     <select id="query" parameterType="java.util.HashMap" resultMap="giftEventVo">
