@@ -48,7 +48,7 @@ public class EventServiceImpl implements EventService {
 	@Override
 	public ResultData fetchEventApplication(Map<String, Object> condition) {
 		ResultData result = new ResultData();
-		ResultData queryResponse = eventDao.q;
+		ResultData queryResponse = eventDao.queryEventApplication(condition);
 		result.setResponseCode(queryResponse.getResponseCode());
 		if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
 			if (((List) queryResponse.getData()).isEmpty()) {

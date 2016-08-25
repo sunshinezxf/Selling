@@ -9,7 +9,7 @@
         <result property="end" column="event_end"></result>
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
-        <collection property="eventQuestion" column="eventId = event_id" select="eventQuestionQuery"></collection>
+        <collection property="eventQuestions" column="eventId = event_id" select="eventQuestionQuery"></collection>
     </resultMap>
     
     <resultMap id="eventQuestionVo" type="common.sunshine.model.selling.event.EventQuestion">
@@ -18,7 +18,7 @@
     	<result property="rank" column="question_rank"></result>
     	<result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
-    	<collection property="questionOption" column="questionId = question_id" select="questionOptionQuery"></collection>
+    	<collection property="questionOptions" column="questionId = question_id" select="questionOptionQuery"></collection>
     </resultMap>
     
     <resultMap id="questionOptionVo" type="common.sunshine.model.selling.event.QuestionOption">

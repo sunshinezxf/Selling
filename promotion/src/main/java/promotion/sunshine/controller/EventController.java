@@ -51,10 +51,17 @@ public class EventController {
 			//需要一个错误页面
 			return view;
 		}
+		/*
+		 * 先查询用户是否已经填过表单，然后查询活动是否结束或未开始
+		 */
 		Map<String, Object> condition = new HashMap<String, Object>();
 		condition.put("donorWechat", (String) session.getAttribute("openId"));
 		condition.put("blockFlag", false);
-		//ResultData fetchEventApplicationResponse = eventService.
+		ResultData fetchEventApplicationResponse = eventService.fetchEventApplication(condition);
+		if(fetchEventApplicationResponse.getResponseCode() == ResponseCode.RESPONSE_OK){
+			//您已参加过该活动页面,可以跳转到是否审核通过页面
+			return view;
+		}
 		
 		condition.clear();
 		condition.put("nickname", eventName);

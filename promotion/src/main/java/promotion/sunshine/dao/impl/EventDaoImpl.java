@@ -60,7 +60,17 @@ public class EventDaoImpl extends BaseDao implements EventDao {
 
 	@Override
 	public ResultData queryEventApplication(Map<String, Object> condition) {
-		// TODO Auto-generated method stub
-		return null;
+		ResultData result = new ResultData();
+		condition = handle(condition);
+		try {
+			List<GiftEvent> list = sqlSession.selectList("promotion.event.application.query", condition);
+			result.setData(list);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+			result.setDescription(e.getMessage());
+		} finally {
+			return result;
+		}
 	}
 }

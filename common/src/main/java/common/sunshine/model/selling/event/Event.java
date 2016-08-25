@@ -22,7 +22,6 @@ public abstract class Event extends Entity {
 
     private Timestamp end;
     
-    private List<EventQuestion> eventQuestions;
 
     public Event() {
         this.start = new Timestamp(System.currentTimeMillis());
