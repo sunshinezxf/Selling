@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -42,9 +44,19 @@ public class EventController {
 	 * @return
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/{eventName}")
-	public ModelAndView view(@PathVariable("eventName") String eventName) {
+	public ModelAndView view(@PathVariable("eventName") String eventName, HttpServletRequest request) {
 		ModelAndView view = new ModelAndView();
+		HttpSession session = request.getSession();
+		if(session.getAttribute("openId") == null || ((String)session.getAttribute("openId")).equals("")){
+			//需要一个错误页面
+			return view;
+		}
 		Map<String, Object> condition = new HashMap<String, Object>();
+		condition.put("donorWechat", (String) session.getAttribute("openId"));
+		condition.put("blockFlag", false);
+		//ResultData fetchEventApplicationResponse = eventService.
+		
+		condition.clear();
 		condition.put("nickname", eventName);
 		condition.put("blockFlag", false);
 		condition.put("time", new Timestamp(System.currentTimeMillis()));

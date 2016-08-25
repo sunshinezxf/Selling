@@ -9,4 +9,6 @@ public interface EventService {
 	ResultData fetchGiftEvent(Map<String, Object> condition);
 	
 	ResultData insertEventApplication(EventApplication eventApplication);
+	
+	ResultData fetchEventApplication(Map<String, Object> condition);
 }

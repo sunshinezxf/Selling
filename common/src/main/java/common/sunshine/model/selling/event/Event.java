@@ -3,6 +3,7 @@ package common.sunshine.model.selling.event;
 import common.sunshine.model.Entity;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 /**
  * 活动默认从当前时间开始,默认持续时间为7天
@@ -20,6 +21,8 @@ public abstract class Event extends Entity {
     private Timestamp start;
 
     private Timestamp end;
+    
+    private List<EventQuestion> eventQuestions;
 
     public Event() {
         this.start = new Timestamp(System.currentTimeMillis());

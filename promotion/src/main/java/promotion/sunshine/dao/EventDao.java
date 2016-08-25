@@ -13,4 +13,5 @@ public interface EventDao {
 	
 	ResultData insertEventApplication(EventApplication eventApplication);
 	
+	ResultData queryEventApplication(Map<String, Object> condition);
 }
