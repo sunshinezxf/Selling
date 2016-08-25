@@ -1,7 +1,9 @@
 package promotion.sunshine.dao.impl;
 
 import common.sunshine.dao.BaseDao;
+import common.sunshine.model.selling.event.EventApplication;
 import common.sunshine.model.selling.event.GiftEvent;
+import common.sunshine.utils.IDGenerator;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
 
@@ -19,6 +21,8 @@ import promotion.sunshine.dao.EventDao;
 @Repository
 public class EventDaoImpl extends BaseDao implements EventDao {
     private Logger logger = LoggerFactory.getLogger(EventDaoImpl.class);
+    
+    private Object lock = new Object();
 
 	@Override
 	public ResultData queryGiftEvent(Map<String, Object> condition) {
@@ -35,4 +39,22 @@ public class EventDaoImpl extends BaseDao implements EventDao {
 			return result;
 		}
 	}
+
+	@Override
+	public ResultData insertEventApplication(EventApplication eventApplication) {
+		ResultData result = new ResultData();
+        synchronized (lock) {
+            try {
+                eventApplication.setApplicationId(IDGenerator.generate("EVA"));
+                sqlSession.insert("promotion.event.insert", eventApplication);
+                result.setData(eventApplication);
+            } catch (Exception e) {
+                logger.error(e.getMessage());
+                result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+                result.setDescription(e.getMessage());
+            } finally {
+                return result;
+            }
+        }	
+    }
 }

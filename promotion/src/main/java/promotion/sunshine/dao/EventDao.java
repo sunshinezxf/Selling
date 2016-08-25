@@ -2,6 +2,7 @@ package promotion.sunshine.dao;
 
 import java.util.Map;
 
+import common.sunshine.model.selling.event.EventApplication;
 import common.sunshine.utils.ResultData;
 
 /**
@@ -9,5 +10,7 @@ import common.sunshine.utils.ResultData;
  */
 public interface EventDao {
 	ResultData queryGiftEvent(Map<String, Object> condition);
+	
+	ResultData insertEventApplication(EventApplication eventApplication);
 	
 }

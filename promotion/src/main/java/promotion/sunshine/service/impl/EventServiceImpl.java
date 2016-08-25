@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import common.sunshine.model.selling.event.EventApplication;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
 import promotion.sunshine.dao.EventDao;
@@ -32,9 +33,16 @@ public class EventServiceImpl implements EventService {
 	}
 
 	@Override
-	public ResultData insertEventApplication() {
-		// TODO Auto-generated method stub
-		return null;
+	public ResultData insertEventApplication(EventApplication eventApplication) {
+		ResultData result = new ResultData();
+		ResultData insertResponse = eventDao.insertEventApplication(eventApplication);
+		result.setResponseCode(insertResponse.getResponseCode());
+		if (insertResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+			result.setData(insertResponse.getData());
+		} else {
+			result.setDescription(insertResponse.getDescription());
+		}
+		return result;
 	}
 
 }
