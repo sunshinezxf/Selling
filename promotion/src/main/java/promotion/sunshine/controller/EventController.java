@@ -48,10 +48,11 @@ public class EventController {
 	 * @param eventName
 	 * @return
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/{eventName}/view")
+	@RequestMapping(method = RequestMethod.GET, value = "/{eventName}")
 	public ModelAndView view(@PathVariable("eventName") String eventName, HttpServletRequest request) {
 		ModelAndView view = new ModelAndView();
 		HttpSession session = request.getSession();
+		session.setAttribute("openId", "123456");
 		if(session.getAttribute("openId") == null || ((String)session.getAttribute("openId")).equals("")){
 			Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "超时,请重新从订阅号菜单进入活动", "");
             view.addObject("prompt", prompt);
@@ -97,7 +98,7 @@ public class EventController {
 			return view;
 		}
 		view.addObject("event", event);
-		// 需要一个活动页面
+		view.setViewName("/customer/event/apply");
 		return view;
 	}
 	

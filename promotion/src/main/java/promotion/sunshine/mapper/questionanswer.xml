@@ -10,7 +10,7 @@
         <result property="createAt" column="create_time"></result>
     </resultMap>
     
-    <insert id="insert" parameterType="common.sunshine.model.selling.event.QuestinAnswer">
+    <insert id="insert" parameterType="common.sunshine.model.selling.event.QuestionAnswer">
     	INSERT INFO question_answer(answer_id, application_id, question_content, question_option, question_rank, block_flag, create_time)
     	VALUES(#{answerId}, #{application.applicationId}, #{content}, #{option}, #{rank}, #{blockFlag}, #{createAt})
     </insert>
