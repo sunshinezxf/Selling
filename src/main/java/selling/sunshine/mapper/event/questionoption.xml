@@ -18,8 +18,16 @@
     </resultMap>
 
     <insert id="insert" parameterType="common.sunshine.model.selling.event.QuestionOption">
-        INSERT INTO question_option(option_id, option_value, block_flag, create_time)
-        VALUES (#{optionId}, #{value}, #{blockFlag}, #{createAt})
+        INSERT INTO question_option(option_id, question_id, option_value, block_flag, create_time)
+        VALUES (#{optionId}, #{question.questionId}, #{value}, #{blockFlag}, #{createAt})
+    </insert>
+
+    <insert id="insertBatch" parameterType="java.util.List">
+        INSERT INTO question_option(option_id, question_id, option_value, block_flag, create_time)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.optionId}, #{item.question.questionId}, #{item.value}, #{item.blockFlag}, #{item.createAt})
+        </foreach>
     </insert>
 
     <select id="query" parameterType="java.util.Map" resultMap="questionOptionVo">
