@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import common.sunshine.model.selling.event.EventApplication;
+import common.sunshine.model.selling.event.QuestionAnswer;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
 import promotion.sunshine.dao.EventDao;
@@ -73,6 +74,19 @@ public class EventServiceImpl implements EventService {
 			result.setData(queryResponse.getData());
 		} else if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
 			result.setDescription(queryResponse.getDescription());
+		}
+		return result;
+	}
+
+	@Override
+	public ResultData insertQuestionAnswer(QuestionAnswer questionAnswer) {
+		ResultData result = new ResultData();
+		ResultData insertResponse = eventDao.insertQuestionAnswer(questionAnswer);
+		result.setResponseCode(insertResponse.getResponseCode());
+		if (insertResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+			result.setData(insertResponse.getData());
+		} else {
+			result.setDescription(insertResponse.getDescription());
 		}
 		return result;
 	}

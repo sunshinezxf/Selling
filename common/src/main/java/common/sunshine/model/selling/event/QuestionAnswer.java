@@ -6,21 +6,28 @@ import common.sunshine.model.Entity;
  * Created by sunshine on 8/24/16.
  */
 public class QuestionAnswer extends Entity {
-    private String anwerId;
+    private String answerId;
     private EventApplication application;
     private String content;
     private String option;
     private int rank;
 
-    public String getAnwerId() {
-        return anwerId;
+    public QuestionAnswer(EventApplication application, String content, String option, int rank){
+    	this.application = application;
+    	this.content = content;
+    	this.option = option;
+    	this.rank = rank;
     }
+    
+    public String getAnswerId() {
+		return answerId;
+	}
 
-    public void setAnwerId(String anwerId) {
-        this.anwerId = anwerId;
-    }
+	public void setAnswerId(String answerId) {
+		this.answerId = answerId;
+	}
 
-    public EventApplication getApplication() {
+	public EventApplication getApplication() {
         return application;
     }
 

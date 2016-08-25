@@ -21,10 +21,14 @@ import org.springframework.web.servlet.ModelAndView;
 
 import common.sunshine.model.selling.event.Event;
 import common.sunshine.model.selling.event.EventApplication;
+import common.sunshine.model.selling.event.QuestionAnswer;
+import common.sunshine.model.selling.event.QuestionOption;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
 import promotion.sunshine.form.EventApplicationForm;
 import promotion.sunshine.service.EventService;
+import selling.sunshine.utils.Prompt;
+import selling.sunshine.utils.PromptCode;
 
 /**
  * Created by sunshine on 8/22/16.
@@ -48,7 +52,9 @@ public class EventController {
 		ModelAndView view = new ModelAndView();
 		HttpSession session = request.getSession();
 		if(session.getAttribute("openId") == null || ((String)session.getAttribute("openId")).equals("")){
-			//需要一个错误页面，提示超时
+			Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "超时,请重新从订阅号菜单进入活动", "");
+            view.addObject("prompt", prompt);
+            view.setViewName("/customer/event/prompt");
 			return view;
 		}
 		/*
@@ -59,7 +65,9 @@ public class EventController {
 		condition.put("blockFlag", false);
 		ResultData fetchEventApplicationResponse = eventService.fetchEventApplication(condition);
 		if(fetchEventApplicationResponse.getResponseCode() == ResponseCode.RESPONSE_OK){
-			//您已参加过该活动页面
+			Prompt prompt = new Prompt(PromptCode.SUCCESS, "提示", "您已经提交过申请", "");
+            view.addObject("prompt", prompt);
+            view.setViewName("/customer/event/prompt");
 			return view;
 		}
 		
@@ -68,17 +76,23 @@ public class EventController {
 		condition.put("blockFlag", false);
 		ResultData fetchEventResponse = eventService.fetchGiftEvent(condition);
 		if (fetchEventResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
-			//未找到该活动页面
+			Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "未找到该活动", "");
+            view.addObject("prompt", prompt);
+            view.setViewName("/customer/event/prompt");
 			return view;
 		}
 		Event event = ((List<Event>) fetchEventResponse.getData()).get(0);
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		if(now.before(event.getStart())){
-			//活动未开始页面
+			Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "活动尚未开始", "");
+            view.addObject("prompt", prompt);
+            view.setViewName("/customer/event/prompt");
 			return view;
 		}
 		if(now.before(event.getEnd())){
-			//活动已结束页面
+			Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "活动已结束", "");
+            view.addObject("prompt", prompt);
+            view.setViewName("/customer/event/prompt");
 			return view;
 		}
 		view.addObject("event", event);
@@ -91,26 +105,35 @@ public class EventController {
     	ModelAndView view = new ModelAndView();
     	HttpSession session = request.getSession();
 		if(session.getAttribute("openId") == null || ((String)session.getAttribute("openId")).equals("")){
-			//需要一个错误页面，提示超时
+			Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "操作超时，请重新进入活动", "");
+            view.addObject("prompt", prompt);
+            view.setViewName("/customer/event/prompt");
 			return view;
 		}
     	EventApplication eventApplication = new EventApplication(form.getDonor_name(),form.getDonor_phone(),form.getDonee_name(),form.getDonee_phone(),form.getDonee_gender(),form.getDonee_address(),form.getRelation(),form.getWishes(), (String)session.getAttribute("openId"));
     	ResultData insertEventApplicationResponse = eventService.insertEventApplication(eventApplication);
     	if(insertEventApplicationResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
-    		//错误页面
+    		Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "未找到该活动", "");
+            view.addObject("prompt", prompt);
+            view.setViewName("/customer/event/prompt");
     		return view;
     	}
     	Map<String, Object> condition = new HashMap<String, Object>();
     	String[] optionIds = form.getOptionId();
+    	eventApplication = (EventApplication) insertEventApplicationResponse.getData();
     	for(String optionId : optionIds){
     		condition.put("optionId", optionId);
     		condition.put("blockFlag", false);
     		ResultData fetchOption = eventService.fetchQuestionOption(condition);
     		if(fetchOption.getResponseCode() == ResponseCode.RESPONSE_OK){
-    			
+    			QuestionOption questionOption= ((List<QuestionOption>)fetchOption.getData()).get(0);
+    			QuestionAnswer questionAnswer = new QuestionAnswer(eventApplication, questionOption.getQuestion().getContent(), questionOption.getValue(), questionOption.getQuestion().getRank());
+    			eventService.insertQuestionAnswer(questionAnswer);
     		}
     	}
-    	//正常Prompt页面
+    	Prompt prompt = new Prompt(PromptCode.SUCCESS, "提示", "申请成功", "");//!!!!!请加上跳转URL
+        view.addObject("prompt", prompt);
+        view.setViewName("/customer/event/prompt");
     	return view;
     }
 	
@@ -119,7 +142,9 @@ public class EventController {
 		ModelAndView view = new ModelAndView();
 		HttpSession session = request.getSession();
 		if(session.getAttribute("openId") == null || ((String)session.getAttribute("openId")).equals("")){
-			//需要一个错误页面，提示超时
+			Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "操作超时，请重新进入活动", "");
+            view.addObject("prompt", prompt);
+            view.setViewName("/customer/event/prompt");
 			return view;
 		}
 		Map<String, Object> condition = new HashMap<String, Object>();
@@ -127,7 +152,9 @@ public class EventController {
 		condition.put("blockFlag", false);
 		ResultData fetchEventApplicationResponse = eventService.fetchEventApplication(condition);
 		if(fetchEventApplicationResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
-			//您还没有参加该活动
+			Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "您还没有参加该活动", "");
+            view.addObject("prompt", prompt);
+            view.setViewName("/customer/event/prompt");
 			return view;
 		}
 		EventApplication eventApplication = ((List<EventApplication>)fetchEventApplicationResponse.getData()).get(0);
