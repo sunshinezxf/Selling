@@ -23,7 +23,7 @@ import common.sunshine.model.selling.event.Event;
 import common.sunshine.model.selling.event.EventApplication;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
-import promotion.sunshine.form.EventForm;
+import promotion.sunshine.form.EventApplicationForm;
 import promotion.sunshine.service.EventService;
 
 /**
@@ -87,7 +87,7 @@ public class EventController {
 	}
 	
 	@RequestMapping(method = RequestMethod.POST, value="/giftapplication")
-    public ModelAndView giftApplication(@Valid EventForm form, BindingResult result, HttpServletRequest request){
+    public ModelAndView giftApplication(@Valid EventApplicationForm form, BindingResult result, HttpServletRequest request){
     	ModelAndView view = new ModelAndView();
     	HttpSession session = request.getSession();
 		if(session.getAttribute("openId") == null || ((String)session.getAttribute("openId")).equals("")){
@@ -99,6 +99,16 @@ public class EventController {
     	if(insertEventApplicationResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
     		//错误页面
     		return view;
+    	}
+    	Map<String, Object> condition = new HashMap<String, Object>();
+    	String[] optionIds = form.getOptionId();
+    	for(String optionId : optionIds){
+    		condition.put("optionId", optionId);
+    		condition.put("blockFlag", false);
+    		ResultData fetchOption = eventService.fetchQuestionOption(condition);
+    		if(fetchOption.getResponseCode() == ResponseCode.RESPONSE_OK){
+    			
+    		}
     	}
     	//正常Prompt页面
     	return view;

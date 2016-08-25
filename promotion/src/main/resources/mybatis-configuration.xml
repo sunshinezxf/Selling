@@ -4,5 +4,6 @@
     <mappers>
         <mapper resource="promotion/sunshine/mapper/event.xml"/>
         <mapper resource="promotion/sunshine/mapper/eventapplication.xml"></mapper>
+        <mapper resource="promotion/sunshine/mapper/questionoption.xml"></mapper>
     </mappers>
 </configuration>

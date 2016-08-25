@@ -39,6 +39,22 @@ public class EventDaoImpl extends BaseDao implements EventDao {
 			return result;
 		}
 	}
+	
+	@Override
+	public ResultData queryQuestionOption(Map<String, Object> condition) {
+		ResultData result = new ResultData();
+		condition = handle(condition);
+		try {
+			List<GiftEvent> list = sqlSession.selectList("promotion.event.question.option.query", condition);
+			result.setData(list);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+			result.setDescription(e.getMessage());
+		} finally {
+			return result;
+		}
+	}
 
 	@Override
 	public ResultData insertEventApplication(EventApplication eventApplication) {
@@ -73,4 +89,6 @@ public class EventDaoImpl extends BaseDao implements EventDao {
 			return result;
 		}
 	}
+
+	
 }

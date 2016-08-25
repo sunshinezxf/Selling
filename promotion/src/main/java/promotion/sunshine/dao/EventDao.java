@@ -11,6 +11,8 @@ import common.sunshine.utils.ResultData;
 public interface EventDao {
 	ResultData queryGiftEvent(Map<String, Object> condition);
 	
+	ResultData queryQuestionOption(Map<String, Object> condition);
+	
 	ResultData insertEventApplication(EventApplication eventApplication);
 	
 	ResultData queryEventApplication(Map<String, Object> condition);
