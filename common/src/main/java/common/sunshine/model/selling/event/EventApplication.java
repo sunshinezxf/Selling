@@ -2,6 +2,8 @@ package common.sunshine.model.selling.event;
 
 import common.sunshine.model.Entity;
 
+import java.util.List;
+
 /**
  * Created by sunshine on 8/24/16.
  */
@@ -16,6 +18,7 @@ public class EventApplication extends Entity {
     private String doneeAddress;
     private String relation;
     private String wishes;
+    private List<QuestionAnswer> answers;
 
     public EventApplication(String donorName, String donorPhone, String doneeName, String doneePhone, String doneeGender, String doneeAddress, String relation, String wishes) {
         this.donorName = donorName;
@@ -106,5 +109,13 @@ public class EventApplication extends Entity {
 
     public void setWishes(String wishes) {
         this.wishes = wishes;
+    }
+
+    public List<QuestionAnswer> getAnswers() {
+        return answers;
+    }
+
+    public void setAnswers(List<QuestionAnswer> answers) {
+        this.answers = answers;
     }
 }
