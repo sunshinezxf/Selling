@@ -45,4 +45,16 @@
             AND block_flag = #{blockFlag}
         </if>
     </select>
+    
+    <select id="eventQuestionQuery" parameterType="java.util.Map" resultMap="eventQuestionVo">
+    	SELECT question_id, event_id, question_content, question_rank, block_flag, create_time
+    	FROM event_question
+    	WHERE event_id = #{eventId}
+    </select>
+    
+    <select id="questionOptionQuery" parameterType="java.util.Map" resultMap="questionOptionVo">
+    	SELECT option_id, option_value, block_flag, create_time
+    	FROM question_option
+    	WHERE question_id = #{questionId}
+    </select>
 </mapper>
