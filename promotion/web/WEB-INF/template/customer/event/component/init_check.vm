@@ -1,0 +1,2 @@
+<link rel="stylesheet" href="${path.concat('/material/css/customer/event/check.css')}">
+<script type="text/javascript" src="${path.concat('/material/js/customer/address.js')}"></script>
