@@ -27,8 +27,7 @@ import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
 import promotion.sunshine.form.EventApplicationForm;
 import promotion.sunshine.service.EventService;
-import selling.sunshine.utils.Prompt;
-import selling.sunshine.utils.PromptCode;
+import promotion.sunshine.utils.Prompt;
 
 /**
  * Created by sunshine on 8/22/16.
