@@ -17,6 +17,8 @@ public class EventForm {
 	private String donee_address;
 	@NotNull
 	private String relation;
+	
+	private String wishes;
 
 	public String getDonor_name() {
 		return donor_name;
@@ -72,6 +74,14 @@ public class EventForm {
 
 	public void setRelation(String relation) {
 		this.relation = relation;
+	}
+
+	public String getWishes() {
+		return wishes;
+	}
+
+	public void setWishes(String wishes) {
+		this.wishes = wishes;
 	}
 
 }
