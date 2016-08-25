@@ -91,7 +91,7 @@ public class EventController {
             view.setViewName("/customer/event/prompt");
 			return view;
 		}
-		if(now.before(event.getEnd())){
+		if(now.after(event.getEnd())){
 			Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "活动已结束", "");
             view.addObject("prompt", prompt);
             view.setViewName("/customer/event/prompt");
