@@ -43,12 +43,12 @@ public class EventController {
 	 * @param eventName
 	 * @return
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/{eventName}")
+	@RequestMapping(method = RequestMethod.GET, value = "/{eventName}/view")
 	public ModelAndView view(@PathVariable("eventName") String eventName, HttpServletRequest request) {
 		ModelAndView view = new ModelAndView();
 		HttpSession session = request.getSession();
 		if(session.getAttribute("openId") == null || ((String)session.getAttribute("openId")).equals("")){
-			//需要一个错误页面
+			//需要一个错误页面，提示超时
 			return view;
 		}
 		/*
@@ -59,29 +59,42 @@ public class EventController {
 		condition.put("blockFlag", false);
 		ResultData fetchEventApplicationResponse = eventService.fetchEventApplication(condition);
 		if(fetchEventApplicationResponse.getResponseCode() == ResponseCode.RESPONSE_OK){
-			//您已参加过该活动页面,可以跳转到是否审核通过页面
+			//您已参加过该活动页面
 			return view;
 		}
 		
 		condition.clear();
 		condition.put("nickname", eventName);
 		condition.put("blockFlag", false);
-		condition.put("time", new Timestamp(System.currentTimeMillis()));
 		ResultData fetchEventResponse = eventService.fetchGiftEvent(condition);
 		if (fetchEventResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
-			// 需要一个
+			//未找到该活动页面
 			return view;
 		}
 		Event event = ((List<Event>) fetchEventResponse.getData()).get(0);
+		Timestamp now = new Timestamp(System.currentTimeMillis());
+		if(now.before(event.getStart())){
+			//活动未开始页面
+			return view;
+		}
+		if(now.before(event.getEnd())){
+			//活动已结束页面
+			return view;
+		}
 		view.addObject("event", event);
 		// 需要一个活动页面
 		return view;
 	}
-
+	
 	@RequestMapping(method = RequestMethod.POST, value="/giftapplication")
-    public ModelAndView giftApplication(@Valid EventForm form, BindingResult result){
+    public ModelAndView giftApplication(@Valid EventForm form, BindingResult result, HttpServletRequest request){
     	ModelAndView view = new ModelAndView();
-    	EventApplication eventApplication = new EventApplication(form.getDonor_name(),form.getDonor_phone(),form.getDonee_name(),form.getDonee_phone(),form.getDonee_gender(),form.getDonee_address(),form.getRelation(),form.getWishes());
+    	HttpSession session = request.getSession();
+		if(session.getAttribute("openId") == null || ((String)session.getAttribute("openId")).equals("")){
+			//需要一个错误页面，提示超时
+			return view;
+		}
+    	EventApplication eventApplication = new EventApplication(form.getDonor_name(),form.getDonor_phone(),form.getDonee_name(),form.getDonee_phone(),form.getDonee_gender(),form.getDonee_address(),form.getRelation(),form.getWishes(), (String)session.getAttribute("openId"));
     	ResultData insertEventApplicationResponse = eventService.insertEventApplication(eventApplication);
     	if(insertEventApplicationResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
     		//错误页面
@@ -90,4 +103,26 @@ public class EventController {
     	//正常Prompt页面
     	return view;
     }
+	
+	@RequestMapping(method = RequestMethod.GET, value="/giftapplication")
+	public ModelAndView giftApplication(HttpServletRequest request){
+		ModelAndView view = new ModelAndView();
+		HttpSession session = request.getSession();
+		if(session.getAttribute("openId") == null || ((String)session.getAttribute("openId")).equals("")){
+			//需要一个错误页面，提示超时
+			return view;
+		}
+		Map<String, Object> condition = new HashMap<String, Object>();
+		condition.put("donorWechat", (String) session.getAttribute("openId"));
+		condition.put("blockFlag", false);
+		ResultData fetchEventApplicationResponse = eventService.fetchEventApplication(condition);
+		if(fetchEventApplicationResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+			//您还没有参加该活动
+			return view;
+		}
+		EventApplication eventApplication = ((List<EventApplication>)fetchEventApplicationResponse.getData()).get(0);
+		view.addObject("eventApplication", eventApplication);
+		//活动结果查询页面
+		return view;
+	}
 }
