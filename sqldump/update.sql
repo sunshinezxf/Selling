@@ -448,4 +448,9 @@ AFTER `question_option`;
 ALTER TABLE `selling`.`event_question`
 CHANGE COLUMN `question_rank` `question_rank` TINYINT(3) NOT NULL;
 
+ALTER TABLE `selling`.`event_application`
+ADD COLUMN `donor_wechat` VARCHAR(45) NULL AFTER `donor_phone`,
+ADD COLUMN `wishes` VARCHAR(150) NULL AFTER `relation`;
+
+
 
