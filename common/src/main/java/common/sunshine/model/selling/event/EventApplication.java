@@ -15,15 +15,17 @@ public class EventApplication extends Entity {
     private String doneeGender;
     private String doneeAddress;
     private String relation;
-    
-    public EventApplication(String donorName, String donorPhone, String doneeName, String doneePhone, String doneeGender, String doneeAddress, String relation){
-    	this.donorName = donorName;
-    	this.donorPhone = donorPhone;
-    	this.doneeName = doneeName;
-    	this.doneePhone = doneePhone;
-    	this.doneeGender = doneeGender;
-    	this.doneeAddress = doneeAddress;
-    	this.relation = relation;
+    private String wishes;
+
+    public EventApplication(String donorName, String donorPhone, String doneeName, String doneePhone, String doneeGender, String doneeAddress, String relation, String wishes) {
+        this.donorName = donorName;
+        this.donorPhone = donorPhone;
+        this.doneeName = doneeName;
+        this.doneePhone = doneePhone;
+        this.doneeGender = doneeGender;
+        this.doneeAddress = doneeAddress;
+        this.relation = relation;
+        this.wishes = wishes;
     }
 
     public String getApplicationId() {
@@ -96,5 +98,13 @@ public class EventApplication extends Entity {
 
     public void setRelation(String relation) {
         this.relation = relation;
+    }
+
+    public String getWishes() {
+        return wishes;
+    }
+
+    public void setWishes(String wishes) {
+        this.wishes = wishes;
     }
 }
