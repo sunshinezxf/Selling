@@ -112,18 +112,29 @@ public class EventController {
             view.setViewName("/customer/event/prompt");
 			return view;
 		}
-    	EventApplication eventApplication = new EventApplication(form.getDonor_name(),form.getDonor_phone(),form.getDonee_name(),form.getDonee_phone(),form.getDonee_gender(),form.getDonee_address(),form.getRelation(),form.getWishes(), (String)session.getAttribute("openId"));
+		Map<String, Object> condition = new HashMap<String, Object>();
+		condition.put("eventId", form.getEvent_id());
+		condition.put("blockFlag", false);
+		ResultData fetchEventResponse = eventService.fetchGiftEvent(condition);
+		Event event = ((List<Event>)fetchEventResponse.getData()).get(0);
+		if(fetchEventResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
+			Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "未找到该活动", "");
+            view.addObject("prompt", prompt);
+            view.setViewName("/customer/event/prompt");
+    		return view;
+		}
+    	EventApplication eventApplication = new EventApplication(event,form.getDonor_name(),form.getDonor_phone(),form.getDonee_name(),form.getDonee_phone(),form.getDonee_gender(),form.getDonee_address(),form.getRelation(),form.getWishes(), (String)session.getAttribute("openId"));
     	ResultData insertEventApplicationResponse = eventService.insertEventApplication(eventApplication);
     	if(insertEventApplicationResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
-    		Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "未找到该活动", "");
+    		Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "申请失败", "");
             view.addObject("prompt", prompt);
             view.setViewName("/customer/event/prompt");
     		return view;
     	}
-    	Map<String, Object> condition = new HashMap<String, Object>();
     	String[] optionIds = form.getOptionId();
     	eventApplication = (EventApplication) insertEventApplicationResponse.getData();
     	for(String optionId : optionIds){
+    		condition.clear();
     		condition.put("optionId", optionId);
     		condition.put("blockFlag", false);
     		ResultData fetchOption = eventService.fetchQuestionOption(condition);
@@ -133,7 +144,7 @@ public class EventController {
     			eventService.insertQuestionAnswer(questionAnswer);
     		}
     	}
-    	Prompt prompt = new Prompt(PromptCode.SUCCESS, "提示", "申请成功", "");//!!!!!请加上跳转URL
+    	Prompt prompt = new Prompt(PromptCode.SUCCESS, "提示", "申请成功", "/event/" + event.getNickname());
         view.addObject("prompt", prompt);
         view.setViewName("/customer/event/prompt");
     	return view;

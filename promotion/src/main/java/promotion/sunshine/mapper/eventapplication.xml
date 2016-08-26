@@ -17,12 +17,12 @@
     </resultMap>
 
     <insert id="insert" parameterType="common.sunshine.model.selling.event.EventApplication">
-        INSERT INTO event_application(application_id, donor_name, donor_phone, donee_name, donee_phone, donee_gender, donee_address, realtion, wishes, donor_wechat, block_flag, create_time)
-        VALUES (#{applicationId}, #{donorName}, #{donorPhone}, #{doneeName}, #{doneePhone}, #{doneeGender}, #{doneeAddress}, #{relation}, #{wishes}, #{donorWechat}, #{blockFlag}, #{createAt})
+        INSERT INTO event_application(application_id, event_id, donor_name, donor_phone, donee_name, donee_phone, donee_gender, donee_address, realtion, wishes, donor_wechat, block_flag, create_time)
+        VALUES (#{applicationId}, #{event.eventId} ,#{donorName}, #{donorPhone}, #{doneeName}, #{doneePhone}, #{doneeGender}, #{doneeAddress}, #{relation}, #{wishes}, #{donorWechat}, #{blockFlag}, #{createAt})
     </insert>
 
     <select id="query" parameterType="java.util.Map" resultMap="applicationVo">
-        SELECT application_id, donor_name, donor_phone, donee_name, donee_phone, donee_gender, donee_address, relation, wishes, donor_wechat
+        SELECT application_id, event_id, donor_name, donor_phone, donee_name, donee_phone, donee_gender, donee_address, relation, wishes, donor_wechat
         block_flag, create_time
         FROM event_application
         WHERE 1 = 1
