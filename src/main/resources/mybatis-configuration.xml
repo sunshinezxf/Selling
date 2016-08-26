@@ -33,6 +33,8 @@
         <mapper resource="selling/sunshine/mapper/gift/apply.xml"/>
         <mapper resource="selling/sunshine/mapper/cashback/summary.xml"/>
         <mapper resource="selling/sunshine/mapper/event/event.xml"/>
+        <mapper resource="selling/sunshine/mapper/event/eventquestion.xml"/>
+        <mapper resource="selling/sunshine/mapper/event/questionoption.xml"/>
         <mapper resource="selling/sunshine/mapper/event/eventapplication.xml"/>
     </mappers>
 </configuration>

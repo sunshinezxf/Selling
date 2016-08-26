@@ -131,18 +131,20 @@ public class EventController {
             view.setViewName("/customer/event/prompt");
     		return view;
     	}
-    	String[] optionIds = form.getOptionId();
-    	eventApplication = (EventApplication) insertEventApplicationResponse.getData();
-    	for(String optionId : optionIds){
-    		condition.clear();
-    		condition.put("optionId", optionId);
-    		condition.put("blockFlag", false);
-    		ResultData fetchOption = eventService.fetchQuestionOption(condition);
-    		if(fetchOption.getResponseCode() == ResponseCode.RESPONSE_OK){
-    			QuestionOption questionOption= ((List<QuestionOption>)fetchOption.getData()).get(0);
-    			QuestionAnswer questionAnswer = new QuestionAnswer(eventApplication, questionOption.getQuestion().getContent(), questionOption.getValue(), questionOption.getQuestion().getRank());
-    			eventService.insertQuestionAnswer(questionAnswer);
-    		}
+    	if(form.getOption_id() != null){
+	    	String[] optionIds = form.getOption_id();
+	    	eventApplication = (EventApplication) insertEventApplicationResponse.getData();
+	    	for(String optionId : optionIds){
+	    		condition.clear();
+	    		condition.put("optionId", optionId);
+	    		condition.put("blockFlag", false);
+	    		ResultData fetchOption = eventService.fetchQuestionOption(condition);
+	    		if(fetchOption.getResponseCode() == ResponseCode.RESPONSE_OK){
+	    			QuestionOption questionOption= ((List<QuestionOption>)fetchOption.getData()).get(0);
+	    			QuestionAnswer questionAnswer = new QuestionAnswer(eventApplication, questionOption.getQuestion().getContent(), questionOption.getValue(), questionOption.getQuestion().getRank());
+	    			eventService.insertQuestionAnswer(questionAnswer);
+	    		}
+	    	}
     	}
     	Prompt prompt = new Prompt(PromptCode.SUCCESS, "提示", "申请成功", "/event/" + event.getNickname());
         view.addObject("prompt", prompt);

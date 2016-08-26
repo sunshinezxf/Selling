@@ -33,8 +33,10 @@
         <div class="weui_cell_bd weui_cell_primary">
             <select class="weui_select" name="donee_age">
                 <option value="" selected>请选择受赠人年龄段</option>
-                <option value=""></option>
-                <option value=""></option>
+                <option value="18-30岁">18-30岁</option>
+                <option value="30-40岁">30-40岁</option>
+                <option value="40-50岁">40-50岁</option>
+                <option value="50岁以上">50岁以上</option>
             </select>
         </div>
     </div>
@@ -66,10 +68,10 @@
         <div class="weui_cell_bd weui_cell_primary">
             <select class="weui_select" name="relation">
                 <option value="" selected>请选择与受赠人关系</option>
-                <option value="">家人</option>
-                <option value="">同事</option>
-                <option value="">朋友</option>
-                <option value="">其他</option>
+                <option value="家人">家人</option>
+                <option value="同事">同事</option>
+                <option value="朋友">朋友</option>
+                <option value="其他">其他</option>
             </select>
         </div>
     </div>

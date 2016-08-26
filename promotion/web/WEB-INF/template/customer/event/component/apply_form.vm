@@ -120,6 +120,12 @@
     		else
     			donee_inactive();
         });
+        
+        $(".question_opt").each(function(){
+            $(this).click(function(){
+                question_active();
+            });
+        });
 
         $("#wishes_content").on("input propertychange",function(){
         	var wishes=$("#wishes_content").val();
@@ -181,7 +187,7 @@
         $("#donor_info").show();
     });
 
-    $("#pre_btn1").click(function(){
+    $("#pre_btn2").click(function(){
         $("#donee_info").show();
         $("#questions").hide();
     });
@@ -259,6 +265,29 @@
         $("#next_btn2").addClass("weui_btn_disabled");
         $("#next_btn2").addClass("weui_btn_default");
     }
+    
+    function question_validate(){
+    	var donorName=$("#donor_name").val();
+    	var donorPhone=$("#donor_phone").val();
+    	if(not_null(donorName)&&not_null(donorPhone))
+            return true;
+    	return false;
+    }
+
+    function question_active(){
+        $("#next_btn3").removeAttr("disabled");
+        $("#next_btn3").removeClass("weui_btn_disabled");
+        $("#next_btn3").removeClass("weui_btn_default");
+        $("#next_btn3").addClass("weui_btn_plain_primary");
+    }
+
+    function question_inactive(){
+    	$("#next_btn3").attr("disabled", "disabled");
+        $("#next_btn3").removeClass("weui_btn_plain_primary");
+        $("#next_btn3").addClass("weui_btn_disabled");
+        $("#next_btn3").addClass("weui_btn_default");
+    }
+    
 
     function not_null(item) {
         if (item == null || item == "" || item.length <= 0)
