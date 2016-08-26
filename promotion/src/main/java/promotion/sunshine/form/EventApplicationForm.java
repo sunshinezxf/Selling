@@ -4,6 +4,8 @@ import javax.validation.constraints.NotNull;
 
 public class EventApplicationForm {
 	@NotNull
+	private String event_id;
+	@NotNull
 	private String donor_name;
 	@NotNull
 	private String donor_phone;
@@ -21,6 +23,15 @@ public class EventApplicationForm {
 	private String wishes;
 	
 	private String optionId[];
+	
+
+	public String getEvent_id() {
+		return event_id;
+	}
+
+	public void setEvent_id(String event_id) {
+		this.event_id = event_id;
+	}
 
 	public String getDonor_name() {
 		return donor_name;

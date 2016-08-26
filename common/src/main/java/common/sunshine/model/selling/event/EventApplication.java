@@ -21,8 +21,9 @@ public class EventApplication extends Entity {
     private String wishes;
     private List<QuestionAnswer> answers;
 
-    public EventApplication(String donorName, String donorPhone, String doneeName, String doneePhone, String doneeGender, String doneeAddress, String relation, String wishes, String donorWechat) {
-        this.donorName = donorName;
+    public EventApplication(Event event,String donorName, String donorPhone, String doneeName, String doneePhone, String doneeGender, String doneeAddress, String relation, String wishes, String donorWechat) {
+        this.event = event;
+    	this.donorName = donorName;
         this.donorPhone = donorPhone;
         this.doneeName = doneeName;
         this.doneePhone = doneePhone;
