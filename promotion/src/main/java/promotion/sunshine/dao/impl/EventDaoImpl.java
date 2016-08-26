@@ -63,7 +63,7 @@ public class EventDaoImpl extends BaseDao implements EventDao {
         synchronized (lock) {
             try {
                 eventApplication.setApplicationId(IDGenerator.generate("EVA"));
-                sqlSession.insert("promotion.event.insert", eventApplication);
+                sqlSession.insert("promotion.event.application.insert", eventApplication);
                 result.setData(eventApplication);
             } catch (Exception e) {
                 logger.error(e.getMessage());

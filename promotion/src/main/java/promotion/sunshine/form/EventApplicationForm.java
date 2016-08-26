@@ -22,7 +22,7 @@ public class EventApplicationForm {
 	
 	private String wishes;
 	
-	private String optionId[];
+	private String option_id[];
 	
 
 	public String getEvent_id() {
@@ -97,12 +97,13 @@ public class EventApplicationForm {
 		this.wishes = wishes;
 	}
 
-	public String[] getOptionId() {
-		return optionId;
+	public String[] getOption_id() {
+		return option_id;
 	}
 
-	public void setOptionId(String[] optionId) {
-		this.optionId = optionId;
+	public void setOption_id(String[] option_id) {
+		this.option_id = option_id;
 	}
+
 
 }
