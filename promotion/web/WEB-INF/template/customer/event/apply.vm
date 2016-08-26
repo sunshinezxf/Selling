@@ -14,26 +14,5 @@
             #parse("/customer/event/component/apply_form.vm")
         </div>
     </div>
-    <form id="test">
-    	<input name="event_id" value="EVE2312313">
-    	<input name="donor_name" value="王旻">
-    	<input name="donor_phone" value="15805778888">
-    	<input name="donee_name" value="马云">
-    	<input name="donee_gender" value="M">
-    	<input name="donee_phone" value="18977778888">
-    	<input name="donee_address" value="汉口路22号">
-    	<input name="relation" value="家人">
-    	<input name="wishes" value="天天开心">
-    	<input name="option_id" value="O1">
-    	<input name="option_id" value="O4">
-    	<input name="option_id" value="O5">
-    </form>
 </body>
 </html>
-<script>
-	$(function(){
-		$("#test").attr("action", "${path.concat('/event/giftapplication')}");
-        $("#test").attr("method", "post");
-        $("#test").submit();
-	});
-</script>

@@ -462,5 +462,37 @@ AFTER `question_content`;
 ALTER TABLE `selling`.`event_application`
 ADD COLUMN `donee_age_range` VARCHAR(45) NOT NULL AFTER `donee_address`;
 
+CREATE TABLE IF NOT EXISTS `selling`.`event_order` (
+  `event_order_id` VARCHAR(45) NOT NULL,
+  `application_id` VARCHAR(45) NOT NULL,
+  `event_id` VARCHAR(45) NOT NULL,
+  `goods_id` VARCHAR(45) NOT NULL,
+  `donee_name` VARCHAR(45) NOT NULL,
+  `donee_phone` VARCHAR(45) NOT NULL,
+  `donee_address` VARCHAR(45) NOT NULL,
+  `order_status` TINYINT(3) NOT NULL,
+  `quantity` TINYINT(1) NOT NULL,
+  `block_flag` TINYINT(1) NOT NULL,
+  `create_time` DATETIME NOT NULL,
+  PRIMARY KEY (`event_order_id`),
+  INDEX `fk_event_order_event_application1_idx` (`application_id` ASC),
+  INDEX `fk_event_order_event1_idx` (`event_id` ASC),
+  INDEX `fk_event_order_goods1_idx` (`goods_id` ASC),
+  CONSTRAINT `fk_event_order_event_application1`
+  FOREIGN KEY (`application_id`)
+  REFERENCES `selling`.`event_application` (`application_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_event_order_event1`
+  FOREIGN KEY (`event_id`)
+  REFERENCES `selling`.`event` (`event_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_event_order_goods1`
+  FOREIGN KEY (`goods_id`)
+  REFERENCES `selling`.`goods` (`goods_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+  ENGINE = InnoDB;
 
 

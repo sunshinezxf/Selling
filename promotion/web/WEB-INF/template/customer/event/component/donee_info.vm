@@ -31,7 +31,7 @@
             <label class="weui_label">年龄</label>
         </div>
         <div class="weui_cell_bd weui_cell_primary">
-            <select class="weui_select" name="donee_age">
+            <select id="donee_age" class="weui_select" name="donee_age">
                 <option value="" selected>请选择受赠人年龄段</option>
                 <option value="18-30岁">18-30岁</option>
                 <option value="30-40岁">30-40岁</option>
@@ -66,7 +66,7 @@
             <label class="weui_label">与本人关系</label>
         </div>
         <div class="weui_cell_bd weui_cell_primary">
-            <select class="weui_select" name="relation">
+            <select id="relation" class="weui_select" name="relation">
                 <option value="" selected>请选择与受赠人关系</option>
                 <option value="家人">家人</option>
                 <option value="同事">同事</option>
@@ -80,4 +80,3 @@
         <button type="button" class="weui_btn weui_btn_disabled weui_btn_default" id="next_btn2" disabled="disabled">下一步</button>
     </div>
 </div>
-#parse("/customer/event/component/gender_list.vm")
