@@ -29,7 +29,7 @@
     </resultMap>
 
     <insert id="insert" parameterType="common.sunshine.model.selling.event.EventQuestion" useGeneratedKeys="false">
-        INSERT INTO event_question(question_id, event_id, question_content, question_rank, question_type, block_flag, create_time)
+        INSERT INTO event_question(question_id, event_id, question_content, question_rank, choice_type, block_flag, create_time)
         VALUES (#{questionId}, #{event.eventId}, #{content}, #{rank}, #{type, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler}, #{blockFlag}, #{createAt})
     </insert>
 
