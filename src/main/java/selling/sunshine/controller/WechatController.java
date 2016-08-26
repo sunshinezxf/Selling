@@ -1,7 +1,6 @@
 package selling.sunshine.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.thoughtworks.xstream.XStream;
 import common.sunshine.utils.Encryption;
 import org.apache.shiro.SecurityUtils;
@@ -20,7 +19,7 @@ import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
 import selling.sunshine.utils.WechatUtil;
 import selling.wechat.model.*;
-import selling.wechat.utils.XStreamFactory;
+import common.sunshine.utils.XStreamFactory;
 
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -71,7 +70,6 @@ public class WechatController {
         try {
             ServletInputStream stream = request.getInputStream();
             String input = WechatUtil.inputStream2String(stream);
-            logger.debug(input);
             XStream content = XStreamFactory.init(false);
             content.alias("xml", InMessage.class);
             final InMessage message = (InMessage) content.fromXML(input);
@@ -156,7 +154,6 @@ public class WechatController {
                     }
                     break;
             }
-            logger.debug(JSONObject.toJSONString(message));
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
