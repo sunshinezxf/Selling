@@ -3,13 +3,13 @@
 <head>
     #parse("/backend/component/init.vm")
     #parse("/backend/component/init_datatable.vm")
-    <title>活动列表</title>
+    <title>活动详情</title>
 </head>
 <body>
     #parse("/backend/component/navigate_with_login.vm")
 <div class="container-fluid">
     #parse("/backend/component/sidebar.vm")
-    #parse("/backend/event/component/event_overview_table.vm")
+    #parse("/backend/event/component/event_preview_table.vm")
 </div>
 </body>
 </html>

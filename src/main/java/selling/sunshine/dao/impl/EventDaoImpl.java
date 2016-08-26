@@ -31,9 +31,13 @@ public class EventDaoImpl extends BaseDao implements EventDao {
         ResultData result = new ResultData();
         synchronized (lock) {
             try {
+            	event.setEventId(IDGenerator.generate("GEV"));
+                sqlSession.insert("selling.event.insert", event);
                 List<EventQuestion> questions = event.getQuestions();
                 for (EventQuestion question : questions) {
+                	
                 	question.setQuestionId(IDGenerator.generate("EQN"));
+                	sqlSession.insert("selling.event.question.insert",question);
                     List<QuestionOption> options = question.getOptions();
                     for (QuestionOption option : options) {
                         EventQuestion temp = new EventQuestion();
@@ -42,10 +46,9 @@ public class EventDaoImpl extends BaseDao implements EventDao {
                         option.setOptionId(IDGenerator.generate("OPT"));
                         sqlSession.insert("selling.event.question.option.insert", option);
                     }
-                   sqlSession.insert("selling.event.question.insert",question);
+                  
                 }
-                event.setEventId(IDGenerator.generate("GEV"));
-                sqlSession.insert("selling.event.insert", event);
+                
                 result.setData(event);
             } catch (Exception e) {
                 logger.error(e.getMessage());

@@ -1,0 +1,30 @@
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id-target="event-management">
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+            <h1><i class="fa fa-home"></i> 活动详情 </h1>
+            <ol class="breadcrumb">
+                <li><a href="${path.concat('/dashboard')}">首页</a></li>
+                <li><a data-toggle="collapse" data-parent="#accordion" href="#event-management">活动管理</a></li>
+                <li class="active">活动详情</li>
+            </ol>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+             #if(${giftEvent})
+                 活动标题： ${giftEvent.title} <br>
+                 活动链接： ${giftEvent.nickname} <hr>
+                 #if(${giftEvent.questions})
+                    #foreach( $eventQuestion in ${giftEvent.questions})
+                      问题：  $eventQuestion.content</br>
+                      答案选项： #foreach( $questionOption in $eventQuestion.options)
+                                    $questionOption.value   &nbsp;&nbsp;&nbsp;&nbsp;
+                              #end
+                              <br>
+                    #end
+                 #end
+             #end
+
+        </div>
+    </div>
+</div>

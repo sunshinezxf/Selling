@@ -69,9 +69,6 @@ public class EventServiceImpl implements EventService {
 		ResultData queryResponse = eventDao.queryGiftEventByPage(condition, param);
 		result.setResponseCode(queryResponse.getResponseCode());
 		if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-			if (((List) queryResponse.getData()).isEmpty()) {
-				result.setResponseCode(ResponseCode.RESPONSE_NULL);
-			}
 			result.setData(queryResponse.getData());
 		} else {
 			result.setResponseCode(ResponseCode.RESPONSE_ERROR);

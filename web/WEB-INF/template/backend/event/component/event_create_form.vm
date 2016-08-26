@@ -330,7 +330,7 @@
                 processData: false,
                 contentType: "application/json",
                 success: function (data) {
-                      
+                      window.location.href="${path.concat('/event/overview')}"
                 }
                 
             });
