@@ -1,20 +1,25 @@
 <div id="questions">
     <div class="weui_panel weui_panel_access">
         <div class="weui_panel_bd">
+            #foreach($question in ${questions})
             <div class="weui_media_box weui_media_text">
-                <h4 class="weui_media_title">单选题</h4>
+                <h4 class="weui_media_title">${question.content}</h4>
                 <div class="weui_cells weui_cells_radio">
-                    <label class="weui_cell weui_check_label" for="radio_answer">
+                    #foreach($option in ${question.options})
+                    <label class="weui_cell weui_check_label" for="' + ${option.optionId} + '">
                         <div class="weui_cell_hd">
-                            <input type="radio" class="weui_check" name="radio1" id="radio_answer">
+                            <input type="radio" class="weui_check question_opt" name="' + ${option.optionId} + '" id="' + ${option.optionId} + '" value="' + ${option.optionId} + '">
                             <i class="weui_icon_checked"></i>
                         </div>
                         <div class="weui_cell_bd weui_cell_primary">
-                            <p>选项</p>
+                            <p>${option.value}</p>
                         </div>
                     </label>
+                    #end
                 </div>
             </div>
+            #end
+            <!--
             <div class="weui_media_box weui_media_text">
                 <h4 class="weui_media_title">多选题</h4>
                 <div class="weui_cells weui_cells_checkbox">
@@ -29,6 +34,7 @@
                     </label>
                 </div>
             </div>
+            -->
         </div>
     </div>
     <div class="weui_btn_area">

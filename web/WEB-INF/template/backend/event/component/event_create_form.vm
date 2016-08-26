@@ -36,46 +36,47 @@
 					</div>
 				</div>
 			</form>
-			<div id="date_form" class="form-inline" role="form">
-				<fieldset>
-					<div class="form-group date-formgroup">
-						<label for="dtp_start" class="control-label">开始时间</label>
-
-						<div id="date_start" class="input-group date form_date"
-							data-date="" data-date-format="yyyy-mm-dd"
-							data-link-field="dtp_start" data-link-format="yyyy-mm-dd">
-							<input class="form-control" size="20" type="text" value=""
-								readonly> <span class="input-group-addon"><span
-								class="glyphicon glyphicon-remove"></span></span> <span
-								class="input-group-addon"><span
-								class="glyphicon glyphicon-calendar"></span></span>
-						</div>
+			<div id="date_form" class="form-horizontal" role="form">
+			    <div class="form-group">
+					<label for="dtp_start" class="col-sm-2 col-md-2 col-lg-2 control-label">开始时间</label>
+                    <div class="col-sm-8 col-md-8 col-lg-8">   
+					    <div id="date_start" class="input-group date form_date"
+						    data-date="" data-date-format="yyyy-mm-dd"
+						    data-link-field="dtp_start" data-link-format="yyyy-mm-dd">
+						    <input id="ds" class="form-control" size="20" type="text" value=""
+							    readonly> <span class="input-group-addon"><span
+							    class="glyphicon glyphicon-remove"></span></span> <span
+							    class="input-group-addon"><span
+							    class="glyphicon glyphicon-calendar"></span></span>
+					    </div>
 						<input type="hidden" id="dtp_start" name="start" value="" />
 					</div>
-					<div class="form-group date-formgroup">
-						<label for="dtp_end" class="control-label">结束时间</label>
-
+				</div>
+				<div class="form-group">
+					<label for="dtp_end" class="col-sm-2 col-md-2 col-lg-2 control-label">结束时间</label>
+                    <div class="col-sm-8 col-md-8 col-lg-8">
 						<div id="date_end" class="input-group date form_date" data-date=""
 							data-date-format="yyyy-mm-dd" data-link-field="dtp_end"
 							data-link-format="yyyy-mm-dd">
-							<input class="form-control" size="20" type="text" value=""
+							<input id="de" class="form-control" size="20" type="text" value=""
 								readonly> <span class="input-group-addon"><span
-								class="glyphicon glyphicon-remove"></span></span> <span
+							    class="glyphicon glyphicon-remove"></span></span> <span
 								class="input-group-addon"><span
 								class="glyphicon glyphicon-calendar"></span></span>
 						</div>
 						<input type="hidden" id="dtp_end" name="end" value="" />
-					</div>
-				</fieldset>
+				    </div>
+				</div>
+				
 			</div>
 			<hr>
 			<div class="row" id="question-list"></div>
-			<div class="row" ><button type="button" id="add_question" class="btn btn-primary">添加问题</button></div>			
+			<div class="row" ><button type="button" id="add_question" class="col-sm-offset-2 col-md-offset-2 col-lg-offset-2 btn btn-primary">添加问题</button></div>			
 			<hr>
-			<div class="form-inline">
-				<button type="button" id="confirm_create_event"
-					class="btn btn-success">发布</button>
-				<button type="button" id="clear_event_content"
+			<div class="row" >
+			    <button type="button" id="confirm_create_event"
+					class="col-sm-offset-2 col-md-offset-2 col-lg-offset-2 btn btn-success">发布</button>
+			    <button type="button" id="clear_event_content"
 					class="btn btn-warning">清空</button>
 			</div>
 		</div>
@@ -189,11 +190,6 @@
 
     var date = new Date();
     var today = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
-        #if(${start})
-        var startDate = "${start}";
-        #else
-        var startDate = "2016-01-01";
-        #end
     $('#date_start').datetimepicker({
         language: 'zh-CN',
         weekStart: 1,
@@ -203,7 +199,11 @@
         startView: 2,
         minView: 2,
         forceParse: 0,
-        startDate: startDate
+        startDate: today
+    }).on('show', function (e) {
+        if ($('#dtp_end').val()) {
+            $('#date_start').datetimepicker('setEndDate', $('#dtp_end').val());
+        }
     });
 
     $('#date_end').datetimepicker({
@@ -215,12 +215,11 @@
         startView: 2,
         minView: 2,
         forceParse: 0,
-        startDate: today
     }).on('show', function (e) {
         if ($('#dtp_start').val()) {
             $('#date_end').datetimepicker('setStartDate', $('#dtp_start').val());
         } else {
-            $('#date_end').datetimepicker('setStartDate', startDate);
+            $('#date_end').datetimepicker('setStartDate', today);
         }
     });
     
@@ -247,9 +246,9 @@
     		eventQuestion.content=question;
     		eventQuestion.rank=rank;
     		if($('input:radio:checked').val()=='true'){
-    			eventQuestion.type="单选";
+    			eventQuestion.type=0;
     		}else{
-    			eventQuestion.type="多选";
+    			eventQuestion.type=1;
     		}
     		var questionOptionList = new Array();
     		$("#answer_list").children().each(function(i,n){
@@ -306,6 +305,10 @@
     $("#clear_event_content").click(function () {
         $("#event_title").val("");
         $("#event_nickname").val("");
+        $("#ds").val("");
+        $("#de").val("");
+        $("#dtp_start").val("");
+        $("#dtp_end").val("");
         questionList = new Array();
         rank=0;
         $("#question-list").children().remove(); 
