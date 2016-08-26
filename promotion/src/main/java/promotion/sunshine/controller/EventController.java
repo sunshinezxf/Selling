@@ -123,7 +123,7 @@ public class EventController {
             view.setViewName("/customer/event/prompt");
     		return view;
 		}
-    	EventApplication eventApplication = new EventApplication(event,form.getDonor_name(),form.getDonor_phone(),form.getDonee_name(),form.getDonee_phone(),form.getDonee_gender(),form.getDonee_address(),form.getRelation(),form.getWishes(), (String)session.getAttribute("openId"));
+    	EventApplication eventApplication = new EventApplication(event,form.getDonor_name(),form.getDonor_phone(),form.getDonee_name(),form.getDonee_phone(),form.getDonee_gender(),form.getDonee_address(),form.getDonee_age_range(), form.getRelation(),form.getWishes(), (String)session.getAttribute("openId"));
     	ResultData insertEventApplicationResponse = eventService.insertEventApplication(eventApplication);
     	if(insertEventApplicationResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
     		Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "申请失败", "");

@@ -18,6 +18,8 @@ public class EventApplicationForm {
 	@NotNull
 	private String donee_address;
 	@NotNull
+	private String donee_age_range;
+	@NotNull
 	private String relation;
 	
 	private String wishes;
@@ -79,6 +81,14 @@ public class EventApplicationForm {
 
 	public void setDonee_address(String donee_address) {
 		this.donee_address = donee_address;
+	}
+	
+	public String getDonee_age_range() {
+		return donee_age_range;
+	}
+
+	public void setDonee_age_range(String donee_age_range) {
+		this.donee_age_range = donee_age_range;
 	}
 
 	public String getRelation() {
