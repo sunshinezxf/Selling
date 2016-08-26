@@ -449,8 +449,15 @@ ALTER TABLE `selling`.`event_question`
 CHANGE COLUMN `question_rank` `question_rank` TINYINT(3) NOT NULL;
 
 ALTER TABLE `selling`.`event_application`
-ADD COLUMN `donor_wechat` VARCHAR(45) NULL AFTER `donor_phone`,
-ADD COLUMN `wishes` VARCHAR(150) NULL AFTER `relation`;
+ADD COLUMN `donor_wechat` VARCHAR(45) NULL
+AFTER `donor_phone`,
+ADD COLUMN `wishes` VARCHAR(150) NULL
+AFTER `relation`;
+
+##2016年8月26日更新
+ALTER TABLE `selling`.`event_question`
+ADD COLUMN `choice_type` TINYINT(1) NOT NULL DEFAULT 0
+AFTER `question_content`;
 
 
 

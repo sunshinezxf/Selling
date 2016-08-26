@@ -1,6 +1,7 @@
 package common.sunshine.model.selling.event;
 
 import common.sunshine.model.Entity;
+import common.sunshine.model.selling.event.support.ChoiceType;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ public class EventQuestion extends Entity {
     private Event event;
     private String content;
     private int rank;
+    private ChoiceType type;
     private List<QuestionOption> options;
 
     public String getQuestionId() {
@@ -44,6 +46,14 @@ public class EventQuestion extends Entity {
 
     public void setEvent(Event event) {
         this.event = event;
+    }
+
+    public ChoiceType getType() {
+        return type;
+    }
+
+    public void setType(ChoiceType type) {
+        this.type = type;
     }
 
     public List<QuestionOption> getOptions() {
