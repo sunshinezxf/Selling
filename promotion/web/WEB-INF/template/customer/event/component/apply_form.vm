@@ -1,6 +1,7 @@
 <div id="event_apply_area">
 	<form id="event_apply_form">
         <div class="weui_cells">
+            <input type="hidden" name="event_id" value="${event.eventId}"/>
     	    #parse("/customer/event/component/donor_info.vm")
     	    #parse("/customer/event/component/donee_info.vm")
     	    #parse("/customer/event/component/questions.vm")
@@ -9,8 +10,13 @@
     </form>
 </div>
 #parse("/customer/event/component/dialog.vm")
+#parse("/customer/event/component/gender_list.vm")
 <script>
+    var is_chosen=true;
     $(document).ready(function(){
+        #foreach($question in ${event.questions})
+        	alert("${question.type}");
+        #end
     	$("#donee_info").hide();
     	$("#questions").hide();
     	$("#wishes").hide();
@@ -59,16 +65,6 @@
     		else
     			donee_inactive();
     	});
-
-        $('#donee_phone').blur(function () {
-            var phone = $("#donee_phone").val();
-            if (!(/^1[3|4|5|7|8]\d{9}$/.test(phone))) {
-                $("#dialog").find(".weui_dialog_bd").html("手机号码有误，请重填！");
-                $("#dialog").fadeIn();
-                $("#donee_phone").val("");
-                donee_inactive();
-            }
-        });
 
         $("#donee_age").change(function(){
             if(donee_validate())
@@ -123,9 +119,26 @@
         
         $(".question_opt").each(function(){
             $(this).click(function(){
-                question_active();
+                $(".opt").each(function(){
+                    var options=$(this).find("input");
+                    var chosen_num=0;
+                    $.each(options,function(i){
+                        if($(this).prop("checked")){
+                            chosen_num++;
+                        }
+                    });
+                    if(chosen_num==0)
+                        is_chosen=false;
+                    else
+                        is_chosen=true;
+                });
+                if(question_validate())
+                    question_active();
+                else
+                    question_inactive();
             });
         });
+
 
         $("#wishes_content").on("input propertychange",function(){
         	var wishes=$("#wishes_content").val();
@@ -178,21 +191,22 @@
     });
 
     $("#next_btn3").click(function(){
+        $("#choice").find("input").attr("name","option");
         $("#questions").hide();
         $("#wishes").show();
     });
 
-    $("#pre_btn1").click(function(){
+    $("#prev_btn1").click(function(){
         $("#donee_info").hide();
         $("#donor_info").show();
     });
 
-    $("#pre_btn2").click(function(){
+    $("#prev_btn2").click(function(){
         $("#donee_info").show();
         $("#questions").hide();
     });
 
-    $("#pre_btn3").click(function(){
+    $("#prev_btn3").click(function(){
         $("#wishes").hide();
         $("#questions").show();
     });
@@ -219,12 +233,12 @@
         $("#next_btn1").removeAttr("disabled");
         $("#next_btn1").removeClass("weui_btn_disabled");
         $("#next_btn1").removeClass("weui_btn_default");
-        $("#next_btn1").addClass("weui_btn_plain_primary");
+        $("#next_btn1").addClass("weui_btn_primary");
     }
 
     function donor_inactive(){
     	$("#next_btn1").attr("disabled", "disabled");
-        $("#next_btn1").removeClass("weui_btn_plain_primary");
+        $("#next_btn1").removeClass("weui_btn_primary");
         $("#next_btn1").addClass("weui_btn_disabled");
         $("#next_btn1").addClass("weui_btn_default");
     }
@@ -256,20 +270,18 @@
         $("#next_btn2").removeAttr("disabled");
         $("#next_btn2").removeClass("weui_btn_disabled");
         $("#next_btn2").removeClass("weui_btn_default");
-        $("#next_btn2").addClass("weui_btn_plain_primary");
+        $("#next_btn2").addClass("weui_btn_primary");
     }
 
     function donee_inactive(){
     	$("#next_btn2").attr("disabled", "disabled");
-        $("#next_btn2").removeClass("weui_btn_plain_primary");
+        $("#next_btn2").removeClass("weui_btn_primary");
         $("#next_btn2").addClass("weui_btn_disabled");
         $("#next_btn2").addClass("weui_btn_default");
     }
     
     function question_validate(){
-    	var donorName=$("#donor_name").val();
-    	var donorPhone=$("#donor_phone").val();
-    	if(not_null(donorName)&&not_null(donorPhone))
+    	if(not_null(is_chosen))
             return true;
     	return false;
     }
@@ -278,12 +290,12 @@
         $("#next_btn3").removeAttr("disabled");
         $("#next_btn3").removeClass("weui_btn_disabled");
         $("#next_btn3").removeClass("weui_btn_default");
-        $("#next_btn3").addClass("weui_btn_plain_primary");
+        $("#next_btn3").addClass("weui_btn_primary");
     }
 
     function question_inactive(){
     	$("#next_btn3").attr("disabled", "disabled");
-        $("#next_btn3").removeClass("weui_btn_plain_primary");
+        $("#next_btn3").removeClass("weui_btn_primary");
         $("#next_btn3").addClass("weui_btn_disabled");
         $("#next_btn3").addClass("weui_btn_default");
     }

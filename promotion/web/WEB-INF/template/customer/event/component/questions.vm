@@ -1,14 +1,35 @@
 <div id="questions">
     <div class="weui_panel weui_panel_access">
-        <div class="weui_panel_bd">
-            #foreach($question in ${questions})
+        <div id="choice" class="weui_panel_bd">
+            #set($i = 0)
+            #foreach($question in ${event.questions})
+            #if(${question.type}=="EXCLUSIVE")
             <div class="weui_media_box weui_media_text">
-                <h4 class="weui_media_title">${question.content}</h4>
-                <div class="weui_cells weui_cells_radio">
+                #set($i = $i + 1)
+                <h4 class="weui_media_title">${i}.${question.content}</h4>
+                <div class="weui_cells weui_cells_radio opt">
                     #foreach($option in ${question.options})
-                    <label class="weui_cell weui_check_label" for="' + ${option.optionId} + '">
+                    <label class="weui_cell weui_check_label" for="${option.optionId}">
+                        <div class="weui_cell_bd weui_cell_primary">
+                            <p>${option.value}</p>
+                        </div>
+                        <div class="weui_cell_ft">
+                            <input type="radio" class="weui_check question_opt" name="${option.optionId}" id="${option.optionId}" value="${option.optionId}">
+                            <span class="weui_icon_checked"></span>
+                        </div>
+                    </label>
+                    #end
+                </div>
+            </div>
+            #else
+            <div class="weui_media_box weui_media_text">
+                #set($i = $i + 1)
+                <h4 class="weui_media_title">${i}.${question.content}</h4>
+                <div class="weui_cells weui_cells_checkbox opt">
+                    #foreach($option in ${question.options})
+                    <label class="weui_cell weui_check_label" for="${option.optionId}">
                         <div class="weui_cell_hd">
-                            <input type="radio" class="weui_check question_opt" name="' + ${option.optionId} + '" id="' + ${option.optionId} + '" value="' + ${option.optionId} + '">
+                            <input type="checkbox" class="weui_check question_opt" name="${option.optionId}" id="${option.optionId}" value="${option.optionId}">
                             <i class="weui_icon_checked"></i>
                         </div>
                         <div class="weui_cell_bd weui_cell_primary">
@@ -19,22 +40,7 @@
                 </div>
             </div>
             #end
-            <!--
-            <div class="weui_media_box weui_media_text">
-                <h4 class="weui_media_title">多选题</h4>
-                <div class="weui_cells weui_cells_checkbox">
-                    <label class="weui_cell weui_check_label" for="checkbox_answer">
-                        <div class="weui_cell_hd">
-                            <input type="checkbox" class="weui_check" name="checkbox1" id="checkbox_answer">
-                            <i class="weui_icon_checked"></i>
-                        </div>
-                        <div class="weui_cell_bd weui_cell_primary">
-                            <p>选项</p>
-                        </div>
-                    </label>
-                </div>
-            </div>
-            -->
+            #end
         </div>
     </div>
     <div class="weui_btn_area">
