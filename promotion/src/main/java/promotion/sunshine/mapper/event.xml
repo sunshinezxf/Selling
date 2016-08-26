@@ -15,6 +15,7 @@
     <resultMap id="eventQuestionVo" type="common.sunshine.model.selling.event.EventQuestion">
         <result property="questionId" column="question_id"></result>
         <result property="content" column="question_content"></result>
+        <result property="type" column="choice_type" typeHandler="common.sunshine.mybatis.handler.event.ChoiceTypeHandler"></result>
         <result property="rank" column="question_rank"></result>
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
@@ -47,7 +48,7 @@
     </select>
 
     <select id="eventQuestionQuery" parameterType="java.util.Map" resultMap="eventQuestionVo">
-    	SELECT question_id, event_id, question_content, question_rank, block_flag, create_time
+    	SELECT question_id, event_id, choice_type, question_content, question_rank, block_flag, create_time
     	FROM event_question
     	WHERE event_id = #{eventId}
     	ORDER BY question_rank
