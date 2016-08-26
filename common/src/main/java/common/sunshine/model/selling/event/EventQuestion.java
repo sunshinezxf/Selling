@@ -16,6 +16,10 @@ public class EventQuestion extends Entity {
     private ChoiceType type;
     private List<QuestionOption> options;
 
+    public EventQuestion() {
+        this.type = ChoiceType.EXCLUSIVE;
+    }
+
     public String getQuestionId() {
         return questionId;
     }
