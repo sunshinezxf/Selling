@@ -9,13 +9,15 @@
         <result property="doneePhone" column="donee_phone"></result>
         <result property="doneeGender" column="donee_gender"></result>
         <result property="doneeAddress" column="donee_address"></result>
+        <result property="doneeAgeRange" column="donee_age_range"></result>
         <result property="relation" column="relation"></result>
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
     </resultMap>
 
     <select id="query" parameterType="java.util.Map" resultMap="applicationVo">
-        SELECT application_id, donor_name, donor_phone, donee_name, donee_phone, donee_gender, donee_address, relation,
+        SELECT application_id, donor_name, donor_phone, donee_name, donee_phone, donee_gender, donee_address,
+        donee_age_range, relation,
         block_flag, create_time
         FROM event_application
         WHERE 1 = 1
@@ -37,6 +39,9 @@
         <if test="relation != null">
             AND relation = #{relation}
         </if>
+        <if test="doneeAgeRange != null">
+            AND donee_age_range = #{doneeAgeRange}
+        </if>
         <if test="rule != null">
             ORDER BY ${rule}
         </if>
@@ -44,4 +49,12 @@
             ORDER BY create_time DESC
         </if>
     </select>
+
+    <update id="update" parameterType="common.sunshine.model.selling.event.EventApplication">
+        UPDATE event_application
+        <set>
+            applicaton_id = #{applicationId}
+        </set>
+        WHERE application_id = #{applicationId}
+    </update>
 </mapper>
