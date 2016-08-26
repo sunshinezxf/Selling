@@ -459,5 +459,8 @@ ALTER TABLE `selling`.`event_question`
 ADD COLUMN `choice_type` TINYINT(1) NOT NULL DEFAULT 0
 AFTER `question_content`;
 
+ALTER TABLE `selling`.`event_application`
+ADD COLUMN `donee_age_range` VARCHAR(45) NOT NULL AFTER `donee_address`;
+
 
 

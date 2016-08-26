@@ -5,6 +5,8 @@
         <result property="questionId" column="question_id"></result>
         <result property="content" column="question_content"></result>
         <result property="rank" column="question_rank"></result>
+        <result property="type" column="question_type"
+                typeHandler="common.sunshine.mybatis.handler.event.ChoiceTypeHandler"></result>
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
         <association property="event" column="eventId = event_id" select="eventQuery"></association>
@@ -27,8 +29,8 @@
     </resultMap>
 
     <insert id="insert" parameterType="common.sunshine.model.selling.event.EventQuestion" useGeneratedKeys="false">
-        INSERT INTO event_question(question_id, event_id, question_content, question_rank, block_flag, create_time)
-        VALUES (#{questionId}, #{event.eventId}, #{content}, #{rank}, #{blockFlag}, #{createAt})
+        INSERT INTO event_question(question_id, event_id, question_content, question_rank, question_type, block_flag, create_time)
+        VALUES (#{questionId}, #{event.eventId}, #{content}, #{rank}, #{type, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler}, #{blockFlag}, #{createAt})
     </insert>
 
     <select id="query" parameterType="java.util.Map" resultMap="questionVo">

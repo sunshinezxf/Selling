@@ -17,18 +17,20 @@ public class EventApplication extends Entity {
     private String doneePhone;
     private String doneeGender;
     private String doneeAddress;
+    private String doneeAgeRange;
     private String relation;
     private String wishes;
     private List<QuestionAnswer> answers;
 
-    public EventApplication(Event event,String donorName, String donorPhone, String doneeName, String doneePhone, String doneeGender, String doneeAddress, String relation, String wishes, String donorWechat) {
+    public EventApplication(Event event, String donorName, String donorPhone, String doneeName, String doneePhone, String doneeGender, String doneeAddress, String doneeAgeRange, String relation, String wishes, String donorWechat) {
         this.event = event;
-    	this.donorName = donorName;
+        this.donorName = donorName;
         this.donorPhone = donorPhone;
         this.doneeName = doneeName;
         this.doneePhone = doneePhone;
         this.doneeGender = doneeGender;
         this.doneeAddress = doneeAddress;
+        this.doneeAgeRange = doneeAgeRange;
         this.relation = relation;
         this.wishes = wishes;
         this.donorWechat = donorWechat;
@@ -98,6 +100,14 @@ public class EventApplication extends Entity {
         this.doneeAddress = doneeAddress;
     }
 
+    public String getDoneeAgeRange() {
+        return doneeAgeRange;
+    }
+
+    public void setDoneeAgeRange(String doneeAgeRange) {
+        this.doneeAgeRange = doneeAgeRange;
+    }
+
     public String getRelation() {
         return relation;
     }
@@ -122,13 +132,13 @@ public class EventApplication extends Entity {
         this.answers = answers;
     }
 
-	public String getDonorWechat() {
-		return donorWechat;
-	}
+    public String getDonorWechat() {
+        return donorWechat;
+    }
 
-	public void setDonorWechat(String donorWechat) {
-		this.donorWechat = donorWechat;
-	}
+    public void setDonorWechat(String donorWechat) {
+        this.donorWechat = donorWechat;
+    }
 
-    
+
 }
