@@ -1,0 +1,47 @@
+<div class="msg">
+    <div class="weui_msg">
+        <div class="weui_icon_area">
+             #if(${prompt.code} == "SUCCESS")
+                    <i class="weui_icon_msg weui_icon_success"></i>
+             #elseif(${prompt.code} == "WARNING")
+                   <i class="weui_icon_msg weui_icon_waiting"></i>
+             #elseif(${prompt.code} == "DANGER")
+                   <i class="weui_icon_msg weui_icon_warn"></i>
+             #else
+                   <i class="weui_icon_msg weui_icon_info"></i>
+             #end
+        </div>
+        <div class="weui_text_area">
+            <h2 class="weui_msg_title">
+               ${prompt.title}
+            </h2>
+
+            <p class="weui_msg_desc">
+                #if(${prompt} && ${prompt.message})
+                    ${prompt.message}
+                #else
+                    对不起,当前您没有任何消息
+                #end
+            </p>
+        </div>
+        <div class="weui_opr_area">
+            <p class="weui_btn_area">
+                <a class="weui_btn weui_btn_primary" id="confirm">确定</a>
+            </p>
+        </div>
+        <div class="weui_extra_area">
+            <a>查看详情</a>
+        </div>
+    </div>
+</div>
+<script>
+	$("#confirm").click(function(){
+		#if(!$null.isNull(${prompt.confirmURL}))
+			#if(${prompt.confirmURL} == "")
+			    WeixinJSBridge.call('closeWindow');
+			#else
+			window.location="${path}" + "${prompt.confirmURL}";
+			#end
+		#end
+	});
+</script>

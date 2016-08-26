@@ -1,0 +1,12 @@
+#parse("/common/util.vm")
+<html lang="zh_CN">
+<head>
+    #parse("/customer/event/component/init.vm")
+    <title>提示</title>
+</head>
+<body ontouchstart>
+<div class="container">
+    #parse("/customer/event/component/success_msg.vm")
+</div>
+</body>
+</html>

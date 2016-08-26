@@ -14,7 +14,7 @@
                             <p>${option.value}</p>
                         </div>
                         <div class="weui_cell_ft">
-                            <input type="radio" class="weui_check question_opt" name="${option.optionId}" id="${option.optionId}" value="${option.optionId}">
+                            <input type="radio" class="weui_check question_opt" name="${question.questionId}" id="${option.optionId}" value="${option.optionId}">
                             <span class="weui_icon_checked"></span>
                         </div>
                     </label>
@@ -29,7 +29,7 @@
                     #foreach($option in ${question.options})
                     <label class="weui_cell weui_check_label" for="${option.optionId}">
                         <div class="weui_cell_hd">
-                            <input type="checkbox" class="weui_check question_opt" name="${option.optionId}" id="${option.optionId}" value="${option.optionId}">
+                            <input type="checkbox" class="weui_check question_opt" name="${question.questionId}" id="${option.optionId}" value="${option.optionId}">
                             <i class="weui_icon_checked"></i>
                         </div>
                         <div class="weui_cell_bd weui_cell_primary">

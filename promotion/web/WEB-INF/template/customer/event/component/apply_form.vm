@@ -14,9 +14,6 @@
 <script>
     var is_chosen=true;
     $(document).ready(function(){
-        #foreach($question in ${event.questions})
-        	alert("${question.type}");
-        #end
     	$("#donee_info").hide();
     	$("#questions").hide();
     	$("#wishes").hide();
@@ -191,7 +188,6 @@
     });
 
     $("#next_btn3").click(function(){
-        $("#choice").find("input").attr("name","option");
         $("#questions").hide();
         $("#wishes").show();
     });
@@ -212,6 +208,13 @@
     });
 
     $("#apply_btn").click(function(){
+        var choices=$("#choice").find("input");
+        $.each(choices,function(i){
+            $(this).attr("name","option_id");
+            if($(this).prop("checked") ){
+            	$(this).removeAttr("type");
+            }
+        });
         $("#event_apply_form").attr("action", "${path.concat('/event/giftapplication')}");
         $("#event_apply_form").attr("method", "post");
         $("#event_apply_form").submit();

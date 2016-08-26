@@ -31,7 +31,7 @@
             <label class="weui_label">年龄</label>
         </div>
         <div class="weui_cell_bd weui_cell_primary">
-            <select id="donee_age" class="weui_select" name="donee_age">
+            <select id="donee_age" class="weui_select" name="donee_age_range">
                 <option value="" selected>请选择受赠人年龄段</option>
                 <option value="18-30岁">18-30岁</option>
                 <option value="30-40岁">30-40岁</option>
