@@ -48,7 +48,7 @@
             AND donee_age_range = #{doneeAgeRange}
         </if>
         <if test="status != null">
-        	AND status = #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler}
+        	AND status = #{status}
         </if>
         <if test="rule != null">
             ORDER BY ${rule}
@@ -61,10 +61,10 @@
     <update id="update" parameterType="common.sunshine.model.selling.event.EventApplication">
         UPDATE event_application
         <set>
-         	<if test="status != null and status != ''">
-                order_status = #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler},
+         	<if test="status != null">
+                status = #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler},
             </if>
-            applicaton_id = #{applicationId}
+            application_id = #{applicationId}
         </set>
         WHERE application_id = #{applicationId}
     </update>

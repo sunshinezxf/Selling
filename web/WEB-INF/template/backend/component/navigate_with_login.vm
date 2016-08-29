@@ -58,6 +58,7 @@
                             <li><a class="menu" href="${path.concat('/event/create')}">发布活动</a></li>
                             <li><a class="menu" href="${path.concat('/event/overview')}"> 活动列表</a></li>
                             <li><a class="menu" href="${path.concat('/event/application')}"> 申请列表</a></li>
+                            <li><a class="menu" href="${path.concat('/event/present')}"> 赠送列表</a></li>
                         </ul>
                     </li>
                 #end

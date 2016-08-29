@@ -173,4 +173,19 @@ public class EventDaoImpl extends BaseDao implements EventDao {
         }
     }
 
+	@Override
+	public ResultData updateEventApplication(EventApplication eventApplication) {
+		ResultData result = new ResultData();
+        try {
+            sqlSession.update("selling.event.application.update", eventApplication);
+            result.setData(eventApplication);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription(e.getMessage());
+        } finally {
+            return result;
+        }
+	}
+
 }

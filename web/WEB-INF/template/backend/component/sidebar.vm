@@ -78,6 +78,9 @@
                         <li><a class="sub-nav" href="${path.concat('/event/application')}"><i class="fa fa-cog"></i>
                             申请列表</a>
                         </li>
+                        <li><a class="sub-nav" href="${path.concat('/event/present')}"><i class="fa fa-cog"></i>
+                            赠送列表</a>
+                        </li>
                     </ul>
                 </li>
             #end
