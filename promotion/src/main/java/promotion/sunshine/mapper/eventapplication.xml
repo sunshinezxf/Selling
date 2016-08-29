@@ -11,6 +11,7 @@
         <result property="doneeGender" column="donee_gender"></result>
         <result property="doneeAddress" column="donee_address"></result>
         <result property="doneeAgeRange" column="donee_age_range"></result>
+        <result property="status" column="status" typeHandler="common.sunshine.mybatis.handler.event.ApplicationStatusHandler"></result>
         <result property="relation" column="relation"></result>
         <result property="wishes" column="wishes"></result>
         <result property="blockFlag" column="block_flag"></result>
@@ -23,7 +24,7 @@
     </insert>
 
     <select id="query" parameterType="java.util.Map" resultMap="applicationVo">
-        SELECT application_id, donor_name, donor_phone, donee_name, donee_phone, donee_gender, donee_address, relation, wishes, donor_wechat
+        SELECT application_id, donor_name, donor_phone, donee_name, donee_phone, donee_gender, donee_address, status, relation, wishes, donor_wechat
         block_flag, create_time
         FROM event_application
         WHERE 1 = 1
@@ -47,6 +48,9 @@
         </if>
         <if test="doneePhone != null">
             AND donee_phone = #{doneePhone}
+        </if>
+        <if test="status != null">
+        	AND status = #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler}
         </if>
         <if test="relation != null">
             AND relation = #{relation}
