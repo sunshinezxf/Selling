@@ -13,7 +13,12 @@
         <div class="col-md-12 col-lg-12">
              #if(${giftEvent})
                  活动标题： ${giftEvent.title} <br>
-                 活动链接： ${giftEvent.nickname} <hr>
+                 活动链接： ${giftEvent.nickname} <br>
+                 当前状态： #if(${giftEvent.blockFlag})
+                           已结束
+                          #else
+                           正在进行
+                          #end<hr>
                  #if(${giftEvent.questions})
                     #foreach( $eventQuestion in ${giftEvent.questions})
                       问题：  $eventQuestion.content</br>

@@ -63,6 +63,15 @@
                 }
                 },
                 {
+                    title: "活动状态", "mRender": function (data, type, full) {
+                       if(full.blockFlag){
+                    	  return "已结束";
+                       }else{
+                    	   return "正在进行";
+                       }
+                }
+                },
+                {
                     title: "操作", "mRender": function (data, type, full) {
                     var operation = "";
                     var detail_button = "<button type='button' class='btn btn-success btn-group-sm' id='" + full.eventId + "' onclick=detail(this) >详情</button>&nbsp;"
