@@ -1,4 +1,4 @@
-<div id="questions">
+<div id="questions" class="questions" style="display: none;">
     <div class="weui_panel weui_panel_access">
         <div id="choice" class="weui_panel_bd">
             #set($i = 0)
@@ -6,7 +6,7 @@
             #if(${question.type}=="EXCLUSIVE")
             <div class="weui_media_box weui_media_text">
                 #set($i = $i + 1)
-                <h4 class="weui_media_title">${i}.${question.content}</h4>
+                <h4 class="weui_media_title">${i}.${question.content}?</h4>
                 <div class="weui_cells weui_cells_radio opt">
                     #foreach($option in ${question.options})
                     <label class="weui_cell weui_check_label" for="${option.optionId}">
@@ -24,7 +24,7 @@
             #else
             <div class="weui_media_box weui_media_text">
                 #set($i = $i + 1)
-                <h4 class="weui_media_title">${i}.${question.content}</h4>
+                <h4 class="weui_media_title">${i}.${question.content}?</h4>
                 <div class="weui_cells weui_cells_checkbox opt">
                     #foreach($option in ${question.options})
                     <label class="weui_cell weui_check_label" for="${option.optionId}">
@@ -42,9 +42,5 @@
             #end
             #end
         </div>
-    </div>
-    <div class="weui_btn_area">
-        <button type="button" class="weui_btn weui_btn_plain_primary" id="prev_btn2">上一步</button>
-        <button type="button" class="weui_btn weui_btn_disabled weui_btn_default" id="next_btn3" disabled="disabled">下一步</button>
     </div>
 </div>

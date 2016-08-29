@@ -8,15 +8,24 @@
     	    #parse("/customer/event/component/wishes.vm")
         </div>
     </form>
+    <div class="weui_btn_area">
+        <button type="button" class="weui_btn weui_btn_disabled weui_btn_default donor_info" id="next_btn1" disabled="disabled">下一步</button>
+        <button type="button" class="weui_btn weui_btn_plain_primary donee_info" id="prev_btn1">上一步</button>
+        <button type="button" class="weui_btn weui_btn_disabled weui_btn_default donee_info" id="next_btn2" disabled="disabled">下一步</button>
+        <button type="button" class="weui_btn weui_btn_plain_primary questions" id="prev_btn2">上一步</button>
+        <button type="button" class="weui_btn weui_btn_disabled weui_btn_default questions" id="next_btn3" disabled="disabled">下一步</button>
+        <button type="button" class="weui_btn weui_btn_plain_primary wishes" id="prev_btn3">上一步</button>
+        <button type="button" class="weui_btn weui_btn_primary wishes" id="apply_btn">提交申请</button>
+    </div>
 </div>
 #parse("/customer/event/component/dialog.vm")
 #parse("/customer/event/component/gender_list.vm")
 <script>
     var is_chosen=true;
     $(document).ready(function(){
-    	$("#donee_info").hide();
-    	$("#questions").hide();
-    	$("#wishes").hide();
+    	$(".donee_info").hide();
+    	$(".questions").hide();
+    	$(".wishes").hide();
 
     	$("#donor_name").on("input propertychange",function(){
     		if(donor_validate())
@@ -158,53 +167,62 @@
             $("#donor_phone").val("");
             donor_inactive();
         }else{
-        	$("#donor_info").hide();
-        	$("#donee_info").show();
+        	$(".donor_info").hide();
+        	$(".donee_info").show();
         }
     });
 
     $("#next_btn2").click(function(){
-    	var phone = $("#donee_phone").val();
-        if (!(/^1[3|4|5|7|8]\d{9}$/.test(phone))) {
+        var donor_phone = $("#donor_phone").val();
+    	var donee_phone = $("#donee_phone").val();
+        if (!(/^1[3|4|5|7|8]\d{9}$/.test(donee_phone))) {
             $("#dialog").find(".weui_dialog_bd").html("手机号码有误，请重填！");
             $("#dialog").fadeIn();
             $("#donee_phone").val("");
             donee_inactive();
         }else{
-        	var donee_address;
-        	if ($("#dist").is(":hidden")) {
-                if ($("#city").is(":hidden")) {
-                    donee_address = $("#prov").val() + $("#address").val();
-                } else {
-                    donee_address = $("#prov").val() + $("#city").val() + $("#address").val();
-                }
-            } else {
-                donee_address = $("#prov").val() + $("#city").val() + $("#dist").val() + $("#address").val();
+            if(donor_phone===donee_phone){
+                $("#dialog").find(".weui_dialog_bd").html("不能赠送给本人，请重填受赠人手机号！");
+                $("#dialog").fadeIn();
+                $("#donee_phone").val("");
+                donee_inactive();
             }
-            $("#donee_address").val(donee_address);
-        	$("#donee_info").hide();
-        	$("#questions").show();
+            else{
+                var donee_address;
+        	    if ($("#dist").is(":hidden")) {
+                    if ($("#city").is(":hidden")) {
+                        donee_address = $("#prov").val() + $("#address").val();
+                    } else {
+                        donee_address = $("#prov").val() + $("#city").val() + $("#address").val();
+                    }
+                } else {
+                    donee_address = $("#prov").val() + $("#city").val() + $("#dist").val() + $("#address").val();
+                }
+                $("#donee_address").val(donee_address);
+        	    $(".donee_info").hide();
+        	    $(".questions").show();
+            }
         }
     });
 
     $("#next_btn3").click(function(){
-        $("#questions").hide();
-        $("#wishes").show();
+        $(".questions").hide();
+        $(".wishes").show();
     });
 
     $("#prev_btn1").click(function(){
-        $("#donee_info").hide();
-        $("#donor_info").show();
+        $(".donee_info").hide();
+        $(".donor_info").show();
     });
 
     $("#prev_btn2").click(function(){
-        $("#donee_info").show();
-        $("#questions").hide();
+        $(".donee_info").show();
+        $(".questions").hide();
     });
 
     $("#prev_btn3").click(function(){
-        $("#wishes").hide();
-        $("#questions").show();
+        $(".wishes").hide();
+        $(".questions").show();
     });
 
     $("#apply_btn").click(function(){
