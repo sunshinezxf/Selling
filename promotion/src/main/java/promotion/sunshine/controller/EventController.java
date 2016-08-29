@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.fastjson.JSON;
+
 import common.sunshine.model.selling.event.Event;
 import common.sunshine.model.selling.event.EventApplication;
 import common.sunshine.model.selling.event.GiftEvent;
@@ -52,7 +54,8 @@ public class EventController {
 	public ModelAndView view(@PathVariable("eventName") String eventName, HttpServletRequest request) {
 		ModelAndView view = new ModelAndView();
 		HttpSession session = request.getSession();
-		session.setAttribute("openId", "123456");
+		logger.debug("12345678");
+		logger.debug(JSON.toJSONString(session));
 		if(session.getAttribute("openId") == null || ((String)session.getAttribute("openId")).equals("")){
 			Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "超时,请重新从订阅号菜单进入活动", "");
             view.addObject("prompt", prompt);
