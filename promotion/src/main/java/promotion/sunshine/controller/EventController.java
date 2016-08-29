@@ -60,20 +60,9 @@ public class EventController {
 			return view;
 		}
 		/*
-		 * 先查询用户是否已经填过表单，然后查询活动是否结束或未开始
+		 * 先查询有没有该活动，然后查询用户是否已经填过表单，然后查询活动是否结束或未开始
 		 */
 		Map<String, Object> condition = new HashMap<String, Object>();
-		condition.put("donorWechat", (String) session.getAttribute("openId"));
-		condition.put("blockFlag", false);
-		ResultData fetchEventApplicationResponse = eventService.fetchEventApplication(condition);
-		if(fetchEventApplicationResponse.getResponseCode() == ResponseCode.RESPONSE_OK){
-			Prompt prompt = new Prompt(PromptCode.SUCCESS, "提示", "您已经提交过申请", "");
-            view.addObject("prompt", prompt);
-            view.setViewName("/customer/event/prompt");
-			return view;
-		}
-		
-		condition.clear();
 		condition.put("nickname", eventName);
 		condition.put("blockFlag", false);
 		ResultData fetchEventResponse = eventService.fetchGiftEvent(condition);
@@ -84,6 +73,19 @@ public class EventController {
 			return view;
 		}
 		GiftEvent event = ((List<GiftEvent>) fetchEventResponse.getData()).get(0);
+		
+		condition.clear();
+		condition.put("eventId", event.getEventId());
+		condition.put("donorWechat", (String) session.getAttribute("openId"));
+		condition.put("blockFlag", false);
+		ResultData fetchEventApplicationResponse = eventService.fetchEventApplication(condition);
+		if(fetchEventApplicationResponse.getResponseCode() == ResponseCode.RESPONSE_OK){
+			Prompt prompt = new Prompt(PromptCode.SUCCESS, "提示", "您已经提交过申请", "");
+            view.addObject("prompt", prompt);
+            view.setViewName("/customer/event/prompt");
+			return view;
+		}
+		
 		Timestamp now = new Timestamp(System.currentTimeMillis());
 		if(now.before(event.getStart())){
 			Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "活动尚未开始", "");
