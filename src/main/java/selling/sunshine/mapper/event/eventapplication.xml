@@ -9,6 +9,7 @@
         <result property="doneePhone" column="donee_phone"></result>
         <result property="doneeGender" column="donee_gender"></result>
         <result property="doneeAddress" column="donee_address"></result>
+        <result property="status" column="status" typeHandler="common.sunshine.mybatis.handler.event.ApplicationStatusHandler"></result>
         <result property="doneeAgeRange" column="donee_age_range"></result>
         <result property="relation" column="relation"></result>
         <result property="wishes" column="wishes"></result>
@@ -46,6 +47,9 @@
         <if test="doneeAgeRange != null">
             AND donee_age_range = #{doneeAgeRange}
         </if>
+        <if test="status != null">
+        	AND status = #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler}
+        </if>
         <if test="rule != null">
             ORDER BY ${rule}
         </if>
@@ -57,6 +61,9 @@
     <update id="update" parameterType="common.sunshine.model.selling.event.EventApplication">
         UPDATE event_application
         <set>
+         	<if test="status != null and status != ''">
+                order_status = #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler},
+            </if>
             applicaton_id = #{applicationId}
         </set>
         WHERE application_id = #{applicationId}

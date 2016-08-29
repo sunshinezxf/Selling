@@ -1,4 +1,4 @@
-<div id="donor_info">
+<div id="donor_info" class="donor_info">
     <div class="weui_cell">
         <div class="weui_cell_hd">
             <label class="weui_label">姓名</label>
@@ -14,8 +14,5 @@
         <div class="weui_cell_bd weui_cell_primary">
             <input id="donor_phone" name="donor_phone" class="weui_input" type="tel" placeholder="请填写本人手机号" autocomplete="off"/>
         </div>
-    </div>
-    <div class="weui_btn_area">
-        <button type="button" class="weui_btn weui_btn_disabled weui_btn_default" id="next_btn1" disabled="disabled">下一步</button>
     </div>
 </div>

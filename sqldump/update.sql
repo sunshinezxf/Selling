@@ -495,4 +495,8 @@ CREATE TABLE IF NOT EXISTS `selling`.`event_order` (
     ON UPDATE NO ACTION)
   ENGINE = InnoDB;
 
+##2016年8月29日更新
+ALTER TABLE `selling`.`event_application`
+ADD COLUMN `status` TINYINT(3) NOT NULL DEFAULT 0 AFTER `donee_age_range`;
+
 

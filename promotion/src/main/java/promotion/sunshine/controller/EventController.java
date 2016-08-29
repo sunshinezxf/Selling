@@ -176,7 +176,7 @@ public class EventController {
 		}
 		EventApplication eventApplication = ((List<EventApplication>)fetchEventApplicationResponse.getData()).get(0);
 		view.addObject("eventApplication", eventApplication);
-		//活动结果查询页面
+		view.setViewName("/customer/event/check");
 		return view;
 	}
 }

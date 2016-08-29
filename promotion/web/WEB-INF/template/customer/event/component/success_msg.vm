@@ -40,7 +40,7 @@
 			#if(${prompt.confirmURL} == "")
 			    WeixinJSBridge.call('closeWindow');
 			#else
-			window.location="${path}" + "${prompt.confirmURL}";
+			    window.location="${path}" + "${prompt.confirmURL}";
 			#end
 		#end
 	});

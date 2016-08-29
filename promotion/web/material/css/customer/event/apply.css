@@ -1,0 +1,33 @@
+.hd{
+	padding-bottom:1em;
+}
+
+.weui_input{
+	color:#000040;
+}
+
+.age_select,.relation_select{
+	color:#000040;
+	width:100%;
+	height:2em;
+	padding-right:1.2em;
+	font-size:0.8em;
+    border: solid 0.0625em #c0c0c0;
+    appearance:none;
+    -moz-appearance:none;
+    -webkit-appearance:none;
+    background: url("../../../images/arrow.png") no-repeat scroll right center transparent;
+    select::-ms-expand { display: none; }
+}
+
+.prov,.city,.dist{
+	font-size:0.8em;
+}
+
+.weui_media_box.weui_media_text .weui_media_title {
+    margin-bottom: 0;
+}
+
+.weui_media_box:before {
+    border-top:0;
+}

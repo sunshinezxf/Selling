@@ -9,6 +9,7 @@
     <div class="container">
         <div class="hd">
             <h1 class="page_title">我要参加</h1>
+            <p class="page_desc">每人仅有一次参与活动的机会</p>
         </div>
         <div class="bd">
             #parse("/customer/event/component/apply_form.vm")

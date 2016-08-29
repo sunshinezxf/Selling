@@ -1,6 +1,7 @@
 package common.sunshine.model.selling.event;
 
 import common.sunshine.model.Entity;
+import common.sunshine.model.selling.event.support.ApplicationStatus;
 
 import java.util.List;
 
@@ -18,6 +19,7 @@ public class EventApplication extends Entity {
     private String doneeGender;
     private String doneeAddress;
     private String doneeAgeRange;
+    private ApplicationStatus status;
     private String relation;
     private String wishes;
     private List<QuestionAnswer> answers;
@@ -143,6 +145,14 @@ public class EventApplication extends Entity {
     public void setDonorWechat(String donorWechat) {
         this.donorWechat = donorWechat;
     }
+
+	public ApplicationStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(ApplicationStatus status) {
+		this.status = status;
+	}
 
 
 }
