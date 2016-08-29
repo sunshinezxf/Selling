@@ -11,10 +11,24 @@
 	text-align:right;
 }
 
-.address{
-	overflow:hidden;
-	text-overflow:ellipsis;
-	white-space:nowrap;
+.address .weui_cell_ft:after {
+    content: " ";
+    display: inline-block;
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
+    height: 6px;
+    width: 6px;
+    border-width: 2px 2px 0 0;
+    border-color: #c8c8cd;
+    border-style: solid;
+    position: relative;
+    top: -2px;
+    top: -1px;
+    margin-left: .3em;
+}
+
+#address{
+	display: inline-block;
 }
 
 .result{

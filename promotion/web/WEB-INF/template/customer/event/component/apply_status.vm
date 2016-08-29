@@ -16,11 +16,13 @@
                 <input class="weui_input" type="tel" value="${eventApplication.doneePhone}" readonly/>
             </div>
         </div>
-        <div class="weui_cell">
+        <div class="weui_cell address">
             <div class="weui_cell_hd">
                 <label class="weui_label">受赠人地址</label>
             </div>
-            <div id="donee_address" class="weui_cell_ft address">
+            <div class="weui_cell_bd weui_cell_primary">
+            </div>
+            <div id="donee_address" class="weui_cell_ft">
                 <p id="address">${eventApplication.doneeAddress}</p>
             </div>
         </div>
@@ -64,14 +66,14 @@
         address_cell.bind("click", $.showAddress);
 
         //地址字符串截取长度
-        //$.addressBeautify();
+        $.addressBeautify();
     });
 
     //地址美化长度
-    //$.addressBeautify = function () {
-    //    var address = $("#address").html();
-    //    $("#address").html($.utf8Substr(address, 25));
-    //}
+    $.addressBeautify = function () {
+        var address = $("#address").html();
+        $("#address").html($.utf8Substr(address, 25));
+    }
 
     $.showAddress = function () {
         $("#dialog").find(".weui_dialog_title").html($(this).data("address"));
