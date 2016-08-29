@@ -35,6 +35,10 @@ public class EventApplication extends Entity {
         this.wishes = wishes;
         this.donorWechat = donorWechat;
     }
+    
+    public EventApplication(){
+    	super();
+    }
 
     public String getApplicationId() {
         return applicationId;

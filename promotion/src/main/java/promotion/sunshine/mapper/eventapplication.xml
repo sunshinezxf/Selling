@@ -23,12 +23,15 @@
     </insert>
 
     <select id="query" parameterType="java.util.Map" resultMap="applicationVo">
-        SELECT application_id, event_id, donor_name, donor_phone, donee_name, donee_phone, donee_gender, donee_address, relation, wishes, donor_wechat
+        SELECT application_id, donor_name, donor_phone, donee_name, donee_phone, donee_gender, donee_address, relation, wishes, donor_wechat
         block_flag, create_time
         FROM event_application
         WHERE 1 = 1
         <if test="applicationId != null">
             AND application_id = #{applicationId}
+        </if>
+        <if test="eventId != null">
+        	AND event_id = #{eventId}
         </if>
         <if test="donorName != null">
             AND donor_name = #{donorName}
