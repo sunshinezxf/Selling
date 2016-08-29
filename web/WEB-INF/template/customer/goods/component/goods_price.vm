@@ -4,10 +4,10 @@
             <div class="under_div">
                 <div id="agent_price" class="price">
                     <div class="pre_price">￥${goods.customerPrice}</div>
-                    <div class="now_price">${goods.agentPrice}</div>
+                    <div class="now_price">${goods.agentPrice}/<span class="pieces">瓶</span></div>
                 </div>
                 <div id="customer_price" class="price">
-                    <div class="common_price">￥${goods.customerPrice}</div>
+                    <div class="common_price">￥${goods.customerPrice}/<span class="pieces">瓶</span></div>
                 </div>
                 <div class="post">
                     <p>包邮</p>

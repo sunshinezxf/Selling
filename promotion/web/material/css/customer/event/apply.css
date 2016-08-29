@@ -28,6 +28,6 @@
     margin-bottom: 0;
 }
 
-.weui_media_box:before {
-    border-top:0;
+.weui_cells:after {
+    border-bottom: 0;
 }

@@ -1,0 +1,22 @@
+.hd{
+	padding-bottom:1em;
+}
+
+.weui_label{
+	width:6em;
+}
+
+.weui_input{
+	color:#888;
+	text-align:right;
+}
+
+.address{
+	overflow:hidden;
+	text-overflow:ellipsis;
+	white-space:nowrap;
+}
+
+.result{
+	color: #3cc51f;
+}
