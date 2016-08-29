@@ -149,7 +149,7 @@ public class EventController {
 		return view;
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value = "/application/{eventId}")
+	@RequestMapping(method = RequestMethod.POST, value = "/application/{eventId}")
 	public DataTablePage<EventApplication> application(@PathVariable("eventId") String eventId,DataTableParam param){
 		DataTablePage<EventApplication>result = new DataTablePage<>(param);
 		if (StringUtils.isEmpty(param)) {

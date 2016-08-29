@@ -17,6 +17,7 @@
         </div>
     </div>
 </div>
+#parse("/backend/event/component/application_detail_modal.vm")
 <script>
 $(document).ready(function () {
     $("#event_application_table").DataTable({
@@ -32,7 +33,7 @@ $(document).ready(function () {
         "bProcessing": true,
         "bServerSide": true,
         "bInfoFiltered": false,
-        "sAjaxSource": '${path.concat('/event/overview')}',
+        "sAjaxSource": '${path.concat('/event/application/')}${giftEvent.eventId}',
         "infoFiltered": false,
         "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
             $(nRow).removeClass('dataTable');
@@ -51,30 +52,32 @@ $(document).ready(function () {
             })
         },
         columns: [
-            {title: "活动标题", "mData": "title"},
-            {
-                title: "开始时间", "mRender": function (data, type, full) {
-                return ((new Date(full.start)).format("yyyy/MM/dd hh:mm"));
-            }
-            },
-            {
-                title: "结束时间", "mRender": function (data, type, full) {
-                return ((new Date(full.end)).format("yyyy/MM/dd hh:mm"));
-            }
-            },
-            {
-                title: "活动状态", "mRender": function (data, type, full) {
-                   if(full.blockFlag){
-                	  return "已结束";
-                   }else{
-                	   return "正在进行";
-                   }
-            }
-            },
+            {title: "申请人", "mData": "donorName"},
+            {title: "受赠人", "mData": "doneeName"},
+            {title: "关系", "mData": "relation"},
             {
                 title: "操作", "mRender": function (data, type, full) {
                 var operation = "";
-                var detail_button = "<button type='button' class='btn btn-success btn-group-sm' id='" + full.eventId + "' onclick=detail(this) >详情</button>&nbsp;"
+                var detail_button = "<button type='button' class='btn btn-success btn-group-sm' id='" + full.applicationId + "' data-toggle='modal' data-target='#application_detail_modal'>详情</button>&nbsp;"
+                $("#" + full.applicationId).on('click', function () {
+                	document.getElementById("donorName").innerHTML =full.donorName;
+                	document.getElementById("donorPhone").innerHTML =full.donorPhone;
+                	document.getElementById("doneeName").innerHTML =full.doneeName;
+                	document.getElementById("doneePhone").innerHTML =full.doneePhone;
+                	if(full.doneeGender=="M"){
+                		document.getElementById("doneeGender").innerHTML ="男";
+                	}else{
+                		document.getElementById("doneeGender").innerHTML ="女";
+                	}               	
+                	document.getElementById("doneeAddress").innerHTML =full.doneeAddress;
+                	document.getElementById("doneeAgeRange").innerHTML =full.doneeAgeRange;
+                	document.getElementById("relation").innerHTML =full.relation;
+                	if(full.wishes!=null){
+                		document.getElementById("wishes").innerHTML =full.wishes;
+                	}else{
+                		document.getElementById("wishes").innerHTML ="无";
+                	}
+                });
                 operation += detail_button;
                 return operation;
             }
@@ -87,7 +90,7 @@ $(document).ready(function () {
             "info": "从 _START_ 到 _END_, 共 _TOTAL_ 条数据",
             "infoEmpty": "暂无数据",
             "infoFiltered": "数据表中共 _MAX_ 条记录)",
-            "zeroRecords": "当前暂无发布的代理",
+            "zeroRecords": "当前暂无申请人",
             "search": "搜索:",
             "paginate": {
                 "first": "首页",
@@ -98,5 +101,6 @@ $(document).ready(function () {
         }
     });
 });
+
 
 </script>
