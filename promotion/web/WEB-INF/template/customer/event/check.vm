@@ -9,6 +9,7 @@
     <div class="container">
         <div class="hd">
             <h1 class="page_title">我的活动</h1>
+            <p class="page_desc">本人已参加活动的当前进度</p>
         </div>
         <div class="bd">
             #parse("/customer/event/component/apply_status.vm")

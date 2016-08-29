@@ -1,0 +1,101 @@
+<div id="event_status_area">
+	<div id="event_info" class="weui_cells">
+        <div class="weui_cell">
+            <div class="weui_cell_hd">
+                <label class="weui_label">受赠人姓名</label>
+            </div>
+            <div class="weui_cell_bd weui_cell_primary">
+                <input class="weui_input" type="text" value="${eventApplication.doneeName}" readonly/>
+            </div>
+        </div>
+        <div class="weui_cell">
+            <div class="weui_cell_hd">
+                <label class="weui_label">受赠人手机</label>
+            </div>
+            <div class="weui_cell_bd weui_cell_primary">
+                <input class="weui_input" type="tel" value="${eventApplication.doneePhone}" readonly/>
+            </div>
+        </div>
+        <div class="weui_cell">
+            <div class="weui_cell_hd">
+                <label class="weui_label">受赠人地址</label>
+            </div>
+            <div id="donee_address" class="weui_cell_ft address">
+                <p id="address">${eventApplication.doneeAddress}</p>
+            </div>
+        </div>
+        <div class="weui_cell">
+            <div class="weui_cell_hd">
+                <label class="weui_label">与本人关系</label>
+            </div>
+            <div class="weui_cell_bd weui_cell_primary">
+                <input class="weui_input" type="text" value="${eventApplication.relation}" readonly/>
+            </div>
+        </div>
+        <div class="weui_cell">
+            #if(${eventApplication.status}=="APPLIED")
+            <div class="weui_cell_hd">
+                <label class="weui_label">当前申请状态</label>
+            </div>
+            <div class="weui_cell_bd weui_cell_primary">
+                <input class="weui_input" type="text" value="申请处理中" readonly/>
+            </div>
+            #elseif(${eventApplication.status}=="REJECTED")
+            <div class="weui_cell_bd weui_cell_primary">
+                <a class="weui_input result" href="">查看申请结果</a>
+            </div>
+            #else
+            <div class="weui_cell_bd weui_cell_primary">
+                <a class="weui_input result" href="">查看申请结果</a>
+            </div>
+            #end
+        </div>
+    </div>
+    <div class="weui_btn_area">
+        <button type="button" class="weui_btn weui_btn_primary" id="confirm_btn">确定</button>
+    </div>
+</div>
+#parse("/customer/event/component/dialog.vm")
+<script>
+    $(document).ready(function () {
+        //将地址数据存入dom节点中,并添加显示函数，必须放在地址字符串截取前
+        var address_cell = $("#donee_address").parent(".weui_cell");
+        address_cell.data("address", address_cell.find("#address").text());
+        address_cell.bind("click", $.showAddress);
+
+        //地址字符串截取长度
+        //$.addressBeautify();
+    });
+
+    //地址美化长度
+    //$.addressBeautify = function () {
+    //    var address = $("#address").html();
+    //    $("#address").html($.utf8Substr(address, 25));
+    //}
+
+    $.showAddress = function () {
+        $("#dialog").find(".weui_dialog_title").html($(this).data("address"));
+        address_dom = this;
+        $("#dialog").fadeIn();
+    }
+    
+    $.approve = function(){
+        $("#dialog").find(".weui_dialog_title").html("结果");
+        $("#dialog").find(".weui_dialog_bd").html("恭喜您获得赠送资格，我们会把您的心意及时送达！");
+        $("#dialog").fadeIn();
+    }
+    
+    $.reject = function(){
+        $("#dialog").find(".weui_dialog_title").html("结果");
+        $("#dialog").find(".weui_dialog_bd").html("很遗憾您未获得赠送资格，下次再试试手气！");
+        $("#dialog").fadeIn();
+    }
+
+    $("#dialog").find(".weui_btn_dialog.primary").click(function () {
+        $("#dialog").hide();
+    });
+    
+    $("#confirm_btn").click(function(){
+        WeixinJSBridge.call('closeWindow');
+    });
+</script>
