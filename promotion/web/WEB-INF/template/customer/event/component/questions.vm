@@ -6,7 +6,7 @@
             #if(${question.type}=="EXCLUSIVE")
             <div class="weui_media_box weui_media_text">
                 #set($i = $i + 1)
-                <h4 class="weui_media_title">${i}.${question.content}?</h4>
+                <h4 class="weui_media_title">${i}.${question.content}</h4>
                 <div class="weui_cells weui_cells_radio opt">
                     #foreach($option in ${question.options})
                     <label class="weui_cell weui_check_label" for="${option.optionId}">
@@ -24,7 +24,7 @@
             #else
             <div class="weui_media_box weui_media_text">
                 #set($i = $i + 1)
-                <h4 class="weui_media_title">${i}.${question.content}?</h4>
+                <h4 class="weui_media_title">${i}.${question.content}</h4>
                 <div class="weui_cells weui_cells_checkbox opt">
                     #foreach($option in ${question.options})
                     <label class="weui_cell weui_check_label" for="${option.optionId}">

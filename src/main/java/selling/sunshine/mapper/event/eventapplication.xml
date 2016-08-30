@@ -12,18 +12,22 @@
         <result property="status" column="status" typeHandler="common.sunshine.mybatis.handler.event.ApplicationStatusHandler"></result>
         <result property="doneeAgeRange" column="donee_age_range"></result>
         <result property="relation" column="relation"></result>
+        <result property="wishes" column="wishes"></result>
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
     </resultMap>
 
     <select id="query" parameterType="java.util.Map" resultMap="applicationVo">
         SELECT application_id, donor_name, donor_phone, donee_name, donee_phone, donee_gender, donee_address,
-        donee_age_range, relation,
+        donee_age_range, relation,wishes,
         block_flag, create_time
         FROM event_application
         WHERE 1 = 1
         <if test="applicationId != null">
             AND application_id = #{applicationId}
+        </if>
+        <if test="eventId != null">
+        	AND event_id = #{eventId}
         </if>
         <if test="donorName != null">
             AND donor_name = #{donorName}
@@ -44,7 +48,7 @@
             AND donee_age_range = #{doneeAgeRange}
         </if>
         <if test="status != null">
-        	AND status = #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler}
+        	AND status = #{status}
         </if>
         <if test="rule != null">
             ORDER BY ${rule}
@@ -57,10 +61,10 @@
     <update id="update" parameterType="common.sunshine.model.selling.event.EventApplication">
         UPDATE event_application
         <set>
-         	<if test="status != null and status != ''">
-                order_status = #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler},
+         	<if test="status != null">
+                status = #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler},
             </if>
-            applicaton_id = #{applicationId}
+            application_id = #{applicationId}
         </set>
         WHERE application_id = #{applicationId}
     </update>

@@ -1,0 +1,125 @@
+<div class="modal fade" id="application_detail_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">x</button>
+                <h4 class="modal-title">申请详情</h4>
+            </div>
+            <div class="modal-body">
+               <p class="form-group">
+                    <label class="col-sm-4 col-md-4 col-lg-3">申请人信息:</label>&nbsp;&nbsp;
+                    <br>
+                    <p class="form-group">
+                        <label>姓名： </label><text id="donorName"></text><br>
+                        <label>电话： </label><text id="donorPhone"></text>
+                    </p>
+               </p>
+               <hr>
+               <p class="form-group">
+                    <label class="col-sm-4 col-md-4 col-lg-3">受赠人信息:</label>&nbsp;&nbsp;
+                    <br>
+                    <p class="form-group">
+                        <label>姓名： </label><text id="doneeName"></text><br>
+                        <label>电话： </label><text id="doneePhone"></text><br>
+                        <label>性别： </label><text id="doneeGender"></text><br>
+                        <label>地址： </label><text id="doneeAddress"></text><br>
+                        <label>年龄段： </label><text id="doneeAgeRange"></text>
+                    </p>
+               </p>
+               <hr>
+               <p class="form-group">
+                  <label class="col-sm-4 col-md-4 col-lg-3">关系:</label>&nbsp;&nbsp;
+                  <text id="relation"></text>
+               </p>
+               <hr>
+               <p class="form-group">
+                  <label class="col-sm-4 col-md-4 col-lg-3">寄语:</label>&nbsp;&nbsp;
+                  <br>
+                    <p class="form-group">
+                      <text id="wishes"></text>
+                    </p>
+               </p>
+               <hr>
+               <p class="form-group">
+                  <label class="col-sm-4 col-md-4 col-lg-3">操作:</label>&nbsp;&nbsp;
+                  <br>
+                    <p class="form-group">
+                      <p id="applicationId" style="display:none"></p>
+                      <button type="button" class="btn btn-success" data-toggle="modal" data-target="#present_modal">赠送</button>&nbsp;&nbsp;
+                      <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#reject_modal">拒绝</button>
+                    </p>
+               </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="present_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">x</button>
+                <h4 class="modal-title">提示</h4>
+            </div>
+            <div class="modal-body">
+              <text>点击赠送之后就会将申请人加入赠送名单中（无法修改），是否确定？</text>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" >取消</button>
+                <button type="button" class="btn btn-success" data-dismiss="modal"  id="present_confirm">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="reject_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">x</button>
+                <h4 class="modal-title">提示</h4>
+            </div>
+            <div class="modal-body">
+               <text>点击拒绝之后就会将申请人从申请名单中去掉（该申请人信息再也不可见），是否确定？</text>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" >取消</button>
+                <button type="button" class="btn btn-success" data-dismiss="modal" id="reject_confirm">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        $("#application_detail_modal").modal({
+            show: false,
+            keyboard: true
+        });
+        $("#present_modal").modal({
+            show: false,
+            keyboard: true
+        });
+        $("#reject_modal").modal({
+            show: false,
+            keyboard: true
+        });
+    });
+    
+    $("#present_confirm").on('click', function () {
+    	$("#application_detail_modal").modal('hide');
+    	$.post("${path.concat('/event/agree/')}"+$("#applicationId").html(),function(data){
+    		window.location.href="${path.concat('/event/application')}";
+    	});
+    	
+    });
+    
+    $("#reject_confirm").on('click', function () {
+    	$("#application_detail_modal").modal('hide');
+    	$.post("${path.concat('/event/reject/')}"+$("#applicationId").html(),function(data){
+    		window.location.href="${path.concat('/event/application')}";
+    	});
+    	
+    });
+
+</script>

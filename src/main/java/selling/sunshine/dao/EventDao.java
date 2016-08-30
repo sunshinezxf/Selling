@@ -2,6 +2,7 @@ package selling.sunshine.dao;
 
 import java.util.Map;
 
+import common.sunshine.model.selling.event.EventApplication;
 import common.sunshine.model.selling.event.GiftEvent;
 import common.sunshine.pagination.DataTableParam;
 import common.sunshine.utils.ResultData;
@@ -19,5 +20,7 @@ public interface EventDao {
 	ResultData queryEventApplication(Map<String, Object> condition);
 	
 	ResultData queryEventApplication(Map<String, Object> condition, DataTableParam param);
+	
+	ResultData updateEventApplication(EventApplication eventApplication);
 
 }

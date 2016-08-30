@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,9 +23,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import common.sunshine.model.selling.agent.Agent;
 import common.sunshine.model.selling.event.Event;
+import common.sunshine.model.selling.event.EventApplication;
 import common.sunshine.model.selling.event.EventQuestion;
 import common.sunshine.model.selling.event.GiftEvent;
 import common.sunshine.model.selling.event.QuestionOption;
+import common.sunshine.model.selling.event.support.ApplicationStatus;
 import common.sunshine.model.selling.event.support.ChoiceType;
 import common.sunshine.pagination.DataTablePage;
 import common.sunshine.pagination.DataTableParam;
@@ -55,10 +58,16 @@ public class EventController {
 	@RequestMapping(method = RequestMethod.POST, value = "/create")
 	public ResultData create(@RequestBody GiftEventForm form, HttpSession session) {
 		ResultData resultData = new ResultData();
+		Map<String, Object> condition=new HashMap<>();
+		condition.put("blockFlag", false);
+		ResultData queryResult=eventService.fetchGiftEvent(condition);
+		if (queryResult.getResponseCode()==ResponseCode.RESPONSE_OK) {
+			resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
+			return resultData;
+		}
 		GiftEvent giftEvent = new GiftEvent();
 		giftEvent.setTitle(form.getGiftEventTitle());
 		giftEvent.setNickname(form.getGiftEventNickname());
-		System.err.println(form.getStartTime());
 		giftEvent.setStart(Timestamp.valueOf(form.getStartTime() + ":00"));
 		giftEvent.setEnd(Timestamp.valueOf(form.getEndTime() + ":00"));
 		List<EventQuestion> eventQuestions = new ArrayList<>();
@@ -125,5 +134,84 @@ public class EventController {
 		}
 		
 		return view;
+	}
+	
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/application")
+	public ModelAndView application(){
+		ModelAndView view = new ModelAndView();
+		Map<String, Object> condition=new HashMap<>();
+		condition.put("blockFlag", false);
+		ResultData queryResult=eventService.fetchGiftEvent(condition);
+		if (queryResult.getResponseCode()==ResponseCode.RESPONSE_OK) {
+			view.addObject("giftEvent", ((List<GiftEvent>)queryResult.getData()).get(0));
+		}
+		view.setViewName("backend/event/application");
+		return view;
+	}
+	
+	@RequestMapping(method = RequestMethod.POST, value = "/application/{eventId}")
+	public DataTablePage<EventApplication> application(@PathVariable("eventId") String eventId,DataTableParam param){
+		DataTablePage<EventApplication>result = new DataTablePage<>(param);
+		if (StringUtils.isEmpty(param)) {
+			return result;
+		} 
+		Map<String, Object> condition = new HashMap<>();
+		condition.put("eventId", eventId);
+		condition.put("status", 0);
+		ResultData fetchResponse = eventService.fetchEventApplicationByPage(condition, param);
+		if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+			result = (DataTablePage<EventApplication>) fetchResponse.getData();
+		}
+		return result;
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/present")
+	public ModelAndView present(){
+		ModelAndView view = new ModelAndView();
+		Map<String, Object> condition=new HashMap<>();
+		condition.put("blockFlag", false);
+		ResultData queryResult=eventService.fetchGiftEvent(condition);
+		if (queryResult.getResponseCode()==ResponseCode.RESPONSE_OK) {
+			view.addObject("giftEvent", ((List<GiftEvent>)queryResult.getData()).get(0));
+		}
+		view.setViewName("backend/event/present");
+		return view;
+	}
+	
+	@RequestMapping(method = RequestMethod.POST, value = "/present/{eventId}")
+	public DataTablePage<EventApplication> present(@PathVariable("eventId") String eventId,DataTableParam param){
+		DataTablePage<EventApplication>result = new DataTablePage<>(param);
+		if (StringUtils.isEmpty(param)) {
+			return result;
+		} 
+		Map<String, Object> condition = new HashMap<>();
+		condition.put("eventId", eventId);
+		condition.put("status", 2);
+		ResultData fetchResponse = eventService.fetchEventApplicationByPage(condition, param);
+		if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+			result = (DataTablePage<EventApplication>) fetchResponse.getData();
+		}
+		return result;
+	}
+	
+	@RequestMapping(method = RequestMethod.POST, value = "/agree/{applicationId}")
+	public ResultData agree(@PathVariable("applicationId") String applicationId) {
+		ResultData resultData=new ResultData();
+		EventApplication eventApplication=new EventApplication();
+		eventApplication.setApplicationId(applicationId);
+		eventApplication.setStatus(ApplicationStatus.APPROVED);
+		resultData=eventService.updateEventApplication(eventApplication);
+		return resultData;
+	}
+	
+	@RequestMapping(method = RequestMethod.POST, value = "/reject/{applicationId}")
+	public ResultData reject(@PathVariable("applicationId") String applicationId) {
+		ResultData resultData=new ResultData();
+		EventApplication eventApplication=new EventApplication();
+		eventApplication.setApplicationId(applicationId);
+		eventApplication.setStatus(ApplicationStatus.REJECTED);
+		resultData=eventService.updateEventApplication(eventApplication);
+		return resultData;
 	}
 }

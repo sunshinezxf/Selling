@@ -23,7 +23,7 @@
 
 					<div class="col-sm-8 col-md-8 col-lg-8">
 						<input type="text" class="form-control" id="event_title"
-							name="title" placeholder="活动标题" required="" autocomplete="off" />
+							name="title" placeholder="活动标题"  required="" autocomplete="off" />
 					</div>
 				</div>
 				<div class="form-group">
@@ -32,7 +32,7 @@
 
 					<div class="col-sm-8 col-md-8 col-lg-8">
 						<input type="text" class="form-control" id="event_nickname"
-							name="nickname" placeholder="活动链接" required="" autocomplete="off" />
+							name="nickname" placeholder="活动链接"  value="zqhd" required="" autocomplete="off" />
 					</div>
 				</div>
 			</form>
@@ -321,6 +321,9 @@
         if((typeof event_title == "undefined" || event_title == "")||(typeof event_nickname == "undefined" || event_nickname == "")||(typeof startTime == "undefined" || startTime == "")||(typeof endTime == "undefined" || endTime == "")){
             $("#dialog").find(".modal-body").html("活动标题、链接、开始时间和结束时间任何一项都不能为空！");
     		$("#dialog").modal('show');    
+        }else if(startTime==endTime){
+        	$("#dialog").find(".modal-body").html("活动开始时间和结束时间不能一样！");
+    		$("#dialog").modal('show');    
         }else{
         	var data = {"giftEventTitle":event_title, "giftEventNickname": event_nickname,"startTime":startTime,"endTime":endTime,"questionList":questionList};
         	$.ajax({
@@ -330,7 +333,12 @@
                 processData: false,
                 contentType: "application/json",
                 success: function (data) {
-                      window.location.href="${path.concat('/event/overview')}"
+                	  if(data.responseCode=="RESPONSE_ERROR"){
+                		  $("#dialog").find(".modal-body").html("当前已有正在进行的活动，只有当前正在进行的活动结束之后才能创建新活动！");
+                  		  $("#dialog").modal('show');    
+                	  }else{
+                		  window.location.href="${path.concat('/event/overview')}";
+                	  }               
                 }
                 
             });

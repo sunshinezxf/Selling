@@ -2,7 +2,7 @@ package selling.sunshine.service;
 
 import java.util.Map;
 
-
+import common.sunshine.model.selling.event.EventApplication;
 import common.sunshine.model.selling.event.GiftEvent;
 import common.sunshine.pagination.DataTableParam;
 import common.sunshine.utils.ResultData;
@@ -20,5 +20,8 @@ public interface EventService {
 	ResultData fetchEventApplication(Map<String, Object> condition);
 	
 	ResultData fetchEventApplicationByPage(Map<String, Object> condition, DataTableParam param);
+	
+	ResultData updateEventApplication(EventApplication eventApplication);
+
 
 }
