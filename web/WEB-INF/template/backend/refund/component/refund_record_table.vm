@@ -59,14 +59,14 @@
                         return detail;
                     }
                 },
-                {
-                    title: "操作", "mRender": function(data,type,full){
-                        var operation="";
-                        var detail_btn="<a type='button' class='btn btn-info btn-group-sm' href='${path.concat("/")}'>详情</a>&nbsp;";
-                        opretion+=detail_btn;
-                        return operation;
-                    }
-                },
+                ##{
+                ##    title: "操作", "mRender": function(data,type,full){
+                ##        var operation="";
+                ##        var detail_btn="<a type='button' class='btn btn-info btn-group-sm' href='${path.concat("/")}'>详情</a>&nbsp;";
+                ##        opretion+=detail_btn;
+                ##        return operation;
+                ##    }
+                ##},
             ],
             "language": {
                 "processing": "正在加载中",
