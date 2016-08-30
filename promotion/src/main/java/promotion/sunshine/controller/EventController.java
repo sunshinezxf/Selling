@@ -165,7 +165,7 @@ public class EventController {
 	@RequestMapping(method = RequestMethod.GET, value="/consultapplication")
 	public ModelAndView consultApplication(){
 		ModelAndView view = new ModelAndView();
-		//添加活动查询申请页面
+		view.setViewName("/customer/event/consult");
 		return view;
 	}
 	

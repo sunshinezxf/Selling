@@ -1,0 +1,84 @@
+<div id="consult_event_area">
+    <form id="consult_form">
+        <div class="weui_cells">
+            <div class="weui_cell">
+                <div class="weui_cell_hd">
+                    <label class="weui_label">手机</label>
+                </div>
+                <div class="weui_cell_bd weui_cell_primary">
+                    <input id="phone" class="weui_input" type="tel" placeholder="请填写本人手机号" autocomplete="off"/>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="weui_btn_area">
+        <button type="button" class="weui_btn weui_btn_disabled weui_btn_default" id="consult_btn" disabled="disabled">查询</button>
+    </div>
+</div>
+#parse("/customer/event/component/dialog.vm")
+<script>
+    $(document).ready(function(){
+        $("#phone").on("input propertychange",function(){
+            if(validate())
+                active();
+            else
+                inactive();
+        });
+        
+        $('#phone').blur(function () {
+            var phone = $("#phone").val();
+            if (!(/^1[3|4|5|7|8]\d{9}$/.test(phone))) {
+                $("#dialog").find(".weui_dialog_bd").html("手机号码有误，请重填！");
+                $("#dialog").fadeIn();
+                $("#phone").val("");
+                inactive();
+            }
+        });
+    });
+    
+    $("#consult_btn").click(function(){
+    	var phone = $("#phone").val();
+        if (!(/^1[3|4|5|7|8]\d{9}$/.test(phone))) {
+            $("#dialog").find(".weui_dialog_bd").html("手机号码有误，请重填！");
+            $("#dialog").fadeIn();
+            $("#phone").val("");
+            inactive();
+        }else{
+            var url="${path.concat('/giftapplication/')}" + phone;
+        	$("#consult_form").attr("action", url);
+            $("#consult_form").attr("method", "get");
+            $("#consult_form").submit();
+        }
+    });
+    
+    $("#dialog").find(".weui_btn_dialog.primary").click(function () {
+        $("#dialog").hide();
+    });
+    
+    function validate(){
+    	var phone=$("#phone").val();
+    	if(not_null(phone))
+            return true;
+    	return false;
+    }
+    
+    function active(){
+        $("#consult_btn").removeAttr("disabled");
+        $("#consult_btn").removeClass("weui_btn_disabled");
+        $("#consult_btn").removeClass("weui_btn_default");
+        $("#consult_btn").addClass("weui_btn_primary");
+    }
+    
+    function inactive(){
+        $("#consult_btn").attr("disabled", "disabled");
+        $("#consult_btn").removeClass("weui_btn_primary");
+        $("#consult_btn").addClass("weui_btn_disabled");
+        $("#consult_btn").addClass("weui_btn_default");
+    }
+    
+    function not_null(item) {
+        if (item == null || item == "" || item.length <= 0)
+            return false
+        return true;
+    }
+</script>
