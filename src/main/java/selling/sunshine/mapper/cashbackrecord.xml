@@ -46,27 +46,27 @@
     <insert id="insert" parameterType="selling.sunshine.model.cashback.CashBackRecord" useGeneratedKeys="false">
         INSERT INTO refund_record
         <set>
-            refund_id=#{refundRecordId},
+            refund_id=#{recordId},
             <if test="orderPool != null and orderPool != ''">
                 order_pool_id = #{orderPool.orderPoolId},
             </if>
-            <if test="refundName != null and refundName != ''">
-                refund_name = #{refundName},
+            <if test="title != null and title != ''">
+                refund_name = #{title},
             </if>
-            <if test="refundDescription != null and refundDescription != ''">
-                refund_description = #{refundDescription},
+            <if test="description != null and description != ''">
+                refund_description = #{description},
             </if>
-            <if test="refundPercent != null and refundPercent != ''">
-                refund_percent = #{refundPercent},
+            <if test="percent != null and percent != ''">
+                refund_percent = #{percent},
             </if>
-            <if test="refundAmount != null and refundAmount != ''">
-                refund_amount = #{refundAmount},
+            <if test="amount != null and amount != ''">
+                refund_amount = #{amount},
             </if>
             <if test="agent != null and agent != ''">
                 agent_id = #{agent.agentId},
             </if>
             <if test="level != null">
-                refund_level = #{level, , typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler}
+                refund_level = #{level, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler},
             </if>
             block_flag = #{blockFlag},
             create_time = #{createAt}
@@ -96,8 +96,8 @@
         refund_id,order_pool_id,refund_name,refund_percent,refund_amount,refund_description,refund_level,agent_id,create_time,block_flag
         FROM refund_record
         WHERE 1 = 1
-        <if test="refundRecordId != null and refundRecordId != ''">
-            AND refund_id = #{refundRecordId}
+        <if test="recordId != null and recordId != ''">
+            AND refund_id = #{recordId}
         </if>
         <if test="agentId != null and agentId != ''">
             AND agent_id = #{agentId}
@@ -117,7 +117,7 @@
         <if test="createAt !=null and createAt != ''">
             AND create_time LIKE #{createAt}
         </if>
-        <if test="refundDescription !=null and refundDescription != ''">
+        <if test="description !=null and description != ''">
             AND refund_description LIKE #{refundDescription}
         </if>
 

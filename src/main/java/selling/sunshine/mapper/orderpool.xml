@@ -50,7 +50,7 @@
         <result property="poolDate" column="pool_date"></result>
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
-        <association property="agent" column="agentId = agent_id" select="agentQuery"></association>
+        <association property="agent" column="agentId = agent_id" select="agentLiteQuery"></association>
 		<association property="goods" column="goodsId = goods_id" select="goods4AgentQuery"></association>
 		<association property="refundConfig" column="refundConfigId = refund_config_id" select="refundConfigQuery"></association>
     </resultMap>
