@@ -36,6 +36,8 @@ public class FollowerServiceImpl implements FollowerService {
 
     @Override
     public ResultData unsubscribe(String openId) {
+    	logger.debug("1234567890");
+    	logger.debug(openId);
         ResultData result = new ResultData();
         ResultData blockResponse = followerDao.blockFollower(openId);
         result.setResponseCode(blockResponse.getResponseCode());
