@@ -1,0 +1,59 @@
+#if(${configuration})
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script>
+    if (is_weixin()) {
+        wx.config({
+            debug: false,
+            appId: '${configuration.appId}',
+            timestamp: '${configuration.timestamp}',
+            nonceStr: '${configuration.nonceStr}',
+            signature: '${configuration.signature}',
+            jsApiList: [
+                'onMenuShareTimeline',
+                'onMenuShareAppMessage',
+                'chooseImage',
+                'uploadImage'
+            ]
+        });
+        // 2. 分享接口
+        // 2.1 监听“分享给朋友”，按钮点击、自定义分享内容及分享结果接口
+        wx.ready(function () {
+            wx.onMenuShareAppMessage({
+                title: title, // 分享标题
+                desc: description, // 分享描述
+                link: '${configuration.shareLink}', // 分享链接
+                imgUrl: "http://www.yuncaogangmu.com/material/images/logo.jpeg", // 分享图标
+                type: '', // 分享类型,music、video或link，不填默认为link
+                dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+                success: function () {
+                },
+                cancel: function () {
+                }
+            });
+            // 2.2 监听“分享到朋友圈”按钮点击、自定义分享内容及分享结果接口
+            wx.onMenuShareTimeline({
+                title: title,
+                link: '${configuration.shareLink}',
+                imgUrl: "http://www.yuncaogangmu.com/material/images/logo.jpeg",
+                trigger: function (res) {
+                },
+                success: function (res) {
+                },
+                cancel: function (res) {
+                },
+                fail: function (res) {
+                }
+            });
+        });
+    }
+
+    function is_weixin() {
+        var ua = navigator.userAgent.toLowerCase();
+        if (ua.match(/MicroMessenger/i) == "micromessenger") {
+            return true;
+        } else {
+            return false;
+        }
+    }
+</script>
+#end
