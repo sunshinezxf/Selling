@@ -44,7 +44,7 @@
             $("#phone").val("");
             inactive();
         }else{
-            var url="${path.concat('/giftapplication/')}" + phone;
+            var url="${path.concat('/event/giftapplication/')}" + phone;
         	$("#consult_form").attr("action", url);
             $("#consult_form").attr("method", "get");
             $("#consult_form").submit();
