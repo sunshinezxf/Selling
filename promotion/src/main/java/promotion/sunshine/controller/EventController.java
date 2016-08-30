@@ -88,7 +88,7 @@ public class EventController {
 		condition.put("blockFlag", false);
 		ResultData fetchEventApplicationResponse = eventService.fetchEventApplication(condition);
 		if(fetchEventApplicationResponse.getResponseCode() == ResponseCode.RESPONSE_OK){
-			Prompt prompt = new Prompt(PromptCode.SUCCESS, "提示", "请从“活动”菜单中查询活动申请，若您还没有关注我们，请先关注“云草健康”公众号", "");
+			Prompt prompt = new Prompt(PromptCode.SUCCESS, "提示", "请从“活动”菜单中查询活动申请，若您还没有关注我们，请搜索“云草健康”公众号并关注", "");
             view.addObject("prompt", prompt);
             view.setViewName("/customer/event/prompt");
 			return view;

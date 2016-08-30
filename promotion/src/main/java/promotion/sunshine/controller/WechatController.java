@@ -172,7 +172,7 @@ public class WechatController {
                         Article welcome = new Article();
                         welcome.setTitle("活动申请");
                         welcome.setDescription("申请");
-                        //welcome.setPicUrl("https://mmbiz.qlogo.cn/mmbiz/zhe7KjM5iaS8Z1VmBFxR793iaJhia9fKCkz0BibJy4bWnLrhLlWHVAqibXGZQz1KiaqWBg6Ikzw7Mbs97EHq1bO6uZibw/0?wx_fmt=jpeg");
+                        welcome.setPicUrl("https://mmbiz.qlogo.cn/mmbiz/zhe7KjM5iaS8Z1VmBFxR793iaJhia9fKCkz0BibJy4bWnLrhLlWHVAqibXGZQz1KiaqWBg6Ikzw7Mbs97EHq1bO6uZibw/0?wx_fmt=jpeg");
                         welcome.setUrl("http://event.yuncaogangmu.com/event/zqhd/" + openId);
                         list.add(welcome);
                         result.setArticles(list);
