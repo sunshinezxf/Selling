@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.fastjson.JSON;
+
 import common.sunshine.model.selling.event.Event;
 import common.sunshine.model.selling.event.EventApplication;
 import common.sunshine.model.selling.event.GiftEvent;
@@ -48,17 +50,23 @@ public class EventController {
 	 * @param eventName
 	 * @return
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/{eventName}")
-	public ModelAndView view(@PathVariable("eventName") String eventName, HttpServletRequest request) {
+	@RequestMapping(method = RequestMethod.GET, value = "/{eventName}/{openId}")
+	public ModelAndView view(@PathVariable("eventName") String eventName, @PathVariable("openId") String openId, HttpServletRequest request) {
 		ModelAndView view = new ModelAndView();
 		HttpSession session = request.getSession();
-		session.setAttribute("openId", "123456");
-		if(session.getAttribute("openId") == null || ((String)session.getAttribute("openId")).equals("")){
-			Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "超时,请重新从订阅号菜单进入活动", "");
-            view.addObject("prompt", prompt);
-            view.setViewName("/customer/event/prompt");
-			return view;
+		if(openId.equals("") || openId == null){
+			if(session.getAttribute("openId") == null || ((String)session.getAttribute("openId")).equals("") || openId.equals("")){
+				Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "超时,请重新从订阅号菜单进入活动", "");
+	            view.addObject("prompt", prompt);
+	            view.setViewName("/customer/event/prompt");
+				return view;
+			} else {
+				openId = (String) session.getAttribute("openId");
+			}
+		} else {
+			session.setAttribute("openId", openId);
 		}
+		
 		/*
 		 * 先查询有没有该活动，然后查询用户是否已经填过表单，然后查询活动是否结束或未开始
 		 */
@@ -76,11 +84,11 @@ public class EventController {
 		
 		condition.clear();
 		condition.put("eventId", event.getEventId());
-		condition.put("donorWechat", (String) session.getAttribute("openId"));
+		condition.put("donorWechat", openId);
 		condition.put("blockFlag", false);
 		ResultData fetchEventApplicationResponse = eventService.fetchEventApplication(condition);
 		if(fetchEventApplicationResponse.getResponseCode() == ResponseCode.RESPONSE_OK){
-			Prompt prompt = new Prompt(PromptCode.SUCCESS, "提示", "您已经提交过申请", "");
+			Prompt prompt = new Prompt(PromptCode.SUCCESS, "提示", "请从“活动”菜单中查询活动申请，若您还没有关注我们，请搜索“云草健康”公众号并关注", "");
             view.addObject("prompt", prompt);
             view.setViewName("/customer/event/prompt");
 			return view;
@@ -148,24 +156,24 @@ public class EventController {
 	    		}
 	    	}
     	}
-    	Prompt prompt = new Prompt(PromptCode.SUCCESS, "提示", "申请成功", "/event/" + event.getNickname());
+    	Prompt prompt = new Prompt(PromptCode.SUCCESS, "提示", "申请成功", "");
         view.addObject("prompt", prompt);
         view.setViewName("/customer/event/prompt");
     	return view;
     }
 	
-	@RequestMapping(method = RequestMethod.GET, value="/giftapplication")
-	public ModelAndView giftApplication(HttpServletRequest request){
+	@RequestMapping(method = RequestMethod.GET, value="/consultapplication")
+	public ModelAndView consultApplication(){
 		ModelAndView view = new ModelAndView();
-		HttpSession session = request.getSession();
-		if(session.getAttribute("openId") == null || ((String)session.getAttribute("openId")).equals("")){
-			Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "操作超时，请重新进入活动", "");
-            view.addObject("prompt", prompt);
-            view.setViewName("/customer/event/prompt");
-			return view;
-		}
+		view.setViewName("/customer/event/consult");
+		return view;
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value="/giftapplication/{phone}")
+	public ModelAndView giftApplication(HttpServletRequest request, @PathVariable("phone") String phone){
+		ModelAndView view = new ModelAndView();
 		Map<String, Object> condition = new HashMap<String, Object>();
-		condition.put("donorWechat", (String) session.getAttribute("openId"));
+		condition.put("donorPhone", phone);
 		condition.put("blockFlag", false);
 		ResultData fetchEventApplicationResponse = eventService.fetchEventApplication(condition);
 		if(fetchEventApplicationResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {

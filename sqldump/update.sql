@@ -499,4 +499,7 @@ CREATE TABLE IF NOT EXISTS `selling`.`event_order` (
 ALTER TABLE `selling`.`event_application`
 ADD COLUMN `status` TINYINT(3) NOT NULL DEFAULT 0 AFTER `donee_age_range`;
 
+##2016年8月30日更新
+ALTER TABLE `selling`.`follower`
+ADD COLUMN `follower_channel` VARCHAR(45) NOT NULL DEFAULT 'fuwu' AFTER `follower_wechat_id`;
 

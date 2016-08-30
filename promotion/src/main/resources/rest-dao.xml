@@ -6,4 +6,8 @@
     <bean id="eventDao" class="promotion.sunshine.dao.impl.EventDaoImpl">
         <property name="sqlSession" ref="sqlSession"></property>
     </bean>
+    
+    <bean id="followerDao" class="promotion.sunshine.dao.impl.FollowerDaoImpl">
+        <property name="sqlSession" ref="sqlSession"></property>
+    </bean>
 </beans>

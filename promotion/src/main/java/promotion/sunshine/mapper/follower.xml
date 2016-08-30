@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="selling.wechat">
-    <resultMap id="followerVo" type="selling.wechat.model.Follower">
+<mapper namespace="promotion.wechat">
+    <resultMap id="followerVo" type="common.sunshine.model.wechat.Follower">
         <result property="openId" column="follower_wechat_id"></result>
         <result property="channel" column="follower_channel"></result>
         <result property="nickname" column="follower_nickname"></result>
@@ -12,7 +12,7 @@
         <result property="createAt" column="create_time"></result>
     </resultMap>
 
-    <insert id="insert" parameterType="selling.wechat.model.Follower" useGeneratedKeys="false">
+    <insert id="insert" parameterType="common.sunshine.model.wechat.Follower" useGeneratedKeys="false">
         REPLACE INTO follower(follower_wechat_id, follower_channel, follower_nickname, follower_gender, follower_city, follower_province, block_flag, create_time)
         VALUES (#{openId}, #{channel}, #{nickname}, #{gender}, #{city}, #{province}, #{blockFlag}, #{createAt})
     </insert>

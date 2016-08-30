@@ -16,4 +16,5 @@
         </div>
     </div>
 </body>
+#parse("/customer/wechat/component/validation.vm")
 </html>

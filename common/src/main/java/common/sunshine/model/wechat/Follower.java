@@ -7,6 +7,7 @@ import common.sunshine.model.Entity;
  */
 public class Follower extends Entity {
     private String openId;
+    private String channel;
     private String nickname;
     private short gender;
     private String city;
@@ -34,7 +35,15 @@ public class Follower extends Entity {
         this.openId = openId;
     }
 
-    public String getNickname() {
+    public String getChannel() {
+		return channel;
+	}
+
+	public void setChannel(String channel) {
+		this.channel = channel;
+	}
+
+	public String getNickname() {
         return nickname;
     }
 
