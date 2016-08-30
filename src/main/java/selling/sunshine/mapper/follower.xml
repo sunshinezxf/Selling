@@ -3,6 +3,7 @@
 <mapper namespace="selling.wechat">
     <resultMap id="followerVo" type="selling.wechat.model.Follower">
         <result property="openId" column="follower_wechat_id"></result>
+        <result property="channel" column="follower_channel"></result>
         <result property="nickname" column="follower_nickname"></result>
         <result property="gender" column="follower_gender"></result>
         <result property="city" column="follower_city"></result>
@@ -12,8 +13,8 @@
     </resultMap>
 
     <insert id="insert" parameterType="selling.wechat.model.Follower" useGeneratedKeys="false">
-        REPLACE INTO follower(follower_wechat_id, follower_nickname, follower_gender, follower_city, follower_province, block_flag, create_time)
-        VALUES (#{openId}, #{nickname}, #{gender}, #{city}, #{province}, #{blockFlag}, #{createAt})
+        REPLACE INTO follower(follower_wechat_id, follower_channel, follower_nickname, follower_gender, follower_city, follower_province, block_flag, create_time)
+        VALUES (#{openId}, #{channel}, #{nickname}, #{gender}, #{city}, #{province}, #{blockFlag}, #{createAt})
     </insert>
 
     <update id="block">

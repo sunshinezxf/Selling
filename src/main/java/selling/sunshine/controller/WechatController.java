@@ -82,6 +82,7 @@ public class WechatController {
                             @Override
                             public void run() {
                                 Follower follower = WechatUtil.queryUserInfo(message.getFromUserName(), PlatformConfig.getAccessToken());
+                                follower.setChannel("fuwu");
                                 followerService.subscribe(follower);
                             }
                         };

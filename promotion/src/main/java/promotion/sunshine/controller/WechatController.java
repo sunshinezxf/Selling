@@ -87,6 +87,7 @@ public class WechatController {
                             @Override
                             public void run() {
                                 Follower follower = WechatUtil.queryUserInfo(message.getFromUserName(), PlatformConfig.getAccessToken());
+                                follower.setChannel("dingyue");
                                 followerService.subscribe(follower);
                             }
                         };
@@ -147,7 +148,7 @@ public class WechatController {
                             welcome.setTitle("中秋活动！！！");
                             welcome.setDescription("云草纲目，每一瓶，都是中秋活动的真诚。");
                             welcome.setPicUrl("https://mmbiz.qlogo.cn/mmbiz/zhe7KjM5iaS8Z1VmBFxR793iaJhia9fKCkz0BibJy4bWnLrhLlWHVAqibXGZQz1KiaqWBg6Ikzw7Mbs97EHq1bO6uZibw/0?wx_fmt=jpeg");
-                            welcome.setUrl("http://event.yuncaogangmu.com/event/zqhd");
+                            welcome.setUrl("http://event.yuncaogangmu.com/event/zqhd/" + openId);
                             list.add(welcome);
                             result.setArticles(list);
                             result.setArticleCount(list.size());
@@ -169,10 +170,10 @@ public class WechatController {
                         result.setCreateTime(new Date().getTime());
                         List<Article> list = new ArrayList<>();
                         Article welcome = new Article();
-                        welcome.setTitle("我们的故事｜关于家人关于爱");
-                        welcome.setDescription("云草纲目，每一瓶，都是家人与朋友满满的爱。");
-                        welcome.setPicUrl("https://mmbiz.qlogo.cn/mmbiz/zhe7KjM5iaS8Z1VmBFxR793iaJhia9fKCkz0BibJy4bWnLrhLlWHVAqibXGZQz1KiaqWBg6Ikzw7Mbs97EHq1bO6uZibw/0?wx_fmt=jpeg");
-                        welcome.setUrl("http://event.yuncaogangmu.com/event/zqhd");
+                        welcome.setTitle("活动申请");
+                        welcome.setDescription("申请");
+                        //welcome.setPicUrl("https://mmbiz.qlogo.cn/mmbiz/zhe7KjM5iaS8Z1VmBFxR793iaJhia9fKCkz0BibJy4bWnLrhLlWHVAqibXGZQz1KiaqWBg6Ikzw7Mbs97EHq1bO6uZibw/0?wx_fmt=jpeg");
+                        welcome.setUrl("http://event.yuncaogangmu.com/event/zqhd/" + openId);
                         list.add(welcome);
                         result.setArticles(list);
                         result.setArticleCount(list.size());
