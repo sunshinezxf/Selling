@@ -16,5 +16,9 @@
         </div>
     </div>
 </body>
+<script>
+    var title = "云草健康";
+    var description = "赶紧告诉亲朋好友，中秋有大事";
+</script>
 #parse("/customer/wechat/component/validation.vm")
 </html>
