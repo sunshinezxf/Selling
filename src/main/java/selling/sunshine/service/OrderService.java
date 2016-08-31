@@ -43,4 +43,6 @@ public interface OrderService {
     ResultData updateOrderItem(OrderItem orderItem);
     
     ResultData updateCustomerOrder(CustomerOrder customerOrder);
+    
+    ResultData check();
 }

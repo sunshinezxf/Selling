@@ -1,13 +1,19 @@
 package selling.sunshine.service.impl;
 
 import org.slf4j.Logger;
+
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+
+
+import selling.sunshine.dao.CustomerDao;
 import selling.sunshine.dao.CustomerOrderDao;
 import selling.sunshine.dao.OrderDao;
 import selling.sunshine.dao.OrderItemDao;
 import selling.sunshine.dao.OrderPoolDao;
+import common.sunshine.model.selling.customer.Customer;
 import common.sunshine.model.selling.order.CustomerOrder;
 import common.sunshine.model.selling.order.Order;
 import common.sunshine.model.selling.order.OrderItem;
@@ -17,6 +23,7 @@ import selling.sunshine.service.OrderService;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -35,6 +42,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private CustomerOrderDao customerOrderDao;
+    
+    @Autowired
+    private CustomerDao customerDao;
 
     @Override
     public ResultData placeOrder(Order order) {
@@ -269,4 +279,35 @@ public class OrderServiceImpl implements OrderService {
         }
         return result;
     }
+
+	@Override
+	public ResultData check() {
+		ResultData resultData=new ResultData();
+		Map<String, Object> condition=new HashMap<>();
+		ResultData queryData=customerOrderDao.queryOrder(condition);
+		List<CustomerOrder> customerOrders=(List<CustomerOrder>)queryData.getData();
+		for (CustomerOrder customerOrder:customerOrders) {
+			if (customerOrder.getAgent()!=null) {
+				condition.put("agentId", customerOrder.getAgent().getAgentId());
+				queryData=customerDao.queryCustomer(condition);
+				if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
+					List<Customer> customers=(List<Customer>)queryData.getData();
+					boolean flag=false;
+					for (Customer customer:customers) {
+						if (customer.getName().equals(customerOrder.getReceiverName())) {
+							flag=true;
+							break;
+						}
+					}
+					if (!flag) {
+						Customer newCustomer=new Customer(customerOrder.getReceiverName(), customerOrder.getReceiverAddress(),
+								customerOrder.getReceiverPhone(), customerOrder.getAgent());
+						customerDao.insertCustomer(newCustomer);
+					}
+				}
+			}
+		}
+		
+		return resultData;
+	}
 }
