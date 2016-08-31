@@ -302,7 +302,7 @@
     
     $("#clear_event_content").click(function () {
         $("#event_title").val("");
-        $("#event_nickname").val("");
+        //$("#event_nickname").val("");
         $("#ds").val("");
         $("#de").val("");
         $("#dtp_start").val("");
