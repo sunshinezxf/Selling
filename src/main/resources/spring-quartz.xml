@@ -11,6 +11,8 @@
     <bean id="withdrawSchedule" class="selling.sunshine.schedule.WithdrawSchedule"></bean>
 
     <bean id="expressSchedule" class="selling.sunshine.schedule.ExpressSchedule"></bean>
+    
+    <bean id="customerOrderSchedule" class="selling.sunshine.schedule.CustomerOrderSchedule"></bean>
 
     <bean id="poolDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <property name="targetObject" ref="poolSchedule"></property>
@@ -38,6 +40,12 @@
 
     <bean id="expressDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <property name="targetObject" ref="expressSchedule"></property>
+        <property name="targetMethod" value="schedule"></property>
+        <property name="concurrent" value="false"></property>
+    </bean>
+    
+    <bean id="checkDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="customerOrderSchedule"></property>
         <property name="targetMethod" value="schedule"></property>
         <property name="concurrent" value="false"></property>
     </bean>
@@ -76,6 +84,13 @@
             <value>0 0 * * * ?</value>
         </property>
     </bean>
+    
+    <bean id="checkTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="checkDetail"></property>
+        <property name="cronExpression">
+            <value>0 0 0 * * ?</value>
+        </property>
+    </bean>
 
     <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="triggers">
@@ -85,6 +100,7 @@
                 <ref bean="refundTrigger"></ref>
                 <ref bean="withdrawTrigger"></ref>
                 <ref bean="expressTrigger"></ref>
+                <ref bean="checkTrigger"></ref>
             </list>
         </property>
     </bean>
