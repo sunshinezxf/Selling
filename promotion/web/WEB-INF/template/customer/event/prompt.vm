@@ -10,8 +10,8 @@
 </div>
 </body>
 <script>
-    var title = "云草健康";
-    var description = "赶紧告诉亲朋好友，中秋有大事";
+    var title = "送你健康要不要！给TA的中秋礼物，我们出了！";
+    var description = "你见过的最实在的中秋活动，没有之一。云草纲目超细三七粉真情馈赠，而且都是180克价值398元的正品装哦。只为这个中秋，以一盒三七粉为线，传递您与您爱的人之间浓浓的情谊。悠悠寸草心，云草送真情。";
 </script>
-#parse("/customer/wechat/component/validation.vm")
+    #parse("/customer/wechat/component/validation.vm")
 </html>
