@@ -157,8 +157,7 @@ public class WechatController {
                              result.setCreateTime(new Date().getTime());
                              List<Article> list = new ArrayList<>();
                              Article welcome = new Article();
-                             welcome.setTitle("活动申请");
-                             welcome.setDescription("申请");
+                             welcome.setTitle("中秋送礼｜您给TA的礼物，我们准备");
                              welcome.setPicUrl("https://mmbiz.qlogo.cn/mmbiz_jpg/LvSutA9l9GomT0kIicicnlUhIrv1Vo9nnfkI7d2q1OyyIhB31ySyokloljpnFSOF6oMfejvt25WnPkNAia5HkQ5Og/0?wx_fmt=jpeg");
                              welcome.setUrl("http://event.yuncaogangmu.com/event/zqhd/" + openId);
                              list.add(welcome);
