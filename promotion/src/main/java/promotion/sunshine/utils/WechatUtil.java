@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -134,6 +135,39 @@ public class WechatUtil {
         } finally {
             return result;
         }
+    }
+    
+    public static void sendImageMessage(String token, String openId, String media_id){
+    	 String url = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=" + token + "&type=jsapi";
+         try {
+             URL address = new URL(url);
+             HttpURLConnection connection = (HttpURLConnection) address.openConnection();
+             connection.setRequestMethod("POST");
+             connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+             connection.setDoOutput(true);
+             connection.setDoInput(true);
+             PrintWriter out = new PrintWriter(connection.getOutputStream());
+             JSONObject param = new JSONObject();
+             param.put("touser", openId);
+             param.put("msgtype", "image");
+             JSONObject image_id = new JSONObject();
+             image_id.put("media_id", media_id);
+             param.put("image", image_id);
+             out.print(param.toJSONString());
+             System.setProperty("sun.net.client.defaultConnectTimeout", "30000");
+             System.setProperty("sun.net.client.defaultReadTimeout", "30000");
+             connection.connect();
+             out.flush();
+             InputStream is = connection.getInputStream();
+             int size = is.available();
+             byte[] bytes = new byte[size];
+             is.read(bytes);
+             String message = new String(bytes, "UTF-8");
+             logger.debug("jsonddd");
+             logger.debug(JSON.toJSONString(message));
+         } catch (MalformedURLException e) {
+         } catch (IOException e) {
+         } 
     }
 
     public static String downloadCredit(String media_id, String token, String base) {

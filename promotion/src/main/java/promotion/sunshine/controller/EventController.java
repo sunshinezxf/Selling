@@ -30,8 +30,10 @@ import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
 import promotion.sunshine.form.EventApplicationForm;
 import promotion.sunshine.service.EventService;
+import promotion.sunshine.utils.PlatformConfig;
 import promotion.sunshine.utils.Prompt;
 import promotion.sunshine.utils.PromptCode;
+import promotion.sunshine.utils.WechatConfig;
 
 /**
  * Created by sunshine on 8/22/16.
@@ -90,6 +92,8 @@ public class EventController {
 		if(fetchEventApplicationResponse.getResponseCode() == ResponseCode.RESPONSE_OK){
 			Prompt prompt = new Prompt(PromptCode.SUCCESS, "提示", "请从“活动”菜单中查询活动申请，若您还没有关注我们，请搜索“云草健康”公众号并关注", "");
             view.addObject("prompt", prompt);
+            String url = "http://" + PlatformConfig.getValue("server_url") + "/login";
+    		WechatConfig.oauthWechat(view, "/event/" + eventName + "/" + openId, url);
             view.setViewName("/customer/event/prompt");
 			return view;
 		}
@@ -108,6 +112,8 @@ public class EventController {
 			return view;
 		}
 		view.addObject("event", event);
+		String url = "http://" + PlatformConfig.getValue("server_url") + "/login";
+		WechatConfig.oauthWechat(view, "/event/" + eventName + "/" + openId, url);
 		view.setViewName("/customer/event/apply");
 		return view;
 	}

@@ -30,6 +30,8 @@ import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -42,6 +44,11 @@ import java.util.List;
 @RestController
 public class WechatController {
     private Logger logger = LoggerFactory.getLogger(WechatController.class);
+    
+    private static String KEFU1 = "ytSMk-WMouat73cGNz5jwBVCCs6hDPl071GteBgYa32oYqAw6lT9yMedTFzoeQx6";
+    private static String KEFU2 = "aP2fkurURlOPGxaL-4MNdkTZLK41i_676GjdaaeWi8dz95RzS8cHo6ZACo35Qz1D";
+    private static String KEFU3 = "nNre-oi78h1iTmRfSwNJcTr5W0Lw9VkNXzLCZu8P6DRO71J_D6dsKLr_5OWvH78k";
+    private static String KEFU4 = "Eca1cAZ0-cryjo8hI5CTGKxyupPYFJFTd8PYZaWBu1AceJHvDpYhmugsBmqFDUgs";
     
     @Autowired
     private FollowerService followerService;
@@ -88,6 +95,7 @@ public class WechatController {
                             public void run() {
                                 Follower follower = WechatUtil.queryUserInfo(message.getFromUserName(), PlatformConfig.getAccessToken());
                                 follower.setChannel("dingyue");
+                                logger.debug("imhere2");
                                 followerService.subscribe(follower);
                             }
                         };
@@ -136,50 +144,56 @@ public class WechatController {
                             return xml;
                         }
                         if(message.getEventKey().equalsIgnoreCase("giftEvent")) {
-                        	String openId = message.getFromUserName();
-                            content.alias("xml", Articles.class);
-                            content.alias("item", Article.class);
-                            Articles result = new Articles();
-                            result.setFromUserName(message.getToUserName());
-                            result.setToUserName(message.getFromUserName());
-                            result.setCreateTime(new Date().getTime());
-                            List<Article> list = new ArrayList<>();
-                            Article welcome = new Article();
-                            welcome.setTitle("中秋活动！！！");
-                            welcome.setDescription("云草纲目，每一瓶，都是中秋活动的真诚。");
-                            welcome.setPicUrl("https://mmbiz.qlogo.cn/mmbiz/zhe7KjM5iaS8Z1VmBFxR793iaJhia9fKCkz0BibJy4bWnLrhLlWHVAqibXGZQz1KiaqWBg6Ikzw7Mbs97EHq1bO6uZibw/0?wx_fmt=jpeg");
-                            welcome.setUrl("http://event.yuncaogangmu.com/event/zqhd/" + openId);
-                            list.add(welcome);
-                            result.setArticles(list);
-                            result.setArticleCount(list.size());
-                            content.processAnnotations(Article.class);
-                            String xml = content.toXML(result);
-                            logger.debug(JSON.toJSONString(xml));
-                            return xml;
+                        	 String openId = message.getFromUserName();
+                             content.alias("xml", Articles.class);
+                             content.alias("item", Article.class);
+                             Articles result = new Articles();
+                             result.setFromUserName(message.getToUserName());
+                             result.setToUserName(message.getFromUserName());
+                             result.setCreateTime(new Date().getTime());
+                             List<Article> list = new ArrayList<>();
+                             Article welcome = new Article();
+                             welcome.setTitle("活动申请");
+                             welcome.setDescription("申请");
+                             welcome.setPicUrl("https://mmbiz.qlogo.cn/mmbiz/zhe7KjM5iaS8Z1VmBFxR793iaJhia9fKCkz0BibJy4bWnLrhLlWHVAqibXGZQz1KiaqWBg6Ikzw7Mbs97EHq1bO6uZibw/0?wx_fmt=jpeg");
+                             welcome.setUrl("http://event.yuncaogangmu.com/event/zqhd/" + openId);
+                             list.add(welcome);
+                             result.setArticles(list);
+                             result.setArticleCount(list.size());
+                             content.processAnnotations(Article.class);
+                             String xml = content.toXML(result);
+                             logger.debug(JSON.toJSONString(xml));
+                             return xml;
                         }
                     }
                     break;
                 case "text":
-                	if (message.getContent().equals("中秋活动")) {
-                        String openId = message.getFromUserName();
-                        content.alias("xml", Articles.class);
-                        content.alias("item", Article.class);
-                        Articles result = new Articles();
+                	if (message.getContent().equals("团圆")) {
+                		String openId = message.getFromUserName();
+                		content.alias("xml", TextOutMessage.class);
+                    	TextOutMessage result = new TextOutMessage();
                         result.setFromUserName(message.getToUserName());
                         result.setToUserName(message.getFromUserName());
                         result.setCreateTime(new Date().getTime());
-                        List<Article> list = new ArrayList<>();
-                        Article welcome = new Article();
-                        welcome.setTitle("活动申请");
-                        welcome.setDescription("申请");
-                        welcome.setPicUrl("https://mmbiz.qlogo.cn/mmbiz/zhe7KjM5iaS8Z1VmBFxR793iaJhia9fKCkz0BibJy4bWnLrhLlWHVAqibXGZQz1KiaqWBg6Ikzw7Mbs97EHq1bO6uZibw/0?wx_fmt=jpeg");
-                        welcome.setUrl("http://event.yuncaogangmu.com/event/zqhd/" + openId);
-                        list.add(welcome);
-                        result.setArticles(list);
-                        result.setArticleCount(list.size());
-                        content.processAnnotations(Article.class);
+                        result.setContent("1. 请点击下方菜单栏“中秋活动”，填写领取申请。填写完毕后请按右上角转发至朋友圈（如图1），将您的好消息分享给更多亲朋～\n2. 扫码添加健康大使微信（图2），将第1步的转发截图，以及您的信息获取来源截图给健康大使（比如您在谁的朋友圈看到活动信息，就将他的那条朋友圈分享截图；如果直接是公众号获取，就发公众号截图）。如果您有任何问题，都可以咨询这位健康大使，TA会为您提供1对1的定制健康服务哦～");
                         String xml = content.toXML(result);
-                        logger.debug(JSON.toJSONString(xml));
+                        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+                        String thirteen = "13:00:00";
+                        String seventeen = "17:00:00";
+                        String twenty = "20:00:00";
+                        String twentythree = "23:00:00";
+                        String now = (new SimpleDateFormat("HH:mm:ss")).format(new Date());
+                        String media_id = null;
+                        if(now.compareTo(twentythree) >= 0 || thirteen.compareTo(now) >= 0) {
+                        	media_id = KEFU1;
+                        } else if(now.compareTo(thirteen) >= 0 && seventeen.compareTo(now) >= 0) {
+                        	media_id = KEFU2;
+                        } else if(now.compareTo(seventeen) >=0 && twenty.compareTo(now) >= 0) {
+                        	media_id = KEFU3;
+                        } else {
+                        	media_id = KEFU4;
+                        }
+                        WechatUtil.sendImageMessage(WechatUtil.queryAccessToken(), openId, media_id);
                         return xml;
                     }
                     break;
