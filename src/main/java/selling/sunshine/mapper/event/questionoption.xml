@@ -43,6 +43,7 @@
         <if test="blockFlag != null">
             AND block_flag = #{blockFlag}
         </if>
+        ORDER by create_time
     </select>
 
     <select id="questionQuery" parameterType="java.util.Map" resultMap="questionVo">
