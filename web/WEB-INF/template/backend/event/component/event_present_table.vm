@@ -19,6 +19,13 @@
 </div>
 <script>
 $(document).ready(function () {
+    var event_id="${giftEvent.eventId}";
+    if(event_id&&event_id.slice(-1)!="}"){
+    	var url="${path.concat('/event/present/')}"+"${giftEvent.eventId}";
+    }else{
+    	var url="${path.concat('/event/present/')}"+"1";
+    }
+	
     $("#event_present_table").DataTable({
         searching: false,
         ordering: false,
@@ -32,7 +39,7 @@ $(document).ready(function () {
         "bProcessing": true,
         "bServerSide": true,
         "bInfoFiltered": false,
-        "sAjaxSource": '${path.concat('/event/present/')}${giftEvent.eventId}',
+        "sAjaxSource": url,
         "infoFiltered": false,
         "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
             $(nRow).removeClass('dataTable');

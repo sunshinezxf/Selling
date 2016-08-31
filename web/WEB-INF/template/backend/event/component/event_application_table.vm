@@ -20,6 +20,12 @@
 #parse("/backend/event/component/application_detail_modal.vm")
 <script>
 $(document).ready(function () {
+	var event_id="${giftEvent.eventId}";
+    if(event_id&&event_id.slice(-1)!="}"){
+    	var url="${path.concat('/event/application/')}"+"${giftEvent.eventId}";
+    }else{
+    	var url="${path.concat('/event/application/')}"+"1";
+    }
     $("#event_application_table").DataTable({
         searching: false,
         ordering: false,
@@ -33,7 +39,7 @@ $(document).ready(function () {
         "bProcessing": true,
         "bServerSide": true,
         "bInfoFiltered": false,
-        "sAjaxSource": '${path.concat('/event/application/')}${giftEvent.eventId}',
+        "sAjaxSource": url,
         "infoFiltered": false,
         "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
             $(nRow).removeClass('dataTable');
