@@ -26,7 +26,7 @@
         </div>
         <div class="weui_opr_area">
             <p class="weui_btn_area">
-                <a class="weui_btn weui_btn_primary" id="purchase" href="http://www.yuncaogangmu.com/commodity/COMyfxwez26">去购买</a>
+                <a class="weui_btn weui_btn_primary" id="purchase" href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx67fcdc4fa58f7578&redirect_uri=http%3A%2F%2Fwww.yuncaogangmu.com%2Fcommodity%2FCOMyfxwez26&response_type=code&scope=snsapi_base&state=view#wechat_redirect">去购买</a>
                 <a class="weui_btn weui_btn_plain_primary" id="leave">离开</a>
             </p>
         </div>
