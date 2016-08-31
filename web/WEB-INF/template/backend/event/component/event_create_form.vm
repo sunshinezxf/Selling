@@ -32,7 +32,7 @@
 
 					<div class="col-sm-8 col-md-8 col-lg-8">
 						<input type="text" class="form-control" id="event_nickname"
-							name="nickname" placeholder="活动链接"  value="zqhd" required="" autocomplete="off" />
+							name="nickname" placeholder="活动链接"  value="zqhd" required="" autocomplete="off" readonly/>
 					</div>
 				</div>
 			</form>
@@ -302,7 +302,7 @@
     
     $("#clear_event_content").click(function () {
         $("#event_title").val("");
-        $("#event_nickname").val("");
+        //$("#event_nickname").val("");
         $("#ds").val("");
         $("#de").val("");
         $("#dtp_start").val("");
