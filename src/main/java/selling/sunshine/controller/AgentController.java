@@ -1379,6 +1379,8 @@ public class AgentController {
         condition.put("blockFlag", true);
         ResultData fetchRefundRecordResponse = refundService.fetchRefundRecord(condition);
         if (fetchRefundRecordResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            WechatConfig.oauthWechat(view, "/agent/account/statement");
+            view.setViewName("/agent/account/statement");
             return view;
         }
         List<CashBackRecord> refundRecords = (List<CashBackRecord>) fetchRefundRecordResponse.getData();

@@ -228,7 +228,7 @@ public class CommodityController {
     @RequestMapping(method = RequestMethod.GET, value = "/{goodsId}")
     public ModelAndView view(HttpServletRequest request, @PathVariable("goodsId") String goodsId, String agentId, String code, String state) {
         ModelAndView view = new ModelAndView();
-        String openId;
+        String openId = null;
         if (StringUtils.isEmpty(code) || StringUtils.isEmpty(state)) {
             HttpSession session = request.getSession();
             if (session.getAttribute("openId") == null || session.getAttribute("openId").equals("")) {
@@ -237,7 +237,9 @@ public class CommodityController {
                 return view;
             }
         }
-        openId = WechatUtil.queryOauthOpenId(code);
+        if(code != null && !code.equals("")){
+        	openId = WechatUtil.queryOauthOpenId(code);
+        }
         if (openId == null || openId.equals("")) {
             HttpSession session = request.getSession();
             if (session.getAttribute("openId") != null && !session.getAttribute("openId").equals("")) {
