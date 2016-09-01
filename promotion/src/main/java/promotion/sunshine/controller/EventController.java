@@ -133,6 +133,7 @@ public class EventController {
             view.setViewName("/customer/event/prompt");
 			return view;
 		}
+		
 		Map<String, Object> condition = new HashMap<String, Object>();
 		condition.put("eventId", form.getEvent_id());
 		condition.put("blockFlag", false);
@@ -144,6 +145,22 @@ public class EventController {
             view.setViewName("/customer/event/prompt");
     		return view;
 		}
+		String eventName = event.getNickname();
+		String openId = (String)session.getAttribute("openId");
+		condition.clear();
+		condition.put("eventId", event.getEventId());
+		condition.put("donorWechat", (String)session.getAttribute("openId"));
+		condition.put("blockFlag", false);
+		ResultData fetchEventApplicationResponse = eventService.fetchEventApplication(condition);
+		if(fetchEventApplicationResponse.getResponseCode() == ResponseCode.RESPONSE_OK){
+			Prompt prompt = new Prompt(PromptCode.SUCCESS, "您已经提交过申请", "请从“活动”菜单中查询活动申请，若您还没有关注我们，请搜索“云草健康”公众号并关注", "");
+            view.addObject("prompt", prompt);
+            String url = "http://mp.weixin.qq.com/s?__biz=MzI1OTMyNTI1NQ==&mid=100000233&idx=1&sn=85b05c7a3dca6429e66ddf7762de06aa#wechat_redirect";
+    		WechatConfig.oauthWechat(view, "/event/giftapplication", url);
+            view.setViewName("/customer/event/prompt");
+			return view;
+		}
+		
     	EventApplication eventApplication = new EventApplication(event,form.getDonor_name(),form.getDonor_phone(),form.getDonee_name(),form.getDonee_phone(),form.getDonee_gender(),form.getDonee_address(),form.getDonee_age_range(), form.getRelation(),form.getWishes(), (String)session.getAttribute("openId"));
     	ResultData insertEventApplicationResponse = eventService.insertEventApplication(eventApplication);
     	if(insertEventApplicationResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
@@ -168,6 +185,8 @@ public class EventController {
 	    	}
     	}
     	Prompt prompt = new Prompt(PromptCode.SUCCESS, "提示", "&nbsp;&nbsp;恭喜您申请成功！<br>结果将以短信形式告知，祝您中秋快乐，阖家团圆", "");
+    	String url = "http://mp.weixin.qq.com/s?__biz=MzI1OTMyNTI1NQ==&mid=100000233&idx=1&sn=85b05c7a3dca6429e66ddf7762de06aa#wechat_redirect";
+		WechatConfig.oauthWechat(view, "/event/giftapplication", url);
         view.addObject("prompt", prompt);
         view.setViewName("/customer/event/prompt");
     	return view;
