@@ -96,17 +96,17 @@ public class WechatController {
             session.setAttribute("openId", message.getFromUserName());
             switch (message.getMsgType()) {
                 case "event":
+                	 Thread thread = new Thread() {
+                         @Override
+                         public void run() {
+                             Follower follower = WechatUtil.queryUserInfo(message.getFromUserName(), PlatformConfig.getAccessToken());
+                             follower.setChannel("dingyue");
+                             logger.debug("imhere2");
+                             followerService.subscribe(follower);
+                         }
+                     };
+                     thread.start();
                     if (message.getEvent().equals("subscribe")) {
-                        Thread thread = new Thread() {
-                            @Override
-                            public void run() {
-                                Follower follower = WechatUtil.queryUserInfo(message.getFromUserName(), PlatformConfig.getAccessToken());
-                                follower.setChannel("dingyue");
-                                logger.debug("imhere2");
-                                followerService.subscribe(follower);
-                            }
-                        };
-                        thread.start();
                         content.alias("xml", Articles.class);
                         content.alias("item", Article.class);
                         Articles result = new Articles();
@@ -121,30 +121,15 @@ public class WechatController {
                         logger.debug(JSON.toJSONString(xml));
                         return xml;
                     } else if (message.getEvent().equals("unsubscribe")) {
-                        Thread thread = new Thread() {
+                        Thread thread2 = new Thread() {
                             @Override
                             public void run() {
                                 followerService.unsubscribe(message.getFromUserName());
                             }
                         };
-                        thread.start();
+                        thread2.start();
                         return "";
                     } else if (message.getEvent().equalsIgnoreCase("click")) {
-                    	Thread thread2 = new Thread() {
-                            @Override
-                            public void run() {
-                            	Map<String, Object> condition = new HashMap<String, Object>();
-                            	condition.put("openId", message.getFromUserName());
-                            	ResultData fetchFollower = followerService.fetchFollower(condition);
-                            	if(fetchFollower.getResponseCode() == ResponseCode.RESPONSE_NULL){
-	                                Follower follower = WechatUtil.queryUserInfo(message.getFromUserName(), PlatformConfig.getAccessToken());
-	                                follower.setChannel("dingyue");
-	                                logger.debug("imhere2");
-	                                followerService.subscribe(follower);
-                            	}
-                            }
-                        };
-                        thread2.start();
                         if (message.getEventKey().equalsIgnoreCase("unbind")) {
                             content.alias("xml", TextOutMessage.class);
                             TextOutMessage result = new TextOutMessage();

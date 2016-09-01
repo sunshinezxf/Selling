@@ -1,7 +1,5 @@
 package promotion.sunshine.dao;
 
-import java.util.Map;
-
 import common.sunshine.model.wechat.Follower;
 import common.sunshine.utils.ResultData;
 
@@ -12,7 +10,4 @@ public interface FollowerDao {
     ResultData insertFollower(Follower follower);
 
     ResultData blockFollower(String openId);
-    
-    ResultData fetchFollower(Map<String, Object> condition);
-    
 }

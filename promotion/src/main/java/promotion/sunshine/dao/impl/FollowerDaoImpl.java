@@ -68,19 +68,4 @@ public class FollowerDaoImpl extends BaseDao implements FollowerDao {
         }
     }
 
-	@Override
-	public ResultData fetchFollower(Map<String, Object> condition) {
-		ResultData result = new ResultData();
-		condition = handle(condition);
-		try {
-			List<GiftEvent> list = sqlSession.selectList("promotion.wechat.query", condition);
-			result.setData(list);
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-			result.setResponseCode(ResponseCode.RESPONSE_ERROR);
-			result.setDescription(e.getMessage());
-		} finally {
-			return result;
-		}
-	}
 }

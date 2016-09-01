@@ -13,5 +13,4 @@ public interface FollowerService {
 
     ResultData unsubscribe(String openId);
     
-    ResultData fetchFollower(Map<String, Object> condition);
 }
