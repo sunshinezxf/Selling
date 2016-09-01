@@ -29,6 +29,9 @@ import common.sunshine.model.selling.event.GiftEvent;
 import common.sunshine.model.selling.event.QuestionOption;
 import common.sunshine.model.selling.event.support.ApplicationStatus;
 import common.sunshine.model.selling.event.support.ChoiceType;
+import common.sunshine.model.selling.goods.Goods4Customer;
+import common.sunshine.model.selling.order.EventOrder;
+import common.sunshine.model.selling.order.support.OrderItemStatus;
 import common.sunshine.pagination.DataTablePage;
 import common.sunshine.pagination.DataTableParam;
 import common.sunshine.utils.ResponseCode;
@@ -58,10 +61,10 @@ public class EventController {
 	@RequestMapping(method = RequestMethod.POST, value = "/create")
 	public ResultData create(@RequestBody GiftEventForm form, HttpSession session) {
 		ResultData resultData = new ResultData();
-		Map<String, Object> condition=new HashMap<>();
+		Map<String, Object> condition = new HashMap<>();
 		condition.put("blockFlag", false);
-		ResultData queryResult=eventService.fetchGiftEvent(condition);
-		if (queryResult.getResponseCode()==ResponseCode.RESPONSE_OK) {
+		ResultData queryResult = eventService.fetchGiftEvent(condition);
+		if (queryResult.getResponseCode() == ResponseCode.RESPONSE_OK) {
 			resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
 			return resultData;
 		}
@@ -125,37 +128,36 @@ public class EventController {
 		Map<String, Object> condition = new HashMap<>();
 		condition.put("eventId", eventId);
 		if (eventId.startsWith("GEV")) {
-			ResultData fetchResponse =eventService.fetchGiftEvent(condition);
+			ResultData fetchResponse = eventService.fetchGiftEvent(condition);
 			if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-				GiftEvent giftEvent=((List<GiftEvent>)fetchResponse.getData()).get(0);
+				GiftEvent giftEvent = ((List<GiftEvent>) fetchResponse.getData()).get(0);
 				view.addObject("giftEvent", giftEvent);
 			}
 			view.setViewName("backend/event/preview");
 		}
-		
+
 		return view;
 	}
-	
-	
+
 	@RequestMapping(method = RequestMethod.GET, value = "/application")
-	public ModelAndView application(){
+	public ModelAndView application() {
 		ModelAndView view = new ModelAndView();
-		Map<String, Object> condition=new HashMap<>();
+		Map<String, Object> condition = new HashMap<>();
 		condition.put("blockFlag", false);
-		ResultData queryResult=eventService.fetchGiftEvent(condition);
-		if (queryResult.getResponseCode()==ResponseCode.RESPONSE_OK) {
-			view.addObject("giftEvent", ((List<GiftEvent>)queryResult.getData()).get(0));
+		ResultData queryResult = eventService.fetchGiftEvent(condition);
+		if (queryResult.getResponseCode() == ResponseCode.RESPONSE_OK) {
+			view.addObject("giftEvent", ((List<GiftEvent>) queryResult.getData()).get(0));
 		}
 		view.setViewName("backend/event/application");
 		return view;
 	}
-	
+
 	@RequestMapping(method = RequestMethod.POST, value = "/application/{eventId}")
-	public DataTablePage<EventApplication> application(@PathVariable("eventId") String eventId,DataTableParam param){
-		DataTablePage<EventApplication>result = new DataTablePage<>(param);
+	public DataTablePage<EventApplication> application(@PathVariable("eventId") String eventId, DataTableParam param) {
+		DataTablePage<EventApplication> result = new DataTablePage<>(param);
 		if (StringUtils.isEmpty(param)) {
 			return result;
-		} 
+		}
 		Map<String, Object> condition = new HashMap<>();
 		condition.put("eventId", eventId);
 		condition.put("status", 0);
@@ -165,62 +167,104 @@ public class EventController {
 		}
 		return result;
 	}
-	
+
 	@RequestMapping(method = RequestMethod.GET, value = "/present")
-	public ModelAndView present(){
+	public ModelAndView present() {
 		ModelAndView view = new ModelAndView();
-		Map<String, Object> condition=new HashMap<>();
+		Map<String, Object> condition = new HashMap<>();
 		condition.put("blockFlag", false);
-		ResultData queryResult=eventService.fetchGiftEvent(condition);
-		if (queryResult.getResponseCode()==ResponseCode.RESPONSE_OK) {
-			view.addObject("giftEvent", ((List<GiftEvent>)queryResult.getData()).get(0));
+		ResultData queryResult = eventService.fetchGiftEvent(condition);
+		if (queryResult.getResponseCode() == ResponseCode.RESPONSE_OK) {
+			view.addObject("giftEvent", ((List<GiftEvent>) queryResult.getData()).get(0));
 		}
 		view.setViewName("backend/event/present");
 		return view;
 	}
-	
+
 	@RequestMapping(method = RequestMethod.POST, value = "/present/{eventId}")
-	public DataTablePage<EventApplication> present(@PathVariable("eventId") String eventId,DataTableParam param){
-		DataTablePage<EventApplication>result = new DataTablePage<>(param);
+	public DataTablePage<EventOrder> present(@PathVariable("eventId") String eventId, DataTableParam param) {
+		DataTablePage<EventOrder> result = new DataTablePage<>(param);
 		if (StringUtils.isEmpty(param)) {
 			return result;
-		} 
+		}
 		Map<String, Object> condition = new HashMap<>();
 		condition.put("eventId", eventId);
-		condition.put("status", 2);
-		ResultData fetchResponse = eventService.fetchEventApplicationByPage(condition, param);
+		condition.put("orderStatus", 1);
+		ResultData fetchResponse = eventService.fetchEventOrderByPage(condition, param);
 		if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-			result = (DataTablePage<EventApplication>) fetchResponse.getData();
+			result = (DataTablePage<EventOrder>) fetchResponse.getData();
 		}
 		return result;
 	}
-	
+
 	@RequestMapping(method = RequestMethod.POST, value = "/agree/{applicationId}")
 	public ResultData agree(@PathVariable("applicationId") String applicationId) {
-		ResultData resultData=new ResultData();
-		EventApplication eventApplication=new EventApplication();
-		eventApplication.setApplicationId(applicationId);
-		eventApplication.setStatus(ApplicationStatus.APPROVED);
-		resultData=eventService.updateEventApplication(eventApplication);
+		ResultData resultData = new ResultData();
+		Map<String, Object> condition = new HashMap<>();
+		condition.put("applicationId", applicationId);
+		resultData = eventService.fetchEventApplication(condition);
+		if (resultData.getResponseCode() == ResponseCode.RESPONSE_OK) {
+			EventApplication eventApplication = (EventApplication) ((List<EventApplication>) resultData.getData())
+					.get(0);
+			eventApplication.setStatus(ApplicationStatus.APPROVED);
+			resultData = eventService.updateEventApplication(eventApplication);
+			EventOrder eventOrder = new EventOrder();
+			eventOrder.setDoneeName(eventApplication.getDoneeName());
+			eventOrder.setDoneePhone(eventApplication.getDoneePhone());
+			eventOrder.setDoneeAddress(eventApplication.getDoneeAddress());
+			eventOrder.setQuantity(1);
+			eventOrder.setApplication(eventApplication);
+			eventOrder.setEvent(eventApplication.getEvent());
+			eventOrder.setOrderStatus(OrderItemStatus.PAYED);
+			Goods4Customer goods=new Goods4Customer();
+			goods.setGoodsId("COMyfxwez26");
+			eventOrder.setGoods(goods);
+			resultData = eventService.createEventOrder(eventOrder);
+		}
+
 		return resultData;
 	}
-	
+
 	@RequestMapping(method = RequestMethod.POST, value = "/reject/{applicationId}")
 	public ResultData reject(@PathVariable("applicationId") String applicationId) {
-		ResultData resultData=new ResultData();
-		EventApplication eventApplication=new EventApplication();
-		eventApplication.setApplicationId(applicationId);
-		eventApplication.setStatus(ApplicationStatus.REJECTED);
-		resultData=eventService.updateEventApplication(eventApplication);
+		ResultData resultData = new ResultData();
+		Map<String, Object> condition = new HashMap<>();
+		condition.put("applicationId", applicationId);
+		resultData = eventService.fetchEventApplication(condition);
+		if (resultData.getResponseCode() == ResponseCode.RESPONSE_OK) {
+			EventApplication eventApplication = (EventApplication) ((List<EventApplication>) resultData.getData())
+					.get(0);
+			eventApplication.setStatus(ApplicationStatus.REJECTED);
+			resultData = eventService.updateEventApplication(eventApplication);
+		}
+
+		return resultData;
+	}
+
+	@RequestMapping(method = RequestMethod.POST, value = "/application/detail/{applicationId}")
+	public ResultData detail(@PathVariable("applicationId") String applicationId) {
+		ResultData resultData = new ResultData();
+		Map<String, Object> condition = new HashMap<>();
+		condition.put("applicationId", applicationId);
+		resultData = eventService.fetchEventApplication(condition);
 		return resultData;
 	}
 	
-	@RequestMapping(method = RequestMethod.POST, value = "/application/detail/{applicationId}")
-	public ResultData detail(@PathVariable("applicationId") String applicationId) {
-		ResultData resultData=new ResultData();
-		Map<String, Object> condition=new HashMap<>();
-		condition.put("applicationId", applicationId);
-		resultData=eventService.fetchEventApplication(condition);
-		return resultData;
+	@RequestMapping(method = RequestMethod.GET, value = "/order/expressAll")
+	public String expressAll() {
+		ResultData resultData = new ResultData();
+		Map<String, Object> condition = new HashMap<>();
+		condition.put("orderStatus", 1);
+		resultData = eventService.fetchEventOrder(condition);
+		if (resultData.getResponseCode() == ResponseCode.RESPONSE_OK) {
+			List<EventOrder> eventOrders=(List<EventOrder>)resultData.getData();
+			for(EventOrder eventOrder:eventOrders){
+				eventOrder.setOrderStatus(OrderItemStatus.SHIPPED);
+				eventService.updateEventOrder(eventOrder);
+			}
+		}
+		return "";
 	}
+	
+	
 }

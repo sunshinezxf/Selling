@@ -3,7 +3,7 @@
 <head>
     #parse("/backend/component/init.vm")
     #parse("/backend/component/init_datatable.vm")
-    <title>赠送列表</title>
+    <title>赠送订单</title>
 </head>
 <body>
     #parse("/backend/component/navigate_with_login.vm")

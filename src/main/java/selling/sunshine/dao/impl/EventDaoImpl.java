@@ -5,6 +5,7 @@ import common.sunshine.model.selling.event.EventApplication;
 import common.sunshine.model.selling.event.EventQuestion;
 import common.sunshine.model.selling.event.GiftEvent;
 import common.sunshine.model.selling.event.QuestionOption;
+import common.sunshine.model.selling.order.EventOrder;
 import common.sunshine.pagination.DataTablePage;
 import common.sunshine.pagination.DataTableParam;
 import common.sunshine.utils.IDGenerator;
@@ -183,6 +184,88 @@ public class EventDaoImpl extends BaseDao implements EventDao {
             logger.error(e.getMessage());
             result.setResponseCode(ResponseCode.RESPONSE_ERROR);
             result.setDescription(e.getMessage());
+        } finally {
+            return result;
+        }
+	}
+
+	@Override
+	public ResultData insertEventOrder(EventOrder eventOrder) {
+		ResultData result = new ResultData();
+        synchronized (lock) {
+            try {
+            	eventOrder.setOrderId(IDGenerator.generate("EOI"));
+                sqlSession.insert("selling.event.order.insert", eventOrder);    
+                result.setData(eventOrder);
+            } catch (Exception e) {
+                logger.error(e.getMessage());
+                result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+                result.setDescription(e.getMessage());
+            } finally {
+                return result;
+            }
+        }
+	}
+
+	@Override
+	public ResultData updateEventOrder(EventOrder eventOrder) {
+		 ResultData result = new ResultData();
+	        try {
+	            sqlSession.update("selling.event.order.update", eventOrder);
+	            result.setData(eventOrder);
+	        } catch (Exception e) {
+	            logger.error(e.getMessage());
+	            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+	            result.setDescription(e.getMessage());
+	        } finally {
+	            return result;
+	        }
+	}
+
+	@Override
+	public ResultData queryEventOrder(Map<String, Object> condition) {
+		 ResultData result = new ResultData();
+	        condition = handle(condition);
+	        try {
+	            List<EventOrder> list = sqlSession.selectList("selling.event.order.query", condition);
+	            result.setData(list);
+	        } catch (Exception e) {
+	            logger.error(e.getMessage());
+	            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+	            result.setDescription(e.getMessage());
+	        } finally {
+	            return result;
+	        }
+	}
+
+	@Override
+	public ResultData queryEventOrderByPage(Map<String, Object> condition, DataTableParam param) {
+		 ResultData result = new ResultData();
+	        DataTablePage<EventOrder> page = new DataTablePage<>(param);
+	        condition = handle(condition);
+	        ResultData total = queryEventOrder(condition);
+	        if (total.getResponseCode() != ResponseCode.RESPONSE_OK) {
+	            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+	            result.setDescription(total.getDescription());
+	            return result;
+	        }
+	        page.setiTotalRecords(((List<EventOrder>) total.getData()).size());
+	        page.setiTotalDisplayRecords(((List<EventOrder>) total.getData()).size());
+	        List<EventOrder> current = queryEventOrder(condition, param.getiDisplayStart(), param.getiDisplayLength());
+	        if (current.isEmpty()) {
+	            result.setResponseCode(ResponseCode.RESPONSE_NULL);
+	        }
+	        page.setData(current);
+	        result.setData(page);
+	        return result;
+	}
+	
+	private List<EventOrder> queryEventOrder(Map<String, Object> condition, int start, int length) {
+		List<EventOrder> result = new ArrayList<>();
+        try {
+            result = sqlSession.selectList("selling.event.order.query", condition, new RowBounds(start, length));
+        } catch (Exception e) {
+            logger.error(e.getMessage());
         } finally {
             return result;
         }

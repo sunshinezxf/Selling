@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import common.sunshine.model.selling.event.EventApplication;
 import common.sunshine.model.selling.event.GiftEvent;
+import common.sunshine.model.selling.order.EventOrder;
 import common.sunshine.pagination.DataTableParam;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
@@ -115,6 +116,61 @@ public class EventServiceImpl implements EventService {
 			result.setData(updateResponse.getData());
 		} else {
 			result.setDescription(updateResponse.getDescription());
+		}
+		return result;
+	}
+
+	@Override
+	public ResultData createEventOrder(EventOrder eventOrder) {
+		ResultData result = new ResultData();
+		ResultData insertResponse = eventDao.insertEventOrder(eventOrder);
+		result.setResponseCode(insertResponse.getResponseCode());
+		if (insertResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+			result.setData(insertResponse.getData());
+		} else {
+			result.setDescription(insertResponse.getDescription());
+		}
+		return result;
+	}
+
+	@Override
+	public ResultData updateEventOrder(EventOrder eventOrder) {
+		ResultData result = new ResultData();
+		ResultData updateResponse = eventDao.updateEventOrder(eventOrder);
+		result.setResponseCode(updateResponse.getResponseCode());
+		if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+			result.setData(updateResponse.getData());
+		} else {
+			result.setDescription(updateResponse.getDescription());
+		}
+		return result;
+	}
+
+	@Override
+	public ResultData fetchEventOrder(Map<String, Object> condition) {
+		ResultData result = new ResultData();
+		ResultData queryResponse = eventDao.queryEventOrder(condition);
+		result.setResponseCode(queryResponse.getResponseCode());
+		if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+			if (((List) queryResponse.getData()).isEmpty()) {
+				result.setResponseCode(ResponseCode.RESPONSE_NULL);
+			}
+			result.setData(queryResponse.getData());
+		} else if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
+			result.setDescription(queryResponse.getDescription());
+		}
+		return result;
+	}
+
+	@Override
+	public ResultData fetchEventOrderByPage(Map<String, Object> condition, DataTableParam param) {
+		ResultData result = new ResultData();
+		ResultData queryResponse = eventDao.queryEventOrderByPage(condition, param);
+		result.setResponseCode(queryResponse.getResponseCode());
+		if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+			result.setData(queryResponse.getData());
+		} else {
+			result.setResponseCode(ResponseCode.RESPONSE_ERROR);
 		}
 		return result;
 	}
