@@ -36,7 +36,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by sunshine on 8/22/16.
@@ -128,6 +130,21 @@ public class WechatController {
                         thread.start();
                         return "";
                     } else if (message.getEvent().equalsIgnoreCase("click")) {
+                    	Thread thread2 = new Thread() {
+                            @Override
+                            public void run() {
+                            	Map<String, Object> condition = new HashMap<String, Object>();
+                            	condition.put("openId", message.getFromUserName());
+                            	ResultData fetchFollower = followerService.fetchFollower(condition);
+                            	if(fetchFollower.getResponseCode() == ResponseCode.RESPONSE_NULL){
+	                                Follower follower = WechatUtil.queryUserInfo(message.getFromUserName(), PlatformConfig.getAccessToken());
+	                                follower.setChannel("dingyue");
+	                                logger.debug("imhere2");
+	                                followerService.subscribe(follower);
+                            	}
+                            }
+                        };
+                        thread2.start();
                         if (message.getEventKey().equalsIgnoreCase("unbind")) {
                             content.alias("xml", TextOutMessage.class);
                             TextOutMessage result = new TextOutMessage();

@@ -1,5 +1,8 @@
 package promotion.sunshine.service.impl;
 
+import java.util.List;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,4 +47,20 @@ public class FollowerServiceImpl implements FollowerService {
         result.setDescription(blockResponse.getDescription());
         return result;
     }
+
+	@Override
+	public ResultData fetchFollower(Map<String, Object> condition) {
+		ResultData result = new ResultData();
+		ResultData queryResponse = followerDao.fetchFollower(condition);
+		result.setResponseCode(queryResponse.getResponseCode());
+		if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+			if (((List) queryResponse.getData()).isEmpty()) {
+				result.setResponseCode(ResponseCode.RESPONSE_NULL);
+			}
+			result.setData(queryResponse.getData());
+		} else if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
+			result.setDescription(queryResponse.getDescription());
+		}
+		return result;
+	}
 }

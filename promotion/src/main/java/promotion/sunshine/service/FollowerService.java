@@ -1,5 +1,7 @@
 package promotion.sunshine.service;
 
+import java.util.Map;
+
 import common.sunshine.model.wechat.Follower;
 import common.sunshine.utils.ResultData;
 
@@ -10,4 +12,6 @@ public interface FollowerService {
     ResultData subscribe(Follower follower);
 
     ResultData unsubscribe(String openId);
+    
+    ResultData fetchFollower(Map<String, Object> condition);
 }

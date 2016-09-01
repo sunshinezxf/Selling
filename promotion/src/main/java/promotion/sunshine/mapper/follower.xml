@@ -16,7 +16,16 @@
         REPLACE INTO follower(follower_wechat_id, follower_channel, follower_nickname, follower_gender, follower_city, follower_province, block_flag, create_time)
         VALUES (#{openId}, #{channel}, #{nickname}, #{gender}, #{city}, #{province}, #{blockFlag}, #{createAt})
     </insert>
-
+    
+    <select id="query" parameterType="java.util.HashMap" resultMap="followerVo">
+        SELECT follower_wechat_id, follower_channel, follower_nickname, follower_gender, follower_gender, follower_city,  follower_province, block_flag, create_time
+        FROM follower
+        WHERE 1 = 1
+        <if test="openId != null">
+            AND follower_wechat_id = #{openId}
+        </if>
+    </select>
+    
     <update id="block">
         UPDATE follower
         <set>
