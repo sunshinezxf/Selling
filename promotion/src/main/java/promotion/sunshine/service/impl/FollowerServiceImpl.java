@@ -25,6 +25,22 @@ public class FollowerServiceImpl implements FollowerService {
     private FollowerDao followerDao;
 
     @Override
+    public ResultData queryFollower(Map<String, Object> condition) {
+        ResultData result = new ResultData();
+        ResultData response = followerDao.queryFollower(condition);
+        result.setResponseCode(response.getResponseCode());
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            if (((List) response.getData()).isEmpty()) {
+                result.setResponseCode(ResponseCode.RESPONSE_NULL);
+            }
+            result.setData(response.getData());
+        } else {
+            result.setDescription(response.getDescription());
+        }
+        return result;
+    }
+
+    @Override
     public ResultData subscribe(Follower follower) {
         ResultData result = new ResultData();
         Map<String, Object> condition = new HashMap<>();
