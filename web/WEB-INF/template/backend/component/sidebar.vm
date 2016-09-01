@@ -64,7 +64,7 @@
                     </ul>
                 </li>
             #end
-            #if($role == "admin")
+            #if($role == "admin" || $role == "express")
                 <li><a class="menu" data-toggle="collapse" data-parent="#accordion" href="#event-management"><i
                         class="fa fa-book"></i> 活动管理<i
                         class="pull-right fa fa-caret-down"></i></a>
@@ -124,7 +124,8 @@
                         </li>
                         <li><a class="sub-nav" href="${path.concat("/gather/overview")}"><i class="fa fa-tasks"></i> 收款单</a>
                         </li>
-                        <li><a class="sub-nav" href="${path.concat("/withdraw/overviewreport")}"><i class="fa fa-tasks"></i> 提现单</a>
+                        <li><a class="sub-nav" href="${path.concat("/withdraw/overviewreport")}"><i
+                                class="fa fa-tasks"></i> 提现单</a>
                         </li>
                     </ul>
                 </li>
@@ -173,13 +174,13 @@
     $("#config-management").collapse('hide');
     $("#admin-management").collapse('hide');
     $("#finance-management").collapse('hide');
-   
+
     $(function () {
         var target_id = $(".main").attr("id-target");
         $("#" + target_id).collapse('show');
     });
 
-    var array = ["#agent-management", "#order-management", "#goods-management","#event-management", "#statement-management", "#withdraw-management", "#config-management", "#admin-management", "#finance-management"];
+    var array = ["#agent-management", "#order-management", "#goods-management", "#event-management", "#statement-management", "#withdraw-management", "#config-management", "#admin-management", "#finance-management"];
     $(".menu").click(function () {
         var menu_id = $(this).attr("href");
         $.each(array, function (i, value) {

@@ -50,7 +50,7 @@
                         </ul>
                     </li>
                 #end
-                #if($role == "admin")
+                #if($role == "admin" || $role == "express")
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" role="button"
                            aria-haspopup="true" aria-expanded="true">活动管理 <span class="caret"></span></a>
@@ -79,28 +79,6 @@
                         <ul class="dropdown-menu nav nav-pills nav-stacked">
                             <li><a class="menu" href="${path.concat('/withdraw/check')}">提现申请</a></li>
                             <li><a class="menu" href="${path.concat('/withdraw/overview')}">提现概览</a></li>
-                        </ul>
-                    </li>
-                #end
-                #if($role == "admin" || $role == "finance")
-                    <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" role="button"
-                           aria-haspopup="true" aria-expanded="true">报表下载 <span class="caret"></span></a>
-                        <ul class="dropdown-menu nav nav-pills nav-stacked">
-                            <li><a class="menu" href="${path.concat('/indent/overview')}">订货单</a></li>
-                            <li><a class="menu" href="${path.concat('/deliver/overview')}">发货单</a></li>
-                            <li><a class="menu" href="${path.concat('/gather/overview')}">收款单</a></li>
-                            <li><a class="menu" href="${path.concat('/withdraw/overviewreport')}">提现单</a></li>
-                        </ul>
-                    </li>
-                #end
-                #if($role == "admin")
-                    <li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" role="button"
-                           aria-haspopup="true" aria-expanded="true">基本配置 <span class="caret"></span></a>
-                        <ul class="dropdown-menu nav nav-pills nav-stacked">
-                            <li><a class="menu" href="${path.concat('/shipment/config')}">发货配置</a></li>
-                            <li><a class="menu" href="${path.concat('/refund/config')}">返现配置</a></li>
                         </ul>
                     </li>
                 #end

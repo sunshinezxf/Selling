@@ -137,9 +137,9 @@
 
                 /deliver/** = roles["admin, finance"]
 
-                /event/create = roles[admin]
-                /event/overview = roles[admin]
-                /event/* = roles[admin]
+                /event/create = roles["admin, express"]
+                /event/overview = roles["admin, express"]
+                /event/* = roles["admin, express"]
                 /event/*/ = anon
 
                 /gather/** = roles["admin, finance"]
