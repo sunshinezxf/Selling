@@ -77,7 +77,7 @@ public class WechatController {
             final InMessage message = (InMessage) content.fromXML(input);
             HttpSession session = request.getSession();
             session.setAttribute("openId", message.getFromUserName());
-            Thread thread = new Thread() {
+            new Thread() {
                 @Override
                 public void run() {
                     Follower follower = WechatUtil.queryUserInfo(message.getFromUserName(), PlatformConfig.getAccessToken());
@@ -85,8 +85,7 @@ public class WechatController {
                     logger.debug("imhere2");
                     followerService.subscribe(follower);
                 }
-            };
-            thread.start();
+            }.start();
             switch (message.getMsgType()) {
                 case "event":
                     if (message.getEvent().equals("subscribe")) {
@@ -104,13 +103,12 @@ public class WechatController {
                         logger.debug(JSON.toJSONString(xml));
                         return xml;
                     } else if (message.getEvent().equals("unsubscribe")) {
-                        Thread thread2 = new Thread() {
+                        new Thread() {
                             @Override
                             public void run() {
                                 followerService.unsubscribe(message.getFromUserName());
                             }
-                        };
-                        thread2.start();
+                        }.start();
                         return "";
                     } else if (message.getEvent().equalsIgnoreCase("click")) {
                         if (message.getEventKey().equalsIgnoreCase("unbind")) {
