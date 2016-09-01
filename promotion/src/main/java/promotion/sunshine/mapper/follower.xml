@@ -8,7 +8,7 @@
         <result property="gender" column="follower_gender"></result>
         <result property="city" column="follower_city"></result>
         <result property="province" column="follower_province"></result>
-        <result property="blockFalg" column="block_flag"></result>
+        <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
     </resultMap>
 
