@@ -236,6 +236,7 @@
         $("#event_apply_form").attr("action", "${path.concat('/event/giftapplication')}");
         $("#event_apply_form").attr("method", "post");
         $("#event_apply_form").submit();
+        apply_inactive();
     });
 
     $("#dialog").find(".weui_btn_dialog.primary").click(function () {
@@ -319,6 +320,13 @@
         $("#next_btn3").removeClass("weui_btn_primary");
         $("#next_btn3").addClass("weui_btn_disabled");
         $("#next_btn3").addClass("weui_btn_default");
+    }
+    
+    function apply_inactive(){
+    	$("#apply_btn").attr("disabled", "disabled");
+        $("#apply_btn").removeClass("weui_btn_primary");
+        $("#apply_btn").addClass("weui_btn_disabled");
+        $("#apply_btn").addClass("weui_btn_default");
     }
     
 

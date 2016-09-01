@@ -78,6 +78,8 @@ public class EventController {
 		if (fetchEventResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
 			Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "未找到该活动", "");
             view.addObject("prompt", prompt);
+            String url = "http://mp.weixin.qq.com/s?__biz=MzI1OTMyNTI1NQ==&mid=100000233&idx=1&sn=85b05c7a3dca6429e66ddf7762de06aa#wechat_redirect";
+    		WechatConfig.oauthWechat(view, "/event/" + eventName + "/" + openId, url);
             view.setViewName("/customer/event/prompt");
 			return view;
 		}
@@ -101,12 +103,16 @@ public class EventController {
 		if(now.before(event.getStart())){
 			Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "活动尚未开始", "");
             view.addObject("prompt", prompt);
+            String url = "http://mp.weixin.qq.com/s?__biz=MzI1OTMyNTI1NQ==&mid=100000233&idx=1&sn=85b05c7a3dca6429e66ddf7762de06aa#wechat_redirect";
+    		WechatConfig.oauthWechat(view, "/event/" + eventName + "/" + openId, url);
             view.setViewName("/customer/event/prompt");
 			return view;
 		}
 		if(now.after(event.getEnd())){
 			Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "活动已结束", "");
             view.addObject("prompt", prompt);
+            String url = "http://mp.weixin.qq.com/s?__biz=MzI1OTMyNTI1NQ==&mid=100000233&idx=1&sn=85b05c7a3dca6429e66ddf7762de06aa#wechat_redirect";
+    		WechatConfig.oauthWechat(view, "/event/" + eventName + "/" + openId, url);
             view.setViewName("/customer/event/prompt");
 			return view;
 		}
