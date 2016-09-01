@@ -64,27 +64,7 @@ $(document).ready(function () {
             {
                 title: "操作", "mRender": function (data, type, full) {
                 var operation = "";
-                var detail_button = "<button type='button' class='btn btn-success btn-group-sm' id='" + full.applicationId + "' data-toggle='modal' data-target='#application_detail_modal'>详情</button>&nbsp;"
-                $("#" + full.applicationId).on('click', function () {
-                	document.getElementById("donorName").innerHTML =full.donorName;
-                	document.getElementById("donorPhone").innerHTML =full.donorPhone;
-                	document.getElementById("doneeName").innerHTML =full.doneeName;
-                	document.getElementById("doneePhone").innerHTML =full.doneePhone;
-                	if(full.doneeGender=="M"){
-                		document.getElementById("doneeGender").innerHTML ="男";
-                	}else{
-                		document.getElementById("doneeGender").innerHTML ="女";
-                	}               	
-                	document.getElementById("doneeAddress").innerHTML =full.doneeAddress;
-                	document.getElementById("doneeAgeRange").innerHTML =full.doneeAgeRange;
-                	document.getElementById("relation").innerHTML =full.relation;
-                	if(full.wishes!=null){
-                		document.getElementById("wishes").innerHTML =full.wishes;
-                	}else{
-                		document.getElementById("wishes").innerHTML ="无";
-                	}
-                	document.getElementById("applicationId").innerHTML =full.applicationId;
-                });
+                var detail_button = "<button type='button' class='btn btn-success btn-group-sm' id='" + full.applicationId + "' onclick=detail(this) data-toggle='modal' data-target='#application_detail_modal'>详情</button>&nbsp;"
                 operation += detail_button;
                 return operation;
             }
@@ -108,6 +88,34 @@ $(document).ready(function () {
         }
     });
 });
+
+function detail(obj){
+	$.post("${path.concat('/event/application/detail/')}"+obj.id,function (result) {
+        
+		var application=result.data[0];
+		alert(JSON.stringify(application));
+		document.getElementById("donorName").innerHTML =application.donorName;
+    	document.getElementById("donorPhone").innerHTML =application.donorPhone;
+    	document.getElementById("doneeName").innerHTML =application.doneeName;
+    	document.getElementById("doneePhone").innerHTML =application.doneePhone;
+    	if(application.doneeGender=="M"){
+    		document.getElementById("doneeGender").innerHTML ="男";
+    	}else{
+    		document.getElementById("doneeGender").innerHTML ="女";
+    	}               	
+    	document.getElementById("doneeAddress").innerHTML =application.doneeAddress;
+    	document.getElementById("doneeAgeRange").innerHTML =application.doneeAgeRange;
+    	document.getElementById("relation").innerHTML =application.relation;
+    	if(application.wishes!=null){
+    		document.getElementById("wishes").innerHTML =application.wishes;
+    	}else{
+    		document.getElementById("wishes").innerHTML ="无";
+    	}
+    	document.getElementById("applicationId").innerHTML =application.applicationId;
+	});
+		
+	
+}
 
 
 </script>

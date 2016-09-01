@@ -15,7 +15,25 @@
         <result property="wishes" column="wishes"></result>
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
+        <collection property="answers" column="applicationId = application_id" select="answerQuery"></collection>
     </resultMap>
+    
+    <resultMap id="questionAnswerVo" type="common.sunshine.model.selling.event.QuestionAnswer">
+        <result property="answerId" column="answer_id"></result>
+        <result property="content" column="question_content"></result>
+        <result property="rank" column="question_rank"></result>
+        <result property="option" column="question_option"></result>
+    </resultMap>
+    
+    <select id="answerQuery" parameterType="java.util.Map" resultMap="questionAnswerVo">
+        SELECT answer_id, question_content, question_rank, question_option
+        FROM question_answer
+        WHERE 1 = 1
+        <if test="applicationId != null">
+            AND application_id = #{applicationId}
+        </if>
+        GROUP BY question_content
+    </select>
 
     <select id="query" parameterType="java.util.Map" resultMap="applicationVo">
         SELECT application_id, donor_name, donor_phone, donee_name, donee_phone, donee_gender, donee_address,

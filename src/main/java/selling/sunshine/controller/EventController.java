@@ -214,4 +214,13 @@ public class EventController {
 		resultData=eventService.updateEventApplication(eventApplication);
 		return resultData;
 	}
+	
+	@RequestMapping(method = RequestMethod.POST, value = "/application/detail/{applicationId}")
+	public ResultData detail(@PathVariable("applicationId") String applicationId) {
+		ResultData resultData=new ResultData();
+		Map<String, Object> condition=new HashMap<>();
+		condition.put("applicationId", applicationId);
+		resultData=eventService.fetchEventApplication(condition);
+		return resultData;
+	}
 }
