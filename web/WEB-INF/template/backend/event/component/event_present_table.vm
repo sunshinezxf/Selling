@@ -11,13 +11,14 @@
     </div>
     <div class="row">
         <div class="col-md-12 col-lg-12">
-          <button type="button" class="btn btn-info" id="expressAll">一键发货</button>
+         #if(${size})
+          <button type="button" class="btn btn-info" id="expressAll">一键发货</button> 
+         #end  
+           <br>
+          <table id="event_present_table" class="table table-striped table-bordered" cellspacing="0" width="100%">
+          </table>      
         </div>
-        <div class="col-md-12 col-lg-12">
-            <table id="event_present_table" class="table table-striped table-bordered" cellspacing="0" width="100%">
-            </table>
 
-        </div>
     </div>
 </div>
 <script>
@@ -94,11 +95,13 @@ $(document).ready(function () {
 });
 
 $("#expressAll").click(function(){
-	
+	 window.location.href = "${path.concat('/event/order/expressAll')}";
+	 $("#event_present_table").DataTable().ajax.reload(null, true);
 });
 
 function express(obj){
-	
+	window.location.href = "${path.concat('/event/order/express/')}"+obj.id;
+	$("#event_present_table").DataTable().ajax.reload(null, true);
 }
 
 </script>

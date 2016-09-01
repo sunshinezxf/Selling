@@ -4,6 +4,7 @@ package selling.sunshine.controller;
 import com.csvreader.CsvReader;
 import common.sunshine.model.selling.admin.Admin;
 import common.sunshine.model.selling.order.CustomerOrder;
+import common.sunshine.model.selling.order.EventOrder;
 import common.sunshine.model.selling.order.Order;
 import common.sunshine.model.selling.order.OrderItem;
 import common.sunshine.model.selling.order.support.OrderItemStatus;
@@ -24,7 +25,9 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import selling.sunshine.model.*;
 import common.sunshine.model.selling.express.Express4Agent;
+import common.sunshine.model.selling.express.Express4Application;
 import common.sunshine.model.selling.express.Express4Customer;
+import selling.sunshine.service.EventService;
 import selling.sunshine.service.ExpressService;
 import selling.sunshine.service.LogService;
 import selling.sunshine.service.OrderService;
@@ -59,6 +62,9 @@ public class ExpressController {
 
     @Autowired
     private LogService logService;
+    
+	@Autowired
+	private EventService eventService;
 
     @RequestMapping(method = RequestMethod.POST, value = "/detail/{id}")
     public ResultData detail(@PathVariable("id") String id) {
@@ -162,7 +168,7 @@ public class ExpressController {
                         }
                     }
 
-                } else {
+                } else if(linkID.startsWith("CUO")){
                     Express4Customer express = new Express4Customer(
                             csvList.get(row)[7],
                             csvList.get(row)[14], csvList.get(row)[15],
@@ -180,6 +186,23 @@ public class ExpressController {
                         orderService.updateCustomerOrder(temp);
                     }
 
+                }else{
+                	Express4Application express = new Express4Application(
+                            csvList.get(row)[7],
+                            csvList.get(row)[14], csvList.get(row)[15],
+                            csvList.get(row)[20], csvList.get(row)[0],
+                            csvList.get(row)[1], address,
+                            csvList.get(row)[27]);
+                	 Map<String, Object> condition = new HashMap<>();
+                     condition.put("orderId", linkID);
+                     ResultData fetchResponse = eventService.fetchEventOrder(condition);
+                     if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                    	 EventOrder temp = ((List<EventOrder>) fetchResponse.getData()).get(0);
+                         temp.setOrderStatus(OrderItemStatus.SHIPPED);
+                         express.setEventOrder(temp);
+                         expressService.createExpress(express);
+                         eventService.updateEventOrder(temp);
+                     }
                 }
             }
         }

@@ -9,6 +9,7 @@ import common.sunshine.dao.BaseDao;
 import selling.sunshine.dao.ExpressDao;
 import common.sunshine.model.selling.express.Express;
 import common.sunshine.model.selling.express.Express4Agent;
+import common.sunshine.model.selling.express.Express4Application;
 import common.sunshine.model.selling.express.Express4Customer;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
@@ -115,4 +116,36 @@ public class ExpressDaoImpl extends BaseDao implements ExpressDao {
             return result;
         }
     }
+
+	@Override
+	public ResultData insertExpress4Application(Express4Application express) {
+		 ResultData result = new ResultData();
+	        synchronized (lock) {
+	            try {
+	                express.setExpressId(IDGenerator.generate("EPE"));
+	                sqlSession.insert("selling.express.insertExpress4Application", express);
+	                result.setData(express);
+	            } catch (Exception e) {
+	                logger.error(e.getMessage());
+	                result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+	                result.setDescription(e.getMessage());
+	            }
+	        }
+	        return result;
+	}
+
+	@Override
+	public ResultData queryExpress4Application(Map<String, Object> condition) {
+		 ResultData result = new ResultData();
+	        try {
+	            List<Express4Application> list = sqlSession.selectList("selling.express.query4Application", condition);
+	            result.setData(list);
+	        } catch (Exception e) {
+	            logger.error(e.getMessage());
+	            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+	            result.setDescription(e.getMessage());
+	        } finally {
+	            return result;
+	        }
+	}
 }

@@ -15,7 +15,8 @@
         <result property="wishes" column="wishes"></result>
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
-        <collection property="answers" column="applicationId = application_id" select="answerQuery"></collection>
+        <association property="event" column="eventId = event_id" select="eventQuery"></association>
+        <collection property="answers" column="applicationId = application_id" select="answerQuery"></collection>     
     </resultMap>
     
     <resultMap id="questionAnswerVo" type="common.sunshine.model.selling.event.QuestionAnswer">
@@ -25,6 +26,16 @@
         <result property="option" column="question_option"></result>
     </resultMap>
     
+    <resultMap id="giftEventVo" type="common.sunshine.model.selling.event.GiftEvent">
+        <result property="eventId" column="event_id"></result>
+        <result property="title" column="event_title"></result>
+        <result property="nickname" column="event_nickname"></result>
+        <result property="start" column="event_start"></result>
+        <result property="end" column="event_end"></result>
+        <result property="blockFlag" column="block_flag"></result>
+        <result property="createAt" column="create_time"></result>
+    </resultMap>
+    
     <select id="answerQuery" parameterType="java.util.Map" resultMap="questionAnswerVo">
         SELECT answer_id, question_content, question_rank, question_option
         FROM question_answer
@@ -32,12 +43,11 @@
         <if test="applicationId != null">
             AND application_id = #{applicationId}
         </if>
-        GROUP BY question_content
     </select>
 
     <select id="query" parameterType="java.util.Map" resultMap="applicationVo">
         SELECT application_id, donor_name, donor_phone, donee_name, donee_phone, donee_gender, donee_address,
-        donee_age_range, relation,wishes,
+        donee_age_range, relation,wishes,event_id,
         block_flag, create_time
         FROM event_application
         WHERE 1 = 1
@@ -74,6 +84,12 @@
         <if test="rule == null">
             ORDER BY create_time DESC
         </if>
+    </select>
+    
+    <select id="eventQuery" parameterType="java.util.Map" resultMap="giftEventVo">
+        SELECT event_id, event_title, event_nickname, event_start, event_end, block_flag, create_time
+        FROM event
+        WHERE event_id = #{eventId}
     </select>
 
     <update id="update" parameterType="common.sunshine.model.selling.event.EventApplication">

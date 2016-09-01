@@ -47,6 +47,21 @@
         <result property="createAt" column="create_time"></result>
         <association property="order" column="orderId = customer_order_id" select="customerOrderQuery"></association>
     </resultMap>
+    
+    <resultMap id="express4ApplicationVo" type="common.sunshine.model.selling.express.Express4Application">
+        <result property="expressId" column="express_id"></result>
+        <result property="expressNumber" column="express_no"></result>
+        <result property="senderName" column="sender_name"></result>
+        <result property="senderPhone" column="sender_phone"></result>
+        <result property="senderAddress" column="sender_address"></result>
+        <result property="receiverName" column="receiver_name"></result>
+        <result property="receiverPhone" column="receiver_phone"></result>
+        <result property="receiverAddress" column="receiver_address"></result>
+        <result property="description" column="description"></result>
+        <result property="goodsName" column="goods_name"></result>
+        <result property="createAt" column="create_time"></result>
+        <association property="eventOrder" column="orderId = event_order_id" select="eventOrderQuery"></association>
+    </resultMap>
 
     <resultMap id="orderVo" type="common.sunshine.model.selling.order.Order">
         <result property="orderId" column="order_id"></result>
@@ -78,6 +93,18 @@
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
     </resultMap>
+    
+    <resultMap id="eventOrderVo" type="common.sunshine.model.selling.order.EventOrder">
+        <result property="orderId" column="event_order_id"></result>
+        <result property="doneeName" column="donee_name"></result>
+        <result property="doneePhone" column="donee_phone"></result>
+        <result property="doneeAddress" column="donee_address"></result>
+        <result property="quantity" column="quantity"></result>
+        <result property="orderStatus" column="order_status"
+                typeHandler="selling.sunshine.handler.mybatis.order.OrderItemStatusHandler"></result>
+        <result property="blockFlag" column="block_flag"></result>
+        <result property="createAt" column="create_time"></result>
+    </resultMap>
 
     <insert id="insertExpress4Agent" parameterType="common.sunshine.model.selling.express.Express4Agent"
             useGeneratedKeys="false">
@@ -89,6 +116,12 @@
             useGeneratedKeys="false">
         INSERT INTO express_customer(express_id, customer_order_id, express_no, sender_name, sender_phone, sender_address, receiver_name, receiver_phone, receiver_address, description, goods_name, block_flag, create_time)
         VALUES (#{expressId}, #{order.orderId}, #{expressNumber}, #{senderName}, #{senderPhone}, #{senderAddress}, #{receiverName}, #{receiverPhone}, #{receiverAddress}, #{description}, #{goodsName}, #{blockFlag}, #{createAt})
+    </insert>
+    
+    <insert id="insertExpress4Application" parameterType="common.sunshine.model.selling.express.Express4Application"
+            useGeneratedKeys="false">
+        INSERT INTO express_application(express_id, event_order_id, express_no, sender_name, sender_phone, sender_address, receiver_name, receiver_phone, receiver_address, description, goods_name, block_flag, create_time)
+        VALUES (#{expressId}, #{eventOrder.orderId}, #{expressNumber}, #{senderName}, #{senderPhone}, #{senderAddress}, #{receiverName}, #{receiverPhone}, #{receiverAddress}, #{description}, #{goodsName}, #{blockFlag}, #{createAt})
     </insert>
 
     <select id="query" parameterType="java.util.Map" resultMap="expressVo">
@@ -125,6 +158,25 @@
         </if>
         <if test="linkId != null and linkId != ''">
             AND customer_order_id = #{link_id}
+        </if>
+        <if test="start != null and end != null and start != '' and end != ''">
+            AND (date_format(create_time, '%Y-%m-%d') &gt;= #{start} AND date_format(create_time, '%Y-%m-%d') &lt;=
+            #{end})
+        </if>
+        UNION ALL
+        SELECT express_id, event_order_id AS link_id, express_no, sender_name, sender_phone, sender_address,
+        receiver_name, receiver_phone,
+        receiver_address, description, goods_name, block_flag, create_time
+        FROM express_application
+        WHERE 1 = 1
+        <if test="expressId != null and expressId != ''">
+            AND express_id = #{expressId}
+        </if>
+        <if test="expressNumber != null and expressNumber != ''">
+            AND express_no = #{expressNumber}
+        </if>
+        <if test="linkId != null and linkId != ''">
+            AND event_order_id = #{link_id}
         </if>
         <if test="start != null and end != null and start != '' and end != ''">
             AND (date_format(create_time, '%Y-%m-%d') &gt;= #{start} AND date_format(create_time, '%Y-%m-%d') &lt;=
@@ -169,6 +221,22 @@
             AND customer_order_id = #{orderId}
         </if>
     </select>
+    
+    <select id="query4Application" parameterType="java.util.Map" resultMap="express4ApplicationVo">
+        SELECT express_id, event_order_id, express_no, sender_name, sender_phone, sender_address, description, receiver_name,
+        receiver_phone, receiver_address, goods_name, block_flag, create_time
+        FROM express_application
+        WHERE 1 = 1
+        <if test="expressId != null and expressId != ''">
+            AND express_id = #{expressId}
+        </if>
+        <if test="expressNumber != null and expressNumber != ''">
+            AND express_no = #{expressNumber}
+        </if>
+        <if test="orderId != null and orderId != ''">
+            AND event_order_id = #{orderId}
+        </if>
+    </select>
 
     <select id="orderItemQuery" parameterType="java.util.Map" resultMap="orderItemVo">
         SELECT order_item_id, order_item_status, goods_quantity, order_item_price,order_id,
@@ -187,5 +255,11 @@
         SELECT order_id, wechat, quantity, receiver_name, receiver_phone, receiver_addr, total_price, order_status
         FROM customer_order
         WHERE order_id = #{orderId}
+    </select>
+    
+    <select id="eventOrderQuery" parameterType="java.util.Map" resultMap="eventOrderVo">
+         SELECT event_order_id, donee_name, donee_phone, donee_address, order_status, quantity, block_flag, create_time
+        FROM event_order
+        WHERE event_order_id = #{orderId}
     </select>
 </mapper>

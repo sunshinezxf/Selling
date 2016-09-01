@@ -93,7 +93,6 @@ function detail(obj){
 	$.post("${path.concat('/event/application/detail/')}"+obj.id,function (result) {
         
 		var application=result.data[0];
-		alert(JSON.stringify(application));
 		document.getElementById("donorName").innerHTML =application.donorName;
     	document.getElementById("donorPhone").innerHTML =application.donorPhone;
     	document.getElementById("doneeName").innerHTML =application.doneeName;

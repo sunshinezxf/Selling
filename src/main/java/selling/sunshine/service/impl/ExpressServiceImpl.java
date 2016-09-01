@@ -18,6 +18,7 @@ import common.sunshine.model.selling.order.support.OrderItemStatus;
 import common.sunshine.model.selling.order.support.OrderStatus;
 import common.sunshine.model.selling.express.Express;
 import common.sunshine.model.selling.express.Express4Agent;
+import common.sunshine.model.selling.express.Express4Application;
 import common.sunshine.model.selling.express.Express4Customer;
 import selling.sunshine.service.ExpressService;
 import selling.sunshine.utils.DigestUtil;
@@ -270,5 +271,34 @@ public class ExpressServiceImpl implements ExpressService {
 			}
 		}
 		return result;
+	}
+
+	@Override
+	public ResultData createExpress(Express4Application express) {
+		 ResultData result = new ResultData();
+	        ResultData insertResponse = expressDao.insertExpress4Application(express);
+	        result.setResponseCode(insertResponse.getResponseCode());
+	        if (insertResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+	            result.setData(insertResponse.getData());
+	        } else {
+	            result.setDescription(insertResponse.getDescription());
+	        }
+	        return result;
+	}
+
+	@Override
+	public ResultData fetchExpress4Application(Map<String, Object> condition) {
+		  ResultData result = new ResultData();
+	        ResultData queryResponse = expressDao.queryExpress4Application(condition);
+	        result.setResponseCode(queryResponse.getResponseCode());
+	        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+	            if (((List<Express4Customer>) queryResponse.getData()).isEmpty()) {
+	                result.setResponseCode(ResponseCode.RESPONSE_NULL);
+	            }
+	            result.setData(queryResponse.getData());
+	        } else if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
+	            result.setDescription(queryResponse.getDescription());
+	        }
+	        return result;
 	}
 }

@@ -36,6 +36,6 @@
         <mapper resource="selling/sunshine/mapper/event/eventquestion.xml"/>
         <mapper resource="selling/sunshine/mapper/event/questionoption.xml"/>
         <mapper resource="selling/sunshine/mapper/event/eventapplication.xml"/>
-        <mapper resource="selling/sunshine/mapper/order/eventorder.xml"/>
+        <mapper resource="selling/sunshine/mapper/event/eventorder.xml"/>
     </mappers>
 </configuration>
