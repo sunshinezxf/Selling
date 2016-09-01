@@ -19,7 +19,7 @@
 <script>
     $(document).ready(function () {
         $("#refund_record_table").DataTable({
-            searching: true,
+            searching: false,
             ordering: false,
             paging: true,
             "sPaginationType": "full_numbers",
@@ -52,7 +52,7 @@
             },
             columns: [
                 {title: "代理商", "mData": "agent.name"},
-                {title: "返现总额(元)", "mData": "refundAmount"},
+                {title: "返现总额(元)", "mData": "amount"},
                 {
                     title: "返现明细(自销/直接/间接)", "mRender": function(data,type,full){
                         var detail=full.self+"/"+full.direct+"/"+full.indirect;

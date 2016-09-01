@@ -95,7 +95,7 @@ public class CashBackDaoImpl extends BaseDao implements CashBackDao {
         if (current.size() == 0) {
             result.setResponseCode(ResponseCode.RESPONSE_NULL);
         }
-        result.setData(current);
+        page.setData(current);
         result.setData(page);
         return result;
     }
