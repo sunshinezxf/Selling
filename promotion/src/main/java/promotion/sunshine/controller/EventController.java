@@ -67,18 +67,6 @@ public class EventController {
          * 先查询有没有该活动，然后查询用户是否已经填过表单，然后查询活动是否结束或未开始
 		 */
         Map<String, Object> condition = new HashMap<>();
-        condition.put("openId", openId);
-        condition.put("channel", "dingyue");
-        ResultData response = followerService.queryFollower(condition);
-        if (response.getResponseCode() != ResponseCode.RESPONSE_OK) {
-            Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "请求链接失效,请重新在订阅号中获取链接", "");
-            view.addObject("prompt", prompt);
-            String url = "http://mp.weixin.qq.com/s?__biz=MzI1OTMyNTI1NQ==&mid=100000233&idx=1&sn=85b05c7a3dca6429e66ddf7762de06aa#wechat_redirect";
-            WechatConfig.oauthWechat(view, "/event/" + eventName + "/" + openId, url);
-            view.setViewName("/customer/event/prompt");
-            return view;
-        }
-        condition.clear();
         condition.put("nickname", eventName);
         condition.put("blockFlag", false);
         ResultData fetchEventResponse = eventService.fetchGiftEvent(condition);
@@ -105,7 +93,18 @@ public class EventController {
             view.setViewName("/customer/event/prompt");
             return view;
         }
-
+        condition.clear();
+        condition.put("openId", openId);
+        condition.put("channel", "dingyue");
+        ResultData response = followerService.queryFollower(condition);
+        if (response.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "请求链接失效,请重新在订阅号中获取链接", "");
+            view.addObject("prompt", prompt);
+            String url = "http://mp.weixin.qq.com/s?__biz=MzI1OTMyNTI1NQ==&mid=100000233&idx=1&sn=85b05c7a3dca6429e66ddf7762de06aa#wechat_redirect";
+            WechatConfig.oauthWechat(view, "/event/" + eventName + "/" + openId, url);
+            view.setViewName("/customer/event/prompt");
+            return view;
+        }
         Timestamp now = new Timestamp(System.currentTimeMillis());
         if (now.before(event.getStart())) {
             Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "活动尚未开始", "");
