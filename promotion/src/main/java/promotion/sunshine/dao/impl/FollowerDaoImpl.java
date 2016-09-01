@@ -1,13 +1,16 @@
 package promotion.sunshine.dao.impl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Repository;
 import common.sunshine.dao.BaseDao;
 import common.sunshine.model.wechat.Follower;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Repository;
 import promotion.sunshine.dao.FollowerDao;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 微信服务号关注用户与持久层交互接口
@@ -18,6 +21,22 @@ public class FollowerDaoImpl extends BaseDao implements FollowerDao {
     private Logger logger = LoggerFactory.getLogger(FollowerDaoImpl.class);
 
     private Object lock = new Object();
+
+    @Override
+    public ResultData queryFollower(Map<String, Object> condition) {
+        ResultData result = new ResultData();
+        condition = handle(condition);
+        try {
+            List<Follower> list = sqlSession.selectList("promotion.wechat.query", condition);
+            result.setData(list);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription(e.getMessage());
+        } finally {
+            return result;
+        }
+    }
 
     /**
      * 添加关注用户信息记录
@@ -63,4 +82,5 @@ public class FollowerDaoImpl extends BaseDao implements FollowerDao {
             }
         }
     }
+
 }

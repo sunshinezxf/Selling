@@ -8,7 +8,7 @@
         <result property="gender" column="follower_gender"></result>
         <result property="city" column="follower_city"></result>
         <result property="province" column="follower_province"></result>
-        <result property="blockFalg" column="block_flag"></result>
+        <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
     </resultMap>
 
@@ -16,6 +16,28 @@
         REPLACE INTO follower(follower_wechat_id, follower_channel, follower_nickname, follower_gender, follower_city, follower_province, block_flag, create_time)
         VALUES (#{openId}, #{channel}, #{nickname}, #{gender}, #{city}, #{province}, #{blockFlag}, #{createAt})
     </insert>
+
+    <select id="query" parameterType="java.util.Map" resultMap="followerVo">
+        SELECT follower_wechat_id, follower_channel, follower_nickname, follower_gender, follower_city,
+        follower_province, block_flag, create_time
+        FROM follower
+        WHERE 1 = 1
+        <if test="openId != null">
+            AND follower_wechat_id = #{openId}
+        </if>
+        <if test="channel != null">
+            AND follower_channel = #{channel}
+        </if>
+        <if test="blockFlag != null">
+            AND block_flag = #{blockFlag}
+        </if>
+        <if test="rule != null">
+            ORDER BY ${rule}
+        </if>
+        <if test="rule == null">
+            ORDER BY create_time DESC
+        </if>
+    </select>
 
     <update id="block">
         UPDATE follower

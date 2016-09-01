@@ -460,20 +460,21 @@ ADD COLUMN `choice_type` TINYINT(1) NOT NULL DEFAULT 0
 AFTER `question_content`;
 
 ALTER TABLE `selling`.`event_application`
-ADD COLUMN `donee_age_range` VARCHAR(45) NOT NULL AFTER `donee_address`;
+ADD COLUMN `donee_age_range` VARCHAR(45) NOT NULL
+AFTER `donee_address`;
 
 CREATE TABLE IF NOT EXISTS `selling`.`event_order` (
   `event_order_id` VARCHAR(45) NOT NULL,
   `application_id` VARCHAR(45) NOT NULL,
-  `event_id` VARCHAR(45) NOT NULL,
-  `goods_id` VARCHAR(45) NOT NULL,
-  `donee_name` VARCHAR(45) NOT NULL,
-  `donee_phone` VARCHAR(45) NOT NULL,
-  `donee_address` VARCHAR(45) NOT NULL,
-  `order_status` TINYINT(3) NOT NULL,
-  `quantity` TINYINT(1) NOT NULL,
-  `block_flag` TINYINT(1) NOT NULL,
-  `create_time` DATETIME NOT NULL,
+  `event_id`       VARCHAR(45) NOT NULL,
+  `goods_id`       VARCHAR(45) NOT NULL,
+  `donee_name`     VARCHAR(45) NOT NULL,
+  `donee_phone`    VARCHAR(45) NOT NULL,
+  `donee_address`  VARCHAR(45) NOT NULL,
+  `order_status`   TINYINT(3)  NOT NULL,
+  `quantity`       TINYINT(1)  NOT NULL,
+  `block_flag`     TINYINT(1)  NOT NULL,
+  `create_time`    DATETIME    NOT NULL,
   PRIMARY KEY (`event_order_id`),
   INDEX `fk_event_order_event_application1_idx` (`application_id` ASC),
   INDEX `fk_event_order_event1_idx` (`event_id` ASC),
@@ -492,14 +493,42 @@ CREATE TABLE IF NOT EXISTS `selling`.`event_order` (
   FOREIGN KEY (`goods_id`)
   REFERENCES `selling`.`goods` (`goods_id`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON UPDATE NO ACTION
+)
   ENGINE = InnoDB;
 
 ##2016年8月29日更新
 ALTER TABLE `selling`.`event_application`
-ADD COLUMN `status` TINYINT(3) NOT NULL DEFAULT 0 AFTER `donee_age_range`;
+ADD COLUMN `status` TINYINT(3) NOT NULL DEFAULT 0
+AFTER `donee_age_range`;
 
 ##2016年8月30日更新
 ALTER TABLE `selling`.`follower`
-ADD COLUMN `follower_channel` VARCHAR(45) NOT NULL DEFAULT 'fuwu' AFTER `follower_wechat_id`;
+ADD COLUMN `follower_channel` VARCHAR(45) NOT NULL DEFAULT 'fuwu'
+AFTER `follower_wechat_id`;
+
+##2016年9月1日更新
+CREATE TABLE IF NOT EXISTS `selling`.`express_application` (
+  `express_id`       VARCHAR(20)  NOT NULL,
+  `event_order_id`   VARCHAR(20)  NOT NULL,
+  `express_no`       VARCHAR(20)  NOT NULL,
+  `sender_name`      VARCHAR(45)  NOT NULL,
+  `sender_phone`     VARCHAR(45)  NOT NULL,
+  `sender_address`   VARCHAR(50)  NOT NULL,
+  `receiver_name`    VARCHAR(45)  NOT NULL,
+  `receiver_phone`   VARCHAR(45)  NOT NULL,
+  `receiver_address` VARCHAR(50)  NOT NULL,
+  `goods_name`       VARCHAR(45)  NOT NULL,
+  `description`      VARCHAR(100) NULL,
+  `block_flag`       TINYINT(1)   NOT NULL,
+  `create_time`      DATETIME     NOT NULL,
+  PRIMARY KEY (`express_id`),
+  INDEX `fk_express_application_event_order1_idx` (`event_order_id` ASC),
+  CONSTRAINT `fk_express_application_event_order1`
+  FOREIGN KEY (`event_order_id`)
+  REFERENCES `selling`.`event_order` (`event_order_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+)
+  ENGINE = InnoDB;
 
