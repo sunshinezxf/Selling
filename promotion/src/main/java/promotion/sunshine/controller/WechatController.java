@@ -2,14 +2,9 @@ package promotion.sunshine.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.thoughtworks.xstream.XStream;
-import common.sunshine.model.wechat.InMessage;
+import common.sunshine.model.wechat.*;
 import common.sunshine.utils.Encryption;
-import common.sunshine.utils.ResponseCode;
-import common.sunshine.utils.ResultData;
 import common.sunshine.utils.XStreamFactory;
-
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,28 +12,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-
 import promotion.sunshine.service.FollowerService;
 import promotion.sunshine.utils.PlatformConfig;
 import promotion.sunshine.utils.WechatUtil;
-import common.sunshine.model.wechat.Article;
-import common.sunshine.model.wechat.Articles;
-import common.sunshine.model.wechat.Follower;
-import common.sunshine.model.wechat.TextOutMessage;
 
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by sunshine on 8/22/16.
@@ -46,8 +29,8 @@ import java.util.Map;
 @RestController
 public class WechatController {
     private Logger logger = LoggerFactory.getLogger(WechatController.class);
-    
-//    private static String KEFU1 = "ytSMk-WMouat73cGNz5jwBVCCs6hDPl071GteBgYa32oYqAw6lT9yMedTFzoeQx6";
+
+    //    private static String KEFU1 = "ytSMk-WMouat73cGNz5jwBVCCs6hDPl071GteBgYa32oYqAw6lT9yMedTFzoeQx6";
 //    private static String KEFU2 = "aP2fkurURlOPGxaL-4MNdkTZLK41i_676GjdaaeWi8dz95RzS8cHo6ZACo35Qz1D";
 //    private static String KEFU3 = "nNre-oi78h1iTmRfSwNJcTr5W0Lw9VkNXzLCZu8P6DRO71J_D6dsKLr_5OWvH78k";
 //    private static String KEFU4 = "Eca1cAZ0-cryjo8hI5CTGKxyupPYFJFTd8PYZaWBu1AceJHvDpYhmugsBmqFDUgs";
@@ -56,7 +39,7 @@ public class WechatController {
     private static String KEFU3 = "Fk1CCke3zdxLUi-x3PGAxTOUCE1pVLf2dLbvr-1EfTM";
     private static String KEFU4 = "Fk1CCke3zdxLUi-x3PGAxahgQ0VEBAKlKYoPr_9ezzQ";
     private static String SHARE = "Fk1CCke3zdxLUi-x3PGAxR42Uic4siplrF5Z1TFQAeg";
-    
+
     @Autowired
     private FollowerService followerService;
 
@@ -86,7 +69,7 @@ public class WechatController {
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/wechat", produces = "text/xml;charset=utf-8")
     public String handle(HttpServletRequest request, HttpServletResponse response) {
-    	try {
+        try {
             ServletInputStream stream = request.getInputStream();
             String input = WechatUtil.inputStream2String(stream);
             XStream content = XStreamFactory.init(false);
@@ -94,18 +77,18 @@ public class WechatController {
             final InMessage message = (InMessage) content.fromXML(input);
             HttpSession session = request.getSession();
             session.setAttribute("openId", message.getFromUserName());
+            Thread thread = new Thread() {
+                @Override
+                public void run() {
+                    Follower follower = WechatUtil.queryUserInfo(message.getFromUserName(), PlatformConfig.getAccessToken());
+                    follower.setChannel("dingyue");
+                    logger.debug("imhere2");
+                    followerService.subscribe(follower);
+                }
+            };
+            thread.start();
             switch (message.getMsgType()) {
                 case "event":
-                	 Thread thread = new Thread() {
-                         @Override
-                         public void run() {
-                             Follower follower = WechatUtil.queryUserInfo(message.getFromUserName(), PlatformConfig.getAccessToken());
-                             follower.setChannel("dingyue");
-                             logger.debug("imhere2");
-                             followerService.subscribe(follower);
-                         }
-                     };
-                     thread.start();
                     if (message.getEvent().equals("subscribe")) {
                         content.alias("xml", Articles.class);
                         content.alias("item", Article.class);
@@ -150,34 +133,34 @@ public class WechatController {
                             String xml = content.toXML(result);
                             return xml;
                         }
-                        if(message.getEventKey().equalsIgnoreCase("giftEvent")) {
-                        	 String openId = message.getFromUserName();
-                             content.alias("xml", Articles.class);
-                             content.alias("item", Article.class);
-                             Articles result = new Articles();
-                             result.setFromUserName(message.getToUserName());
-                             result.setToUserName(message.getFromUserName());
-                             result.setCreateTime(new Date().getTime());
-                             List<Article> list = new ArrayList<>();
-                             Article welcome = new Article();
-                             welcome.setTitle("中秋送礼｜您给TA的礼物，我们准备");
-                             welcome.setPicUrl("https://mmbiz.qlogo.cn/mmbiz_jpg/LvSutA9l9GomT0kIicicnlUhIrv1Vo9nnfkI7d2q1OyyIhB31ySyokloljpnFSOF6oMfejvt25WnPkNAia5HkQ5Og/0?wx_fmt=jpeg");
-                             welcome.setUrl("http://event.yuncaogangmu.com/event/zqhd/" + openId);
-                             list.add(welcome);
-                             result.setArticles(list);
-                             result.setArticleCount(list.size());
-                             content.processAnnotations(Article.class);
-                             String xml = content.toXML(result);
-                             logger.debug(JSON.toJSONString(xml));
-                             return xml;
+                        if (message.getEventKey().equalsIgnoreCase("giftEvent")) {
+                            String openId = message.getFromUserName();
+                            content.alias("xml", Articles.class);
+                            content.alias("item", Article.class);
+                            Articles result = new Articles();
+                            result.setFromUserName(message.getToUserName());
+                            result.setToUserName(message.getFromUserName());
+                            result.setCreateTime(new Date().getTime());
+                            List<Article> list = new ArrayList<>();
+                            Article welcome = new Article();
+                            welcome.setTitle("中秋送礼｜您给TA的礼物，我们准备");
+                            welcome.setPicUrl("https://mmbiz.qlogo.cn/mmbiz_jpg/LvSutA9l9GomT0kIicicnlUhIrv1Vo9nnfkI7d2q1OyyIhB31ySyokloljpnFSOF6oMfejvt25WnPkNAia5HkQ5Og/0?wx_fmt=jpeg");
+                            welcome.setUrl("http://event.yuncaogangmu.com/event/zqhd/" + openId);
+                            list.add(welcome);
+                            result.setArticles(list);
+                            result.setArticleCount(list.size());
+                            content.processAnnotations(Article.class);
+                            String xml = content.toXML(result);
+                            logger.debug(JSON.toJSONString(xml));
+                            return xml;
                         }
                     }
                     break;
                 case "text":
-                	if (message.getContent().equals("团圆")) {
-                		String openId = message.getFromUserName();
-                		content.alias("xml", TextOutMessage.class);
-                    	TextOutMessage result = new TextOutMessage();
+                    if (message.getContent().equals("团圆")) {
+                        String openId = message.getFromUserName();
+                        content.alias("xml", TextOutMessage.class);
+                        TextOutMessage result = new TextOutMessage();
                         result.setFromUserName(message.getToUserName());
                         result.setToUserName(message.getFromUserName());
                         result.setCreateTime(new Date().getTime());
@@ -190,14 +173,14 @@ public class WechatController {
                         String twentythree = "23:00:00";
                         String now = (new SimpleDateFormat("HH:mm:ss")).format(new Date());
                         String media_id = null;
-                        if(now.compareTo(twentythree) >= 0 || thirteen.compareTo(now) >= 0) {
-                        	media_id = KEFU1;
-                        } else if(now.compareTo(thirteen) >= 0 && seventeen.compareTo(now) >= 0) {
-                        	media_id = KEFU2;
-                        } else if(now.compareTo(seventeen) >=0 && twenty.compareTo(now) >= 0) {
-                        	media_id = KEFU3;
+                        if (now.compareTo(twentythree) >= 0 || thirteen.compareTo(now) >= 0) {
+                            media_id = KEFU1;
+                        } else if (now.compareTo(thirteen) >= 0 && seventeen.compareTo(now) >= 0) {
+                            media_id = KEFU2;
+                        } else if (now.compareTo(seventeen) >= 0 && twenty.compareTo(now) >= 0) {
+                            media_id = KEFU3;
                         } else {
-                        	media_id = KEFU4;
+                            media_id = KEFU4;
                         }
                         String token = WechatUtil.queryAccessToken();
                         WechatUtil.sendImageMessage(token, openId, SHARE);
@@ -211,7 +194,7 @@ public class WechatController {
         }
         return "";
     }
-    
+
     private List<Article> subscribe() {
         List<Article> list = new ArrayList<>();
         Article welcome = new Article();
