@@ -79,7 +79,7 @@
                             申请列表</a>
                         </li>
                         <li><a class="sub-nav" href="${path.concat('/event/present')}"><i class="fa fa-cog"></i>
-                            赠送列表</a>
+                            赠送订单</a>
                         </li>
                     </ul>
                 </li>
