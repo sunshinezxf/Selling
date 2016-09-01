@@ -16,7 +16,7 @@ public class EventOrder extends Entity {
 
     private String doneePhone;
 
-    private String donneAddress;
+    private String doneeAddress;
 
     private OrderItemStatus orderStatus;
 
@@ -52,15 +52,15 @@ public class EventOrder extends Entity {
         this.doneePhone = doneePhone;
     }
 
-    public String getDonneAddress() {
-        return donneAddress;
-    }
+    public String getDoneeAddress() {
+		return doneeAddress;
+	}
 
-    public void setDonneAddress(String donneAddress) {
-        this.donneAddress = donneAddress;
-    }
+	public void setDoneeAddress(String doneeAddress) {
+		this.doneeAddress = doneeAddress;
+	}
 
-    public OrderItemStatus getOrderStatus() {
+	public OrderItemStatus getOrderStatus() {
         return orderStatus;
     }
 

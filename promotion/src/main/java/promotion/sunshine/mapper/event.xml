@@ -58,5 +58,6 @@
     	SELECT option_id, option_value, block_flag, create_time
     	FROM question_option
     	WHERE question_id = #{questionId}
+    	ORDER BY create_time
     </select>
 </mapper>

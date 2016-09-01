@@ -53,6 +53,7 @@ public class WechatController {
     private static String KEFU2 = "Fk1CCke3zdxLUi-x3PGAxWkGUzd-t5-BktNRO2ZVOtE";
     private static String KEFU3 = "Fk1CCke3zdxLUi-x3PGAxTOUCE1pVLf2dLbvr-1EfTM";
     private static String KEFU4 = "Fk1CCke3zdxLUi-x3PGAxahgQ0VEBAKlKYoPr_9ezzQ";
+    private static String SHARE = "Fk1CCke3zdxLUi-x3PGAxR42Uic4siplrF5Z1TFQAeg";
     
     @Autowired
     private FollowerService followerService;
@@ -196,7 +197,9 @@ public class WechatController {
                         } else {
                         	media_id = KEFU4;
                         }
-                        WechatUtil.sendImageMessage(WechatUtil.queryAccessToken(), openId, media_id);
+                        String token = WechatUtil.queryAccessToken();
+                        WechatUtil.sendImageMessage(token, openId, SHARE);
+                        WechatUtil.sendImageMessage(token, openId, media_id);
                         return xml;
                     }
                     break;
