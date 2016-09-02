@@ -11,6 +11,10 @@ public class QuestionAnswer extends Entity {
     private String content;
     private String option;
     private int rank;
+    
+    public QuestionAnswer(){
+    	super();
+    }
 
     public QuestionAnswer(EventApplication application, String content, String option, int rank){
     	this.application = application;
