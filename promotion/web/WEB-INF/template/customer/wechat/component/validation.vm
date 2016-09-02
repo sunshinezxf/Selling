@@ -21,7 +21,7 @@
             wx.onMenuShareAppMessage({
                 title: title, // 分享标题
                 desc: description, // 分享描述
-                link: '${configuration.shareLink}', // 分享链接
+                link: 'http://mp.weixin.qq.com/s?__biz=MzI1OTMyNTI1NQ==&mid=2247483894&idx=1&sn=f7287ed4a14136b12784691b59621694&scene=1&srcid=0901tai95Ao9ckmzi44WfQCC#rd', // 分享链接
                 imgUrl: "http://www.yuncaogangmu.com/material/images/logo.jpeg", // 分享图标
                 type: '', // 分享类型,music、video或link，不填默认为link
                 dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
@@ -33,7 +33,7 @@
             // 2.2 监听“分享到朋友圈”按钮点击、自定义分享内容及分享结果接口
             wx.onMenuShareTimeline({
                 title: title,
-                link: '${configuration.shareLink}',
+                link: 'http://mp.weixin.qq.com/s?__biz=MzI1OTMyNTI1NQ==&mid=2247483894&idx=1&sn=f7287ed4a14136b12784691b59621694&scene=1&srcid=0901tai95Ao9ckmzi44WfQCC#rd',
                 imgUrl: "http://www.yuncaogangmu.com/material/images/logo.jpeg",
                 trigger: function (res) {
                 },

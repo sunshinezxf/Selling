@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.thoughtworks.xstream.XStream;
 import common.sunshine.model.wechat.*;
 import common.sunshine.utils.Encryption;
+import common.sunshine.utils.ResultData;
 import common.sunshine.utils.XStreamFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,10 +81,12 @@ public class WechatController {
             new Thread() {
                 @Override
                 public void run() {
-                    Follower follower = WechatUtil.queryUserInfo(message.getFromUserName(), PlatformConfig.getAccessToken());
+                	String token = PlatformConfig.getAccessToken();
+                    Follower follower = WechatUtil.queryUserInfo(message.getFromUserName(), token);
                     follower.setChannel("dingyue");
                     logger.debug("imhere2");
-                    followerService.subscribe(follower);
+                    ResultData rtn = followerService.subscribe(follower);
+                    logger.debug(JSON.toJSONString(rtn));
                 }
             }.start();
             switch (message.getMsgType()) {
@@ -162,7 +165,7 @@ public class WechatController {
                         result.setFromUserName(message.getToUserName());
                         result.setToUserName(message.getFromUserName());
                         result.setCreateTime(new Date().getTime());
-                        result.setContent("1. 请点击下方菜单栏“中秋活动”，填写领取申请。填写完毕后请按右上角转发至朋友圈（如图1），将您的好消息分享给更多亲朋～\n2. 扫码添加健康大使微信（图2），将第1步的转发截图，以及您的信息获取来源截图给健康大使（比如您在谁的朋友圈看到活动信息，就将他的那条朋友圈分享截图；如果直接是公众号获取，就发公众号截图）。如果您有任何问题，都可以咨询这位健康大使，TA会为您提供1对1的定制健康服务哦～");
+                        result.setContent("1. 点击下方菜单栏“活动”中的“中秋活动”，申请页面自动弹出。填写完毕后请按右上角转发至朋友圈（如图1），将好消息分享给更多亲朋～\n2. 扫码添加健康大使（图2），将第1步您的转发截图发送给TA，并告诉TA您最早是从哪里知道我们的活动消息～\n填链接，转票圈；加大使，发截图；搞定！如果您有任何问题，都可以咨询健康大使，TA会为您提供1对1的定制健康服务哦～");
                         String xml = content.toXML(result);
                         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
                         String thirteen = "13:00:00";

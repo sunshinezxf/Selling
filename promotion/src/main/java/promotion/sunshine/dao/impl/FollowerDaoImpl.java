@@ -7,6 +7,9 @@ import common.sunshine.utils.ResultData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
+
+import com.alibaba.fastjson.JSON;
+
 import promotion.sunshine.dao.FollowerDao;
 
 import java.util.List;

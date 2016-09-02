@@ -7,6 +7,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.alibaba.fastjson.JSON;
+
 import promotion.sunshine.dao.FollowerDao;
 import promotion.sunshine.service.FollowerService;
 
@@ -42,10 +45,13 @@ public class FollowerServiceImpl implements FollowerService {
 
     @Override
     public ResultData subscribe(Follower follower) {
+    	logger.debug("follower");
+    	logger.debug(JSON.toJSONString(follower));
         ResultData result = new ResultData();
         Map<String, Object> condition = new HashMap<>();
         condition.put("openId", follower.getOpenId());
         condition.put("channel", follower.getChannel());
+        condition.put("blockFlag", false);
         ResultData response = followerDao.queryFollower(condition);
         if (response.getResponseCode() == ResponseCode.RESPONSE_OK && !((List) response.getData()).isEmpty()) {
             result.setResponseCode(ResponseCode.RESPONSE_OK);

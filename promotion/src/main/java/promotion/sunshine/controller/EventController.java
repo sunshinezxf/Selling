@@ -92,7 +92,7 @@ public class EventController {
             WechatConfig.oauthWechat(view, "/event/" + eventName + "/" + openId, url);
             view.setViewName("/customer/event/prompt");
             return view;
-        }
+        }/*
         condition.clear();
         condition.put("openId", openId);
         condition.put("channel", "dingyue");
@@ -104,7 +104,7 @@ public class EventController {
             WechatConfig.oauthWechat(view, "/event/" + eventName + "/" + openId, url);
             view.setViewName("/customer/event/prompt");
             return view;
-        }
+        }*/
         Timestamp now = new Timestamp(System.currentTimeMillis());
         if (now.before(event.getStart())) {
             Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "活动尚未开始", "");
