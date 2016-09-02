@@ -8,10 +8,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import selling.sunshine.dao.CustomerOrderDao;
+import selling.sunshine.dao.EventDao;
 import selling.sunshine.dao.ExpressDao;
 import selling.sunshine.dao.OrderDao;
 import selling.sunshine.dao.OrderItemDao;
 import common.sunshine.model.selling.order.CustomerOrder;
+import common.sunshine.model.selling.order.EventOrder;
 import common.sunshine.model.selling.order.Order;
 import common.sunshine.model.selling.order.OrderItem;
 import common.sunshine.model.selling.order.support.OrderItemStatus;
@@ -47,6 +49,9 @@ public class ExpressServiceImpl implements ExpressService {
     
     @Autowired
     private CustomerOrderDao customerOrderDao;
+    
+    @Autowired
+    private EventDao eventDao; 
     
     @Override
     public ResultData createExpress(Express4Agent express) {
@@ -221,6 +226,7 @@ public class ExpressServiceImpl implements ExpressService {
 				orderDao.updateOrderLite(order);
 			}
 		}
+		
 		status.clear();
 		condition.clear();
 		status.add(2);
@@ -266,6 +272,56 @@ public class ExpressServiceImpl implements ExpressService {
 					if(scanType.equals("签收")){
 						customerOrder.setStatus(OrderItemStatus.RECEIVED);
 						customerOrderDao.updateOrder(customerOrder);
+					}
+				}
+			}
+		}
+		
+		status.clear();
+		condition.clear();
+		status.add(2);
+		condition.put("status", status);
+		condition.put("blockFlag", false);
+		ResultData fetchEventOrderResponse = eventDao.queryEventOrder(condition);
+		if(fetchEventOrderResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR){
+			result.setResponseCode(fetchEventOrderResponse.getResponseCode());
+			result.setDescription(fetchEventOrderResponse.getDescription());
+			logger.error(fetchEventOrderResponse.getDescription());
+			return result;
+		}
+		List<EventOrder> eventOrders = (List<EventOrder>) fetchEventOrderResponse.getData();
+		for(EventOrder eventOrder : eventOrders) {
+			condition.clear();
+			condition.put("orderId", eventOrder.getOrderId());
+			condition.put("blockFlag", false);
+			ResultData fetchExpressResponse = expressDao.queryExpress4Application(condition);
+			if(fetchExpressResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR){
+				result.setResponseCode(fetchExpressResponse.getResponseCode());
+				result.setDescription(fetchExpressResponse.getDescription());
+				logger.error(fetchExpressResponse.getDescription());
+				return result;
+			}
+			if(((List<Express>)fetchExpressResponse.getData()).isEmpty()){
+				continue;
+			}
+			Express express = ((List<Express>) fetchExpressResponse.getData()).get(0);
+			ResultData fetchWuliuResponse =  traceExpress(express.getExpressNumber(), "LATEST");
+			if(fetchWuliuResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR){
+				result.setResponseCode(fetchWuliuResponse.getResponseCode());
+				result.setDescription(fetchWuliuResponse.getDescription());
+				logger.error(fetchWuliuResponse.getDescription());
+				return result;
+			}
+			JSONObject wuliu = JSONObject.parseObject((String)fetchWuliuResponse.getData());
+			JSONArray wuliuInfo = wuliu.getJSONArray("data");
+			if(wuliuInfo != null && !wuliuInfo.isEmpty()){
+				JSONObject wuliuInfoInner = wuliuInfo.getJSONObject(0);
+				JSONObject traces = wuliuInfoInner.getJSONObject("traces");
+				if(traces != null && !traces.isEmpty()) {
+					String scanType = traces.getString("scanType");
+					if(scanType.equals("签收")){
+						eventOrder.setOrderStatus(OrderItemStatus.RECEIVED);
+						eventDao.updateEventOrder(eventOrder);
 					}
 				}
 			}
