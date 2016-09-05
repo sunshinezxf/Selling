@@ -95,13 +95,11 @@ $(document).ready(function () {
 });
 
 $("#expressAll").click(function(){
-	 window.location.href = "${path.concat('/event/order/expressAll')}";
-	 $("#event_present_table").DataTable().ajax.reload(null, true);
+	 window.location.href = "${path.concat('/event/order/expressAll')}";	 
 });
 
 function express(obj){
 	window.location.href = "${path.concat('/event/order/express/')}"+obj.id;
-	$("#event_present_table").DataTable().ajax.reload(null, true);
 }
 
 </script>
