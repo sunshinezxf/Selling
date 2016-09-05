@@ -11,6 +11,10 @@
     </div>
     <div class="row">
         <div class="col-md-12 col-lg-12">
+           #if(${size})
+             <button type="button" class="btn btn-info" id="presentAll">一键赠送</button> 
+           #end  
+           <br>
             <table id="event_application_table" class="table table-striped table-bordered" cellspacing="0" width="100%">
             </table>
 
@@ -115,6 +119,10 @@ function detail(obj){
 		
 	
 }
+
+$("#presentAll").click(function(){
+	 window.location.href = "${path.concat('/event/presentAll')}";	 
+});
 
 
 </script>

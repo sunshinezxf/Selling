@@ -161,6 +161,13 @@ public class EventController {
 		ResultData queryResult = eventService.fetchGiftEvent(condition);
 		if (queryResult.getResponseCode() == ResponseCode.RESPONSE_OK) {
 			view.addObject("giftEvent", ((List<GiftEvent>) queryResult.getData()).get(0));
+			condition.clear();
+			condition.put("status", 0);
+			ResultData fetchResponse = eventService.fetchEventApplication(condition);
+			if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+				int size=((List<EventApplication>)fetchResponse.getData()).size();
+				view.addObject("size", size);
+			}
 		}
 		view.setViewName("backend/event/application");
 		return view;
@@ -248,6 +255,36 @@ public class EventController {
 		}
 
 		return resultData;
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/presentAll")
+	public ModelAndView presentAll(){
+		ModelAndView view=new ModelAndView();
+		ResultData resultData = new ResultData();
+		Map<String, Object> condition = new HashMap<>();
+		condition.put("status", 0);
+		resultData = eventService.fetchEventApplication(condition);
+		if (resultData.getResponseCode() == ResponseCode.RESPONSE_OK) {
+			List<EventApplication> eventApplications=(List<EventApplication>) resultData.getData();
+			for (EventApplication eventApplication:eventApplications) {
+				eventApplication.setStatus(ApplicationStatus.APPROVED);
+				resultData = eventService.updateEventApplication(eventApplication);
+				EventOrder eventOrder = new EventOrder();
+				eventOrder.setDoneeName(eventApplication.getDoneeName());
+				eventOrder.setDoneePhone(eventApplication.getDoneePhone());
+				eventOrder.setDoneeAddress(eventApplication.getDoneeAddress());
+				eventOrder.setQuantity(1);
+				eventOrder.setApplication(eventApplication);
+				eventOrder.setEvent(eventApplication.getEvent());
+				eventOrder.setOrderStatus(OrderItemStatus.PAYED);
+				Goods4Customer goods = new Goods4Customer();
+				goods.setGoodsId("COMyfxwez26");
+				eventOrder.setGoods(goods);
+				resultData = eventService.createEventOrder(eventOrder);
+			}
+		}
+        view.setViewName("redirect:/event/present");
+		return view;
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/reject/{applicationId}")
