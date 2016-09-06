@@ -25,7 +25,7 @@
                 <h4 class="modal-title">提示</h4>
             </div>
             <div class="modal-body">
-              <text>点击赠送之后就会将申请人加入赠送名单中（无法修改），是否确定？</text>
+              <text>点击确定之后就将发送短信给赠送人，是否确定？</text>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal" >取消</button>
