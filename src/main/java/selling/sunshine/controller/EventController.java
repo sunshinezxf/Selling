@@ -52,6 +52,7 @@ import common.sunshine.utils.ResultData;
 import selling.sunshine.form.EventQuestionForm;
 import selling.sunshine.form.GiftEventForm;
 import selling.sunshine.service.EventService;
+import selling.sunshine.service.MessageService;
 import selling.sunshine.utils.PlatformConfig;
 
 /**
@@ -64,6 +65,9 @@ public class EventController {
 
 	@Autowired
 	private EventService eventService;
+	
+	@Autowired
+	private MessageService messageService;
 
 	@RequestMapping(method = RequestMethod.GET, value = "/create")
 	public ModelAndView create() {
@@ -434,6 +438,22 @@ public class EventController {
 			os.close();
 		}
 		return "";
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/sendMessage/{eventId}")
+	public ResultData sendMessage(@PathVariable("eventId") String eventId){
+		ResultData resultData=new ResultData();
+		Map<String, Object> condition = new HashMap<>();
+		condition.put("eventId", eventId);
+		condition.put("status", 2);
+		ResultData fetchResponse = eventService.fetchEventApplication(condition);
+		if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+			List<EventApplication> eventApplications=(List<EventApplication>)fetchResponse.getData();
+			for(EventApplication eventApplication:eventApplications){
+				messageService.send(eventApplication.getDonorPhone(), "");
+			}
+		}
+		return resultData;
 	}
 
 }

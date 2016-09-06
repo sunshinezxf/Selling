@@ -17,6 +17,23 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="dialog_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">x</button>
+                <h4 class="modal-title">提示</h4>
+            </div>
+            <div class="modal-body">
+              <text>点击赠送之后就会将申请人加入赠送名单中（无法修改），是否确定？</text>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" >取消</button>
+                <button type="button" class="btn btn-success" data-dismiss="modal"  id="dialog_confirm">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
     $(document).ready(function () {
         $("#event_overview_table").DataTable({
@@ -76,6 +93,10 @@
                     var operation = "";
                     var detail_button = "<button type='button' class='btn btn-success btn-group-sm' id='" + full.eventId + "' onclick=detail(this) >详情</button>&nbsp;"
                     operation += detail_button;
+                    if(full.blockFlag){
+                    	 var send_button = "<button type='button' class='btn btn-success btn-group-sm' id='" + full.eventId + "' onclick=getId(this) data-toggle='modal' data-target='#dialog_modal'>发送短信</button>&nbsp;"
+                         operation += send_button;
+                    }
                     return operation;
                 }
                 }
@@ -102,4 +123,18 @@
     function detail(obj) {
     	window.location.href="${path.concat('/event/')}"+obj.id;
     }
+    
+    var eventId;
+    function getId(obj) {
+    	eventId=obj.id;
+    }
+    
+    $("#dialog_confirm").on('click', function () {
+    	window.location.href="${path.concat('/event/sendMessage/')}"+eventId;   	
+    });
+    
+    $("#dialog_modal").modal({
+        show: false,
+        keyboard: true
+    });
  </script>
