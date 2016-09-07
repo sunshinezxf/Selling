@@ -450,7 +450,7 @@ public class EventController {
 		if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
 			List<EventApplication> eventApplications=(List<EventApplication>)fetchResponse.getData();
 			for(EventApplication eventApplication:eventApplications){
-				messageService.send(eventApplication.getDonorPhone(), "【云草纲目】悠悠寸草心，云草见真情。恭喜您获赠云草纲目超细三七粉。8号发货，快递5天。如有疑问，欢迎咨询健康大使。预祝您身体健康，阖家团圆！");
+				messageService.send(eventApplication.getDonorPhone(), "悠悠寸草心，云草见真情。恭喜您获赠云草纲目超细三七粉。8号发货，快递5天。如有疑问，欢迎咨询健康大使。预祝您身体健康，阖家团圆！【云草纲目】");
 			}
 		}
 		return resultData;
