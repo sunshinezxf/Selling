@@ -440,12 +440,12 @@ public class EventController {
 		return "";
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value = "/sendMessage/{eventId}")
+	@RequestMapping(method = RequestMethod.POST, value = "/sendMessage/{eventId}")
 	public ResultData sendMessage(@PathVariable("eventId") String eventId){
 		ResultData resultData=new ResultData();
 		Map<String, Object> condition = new HashMap<>();
 		condition.put("eventId", eventId);
-		condition.put("status", 2);
+		condition.put("status", ApplicationStatus.APPROVED.getCode());
 		ResultData fetchResponse = eventService.fetchEventApplication(condition);
 		if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
 			List<EventApplication> eventApplications=(List<EventApplication>)fetchResponse.getData();

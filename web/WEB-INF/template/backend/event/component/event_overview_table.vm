@@ -25,11 +25,27 @@
                 <h4 class="modal-title">提示</h4>
             </div>
             <div class="modal-body">
-              <text>点击确定之后就将发送短信给赠送人，是否确定？</text>
+              <text>点击确定之后就将发送短信给赠送人，是否确定？（注意不要重复发送）</text>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal" >取消</button>
                 <button type="button" class="btn btn-success" data-dismiss="modal"  id="dialog_confirm">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="dialog_modal2" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">x</button>
+                <h4 class="modal-title">提示</h4>
+            </div>
+            <div class="modal-body">
+              <text>发送短信成功！</text>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-dismiss="modal" >确定</button>
             </div>
         </div>
     </div>
@@ -94,7 +110,7 @@
                     var detail_button = "<button type='button' class='btn btn-success btn-group-sm' id='" + full.eventId + "' onclick=detail(this) >详情</button>&nbsp;"
                     operation += detail_button;
                     if(full.blockFlag){
-                    	 var send_button = "<button type='button' class='btn btn-success btn-group-sm' id='" + full.eventId + "' onclick=getId(this) data-toggle='modal' data-target='#dialog_modal'>发送短信</button>&nbsp;"
+                    	 var send_button = "<button type='button' class='btn btn-info btn-group-sm' id='ID" + full.eventId + "' onclick=getId(this) data-toggle='modal' data-target='#dialog_modal'>发送短信</button>&nbsp;"
                          operation += send_button;
                     }
                     return operation;
@@ -130,10 +146,21 @@
     }
     
     $("#dialog_confirm").on('click', function () {
-    	window.location.href="${path.concat('/event/sendMessage/')}"+eventId;   	
+    	var id=eventId.substring(2);
+    	$.post("${path.concat('/event/sendMessage/')}"+id,function(result){
+    		if(result.responseCode=='RESPONSE_OK'){
+    			$("#dialog_modal2").modal('show');
+    			$("#"+eventId).hide();
+    		}
+    	});
     });
     
     $("#dialog_modal").modal({
+        show: false,
+        keyboard: true
+    });
+    
+    $("#dialog_modal2").modal({
         show: false,
         keyboard: true
     });
