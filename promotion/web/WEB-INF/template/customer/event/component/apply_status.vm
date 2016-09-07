@@ -44,11 +44,11 @@
             </div>
             #elseif(${eventApplication.status}=="REJECTED")
             <div class="weui_cell_bd weui_cell_primary">
-                <a class="weui_input result" href="">查看申请结果</a>
+                <a class="weui_input result" href="javascript:;" onclick="$.reject()">查看申请结果</a>
             </div>
             #else
             <div class="weui_cell_bd weui_cell_primary">
-                <a class="weui_input result" href="">查看申请结果</a>
+                <a class="weui_input result" href="javascript:;" onclick="$.approve()">查看申请结果</a>
             </div>
             #end
         </div>
