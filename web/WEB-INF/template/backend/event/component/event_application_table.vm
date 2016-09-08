@@ -33,9 +33,16 @@
         </div>
     </div>
 </div>
+<div id="loading">
+    <img src="${path.concat('/material/images/ajax-loader.gif')}">
+</div>
 #parse("/backend/event/component/application_detail_modal.vm")
 <script>
 $(document).ready(function () {
+    $("#loading").width($(document).width());
+    $("#loading").height($(document).height());
+    $("#loading").hide();
+
 	var event_id="${giftEvent.eventId}";
     var url="${path.concat('/event/application/')}"+"${giftEvent.eventId}"+"/0";
     $("#event_application_table").DataTable({
@@ -216,7 +223,14 @@ function detail(obj){
 }
 
 function presentAll(){
-	 window.location.href = "${path.concat('/event/presentAll/')}"+"${giftEvent.eventId}";	 
+     $("#loading").show();
+     var url="${path.concat('/event/presentAll/')}"+"${giftEvent.eventId}";
+	 $.get(url,function(result){
+	     if(result.responseCode=="RESPONSE_OK"){
+	         $("#loading").hide();
+	         window.location.reload();
+	     }
+	 });	 
 }
 
 
