@@ -71,7 +71,7 @@ public class EventController {
         condition.put("blockFlag", false);
         ResultData fetchEventResponse = eventService.fetchGiftEvent(condition);
         if (fetchEventResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
-            Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "未找到该活动", "");
+            Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "活动已结束", "");
             view.addObject("prompt", prompt);
             String url = "http://mp.weixin.qq.com/s?__biz=MzI1OTMyNTI1NQ==&mid=100000233&idx=1&sn=85b05c7a3dca6429e66ddf7762de06aa#wechat_redirect";
             WechatConfig.oauthWechat(view, "/event/" + eventName + "/" + openId, url);

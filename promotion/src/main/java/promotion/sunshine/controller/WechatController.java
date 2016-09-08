@@ -159,6 +159,7 @@ public class WechatController {
                     break;
                 case "text":
                     if (message.getContent().equals("团圆")) {
+                    	/*
                         String openId = message.getFromUserName();
                         content.alias("xml", TextOutMessage.class);
                         TextOutMessage result = new TextOutMessage();
@@ -187,6 +188,7 @@ public class WechatController {
                         WechatUtil.sendImageMessage(token, openId, SHARE);
                         WechatUtil.sendImageMessage(token, openId, media_id);
                         return xml;
+                        */
                     }
                     break;
             }
@@ -204,12 +206,6 @@ public class WechatController {
         welcome.setPicUrl("https://mmbiz.qlogo.cn/mmbiz/zhe7KjM5iaS8Z1VmBFxR793iaJhia9fKCkz0BibJy4bWnLrhLlWHVAqibXGZQz1KiaqWBg6Ikzw7Mbs97EHq1bO6uZibw/0?wx_fmt=jpeg");
         welcome.setUrl("http://mp.weixin.qq.com/s?__biz=MzI1OTMyNTI1NQ==&mid=2247483666&idx=1&sn=84bdafae0d39c1c9d4c1b85bb8bf184a");
         list.add(welcome);
-        Article guidance = new Article();
-        guidance.setTitle("使用指南｜云草纲目代理商管理手册");
-        guidance.setDescription("欢迎加入“云草纲目”大家庭，我们共同努力把最信任的佳品分享给身边最在乎的人。");
-        guidance.setPicUrl("https://mmbiz.qlogo.cn/mmbiz/zhe7KjM5iaSibkQicWl47EG0pdFrtLBx96445SZ2qdVOLcl0Lbjn0SCibGO0MFHiccRaoniawAaM8JBmPdIiavbFKmRNA/0?wx_fmt=jpeg");
-        guidance.setUrl("http://mp.weixin.qq.com/s?__biz=MzIwNjI1OTY2Mg==&mid=503177455&idx=1&sn=ad4c39e7083a36e89009e4f72ef4f139");
-        list.add(guidance);
         Article product = new Article();
         product.setTitle("何为三七｜参中之王，千金不换");
         product.setDescription("现代研究发现，三七的化学成分和药理作用与人参相似，但其治疗外伤和心血管病的功能则是人参无法比拟的。因为人们对三七的药效的了解比人参晚了1000多年；所以，三七的名气没有人参那么大，但是他却是名副其实的参中之王。");
