@@ -109,7 +109,7 @@
     $("#present_confirm").on('click', function () {
     	$("#application_detail_modal").modal('hide');
     	$.post("${path.concat('/event/agree/')}"+$("#applicationId").html(),function(data){
-    		window.location.href="${path.concat('/event/application')}";
+    		window.location.href="${path.concat('/event/application/')}"+"${giftEvent.eventId}";
     	});
     	
     });
@@ -117,7 +117,7 @@
     $("#reject_confirm").on('click', function () {
     	$("#application_detail_modal").modal('hide');
     	$.post("${path.concat('/event/reject/')}"+$("#applicationId").html(),function(data){
-    		window.location.href="${path.concat('/event/application')}";
+    		window.location.href="${path.concat('/event/application/')}"+"${giftEvent.eventId}";
     	});
     	
     });
