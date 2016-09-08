@@ -177,15 +177,15 @@ public class EventController {
 		return view;
 	}
 
-	@RequestMapping(method = RequestMethod.POST, value = "/application/{eventId}")
-	public DataTablePage<EventApplication> application(@PathVariable("eventId") String eventId, DataTableParam param) {
+	@RequestMapping(method = RequestMethod.POST, value = "/application/{eventId}/{status}")
+	public DataTablePage<EventApplication> application(@PathVariable("eventId") String eventId,@PathVariable("status") String status, DataTableParam param) {
 		DataTablePage<EventApplication> result = new DataTablePage<>(param);
 		if (StringUtils.isEmpty(param)) {
 			return result;
 		}
 		Map<String, Object> condition = new HashMap<>();
 		condition.put("eventId", eventId);
-		condition.put("status", 0);
+		condition.put("status", status);
 		ResultData fetchResponse = eventService.fetchEventApplicationByPage(condition, param);
 		if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
 			result = (DataTablePage<EventApplication>) fetchResponse.getData();
@@ -215,17 +215,17 @@ public class EventController {
 		return view;
 	}
 
-	@RequestMapping(method = RequestMethod.POST, value = "/present/{eventId}")
-	public DataTablePage<EventOrder> present(@PathVariable("eventId") String eventId, DataTableParam param) {
+	@RequestMapping(method = RequestMethod.POST, value = "/present/{eventId}/{status}")
+	public DataTablePage<EventOrder> present(@PathVariable("eventId") String eventId,@PathVariable("status") String status, DataTableParam param) {
 		DataTablePage<EventOrder> result = new DataTablePage<>(param);
 		if (StringUtils.isEmpty(param)) {
 			return result;
 		}
 		Map<String, Object> condition = new HashMap<>();
 		condition.put("eventId", eventId);
-		List<Integer> status = new ArrayList<>();
-		status.add(1);
-		condition.put("status", status);
+		List<Integer> statusList = new ArrayList<>();
+		statusList.add(Integer.parseInt(status));
+		condition.put("status", statusList);
 		ResultData fetchResponse = eventService.fetchEventOrderByPage(condition, param);
 		if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
 			result = (DataTablePage<EventOrder>) fetchResponse.getData();
@@ -261,8 +261,8 @@ public class EventController {
 		return resultData;
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value = "/presentAll")
-	public ModelAndView presentAll(){
+	@RequestMapping(method = RequestMethod.GET, value = "/presentAll/{eventId}")
+	public ModelAndView presentAll(@PathVariable("eventId") String eventId){
 		ModelAndView view=new ModelAndView();
 		ResultData resultData = new ResultData();
 		Map<String, Object> condition = new HashMap<>();
@@ -287,7 +287,7 @@ public class EventController {
 				resultData = eventService.createEventOrder(eventOrder);
 			}
 		}
-        view.setViewName("redirect:/event/present");
+        view.setViewName("redirect:/event/application/"+eventId);
 		return view;
 	}
 
