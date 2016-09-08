@@ -109,6 +109,10 @@
                     var operation = "";
                     var detail_button = "<button type='button' class='btn btn-success btn-group-sm' id='" + full.eventId + "' onclick=detail(this) >详情</button>&nbsp;"
                     operation += detail_button;
+                    var application_button = "<button type='button' class='btn btn-success btn-group-sm' id='" + full.eventId + "' onclick=application(this) >申请列表</button>&nbsp;"
+                    operation += application_button;
+                    var present_button = "<button type='button' class='btn btn-success btn-group-sm' id='" + full.eventId + "' onclick=present(this) >赠送订单</button>&nbsp;"
+                    operation += present_button;
                     if(full.blockFlag){
                     	 var send_button = "<button type='button' class='btn btn-info btn-group-sm' id='ID" + full.eventId + "' onclick=getId(this) data-toggle='modal' data-target='#dialog_modal'>发送短信</button>&nbsp;"
                          operation += send_button;
@@ -138,6 +142,14 @@
     
     function detail(obj) {
     	window.location.href="${path.concat('/event/')}"+obj.id;
+    }
+    
+    function application(obj) {
+    	window.location.href="${path.concat('/event/application/')}"+obj.id;
+    }
+    
+    function present(obj) {
+    	window.location.href="${path.concat('/event/present/')}"+obj.id;
     }
     
     var eventId;

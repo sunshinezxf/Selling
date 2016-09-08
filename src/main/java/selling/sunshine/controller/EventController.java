@@ -157,11 +157,11 @@ public class EventController {
 		return view;
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "/application")
-	public ModelAndView application() {
+	@RequestMapping(method = RequestMethod.GET, value = "/application/{eventId}")
+	public ModelAndView application(@PathVariable("eventId") String eventId) {
 		ModelAndView view = new ModelAndView();
 		Map<String, Object> condition = new HashMap<>();
-		condition.put("blockFlag", false);
+		condition.put("eventId", eventId);
 		ResultData queryResult = eventService.fetchGiftEvent(condition);
 		if (queryResult.getResponseCode() == ResponseCode.RESPONSE_OK) {
 			view.addObject("giftEvent", ((List<GiftEvent>) queryResult.getData()).get(0));
@@ -193,11 +193,11 @@ public class EventController {
 		return result;
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "/present")
-	public ModelAndView present() {
+	@RequestMapping(method = RequestMethod.GET, value = "/present/{eventId}")
+	public ModelAndView present(@PathVariable("eventId") String eventId) {
 		ModelAndView view = new ModelAndView();
 		Map<String, Object> condition = new HashMap<>();
-		condition.put("blockFlag", false);
+		condition.put("eventId", eventId);
 		ResultData queryResult = eventService.fetchGiftEvent(condition);
 		if (queryResult.getResponseCode() == ResponseCode.RESPONSE_OK) {
 			view.addObject("giftEvent", ((List<GiftEvent>) queryResult.getData()).get(0));
