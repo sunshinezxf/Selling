@@ -262,8 +262,7 @@ public class EventController {
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, value = "/presentAll/{eventId}")
-	public ModelAndView presentAll(@PathVariable("eventId") String eventId){
-		ModelAndView view=new ModelAndView();
+	public ResultData presentAll(@PathVariable("eventId") String eventId){
 		ResultData resultData = new ResultData();
 		Map<String, Object> condition = new HashMap<>();
 		condition.put("status", 0);
@@ -287,8 +286,7 @@ public class EventController {
 				resultData = eventService.createEventOrder(eventOrder);
 			}
 		}
-        view.setViewName("redirect:/event/application/"+eventId);
-		return view;
+		return resultData;
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/reject/{applicationId}")
