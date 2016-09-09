@@ -33,6 +33,7 @@
 
     </div>
 </div>
+#parse("/backend/express/component/express_detail_modal.vm")
 <script>
 
 $(document).ready(function () {
@@ -168,7 +169,8 @@ $(document).ready(function () {
                         	 var express_button = " <button type='button' id='" + full.orderId + "' class='btn btn-success' onclick=express(this)>发货</button> ";
                              operation += express_button;
                         }else{
-                        	operation +="无";
+                        	var express_button="<button type='button' class='btn btn-success' id='" + full.orderId + "' onclick=expressDetail(this)>快递单详情</button>";
+                        	operation += express_button;
                         }
                         return operation;
                     }
@@ -200,5 +202,27 @@ $(document).ready(function () {
 function express(obj){
 	window.location.href = "${path.concat('/event/order/express/')}"+obj.id;
 }
+
+function expressDetail(obj){
+    $.post("${path.concat('/express/detail/')}"+obj.id, function (result) {
+
+   	 if(result.data!=null){
+   		 document.getElementById("expressNumber").innerHTML=result.data.express.expressNumber;
+            document.getElementById("createAt").innerHTML=(new Date(result.data.express.createAt)).format("yyyy/MM/dd");
+            document.getElementById("senderName").innerHTML=result.data.express.senderName;
+            document.getElementById("senderPhone").innerHTML=result.data.express.senderPhone;
+            document.getElementById("senderAddress").innerHTML=result.data.express.senderAddress;
+            document.getElementById("receiverName").innerHTML=result.data.express.receiverName;
+            document.getElementById("receiverPhone").innerHTML=result.data.express.receiverPhone;
+            document.getElementById("receiverAddress").innerHTML=result.data.express.receiverAddress;
+            document.getElementById("goodsName").innerHTML=result.data.express.goodsName;
+            $("#express_detail_modal").modal('show');
+   	 }else{
+   		 $("#express_detail_modal").modal('show');
+   	 }
+      
+
+    });
+ }
 
 </script>

@@ -96,6 +96,18 @@ public class ExpressController {
             } else {
                 resultData.setResponseCode(ResponseCode.RESPONSE_NULL);
             }
+        }else{
+        	 condition.put("orderId", id);
+        	 ResultData queryResponse = expressService
+                     .fetchExpress4Application(condition);
+             if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            	 Express4Application express = ((List<Express4Application>) queryResponse
+                         .getData()).get(0);
+                 dataMap.put("express", express);
+                 resultData.setData(dataMap);
+             } else {
+                 resultData.setResponseCode(ResponseCode.RESPONSE_NULL);
+             }
         }
         return resultData;
     }
