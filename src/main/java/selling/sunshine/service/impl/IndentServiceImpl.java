@@ -2,6 +2,7 @@ package selling.sunshine.service.impl;
 
 import common.sunshine.model.selling.customer.Customer;
 import common.sunshine.model.selling.order.CustomerOrder;
+import common.sunshine.model.selling.order.EventOrder;
 import common.sunshine.model.selling.order.Order;
 import common.sunshine.model.selling.order.OrderItem;
 import common.sunshine.model.selling.order.support.OrderItemStatus;
@@ -17,6 +18,7 @@ import selling.sunshine.dao.CustomerDao;
 import selling.sunshine.dao.ExpressDao;
 import selling.sunshine.dao.OrderDao;
 import common.sunshine.model.selling.express.Express4Agent;
+import common.sunshine.model.selling.express.Express4Application;
 import common.sunshine.model.selling.express.Express4Customer;
 import selling.sunshine.service.IndentService;
 import selling.sunshine.utils.PlatformConfig;
@@ -98,6 +100,24 @@ public class IndentServiceImpl implements IndentService {
                 Workbook workbook = produce(template, temp);
                 try {
                     FileOutputStream out = new FileOutputStream(file + "/" + time + "_" + temp.getOrderId() + "_" + temp.getReceiverName() + ".xlsx");
+                    workbook.write(out);
+                    out.close();
+                } catch (Exception e) {
+                    logger.error(e.getMessage());
+                    result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+                    result.setDescription(e.getMessage());
+                }
+            } else if (item instanceof EventOrder) {
+            	EventOrder temp = (EventOrder) item;
+                String time = format.format(temp.getCreateAt());
+                StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(time);
+                File file = new File(sb.toString());
+                if (!file.exists()) {
+                    file.mkdirs();
+                }
+                Workbook workbook = produce(template, temp);
+                try {
+                    FileOutputStream out = new FileOutputStream(file + "/" + time + "_" + temp.getOrderId() + "_" + temp.getDoneeName() + ".xlsx");
                     workbook.write(out);
                     out.close();
                 } catch (Exception e) {
@@ -199,6 +219,46 @@ public class IndentServiceImpl implements IndentService {
         bookerAddr.setCellValue(item.getReceiverAddress());
         return template;
     }
+    
+    private Workbook produce(Workbook template, EventOrder item) {
+        Sheet sheet = template.getSheetAt(0);
+        Row order = sheet.getRow(1);
+        Cell orderNo = order.getCell(1);
+        orderNo.setCellValue(item.getOrderId());
+        Cell orderDate = order.getCell(5);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日");
+        orderDate.setCellValue(format.format(item.getCreateAt()));
+        Row provider = sheet.getRow(2);
+        Cell providerName = provider.getCell(1);
+        providerName.setCellValue(PlatformConfig.getValue("sender_name"));
+        Cell providerTel = provider.getCell(5);
+        providerTel.setCellValue(PlatformConfig.getValue("sender_phone"));
+        Row address = sheet.getRow(3);
+        Cell addressDetail = address.getCell(1);
+        addressDetail.setCellValue(PlatformConfig.getValue("sender_address"));
+        Row content = sheet.getRow(6);
+        Cell name = content.getCell(1);
+        name.setCellValue(item.getGoods().getName());
+        Cell piece = content.getCell(2);
+        piece.setCellValue("件");
+        Cell price = content.getCell(3);
+        price.setCellValue(item.getGoods().getAgentPrice());
+        Cell quantity = content.getCell(4);
+        quantity.setCellValue(item.getQuantity());
+        Cell totalPrice = content.getCell(5);
+        totalPrice.setCellValue(item.getGoods().getAgentPrice());
+        Cell description = content.getCell(6);
+        description.setCellValue("活动");
+        Row booker = sheet.getRow(8);
+        Cell bookerName = booker.getCell(1);
+        bookerName.setCellValue(item.getDoneeName());
+        Cell bookerPhone = booker.getCell(5);
+        bookerPhone.setCellValue(item.getDoneePhone());
+        Row receiveAddr = sheet.getRow(9);
+        Cell bookerAddr = receiveAddr.getCell(1);
+        bookerAddr.setCellValue(item.getDoneeAddress());
+        return template;
+    }
 
     @Override
     public <T> ResultData produceAll(List<T> list) {
@@ -215,9 +275,14 @@ public class IndentServiceImpl implements IndentService {
         HSSFSheet sheet2 = wb.createSheet();
         wb.setSheetName(1, "客户订单");
         HSSFRow row2 = sheet2.createRow((int) 0);
+        
+        HSSFSheet sheet3 = wb.createSheet();
+        wb.setSheetName(2, "活动订单");
+        HSSFRow row3 = sheet3.createRow((int) 0);
 
         HSSFCell cell = row.createCell((short) 0);
         HSSFCell cell2 = row2.createCell((short) 0);
+        HSSFCell cell3 = row3.createCell((short)0);
         cell.setCellValue("订单编号");
         cell.setCellStyle(style);
         cell = row.createCell((short) 1);
@@ -291,8 +356,45 @@ public class IndentServiceImpl implements IndentService {
         cell2 = row2.createCell((short) 11);
         cell2.setCellValue("快递单号");
         cell2.setCellStyle(style);
+        
+        cell3.setCellValue("订单编号");
+        cell3.setCellStyle(style);
+        cell3 = row3.createCell((short) 1);
+        cell3.setCellValue("活动");
+        cell3.setCellStyle(style);
+        cell3 = row3.createCell((short) 2);
+        cell3.setCellValue("顾客");
+        cell3.setCellStyle(style);
+        cell3 = row3.createCell((short) 3);
+        cell3.setCellValue("联系方式");
+        cell3.setCellStyle(style);
+        cell3 = row3.createCell((short) 4);
+        cell3.setCellValue("地址");
+        cell3.setCellStyle(style);
+        cell3 = row3.createCell((short) 5);
+        cell3.setCellValue("商品");
+        cell3.setCellStyle(style);
+        cell3 = row3.createCell((short) 6);
+        cell3.setCellValue("数量");
+        cell3.setCellStyle(style);
+        cell3 = row3.createCell((short) 7);
+        cell3.setCellValue("总价");
+        cell3.setCellStyle(style);
+        cell3 = row3.createCell((short) 8);
+        cell3.setCellValue("订单日期");
+        cell3.setCellStyle(style);
+        cell3 = row3.createCell((short) 9);
+        cell3.setCellValue("是否已发货");
+        cell3.setCellStyle(style);
+        cell3 = row3.createCell((short) 10);
+        cell3.setCellValue("发货时间");
+        cell3.setCellStyle(style);
+        cell3 = row3.createCell((short) 11);
+        cell3.setCellValue("快递单号");
+        cell3.setCellStyle(style);
         int k = 1;
         int j = 1;
+        int l = 1;
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i) instanceof OrderItem) {
                 row = sheet1.createRow((int) k);
@@ -370,6 +472,36 @@ public class IndentServiceImpl implements IndentService {
                     row.createCell((short) 11).setCellValue("");
                 }
                 j++;
+            } else if (list.get(i) instanceof EventOrder) {
+                row = sheet3.createRow((int) l);
+                EventOrder eventOrder = (EventOrder) list.get(i);
+                // 第四步，创建单元格，并设置值
+                row.createCell((short) 0).setCellValue(eventOrder.getOrderId());
+                row.createCell((short) 1).setCellValue(eventOrder.getEvent().getTitle());
+                row.createCell((short) 2).setCellValue(eventOrder.getDoneeName());
+                row.createCell((short) 3).setCellValue(eventOrder.getDoneePhone());
+                row.createCell((short) 4).setCellValue(eventOrder.getDoneeAddress());
+                row.createCell((short) 5).setCellValue(eventOrder.getGoods().getName());
+                row.createCell((short) 6).setCellValue(eventOrder.getQuantity());
+                row.createCell((short) 7).setCellValue(eventOrder.getQuantity() * eventOrder.getGoods().getAgentPrice());
+                cell = row.createCell((short) 8);
+                cell.setCellValue(new SimpleDateFormat("yyyy-MM-dd").format(eventOrder.getCreateAt()));
+                if (eventOrder.getOrderStatus() == OrderItemStatus.SHIPPED || eventOrder.getOrderStatus() == OrderItemStatus.RECEIVED || eventOrder.getOrderStatus() == OrderItemStatus.EXCHANGED) {
+                    row.createCell((short) 9).setCellValue("是");
+                    Map<String, Object> condition = new HashMap<>();
+                    condition.put("orderId", eventOrder.getOrderId());
+                    ResultData queryData = expressDao.queryExpress4Application(condition);
+                    if (queryData.getResponseCode() == ResponseCode.RESPONSE_OK && !((List) queryData.getData()).isEmpty()) {
+                        Express4Application express = ((List<Express4Application>) queryData.getData()).get(0);
+                        row.createCell((short) 10).setCellValue(new SimpleDateFormat("yyyy-MM-dd").format(express.getCreateAt()));
+                        row.createCell((short) 11).setCellValue(express.getExpressNumber());
+                    }
+                } else {
+                    row.createCell((short) 9).setCellValue("否");
+                    row.createCell((short) 10).setCellValue("");
+                    row.createCell((short) 11).setCellValue("");
+                }
+                l++;
             }
 
         }
@@ -476,6 +608,29 @@ public class IndentServiceImpl implements IndentService {
                 quantityCell.setCellValue(c.getQuantity());
                 Cell priceCell = current.createCell(8);
                 priceCell.setCellValue(c.getTotalPrice());
+                row++;
+            }else if (item instanceof EventOrder){
+            	EventOrder c = (EventOrder) item;
+                Row current = sheet.createRow(row);
+                Cell noCell = current.createCell(0);
+                noCell.setCellValue(c.getOrderId());
+                Cell dateCell = current.createCell(1);
+                SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日");
+                dateCell.setCellValue(format.format(c.getCreateAt()));
+                Cell consumerNameCell = current.createCell(2);
+                consumerNameCell.setCellValue(c.getDoneeName());
+                Cell phoneCell = current.createCell(3);
+                phoneCell.setCellValue(c.getDoneePhone());
+                Cell addressCell = current.createCell(4);
+                addressCell.setCellValue(c.getDoneeAddress());
+                Cell productNameCell = current.createCell(6);
+                productNameCell.setCellValue(c.getGoods().getName());
+                Cell quantityCell = current.createCell(7);
+                quantityCell.setCellValue(c.getQuantity());
+                Cell priceCell = current.createCell(8);
+                priceCell.setCellValue(c.getQuantity() * c.getGoods().getAgentPrice());
+                Cell description = current.createCell(9);
+                description.setCellValue("活动");
                 row++;
             }
         }
