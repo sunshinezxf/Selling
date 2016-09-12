@@ -13,7 +13,9 @@ import org.springframework.web.servlet.ModelAndView;
 import common.sunshine.utils.SortRule;
 import selling.sunshine.form.TimeRangeForm;
 import common.sunshine.model.selling.order.CustomerOrder;
+import common.sunshine.model.selling.order.EventOrder;
 import common.sunshine.model.selling.order.OrderItem;
+import selling.sunshine.service.EventService;
 import selling.sunshine.service.IndentService;
 import selling.sunshine.service.OrderService;
 import selling.sunshine.utils.DateUtils;
@@ -43,6 +45,9 @@ public class IndentController {
 
     @Autowired
     private OrderService orderService;
+    
+    @Autowired
+    private EventService eventService;
 
 
     @RequestMapping(method = RequestMethod.GET, value = "/overview")
@@ -104,6 +109,13 @@ public class IndentController {
         if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             empty = false;
             List<CustomerOrder> list = (List<CustomerOrder>) queryResponse.getData();
+            total.addAll(list);
+            indentService.produce(list);
+        }
+        queryResponse = eventService.fetchEventOrder(condition);
+        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            empty = false;
+            List<EventOrder> list = (List<EventOrder>) queryResponse.getData();
             total.addAll(list);
             indentService.produce(list);
         }

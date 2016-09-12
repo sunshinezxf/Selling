@@ -7,10 +7,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import selling.sunshine.dao.CustomerOrderDao;
+import selling.sunshine.dao.EventDao;
 import selling.sunshine.dao.ExpressDao;
 import selling.sunshine.dao.OrderDao;
 import selling.sunshine.dao.OrderItemDao;
 import common.sunshine.model.selling.order.CustomerOrder;
+import common.sunshine.model.selling.order.EventOrder;
 import common.sunshine.model.selling.order.Order;
 import common.sunshine.model.selling.order.OrderItem;
 import common.sunshine.model.selling.order.support.OrderType;
@@ -42,6 +44,9 @@ public class DeliverServiceImpl implements DeliverService {
 
     @Autowired
     private OrderDao orderDao;
+    
+    @Autowired
+    private EventDao eventDao;
 
     @Override
     public ResultData generateDeliver() {
@@ -116,7 +121,31 @@ public class DeliverServiceImpl implements DeliverService {
                         result.setDescription(e.getMessage());
                     }
                 }
-            }
+            } else if (!StringUtils.isEmpty(linkId) && linkId.startsWith("EOI")) {
+                Map<String, Object> condition = new HashMap<>();
+                condition.clear();
+                condition.put("orderId", linkId);
+                ResultData response = eventDao.queryEventOrder(condition);
+                if (response.getResponseCode() == ResponseCode.RESPONSE_OK && !((List<EventOrder>) response.getData()).isEmpty()) {
+                    EventOrder temp = ((List<EventOrder>) response.getData()).get(0);
+                    String time = format.format(express.getCreateAt());
+                    StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(time);
+                    File file = new File(sb.toString());
+                    if (!file.exists()) {
+                        file.mkdirs();
+                    }
+                    Workbook workbook = produce(template, temp, express);
+                    try {
+                        FileOutputStream out = new FileOutputStream(file + "/" + time + "_" + temp.getOrderId() + "_" + temp.getDoneeName() + ".xlsx");
+                        workbook.write(out);
+                        out.close();
+                    } catch (Exception e) {
+                        logger.error(e.getMessage());
+                        result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+                        result.setDescription(e.getMessage());
+                    }
+                }
+             }
         });
         return result;
     }
@@ -212,6 +241,45 @@ public class DeliverServiceImpl implements DeliverService {
         bookerAddr.setCellValue(PlatformConfig.getValue("sender_address"));
         return template;
     }
+    
+    private Workbook produce(Workbook template, EventOrder item, Express express) {
+        Sheet sheet = template.getSheetAt(0);
+        Row order = sheet.getRow(1);
+        Cell orderDate = order.getCell(1);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日");
+        orderDate.setCellValue(format.format(express.getCreateAt()));
+        Cell expressNo = order.getCell(5);
+        expressNo.setCellValue(express.getExpressNumber());
+        Row consumer = sheet.getRow(2);
+        Cell consumerName = consumer.getCell(2);
+        consumerName.setCellValue(express.getReceiverName());
+        Cell consumerTel = consumer.getCell(5);
+        consumerTel.setCellValue(express.getReceiverPhone());
+        Row address = sheet.getRow(3);
+        Cell addressDetail = address.getCell(2);
+        addressDetail.setCellValue(express.getReceiverAddress());
+        Row content = sheet.getRow(6);
+        Cell name = content.getCell(1);
+        name.setCellValue(item.getGoods().getName());
+        Cell piece = content.getCell(2);
+        piece.setCellValue("件");
+        Cell price = content.getCell(3);
+        price.setCellValue(item.getGoods().getAgentPrice());
+        Cell quantity = content.getCell(4);
+        quantity.setCellValue(item.getQuantity());
+        Cell totalPrice = content.getCell(5);
+        totalPrice.setCellValue(item.getGoods().getAgentPrice() * item.getQuantity());
+        Row seller = sheet.getRow(8);
+        Cell sellerName = seller.getCell(2);
+        sellerName.setCellValue(PlatformConfig.getValue("sender_name"));
+        Cell sellerPhone = seller.getCell(5);
+        sellerPhone.setCellValue(PlatformConfig.getValue("sender_phone"));
+        Row sellerAddr = sheet.getRow(9);
+        Cell bookerAddr = sellerAddr.getCell(2);
+        bookerAddr.setCellValue(PlatformConfig.getValue("sender_address"));
+        return template;
+    }
+
 
     @Override
     public ResultData produceSummary(List<Express> list) {

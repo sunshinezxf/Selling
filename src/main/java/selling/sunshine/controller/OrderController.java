@@ -9,6 +9,7 @@ import common.sunshine.model.selling.bill.CustomerOrderBill;
 import common.sunshine.model.selling.bill.OrderBill;
 import common.sunshine.model.selling.customer.Customer;
 import common.sunshine.model.selling.order.CustomerOrder;
+import common.sunshine.model.selling.order.EventOrder;
 import common.sunshine.model.selling.order.Order;
 import common.sunshine.model.selling.order.OrderItem;
 import common.sunshine.model.selling.order.support.OrderItemStatus;
@@ -91,7 +92,9 @@ public class OrderController {
 
     @Autowired
     private IndentService indentService;
-
+    
+    @Autowired
+    private EventService eventService;
 
     @Autowired
     private LogService logService;
@@ -1274,6 +1277,12 @@ public class OrderController {
         if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             empty = false;
             List<CustomerOrder> list = (List<CustomerOrder>) queryResponse.getData();
+            allList.addAll(list);
+        }
+        queryResponse = eventService.fetchEventOrder(condition);
+        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            empty = false;
+            List<EventOrder> list = (List<EventOrder>) queryResponse.getData();
             allList.addAll(list);
         }
         if (empty) {
