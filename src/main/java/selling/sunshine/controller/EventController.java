@@ -360,7 +360,7 @@ public class EventController {
 				goods.setCellValue(eventOrder.getGoods().getName());
 				Cell description = current.createCell(22);
 				StringBuffer descriptionContent = new StringBuffer();
-				descriptionContent.append(eventOrder.getQuantity()).append("盒");
+				descriptionContent.append(eventOrder.getQuantity()).append("盒").append("（活动赠品）");
 
 				description.setCellValue(descriptionContent.toString());
 				Cell orderNo = current.createCell(37);
@@ -423,7 +423,7 @@ public class EventController {
 			goods.setCellValue(eventOrder.getGoods().getName());
 			Cell description = current.createCell(22);
 			StringBuffer descriptionContent = new StringBuffer();
-			descriptionContent.append(eventOrder.getQuantity()).append("盒");
+			descriptionContent.append(eventOrder.getQuantity()).append("盒").append("（活动赠品）");
 
 			description.setCellValue(descriptionContent.toString());
 			Cell orderNo = current.createCell(37);
