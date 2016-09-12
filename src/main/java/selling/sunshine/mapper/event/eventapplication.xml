@@ -47,7 +47,7 @@
 
     <select id="query" parameterType="java.util.Map" resultMap="applicationVo">
         SELECT application_id, donor_name, donor_phone, donee_name, donee_phone, donee_gender, donee_address,
-        donee_age_range, relation,wishes,event_id,
+        donee_age_range, relation,wishes,event_id,status,
         block_flag, create_time
         FROM event_application
         WHERE 1 = 1
@@ -77,6 +77,13 @@
         </if>
         <if test="status != null">
         	AND status = #{status}
+        </if>
+        <if test="search !=null and search != ''">
+            AND (application_id LIKE #{search}  OR donee_name LIKE
+            #{search} OR donee_address LIKE #{search} OR donee_phone LIKE #{search}
+            OR donor_name LIKE
+            #{search} OR donor_phone LIKE #{search}
+            OR relation LIKE #{search})
         </if>
         <if test="rule != null">
             ORDER BY ${rule}

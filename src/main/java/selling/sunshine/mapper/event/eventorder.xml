@@ -77,9 +77,9 @@
             #{end})
         </if>
         <if test="search !=null and search != ''">
-            AND (event_order_id LIKE #{search} OR DATE_FORMAT(create_time,'%Y-%m-%D') LIKE #{search} OR donee_name LIKE
-            #{search} OR donee_addr LIKE #{search} OR donee_phone LIKE #{search}
-            OR quantity LIKE #{search}
+            AND (event_order_id LIKE #{search} OR donee_name LIKE
+            #{search} OR donee_address LIKE #{search} OR donee_phone LIKE #{search}
+            OR quantity LIKE #{search})
         </if>
         <if test="rule != null and rule != ''">
             ORDER BY ${rule}

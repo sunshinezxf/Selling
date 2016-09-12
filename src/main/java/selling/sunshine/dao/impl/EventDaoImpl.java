@@ -15,6 +15,8 @@ import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
+
 import selling.sunshine.dao.EventDao;
 
 import java.util.ArrayList;
@@ -146,6 +148,10 @@ public class EventDaoImpl extends BaseDao implements EventDao {
         ResultData result = new ResultData();
         DataTablePage<EventApplication> page = new DataTablePage<>(param);
         condition = handle(condition);
+        if (!StringUtils.isEmpty(param.getsSearch())) {
+            String searchParam = param.getsSearch().replace("/", "-");
+            condition.put("search", "%" + searchParam + "%");
+        }
         ResultData total = queryEventApplication(condition);
         if (total.getResponseCode() != ResponseCode.RESPONSE_OK) {
             result.setResponseCode(ResponseCode.RESPONSE_ERROR);
@@ -243,6 +249,10 @@ public class EventDaoImpl extends BaseDao implements EventDao {
 		 ResultData result = new ResultData();
 	        DataTablePage<EventOrder> page = new DataTablePage<>(param);
 	        condition = handle(condition);
+	        if (!StringUtils.isEmpty(param.getsSearch())) {
+	            String searchParam = param.getsSearch().replace("/", "-");
+	            condition.put("search", "%" + searchParam + "%");
+	        }
 	        ResultData total = queryEventOrder(condition);
 	        if (total.getResponseCode() != ResponseCode.RESPONSE_OK) {
 	            result.setResponseCode(ResponseCode.RESPONSE_ERROR);

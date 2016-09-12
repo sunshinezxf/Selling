@@ -41,7 +41,7 @@ $(document).ready(function () {
     var url="${path.concat('/event/present/')}"+"${giftEvent.eventId}"+"/1";
 
     $("#event_present_table").DataTable({
-        searching: false,
+        searching: true,
         ordering: false,
         paging: true,
         "sPaginationType": "full_numbers",
@@ -128,7 +128,7 @@ $(document).ready(function () {
       	var event_id="${giftEvent.eventId}";
       	var url="${path.concat('/event/present/')}"+"${giftEvent.eventId}"+"/"+status;
         $("#event_present_table").DataTable({
-            searching: false,
+            searching: true,
             ordering: false,
             paging: true,
             "sPaginationType": "full_numbers",

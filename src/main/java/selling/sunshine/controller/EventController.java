@@ -311,6 +311,10 @@ public class EventController {
 		Map<String, Object> condition = new HashMap<>();
 		condition.put("applicationId", applicationId);
 		resultData = eventService.fetchEventApplication(condition);
+		EventApplication eventApplication=((List<EventApplication>)resultData.getData()).get(0);
+		if (eventApplication.getStatus()==ApplicationStatus.APPROVED||eventApplication.getStatus()==ApplicationStatus.REJECTED) {
+			resultData.setDescription("done");;
+		}
 		return resultData;
 	}
 

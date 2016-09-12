@@ -41,6 +41,7 @@
                </p>
                <hr>
                <p class="form-group">
+                 <div id="operation">
                   <label class="col-sm-4 col-md-4 col-lg-3">操作:</label>&nbsp;&nbsp;
                   <br>
                     <p class="form-group">
@@ -48,6 +49,7 @@
                       <button type="button" class="btn btn-success" data-toggle="modal" data-target="#present_modal">赠送</button>&nbsp;&nbsp;
                       <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#reject_modal">拒绝</button>
                     </p>
+                  </div>
                </p>
             </div>
             <div class="modal-footer">

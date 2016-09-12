@@ -46,7 +46,7 @@ $(document).ready(function () {
 	var event_id="${giftEvent.eventId}";
     var url="${path.concat('/event/application/')}"+"${giftEvent.eventId}"+"/0";
     $("#event_application_table").DataTable({
-        searching: false,
+        searching: true,
         ordering: false,
         paging: true,
         "sPaginationType": "full_numbers",
@@ -133,7 +133,7 @@ $(document).ready(function () {
       	var event_id="${giftEvent.eventId}";
         var url="${path.concat('/event/application/')}"+"${giftEvent.eventId}"+"/"+status;
         $("#event_application_table").DataTable({
-            searching: false,
+            searching: true,
             ordering: false,
             paging: true,
             "sPaginationType": "full_numbers",
@@ -217,6 +217,12 @@ function detail(obj){
     		document.getElementById("wishes").innerHTML ="无";
     	}
     	document.getElementById("applicationId").innerHTML =application.applicationId;
+    	if(result.description=="done"){
+    		$("#operation").hide();
+    	}else{
+    		$("#operation").show();
+    	}
+    	
 	});
 		
 	
