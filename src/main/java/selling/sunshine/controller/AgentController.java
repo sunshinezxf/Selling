@@ -14,6 +14,7 @@ import common.sunshine.model.selling.order.support.OrderItemStatus;
 import common.sunshine.model.selling.order.support.OrderStatus;
 import common.sunshine.model.selling.order.support.OrderType;
 import common.sunshine.model.selling.user.User;
+import common.sunshine.model.selling.util.ShortUrl;
 import common.sunshine.utils.Encryption;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
@@ -46,6 +47,8 @@ import selling.sunshine.utils.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+
+import java.io.IOException;
 import java.net.URLEncoder;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -93,6 +96,9 @@ public class AgentController {
 
     @Autowired
     private StatisticService statisticService;
+    
+    @Autowired
+    private ShortUrlService shortUrlService;
 
     @Autowired
     private LogService logService;
@@ -460,6 +466,24 @@ public class AgentController {
             return view;
         }
         String url = "http://" + PlatformConfig.getValue("server_url") + "/agent/" + user.getAgent().getAgentId() + "/embrace";
+        Map<String, Object> condition = new HashMap<String, Object>();
+        condition.put("longUrl",url);
+        condition.put("blockFlag", false);
+        ResultData fetchShortUrl = shortUrlService.fetchShortUrl(condition);
+        if(fetchShortUrl.getResponseCode() == ResponseCode.RESPONSE_OK){
+        	url = ((List<ShortUrl>)fetchShortUrl.getData()).get(0).getShortUrl();
+        } else if(fetchShortUrl.getResponseCode() == ResponseCode.RESPONSE_NULL){
+        	String shortUrlString = WechatUtil.long2short(url);
+        	if(shortUrlString != null){
+				ShortUrl shortUrl = new ShortUrl();
+				shortUrl.setLongUrl(url);
+				shortUrl.setShortUrl(shortUrlString);
+				ResultData createResult = shortUrlService.createShortUrl(shortUrl);
+				if(createResult.getResponseCode() == ResponseCode.RESPONSE_OK){
+					url = shortUrlString;
+				}
+			}
+        }
         WechatConfig.oauthWechat(view, "/agent/invite", url);
         view.addObject("url", url);
         view.addObject("agent", user.getAgent());
@@ -528,6 +552,24 @@ public class AgentController {
                 String shareURL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + PlatformConfig.getValue("wechat_appid") + "&redirect_uri=" + URLEncoder.encode(url, "utf-8") + "&response_type=code&scope=snsapi_base&state=view#wechat_redirect";
                 if (StringUtils.isEmpty(link)) {
                     link = shareURL;
+                }
+                condition.clear();
+                condition.put("longUrl",shareURL);
+                condition.put("blockFlag", false);
+                ResultData fetchShortUrl = shortUrlService.fetchShortUrl(condition);
+                if(fetchShortUrl.getResponseCode() == ResponseCode.RESPONSE_OK){
+                	shareURL = ((List<ShortUrl>)fetchShortUrl.getData()).get(0).getShortUrl();
+                } else if(fetchShortUrl.getResponseCode() == ResponseCode.RESPONSE_NULL){
+                	String shortUrlString = WechatUtil.long2short(shareURL);
+                	if(shortUrlString != null){
+        				ShortUrl shortUrl = new ShortUrl();
+        				shortUrl.setLongUrl(shareURL);
+        				shortUrl.setShortUrl(shortUrlString);
+        				ResultData createResult = shortUrlService.createShortUrl(shortUrl);
+        				if(createResult.getResponseCode() == ResponseCode.RESPONSE_OK){
+        					shareURL = shortUrlString;
+        				}
+        			}
                 }
                 urls.add(shareURL);
             } catch (Exception e) {
