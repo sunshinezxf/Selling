@@ -2,7 +2,12 @@ package selling.sunshine.utils;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+
+import common.sunshine.model.selling.util.ShortUrl;
 import common.sunshine.utils.IDGenerator;
+import common.sunshine.utils.ResponseCode;
+import common.sunshine.utils.ResultData;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import selling.wechat.model.Follower;
@@ -183,6 +188,26 @@ public class WechatUtil {
         } finally {
             return result;
         }
+    }
+    
+    public static final String long2short(String url){
+    	JSONObject params = new JSONObject();
+    	params.put("action", "long2short");
+    	params.put("long_url", url);
+    	String json = "";
+    	try {
+			json = HttpUtil.postJSON("https://api.weixin.qq.com/cgi-bin/shorturl?access_token=" + PlatformConfig.getAccessToken(), "UTF-8", params);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    	JSONObject urlData = JSON.parseObject(json);
+    	if(urlData.containsKey("errcode")){
+    		int errcode = urlData.getInteger("errcode");
+    		if(errcode == 0){
+    			return urlData.getString("short_url");
+    		}
+    	}
+    	return null;
     }
 
     public static final String inputStream2String(InputStream in) throws IOException {

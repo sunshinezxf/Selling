@@ -537,3 +537,13 @@ ALTER TABLE `selling`.`agent`
 ADD COLUMN `customer_service` TINYINT(1) NOT NULL DEFAULT '0' AFTER `create_time`;
 
 
+##2016年9月13日更新
+CREATE TABLE IF NOT EXISTS `selling`.`short_url` (
+  `url_id`      VARCHAR(20)     NOT NULL,
+  `long_url`    VARCHAR(2000)   NULL,
+  `short_url`   VARCHAR(255)    NULL,
+  `block_flag`  TINYINT(1)      NOT NULL,
+  `create_time` DATETIME        NOT NULL,
+  PRIMARY KEY (`url_id`)
+)
+  ENGINE = InnoDB;

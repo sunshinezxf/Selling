@@ -93,4 +93,8 @@
     <bean id="eventDao" class="selling.sunshine.dao.impl.EventDaoImpl">
         <property name="sqlSession" ref="sqlSession"></property>
     </bean>
+    
+    <bean id="shortUrlDao" class="selling.sunshine.dao.impl.ShortUrlDaoImpl">
+        <property name="sqlSession" ref="sqlSession"></property>
+    </bean>
 </beans>

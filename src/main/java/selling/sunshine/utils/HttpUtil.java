@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.alibaba.fastjson.JSONObject;
+
 public class HttpUtil {
 	
 	/**
@@ -68,6 +70,52 @@ public class HttpUtil {
 		return result.toString();
 	}
 	
+	public static String postJSON(String url, String charset, JSONObject params) throws Exception{
+		HttpURLConnection conn = null;
+		OutputStreamWriter out = null;
+		InputStream inputStream = null;
+        InputStreamReader inputStreamReader = null;
+        BufferedReader reader = null;
+        StringBuffer result = new StringBuffer();
+		try {
+			conn = (HttpURLConnection)new URL(url).openConnection();
+			conn.setDoOutput(true);
+			conn.setDoInput(true);
+			conn.setRequestMethod("POST"); 
+			conn.setRequestProperty("accept", "*/*");
+			conn.setRequestProperty("connection", "Keep-Alive");
+			conn.setRequestProperty("Accept-Charset", charset);
+			conn.setRequestProperty("Content-Type", "application/json");
+			out = new OutputStreamWriter(conn.getOutputStream(), charset);
+			out.write(params.toJSONString());
+			out.flush();
+			inputStream = conn.getInputStream();
+			inputStreamReader = new InputStreamReader(inputStream);
+            reader = new BufferedReader(inputStreamReader);
+            String tempLine = null;
+            while ((tempLine = reader.readLine()) != null) {
+            	result.append(tempLine);
+            }
+            
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (out != null) {
+				out.close();
+			}
+            if (reader != null) {
+                reader.close();
+            }
+            if (inputStreamReader != null) {
+                inputStreamReader.close();
+            }
+            if (inputStream != null) {
+                inputStream.close();
+            }
+		}
+		return result.toString();
+	}
+	
 	/**
 	 * 将map转换为请求字符串
 	 * <p>data=xxx&msg_type=xxx</p>
@@ -92,7 +140,7 @@ public class HttpUtil {
 			}
 			data.append(entry.getKey()).append("=").append(URLEncoder.encode(entry.getValue().toString(), charset));
 		}
-		
+		System.out.println(data.toString());
 		return data.toString();
 	
 	}
