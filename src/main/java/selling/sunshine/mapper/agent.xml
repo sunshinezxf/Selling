@@ -15,6 +15,7 @@
         <result property="createAt" column="create_time"></result>
         <result property="agentRefund" column="agent_refund"></result>
         <result property="claimScale" column="scale"></result>
+        <result property="customerService" column="customer_service"></result>
         <association property="upperAgent" column="agentId = upper_agent_id" select="agentLiteQuery"></association>
     </resultMap>
 
@@ -42,7 +43,8 @@
             agent_refund = #{agentRefund},
             block_flag = #{blockFlag},
             create_time = #{createAt},
-            agent_coffer = #{coffer}
+            agent_coffer = #{coffer},
+            customer_service=#{customerService}
         </set>
     </insert>
 
@@ -55,7 +57,7 @@
     <select id="query" parameterType="java.util.Map" resultMap="agentVo">
         SELECT agent_id, upper_agent_id,agent_coffer, agent_name, agent_gender, agent_phone, agent_address,
         agent_password,
-        agent_wechat, agent_refund, agent_granted, block_flag, create_time, scale
+        agent_wechat, agent_refund, agent_granted, block_flag, create_time, scale,customer_service
         FROM agent
         WHERE 1 = 1
         <if test="agentId != null and agentId != ''">
@@ -130,6 +132,9 @@
             </if>
             <if test="agentRefund != null and agentRefund != ''">
                 agent_refund = #{agentRefund},
+            </if>
+            <if test="customerService != null and customerService != ''">
+                customer_service = #{customerService},
             </if>
             <if test="claimScale != null and claimScale != ''">
                 scale = #{claimScale},

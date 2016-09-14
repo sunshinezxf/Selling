@@ -19,6 +19,7 @@ public class Agent extends Entity {
     private double coffer;
     private double agentRefund;
     private int claimScale;
+    private boolean customerService;
     private common.sunshine.model.selling.agent.lite.Agent upperAgent;
 
     public Agent() {
@@ -53,7 +54,26 @@ public class Agent extends Entity {
         this.claimScale = claimScale;
     }
 
-    public String getAgentId() {
+    public Agent(String agentId, String name, String gender, String phone, String address, String password,
+			String wechat, boolean granted, double coffer, double agentRefund, int claimScale, boolean customerService,
+			common.sunshine.model.selling.agent.lite.Agent upperAgent) {
+		super();
+		this.agentId = agentId;
+		this.name = name;
+		this.gender = gender;
+		this.phone = phone;
+		this.address = address;
+		this.password = password;
+		this.wechat = wechat;
+		this.granted = granted;
+		this.coffer = coffer;
+		this.agentRefund = agentRefund;
+		this.claimScale = claimScale;
+		this.customerService = customerService;
+		this.upperAgent = upperAgent;
+	}
+
+	public String getAgentId() {
         return agentId;
     }
 
@@ -148,4 +168,14 @@ public class Agent extends Entity {
     public void setClaimScale(int claimScale) {
         this.claimScale = claimScale;
     }
+
+	public boolean isCustomerService() {
+		return customerService;
+	}
+
+	public void setCustomerService(boolean customerService) {
+		this.customerService = customerService;
+	}
+    
+    
 }

@@ -531,4 +531,9 @@ CREATE TABLE IF NOT EXISTS `selling`.`express_application` (
     ON UPDATE NO ACTION
 )
   ENGINE = InnoDB;
+  
+##2016年9月14日更新
+ALTER TABLE `selling`.`agent` 
+ADD COLUMN `customer_service` TINYINT(1) NOT NULL DEFAULT '0' AFTER `create_time`;
+
 
