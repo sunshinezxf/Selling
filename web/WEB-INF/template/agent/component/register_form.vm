@@ -25,7 +25,15 @@
                     </span>
                     </div>
                 </a>
-
+                <div class="weui_cell">
+                    <div class="weui_cell_hd">
+                        <label class="weui_label">身份证号</label>
+                    </div>
+                    <div class="weui_cell_bd weui_cell_primary">
+                        <input class="weui_input" id="card" name="card" type="text" placeholder="请填写身份证号"
+                               autocomplete="off"/>
+                    </div>
+                </div>
                 <div class="weui_cell">
                     <div class="weui_cell_hd">
                         <label class="weui_label">手机</label>
@@ -218,6 +226,13 @@
                 first_inactive();
             }
         });
+        $("#card").on("input propertychange", function () {
+            if (information_validate()) {
+                first_active();
+            } else {
+                first_inactive();
+            }
+        });
         $("#agent_tel").on("input propertychange", function () {
             if (information_validate()) {
                 first_active();
@@ -309,13 +324,14 @@
     function information_validate() {
         var name = $("#agent_name").val();
         var gender = $("#gender").val();
+        var card = $("#card").val();
         var phone = $("#agent_tel").val();
         var address = $("#agent_addr").val();
         var password = $("#agent_password").val();
         var isConfirm1 = $("#checkbox1").prop("checked");
         var isConfirm2 = $("#checkbox2").prop("checked");
         var isConfirm3 = $("#checkbox3").prop("checked");
-        if (not_null(name) && not_null(gender) && not_null(phone) && not_null(address) && not_null(password) && isConfirm1 && isConfirm2 && isConfirm3) {
+        if (not_null(name) && not_null(gender)&& not_null(card) && not_null(phone) && not_null(address) && not_null(password) && isConfirm1 && isConfirm2 && isConfirm3) {
             return true;
         }
         return false;
