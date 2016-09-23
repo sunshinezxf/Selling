@@ -21,6 +21,8 @@ public class AgentForm {
 
     @NotNull
     private String address;
+    
+    private String card;
 
     @NotNull
     private String password;
@@ -76,8 +78,16 @@ public class AgentForm {
     public void setAddress(String address) {
         this.address = address;
     }
+    
+    public String getCard() {
+		return card;
+	}
 
-    public String getPassword() {
+	public void setCard(String card) {
+		this.card = card;
+	}
+
+	public String getPassword() {
         return password;
     }
 

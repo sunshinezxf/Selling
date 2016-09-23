@@ -547,3 +547,7 @@ CREATE TABLE IF NOT EXISTS `selling`.`short_url` (
   PRIMARY KEY (`url_id`)
 )
   ENGINE = InnoDB;
+
+##2016年9月23日更新
+ALTER TABLE `selling`.`agent`
+ADD COLUMN `agent_card` VARCHAR(50) DEFAULT NULL AFTER `agent_gender`;
