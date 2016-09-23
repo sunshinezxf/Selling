@@ -8,6 +8,7 @@ import common.sunshine.model.selling.agent.Credit;
 import common.sunshine.model.selling.customer.Customer;
 import common.sunshine.model.selling.customer.CustomerPhone;
 import common.sunshine.model.selling.order.CustomerOrder;
+import common.sunshine.model.selling.order.EventOrder;
 import common.sunshine.model.selling.order.Order;
 import common.sunshine.model.selling.order.OrderItem;
 import common.sunshine.model.selling.order.support.OrderItemStatus;
@@ -19,6 +20,12 @@ import common.sunshine.utils.Encryption;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
 import common.sunshine.utils.SortRule;
+import jxl.write.Label;
+import jxl.write.WritableSheet;
+import jxl.write.WritableWorkbook;
+import jxl.write.WriteException;
+import jxl.write.biff.RowsExceededException;
+
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
@@ -45,10 +52,16 @@ import selling.sunshine.service.*;
 import selling.sunshine.utils.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -2163,4 +2176,55 @@ public class AgentController {
         result.setData(data);
         return result;
     }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/downloadAgentExcel")
+    public String downloadOrderExcel(HttpServletRequest request, HttpServletResponse response) throws IOException, RowsExceededException, WriteException {
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("blockFlag", false);
+        condition.put("granted", true);
+        List<Agent> agentList = (List<Agent>) agentService
+                .fetchAgent(condition).getData();
+        response.reset();
+        response.setContentType("application/vnd.ms-excel");
+        response.setCharacterEncoding("utf-8");
+        response.setHeader("Content-Disposition", "attachment;filename="
+                + URLEncoder.encode("代理商.xls", "utf-8"));
+        OutputStream os = response.getOutputStream();
+        WritableWorkbook book = null;
+        WritableSheet sheet1;
+        //book = Workbook.createWorkbook(os);
+        book = jxl.Workbook.createWorkbook(os);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        if (agentList != null) {
+            sheet1 = book.createSheet(" 代理商 ", 0);
+            String headerArr[] = {"代理商编号", "姓名", "性别", "手机号", "地址", "注册时间", "身份证",
+                    "群员人数", "上级代理编号","上级代理姓名"};
+
+            for (int i = 0; i < headerArr.length; i++) {
+                sheet1.addCell(new Label(i, 0, headerArr[i]));
+            }
+            int k = 1;
+            for (int i = 0; i < agentList.size(); i++) {
+                Agent agent = agentList.get(i);
+                sheet1.addCell(new Label(0, k, agent.getAgentId()));
+                sheet1.addCell(new Label(1, k, agent.getName()));
+                sheet1.addCell(new Label(2, k, agent.getGender().equals("M")?"男":"女"));
+                sheet1.addCell(new Label(3, k, agent.getPhone()));
+                sheet1.addCell(new Label(4, k, agent.getAddress()));
+                sheet1.addCell(new Label(5, k, new SimpleDateFormat("yyyy-MM-dd").format(agent.getCreateAt())));
+                sheet1.addCell(new Label(6, k, agent.getCard() == null ? "未填":agent.getCard()));
+                sheet1.addCell(new Label(7, k, String.valueOf(agent.getClaimScale())));
+                sheet1.addCell(new Label(8, k, agent.getUpperAgent() == null ? "无" : agent.getUpperAgent().getAgentId()));
+                sheet1.addCell(new Label(9, k, agent.getUpperAgent() == null ? "无" : agent.getUpperAgent().getName()));
+                k++;
+            }
+        }
+        // 写入数据并关闭文件
+        book.write();
+        book.close();
+        os.flush();
+        os.close();
+        return null;
+    }
+
 }

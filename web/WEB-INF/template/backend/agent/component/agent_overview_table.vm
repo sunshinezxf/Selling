@@ -11,7 +11,8 @@
     </div>
     <div class="row">
         <div class="col-md-12 col-lg-12" style="margin-bottom:2em;">
-            <a href="${path.concat('/message/send')}" class="btn btn-primary">短信推送</a>
+            <a href="${path.concat('/message/send')}" class="btn btn-primary">短信推送</a>&nbsp;
+            <a href="${path.concat('/agent/downloadAgentExcel')}" class="btn btn-primary">代理信息下载</a>
         </div>
         <div class="col-md-12 col-lg-12">
             <table id="overview_agent_table" class="table table-striped table-bordered" cellspacing="0" width="100%">
