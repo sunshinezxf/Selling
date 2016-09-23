@@ -25,15 +25,7 @@
                     </span>
                     </div>
                 </a>
-                <div class="weui_cell">
-                    <div class="weui_cell_hd">
-                        <label class="weui_label">身份证号</label>
-                    </div>
-                    <div class="weui_cell_bd weui_cell_primary">
-                        <input class="weui_input" id="card" name="card" type="text" placeholder="请填写身份证号"
-                               autocomplete="off"/>
-                    </div>
-                </div>
+                
                 <div class="weui_cell">
                     <div class="weui_cell_hd">
                         <label class="weui_label">手机</label>
@@ -59,6 +51,15 @@
                     <div class="weui_cell_bd weui_cell_primary">
                         <input class="weui_input" id="agent_password" name="password" type="password"
                                placeholder="请设置账户密码" autocomplete="off"/>
+                    </div>
+                </div>
+                <div class="weui_cell">
+                    <div class="weui_cell_hd">
+                        <label class="weui_label">身份证</label>
+                    </div>
+                    <div class="weui_cell_bd weui_cell_primary">
+                        <input class="weui_input" id="card" name="card" type="text" placeholder="请填写身份证号"
+                               autocomplete="off"/>
                     </div>
                 </div>
                 <div class="weui_cell">
