@@ -13,6 +13,7 @@ public class Agent extends Entity {
     private String gender;
     private String phone;
     private String address;
+    private String card;
     private String password;
     private String wechat;
     private boolean granted;
@@ -33,28 +34,29 @@ public class Agent extends Entity {
         this.password = password;
     }
 
-    public Agent(String name, String gender, String phone, String address, String password) {
+    public Agent(String name, String gender, String phone, String address, String card, String password) {
         this();
         this.name = name;
         this.gender = gender;
         this.phone = phone;
         this.address = address;
+        this.card = card;
         this.password = password;
     }
 
-    public Agent(String name, String gender, String phone, String address, String password, String wechat) {
-        this(name, gender, phone, address, password);
+    public Agent(String name, String gender, String phone, String address, String card, String password, String wechat) {
+        this(name, gender, phone, address, card, password);
         if (!StringUtils.isEmpty(wechat)) {
             this.wechat = wechat;
         }
     }
 
-    public Agent(String name, String gender, String phone, String address, String password, String wechat, int claimScale) {
-        this(name, gender, phone, address, password, wechat);
+    public Agent(String name, String gender, String phone, String address, String card, String password, String wechat, int claimScale) {
+        this(name, gender, phone, address, card, password, wechat);
         this.claimScale = claimScale;
     }
 
-    public Agent(String agentId, String name, String gender, String phone, String address, String password,
+    public Agent(String agentId, String name, String gender, String phone, String address, String card, String password,
 			String wechat, boolean granted, double coffer, double agentRefund, int claimScale, boolean customerService,
 			common.sunshine.model.selling.agent.lite.Agent upperAgent) {
 		super();
@@ -63,6 +65,7 @@ public class Agent extends Entity {
 		this.gender = gender;
 		this.phone = phone;
 		this.address = address;
+		this.card = card;
 		this.password = password;
 		this.wechat = wechat;
 		this.granted = granted;
@@ -112,8 +115,16 @@ public class Agent extends Entity {
     public void setAddress(String address) {
         this.address = address;
     }
+    
+    public String getCard() {
+		return card;
+	}
 
-    public String getPassword() {
+	public void setCard(String card) {
+		this.card = card;
+	}
+
+	public String getPassword() {
         return password;
     }
 

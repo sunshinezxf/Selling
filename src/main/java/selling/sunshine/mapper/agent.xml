@@ -8,6 +8,7 @@
         <result property="gender" column="agent_gender"></result>
         <result property="phone" column="agent_phone"></result>
         <result property="address" column="agent_address"></result>
+        <result property="card" column="agent_card"></result>
         <result property="wechat" column="agent_wechat"></result>
         <result property="password" column="agent_password"></result>
         <result property="granted" column="agent_granted"></result>
@@ -36,6 +37,7 @@
             agent_gender = #{gender},
             agent_phone = #{phone},
             agent_address = #{address},
+            agent_card = #{card},
             agent_password = #{password},
             agent_wechat = #{wechat},
             agent_granted = #{granted},
@@ -55,7 +57,7 @@
     </select>
 
     <select id="query" parameterType="java.util.Map" resultMap="agentVo">
-        SELECT agent_id, upper_agent_id,agent_coffer, agent_name, agent_gender, agent_phone, agent_address,
+        SELECT agent_id, upper_agent_id,agent_coffer, agent_name, agent_gender, agent_phone, agent_address, agent_card,
         agent_password,
         agent_wechat, agent_refund, agent_granted, block_flag, create_time, scale,customer_service
         FROM agent
@@ -83,6 +85,9 @@
         </if>
         <if test="phone != null and phone != ''">
             AND agent_phone = #{phone}
+        </if>
+        <if test="card != null and card != ''">
+        	AND agent_card = #{card}
         </if>
         <if test="agentRefund != null">
             AND agent_refund = #{agentRefund}
@@ -120,6 +125,9 @@
             </if>
             <if test="address != null and address != ''">
                 agent_address = #{address},
+            </if>
+            <if test="card != null and card != ''">
+                agent_card = #{card},
             </if>
             <if test="wechat != null and wechat != ''">
                 agent_wechat = #{wechat},
