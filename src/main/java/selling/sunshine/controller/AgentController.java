@@ -1675,6 +1675,17 @@ public class AgentController {
         ResultData fetchResponse = agentService.fetchAgent(condition);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             Agent targetAgent = ((List<Agent>) agentService.fetchAgent(condition).getData()).get(0);
+            condition.clear();
+            condition.put("phone", targetAgent.getPhone());
+            condition.put("customerBlockFlag", false);
+            ResultData fetchCustomerResponse = customerService.fetchCustomerPhone(condition);
+            if (fetchCustomerResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                CustomerPhone phone = ((List<CustomerPhone>) fetchCustomerResponse.getData()).get(0);
+                condition.clear();
+                condition.put("customerId", phone.getCustomer().getCustomerId());
+                Customer customer = ((List<Customer>) customerService.fetchCustomer(condition).getData()).get(0);
+                customerService.deleteCustomer(customer);
+            }
             Subject subject = SecurityUtils.getSubject();
             User user = (User) subject.getPrincipal();
             if (user == null) {
@@ -2017,6 +2028,7 @@ public class AgentController {
         }
 
         //顾客人数
+        condition.put("blockFlag", false);
         queryData = customerService.fetchCustomer(condition);
         if (queryData.getResponseCode() == ResponseCode.RESPONSE_OK) {
             int customerNum = ((List<Customer>) queryData.getData()).size();
@@ -2025,6 +2037,7 @@ public class AgentController {
             view.addObject("customerNum", 0);
         }
         //代理商身份证照片
+        condition.remove("blockFlag");
         queryData = agentService.fetchCredit(condition);
         if (queryData.getResponseCode() == ResponseCode.RESPONSE_OK) {
             Credit credit = ((List<Credit>) queryData.getData()).get(0);

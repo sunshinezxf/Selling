@@ -71,6 +71,7 @@ public class CustomerController {
         }
         Map<String, Object> condition = new HashMap<String, Object>();
         condition.put("agentId", agentId);
+        condition.put("blockFlag", false);
         ResultData fetchResponse = customerService.fetchCustomer(condition, param);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             result = (DataTablePage<Customer>) fetchResponse.getData();
