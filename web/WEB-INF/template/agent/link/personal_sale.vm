@@ -18,9 +18,9 @@
         <div class="bd">
             <div class="weui-cells">
                 #foreach($goods in $goodsList)
-                <a class="weui-cell weui-cell_access" href="${path.concat('/agent/personalsale/${goods.goodsId}')}">
+                <a class="weui-cell weui-cell_access" href="${path.concat('/agent/personalsale/')}+${goods.goodsId}">
                     <div class="weui-cell__bd">
-                        <p>${goods.name}(${goods.price})</p>
+                        <p>${goods.name}<span>(</span>${goods.agentPrice}<span>)</span></p>
                     </div>
                     <div class="weui-cell__ft"></div>
                 </a>
