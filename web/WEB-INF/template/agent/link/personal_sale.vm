@@ -18,12 +18,12 @@
         <div class="bd">
             <div class="weui-cells">
                 #foreach($goods in $goodsList)
-                <a class="weui_cells_access weui_cell goods" href="javascript:;" id="${goods.goodsId}">
+                <div class="weui_cells_access weui_cell goods" id="${goods.goodsId}">
                     <div class="weui_cell_bd weui_cell_primary">
                         <p>${goods.name}<span>(</span>${goods.agentPrice}<span>)</span></p>
                     </div>
                     <div class="weui_cell_ft"></div>
-                </a>
+                </div>
                 #end
             </div>
         </div>
