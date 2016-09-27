@@ -18,11 +18,11 @@
         <div class="bd">
             <div class="weui-cells">
                 #foreach($goods in $goodsList)
-                <a class="weui-cell weui-cell_access" href="${path.concat('/agent/personalsale/')}+${goods.goodsId}">
-                    <div class="weui-cell__bd">
+                <a class="weui_cells_access weui_cell goods" href="javascript:;" id="${goods.goodsId}">
+                    <div class="weui_cell_bd weui_cell_primary">
                         <p>${goods.name}<span>(</span>${goods.agentPrice}<span>)</span></p>
                     </div>
-                    <div class="weui-cell__ft"></div>
+                    <div class="weui_cell_ft"></div>
                 </a>
                 #end
             </div>
@@ -32,7 +32,11 @@
 </div>
 </body>
 <script>
-    
+    $(".goods").each(function(){
+        $(this).click(function(){
+            window.location.href="${path.concat('/agent/personalsale/')}"+$(this).attr("id");
+        })
+    });
 </script>
 <script>
     var title = "商品分享";
