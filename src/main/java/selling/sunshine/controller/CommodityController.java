@@ -254,6 +254,25 @@ public class CommodityController {
             HttpSession session = request.getSession();
             session.setAttribute("openId", openId);
         }
+        Map<String, Object> condition = new HashMap<String, Object>();
+        condition.put("blockFlag", false);
+        ResultData fetchGoodsData = commodityService.fetchGoods4Customer(condition);
+        if(fetchGoodsData.getResponseCode() != ResponseCode.RESPONSE_OK){
+        	WechatConfig.oauthWechat(view, "/customer/component/goods_error_msg");
+            view.setViewName("/customer/component/goods_error_msg");
+            return view;
+        }
+        List<Goods4Customer> goods4Customers = (List<Goods4Customer>) fetchGoodsData.getData();
+        for(Goods4Customer goods: goods4Customers){
+        	List<Thumbnail> thumbnails = goods.getThumbnails();
+        	for(Thumbnail thumbnail : thumbnails){
+        		if(!thumbnail.getType().equals("cover")){
+        			thumbnails.remove(thumbnail);
+        		}
+        	}
+        }
+        view.addObject("goodsList", goods4Customers);
+        view.setViewName("/customer/goods/goods_list");
         return view;
     }
 
