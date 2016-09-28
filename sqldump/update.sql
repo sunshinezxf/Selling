@@ -559,3 +559,9 @@ ADD COLUMN `universal_month` INT(11) NOT NULL DEFAULT '1' AFTER `isUniversal`;
 ALTER TABLE `selling`.`refund_config` 
 CHANGE COLUMN `isUniversal` `universal` TINYINT(1) NOT NULL DEFAULT '1' ;
 
+##2016年9月28日更新
+ALTER TABLE `selling`.`goods_thumbnail`
+ADD COLUMN `type` VARCHAR(50) DEFAULT NULL AFTER `goods_id`;
+
+ALTER TABLE `selling`.`goods`
+ADD COLUMN `standard` VARCHAR(50) DEFAULT NULL AFTER `agent_price`;
