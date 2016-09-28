@@ -65,6 +65,16 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label class="col-sm-2 col-md-2 col-lg-2 control-label" for="goods_">
+                        商品规格
+                    </label>
+
+                    <div class="col-sm-8 col-md-8 col-lg-8">
+                        <input type="text" class="form-control" id="goods_" name=""
+                               placeholder="商品规格，例如：180克/瓶" required="" autocomplete="off"/>
+                    </div>
+                </div>
+                <div class="form-group">
                     <label class="col-sm-2 col-md-2 col-lg-2 control-label" for="goods_description">
                         商品描述
                     </label>
@@ -79,6 +89,7 @@
 
                     <div class="col-sm-8 col-md-8 col-lg-8">
                         <input id="goods_picture" name="picture" type="file" accept="image/*"/>
+                        <p class="help-block">要求：请尽量上传正方形图片，图片不大于100k</p>
                     </div>
                 </div>
                 <div class="form-group">
@@ -87,6 +98,7 @@
                     <div class="col-sm-8 col-md-8 col-lg-8">
                         <input id="goods_thumnail" name="thumbnail" type="file" accept="image/*" multiple
                                class="file-loading"/>
+                        <p class="help-block">要求：图片不大于100k</p>
                     </div>
                 </div>
                 <div class="form-group">
@@ -184,7 +196,9 @@
             showClose: false,
             initialPreviewAsData: true,
             overwriteInitial: false,
-            dropZoneEnabled: false
+            dropZoneEnabled: false,
+            maxFileSize: 100,
+            allowedFileExtensions: ['jpg', 'jpeg', 'png', 'gif'],
         }).on('fileuploaded', function (event, result) {
             
         });
@@ -210,7 +224,9 @@
             initialPreviewAsData: true,
             overwriteInitial: false,
             dropZoneEnabled: false,
-            maxFileCount:1
+            maxFileCount:1,
+            maxFileSize: 100,
+            allowedFileExtensions: ['jpg', 'jpeg', 'png', 'gif'],
         }).on('fileuploaded', function (event, result) {
             
         });
