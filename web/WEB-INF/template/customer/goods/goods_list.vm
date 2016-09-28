@@ -1,0 +1,31 @@
+#parse("/common/util.vm")
+<html lang="zh_CN">
+<head>
+    #parse("/customer/component/init.vm")
+    <link rel="stylesheet" href="${path.concat('/material/css/customer/goods_list.css')}"/>
+    <title>商品列表</title>
+</head>
+<body ontouchstart>
+    <header class="head">
+        <h4>云草纲目</h4>
+    </header>
+    <div class="gap"></div>
+    <main>
+        <div class="list">
+            <div class="item">
+                <div class="upper">
+                    <img />
+                </div>
+                <div class="middle">
+                    <p></p>
+                </div>
+                <div class="down">
+                    <p></p>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+<script>
+</script>
+</html>

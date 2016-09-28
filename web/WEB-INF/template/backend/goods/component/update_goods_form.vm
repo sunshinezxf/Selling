@@ -65,6 +65,16 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label class="col-sm-2 col-md-2 col-lg-2 control-label" for="goods_standard">
+                        商品规格
+                    </label>
+
+                    <div class="col-sm-8 col-md-8 col-lg-8">
+                        <input type="text" class="form-control" id="goods_standard" name="standard"
+                               placeholder="商品规格，例如：180克/瓶" required="" autocomplete="off"/>
+                    </div>
+                </div>
+                <div class="form-group">
                     <label class="col-sm-2 col-md-2 col-lg-2 control-label" for="goods_description">
                         商品描述
                     </label>
@@ -133,6 +143,7 @@
         $("#goods_name").val("");
         $("#goods_price").val("");
         $("#agent_price").val("");
+        $("#goods_standard").val("");
         $("#goods_description").val("");
     });
 
@@ -141,10 +152,11 @@
         var goods_name=$("#goods_name").val();
         var goods_price=$("#goods_price").val();
         var agent_price=$("#agent_price").val();
+        var goods_standard=$("#goods_standard").val();
         var goods_description=$("#goods_description").val();
             
-        if((typeof goods_name == "undefined" || goods_name == "")||(typeof goods_price == "undefined" || goods_price == "")||(typeof agent_price == "undefined" || agent_price == "")||(typeof goods_description == "undefined" || goods_description == "")){
-            $("#dialog").find(".modal-body").html("商品名称、原价、代理商价格和描述任何一项都不能为空！");
+        if((typeof goods_name == "undefined" || goods_name == "")||(typeof goods_price == "undefined" || goods_price == "")||(typeof agent_price == "undefined" || agent_price == "")||(typeof goods_standard == "undefined" || goods_standard == "")||(typeof goods_description == "undefined" || goods_description == "")){
+            $("#dialog").find(".modal-body").html("商品名称、原价、代理商价格、规格和描述任何一项都不能为空！");
     		$("#dialog").modal('show');    
         }else{
             $("#update_goods_form").attr("action", "${path.concat('/commodity/edit/')}${goods.goodsId}");

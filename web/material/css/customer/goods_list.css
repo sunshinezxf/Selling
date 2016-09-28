@@ -1,0 +1,19 @@
+body, html {
+    height: 100%;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    overflow-x: hidden;
+    background-color: #EFEFF4;
+}
+
+.head{
+	width:100%;
+	background-color: #EFEFF4;
+}
+
+.head p{
+	color:#d0c080;
+	font:bold 1em/2em Arial, sans-serif;
+}
