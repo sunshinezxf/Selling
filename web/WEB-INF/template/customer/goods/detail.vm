@@ -120,22 +120,22 @@
         $('#parameters').hide();
         $('#more').hide();
 
-        $(".logo").fancybox({
-            padding: 0,
-            closeBtn: false,
-            closeClick: true,
-            afterShow: function () {
-                $('.fancybox-outter').addClass('pinch-zoom-container');
-                $('.fancybox-inner').addClass('pinch-zoom');
-                $('div.pinch-zoom').each(function () {
-                    new RTP.PinchZoom($(this), {});
-                });
-                forbidden = true;
-            },
-            afterClose: function () {
-                forbidden = false;
-            }
-        });
+        //$(".logo").fancybox({
+        //    padding: 0,
+        //    closeBtn: false,
+        //    closeClick: true,
+        //    afterShow: function () {
+        //        $('.fancybox-outter').addClass('pinch-zoom-container');
+        //        $('.fancybox-inner').addClass('pinch-zoom');
+        //        $('div.pinch-zoom').each(function () {
+        //            new RTP.PinchZoom($(this), {});
+        //        });
+        //        forbidden = true;
+        //    },
+        //    afterClose: function () {
+        //        forbidden = false;
+        //    }
+        //});
 
         $("#feelings").fancybox({
             padding: 0,

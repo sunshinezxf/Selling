@@ -24,11 +24,11 @@
         <table class="p_table">
             <tr>
                 <td class="p_hd">产品名称</td>
-                <td class="p_bd">云草纲目三七超细粉</td>
+                <td class="p_bd">${goods.name}</td>
             </tr>
             <tr>
                 <td class="p_hd">规格</td>
-                <td class="p_bd">180克/瓶</td>
+                <td class="p_bd">${goods.standard}</td>
             </tr>
             <tr>
                 <td class="p_hd">原料产地</td>

@@ -1,26 +1,22 @@
 <div class="unslider_div">
     <div class="fading-slider">
         <ul>
+            #foreach($path in $(goods.thumbnails))
+            #set($index=$velocityCount-1)
+            #if($index==0)
             <li>
-                <a id="first_img" class="logo" href="${path.concat('/material/goods_img/1_b.jpg')}">
-                    <img class="img" src="${path.concat('/material/goods_img/1.jpg')}"/>
+                <a id="first_img" class="logo" href="${path}">
+                    <img class="img" src="${path}"/>
                 </a>
             </li>
+            #else
             <li>
-                <a class="logo" href="${path.concat('/material/goods_img/2_b.jpg')}">
-                    <img class="img" src="${path.concat('/material/goods_img/2.jpg')}"/>
+                <a class="logo" href="${path}">
+                    <img class="img" src="${path}"/>
                 </a>
             </li>
-            <li>
-                <a class="logo" href="${path.concat('/material/goods_img/3_b.jpg')}">
-                    <img class="img" src="${path.concat('/material/goods_img/3.jpg')}"/>
-                </a>
-            </li>
-            <li>
-                <a class="logo" href="${path.concat('/material/goods_img/4_b.jpg')}">
-                    <img class="img" src="${path.concat('/material/goods_img/4.jpg')}"/>
-                </a>
-            </li>
+            #end
+            #end
         </ul>
     </div>
 </div>
