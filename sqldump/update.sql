@@ -551,3 +551,11 @@ CREATE TABLE IF NOT EXISTS `selling`.`short_url` (
 ##2016年9月23日更新
 ALTER TABLE `selling`.`agent`
 ADD COLUMN `agent_card` VARCHAR(50) DEFAULT NULL AFTER `agent_gender`;
+
+##2016年9月27日更新
+ALTER TABLE `selling`.`refund_config` 
+ADD COLUMN `isUniversal` TINYINT(1) NOT NULL DEFAULT '1' AFTER `create_time`,
+ADD COLUMN `universal_month` INT(11) NOT NULL DEFAULT '1' AFTER `isUniversal`;
+ALTER TABLE `selling`.`refund_config` 
+CHANGE COLUMN `isUniversal` `universal` TINYINT(1) NOT NULL DEFAULT '1' ;
+
