@@ -37,6 +37,15 @@ body {
 	border-bottom:1px solid #EFEFF4;
 }
 
+.list .item:nth-last-child(2){
+	border-bottom:0;
+}
+
+.list .item:last-child{
+	border-bottom:0;
+}
+
+
 .item{
     width:50%;
     box-sizing:border-box;
