@@ -77,7 +77,7 @@ public class CommodityServiceImpl implements CommodityService {
 		result.setResponseCode(response.getResponseCode());
 		if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
 			if (((List) response.getData()).isEmpty()) {
-				response.setResponseCode(ResponseCode.RESPONSE_NULL);
+				result.setResponseCode(ResponseCode.RESPONSE_NULL);
 			}
 			result.setData(response.getData());
 		}

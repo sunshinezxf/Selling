@@ -596,6 +596,63 @@ public class AgentController {
         view.setViewName("/agent/link/personal_sale");
         return view;
     }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/personalsale/{goodsId}")
+    public ModelAndView personalSaleDetail(@PathVariable("goodsId") String goodsId){
+    	ModelAndView view = new ModelAndView();
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        if (user == null || user.getAgent() == null) {
+            view.setViewName("/agent/login");
+            return view;
+        }
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("blockFlag", false);
+        condition.put("goodsId", goodsId);
+        ResultData fetchGoodsData = commodityService.fetchGoods4Agent(condition);
+        if(fetchGoodsData.getResponseCode() != ResponseCode.RESPONSE_OK){
+        	 Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "未找到该商品", "/agent/personalsale");
+             view.addObject("prompt", prompt);
+             WechatConfig.oauthWechat(view, "/agent/prompt");
+             view.setViewName("/agent/prompt");
+             return view;
+        }
+        Goods4Agent goods = ((List<Goods4Agent>)fetchGoodsData.getData()).get(0);
+        String link = "";
+        String url = "http://" + PlatformConfig.getValue("server_url") + "/commodity/" + goods.getGoodsId() + "?agentId=" + user.getAgent().getAgentId();
+        try {
+            String shareURL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + PlatformConfig.getValue("wechat_appid") + "&redirect_uri=" + URLEncoder.encode(url, "utf-8") + "&response_type=code&scope=snsapi_base&state=view#wechat_redirect";
+            if (StringUtils.isEmpty(link)) {
+                link = shareURL;
+            }
+            condition.clear();
+            condition.put("longUrl",shareURL);
+            condition.put("blockFlag", false);
+            ResultData fetchShortUrl = shortUrlService.fetchShortUrl(condition);
+            if(fetchShortUrl.getResponseCode() == ResponseCode.RESPONSE_OK){
+            	shareURL = ((List<ShortUrl>)fetchShortUrl.getData()).get(0).getShortUrl();
+            } else if(fetchShortUrl.getResponseCode() == ResponseCode.RESPONSE_NULL){
+            	String shortUrlString = WechatUtil.long2short(shareURL);
+            	if(shortUrlString != null){
+    				ShortUrl shortUrl = new ShortUrl();
+    				shortUrl.setLongUrl(shareURL);
+    				shortUrl.setShortUrl(shortUrlString);
+    				ResultData createResult = shortUrlService.createShortUrl(shortUrl);
+    				if(createResult.getResponseCode() == ResponseCode.RESPONSE_OK){
+    					shareURL = shortUrlString;
+    				}
+    			}
+            }
+            view.addObject("agent", user.getAgent());
+            view.addObject("goods", goods);
+            view.addObject("url", shareURL);
+            WechatConfig.oauthWechat(view, "/agent/personalsale/" + goodsId, link);
+            view.setViewName("agent/link/goods_qrcode");
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        return view;
+    }
 
     @RequestMapping(method = RequestMethod.GET, value = "/gift")
     public ModelAndView sendGift() {

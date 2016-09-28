@@ -414,7 +414,6 @@ public class CommodityController {
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/upload")
     public String upload(MultipartHttpServletRequest request) {
-        System.err.println("test");
         String context = request.getSession().getServletContext().getRealPath("/");
         JSONObject resultObject = new JSONObject();
         try {
@@ -424,8 +423,40 @@ public class CommodityController {
                 ResultData response = uploadService.upload(file, context);
                 if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
                     Thumbnail thumbnail = new Thumbnail((String) response.getData());
-
-
+                    String thumbnailId = ((Thumbnail) commodityService.createThumbnail(thumbnail).getData()).getThumbnailId();
+                    JSONArray initialPreviewArray = new JSONArray();
+                    JSONArray initialPreviewConfigArray = new JSONArray();
+                    JSONObject initialPreviewConfigObject = new JSONObject();
+//                  initialPreviewArray.add("/selling" + response.getData().toString());
+                    initialPreviewArray.add(response.getData().toString());
+//                  initialPreviewConfigObject.put("url", "/selling/commodity/delete/Thumbnail/"+thumbnailId);
+                    initialPreviewConfigObject.put("url", "/commodity/delete/Thumbnail/" + thumbnailId);
+                    initialPreviewConfigObject.put("key", thumbnailId);
+                    initialPreviewConfigArray.add(initialPreviewConfigObject);
+                    resultObject.put("initialPreview", initialPreviewArray);
+                    resultObject.put("initialPreviewConfig", initialPreviewConfigArray);
+                    return resultObject.toJSONString();
+                }
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        resultObject.put("error", "上传此图片发生错误，请重试！");
+        return resultObject.toJSONString();
+    }
+    
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value = "/uploadthumbnail")
+    public String uploadThumbnail(MultipartHttpServletRequest request) {
+        String context = request.getSession().getServletContext().getRealPath("/");
+        JSONObject resultObject = new JSONObject();
+        try {
+            String filename = "thumbnail";
+            MultipartFile file = request.getFile(filename);
+            if (file != null) {
+                ResultData response = uploadService.upload(file, context);
+                if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                    Thumbnail thumbnail = new Thumbnail((String) response.getData());
                     String thumbnailId = ((Thumbnail) commodityService.createThumbnail(thumbnail).getData()).getThumbnailId();
                     JSONArray initialPreviewArray = new JSONArray();
                     JSONArray initialPreviewConfigArray = new JSONArray();
