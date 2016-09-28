@@ -3,6 +3,7 @@
 <mapper namespace="selling.goods.thumbnail">
     <resultMap id="goodsThumbnailVo" type="common.sunshine.model.selling.goods.Thumbnail">
         <result property="thumbnailId" column="thumbnail_id"></result>
+        <result property="type" column="type"></result>
         <result property="path" column="thumbnail_path"></result>
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
@@ -29,6 +30,9 @@
             <if test="path != null">
                 thumbnail_path = #{path},
             </if>
+            <if test="type != null">
+            	type = #{type},
+            </if>
             <if test="goods != null and goods.goodsId != null">
                 goods_id = #{goods.goodsId},
             </if>
@@ -43,7 +47,7 @@
     
     <!-- 查询商品图片信息 -->
     <select id="query" parameterType="java.util.Map" resultMap="goodsThumbnailVo">
-        SELECT thumbnail_id,thumbnail_path,block_flag,create_time,goods_id
+        SELECT thumbnail_id,thumbnail_path,type,block_flag,create_time,goods_id
         FROM goods_thumbnail
         WHERE 1=1
         <if test="thumbnailId != null and thumbnailId != ''">
@@ -52,6 +56,9 @@
         <if test="path != null and path != ''">
             AND thumbnail_path = #{path}
         </if>
+        <if test="type != null and type != ''">
+        	AND type = #{type}
+        </if>
         <if test="goodsId != null and goodsId != ''">
             AND goods_id = #{goodsId}
         </if>
@@ -59,7 +66,7 @@
     
     <!-- 查询goodsId为空的所有的商品图片信息 -->
      <select id="query_Goods_NULL"  resultMap="goodsThumbnailVo">
-        SELECT thumbnail_id,thumbnail_path,block_flag,create_time,goods_id
+        SELECT thumbnail_id,thumbnail_path,type,block_flag,create_time,goods_id
         FROM goods_thumbnail
         WHERE goods_id IS NULL;
      </select>

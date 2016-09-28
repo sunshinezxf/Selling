@@ -14,24 +14,24 @@ public class Goods4Customer extends Goods4Agent {
         super();
     }
 
-    public Goods4Customer(String name, String description) {
-        super(name, description);
+    public Goods4Customer(String name, String description, String standard) {
+        super(name, description, standard);
     }
     
-    public Goods4Customer(String name, double agentPrice, double customerPrice, String description) {
-        super(name, agentPrice, description);
+    public Goods4Customer(String name, double agentPrice, double customerPrice, String description, String standard) {
+        super(name, agentPrice, description, standard);
         this.customerPrice = customerPrice;
     }
 
-    public Goods4Customer(String name, double agentPrice, double customerPrice, String description, List<Thumbnail> thumbnails) {
-        this(name, agentPrice, customerPrice, description);
+    public Goods4Customer(String name, double agentPrice, double customerPrice, String description, String standard, List<Thumbnail> thumbnails) {
+        this(name, agentPrice, customerPrice, description, standard);
         if (!thumbnails.isEmpty()) {
             this.thumbnails = thumbnails;
         }
     }
 
-    public Goods4Customer(String name, double agentPrice, double customerPrice, String description, List<Thumbnail> thumbnails, boolean blockFlag) {
-        this(name, agentPrice, customerPrice, description, thumbnails);
+    public Goods4Customer(String name, double agentPrice, double customerPrice, String description, String standard, List<Thumbnail> thumbnails, boolean blockFlag) {
+        this(name, agentPrice, customerPrice, description, standard, thumbnails);
         this.setBlockFlag(blockFlag);
     }
 

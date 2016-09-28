@@ -9,6 +9,7 @@ public abstract class AbstractGoods extends Entity {
     private String goodsId;
     private String name;
     private String description;
+    private String standard;
 
     public String getGoodsId() {
         return goodsId;
@@ -33,4 +34,12 @@ public abstract class AbstractGoods extends Entity {
     public void setDescription(String description) {
         this.description = description;
     }
+
+	public String getStandard() {
+		return standard;
+	}
+
+	public void setStandard(String standard) {
+		this.standard = standard;
+	}
 }

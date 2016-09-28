@@ -81,7 +81,7 @@ public class CommodityController {
             return view;
         }
 
-        Goods4Customer goods = new Goods4Customer(form.getName(), Double.parseDouble(form.getAgentPrice()), Double.parseDouble(form.getPrice()), form.getDescription());
+        Goods4Customer goods = new Goods4Customer(form.getName(), Double.parseDouble(form.getAgentPrice()), Double.parseDouble(form.getPrice()), form.getDescription(), form.getStandard());
         goods.setBlockFlag(form.isBlock());
         ResultData response = commodityService.createGoods4Customer(goods);
         if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
@@ -175,7 +175,7 @@ public class CommodityController {
         Goods4Customer oldGoods = ((List<Goods4Customer>) queryData.getData()).get(0);
         Goods4Customer goods = new Goods4Customer(form.getName(),
                 Double.parseDouble(form.getAgentPrice()),
-                Double.parseDouble(form.getPrice()), form.getDescription());
+                Double.parseDouble(form.getPrice()), form.getDescription(), form.getStandard());
         goods.setBlockFlag(form.isBlock());
         goods.setGoodsId(goodsId);
         ResultData response = commodityService.updateGoods4Customer(goods);
@@ -223,6 +223,38 @@ public class CommodityController {
             result = (DataTablePage<Goods4Customer>) response.getData();
         }
         return result;
+    }
+    
+    public ModelAndView viewList(HttpServletRequest request, @PathVariable("goodsId") String goodsId, String agentId, String code, String state) {
+    	ModelAndView view = new ModelAndView();
+        String openId = null;
+        if (StringUtils.isEmpty(code) || StringUtils.isEmpty(state)) {
+            HttpSession session = request.getSession();
+            if (session.getAttribute("openId") == null || session.getAttribute("openId").equals("")) {
+                WechatConfig.oauthWechat(view, "/customer/component/goods_error_msg");
+                view.setViewName("/customer/component/goods_error_msg");
+                return view;
+            }
+        }
+        if(code != null && !code.equals("")){
+        	openId = WechatUtil.queryOauthOpenId(code);
+        }
+        if (openId == null || openId.equals("")) {
+            HttpSession session = request.getSession();
+            if (session.getAttribute("openId") != null && !session.getAttribute("openId").equals("")) {
+                openId = (String) session.getAttribute("openId");
+            }
+        }
+        if (openId == null || openId.equals("")) {
+            WechatConfig.oauthWechat(view, "/customer/component/goods_error_msg");
+            view.setViewName("/customer/component/goods_error_msg");
+            return view;
+        }
+        if (!StringUtils.isEmpty(openId)) {
+            HttpSession session = request.getSession();
+            session.setAttribute("openId", openId);
+        }
+        return view;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{goodsId}")
@@ -422,15 +454,15 @@ public class CommodityController {
             if (file != null) {
                 ResultData response = uploadService.upload(file, context);
                 if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
-                    Thumbnail thumbnail = new Thumbnail((String) response.getData());
+                    Thumbnail thumbnail = new Thumbnail((String) response.getData(), "cover");
                     String thumbnailId = ((Thumbnail) commodityService.createThumbnail(thumbnail).getData()).getThumbnailId();
                     JSONArray initialPreviewArray = new JSONArray();
                     JSONArray initialPreviewConfigArray = new JSONArray();
                     JSONObject initialPreviewConfigObject = new JSONObject();
-//                  initialPreviewArray.add("/selling" + response.getData().toString());
-                    initialPreviewArray.add(response.getData().toString());
-//                  initialPreviewConfigObject.put("url", "/selling/commodity/delete/Thumbnail/"+thumbnailId);
-                    initialPreviewConfigObject.put("url", "/commodity/delete/Thumbnail/" + thumbnailId);
+                  initialPreviewArray.add("/selling" + response.getData().toString());
+//                    initialPreviewArray.add(response.getData().toString());
+                  initialPreviewConfigObject.put("url", "/selling/commodity/delete/Thumbnail/"+thumbnailId);
+//                   initialPreviewConfigObject.put("url", "/commodity/delete/Thumbnail/" + thumbnailId);
                     initialPreviewConfigObject.put("key", thumbnailId);
                     initialPreviewConfigArray.add(initialPreviewConfigObject);
                     resultObject.put("initialPreview", initialPreviewArray);
@@ -456,15 +488,15 @@ public class CommodityController {
             if (file != null) {
                 ResultData response = uploadService.upload(file, context);
                 if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
-                    Thumbnail thumbnail = new Thumbnail((String) response.getData());
+                    Thumbnail thumbnail = new Thumbnail((String) response.getData(), "slide");
                     String thumbnailId = ((Thumbnail) commodityService.createThumbnail(thumbnail).getData()).getThumbnailId();
                     JSONArray initialPreviewArray = new JSONArray();
                     JSONArray initialPreviewConfigArray = new JSONArray();
                     JSONObject initialPreviewConfigObject = new JSONObject();
-//                  initialPreviewArray.add("/selling" + response.getData().toString());
-                    initialPreviewArray.add(response.getData().toString());
-//                  initialPreviewConfigObject.put("url", "/selling/commodity/delete/Thumbnail/"+thumbnailId);
-                    initialPreviewConfigObject.put("url", "/commodity/delete/Thumbnail/" + thumbnailId);
+                  initialPreviewArray.add("/selling" + response.getData().toString());
+//                    initialPreviewArray.add(response.getData().toString());
+                  initialPreviewConfigObject.put("url", "/selling/commodity/delete/Thumbnail/"+thumbnailId);
+//                    initialPreviewConfigObject.put("url", "/commodity/delete/Thumbnail/" + thumbnailId);
                     initialPreviewConfigObject.put("key", thumbnailId);
                     initialPreviewConfigArray.add(initialPreviewConfigObject);
                     resultObject.put("initialPreview", initialPreviewArray);

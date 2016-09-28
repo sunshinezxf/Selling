@@ -10,19 +10,19 @@ public class Goods4Agent extends AbstractGoods {
         super();
     }
 
-    public Goods4Agent(String name, String description) {
+    public Goods4Agent(String name, String description, String standard) {
         this();
         this.setName(name);
         this.setDescription(description);
     }
     
     public Goods4Agent(Goods4Customer goods4Customer){
-    	this(goods4Customer.getName(), goods4Customer.getDescription());
+    	this(goods4Customer.getName(), goods4Customer.getDescription(), goods4Customer.getStandard());
     	this.agentPrice = goods4Customer.getAgentPrice();
     }
 
-    public Goods4Agent(String name, double agentPrice, String description) {
-        this(name, description);
+    public Goods4Agent(String name, double agentPrice, String description, String standard) {
+        this(name, description, standard);
         this.agentPrice = agentPrice;
     }
 

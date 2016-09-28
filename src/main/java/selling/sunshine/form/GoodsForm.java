@@ -14,6 +14,8 @@ public class GoodsForm {
     private String agentPrice;
     @NotNull
     private String description;
+    
+    private String standard;
 
     private String[] path;
 
@@ -51,7 +53,15 @@ public class GoodsForm {
         this.description = description;
     }
 
-    public String[] getPath() {
+    public String getStandard() {
+		return standard;
+	}
+
+	public void setStandard(String standard) {
+		this.standard = standard;
+	}
+
+	public String[] getPath() {
         return path;
     }
 

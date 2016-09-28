@@ -4,6 +4,7 @@
     <resultMap id="goods4AgentVo" type="common.sunshine.model.selling.goods.Goods4Agent">
         <result property="goodsId" column="goods_id"></result>
         <result property="name" column="goods_name"></result>
+        <result property="standard" column="standard"></result>
         <result property="description" column="goods_description"></result>
         <result property="agentPrice" column="agent_price"></result>
         <result property="blockFlag" column="block_flag"></result>
@@ -13,6 +14,7 @@
     <resultMap id="goods4CustomerVo" type="common.sunshine.model.selling.goods.Goods4Customer">
         <result property="goodsId" column="goods_id"></result>
         <result property="name" column="goods_name"></result>
+        <result property="standard" column="standard"></result>
         <result property="description" column="goods_description"></result>
         <result property="customerPrice" column="prime_price"></result>
         <result property="agentPrice" column="agent_price"></result>
@@ -23,6 +25,7 @@
 
     <resultMap id="thumbnailVo" type="common.sunshine.model.selling.goods.Thumbnail">
         <result property="thumbnailId" column="thumbnail_id"></result>
+        <result property="type" column="type"></result>
         <result property="path" column="thumbnail_path"></result>
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
@@ -30,13 +33,13 @@
 
     <!-- insert record of goods -->
     <insert id="insert" parameterType="common.sunshine.model.selling.goods.Goods4Customer" useGeneratedKeys="false">
-        INSERT INTO goods(goods_id, goods_name, prime_price, agent_price, goods_description, block_flag, create_time)
-        VALUE (#{goodsId}, #{name}, #{customerPrice}, #{agentPrice}, #{description}, #{blockFlag}, #{createAt})
+        INSERT INTO goods(goods_id, goods_name, prime_price, agent_price, standard, goods_description, block_flag, create_time)
+        VALUE (#{goodsId}, #{name}, #{customerPrice}, #{agentPrice}, #{standard}, #{description}, #{blockFlag}, #{createAt})
     </insert>
 
     <!-- fetch goods info for agent -->
     <select id="query4Agent" parameterType="java.util.Map" resultMap="goods4AgentVo">
-        SELECT goods_id, goods_name, goods_description, agent_price, block_flag, create_time
+        SELECT goods_id, goods_name, goods_description, standard, agent_price, block_flag, create_time
         FROM goods
         WHERE 1 = 1
         <if test="goodsId != null and goodsId != ''">
@@ -58,7 +61,7 @@
 
     <!-- fetch goods info for customer or admin management -->
     <select id="query4Customer" parameterType="java.util.Map" resultMap="goods4CustomerVo">
-        SELECT goods_id, goods_name, goods_description, prime_price, agent_price, block_flag, create_time
+        SELECT goods_id, goods_name, goods_description, prime_price, agent_price, standard, block_flag, create_time
         FROM goods
         WHERE 1 = 1
         <if test="goodsId != null and goodsId != ''">
@@ -79,7 +82,7 @@
     </select>
 
     <select id="thumbnailQuery" parameterType="java.util.Map" resultMap="thumbnailVo">
-        SELECT thumbnail_id, thumbnail_path, block_flag, create_time
+        SELECT thumbnail_id, thumbnail_path, type, block_flag, create_time
         FROM goods_thumbnail
         WHERE goods_id = #{goodsId}
     </select>
@@ -99,6 +102,9 @@
             </if>
             <if test="description != null">
                 goods_description = #{description},
+            </if>
+            <if test="standard != null">
+            	standard = #{standard},
             </if>
             <if test="blockFlag != null">
                 block_flag = #{blockFlag},
