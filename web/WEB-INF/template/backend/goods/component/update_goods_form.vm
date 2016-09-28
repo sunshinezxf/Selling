@@ -85,6 +85,14 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label class="col-sm-2 col-md-2 col-lg-2 control-label" for="goods_picture">商品缩略图</label>
+
+                    <div class="col-sm-8 col-md-8 col-lg-8">
+                        <input id="goods_picture" name="picture" type="file" accept="image/*"/>
+                        <p class="help-block">要求：请尽量上传正方形图片，图片不大于100k</p>
+                    </div>
+                </div>
+                <div class="form-group">
                     <label class="col-sm-2 col-md-2 col-lg-2 control-label" for="goods_thumnail">商品图片</label>
 
                     <div class="col-sm-8 col-md-8 col-lg-8">
@@ -205,6 +213,36 @@
             
         });
      });
+       
+       $.post("${path.concat('/commodity/picture/')}${goods.goodsId}",function(result){
+           var array=eval(result);
+           $("#goods_picture").fileinput({
+              uploadUrl: "${path.concat('/commodity/uploadthumbnail')}",
+              browseClass: "btn btn-success",
+              browseLabel: "选择图片",
+              browseIcon: "<i class=\"glyphicon glyphicon-picture\"></i> ",
+              removeClass: "btn btn-danger",
+              removeLabel: "全部删除",
+              removeIcon: "<i class=\"glyphicon glyphicon-trash\"></i> ",
+              uploadClass: "btn btn-info",
+              uploadLabel: "上传",
+              uploadIcon: "<i class=\"glyphicon glyphicon-upload\"></i> ",
+              initialPreview:array[0],
+              initialPreviewConfig:array[1],
+              removeFromPreviewOnError: true,
+              showBrowse: false,
+              showCaption: false,
+              showCancel: false,
+              showRemove: false,
+              showUpload: true,
+              showClose: false,
+              initialPreviewAsData: true,
+              overwriteInitial: false,
+              dropZoneEnabled: false
+          }).on('fileuploaded', function (event, result) {
+              
+          });
+       });
         
        
    
