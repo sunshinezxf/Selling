@@ -551,3 +551,10 @@ CREATE TABLE IF NOT EXISTS `selling`.`short_url` (
 ##2016年9月23日更新
 ALTER TABLE `selling`.`agent`
 ADD COLUMN `agent_card` VARCHAR(50) DEFAULT NULL AFTER `agent_gender`;
+
+##2016年9月28日更新
+ALTER TABLE `selling`.`goods_thumbnail`
+ADD COLUMN `type` VARCHAR(50) DEFAULT NULL AFTER `goods_id`;
+
+ALTER TABLE `selling`.`goods`
+ADD COLUMN ``
