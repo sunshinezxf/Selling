@@ -8,12 +8,67 @@ body {
     background-color: #EFEFF4;
 }
 
-.head{
+.head,.main{
 	width:100%;
-	background-color: #EFEFF4;
+	background-color: #ffffff;
 }
 
-.head p{
+.gap{
+    width:100%;
+    height:0.5em;
+}
+
+.head h4{
+	color:#d0c080;
+	font:bold 1em/2em Arial, sans-serif;
+}
+
+.list{
+	width:100%;
+	padding:0.5em;
+}
+
+.list .item:nth-child(odd){
+	border-bottom:1px solid #EFEFF4;
+	border-right:1px solid #EFEFF4;
+}
+
+.list .item:nth-child(even){
+	border-bottom:1px solid #EFEFF4;
+}
+
+.item{
+    width:50%;
+    box-sizing:border-box;
+    float:left;
+}
+
+.upper{
+    position:relative;
+    height:0;
+    width:80%;
+    padding-bottom:80%;
+    margin:0 auto;
+}
+
+.upper img{
+    position:absolute;
+    width:100%;
+    height:100%;
+}
+
+.middle,.down{
+    position:relative;
+    width:80%;
+    margin:0 auto;
+}
+
+.middle p{
+    color:#d0c080;
+	font:bold 1em/2em Arial, sans-serif;
+}
+
+.down p{
 	color:#d0c080;
 	font:bold 1em/2em Arial, sans-serif;
 }
