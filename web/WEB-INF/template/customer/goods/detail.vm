@@ -102,40 +102,33 @@
         }).on('swiperight', function (e) {
             data.prev();
         });
-
-        //$('.img').load( function (){    //<img>加载url事件
-        //    var img = new Image();    //图片预加载
-        //    img.src= this.src;        //this为id="img"的dom节点对象
-        //    var rate=img.height/img.width; //这里的img.width和img.height为原图大小
-        //    this.height=this.width*rate;
-        //});
         
         // 判断图片加载状况，加载完成后回调
         isImgLoad(function(){
             // 加载完成
-            $('.unslider-fade').css('height', $('#first_img img').height());
+            $('.unslider-fade').css('height', $('.logo:first-child').height());
         });
         
         $('#detail').show();
         $('#parameters').hide();
         $('#more').hide();
 
-        //$(".logo").fancybox({
-        //    padding: 0,
-        //    closeBtn: false,
-        //    closeClick: true,
-        //    afterShow: function () {
-        //        $('.fancybox-outter').addClass('pinch-zoom-container');
-        //        $('.fancybox-inner').addClass('pinch-zoom');
-        //        $('div.pinch-zoom').each(function () {
-        //            new RTP.PinchZoom($(this), {});
-        //        });
-        //        forbidden = true;
-        //    },
-        //    afterClose: function () {
-        //        forbidden = false;
-        //    }
-        //});
+        $(".logo").fancybox({
+            padding: 0,
+            closeBtn: false,
+            closeClick: true,
+            afterShow: function () {
+                $('.fancybox-outter').addClass('pinch-zoom-container');
+                $('.fancybox-inner').addClass('pinch-zoom');
+                $('div.pinch-zoom').each(function () {
+                    new RTP.PinchZoom($(this), {});
+                });
+                forbidden = true;
+            },
+            afterClose: function () {
+                forbidden = false;
+            }
+        });
 
         $("#feelings").fancybox({
             padding: 0,

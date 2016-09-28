@@ -15,7 +15,7 @@
             #foreach($goods in ${goodsList})
             <div class="item" id="${goods.goodsId}">
                 <div class="upper">
-                    <img src="${goods.thumbnails.get(0)}"/>
+                    <img src="${goods.thumbnails.get(0).path}"/>
                 </div>
                 <div class="middle">
                     <p>${goods.name}</p>
@@ -29,8 +29,11 @@
     </main>
 </body>
 <script>
+    $(document).ready(function(){
+        
+    });
     $(".item").each(function(){
-        this.click(function(){
+        $(this).click(function(){
             window.location.href ="${path.concat('/commodity/')}" + $(this).attr("id");
         });
     });

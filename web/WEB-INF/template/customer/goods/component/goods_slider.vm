@@ -1,21 +1,12 @@
 <div class="unslider_div">
     <div class="fading-slider">
         <ul>
-            #foreach($path in $(goods.thumbnails))
-            #set($index=$velocityCount-1)
-            #if($index==0)
-            <li>
-                <a id="first_img" class="logo" href="${path}">
-                    <img class="img" src="${path}"/>
-                </a>
+            #foreach($thumbnail in ${goods.thumbnails})
+            <li class="logo">
+                ##<a class="logo" href="${thumbnail.path}">
+                    <img class="img" src="${thumbnail.path}"/>
+                ##</a>
             </li>
-            #else
-            <li>
-                <a class="logo" href="${path}">
-                    <img class="img" src="${path}"/>
-                </a>
-            </li>
-            #end
             #end
         </ul>
     </div>

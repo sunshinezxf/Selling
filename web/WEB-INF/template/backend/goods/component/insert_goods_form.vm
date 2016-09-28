@@ -98,7 +98,7 @@
                     <div class="col-sm-8 col-md-8 col-lg-8">
                         <input id="goods_thumnail" name="thumbnail" type="file" accept="image/*" multiple
                                class="file-loading"/>
-                        <p class="help-block">要求：图片不大于100k</p>
+                        <p class="help-block">要求：图片不大于200k</p>
                     </div>
                 </div>
                 <div class="form-group">
@@ -199,7 +199,7 @@
             initialPreviewAsData: true,
             overwriteInitial: false,
             dropZoneEnabled: false,
-            maxFileSize: 100,
+            maxFileSize: 200,
             allowedFileExtensions: ['jpg', 'jpeg', 'png', 'gif'],
         }).on('fileuploaded', function (event, result) {
             
