@@ -128,6 +128,47 @@ public class CommodityController {
 
         Map<String, Object> condition = new HashMap<>();
         condition.put("goodsId", goodsId);
+        condition.put("type", "slide");
+        ResultData resultData = commodityService.fetchThumbnail(condition);
+        List<Thumbnail> thumbnails = (List<Thumbnail>) resultData.getData();
+
+        JSONArray resultArray = new JSONArray();
+        JSONArray initialPreviewArray = new JSONArray();
+        JSONArray initialPreviewConfigArray = new JSONArray();
+        if (thumbnails.size() == 0) {
+
+            resultArray.add(initialPreviewArray);
+            resultArray.add(initialPreviewConfigArray);
+            return resultArray.toJSONString();
+        }
+        for (Thumbnail thumbnail : thumbnails) {
+            JSONObject initialPreviewConfigObject = new JSONObject();
+            //initialPreviewArray.add("/selling" + thumbnail.getPath());
+            initialPreviewArray.add(thumbnail.getPath());
+//			initialPreviewConfigObject.put(
+//					"url",
+//					"/selling/commodity/delete/Thumbnail/"
+//							+ thumbnail.getThumbnailId());
+            initialPreviewConfigObject.put(
+                    "url",
+                    "/commodity/delete/Thumbnail/"
+                            + thumbnail.getThumbnailId());
+            initialPreviewConfigObject.put("key", thumbnail.getThumbnailId());
+            initialPreviewConfigArray.add(initialPreviewConfigObject);
+        }
+        resultArray.add(initialPreviewArray);
+        resultArray.add(initialPreviewConfigArray);
+        return resultArray.toJSONString();
+
+    }
+    
+    @RequestMapping(method = RequestMethod.POST, value = "/picture/{goodsId}")
+    @ResponseBody
+    public String picture(@PathVariable("goodsId") String goodsId) {
+
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("goodsId", goodsId);
+        condition.put("type", "cover");
         ResultData resultData = commodityService.fetchThumbnail(condition);
         List<Thumbnail> thumbnails = (List<Thumbnail>) resultData.getData();
 
