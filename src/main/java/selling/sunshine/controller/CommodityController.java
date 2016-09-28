@@ -451,7 +451,7 @@ public class CommodityController {
         String context = request.getSession().getServletContext().getRealPath("/");
         JSONObject resultObject = new JSONObject();
         try {
-            String filename = "thumbnail";
+            String filename = "picture";
             MultipartFile file = request.getFile(filename);
             if (file != null) {
                 ResultData response = uploadService.upload(file, context);
