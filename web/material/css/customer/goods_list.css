@@ -10,8 +10,6 @@ body {
 
 .head,main{
 	width:100%;
-	padding-top:0.5em;
-	padding-bottom:0.5em;
 	box-shadow:0 0 5px #ccc;
 	background-color: #ffffff;
 }
@@ -50,18 +48,20 @@ main{
 	border-bottom:0;
 }
 
-.list .item:last-child{
-	border-bottom:0;
-}
-
 .list .item:nth-child(2){
 	border-bottom:1px solid #EFEFF4;
+}
+
+.list .item:last-child{
+	border-bottom:0;
 }
 
 .item{
     width:50%;
     box-sizing:border-box;
     float:left;
+    padding-top:0.8em;
+    padding-bottom:0.8em;
 }
 
 .upper{
