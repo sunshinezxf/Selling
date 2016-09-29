@@ -143,5 +143,18 @@ public class RefundServiceImpl implements RefundService {
         return refundDao.calculateQuantityAll(agentId);
     }
 
+	@Override
+	public ResultData fetchRefundConfig(Map<String, Object> condition, DataTableParam param) {
+		 ResultData resultData = new ResultData();
+	        ResultData queryResponse = refundDao.queryRefundConfig(condition, param);
+	        resultData.setResponseCode(queryResponse.getResponseCode());
+	        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+	            resultData.setData(queryResponse.getData());
+	        } else {
+	            resultData.setDescription(queryResponse.getDescription());
+	        }
+	        return resultData;
+	}
+
 
 }

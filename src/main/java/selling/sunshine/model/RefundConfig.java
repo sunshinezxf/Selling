@@ -15,6 +15,8 @@ public class RefundConfig extends Entity {
     private double level3Percent;
     private int monthConfig;
     private Goods4Agent goods;
+    private boolean universal;//是否普遍适用
+    private int universalMonth;//假如不是普遍适用的话，代表的是前n个月的返现配置
 
     public RefundConfig() {
         super();
@@ -39,7 +41,21 @@ public class RefundConfig extends Entity {
         this.level3Percent = level3Percent;
     }
 
-    public Goods4Agent getGoods() {
+    public RefundConfig(String refundConfigId, int amountTrigger, double level1Percent, double level2Percent,
+			double level3Percent, int monthConfig, Goods4Agent goods, boolean universal, int universalMonth) {
+		super();
+		this.refundConfigId = refundConfigId;
+		this.amountTrigger = amountTrigger;
+		this.level1Percent = level1Percent;
+		this.level2Percent = level2Percent;
+		this.level3Percent = level3Percent;
+		this.monthConfig = monthConfig;
+		this.goods = goods;
+		this.universal = universal;
+		this.universalMonth = universalMonth;
+	}
+
+	public Goods4Agent getGoods() {
         return goods;
     }
 
@@ -94,6 +110,24 @@ public class RefundConfig extends Entity {
     public void setMonthConfig(int monthConfig) {
         this.monthConfig = monthConfig;
     }
+
+	public int getUniversalMonth() {
+		return universalMonth;
+	}
+
+	public void setUniversalMonth(int universalMonth) {
+		this.universalMonth = universalMonth;
+	}
+
+	public boolean isUniversal() {
+		return universal;
+	}
+
+	public void setUniversal(boolean universal) {
+		this.universal = universal;
+	}
+    
+    
 
 
 }

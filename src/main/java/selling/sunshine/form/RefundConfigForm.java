@@ -18,6 +18,8 @@ public class RefundConfigForm {
     private String level3Percent;
     @NotNull
     private String monthConfig;
+    @NotNull
+    private String universal;
 
     public String getGoodsId() {
         return goodsId;
@@ -66,6 +68,16 @@ public class RefundConfigForm {
 	public void setMonthConfig(String monthConfig) {
 		this.monthConfig = monthConfig;
 	}
+
+	public String getUniversal() {
+		return universal;
+	}
+
+	public void setUniversal(String universal) {
+		this.universal = universal;
+	}
+	
+	
 
     
 }

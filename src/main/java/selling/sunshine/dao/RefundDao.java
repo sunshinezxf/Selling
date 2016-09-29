@@ -14,6 +14,8 @@ public interface RefundDao {
 
     ResultData queryRefundConfig(Map<String, Object> condition);
     
+    ResultData queryRefundConfig(Map<String, Object> condition,DataTableParam param);
+    
     ResultData queryRefundRecord(Map<String, Object> condition);
     
     ResultData queryRefundRecordByPage(Map<String, Object> condition,DataTableParam param);

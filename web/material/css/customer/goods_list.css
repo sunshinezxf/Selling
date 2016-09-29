@@ -11,6 +11,8 @@ body {
 .head,main{
 	width:100%;
 	box-shadow:0 0 5px #ccc;
+	padding-top:0.4em;
+	padding-bottom:0.4em;
 	background-color: #ffffff;
 }
 
@@ -88,10 +90,11 @@ main{
 	overflow:hidden;
 	white-space:nowrap;
 	text-overflow:ellipsis;
-	font:bold 1em/2em Arial, sans-serif;
+	font:normal 0.9em/2em Arial, sans-serif;
+	margin-top:0.2em;
 }
 
 .down p{
 	color:#d0c080;
-	font:bold 1em/2em Arial, sans-serif;
+	font:normal 1em/2em Arial, sans-serif;
 }

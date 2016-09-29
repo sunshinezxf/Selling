@@ -60,12 +60,37 @@ public class RefundController {
         view.setViewName("/backend/refund/config");
         return view;
     }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/configList/goods/{goodsId}")
+    public ModelAndView configList(@PathVariable("goodsId") String goodsId) {
+        ModelAndView view = new ModelAndView();
+        view.addObject("goodsId", goodsId);
+        view.setViewName("/backend/refund/configList");
+        return view;
+    }
+    
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value = "/overview/{goodsId}")
+    public DataTablePage<RefundConfig> overview(@PathVariable("goodsId") String goodsId,DataTableParam param){
+    	DataTablePage<RefundConfig> result = new DataTablePage<>(param);
+        if (StringUtils.isEmpty(param)) {
+            return result;
+        }
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("goodsId", goodsId);
+        condition.put("blockFlag", false);
+        ResultData response = refundService.fetchRefundConfig(condition, param);
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result = (DataTablePage<RefundConfig>) response.getData();
+        }
+        return result;
+    }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/config/goods/{goodsId}")
-    public ModelAndView config(@PathVariable("goodsId") String goodsId, @Valid RefundConfigForm form, BindingResult result, HttpServletRequest request) {
+    @RequestMapping(method = RequestMethod.POST, value = "/config/goods/{configId}/{goodsId}")
+    public ModelAndView config(@PathVariable("configId") String configId,@PathVariable("goodsId") String goodsId, @Valid RefundConfigForm form, BindingResult result, HttpServletRequest request) {
         ModelAndView view = new ModelAndView();
         if (result.hasErrors()) {
-            view.setViewName("redirect:/refund/config");
+            view.setViewName("redirect:/refund/configList/goods/"+goodsId);
             return view;
         }
         Goods4Customer goods = new Goods4Customer();
@@ -73,12 +98,20 @@ public class RefundController {
         condition.put("goodsId", goodsId);
         goods = ((List<Goods4Customer>) commodityService.fetchGoods4Customer(condition).getData()).get(0);
         RefundConfig config = new RefundConfig(goods, Integer.parseInt(form.getAmountTrigger()), Double.parseDouble(form.getLevel1Percent()), Double.parseDouble(form.getLevel2Percent()), Double.parseDouble(form.getLevel3Percent()), Integer.parseInt(form.getMonthConfig()));
+        config.setRefundConfigId(configId);
+        if (form.getUniversal().equals("普遍适用")) {
+			config.setUniversal(true);
+			config.setUniversalMonth(1);
+		}else {
+			config.setUniversal(false);
+			config.setUniversalMonth(Integer.parseInt(form.getUniversal().split("个")[0].substring(1)));
+		}
         ResultData createResponse = refundService.createRefundConfig(config);
         if (createResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             Subject subject = SecurityUtils.getSubject();
             User user = (User) subject.getPrincipal();
             if (user == null) {
-                view.setViewName("redirect:/refund/config");
+            	view.setViewName("redirect:/refund/configList/goods/"+goodsId);
                 return view;
             }
             Admin admin = user.getAdmin();
@@ -86,12 +119,67 @@ public class RefundController {
                     admin.getUsername(), toolService.getIP(request), "管理员" + admin.getUsername() + "修改了商品名称为" + goods.getName() + "的返现配置");
             logService.createbackOperationLog(backOperationLog);
 
-            view.setViewName("redirect:/refund/config");
+            view.setViewName("redirect:/refund/configList/goods/"+goodsId);
             return view;
         }
-        view.setViewName("redirect:/refund/config");
+        view.setViewName("redirect:/refund/configList/goods/"+goodsId);
         return view;
     }
+    
+    @RequestMapping(method = RequestMethod.POST, value = "/config/create/{goodsId}")
+    public ModelAndView createConfig(@PathVariable("goodsId") String goodsId, @Valid RefundConfigForm form, BindingResult result, HttpServletRequest request) {
+    	ModelAndView view = new ModelAndView();
+        if (result.hasErrors()) {
+            view.setViewName("redirect:/refund/configList/goods/"+goodsId);
+            return view;
+        }
+        Goods4Customer goods = new Goods4Customer();
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("goodsId", goodsId);
+        condition.put("blockFlag", false);
+        if (form.getUniversal().equals("普遍适用")) {
+        	 condition.put("universal", true);
+        }else if (form.getUniversal().contains("个月适用")) {
+        	 condition.put("universal", false);
+		}
+        if(refundService.fetchRefundConfig(condition).getResponseCode()!=ResponseCode.RESPONSE_NULL){
+        	view.setViewName("redirect:/refund/configList/goods/"+goodsId);
+            return view;
+        }
+        condition.clear();
+        condition.put("goodsId", goodsId);
+        goods = ((List<Goods4Customer>) commodityService.fetchGoods4Customer(condition).getData()).get(0);
+        RefundConfig config = new RefundConfig(goods, Integer.parseInt(form.getAmountTrigger()), Double.parseDouble(form.getLevel1Percent()), Double.parseDouble(form.getLevel2Percent()), Double.parseDouble(form.getLevel3Percent()), Integer.parseInt(form.getMonthConfig()));
+        config.setRefundConfigId("null");
+        if (form.getUniversal().equals("普遍适用")) {
+			config.setUniversal(true);
+			config.setUniversalMonth(1);
+		}else if(form.getUniversal().contains("个月适用")){
+			config.setUniversal(false);
+			config.setUniversalMonth(Integer.parseInt(form.getUniversal().split("个")[0].substring(1)));
+		}else {
+			view.setViewName("redirect:/refund/configList/goods/"+goodsId);
+            return view;
+		}
+        ResultData createResponse = refundService.createRefundConfig(config);
+        if (createResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            Subject subject = SecurityUtils.getSubject();
+            User user = (User) subject.getPrincipal();
+            if (user == null) {
+            	view.setViewName("redirect:/refund/configList/goods/"+goodsId);
+                return view;
+            }
+            Admin admin = user.getAdmin();
+            BackOperationLog backOperationLog = new BackOperationLog(
+                    admin.getUsername(), toolService.getIP(request), "管理员" + admin.getUsername() + "添加了商品名称为" + goods.getName() + "的返现配置");
+            logService.createbackOperationLog(backOperationLog);
+
+            view.setViewName("redirect:/refund/configList/goods/"+goodsId);
+            return view;
+        }
+        view.setViewName("redirect:/refund/configList/goods/"+goodsId);
+        return view;
+	}
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/config/goods/{goodsId}")
