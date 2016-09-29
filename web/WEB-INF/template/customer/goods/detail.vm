@@ -106,7 +106,7 @@
         // 判断图片加载状况，加载完成后回调
         isImgLoad(function(){
             // 加载完成
-            $('.unslider-fade').css('height', $('.logo:first-child').height());
+            $('.unslider-fade').css('height', $('.logo img').height());
         });
         
         $('#detail').show();
