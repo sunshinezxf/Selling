@@ -530,7 +530,7 @@ public class CommodityController {
             if (file != null) {
                 ResultData response = uploadService.upload(file, context);
                 if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
-                    Thumbnail thumbnail = new Thumbnail((String) response.getData(), "cover");
+                    Thumbnail thumbnail = new Thumbnail((String) response.getData(), "slide");
                     String thumbnailId = ((Thumbnail) commodityService.createThumbnail(thumbnail).getData()).getThumbnailId();
                     JSONArray initialPreviewArray = new JSONArray();
                     JSONArray initialPreviewConfigArray = new JSONArray();
@@ -564,7 +564,7 @@ public class CommodityController {
             if (file != null) {
                 ResultData response = uploadService.upload(file, context);
                 if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
-                    Thumbnail thumbnail = new Thumbnail((String) response.getData(), "slide");
+                    Thumbnail thumbnail = new Thumbnail((String) response.getData(), "cover");
                     String thumbnailId = ((Thumbnail) commodityService.createThumbnail(thumbnail).getData()).getThumbnailId();
                     JSONArray initialPreviewArray = new JSONArray();
                     JSONArray initialPreviewConfigArray = new JSONArray();

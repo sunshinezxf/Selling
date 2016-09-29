@@ -12,8 +12,7 @@
         <div class="hd">
             <h1 class="page_title">客户商城</h1>
             #set($str = ${agent.agentId})
-            #set($end = $str.length() - 1)
-            #set($str = $str.substring(3,$end))
+            #set($str = $str.substring(3))
             <p class="page_desc">我的优惠码：${str}</p>
         </div>
         <div class="bd page_title">
