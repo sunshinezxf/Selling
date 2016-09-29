@@ -16,7 +16,6 @@
         </div>
     </div>
 </div>
-#parse("/backend/refund/component/config_modal.vm")
 <script>
     $(document).ready(function () {
         $("#config_overview_table").DataTable({
@@ -57,141 +56,15 @@
                 {
                     title: "描述", "mData": "description"
                 },
-                {
-                    title: "当前配置(件)", "mRender": function (data, type, full) {
-                    var url = "${path.concat('/refund/config/goods/')}" + full.goodsId;
-                    var option = "";
-                    $.ajax({
-                        type: "get",
-                        url: url,
-                        async: false,
-                        success: function (result) {
-                            var config = result.data;
-                            if (result.responseCode == "RESPONSE_OK") {
-                                option += config.amountTrigger;
-                            } else {
-                                option += "暂未配置";
-                            }
-                        }
-                    });
-                    return option;
-                }
-                },
-                {
-                    title: "自己返现(元/件)", "mRender": function (data, type, full) {
-                    var url = "${path.concat('/refund/config/goods/')}" + full.goodsId;
-                    var option = "";
-                    $.ajax({
-                        type: "get",
-                        url: url,
-                        async: false,
-                        success: function (result) {
-                            var config = result.data;
-                            if (result.responseCode == "RESPONSE_OK") {
-                                option += config.level1Percent;
-                            } else {
-                                option += "暂未配置";
-                            }
-                        }
-                    });
-                    return option;
-                }
-                },
-                {
-                    title: "直接关联返现(元/件)", "mRender": function (data, type, full) {
-                    var url = "${path.concat('/refund/config/goods/')}" + full.goodsId;
-                    var option = "";
-                    $.ajax({
-                        type: "get",
-                        url: url,
-                        async: false,
-                        success: function (result) {
-                            var config = result.data;
-                            if (result.responseCode == "RESPONSE_OK") {
-                                option += config.level2Percent;
-                            } else {
-                                option += "暂未配置";
-                            }
-                        }
-                    });
-                    return option;
-                }
-                },
-                {
-                    title: "间接关联返现(元/件)", "mRender": function (data, type, full) {
-                    var url = "${path.concat('/refund/config/goods/')}" + full.goodsId;
-                    var option = "";
-                    $.ajax({
-                        type: "get",
-                        url: url,
-                        async: false,
-                        success: function (result) {
-                            var config = result.data;
-                            if (result.responseCode == "RESPONSE_OK") {
-                                option += config.level3Percent;
-                            } else {
-                                option += "暂未配置";
-                            }
-                        }
-                    });
-                    return option;
-                }
-                },
-                {
-                    title: "月份配置(个月)", "mRender": function (data, type, full) {
-                    var url = "${path.concat('/refund/config/goods/')}" + full.goodsId;
-                    var option = "";
-                    $.ajax({
-                        type: "get",
-                        url: url,
-                        async: false,
-                        success: function (result) {
-                            var config = result.data;
-                            if (result.responseCode == "RESPONSE_OK") {
-                                option += config.monthConfig;
-                            } else {
-                                option += "暂未配置";
-                            }
-                        }
-                    });
-                    return option;
-                }
-                },
+     
                 {
                     title: "操作", "mRender": function (data, type, full) {
                     var operation = "";
-                    var edit_url = "${path.concat('/commodity/edit/')}" + full.goodsId;
-                    var update_button = "<button type='button' class='btn btn-success btn-group-sm' id='" + full.goodsId + "' data-toggle='modal' data-target='#config_modal'>修改</button>&nbsp;"
-                    operation += update_button;
+                    var url = "${path.concat('/refund/configList/goods/')}" + full.goodsId;
+                    var button = "<button type='button' class='btn btn-success btn-group-sm' id='" + full.goodsId + "'>返现配置列表</button>&nbsp;"
+                    operation += button;
                     $("#" + full.goodsId).on('click', function () {
-                        var goodsId = full.goodsId;
-                        $("#goods_id").val(goodsId);
-                        var goodsname = full.name;
-                        $("#goods_name").text(goodsname);
-                        var goodsprice = full.agentPrice;
-                        $("#goods_price").text(goodsprice + "元");
-                        var url = "${path.concat('/refund/config/goods/')}" + full.goodsId;
-                        $.ajax({
-                            type: "get",
-                            url: url,
-                            async: true,
-                            success: function (result) {
-                                var config = result.data;
-                                if (result.responseCode == "RESPONSE_OK") {                               	
-                                    $("#config_trigger").val(config.amountTrigger);
-                                    $("#config_percent_1").val(config.level1Percent);
-                                    $("#config_percent_2").val(config.level2Percent);
-                                    $("#config_percent_3").val(config.level3Percent);
-                                    $("#month_config").val(config.monthConfig);
-                                }else{
-                                    $("#config_trigger").val(0);
-                                    $("#config_percent_1").val(0);
-                                    $("#config_percent_2").val(0);
-                                    $("#config_percent_3").val(0);
-                                    $("#month_config").val(1);
-                                }
-                            }
-                        });
+                        window.location.href=url;
                     });
 
                     return operation;

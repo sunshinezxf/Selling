@@ -1,0 +1,71 @@
+<div class="modal fade" id="create_config_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">x</button>
+                <h4 class="modal-title">新建返现配置</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" id="create_config_form">
+                    <p class="form-group">
+                        <label class="col-sm-4 col-md-4 col-lg-3">适用情况:</label>&nbsp;&nbsp;
+                        <input type="text" id="universal" name="universal" />
+                        <text>*请输入："前X个月适用" 或者 "普遍适用"</text>
+                    </p>
+                    <p class="form-group">
+                        <label class="col-sm-4 col-md-4 col-lg-3">返现标准数量为:</label>&nbsp;&nbsp;
+                        <input type="number" id="config_trigger" name="amountTrigger" value="0" autocomplete="off"/>&nbsp;<span>件</span>
+                    </p>
+                    <p class="form-group">
+                        <label class="col-sm-4 col-md-4 col-lg-3">自己返现:</label>&nbsp;&nbsp;
+                        <input type="number" name="level1Percent" value="0"
+                               autocomplete="off"/>&nbsp;<span>元/件</span>
+                    </p>
+                    <p class="form-group">
+                        <label class="col-sm-4 col-md-4 col-lg-3">直接关联返现:</label>&nbsp;&nbsp;
+                        <input type="number" name="level2Percent" value="0"
+                               autocomplete="off"/>&nbsp;<span>元/件</span>
+                    </p>
+                     <p class="form-group">
+                        <label class="col-sm-4 col-md-4 col-lg-3">间接关联返现:</label>&nbsp;&nbsp;
+                        <input type="number" name="level3Percent" value="0"
+                               autocomplete="off"/>&nbsp;<span>元/件</span>
+                    </p>
+                    <p class="form-group">
+                        <label class="col-sm-4 col-md-4 col-lg-3">月份配置:</label>&nbsp;&nbsp;
+                        <input type="number" name="monthConfig" value="1"
+                               autocomplete="off"/>&nbsp;<span>个月</span>
+                    </p>
+
+                    <p class="form-group">
+                        <label class="col-sm-12 col-md-12 col-lg-12">*已经存在某类型的适用情况的返现配置了，则不允许添加同类型的适用情况的返现配置，只能修改</label>
+                    </p>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="create_config_confirm">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        $("#create_config_modal").modal({
+            show: false,
+            keyboard: true
+        });
+    });
+
+    $("#create_config_confirm").on('click', function () {
+    	
+       
+    	if($("#universal").val() == "普遍适用" || $("#universal").val().indexOf("个月适用") >= 0){
+    		 var url = "${path.concat('/refund/config/create/')}${goodsId}";
+    	     $("#create_config_form").attr("action", url);
+    	     $("#create_config_form").attr("method", "post");
+    	     $("#create_config_form").submit();
+    	}
+       
+    });
+</script>

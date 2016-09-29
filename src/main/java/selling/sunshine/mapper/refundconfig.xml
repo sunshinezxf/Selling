@@ -10,6 +10,8 @@
         <result property="monthConfig" column="month_config"></result>
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
+        <result property="universal" column="universal"></result>
+        <result property="universalMonth" column="universal_month"></result>
         <association property="goods" column="goodsId = goods_id" select="goods4AgentQuery"></association>
     </resultMap>
 
@@ -23,13 +25,13 @@
     </resultMap>
 
     <insert id="insert" parameterType="selling.sunshine.model.RefundConfig" useGeneratedKeys="false">
-        INSERT INTO refund_config(refund_config_id, goods_id, refund_trigger_amount, level_1_percent,level_2_percent,level_3_percent,month_config, block_flag, create_time)
-        VALUES (#{refundConfigId}, #{goods.goodsId}, #{amountTrigger}, #{level1Percent},#{level2Percent},#{level3Percent},#{monthConfig}, #{blockFlag}, #{createAt})
+        INSERT INTO refund_config(refund_config_id, goods_id, refund_trigger_amount, level_1_percent,level_2_percent,level_3_percent,month_config, block_flag, create_time,universal,universal_month)
+        VALUES (#{refundConfigId}, #{goods.goodsId}, #{amountTrigger}, #{level1Percent},#{level2Percent},#{level3Percent},#{monthConfig}, #{blockFlag}, #{createAt},#{universal}, #{universalMonth})
     </insert>
 
     <select id="query" parameterType="java.util.Map" resultMap="refundConfigVo">
         SELECT refund_config_id, goods_id, refund_trigger_amount, level_1_percent,level_2_percent,level_3_percent,month_config,
-        block_flag, create_time
+        block_flag, create_time,universal,universal_month
         FROM refund_config
         WHERE 1 = 1
         <if test="refundConfigId != null and refundConfigId != ''">
@@ -40,6 +42,9 @@
         </if>
         <if test="blockFlag != null">
             AND block_flag = #{blockFlag}
+        </if>
+        <if test="universal != null">
+            AND universal = #{universal}
         </if>
         <if test="rule != null and rule != ''">
             ORDER BY ${rule}

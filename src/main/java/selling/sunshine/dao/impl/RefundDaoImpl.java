@@ -38,18 +38,17 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
     @Transactional
     @Override
     public ResultData insertRefundConfig(RefundConfig config) {
-        ResultData result = new ResultData();
-        config.setRefundConfigId(IDGenerator.generate("RCG"));
+        ResultData result = new ResultData();        
         synchronized (lock) {
             try {
                 Map<String, Object> condition = new HashMap<>();
-                condition.put("goodsId", config.getGoods().getGoodsId());
-                condition.put("blockFlag", false);
+                condition.put("refundConfigId", config.getRefundConfigId());
                 RefundConfig target = sqlSession.selectOne("selling.refund.config.query", condition);
                 if (target != null) {
                     target.setBlockFlag(true);
                     sqlSession.update("selling.refund.config.block", target);
                 }
+                config.setRefundConfigId(IDGenerator.generate("RCG"));
                 sqlSession.insert("selling.refund.config.insert", config);
                 result.setData(config);
             } catch (Exception e) {
@@ -516,6 +515,42 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
             logger.error(e.getMessage());
             result.setResponseCode(ResponseCode.RESPONSE_ERROR);
             result.setDescription(e.getMessage());
+        } finally {
+            return result;
+        }
+    }
+
+	@Override
+	public ResultData queryRefundConfig(Map<String, Object> condition, DataTableParam param) {
+		 ResultData result = new ResultData();
+	        DataTablePage<RefundConfig> page = new DataTablePage<>();
+	        page.setsEcho(param.getsEcho());
+	        logger.debug(JSONObject.toJSONString(condition));
+
+	        ResultData total = queryRefundConfig(condition);
+	        if (total.getResponseCode() != ResponseCode.RESPONSE_OK) {
+	            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+	            result.setDescription(total.getDescription());
+	            return result;
+	        }
+	        page.setiTotalRecords(((List<RefundConfig>) total.getData()).size());
+	        page.setiTotalDisplayRecords(((List<RefundConfig>) total.getData()).size());
+	        List<RefundConfig> current = queryRefundConfig(condition, param.getiDisplayStart(),
+	                param.getiDisplayLength());
+	        if (current.size() == 0) {
+	            result.setResponseCode(ResponseCode.RESPONSE_NULL);
+	        }
+	        page.setData(current);
+	        result.setData(page);
+	        return result;
+	}
+	
+    private List<RefundConfig> queryRefundConfig(Map<String, Object> condition, int start, int length) {
+        List<RefundConfig> result = new ArrayList<>();
+        try {
+            result = sqlSession.selectList("selling.refund.config.query", condition, new RowBounds(start, length));
+        } catch (Exception e) {
+            logger.error(e.getMessage());
         } finally {
             return result;
         }
