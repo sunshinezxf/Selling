@@ -85,6 +85,13 @@ public class CommodityController {
         goods.setBlockFlag(form.isBlock());
         ResultData response = commodityService.createGoods4Customer(goods);
         if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+        	 List<Thumbnail> thumbnails = (List<Thumbnail>) commodityService
+                     .fetchThumbnail().getData();
+             for (Thumbnail thumbnail : thumbnails) {
+                 thumbnail.setGoods((Goods4Customer) response.getData());
+             }
+             commodityService.updateThumbnails(thumbnails);
+        	
             Subject subject = SecurityUtils.getSubject();
             User user = (User) subject.getPrincipal();
             if (user == null) {
@@ -266,7 +273,8 @@ public class CommodityController {
         return result;
     }
     
-    public ModelAndView viewList(HttpServletRequest request, @PathVariable("goodsId") String goodsId, String agentId, String code, String state) {
+    @RequestMapping(method = RequestMethod.GET, value = "/viewlist")
+    public ModelAndView viewList(HttpServletRequest request, String agentId, String code, String state) {
     	ModelAndView view = new ModelAndView();
         String openId = null;
         if (StringUtils.isEmpty(code) || StringUtils.isEmpty(state)) {
@@ -295,6 +303,27 @@ public class CommodityController {
             HttpSession session = request.getSession();
             session.setAttribute("openId", openId);
         }
+        Map<String, Object> condition = new HashMap<String, Object>();
+        condition.put("blockFlag", false);
+        ResultData fetchGoodsData = commodityService.fetchGoods4Customer(condition);
+        if(fetchGoodsData.getResponseCode() != ResponseCode.RESPONSE_OK){
+        	WechatConfig.oauthWechat(view, "/customer/component/goods_error_msg");
+            view.setViewName("/customer/component/goods_error_msg");
+            return view;
+        }
+        List<Goods4Customer> goods4Customers = (List<Goods4Customer>) fetchGoodsData.getData();
+        for(Goods4Customer goods: goods4Customers){
+        	List<Thumbnail> thumbnails = goods.getThumbnails();
+        	List<Thumbnail> newThumbnails = new ArrayList<Thumbnail>();
+        	for(Thumbnail thumbnail : thumbnails){
+        		if(thumbnail.getType().equals("cover")){
+        			newThumbnails.add(thumbnail);
+        		}
+        	}
+        	goods.setThumbnails(newThumbnails);
+        }
+        view.addObject("goodsList", goods4Customers);
+        view.setViewName("/customer/goods/goods_list");
         return view;
     }
 
@@ -364,6 +393,12 @@ public class CommodityController {
             }
             Agent agent = ((List<Agent>) fetchAgentData.getData()).get(0);
             view.addObject("agent", agent);
+        }
+        for(int i = 0; i < goods.getThumbnails().size(); i++){
+        	if(goods.getThumbnails().get(i).getType().equals("cover")){
+        		goods.getThumbnails().remove(i);
+        		break;
+        	}
         }
         view.addObject("goods", goods);
         WechatConfig.oauthWechat(view, "/customer/goods/detail");
@@ -500,10 +535,10 @@ public class CommodityController {
                     JSONArray initialPreviewArray = new JSONArray();
                     JSONArray initialPreviewConfigArray = new JSONArray();
                     JSONObject initialPreviewConfigObject = new JSONObject();
-                  initialPreviewArray.add("/selling" + response.getData().toString());
-//                    initialPreviewArray.add(response.getData().toString());
-                  initialPreviewConfigObject.put("url", "/selling/commodity/delete/Thumbnail/"+thumbnailId);
-//                   initialPreviewConfigObject.put("url", "/commodity/delete/Thumbnail/" + thumbnailId);
+                  //initialPreviewArray.add("/selling" + response.getData().toString());
+                    initialPreviewArray.add(response.getData().toString());
+                  //initialPreviewConfigObject.put("url", "/selling/commodity/delete/Thumbnail/"+thumbnailId);
+                   initialPreviewConfigObject.put("url", "/commodity/delete/Thumbnail/" + thumbnailId);
                     initialPreviewConfigObject.put("key", thumbnailId);
                     initialPreviewConfigArray.add(initialPreviewConfigObject);
                     resultObject.put("initialPreview", initialPreviewArray);
@@ -534,10 +569,10 @@ public class CommodityController {
                     JSONArray initialPreviewArray = new JSONArray();
                     JSONArray initialPreviewConfigArray = new JSONArray();
                     JSONObject initialPreviewConfigObject = new JSONObject();
-                  initialPreviewArray.add("/selling" + response.getData().toString());
-//                    initialPreviewArray.add(response.getData().toString());
-                  initialPreviewConfigObject.put("url", "/selling/commodity/delete/Thumbnail/"+thumbnailId);
-//                    initialPreviewConfigObject.put("url", "/commodity/delete/Thumbnail/" + thumbnailId);
+                 // initialPreviewArray.add("/selling" + response.getData().toString());
+                    initialPreviewArray.add(response.getData().toString());
+                 // initialPreviewConfigObject.put("url", "/selling/commodity/delete/Thumbnail/"+thumbnailId);
+                    initialPreviewConfigObject.put("url", "/commodity/delete/Thumbnail/" + thumbnailId);
                     initialPreviewConfigObject.put("key", thumbnailId);
                     initialPreviewConfigArray.add(initialPreviewConfigObject);
                     resultObject.put("initialPreview", initialPreviewArray);
