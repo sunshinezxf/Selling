@@ -72,8 +72,9 @@
     }
 </script>
 <script>
-    var title = "商品分享";
-    var description = "自助购买,让您买的更放心";
+    var title = "${title}";
+    var description = "${desc}";
+    var imgURL = "${img}";
 </script>
-    #parse("/agent/wechat/component/validation.vm")
+    #parse("/agent/link/validation.vm")
 </html>

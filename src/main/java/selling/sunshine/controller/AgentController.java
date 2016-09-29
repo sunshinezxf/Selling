@@ -43,6 +43,7 @@ import common.sunshine.model.selling.agent.Agent;
 import selling.sunshine.model.cashback.CashBackRecord;
 import selling.sunshine.model.gift.GiftConfig;
 import common.sunshine.model.selling.goods.Goods4Agent;
+import common.sunshine.model.selling.goods.Thumbnail;
 import selling.sunshine.model.sum.TotalQuantityAll;
 import selling.sunshine.model.sum.Volume;
 import selling.sunshine.model.sum.VolumeTotal;
@@ -558,14 +559,10 @@ public class AgentController {
         if (fetchGoodsResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             goodsList = (List) fetchGoodsResponse.getData();
         }
-        String link = "";
         for (Goods4Agent goods : goodsList) {
             String url = "http://" + PlatformConfig.getValue("server_url") + "/commodity/" + goods.getGoodsId() + "?agentId=" + user.getAgent().getAgentId();
             try {
                 String shareURL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + PlatformConfig.getValue("wechat_appid") + "&redirect_uri=" + URLEncoder.encode(url, "utf-8") + "&response_type=code&scope=snsapi_base&state=view#wechat_redirect";
-                if (StringUtils.isEmpty(link)) {
-                    link = shareURL;
-                }
                 condition.clear();
                 condition.put("longUrl",shareURL);
                 condition.put("blockFlag", false);
@@ -592,6 +589,13 @@ public class AgentController {
         view.addObject("goodsList", goodsList);
         view.addObject("agent", user.getAgent());
         view.addObject("urls", urls);
+        String linkUrl = "http://" + PlatformConfig.getValue("server_url") + "/commodity/viewlist";
+        String link = "";
+		try {
+			link = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + PlatformConfig.getValue("wechat_appid") + "&redirect_uri=" + URLEncoder.encode(linkUrl, "utf-8") + "&response_type=code&scope=snsapi_base&state=view#wechat_redirect";
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
         WechatConfig.oauthWechat(view, "/agent/personalsale", link);
         view.setViewName("/agent/link/personal_sale");
         return view;
@@ -643,8 +647,19 @@ public class AgentController {
     				}
     			}
             }
+            condition.clear();
+            condition.put("goodsId", goods.getGoodsId());
+            condition.put("type", "cover");
+            ResultData fetchThumbnailData = commodityService.fetchThumbnail(condition);
+            if(fetchThumbnailData.getResponseCode() != ResponseCode.RESPONSE_OK){
+            	 view.addObject("img", "http://www.yuncaogangmu.com/material/images/logo.jpeg");            	
+            }else{
+            	 view.addObject("img", "http://" + PlatformConfig.getValue("server_url") + ((List<Thumbnail>)fetchThumbnailData.getData()).get(0).getPath());
+            }
             view.addObject("agent", user.getAgent());
             view.addObject("goods", goods);
+            view.addObject("title", goods.getName() + "购买");
+            view.addObject("desc", "自助购买，让您买的更放心");
             view.addObject("url", shareURL);
             WechatConfig.oauthWechat(view, "/agent/personalsale/" + goodsId, link);
             view.setViewName("agent/link/goods_qrcode");
