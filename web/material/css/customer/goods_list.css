@@ -11,6 +11,8 @@ body {
 .head,main{
 	width:100%;
 	box-shadow:0 0 5px #ccc;
+	padding-top:0.4em;
+	padding-bottom:0.4em;
 	background-color: #ffffff;
 }
 
