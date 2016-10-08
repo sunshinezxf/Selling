@@ -45,8 +45,12 @@
 			var config = data[0];
 			if($.isEmptyObject(config)){
 				return;
+			}
+			var num = 0;
+			for(var i = 0; i < data.length; i++){
+				num += data[i]['quantity'];
 			} 
-			$("#refund_condition").html("社群奖励进度： " + config['quantity'] + "件/"+config['amountTrigger'] + "件");		
+			$("#refund_condition").html("社群奖励进度： " + num + "件");		
 		});
 		
 		
