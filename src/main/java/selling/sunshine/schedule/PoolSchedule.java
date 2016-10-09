@@ -21,6 +21,10 @@ public class PoolSchedule {
 
     public void schedule() {
     	orderService.poolOrder();
+    	
+    }
+    
+    public void refundSchedule() {
     	refundService.refundRecord();
-    } 
+	}
 }
