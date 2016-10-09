@@ -182,7 +182,7 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
                                                              .setTitle(time + "社群拓展奖励账单");
                                                      refundRecordLevel3.setDescription("代理商" + agentLevel3.getName() + "与代理商"
                                                              + agent.getName() + "间接关联，获得代理商" + agent.getName() + "在" + date + "购买"
-                                                             + poolList.get(j).getGoods().getName() + "的社群拓展奖励，奖励"
+                                                             + poolList.get(j).getGoods().getName() +poolList.get(j).getQuantity()+ "盒的社群拓展奖励，奖励"
                                                              + refundRecordLevel3.getAmount() + "元");
                                                      refundRecordLevel3.setLevel(CashBackLevel.INDIRECT);
                                                      refundRecordLevel3.setBlockFlag(false);
@@ -196,7 +196,7 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
                                              refundRecord.setAmount(poolList.get(j).getRefundAmount());
                                              refundRecord.setPercent(refundConfig.getLevel1Percent());
                                              refundRecord.setDescription("代理商" + agent.getName() + "在" + date + "购买"
-                                                     + poolList.get(j).getGoods().getName() + "达到返现标准，返现"
+                                                     + poolList.get(j).getGoods().getName()+poolList.get(j).getQuantity() + "盒，达到返现标准，返现"
                                                      + refundRecord.getAmount() + "元");
                                              //
 
@@ -205,14 +205,14 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
                                              refundRecordLevel2.setPercent(refundConfig.getLevel2Percent());
                                              refundRecordLevel2.setDescription("代理商" + agentLevel2.getName() + "与代理商"
                                                      + agent.getName() + "直接关联，获得代理商" + agent.getName() + "在" + date + "购买"
-                                                     + poolList.get(j).getGoods().getName() + "的社群拓展奖励，奖励"
+                                                     + poolList.get(j).getGoods().getName()+poolList.get(j).getQuantity() + "盒的社群拓展奖励，奖励"
                                                      + refundRecordLevel2.getAmount() + "元");                                   	                      
                                      } else {
                                          // 当前agent为二级代理商
                                          refundRecord.setAmount(poolList.get(j).getRefundAmount());
                                          refundRecord.setPercent(refundConfig.getLevel1Percent());
                                          refundRecord.setDescription("代理商" + agent.getName() + "在" + date + "购买"
-                                                 + poolList.get(j).getGoods().getName() + "达到返现标准，返现"
+                                                 + poolList.get(j).getGoods().getName()+poolList.get(j).getQuantity() + "盒，达到返现标准，返现"
                                                  + refundRecord.getAmount() + "元");
                                          //
                                          refundRecordLevel2.setAmount(
@@ -220,7 +220,7 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
                                          refundRecordLevel2.setPercent(refundConfig.getLevel2Percent());
                                          refundRecordLevel2.setDescription("代理商" + agentLevel2.getName() + "与代理商"
                                                  + agent.getName() + "直接关联，获得代理商" + agent.getName() + "在" + date + "购买"
-                                                 + poolList.get(j).getGoods().getName() + "的社群拓展奖励，奖励"
+                                                 + poolList.get(j).getGoods().getName()+poolList.get(j).getQuantity() + "盒的社群拓展奖励，奖励"
                                                  + refundRecordLevel2.getAmount() + "元");
                                      }
                                      refundRecordLevel2.setOrderPool(poolList.get(j));
@@ -239,8 +239,8 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
                                  refundRecord.setAmount(poolList.get(j).getRefundAmount());
                                  refundRecord.setPercent(refundConfig.getLevel1Percent());
                                  refundRecord.setDescription(
-                                         "代理商" + agent.getName() + "在" + date + "购买" + poolList.get(j).getGoods().getName()
-                                                 + "达到返现标准，返现" + refundRecord.getAmount() + "元");
+                                         "代理商" + agent.getName() + "在" + date + "购买" + poolList.get(j).getGoods().getName()+poolList.get(j).getQuantity()
+                                                 + "盒，达到返现标准，返现" + refundRecord.getAmount() + "元");
                              }
                              refundRecord.setOrderPool(poolList.get(j));
                              refundRecord.setTitle(time + "日" + "返现账单");
