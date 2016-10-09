@@ -20,7 +20,7 @@
             #parse("/agent/account/statement_item.vm")
         </div>
     </div>
-      #parse("/agent/component/navigate.vm")
 </div>
+#parse("/agent/component/navigate.vm")
 </body>
 </html>

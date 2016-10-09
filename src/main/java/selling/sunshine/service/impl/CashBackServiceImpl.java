@@ -1,6 +1,9 @@
 package selling.sunshine.service.impl;
 
+import common.sunshine.pagination.DataTableParam;
 import common.sunshine.utils.IDGenerator;
+import common.sunshine.utils.ResponseCode;
+import common.sunshine.utils.ResultData;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -12,12 +15,9 @@ import org.springframework.stereotype.Service;
 import selling.sunshine.dao.AgentDao;
 import selling.sunshine.dao.CashBackDao;
 import selling.sunshine.dao.RefundDao;
-import selling.sunshine.model.cashback.support.CashBackLevel;
 import selling.sunshine.model.cashback.CashBackRecord;
-import common.sunshine.pagination.DataTableParam;
+import selling.sunshine.model.cashback.support.CashBackLevel;
 import selling.sunshine.service.CashBackService;
-import common.sunshine.utils.ResponseCode;
-import common.sunshine.utils.ResultData;
 import selling.sunshine.utils.WorkBookUtil;
 import selling.sunshine.vo.cashback.CashBack4AgentPerMonth;
 
@@ -166,6 +166,9 @@ public class CashBackServiceImpl implements CashBackService {
         Map<String, Object> condition = new HashMap<>();
         int row = 2;
         condition.put("agentId", cashback.getAgent().getAgentId());
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM");
+        condition.put("createAt", format.format(calendar.getTime()) + "%");
         condition.put("level", CashBackLevel.SELF.getCode());
         ResultData response = refundDao.queryRefundRecord(condition);
         if (response.getResponseCode() == ResponseCode.RESPONSE_OK && !((List<CashBackRecord>) response.getData()).isEmpty()) {
