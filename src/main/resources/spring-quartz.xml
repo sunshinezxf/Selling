@@ -19,6 +19,12 @@
         <property name="targetMethod" value="schedule"></property>
         <property name="concurrent" value="false"></property>
     </bean>
+    
+    <bean id="poolRefundDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="poolSchedule"></property>
+        <property name="targetMethod" value="refundSchedule"></property>
+        <property name="concurrent" value="false"></property>
+    </bean>
 
     <bean id="refundDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <property name="targetObject" ref="refundSchedule"></property>
@@ -56,6 +62,13 @@
             <value>0 10 0 1 * ?</value>
         </property>
     </bean>
+    
+    <bean id="poolRefundTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="poolRefundDetail"></property>
+        <property name="cronExpression">
+            <value>0 30 0 1 * ?</value>
+        </property>
+    </bean>
 
     <bean id="refundTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="refundDetail"></property>
@@ -65,7 +78,7 @@
     </bean>
 
     <bean id="wechatTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-        <property name="jobDetail" ref="wechatDetail"></property>
+        <property name="jobDetail"	 ref="wechatDetail"></property>
         <property name="cronExpression">
             <value>0 0 * * * ?</value>
         </property>
@@ -96,6 +109,7 @@
         <property name="triggers">
             <list>
                 <ref bean="poolTrigger"></ref>
+                <ref bean="poolRefundTrigger"></ref>
                 <ref bean="wechatTrigger"></ref>
                 <ref bean="refundTrigger"></ref>
                 <ref bean="withdrawTrigger"></ref>
