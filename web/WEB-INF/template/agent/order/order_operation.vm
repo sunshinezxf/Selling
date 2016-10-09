@@ -124,7 +124,7 @@
     			var	timeString = (new Date(val.createAt)).format("yyyy MM dd");
     			var time = timeString.split(" ");
     			var html = 
-    				"<a class='weui_cell' id='" + val.orderId + "'>" + 
+    				"<a class='weui_cell' id='" + val.orderId+ "'>" + 
     				"<div class='weui_cell_hd'>" + 
     				"<i class='icon icon_article'></i>" + 
     				"</div>" + 
@@ -132,9 +132,36 @@
     				"<p>" + time[0] + "年" + parseInt(time[1]) + "月" + time[2] + "日<span style='color:#888;'>" + typeString + "</span></p>" +
     				"</div>" + 
     				"<div class='weui_cell_ft'>含" + val.orderItems.length + "个订单项</div>" + 
+    				"</a>" +
+					"<div class='order_detail' style='display:none;'>"					    				
+    			for(var j = 0; j < val.orderItems.length; j++){
+    				var wuliu = "";
+    				switch(val.orderItems[j].status){
+    				case "NOT_PAYED":wuliu = "(未付款)";break;
+    				case "PAYED":wuliu="(已付款)";break;
+    				case "SHIPPED":wuliu="(已发货)";break;
+    				case "RECEIVED":wuliu="(已签收)";break;
+    				default:break;
+    				}
+    				html += 
+    				"<a class='weui_cell order_item"+ val.orderId + "'>" +
+    				"<div class='weui_cell_bd weui_cell_primary'>" +
+    				"<p>" + val.orderItems[j].customer.name +"<span style='color:#888;'>" + wuliu + "</span></p>" + 
+    				"</div>" + 
+    				"<div class='weui_cell_ft'>查看详情</div>"
     				"</a>";
+    			}
+    			html += "</div>";
     			$("#order_list").append(html);
-    			$("#" + val.orderId).on("click", function(){
+    			downId = 0;
+    			$("#" + val.orderId).on("click",function(){
+    				$("#" + val.orderId).next().slideToggle();
+    				if(val.orderId != downId){
+    					$("#" + downId).next().slideToggle();
+    				}
+    				downId = val.orderId;
+    			});
+    			$(".order_item" + val.orderId).on("click", function(){
     				window.location =  "${path.concat('/agent/order/detail/" + val.orderId + "')}";
     			});
     		});
