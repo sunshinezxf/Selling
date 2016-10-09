@@ -1,22 +1,21 @@
 package selling.sunshine.controller;
 
-import com.alibaba.fastjson.JSON;
+import common.sunshine.model.selling.agent.Agent;
+import common.sunshine.pagination.DataTablePage;
+import common.sunshine.pagination.DataTableParam;
+import common.sunshine.utils.ResponseCode;
+import common.sunshine.utils.ResultData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import common.sunshine.model.selling.agent.Agent;
-import selling.sunshine.model.cashback.support.CashBackLevel;
 import selling.sunshine.model.cashback.CashBackRecord;
-import common.sunshine.pagination.DataTablePage;
-import common.sunshine.pagination.DataTableParam;
+import selling.sunshine.model.cashback.support.CashBackLevel;
 import selling.sunshine.service.AgentService;
 import selling.sunshine.service.CashBackService;
 import selling.sunshine.service.RefundService;
-import common.sunshine.utils.ResponseCode;
-import common.sunshine.utils.ResultData;
 import selling.sunshine.utils.ZipCompressor;
 import selling.sunshine.vo.cashback.CashBack4Agent;
 import selling.sunshine.vo.cashback.CashBack4AgentPerMonth;
@@ -102,6 +101,9 @@ public class CashBackController {
         condition.clear();
         //获取自销的返现记录详情
         condition.put("agentId", cashback.getAgent().getAgentId());
+        Calendar date = Calendar.getInstance();
+        format = new SimpleDateFormat("yyyy-mm");
+        condition.put("createAt", format.format(date.getTime()) + "%");
         condition.put("level", CashBackLevel.SELF.getCode());
         response = refundService.fetchRefundRecord(condition);
         if (response.getResponseCode() != ResponseCode.RESPONSE_OK) {
@@ -113,6 +115,7 @@ public class CashBackController {
         condition.clear();
         //获取所有的直接拓展代理的返现详情
         condition.put("agentId", agentId);
+        condition.put("createAt", format.format(date.getTime()) + "%");
         condition.put("level", CashBackLevel.DIRECT.getCode());
         response = refundService.fetchRefundRecord(condition);
         if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
@@ -122,11 +125,11 @@ public class CashBackController {
         condition.clear();
         //获取所有的间接拓展代理的返现详情
         condition.put("agentId", agentId);
+        condition.put("createAt", format.format(date.getTime()) + "%");
         condition.put("level", CashBackLevel.INDIRECT.getCode());
         response = refundService.fetchRefundRecord(condition);
         if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
             List<CashBackRecord> indirect = (List<CashBackRecord>) response.getData();
-            logger.debug("JSON CONTENT:" + JSON.toJSONString(indirect));
             view.addObject("indirect", indirect);
         }
         view.setViewName("/backend/refund/cashback_month_detail");
