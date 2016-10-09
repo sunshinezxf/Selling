@@ -168,7 +168,7 @@ public class CashBackServiceImpl implements CashBackService {
         condition.put("agentId", cashback.getAgent().getAgentId());
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM");
-        condition.put("createAt", format.format(calendar) + "%");
+        condition.put("createAt", format.format(calendar.getTime()) + "%");
         condition.put("level", CashBackLevel.SELF.getCode());
         ResultData response = refundDao.queryRefundRecord(condition);
         if (response.getResponseCode() == ResponseCode.RESPONSE_OK && !((List<CashBackRecord>) response.getData()).isEmpty()) {
