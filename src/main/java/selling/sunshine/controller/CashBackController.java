@@ -102,7 +102,7 @@ public class CashBackController {
         //获取自销的返现记录详情
         condition.put("agentId", cashback.getAgent().getAgentId());
         Calendar date = Calendar.getInstance();
-        format = new SimpleDateFormat("yyyy-mm");
+        format = new SimpleDateFormat("yyyy-MM");
         condition.put("createAt", format.format(date.getTime()) + "%");
         condition.put("level", CashBackLevel.SELF.getCode());
         response = refundService.fetchRefundRecord(condition);
