@@ -112,6 +112,9 @@
             #parse("/agent/component/wx_uploader.vm")
         </div>
     </div>
+    <div class="weui_cells_tips register_hide identity_verification">
+                          注：身份证信息仅用作注册代理使用，公司不会将群主个人信息外泄
+    </div>
     <div id="next_div" class="weui_btn_area">
         <button type="button" class="weui_btn weui_btn_disabled weui_btn_default" id="next_btn" disabled="disabled">
             下一步
