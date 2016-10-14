@@ -2280,13 +2280,35 @@ public class AgentController {
         //book = Workbook.createWorkbook(os);
         book = jxl.Workbook.createWorkbook(os);
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat dateSearchFormat = new SimpleDateFormat("yyyy-MM");
+        condition.clear();
+        condition.put("blockFlag", false);
+        ResultData fetchGoodsList = commodityService.fetchGoods4Agent(condition);
+        List<Goods4Agent> goodsList = null;
+        if(fetchGoodsList.getResponseCode() == ResponseCode.RESPONSE_OK){
+        	goodsList = (List<Goods4Agent>) fetchGoodsList.getData();
+        }
+        Calendar cl = Calendar.getInstance();
+        int[] month = new int[3];
+        String[] dateSearch = new String[3];
+        for(int i = 0; i < 3; i++){
+        	cl.add(Calendar.MONTH, -1);
+        	month[i] = cl.get(Calendar.MONTH) + 1;
+        	dateSearch[i] = dateSearchFormat.format(cl.getTime());
+        }
         if (agentList != null) {
             sheet1 = book.createSheet(" 代理商 ", 0);
             String headerArr[] = {"代理商编号", "姓名", "性别", "手机号", "地址", "注册时间", "身份证",
                     "群员人数", "上级代理编号","上级代理姓名"};
-
-            for (int i = 0; i < headerArr.length; i++) {
-                sheet1.addCell(new Label(i, 0, headerArr[i]));
+            int h = 0;
+            for (; h < headerArr.length; h++) {
+                sheet1.addCell(new Label(h, 0, headerArr[h]));
+            }
+            for(int i = 0; i < 3; i++){
+            	for(int j = 0; j < goodsList.size(); j++){
+            		sheet1.addCell(new Label(h, 0, goodsList.get(j).getName() + "(" + month[i] + "月销量)"));
+            		h++;
+            	}
             }
             int k = 1;
             for (int i = 0; i < agentList.size(); i++) {
@@ -2301,6 +2323,24 @@ public class AgentController {
                 sheet1.addCell(new Label(7, k, String.valueOf(agent.getClaimScale())));
                 sheet1.addCell(new Label(8, k, agent.getUpperAgent() == null ? "无" : agent.getUpperAgent().getAgentId()));
                 sheet1.addCell(new Label(9, k, agent.getUpperAgent() == null ? "无" : agent.getUpperAgent().getName()));
+                int l = 10;
+                for(int m = 0; m < 3; m++){
+                	for(int n = 0; n < goodsList.size(); n++){
+                		condition.clear();
+                		condition.put("agentId", agent.getAgentId());
+                		condition.put("goodsId", goodsList.get(n).getGoodsId());
+                		condition.put("date", dateSearch[m] + "%");
+                		condition.put("blockFlag", false);
+                		ResultData fetchOrderPoolData = orderService.fetchOrderPool(condition);
+                		if(fetchOrderPoolData.getResponseCode() == ResponseCode.RESPONSE_OK && !((List<OrderPool>)fetchOrderPoolData.getData()).isEmpty()){
+                			OrderPool orderPool = ((List<OrderPool>)fetchOrderPoolData.getData()).get(0);
+                			sheet1.addCell(new Label(l, k, String.valueOf(orderPool.getQuantity())));
+                		}else{
+                			sheet1.addCell(new Label(l, k, "0"));
+                		}
+                		l++;
+                	}
+                }
                 k++;
             }
         }
