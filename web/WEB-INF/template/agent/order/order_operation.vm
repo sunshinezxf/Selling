@@ -10,14 +10,14 @@
     </div>
     <div class="weui_tab">
         <div class="weui_navbar">
-            <div class="weui_navbar_item " id="saved">
-                已保存 
-            </div>
-            <div class="weui_navbar_item" id="submit">
-                未付款
+            <div class="weui_navbar_item " id="submit">
+                未付款 
             </div>
             <div class="weui_navbar_item" id="paid">
                 已付款
+            </div>
+            <div class="weui_navbar_item" id="shipped">
+                已发货
             </div>
             <div class="weui_navbar_item" id="closed">
                 已结束
@@ -57,16 +57,16 @@
 		$.get_order(${type});
 		switch(${type}){
 		case 0:
-			$("#saved").css("font-weight","bold");
-            $("#saved").addClass("weui_bar_item_on");
-            break;
-		case 1:
 			$("#submit").css("font-weight","bold");
             $("#submit").addClass("weui_bar_item_on");
             break;
-		case 2:
+		case 1:
 			$("#paid").css("font-weight","bold");
             $("#paid").addClass("weui_bar_item_on");
+            break;
+		case 2:
+			$("#shipped").css("font-weight","bold");
+            $("#shipped").addClass("weui_bar_item_on");
             break;
 		case 3:
 			$("#closed").css("font-weight","bold");
@@ -83,11 +83,11 @@
         if (current_id != target_id) {
             current.removeClass("weui_bar_item_on");
             current.css("font-weight","normal");
-            if (target_id == "saved") {
+            if (target_id == "submit") {
             	$.get_order(0);
-            } else if (target_id == "submit") {
-				$.get_order(1);
             } else if (target_id == "paid") {
+				$.get_order(1);
+            } else if (target_id == "shipped") {
 				$.get_order(2);
             } else if (target_id == "closed") {
 				$.get_order(3);
@@ -158,8 +158,10 @@
     				$("#" + val.orderId).next().slideToggle();
     				if(val.orderId != downId){
     					$("#" + downId).next().slideToggle();
+    					downId = val.orderId;
+    				}else{
+    					downId = 0;	
     				}
-    				downId = val.orderId;
     			});
     			$(".order_item" + val.orderId).on("click", function(){
     				window.location =  "${path.concat('/agent/order/detail/" + val.orderId + "')}";

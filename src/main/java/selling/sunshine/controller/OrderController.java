@@ -1122,7 +1122,7 @@ public class OrderController {
                 if (payData.getResponseCode() == ResponseCode.RESPONSE_OK) {
                     Prompt prompt = new Prompt(PromptCode.SUCCESS, "付款成功",
                             "订单号：" + order.getOrderId() + "，请等待发货",
-                            "/agent/order/manage/2");
+                            "/agent/order/manage/1");
                     attr.addFlashAttribute(prompt);
                     view.setViewName("redirect:/agent/prompt");
                     return view;
@@ -1130,7 +1130,7 @@ public class OrderController {
             }
         }
         Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "失败",
-                "/agent/order/manage/2");
+                "/agent/order/manage/1");
         attr.addFlashAttribute(prompt);
         view.setViewName("redirect:/agent/prompt");
         return view;

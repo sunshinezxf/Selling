@@ -1178,11 +1178,11 @@ public class AgentController {
             } else if (type.equals("gift")) {
                 ResultData fetchGiftResponse = agentService.updateAgentGift(giftConfigs);
                 if (fetchGiftResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-                    Prompt prompt = new Prompt("提示", "赠送成功", "/agent/order/manage/2");
+                    Prompt prompt = new Prompt("提示", "赠送成功", "/agent/order/manage/1");
                     attr.addFlashAttribute("prompt", prompt);
                     view.setViewName("redirect:/agent/prompt");
                 } else {
-                    Prompt prompt = new Prompt("提示", "赠送申请成功，审核通过后即可送出", "/agent/order/manage/2");
+                    Prompt prompt = new Prompt("提示", "赠送申请成功，审核通过后即可送出", "/agent/order/manage/1");
                     attr.addFlashAttribute("prompt", prompt);
                     view.setViewName("redirect:/agent/prompt");
                 }
@@ -1308,13 +1308,13 @@ public class AgentController {
         switch (Integer.parseInt(type)) {
             case 0:
                 status.add(0);
-                break;
-            case 1:
                 status.add(1);
                 break;
+            case 1:
+            	status.add(2);
+            	status.add(3);
+                break;
             case 2:
-                status.add(2);
-                status.add(3);
                 status.add(4);
                 break;
             case 3:
@@ -1330,16 +1330,17 @@ public class AgentController {
         condition.put("blockFlag", false);
         ResultData fetchResponse = orderService.fetchOrder(condition);
         List<Order> orderList = (List<Order>) fetchResponse.getData();
-        if (Integer.parseInt(type) == 2 || Integer.parseInt(type) == 3) {
+        if (Integer.parseInt(type) == 1 || Integer.parseInt(type) == 2 || Integer.parseInt(type) == 3) {
             //customerOrder与代理商Order合并
             condition.clear();
             List<Integer> customerStatus = new ArrayList<Integer>();
-            if (Integer.parseInt(type) == 2) {
+            if (Integer.parseInt(type) == 1) {
                 customerStatus.add(1);
-                customerStatus.add(2);
+            } else if(Integer.parseInt(type) == 2){
+            	customerStatus.add(2);
             } else {
-                customerStatus.add(3);
-                customerStatus.add(4);
+            	customerStatus.add(3);
+                customerStatus.add(4);            
             }
             condition.put("agentId", user.getAgent().getAgentId());
             condition.put("status", customerStatus);

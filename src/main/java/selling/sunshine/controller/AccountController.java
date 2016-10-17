@@ -212,9 +212,9 @@ public class AccountController {
                 orderId = orderBill.getOrder().getOrderId();
             }
             if (!StringUtils.isEmpty(result) && result.equals("success")) {
-                prompt = new Prompt("付款成功", "订单号：" + orderId + "，请等待发货", "/agent/order/manage/2");
+                prompt = new Prompt("付款成功", "订单号：" + orderId + "，请等待发货", "/agent/order/manage/1");
             } else {
-                prompt = new Prompt(PromptCode.WARNING, "提示", "对不起,您的付款失败了，请联系工作人员.", "/agent/order/manage/2");
+                prompt = new Prompt(PromptCode.WARNING, "提示", "对不起,您的付款失败了，请联系工作人员.", "/agent/order/manage/1");
             }
             view.addObject("prompt", prompt);
             WechatConfig.oauthWechat(view, "/agent/prompt");
