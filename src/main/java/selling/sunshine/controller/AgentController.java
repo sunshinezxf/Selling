@@ -1966,6 +1966,7 @@ public class AgentController {
             view.setViewName("redirect:/agent/overview");
             return view;
         }
+        
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         if (user == null) {
@@ -1991,6 +1992,7 @@ public class AgentController {
     public DataTablePage<Agent> overview(DataTableParam param) {
         DataTablePage<Agent> result = new DataTablePage<>(param);
         if (StringUtils.isEmpty(param)) {
+        	
             return result;
         }
         Map<String, Object> condition = new HashMap<>();
