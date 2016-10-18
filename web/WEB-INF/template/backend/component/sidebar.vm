@@ -2,7 +2,7 @@
 <div class="row">
     <div class="col-sm-3 col-md-2 sidebar">
         <ul class="nav nav-sidebar" id="accordion" aria-multiselectable="true">
-            #if($role == "admin")
+            #if($role == "admin" || $role == "express")
                 <li><a href="${path.concat('/dashboard')}"><i class="fa fa-desktop"></i> 首页</a></li>
             #end
             #if($role == "admin" || $role == "auditor")

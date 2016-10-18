@@ -117,7 +117,7 @@
 
                 /bill/inform = anon
 
-                /dashboard = roles[admin]
+                /dashboard = roles["admin, express"]
 
                 /express/queryExpress/* = anon
 

@@ -12,7 +12,7 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-                #if($role == "admin")
+                #if($role == "admin" || $role == "express")
                     <li><a href="${path.concat('/dashboard')}">首页</a></li>
                 #end
                 #if($role == "admin" || $role == "auditor")
