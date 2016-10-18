@@ -1178,11 +1178,11 @@ public class AgentController {
             } else if (type.equals("gift")) {
                 ResultData fetchGiftResponse = agentService.updateAgentGift(giftConfigs);
                 if (fetchGiftResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-                    Prompt prompt = new Prompt("提示", "赠送成功", "/agent/order/manage/2");
+                    Prompt prompt = new Prompt("提示", "赠送成功", "/agent/order/manage/1");
                     attr.addFlashAttribute("prompt", prompt);
                     view.setViewName("redirect:/agent/prompt");
                 } else {
-                    Prompt prompt = new Prompt("提示", "赠送申请成功，审核通过后即可送出", "/agent/order/manage/2");
+                    Prompt prompt = new Prompt("提示", "赠送申请成功，审核通过后即可送出", "/agent/order/manage/1");
                     attr.addFlashAttribute("prompt", prompt);
                     view.setViewName("redirect:/agent/prompt");
                 }
@@ -1308,13 +1308,13 @@ public class AgentController {
         switch (Integer.parseInt(type)) {
             case 0:
                 status.add(0);
-                break;
-            case 1:
                 status.add(1);
                 break;
+            case 1:
+            	status.add(2);
+            	status.add(3);
+                break;
             case 2:
-                status.add(2);
-                status.add(3);
                 status.add(4);
                 break;
             case 3:
@@ -1330,16 +1330,17 @@ public class AgentController {
         condition.put("blockFlag", false);
         ResultData fetchResponse = orderService.fetchOrder(condition);
         List<Order> orderList = (List<Order>) fetchResponse.getData();
-        if (Integer.parseInt(type) == 2 || Integer.parseInt(type) == 3) {
+        if (Integer.parseInt(type) == 1 || Integer.parseInt(type) == 2 || Integer.parseInt(type) == 3) {
             //customerOrder与代理商Order合并
             condition.clear();
             List<Integer> customerStatus = new ArrayList<Integer>();
-            if (Integer.parseInt(type) == 2) {
+            if (Integer.parseInt(type) == 1) {
                 customerStatus.add(1);
-                customerStatus.add(2);
+            } else if(Integer.parseInt(type) == 2){
+            	customerStatus.add(2);
             } else {
-                customerStatus.add(3);
-                customerStatus.add(4);
+            	customerStatus.add(3);
+                customerStatus.add(4);            
             }
             condition.put("agentId", user.getAgent().getAgentId());
             condition.put("status", customerStatus);
@@ -2282,13 +2283,35 @@ public class AgentController {
         //book = Workbook.createWorkbook(os);
         book = jxl.Workbook.createWorkbook(os);
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat dateSearchFormat = new SimpleDateFormat("yyyy-MM");
+        condition.clear();
+        condition.put("blockFlag", false);
+        ResultData fetchGoodsList = commodityService.fetchGoods4Agent(condition);
+        List<Goods4Agent> goodsList = null;
+        if(fetchGoodsList.getResponseCode() == ResponseCode.RESPONSE_OK){
+        	goodsList = (List<Goods4Agent>) fetchGoodsList.getData();
+        }
+        Calendar cl = Calendar.getInstance();
+        int[] month = new int[3];
+        String[] dateSearch = new String[3];
+        for(int i = 0; i < 3; i++){
+        	cl.add(Calendar.MONTH, -1);
+        	month[i] = cl.get(Calendar.MONTH) + 1;
+        	dateSearch[i] = dateSearchFormat.format(cl.getTime());
+        }
         if (agentList != null) {
             sheet1 = book.createSheet(" 代理商 ", 0);
             String headerArr[] = {"代理商编号", "姓名", "性别", "手机号", "地址", "注册时间", "身份证",
                     "群员人数", "上级代理编号","上级代理姓名"};
-
-            for (int i = 0; i < headerArr.length; i++) {
-                sheet1.addCell(new Label(i, 0, headerArr[i]));
+            int h = 0;
+            for (; h < headerArr.length; h++) {
+                sheet1.addCell(new Label(h, 0, headerArr[h]));
+            }
+            for(int i = 0; i < 3; i++){
+            	for(int j = 0; j < goodsList.size(); j++){
+            		sheet1.addCell(new Label(h, 0, goodsList.get(j).getName() + "(" + month[i] + "月销量)"));
+            		h++;
+            	}
             }
             int k = 1;
             for (int i = 0; i < agentList.size(); i++) {
@@ -2303,6 +2326,24 @@ public class AgentController {
                 sheet1.addCell(new Label(7, k, String.valueOf(agent.getClaimScale())));
                 sheet1.addCell(new Label(8, k, agent.getUpperAgent() == null ? "无" : agent.getUpperAgent().getAgentId()));
                 sheet1.addCell(new Label(9, k, agent.getUpperAgent() == null ? "无" : agent.getUpperAgent().getName()));
+                int l = 10;
+                for(int m = 0; m < 3; m++){
+                	for(int n = 0; n < goodsList.size(); n++){
+                		condition.clear();
+                		condition.put("agentId", agent.getAgentId());
+                		condition.put("goodsId", goodsList.get(n).getGoodsId());
+                		condition.put("date", dateSearch[m] + "%");
+                		condition.put("blockFlag", false);
+                		ResultData fetchOrderPoolData = orderService.fetchOrderPool(condition);
+                		if(fetchOrderPoolData.getResponseCode() == ResponseCode.RESPONSE_OK && !((List<OrderPool>)fetchOrderPoolData.getData()).isEmpty()){
+                			OrderPool orderPool = ((List<OrderPool>)fetchOrderPoolData.getData()).get(0);
+                			sheet1.addCell(new Label(l, k, String.valueOf(orderPool.getQuantity())));
+                		}else{
+                			sheet1.addCell(new Label(l, k, "0"));
+                		}
+                		l++;
+                	}
+                }
                 k++;
             }
         }

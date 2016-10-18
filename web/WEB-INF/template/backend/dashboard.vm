@@ -3,7 +3,7 @@
 <head>
     #parse("/backend/component/init.vm")
     #parse("/backend/component/init_highcharts.vm")
-    
+    #parse("/backend/component/init_dashboard.vm")
     <title>首页</title>
 </head>
 <body>

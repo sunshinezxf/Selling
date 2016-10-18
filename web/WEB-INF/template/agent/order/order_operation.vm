@@ -10,14 +10,14 @@
     </div>
     <div class="weui_tab">
         <div class="weui_navbar">
-            <div class="weui_navbar_item " id="saved">
-                已保存 
-            </div>
-            <div class="weui_navbar_item" id="submit">
-                未付款
+            <div class="weui_navbar_item " id="submit">
+                未付款 
             </div>
             <div class="weui_navbar_item" id="paid">
                 已付款
+            </div>
+            <div class="weui_navbar_item" id="shipped">
+                已发货
             </div>
             <div class="weui_navbar_item" id="closed">
                 已结束
@@ -57,16 +57,16 @@
 		$.get_order(${type});
 		switch(${type}){
 		case 0:
-			$("#saved").css("font-weight","bold");
-            $("#saved").addClass("weui_bar_item_on");
-            break;
-		case 1:
 			$("#submit").css("font-weight","bold");
             $("#submit").addClass("weui_bar_item_on");
             break;
-		case 2:
+		case 1:
 			$("#paid").css("font-weight","bold");
             $("#paid").addClass("weui_bar_item_on");
+            break;
+		case 2:
+			$("#shipped").css("font-weight","bold");
+            $("#shipped").addClass("weui_bar_item_on");
             break;
 		case 3:
 			$("#closed").css("font-weight","bold");
@@ -83,11 +83,11 @@
         if (current_id != target_id) {
             current.removeClass("weui_bar_item_on");
             current.css("font-weight","normal");
-            if (target_id == "saved") {
+            if (target_id == "submit") {
             	$.get_order(0);
-            } else if (target_id == "submit") {
-				$.get_order(1);
             } else if (target_id == "paid") {
+				$.get_order(1);
+            } else if (target_id == "shipped") {
 				$.get_order(2);
             } else if (target_id == "closed") {
 				$.get_order(3);
@@ -124,7 +124,7 @@
     			var	timeString = (new Date(val.createAt)).format("yyyy MM dd");
     			var time = timeString.split(" ");
     			var html = 
-    				"<a class='weui_cell' id='" + val.orderId + "'>" + 
+    				"<a class='weui_cell' id='" + val.orderId+ "'>" + 
     				"<div class='weui_cell_hd'>" + 
     				"<i class='icon icon_article'></i>" + 
     				"</div>" + 
@@ -132,9 +132,38 @@
     				"<p>" + time[0] + "年" + parseInt(time[1]) + "月" + time[2] + "日<span style='color:#888;'>" + typeString + "</span></p>" +
     				"</div>" + 
     				"<div class='weui_cell_ft'>含" + val.orderItems.length + "个订单项</div>" + 
+    				"</a>" +
+					"<div class='order_detail' style='display:none;'>"					    				
+    			for(var j = 0; j < val.orderItems.length; j++){
+    				var wuliu = "";
+    				switch(val.orderItems[j].status){
+    				case "NOT_PAYED":wuliu = "(未付款)";break;
+    				case "PAYED":wuliu="(已付款)";break;
+    				case "SHIPPED":wuliu="(已发货)";break;
+    				case "RECEIVED":wuliu="(已签收)";break;
+    				default:break;
+    				}
+    				html += 
+    				"<a class='weui_cell order_item"+ val.orderId + "'>" +
+    				"<div class='weui_cell_bd weui_cell_primary'>" +
+    				"<p>" + val.orderItems[j].customer.name +"<span style='color:#888;'>" + wuliu + "</span></p>" + 
+    				"</div>" + 
+    				"<div class='weui_cell_ft'>查看详情</div>"
     				"</a>";
+    			}
+    			html += "</div>";
     			$("#order_list").append(html);
-    			$("#" + val.orderId).on("click", function(){
+    			downId = 0;
+    			$("#" + val.orderId).on("click",function(){
+    				$("#" + val.orderId).next().slideToggle();
+    				if(val.orderId != downId){
+    					$("#" + downId).next().slideToggle();
+    					downId = val.orderId;
+    				}else{
+    					downId = 0;	
+    				}
+    			});
+    			$(".order_item" + val.orderId).on("click", function(){
     				window.location =  "${path.concat('/agent/order/detail/" + val.orderId + "')}";
     			});
     		});
