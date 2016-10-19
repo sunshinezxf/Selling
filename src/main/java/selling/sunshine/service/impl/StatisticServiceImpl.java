@@ -267,7 +267,7 @@ public class StatisticServiceImpl implements StatisticService {
 				goodsMap.put(goods.get(i).getName(), new int[length]);
 			}
 			for (int i = 0; i < length; i++) {
-				categories.add(i+1);
+				categories.add((i+1)+"号");
 			}
 			for (int i = 0; i < list.size();i++) {
 				Map<String, Object> map=list.get(i);
@@ -314,7 +314,7 @@ public class StatisticServiceImpl implements StatisticService {
 				goodsMap.put(goods.get(i).getName(), new int[length]);
 			}
 			for (int i = 0; i < length; i++) {
-				categories.add(i+1);
+				categories.add((i+1)+"月");
 			}
 			for (int i = 0; i < list.size();i++) {
 				Map<String, Object> map=list.get(i);
