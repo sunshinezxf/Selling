@@ -114,6 +114,8 @@
 </div>
 
 <div id="order_container" class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main"></div>
+<div id="purchaseRecordEveryday" class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main"></div>
+<div id="purchaseRecordEveryMonth" class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main"></div>
 
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 <hr>
@@ -146,7 +148,7 @@
 </div>
 <script>
 $(function () {
-	$.post("${path.concat('/statistic/orderByYear/')}", function (result) {
+	$.post("${path.concat('/statistic/orderByYear')}", function (result) {
     $('#order_container').highcharts({
         title: {
             text: '每月已付款订单数量分布图',
@@ -181,6 +183,78 @@ $(function () {
         series:result.series
     });
     });
+	
+	$.post("${path.concat('/statistic/purchaseRecordEveryday')}", function (result) {
+	    $('#purchaseRecordEveryday').highcharts({
+	        title: {
+	            text: '当月每天购买商品数量分布图',
+	            x: -20 //center
+	        },
+	        subtitle: {
+	            text: '',
+	            x: -20
+	        },
+	        xAxis: {
+	            categories: result.categories
+	        },
+	        yAxis: {
+	            title: {
+	                text: '数量（盒）'
+	            },
+	            plotLines: [{
+	                value: 0,
+	                width: 1,
+	                color: '#808080'
+	            }]
+	        },
+	        tooltip: {
+	            valueSuffix: '盒'
+	        },
+	        legend: {
+	            layout: 'vertical',
+	            align: 'right',
+	            verticalAlign: 'middle',
+	            borderWidth: 0
+	        },
+	        series:result.series
+	    });
+     });
+	
+	$.post("${path.concat('/statistic/purchaseRecordEveryMonth')}", function (result) {
+	    $('#purchaseRecordEveryMonth').highcharts({
+	        title: {
+	            text: '当年每月购买商品数量分布图',
+	            x: -20 //center
+	        },
+	        subtitle: {
+	            text: '',
+	            x: -20
+	        },
+	        xAxis: {
+	            categories: result.categories
+	        },
+	        yAxis: {
+	            title: {
+	                text: '数量（盒）'
+	            },
+	            plotLines: [{
+	                value: 0,
+	                width: 1,
+	                color: '#808080'
+	            }]
+	        },
+	        tooltip: {
+	            valueSuffix: '盒'
+	        },
+	        legend: {
+	            layout: 'vertical',
+	            align: 'right',
+	            verticalAlign: 'middle',
+	            borderWidth: 0
+	        },
+	        series:result.series
+	    });
+     });
 });
 </script>
 
