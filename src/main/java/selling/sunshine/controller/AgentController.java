@@ -51,6 +51,7 @@ import common.sunshine.pagination.DataTablePage;
 import common.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.*;
 import selling.sunshine.utils.*;
+import selling.sunshine.vo.cashback.CashBack;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -65,6 +66,7 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -98,6 +100,9 @@ public class AgentController {
 
     @Autowired
     private RefundService refundService;
+    
+    @Autowired
+    private CashBackService cashBackService;
 
     @Autowired
     private ShipmentService shipmentService;
@@ -1487,6 +1492,52 @@ public class AgentController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/statement")
     public ModelAndView statement() {
+    	ModelAndView view = new ModelAndView();
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        if (user == null) {
+            WechatConfig.oauthWechat(view, "/agent/login");
+            view.setViewName("/agent/login");
+            return view;
+        }
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("agentId", user.getAgent().getAgentId());
+        ResultData fetchAgentResponse = agentService.fetchAgent(condition);
+        if (fetchAgentResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            view.setViewName("/agent/account/statement");
+            return view;
+        }
+        Agent agent = ((List<Agent>) fetchAgentResponse.getData()).get(0);
+        view.addObject("agent", agent);
+        ResultData fetchCashBackData = cashBackService.fetchCashBackALL(condition);
+        if(fetchCashBackData.getResponseCode() != ResponseCode.RESPONSE_OK){
+        	WechatConfig.oauthWechat(view, "/agent/account/statement");
+            view.setViewName("/agent/account/statement");
+            return view;
+        }
+        List<CashBack> cashBackData = (List<CashBack>) fetchCashBackData.getData();
+        Map<String, List<CashBack>> cashBacks = new TreeMap<String, List<CashBack>>(new Comparator<String>(){
+			@Override
+			public int compare(String o1, String o2) {
+				return o2.compareTo(o1);
+			}
+        });
+        for(CashBack cashBack : cashBackData){
+        	if(cashBacks.containsKey(cashBack.getMonth())){
+        		cashBacks.get(cashBack.getMonth()).add(cashBack);
+        	} else {
+        		List<CashBack> cashBackMonthly = new ArrayList<CashBack>();
+        		cashBackMonthly.add(cashBack);
+        		cashBacks.put(cashBack.getMonth(), cashBackMonthly);
+        	}
+        }
+        view.addObject("cashBacks", cashBacks);
+        view.setViewName("/agent/account/statement");
+        return view;
+    }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/statementdetail/{level}/{date}")
+    public ModelAndView statementDetail(@PathVariable("level") int level, @PathVariable("date") String date) {
         ModelAndView view = new ModelAndView();
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
@@ -1504,17 +1555,27 @@ public class AgentController {
         }
         Agent agent = ((List<Agent>) fetchAgentResponse.getData()).get(0);
         view.addObject("agent", agent);
-        condition.put("blockFlag", true);
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
+			Date dateInfo = sdf.parse(date);
+			Calendar cl = Calendar.getInstance();
+	        cl.setTime(dateInfo);
+	        cl.add(Calendar.MONTH, 1);
+	        condition.put("createAt", sdf.format(cl.getTime()) + "%");
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		condition.put("level", level);
         ResultData fetchRefundRecordResponse = refundService.fetchRefundRecord(condition);
         if (fetchRefundRecordResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
-            WechatConfig.oauthWechat(view, "/agent/account/statement");
-            view.setViewName("/agent/account/statement");
+            WechatConfig.oauthWechat(view, "/agent/account/statement_item");
+            view.setViewName("/agent/account/statement_item");
             return view;
         }
         List<CashBackRecord> refundRecords = (List<CashBackRecord>) fetchRefundRecordResponse.getData();
         view.addObject("refundRecords", refundRecords);
-        WechatConfig.oauthWechat(view, "/agent/account/statement");
-        view.setViewName("/agent/account/statement");
+        WechatConfig.oauthWechat(view, "/agent/account/statement_item");
+        view.setViewName("/agent/account/statement_item");
         return view;
     }
 

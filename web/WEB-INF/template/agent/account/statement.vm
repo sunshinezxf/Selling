@@ -17,10 +17,56 @@
 	</div>
     <div class="bd weui_tab_bd">
         <div class="weui_cells">
-            #parse("/agent/account/statement_item.vm")
+        	#foreach($cashBackMonth in ${cashBacks.entrySet()})
+        		<a class="weui_cell weui_cells_access month_hd">
+        			<div class="weui_cell_bd weui_cell_primary">${cashBackMonth.key}</div>
+        			<div class='weui_cell_ft'></div>
+        		</a>
+        		<div class="cashMonth" style="display:none">
+        		#foreach($cashBack in $cashBackMonth.value)
+        		<a class="weui_cell weui_cells_access">
+        			<div class="weui_cell_bd weui_cell_primary">
+        			#if(${cashBack.level} == 0)
+        			自销
+        			#elseif(${cashBack.level} == 1)
+        			直接代理
+        			#else
+        			间接代理
+        			#end
+        			</div>
+        			<div class='weui_cell_ft'><span class="money">${cashBack.amount}</span>元</div>
+        		</a>
+        		#end	
+        		</div>
+        	#end
         </div>
     </div>
 </div>
 #parse("/agent/component/navigate.vm")
 </body>
+<script>
+$(function(){
+	$(".month_hd").on("click",function(){
+		$(this).next().slideToggle();
+	});
+	$.each($(".month_hd"), function(i, val){
+		var day = $(val).find(".weui_cell_bd").text();
+		var dayInfo = day.split("-");
+		$(val).find(".weui_cell_bd").html(dayInfo[0]+"年"+dayInfo[1]+"月返现");
+		var money = 0;
+		$.each($(val).next().find(".weui_cell"), function(j, vval){
+			money += parseFloat($(vval).find(".money").text());
+			$(vval).on("click",function(){
+				switch($.trim($(vval).find(".weui_cell_bd").text())){
+					case "自销" : window.location = "${path.concat('/agent/statementdetail/')}" + "0/" + day;break;
+					case "直接代理" : window.location = "${path.concat('/agent/statementdetail/')}" + "1/" + day;break;
+					case "间接代理" : window.location = "${path.concat('/agent/statementdetail/')}" + "2/" + day;break;
+					default:
+				}
+			});
+		});
+		$(val).find(".weui_cell_ft").html(money + "元");
+	});
+});
+</script>
 </html>

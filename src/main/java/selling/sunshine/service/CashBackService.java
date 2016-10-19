@@ -18,4 +18,6 @@ public interface CashBackService {
     ResultData fetchCashBack(Map<String, Object> condition, DataTableParam param);
 
     ResultData produce(List<CashBack4AgentPerMonth> list);
+
+	ResultData fetchCashBackALL(Map<String, Object> condition);
 }

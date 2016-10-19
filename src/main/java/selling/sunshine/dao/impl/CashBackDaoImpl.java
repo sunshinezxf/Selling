@@ -10,6 +10,7 @@ import common.sunshine.pagination.DataTablePage;
 import common.sunshine.pagination.DataTableParam;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
+import selling.sunshine.vo.cashback.CashBack;
 import selling.sunshine.vo.cashback.CashBack4Agent;
 import selling.sunshine.vo.cashback.CashBack4AgentPerMonth;
 
@@ -68,6 +69,22 @@ public class CashBackDaoImpl extends BaseDao implements CashBackDao {
         condition = handle(condition);
         try {
             List<CashBack4Agent> list = sqlSession.selectList("selling.cashback.summary.query", condition);
+            result.setData(list);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription(e.getMessage());
+        } finally {
+            return result;
+        }
+    }
+    
+    @Override
+    public ResultData queryALL(Map<String, Object> condition) {
+        ResultData result = new ResultData();
+        condition = handle(condition);
+        try {
+            List<CashBack> list = sqlSession.selectList("selling.cashback.summary.queryALL", condition);
             result.setData(list);
         } catch (Exception e) {
             logger.error(e.getMessage());

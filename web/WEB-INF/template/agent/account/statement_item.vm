@@ -1,21 +1,55 @@
-#foreach($refundRecord in $refundRecords)
-<div class="weui_panel">
-    <div class="weui_panel_bd">
-        <div class="weui_media_box weui_media_text">
-            <h4 class="weui_media_title">${refundRecord.title}</h4>
-            <p class="weui_media_desc">${refundRecord.description}</p>
-            <ul class="weui_media_info">
-                <li class="weui_media_info_meta createAt">${refundRecord.createAt}</li>
-                <li class="weui_media_info_meta">返现</li>
-            </ul>
+#parse("/common/util.vm")
+<html lang="zh_CN">
+<head>
+    #parse("/agent/component/init.vm")
+    <title>我的返现</title>
+</head>
+<body ontouchstart>
+<div class="container">
+    <div class="hd">
+        <h1 class="page_title">
+            返现明细
+        </h1>
+    </div>
+    <div class="bd weui_tab_bd">
+        <div class="weui_cells">
+        	#foreach($refundRecord in $refundRecords)
+			<div class="weui_panel">
+			    <div class="weui_panel_bd">
+			        <div class="weui_media_box weui_media_text">
+			            <h4 class="weui_media_title">${refundRecord.title}</h4>
+			            <p class="weui_media_desc">
+			            ${refundRecord.description}
+			            #if(${refundRecord.blockFlag} == "false")
+			            (入账中)
+			            #end
+			            </p>
+			            <ul class="weui_media_info">
+			                <li class="weui_media_info_meta createAt">${refundRecord.createAt}</li>
+			                <li class="weui_media_info_meta">返现</li>
+			            </ul>
+			        </div>
+			    </div>
+			</div>
+			#end
         </div>
+        <div class="weui_btn_area">
+			<button type="button" class="weui_btn weui_btn_primary" id="num_modify_cancel_btn">返回</button>
+		</div>
     </div>
 </div>
-#end
+#parse("/agent/component/navigate.vm")
+</body>
 <script>
 	$(document).ready(function(){
 		$.each($(".createAt"), function(i, val){
 			$(val).html(($(val).html().split(" "))[0]);
 		});
 	});
+	
+	$("#num_modify_cancel_btn").on("click", function(){
+		window.location = "${path.concat('/agent/statement')}"
+	});
 </script>
+</html>
+

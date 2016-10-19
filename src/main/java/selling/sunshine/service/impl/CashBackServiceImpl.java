@@ -19,6 +19,7 @@ import selling.sunshine.model.cashback.CashBackRecord;
 import selling.sunshine.model.cashback.support.CashBackLevel;
 import selling.sunshine.service.CashBackService;
 import selling.sunshine.utils.WorkBookUtil;
+import selling.sunshine.vo.cashback.CashBack;
 import selling.sunshine.vo.cashback.CashBack4AgentPerMonth;
 
 import java.io.File;
@@ -52,6 +53,22 @@ public class CashBackServiceImpl implements CashBackService {
         result.setResponseCode(response.getResponseCode());
         if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
             if (((List<CashBack4AgentPerMonth>) response.getData()).isEmpty()) {
+                result.setResponseCode(ResponseCode.RESPONSE_NULL);
+            }
+            result.setData(response.getData());
+        } else {
+            result.setDescription(response.getDescription());
+        }
+        return result;
+    }
+    
+    @Override
+    public ResultData fetchCashBackALL(Map<String, Object> condition) {
+        ResultData result = new ResultData();
+        ResultData response = cashBackDao.queryALL(condition);
+        result.setResponseCode(response.getResponseCode());
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            if (((List<CashBack>) response.getData()).isEmpty()) {
                 result.setResponseCode(ResponseCode.RESPONSE_NULL);
             }
             result.setData(response.getData());

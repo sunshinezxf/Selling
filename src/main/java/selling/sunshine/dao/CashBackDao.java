@@ -16,4 +16,6 @@ public interface CashBackDao {
     ResultData query(Map<String, Object> condition);
 
     ResultData queryByPage(Map<String, Object> condition, DataTableParam param);
+
+	ResultData queryALL(Map<String, Object> condition);
 }
