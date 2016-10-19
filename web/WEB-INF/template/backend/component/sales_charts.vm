@@ -1,0 +1,81 @@
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div id="purchaseRecordEveryday" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 main"></div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div id="purchaseRecordEveryMonth" class="col-xs-12 col-sm-12 col-md-12 col-lg-12 main"></div>
+    </div>
+</div>
+<script>
+    $(function(){
+        $.post("${path.concat('/statistic/purchaseRecordEveryday')}", function (result) {
+	        $('#purchaseRecordEveryday').highcharts({
+	            chart: {
+                    type: 'line'
+                },
+	            title: {
+	                text: '本月每天购买商品数量分布图',
+	            },
+	            subtitle: {
+	                text: '',
+	            },
+	            xAxis: {
+	                categories: result.categories
+	            },
+	            yAxis: {
+	                title: {
+	                    text: '数量（盒）'
+	                }
+	            },
+	            tooltip: {
+	                valueSuffix: '盒'
+	            },
+	            plotOptions: {
+                    line: {
+                        dataLabels: {
+                            enabled: true
+                        },
+                        enableMouseTracking: true
+                    }
+                },
+	            series:result.series
+	        });
+	    });
+	
+	    $.post("${path.concat('/statistic/purchaseRecordEveryMonth')}", function (result) {
+	        $('#purchaseRecordEveryMonth').highcharts({
+	            chart: {
+                    type: 'line'
+                }, 
+	            title: {
+	                text: '累积每月购买商品数量分布图',
+	            },
+	            subtitle: {
+	                text: '',
+	            },
+	            xAxis: {
+	                categories: result.categories
+	            },
+	            yAxis: {
+	                title: {
+	                    text: '数量（盒）'
+	                }
+	            },
+	            tooltip: {
+	                valueSuffix: '盒'
+	            },
+	            plotOptions: {
+                    line: {
+                        dataLabels: {
+                            enabled: true
+                        },
+                        enableMouseTracking: true
+                    }
+                },
+	            series:result.series
+	        });
+        });
+    })
+</script>
