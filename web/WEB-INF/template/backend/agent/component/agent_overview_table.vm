@@ -86,13 +86,14 @@
     $(document).ready(function () {
         $("#overview_agent_table").DataTable({
             searching: true,
-            ordering: false,
+            ordering: true,
             paging: true,
+            "order": [[ 0, "desc" ]],
             "sPaginationType": "full_numbers",
             "bPaginate": true,
             "bLengthChange": true,
             "bAutoWidth": true,
-            "bSort": false,
+            "bSort": true,
             "bDeferRender": true,
             "bProcessing": true,
             "bServerSide": true,

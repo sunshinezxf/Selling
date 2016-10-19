@@ -37,6 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import selling.sunshine.form.*;
@@ -664,7 +665,7 @@ public class OrderController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/expressOne/{expressId}")
     @ResponseBody
-    public ResultData expressOne(@PathVariable("expressId") String expressId, @RequestBody ExpressForm form) {
+    public ResultData expressOne(@PathVariable("expressId") String expressId, @RequestBody ExpressForm form,HttpServletRequest request) {
         ResultData resultData = new ResultData();
         List<Express> itemForms = form.getExpressItem();
         String expressNumber = form.getExpressNumber();
@@ -706,8 +707,18 @@ public class OrderController {
                                 order.setStatus(OrderStatus.PATIAL_SHIPMENT);
                                 orderService.modifyOrder(order);
                             }
-
+                            Subject subject = SecurityUtils.getSubject();
+                            User user = (User) subject.getPrincipal();
+                            if (user == null) {
+                            	resultData.setData(itemForms);
+                                return resultData;
+                            }
+                            Admin admin = user.getAdmin();
+                            BackOperationLog backOperationLog = new BackOperationLog(
+                                    admin.getUsername(), toolService.getIP((HttpServletRequest) request), "管理员" + admin.getUsername() + "单独发货，快递单号是："+expressNumber+",订单号是："+order.getOrderId());
+                            logService.createbackOperationLog(backOperationLog);
                         }
+                        
                     }
 
                 } else if (linkId.startsWith("CUO")) {
@@ -722,6 +733,16 @@ public class OrderController {
                         express.setOrder(temp);
                         expressService.createExpress(express);
                         orderService.updateCustomerOrder(temp);
+                        Subject subject = SecurityUtils.getSubject();
+                        User user = (User) subject.getPrincipal();
+                        if (user == null) {
+                        	resultData.setData(itemForms);
+                            return resultData;
+                        }
+                        Admin admin = user.getAdmin();
+                        BackOperationLog backOperationLog = new BackOperationLog(
+                                admin.getUsername(), toolService.getIP((HttpServletRequest) request), "管理员" + admin.getUsername() + "单独发货，快递单号是："+expressNumber+",订单号是："+temp.getOrderId());
+                        logService.createbackOperationLog(backOperationLog);
                     }
                 }
                 iter.remove();
