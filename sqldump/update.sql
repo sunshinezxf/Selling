@@ -565,3 +565,12 @@ ADD COLUMN `type` VARCHAR(50) DEFAULT NULL AFTER `goods_id`;
 
 ALTER TABLE `selling`.`goods`
 ADD COLUMN `standard` VARCHAR(50) DEFAULT NULL AFTER `agent_price`;
+
+##2016年10月24日更新
+CREATE TABLE `selling`.`agent_vitality` (
+  `idagent_vitality` VARCHAR(20) NOT NULL,
+  `vitality_quantity` INT(11) NOT NULL DEFAULT 0,
+  `vitality_price` VARCHAR(45) NOT NULL DEFAULT 0,
+  `block_flag` TINYINT(1) NOT NULL DEFAULT 0,
+  `create_time` DATETIME NOT NULL,
+  PRIMARY KEY (`idagent_vitality`));
