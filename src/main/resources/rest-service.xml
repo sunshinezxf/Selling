@@ -50,4 +50,6 @@
     <bean id="eventService" class="selling.sunshine.service.impl.EventServiceImpl"></bean>
     
     <bean id="shortUrlService" class="selling.sunshine.service.impl.ShortUrlServiceImpl"></bean>
+    
+    <bean id="agentVitalityService" class="selling.sunshine.service.impl.AgentVitalityServiceImpl"></bean>
 </beans>

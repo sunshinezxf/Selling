@@ -100,8 +100,19 @@ public class AgentVitalityDaoImpl extends BaseDao implements AgentVitalityDao {
 
 	@Override
 	public ResultData updateAgentVitality(AgentVitality agentVitality) {
-		// TODO Auto-generated method stub
-		return null;
+		ResultData result = new ResultData();        
+        synchronized (lock) {
+            try {
+                sqlSession.update("selling.agent.vitality.update", agentVitality);
+                result.setData(agentVitality);
+            } catch (Exception e) {
+                logger.error(e.getMessage());
+                result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+                result.setDescription(e.getMessage());
+            } finally {
+                return result;
+            }
+        }
 	}
 
 }

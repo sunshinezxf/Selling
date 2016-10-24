@@ -38,5 +38,6 @@
         <mapper resource="selling/sunshine/mapper/event/eventapplication.xml"/>
         <mapper resource="selling/sunshine/mapper/event/eventorder.xml"/>
         <mapper resource="selling/sunshine/mapper/shorturl.xml"/>
+        <mapper resource="selling/sunshine/mapper/agentvitality.xml"/>
     </mappers>
 </configuration>
