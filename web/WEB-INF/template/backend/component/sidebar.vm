@@ -135,6 +135,9 @@
                         <li><a class="sub-nav" href="${path.concat('/refund/config')}"><i class="fa fa-cog"></i>
                             返现配置</a>
                         </li>
+                        <li><a class="sub-nav" href="${path.concat('/agent/agentVitalityView')}"><i class="fa fa-cog"></i>
+                            活跃度配置</a>
+                        </li>
                     </ul>
                 </li>
             #end
