@@ -574,3 +574,6 @@ CREATE TABLE `selling`.`agent_vitality` (
   `block_flag` TINYINT(1) NOT NULL DEFAULT 0,
   `create_time` DATETIME NOT NULL,
   PRIMARY KEY (`idagent_vitality`));
+  ALTER TABLE `selling`.`agent_vitality` 
+CHANGE COLUMN `idagent_vitality` `agentVitality_id` VARCHAR(20) NOT NULL ;
+INSERT INTO `selling`.`agent_vitality` (`agentVitality_id`, `vitality_quantity`, `vitality_price`, `block_flag`, `create_time`) VALUES ('VIT00000001', '0', '0', '0', '2016-10-24 00:10:00');
