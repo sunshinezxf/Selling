@@ -45,4 +45,6 @@ public interface OrderService {
     ResultData updateCustomerOrder(CustomerOrder customerOrder);
     
     ResultData check();
+    
+    ResultData checkOrderPool(Map<String, Object> condition);
 }

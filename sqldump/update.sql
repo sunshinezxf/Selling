@@ -568,12 +568,10 @@ ADD COLUMN `standard` VARCHAR(50) DEFAULT NULL AFTER `agent_price`;
 
 ##2016年10月24日更新
 CREATE TABLE `selling`.`agent_vitality` (
-  `idagent_vitality` VARCHAR(20) NOT NULL,
+  `agentVitality_id` VARCHAR(20) NOT NULL,
   `vitality_quantity` INT(11) NOT NULL DEFAULT 0,
   `vitality_price` VARCHAR(45) NOT NULL DEFAULT 0,
   `block_flag` TINYINT(1) NOT NULL DEFAULT 0,
   `create_time` DATETIME NOT NULL,
-  PRIMARY KEY (`idagent_vitality`));
-  ALTER TABLE `selling`.`agent_vitality` 
-CHANGE COLUMN `idagent_vitality` `agentVitality_id` VARCHAR(20) NOT NULL ;
-INSERT INTO `selling`.`agent_vitality` (`agentVitality_id`, `vitality_quantity`, `vitality_price`, `block_flag`, `create_time`) VALUES ('VIT00000001', '0', '0', '0', '2016-10-24 00:10:00');
+  PRIMARY KEY (`agentVitality_id`));
+INSERT INTO `selling`.`agent_vitality` (`agentVitality_id`, `vitality_quantity`, `vitality_price`, `block_flag`, `create_time`) VALUES ('VIT00000001', '1', '0', '0', '2016-10-24 00:10:00');

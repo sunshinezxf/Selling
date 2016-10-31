@@ -120,6 +120,9 @@
         <if test="date != null and date != ''">
 			AND pool_date LIKE #{date}
 		</if>
+		<if test="monthConfig != null and monthConfig != ''">
+		    AND create_time >= DATE_SUB( CURDATE() , INTERVAL #{monthConfig} MONTH )
+		</if>
         ORDER BY pool_date
 	</select>
 	

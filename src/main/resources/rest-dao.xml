@@ -97,4 +97,8 @@
     <bean id="shortUrlDao" class="selling.sunshine.dao.impl.ShortUrlDaoImpl">
         <property name="sqlSession" ref="sqlSession"></property>
     </bean>
+    
+    <bean id="agentVitalityDao" class="selling.sunshine.dao.impl.AgentVitalityDaoImpl">
+        <property name="sqlSession" ref="sqlSession"></property>
+    </bean>
 </beans>
