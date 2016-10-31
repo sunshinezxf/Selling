@@ -1,6 +1,6 @@
 <div class="weui_cells">
     <form id="agent_bind_form">
-        <input type="hidden" name="wechat" value="${wechat}" autocomplete="off"/>
+        <input type="hidden" name="wechat" value="$!{wechat}" autocomplete="off"/>
 
         <div class="weui_cell">
             <div class="weui_cell_hd">
