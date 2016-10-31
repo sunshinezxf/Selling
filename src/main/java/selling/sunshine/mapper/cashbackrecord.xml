@@ -120,6 +120,9 @@
         <if test="description !=null and description != ''">
             AND refund_description LIKE #{refundDescription}
         </if>
+        <if test="orderPoolId !=null and orderPoolId != ''">
+            AND order_pool_id LIKE #{orderPoolId}
+        </if>
 
         ORDER BY create_time
     </select>

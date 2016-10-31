@@ -31,6 +31,12 @@
         <property name="targetMethod" value="schedule"></property>
         <property name="concurrent" value="false"></property>
     </bean>
+    
+    <bean id="checkOrderPoolDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="poolSchedule"></property>
+        <property name="targetMethod" value="checkOrderPool"></property>
+        <property name="concurrent" value="false"></property>
+    </bean>
 
     <bean id="wechatDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <property name="targetObject" ref="wechatSchedule"></property>
@@ -76,6 +82,13 @@
             <value>0 10 0 8 * ?</value>
         </property>
     </bean>
+    
+    <bean id="checkOrderPoolTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="checkOrderPoolDetail"></property>
+        <property name="cronExpression">
+            <value>0 33 16 * * ?</value>
+        </property>
+    </bean>
 
     <bean id="wechatTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail"	 ref="wechatDetail"></property>
@@ -115,6 +128,7 @@
                 <ref bean="withdrawTrigger"></ref>
                 <ref bean="expressTrigger"></ref>
                 <ref bean="checkTrigger"></ref>
+                <ref bean="checkOrderPoolTrigger"></ref>
             </list>
         </property>
     </bean>

@@ -310,4 +310,9 @@ public class OrderServiceImpl implements OrderService {
 		
 		return resultData;
 	}
+
+	@Override
+	public ResultData checkOrderPool(Map<String, Object> condition) {
+		return orderPoolDao.checkOrderPool(condition);
+	}
 }

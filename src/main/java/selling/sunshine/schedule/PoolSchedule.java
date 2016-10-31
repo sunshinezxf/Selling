@@ -1,5 +1,8 @@
 package selling.sunshine.schedule;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,4 +30,11 @@ public class PoolSchedule {
     public void refundSchedule() {
     	refundService.refundRecord();
 	}
+    
+    public void checkOrderPool(){
+    	Map<String, Object> condition=new HashMap<>();
+    	condition.put("blockFlag", false);
+    	condition.put("monthConfig", 4);
+    	orderService.checkOrderPool(condition);
+    }
 }

@@ -6,4 +6,6 @@ import common.sunshine.utils.ResultData;
 
 public interface OrderPoolDao {
 	ResultData queryOrderPool(Map<String, Object> condition);
+	
+	ResultData checkOrderPool(Map<String, Object> condition);
 }

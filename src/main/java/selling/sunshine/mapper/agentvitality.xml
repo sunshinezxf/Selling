@@ -7,8 +7,7 @@
         <result property="vitalityQuantity" column="vitality_quantity"></result>
         <result property="vitalityPrice" column="vitality_price"></result>
         <result property="blockFlag" column="block_flag"></result>
-        <result property="c
-        reateAt" column="create_time"></result>
+        <result property="createAt" column="create_time"></result>
     </resultMap>
     
      <insert id="insert" parameterType="selling.sunshine.model.AgentVitality" useGeneratedKeys="false">

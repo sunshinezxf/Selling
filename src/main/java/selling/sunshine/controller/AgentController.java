@@ -2419,15 +2419,15 @@ public class AgentController {
         return null;
     }
     
-    @RequestMapping(method = RequestMethod.GET, value = "/agentVitalityView")
+    @RequestMapping(method = RequestMethod.GET, value = "/vitality")
     public ModelAndView agentVitalityView(){
     	 ModelAndView view = new ModelAndView();
-    	 view.setViewName("/backend/refund/configList");
+    	 view.setViewName("/backend/agent/vitalityconfig");
          return view;
     }
     
     @ResponseBody
-    @RequestMapping(method = RequestMethod.POST, value = "/agentVitalityView")
+    @RequestMapping(method = RequestMethod.POST, value = "/vitality")
     public DataTablePage<AgentVitality> agentVitalityView(DataTableParam param){
     	DataTablePage<AgentVitality> result = new DataTablePage<>(param);
         if (StringUtils.isEmpty(param)) {
@@ -2440,6 +2440,34 @@ public class AgentController {
         	 result = (DataTablePage<AgentVitality>) response.getData();
         }
         return result;
+    }
+    
+    @RequestMapping(method = RequestMethod.POST, value = "/vitality/config/{agentVitalityId}")
+    public ModelAndView agentVitalityConfig(@PathVariable("agentVitalityId") String agentVitalityId,@Valid AgentVitalityForm form, BindingResult result, HttpServletRequest request){
+    	 ModelAndView view = new ModelAndView();
+    	 if (result.hasErrors()) {
+             view.setViewName("redirect:/agent/vitality");
+             return view;
+         }
+    	 AgentVitality agentVitality=new AgentVitality(agentVitalityId, Integer.parseInt(form.getVitalityQuantity()), Double.parseDouble(form.getVitalityPrice()));
+    	 ResultData resultData=agentVitalityService.updateAgentVitality(agentVitality);
+    	 if (resultData.getResponseCode() == ResponseCode.RESPONSE_OK) {
+             Subject subject = SecurityUtils.getSubject();
+             User user = (User) subject.getPrincipal();
+             if (user == null) {
+            	 view.setViewName("redirect:/agent/vitality");
+                 return view;
+             }
+             Admin admin = user.getAdmin();
+             BackOperationLog backOperationLog = new BackOperationLog(
+                     admin.getUsername(), toolService.getIP(request), "管理员" + admin.getUsername() + "修改了代理商活跃度配置");
+             logService.createbackOperationLog(backOperationLog);
+
+             view.setViewName("redirect:/agent/vitality");
+             return view;
+         }
+    	 view.setViewName("redirect:/agent/vitality");
+         return view;
     }
 
 }
