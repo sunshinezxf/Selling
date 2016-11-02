@@ -95,16 +95,22 @@ public class OrderPoolDaoImpl extends BaseDao implements OrderPoolDao {
 	                        condition.put("poolDate", orderPool.getPoolDate());
 	                        boolean flag=false;
 	                        if (!sqlSession.selectList("selling.order.pool.query", condition).isEmpty()) {                                          	     
-	                       	    OrderPool temp=(OrderPool) sqlSession.selectList("selling.order.pool.query", condition).get(0);
-	                       	    if (temp.getQuantity()>=agentVitality.getVitalityQuantity()&&temp.getPrice()>=agentVitality.getVitalityPrice()) {
-	                       	    	flag=true;
-							    }
+	                        	 List<OrderPool> list2=sqlSession.selectList("selling.order.pool.query", condition);
+                            	 int quantity=0;
+                            	 double price=0.0;
+                            	 for (OrderPool pool:list2) {
+									quantity+=pool.getQuantity();
+									price+=pool.getPrice();
+								 }
+                            	 if (quantity>=agentVitality.getVitalityQuantity()&&price>=agentVitality.getVitalityPrice()) {
+                            		 flag=false;//当购买金额和数量都达到活跃度配置标准，就可以获取下级代理商的返现
+								 }
 	                        }else {
 	                   	         if (agentVitality.getVitalityQuantity()==0&&agentVitality.getVitalityPrice()==0.0) {
 	                   	        	flag=true;
 							     }
 						    }
-	                        if (flag) {//flag为true表示有遗漏，需要添加上去
+	                        if (flag&&!agent2.isCustomerService()) {//flag为true表示有遗漏，需要添加上去
 	                        	  CashBackRecord refundRecordLevel2 = new CashBackRecord();
                                   refundRecordLevel2.setRecordId(IDGenerator.generate("RFR"));
                                   if (agent3==null) {
@@ -129,6 +135,7 @@ public class OrderPoolDaoImpl extends BaseDao implements OrderPoolDao {
                                   refundRecordLevel2.setAgent(new common.sunshine.model.selling.agent.lite.Agent(agent2));
                                   refundRecordLevel2.setLevel(CashBackLevel.DIRECT);
                                   refundRecordLevel2.setBlockFlag(false);
+                                  refundRecordLevel2.setCreateAt(orderPool.getCreateAt());
                                   sqlSession.insert("selling.refund.record.insert", refundRecordLevel2);
 	                        }
 						}
@@ -143,16 +150,22 @@ public class OrderPoolDaoImpl extends BaseDao implements OrderPoolDao {
 	                        condition.put("poolDate", orderPool.getPoolDate());
 	                        boolean flag=false;
 	                        if (!sqlSession.selectList("selling.order.pool.query", condition).isEmpty()) {                                          	     
-	                       	    OrderPool temp=(OrderPool) sqlSession.selectList("selling.order.pool.query", condition).get(0);
-	                       	    if (temp.getQuantity()>=agentVitality.getVitalityQuantity()&&temp.getPrice()>=agentVitality.getVitalityPrice()) {
-	                       	    	flag=true;
-							    }
+	                        	 List<OrderPool> list2=sqlSession.selectList("selling.order.pool.query", condition);
+                            	 int quantity=0;
+                            	 double price=0.0;
+                            	 for (OrderPool pool:list2) {
+									quantity+=pool.getQuantity();
+									price+=pool.getPrice();
+							     }
+                            	 if (quantity>=agentVitality.getVitalityQuantity()&&price>=agentVitality.getVitalityPrice()) {
+                            		 flag=false;//当购买金额和数量都达到活跃度配置标准，就可以获取下级代理商的返现
+								 }
 	                        }else {
 	                   	         if (agentVitality.getVitalityQuantity()==0&&agentVitality.getVitalityPrice()==0.0) {
 	                   	        	flag=true;
 							     }
 						    }
-	                        if (flag) {//flag为true表示有遗漏，需要添加上去
+	                        if (flag&&!agent3.isCustomerService()) {//flag为true表示有遗漏，需要添加上去
 	                        	 CashBackRecord refundRecordLevel3 = new CashBackRecord();
                                  refundRecordLevel3.setRecordId(IDGenerator.generate("RFR"));
                                  refundRecordLevel3.setAmount(
@@ -168,6 +181,7 @@ public class OrderPoolDaoImpl extends BaseDao implements OrderPoolDao {
                                          + refundRecordLevel3.getAmount() + "元");
                                  refundRecordLevel3.setLevel(CashBackLevel.INDIRECT);
                                  refundRecordLevel3.setBlockFlag(false);
+                                 refundRecordLevel3.setCreateAt(orderPool.getCreateAt());
                                  sqlSession.insert("selling.refund.record.insert", refundRecordLevel3);
 							}
 						}

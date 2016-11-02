@@ -244,5 +244,23 @@ public class StatisticController {
         return result;
     }
     
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value = "/purchaseRecordEveryday2")
+    public JSONObject purchaseRecordEveryday2(){
+    	JSONObject result = new JSONObject();
+        ResultData resultData=statisticService.purchaseRecordEveryday2();
+        result=(JSONObject)resultData.getData();
+        return result;
+    }
+    
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value = "/purchaseRecordEveryMonth2")
+    public JSONObject purchaseRecordEveryMonth2(){
+    	JSONObject result = new JSONObject();
+        ResultData resultData=statisticService.purchaseRecordEveryMonth2();
+        result=(JSONObject)resultData.getData();
+        return result;
+    }
+    
     
 }

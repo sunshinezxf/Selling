@@ -341,6 +341,100 @@ public class StatisticServiceImpl implements StatisticService {
 		
 		return result;
 	}
+	
+	@Override
+	public ResultData purchaseRecordEveryday2() {
+		ResultData result = new ResultData();
+		ResultData response =statisticDao.purchaseRecordEveryday();
+		List<Map<String, Object>> list =(List<Map<String, Object>>) response.getData();
+		if (list.size()==0) {
+			return result;
+		}
+		Map<String, Object> condition=new HashMap<>();
+		if (commodityDao.queryGoods4Agent(condition).getResponseCode()==ResponseCode.RESPONSE_OK) {
+			List<Goods4Agent> goods=(List<Goods4Agent>)commodityDao.queryGoods4Agent(condition).getData();
+			JSONArray categories = new JSONArray();
+			JSONArray series = new JSONArray();
+			int length=Integer.parseInt(((String)list.get(list.size()-1).get("date")).substring(8, 10));
+			Map<String, double[]> goodsMap=new HashMap<>();
+			for (int i = 0; i < goods.size(); i++) {
+				goodsMap.put(goods.get(i).getName(), new double[length]);
+			}
+			for (int i = 0; i < length; i++) {
+				categories.add((i+1)+"号");
+			}
+			for (int i = 0; i < list.size();i++) {
+				Map<String, Object> map=list.get(i);
+				double[] data=goodsMap.get((String)map.get("goodsName"));
+				data[Integer.parseInt(((String)map.get("date")).substring(8, 10))-1]=Double.parseDouble(map.get("price").toString());
+				goodsMap.put((String)map.get("goodsName"), data);
+			}
+			
+			for (String key:goodsMap.keySet()) {
+				JSONObject temp=new JSONObject();
+				JSONArray data = new JSONArray();
+				for (int i = 0; i < goodsMap.get(key).length; i++) {
+					data.add(goodsMap.get(key)[i]);
+				}
+				temp.put("name", key);
+				temp.put("data", data);
+				series.add(temp);
+			}
+			JSONObject record = new JSONObject();
+			record.put("categories", categories);
+			record.put("series", series);
+			result.setData(record);
+		}
+		
+		return result;
+	}
+
+	@Override
+	public ResultData purchaseRecordEveryMonth2() {
+		ResultData result = new ResultData();
+		ResultData response =statisticDao.purchaseRecordEveryMonth();
+		List<Map<String, Object>> list =(List<Map<String, Object>>) response.getData();
+		if (list.size()==0) {
+			return result;
+		}
+		Map<String, Object> condition=new HashMap<>();
+		if (commodityDao.queryGoods4Agent(condition).getResponseCode()==ResponseCode.RESPONSE_OK) {
+			List<Goods4Agent> goods=(List<Goods4Agent>)commodityDao.queryGoods4Agent(condition).getData();
+			JSONArray categories = new JSONArray();
+			JSONArray series = new JSONArray();
+			int length=Integer.parseInt(((String)list.get(list.size()-1).get("date")).substring(5, 7));
+			Map<String, double[]> goodsMap=new HashMap<>();
+			for (int i = 0; i < goods.size(); i++) {
+				goodsMap.put(goods.get(i).getName(), new double[length]);
+			}
+			for (int i = 0; i < length; i++) {
+				categories.add((i+1)+"月");
+			}
+			for (int i = 0; i < list.size();i++) {
+				Map<String, Object> map=list.get(i);
+				double[] data=goodsMap.get((String)map.get("goodsName"));
+				data[Integer.parseInt(((String)map.get("date")).substring(5, 7))-1]=Double.parseDouble(map.get("price").toString());
+				goodsMap.put((String)map.get("goodsName"), data);
+			}
+			
+			for (String key:goodsMap.keySet()) {
+				JSONObject temp=new JSONObject();
+				JSONArray data = new JSONArray();
+				for (int i = 0; i < goodsMap.get(key).length; i++) {
+					data.add(goodsMap.get(key)[i]);
+				}
+				temp.put("name", key);
+				temp.put("data", data);
+				series.add(temp);
+			}
+			JSONObject record = new JSONObject();
+			record.put("categories", categories);
+			record.put("series", series);
+			result.setData(record);
+		}
+		
+		return result;
+	}
 
 
 }

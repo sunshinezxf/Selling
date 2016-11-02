@@ -154,8 +154,14 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
                                      condition.put("poolDate", poolList.get(j).getPoolDate());
                                      boolean blockFlag = true;//blockFlag为true表示不能获取下级代理商的返现
                                      if (!sqlSession.selectList("selling.order.pool.query", condition).isEmpty()) {
-                                    	 OrderPool temp=(OrderPool) sqlSession.selectList("selling.order.pool.query", condition).get(0);
-                                    	 if (temp.getQuantity()>=agentVitality.getVitalityQuantity()&&temp.getPrice()>=agentVitality.getVitalityPrice()) {
+                                    	 List<OrderPool> list=sqlSession.selectList("selling.order.pool.query", condition);
+                                    	 int quantity=0;
+                                    	 double price=0.0;
+                                    	 for (OrderPool pool:list) {
+											quantity+=pool.getQuantity();
+											price+=pool.getPrice();
+										 }
+                                    	 if (quantity>=agentVitality.getVitalityQuantity()&&price>=agentVitality.getVitalityPrice()) {
                                     		 blockFlag=false;//当购买金额和数量都达到活跃度配置标准，就可以获取下级代理商的返现
 										 }
                                      }else {
@@ -175,10 +181,16 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
                                              condition.put("poolDate", poolList.get(j).getPoolDate());
                                              boolean blockFlag2=true;
                                              if (!sqlSession.selectList("selling.order.pool.query", condition).isEmpty()) {                                          	     
-                                                	 OrderPool temp=(OrderPool) sqlSession.selectList("selling.order.pool.query", condition).get(0);
-                                                	 if (temp.getQuantity()>=agentVitality.getVitalityQuantity()&&temp.getPrice()>=agentVitality.getVitalityPrice()) {
-                                                		 blockFlag2=false;//当购买金额和数量都达到活跃度配置标准，就可以获取下级代理商的返现
-            										 }
+                                            	 List<OrderPool> list=sqlSession.selectList("selling.order.pool.query", condition);
+                                            	 int quantity=0;
+                                            	 double price=0.0;
+                                            	 for (OrderPool pool:list) {
+        											quantity+=pool.getQuantity();
+        											price+=pool.getPrice();
+        										 }
+                                            	 if (quantity>=agentVitality.getVitalityQuantity()&&price>=agentVitality.getVitalityPrice()) {
+                                            		 blockFlag2=false;//当购买金额和数量都达到活跃度配置标准，就可以获取下级代理商的返现
+        										 }
                                              }else {
                                             	 if (agentVitality.getVitalityQuantity()==0&&agentVitality.getVitalityPrice()==0.0) {
                                             		 blockFlag2=false;

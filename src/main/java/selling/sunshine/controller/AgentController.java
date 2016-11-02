@@ -4,11 +4,13 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import common.sunshine.model.selling.admin.Admin;
+import common.sunshine.model.selling.agent.Agent;
 import common.sunshine.model.selling.agent.Credit;
 import common.sunshine.model.selling.customer.Customer;
 import common.sunshine.model.selling.customer.CustomerPhone;
+import common.sunshine.model.selling.goods.Goods4Agent;
+import common.sunshine.model.selling.goods.Thumbnail;
 import common.sunshine.model.selling.order.CustomerOrder;
-import common.sunshine.model.selling.order.EventOrder;
 import common.sunshine.model.selling.order.Order;
 import common.sunshine.model.selling.order.OrderItem;
 import common.sunshine.model.selling.order.support.OrderItemStatus;
@@ -16,6 +18,8 @@ import common.sunshine.model.selling.order.support.OrderStatus;
 import common.sunshine.model.selling.order.support.OrderType;
 import common.sunshine.model.selling.user.User;
 import common.sunshine.model.selling.util.ShortUrl;
+import common.sunshine.pagination.DataTablePage;
+import common.sunshine.pagination.DataTableParam;
 import common.sunshine.utils.Encryption;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
@@ -25,7 +29,6 @@ import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
 import jxl.write.biff.RowsExceededException;
-
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
@@ -38,17 +41,15 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import selling.sunshine.form.*;
-import selling.sunshine.model.*;
-import common.sunshine.model.selling.agent.Agent;
+import selling.sunshine.model.AgentVitality;
+import selling.sunshine.model.BackOperationLog;
+import selling.sunshine.model.OrderPool;
+import selling.sunshine.model.ShipConfig;
 import selling.sunshine.model.cashback.CashBackRecord;
 import selling.sunshine.model.gift.GiftConfig;
-import common.sunshine.model.selling.goods.Goods4Agent;
-import common.sunshine.model.selling.goods.Thumbnail;
 import selling.sunshine.model.sum.TotalQuantityAll;
 import selling.sunshine.model.sum.Volume;
 import selling.sunshine.model.sum.VolumeTotal;
-import common.sunshine.pagination.DataTablePage;
-import common.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.*;
 import selling.sunshine.utils.*;
 import selling.sunshine.vo.cashback.CashBack;
@@ -57,10 +58,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
@@ -100,7 +97,7 @@ public class AgentController {
 
     @Autowired
     private RefundService refundService;
-    
+
     @Autowired
     private CashBackService cashBackService;
 
@@ -115,13 +112,13 @@ public class AgentController {
 
     @Autowired
     private StatisticService statisticService;
-    
+
     @Autowired
     private ShortUrlService shortUrlService;
 
     @Autowired
     private LogService logService;
-    
+
     @Autowired
     private AgentVitalityService agentVitalityService;
 
@@ -489,22 +486,22 @@ public class AgentController {
         }
         String url = "http://" + PlatformConfig.getValue("server_url") + "/agent/" + user.getAgent().getAgentId() + "/embrace";
         Map<String, Object> condition = new HashMap<String, Object>();
-        condition.put("longUrl",url);
+        condition.put("longUrl", url);
         condition.put("blockFlag", false);
         ResultData fetchShortUrl = shortUrlService.fetchShortUrl(condition);
-        if(fetchShortUrl.getResponseCode() == ResponseCode.RESPONSE_OK){
-        	url = ((List<ShortUrl>)fetchShortUrl.getData()).get(0).getShortUrl();
-        } else if(fetchShortUrl.getResponseCode() == ResponseCode.RESPONSE_NULL){
-        	String shortUrlString = WechatUtil.long2short(url);
-        	if(shortUrlString != null){
-				ShortUrl shortUrl = new ShortUrl();
-				shortUrl.setLongUrl(url);
-				shortUrl.setShortUrl(shortUrlString);
-				ResultData createResult = shortUrlService.createShortUrl(shortUrl);
-				if(createResult.getResponseCode() == ResponseCode.RESPONSE_OK){
-					url = shortUrlString;
-				}
-			}
+        if (fetchShortUrl.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            url = ((List<ShortUrl>) fetchShortUrl.getData()).get(0).getShortUrl();
+        } else if (fetchShortUrl.getResponseCode() == ResponseCode.RESPONSE_NULL) {
+            String shortUrlString = WechatUtil.long2short(url);
+            if (shortUrlString != null) {
+                ShortUrl shortUrl = new ShortUrl();
+                shortUrl.setLongUrl(url);
+                shortUrl.setShortUrl(shortUrlString);
+                ResultData createResult = shortUrlService.createShortUrl(shortUrl);
+                if (createResult.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                    url = shortUrlString;
+                }
+            }
         }
         WechatConfig.oauthWechat(view, "/agent/invite", url);
         view.addObject("url", url);
@@ -572,22 +569,22 @@ public class AgentController {
             try {
                 String shareURL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + PlatformConfig.getValue("wechat_appid") + "&redirect_uri=" + URLEncoder.encode(url, "utf-8") + "&response_type=code&scope=snsapi_base&state=view#wechat_redirect";
                 condition.clear();
-                condition.put("longUrl",shareURL);
+                condition.put("longUrl", shareURL);
                 condition.put("blockFlag", false);
                 ResultData fetchShortUrl = shortUrlService.fetchShortUrl(condition);
-                if(fetchShortUrl.getResponseCode() == ResponseCode.RESPONSE_OK){
-                	shareURL = ((List<ShortUrl>)fetchShortUrl.getData()).get(0).getShortUrl();
-                } else if(fetchShortUrl.getResponseCode() == ResponseCode.RESPONSE_NULL){
-                	String shortUrlString = WechatUtil.long2short(shareURL);
-                	if(shortUrlString != null){
-        				ShortUrl shortUrl = new ShortUrl();
-        				shortUrl.setLongUrl(shareURL);
-        				shortUrl.setShortUrl(shortUrlString);
-        				ResultData createResult = shortUrlService.createShortUrl(shortUrl);
-        				if(createResult.getResponseCode() == ResponseCode.RESPONSE_OK){
-        					shareURL = shortUrlString;
-        				}
-        			}
+                if (fetchShortUrl.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                    shareURL = ((List<ShortUrl>) fetchShortUrl.getData()).get(0).getShortUrl();
+                } else if (fetchShortUrl.getResponseCode() == ResponseCode.RESPONSE_NULL) {
+                    String shortUrlString = WechatUtil.long2short(shareURL);
+                    if (shortUrlString != null) {
+                        ShortUrl shortUrl = new ShortUrl();
+                        shortUrl.setLongUrl(shareURL);
+                        shortUrl.setShortUrl(shortUrlString);
+                        ResultData createResult = shortUrlService.createShortUrl(shortUrl);
+                        if (createResult.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                            shareURL = shortUrlString;
+                        }
+                    }
                 }
                 urls.add(shareURL);
             } catch (Exception e) {
@@ -599,19 +596,19 @@ public class AgentController {
         view.addObject("urls", urls);
         String linkUrl = "http://" + PlatformConfig.getValue("server_url") + "/commodity/viewlist";
         String link = "";
-		try {
-			link = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + PlatformConfig.getValue("wechat_appid") + "&redirect_uri=" + URLEncoder.encode(linkUrl, "utf-8") + "&response_type=code&scope=snsapi_base&state=view#wechat_redirect";
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
+        try {
+            link = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + PlatformConfig.getValue("wechat_appid") + "&redirect_uri=" + URLEncoder.encode(linkUrl, "utf-8") + "&response_type=code&scope=snsapi_base&state=view#wechat_redirect";
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         WechatConfig.oauthWechat(view, "/agent/personalsale", link);
         view.setViewName("/agent/link/personal_sale");
         return view;
     }
-    
+
     @RequestMapping(method = RequestMethod.GET, value = "/personalsale/{goodsId}")
-    public ModelAndView personalSaleDetail(@PathVariable("goodsId") String goodsId){
-    	ModelAndView view = new ModelAndView();
+    public ModelAndView personalSaleDetail(@PathVariable("goodsId") String goodsId) {
+        ModelAndView view = new ModelAndView();
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         if (user == null || user.getAgent() == null) {
@@ -622,14 +619,14 @@ public class AgentController {
         condition.put("blockFlag", false);
         condition.put("goodsId", goodsId);
         ResultData fetchGoodsData = commodityService.fetchGoods4Agent(condition);
-        if(fetchGoodsData.getResponseCode() != ResponseCode.RESPONSE_OK){
-        	 Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "未找到该商品", "/agent/personalsale");
-             view.addObject("prompt", prompt);
-             WechatConfig.oauthWechat(view, "/agent/prompt");
-             view.setViewName("/agent/prompt");
-             return view;
+        if (fetchGoodsData.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "未找到该商品", "/agent/personalsale");
+            view.addObject("prompt", prompt);
+            WechatConfig.oauthWechat(view, "/agent/prompt");
+            view.setViewName("/agent/prompt");
+            return view;
         }
-        Goods4Agent goods = ((List<Goods4Agent>)fetchGoodsData.getData()).get(0);
+        Goods4Agent goods = ((List<Goods4Agent>) fetchGoodsData.getData()).get(0);
         String link = "";
         String url = "http://" + PlatformConfig.getValue("server_url") + "/commodity/" + goods.getGoodsId() + "?agentId=" + user.getAgent().getAgentId();
         try {
@@ -638,31 +635,31 @@ public class AgentController {
                 link = shareURL;
             }
             condition.clear();
-            condition.put("longUrl",shareURL);
+            condition.put("longUrl", shareURL);
             condition.put("blockFlag", false);
             ResultData fetchShortUrl = shortUrlService.fetchShortUrl(condition);
-            if(fetchShortUrl.getResponseCode() == ResponseCode.RESPONSE_OK){
-            	shareURL = ((List<ShortUrl>)fetchShortUrl.getData()).get(0).getShortUrl();
-            } else if(fetchShortUrl.getResponseCode() == ResponseCode.RESPONSE_NULL){
-            	String shortUrlString = WechatUtil.long2short(shareURL);
-            	if(shortUrlString != null){
-    				ShortUrl shortUrl = new ShortUrl();
-    				shortUrl.setLongUrl(shareURL);
-    				shortUrl.setShortUrl(shortUrlString);
-    				ResultData createResult = shortUrlService.createShortUrl(shortUrl);
-    				if(createResult.getResponseCode() == ResponseCode.RESPONSE_OK){
-    					shareURL = shortUrlString;
-    				}
-    			}
+            if (fetchShortUrl.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                shareURL = ((List<ShortUrl>) fetchShortUrl.getData()).get(0).getShortUrl();
+            } else if (fetchShortUrl.getResponseCode() == ResponseCode.RESPONSE_NULL) {
+                String shortUrlString = WechatUtil.long2short(shareURL);
+                if (shortUrlString != null) {
+                    ShortUrl shortUrl = new ShortUrl();
+                    shortUrl.setLongUrl(shareURL);
+                    shortUrl.setShortUrl(shortUrlString);
+                    ResultData createResult = shortUrlService.createShortUrl(shortUrl);
+                    if (createResult.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                        shareURL = shortUrlString;
+                    }
+                }
             }
             condition.clear();
             condition.put("goodsId", goods.getGoodsId());
             condition.put("type", "cover");
             ResultData fetchThumbnailData = commodityService.fetchThumbnail(condition);
-            if(fetchThumbnailData.getResponseCode() != ResponseCode.RESPONSE_OK){
-            	 view.addObject("img", "http://www.yuncaogangmu.com/material/images/logo.jpeg");            	
-            }else{
-            	 view.addObject("img", "http://" + PlatformConfig.getValue("server_url") + ((List<Thumbnail>)fetchThumbnailData.getData()).get(0).getPath());
+            if (fetchThumbnailData.getResponseCode() != ResponseCode.RESPONSE_OK) {
+                view.addObject("img", "http://www.yuncaogangmu.com/material/images/logo.jpeg");
+            } else {
+                view.addObject("img", "http://" + PlatformConfig.getValue("server_url") + ((List<Thumbnail>) fetchThumbnailData.getData()).get(0).getPath());
             }
             view.addObject("agent", user.getAgent());
             view.addObject("goods", goods);
@@ -1319,8 +1316,8 @@ public class AgentController {
                 status.add(1);
                 break;
             case 1:
-            	status.add(2);
-            	status.add(3);
+                status.add(2);
+                status.add(3);
                 break;
             case 2:
                 status.add(4);
@@ -1344,11 +1341,11 @@ public class AgentController {
             List<Integer> customerStatus = new ArrayList<Integer>();
             if (Integer.parseInt(type) == 1) {
                 customerStatus.add(1);
-            } else if(Integer.parseInt(type) == 2){
-            	customerStatus.add(2);
+            } else if (Integer.parseInt(type) == 2) {
+                customerStatus.add(2);
             } else {
-            	customerStatus.add(3);
-                customerStatus.add(4);            
+                customerStatus.add(3);
+                customerStatus.add(4);
             }
             condition.put("agentId", user.getAgent().getAgentId());
             condition.put("status", customerStatus);
@@ -1495,7 +1492,7 @@ public class AgentController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/statement")
     public ModelAndView statement() {
-    	ModelAndView view = new ModelAndView();
+        ModelAndView view = new ModelAndView();
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         if (user == null) {
@@ -1513,32 +1510,32 @@ public class AgentController {
         Agent agent = ((List<Agent>) fetchAgentResponse.getData()).get(0);
         view.addObject("agent", agent);
         ResultData fetchCashBackData = cashBackService.fetchCashBackALL(condition);
-        if(fetchCashBackData.getResponseCode() != ResponseCode.RESPONSE_OK){
-        	WechatConfig.oauthWechat(view, "/agent/account/statement");
+        if (fetchCashBackData.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            WechatConfig.oauthWechat(view, "/agent/account/statement");
             view.setViewName("/agent/account/statement");
             return view;
         }
         List<CashBack> cashBackData = (List<CashBack>) fetchCashBackData.getData();
-        Map<String, List<CashBack>> cashBacks = new TreeMap<String, List<CashBack>>(new Comparator<String>(){
-			@Override
-			public int compare(String o1, String o2) {
-				return o2.compareTo(o1);
-			}
+        Map<String, List<CashBack>> cashBacks = new TreeMap<String, List<CashBack>>(new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                return o2.compareTo(o1);
+            }
         });
-        for(CashBack cashBack : cashBackData){
-        	if(cashBacks.containsKey(cashBack.getMonth())){
-        		cashBacks.get(cashBack.getMonth()).add(cashBack);
-        	} else {
-        		List<CashBack> cashBackMonthly = new ArrayList<CashBack>();
-        		cashBackMonthly.add(cashBack);
-        		cashBacks.put(cashBack.getMonth(), cashBackMonthly);
-        	}
+        for (CashBack cashBack : cashBackData) {
+            if (cashBacks.containsKey(cashBack.getMonth())) {
+                cashBacks.get(cashBack.getMonth()).add(cashBack);
+            } else {
+                List<CashBack> cashBackMonthly = new ArrayList<CashBack>();
+                cashBackMonthly.add(cashBack);
+                cashBacks.put(cashBack.getMonth(), cashBackMonthly);
+            }
         }
         view.addObject("cashBacks", cashBacks);
         view.setViewName("/agent/account/statement");
         return view;
     }
-    
+
     @RequestMapping(method = RequestMethod.GET, value = "/statementdetail/{level}/{date}")
     public ModelAndView statementDetail(@PathVariable("level") int level, @PathVariable("date") String date) {
         ModelAndView view = new ModelAndView();
@@ -1558,17 +1555,17 @@ public class AgentController {
         }
         Agent agent = ((List<Agent>) fetchAgentResponse.getData()).get(0);
         view.addObject("agent", agent);
-		try {
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
-			Date dateInfo = sdf.parse(date);
-			Calendar cl = Calendar.getInstance();
-	        cl.setTime(dateInfo);
-	        cl.add(Calendar.MONTH, 1);
-	        condition.put("createAt", sdf.format(cl.getTime()) + "%");
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		condition.put("level", level);
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
+            Date dateInfo = sdf.parse(date);
+            Calendar cl = Calendar.getInstance();
+            cl.setTime(dateInfo);
+            cl.add(Calendar.MONTH, 1);
+            condition.put("createAt", sdf.format(cl.getTime()) + "%");
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        condition.put("level", level);
         ResultData fetchRefundRecordResponse = refundService.fetchRefundRecord(condition);
         if (fetchRefundRecordResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
             WechatConfig.oauthWechat(view, "/agent/account/statement_item");
@@ -2031,7 +2028,7 @@ public class AgentController {
             view.setViewName("redirect:/agent/overview");
             return view;
         }
-        
+
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         if (user == null) {
@@ -2054,12 +2051,12 @@ public class AgentController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/overview")
-    public DataTablePage<Agent> overview(DataTableParam param) {
+    public DataTablePage<Agent> overview(DataTableParam param, HttpServletRequest request) {
         DataTablePage<Agent> result = new DataTablePage<>(param);
         if (StringUtils.isEmpty(param)) {
-        	
             return result;
         }
+        logger.debug(JSON.toJSONString(param));
         Map<String, Object> condition = new HashMap<>();
         condition.put("granted", true);
         condition.put("blockFlag", false);
@@ -2328,7 +2325,7 @@ public class AgentController {
         result.setData(data);
         return result;
     }
-    
+
     @RequestMapping(method = RequestMethod.GET, value = "/downloadAgentExcel")
     public String downloadOrderExcel(HttpServletRequest request, HttpServletResponse response) throws IOException, RowsExceededException, WriteException {
         Map<String, Object> condition = new HashMap<>();
@@ -2352,61 +2349,61 @@ public class AgentController {
         condition.put("blockFlag", false);
         ResultData fetchGoodsList = commodityService.fetchGoods4Agent(condition);
         List<Goods4Agent> goodsList = null;
-        if(fetchGoodsList.getResponseCode() == ResponseCode.RESPONSE_OK){
-        	goodsList = (List<Goods4Agent>) fetchGoodsList.getData();
+        if (fetchGoodsList.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            goodsList = (List<Goods4Agent>) fetchGoodsList.getData();
         }
         Calendar cl = Calendar.getInstance();
         int[] month = new int[3];
         String[] dateSearch = new String[3];
-        for(int i = 0; i < 3; i++){
-        	cl.add(Calendar.MONTH, -1);
-        	month[i] = cl.get(Calendar.MONTH) + 1;
-        	dateSearch[i] = dateSearchFormat.format(cl.getTime());
+        for (int i = 0; i < 3; i++) {
+            cl.add(Calendar.MONTH, -1);
+            month[i] = cl.get(Calendar.MONTH) + 1;
+            dateSearch[i] = dateSearchFormat.format(cl.getTime());
         }
         if (agentList != null) {
             sheet1 = book.createSheet(" 代理商 ", 0);
             String headerArr[] = {"代理商编号", "姓名", "性别", "手机号", "地址", "注册时间", "身份证",
-                    "群员人数", "上级代理编号","上级代理姓名"};
+                    "群员人数", "上级代理编号", "上级代理姓名"};
             int h = 0;
             for (; h < headerArr.length; h++) {
                 sheet1.addCell(new Label(h, 0, headerArr[h]));
             }
-            for(int i = 0; i < 3; i++){
-            	for(int j = 0; j < goodsList.size(); j++){
-            		sheet1.addCell(new Label(h, 0, goodsList.get(j).getName() + "(" + month[i] + "月销量)"));
-            		h++;
-            	}
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < goodsList.size(); j++) {
+                    sheet1.addCell(new Label(h, 0, goodsList.get(j).getName() + "(" + month[i] + "月销量)"));
+                    h++;
+                }
             }
             int k = 1;
             for (int i = 0; i < agentList.size(); i++) {
                 Agent agent = agentList.get(i);
                 sheet1.addCell(new Label(0, k, agent.getAgentId()));
                 sheet1.addCell(new Label(1, k, agent.getName()));
-                sheet1.addCell(new Label(2, k, agent.getGender().equals("M")?"男":"女"));
+                sheet1.addCell(new Label(2, k, agent.getGender().equals("M") ? "男" : "女"));
                 sheet1.addCell(new Label(3, k, agent.getPhone()));
                 sheet1.addCell(new Label(4, k, agent.getAddress()));
                 sheet1.addCell(new Label(5, k, new SimpleDateFormat("yyyy-MM-dd").format(agent.getCreateAt())));
-                sheet1.addCell(new Label(6, k, agent.getCard() == null ? "未填":agent.getCard()));
+                sheet1.addCell(new Label(6, k, agent.getCard() == null ? "未填" : agent.getCard()));
                 sheet1.addCell(new Label(7, k, String.valueOf(agent.getClaimScale())));
                 sheet1.addCell(new Label(8, k, agent.getUpperAgent() == null ? "无" : agent.getUpperAgent().getAgentId()));
                 sheet1.addCell(new Label(9, k, agent.getUpperAgent() == null ? "无" : agent.getUpperAgent().getName()));
                 int l = 10;
-                for(int m = 0; m < 3; m++){
-                	for(int n = 0; n < goodsList.size(); n++){
-                		condition.clear();
-                		condition.put("agentId", agent.getAgentId());
-                		condition.put("goodsId", goodsList.get(n).getGoodsId());
-                		condition.put("date", dateSearch[m] + "%");
-                		condition.put("blockFlag", false);
-                		ResultData fetchOrderPoolData = orderService.fetchOrderPool(condition);
-                		if(fetchOrderPoolData.getResponseCode() == ResponseCode.RESPONSE_OK && !((List<OrderPool>)fetchOrderPoolData.getData()).isEmpty()){
-                			OrderPool orderPool = ((List<OrderPool>)fetchOrderPoolData.getData()).get(0);
-                			sheet1.addCell(new Label(l, k, String.valueOf(orderPool.getQuantity())));
-                		}else{
-                			sheet1.addCell(new Label(l, k, "0"));
-                		}
-                		l++;
-                	}
+                for (int m = 0; m < 3; m++) {
+                    for (int n = 0; n < goodsList.size(); n++) {
+                        condition.clear();
+                        condition.put("agentId", agent.getAgentId());
+                        condition.put("goodsId", goodsList.get(n).getGoodsId());
+                        condition.put("date", dateSearch[m] + "%");
+                        condition.put("blockFlag", false);
+                        ResultData fetchOrderPoolData = orderService.fetchOrderPool(condition);
+                        if (fetchOrderPoolData.getResponseCode() == ResponseCode.RESPONSE_OK && !((List<OrderPool>) fetchOrderPoolData.getData()).isEmpty()) {
+                            OrderPool orderPool = ((List<OrderPool>) fetchOrderPoolData.getData()).get(0);
+                            sheet1.addCell(new Label(l, k, String.valueOf(orderPool.getQuantity())));
+                        } else {
+                            sheet1.addCell(new Label(l, k, "0"));
+                        }
+                        l++;
+                    }
                 }
                 k++;
             }
@@ -2418,18 +2415,18 @@ public class AgentController {
         os.close();
         return null;
     }
-    
+
     @RequestMapping(method = RequestMethod.GET, value = "/vitality")
-    public ModelAndView agentVitalityView(){
-    	 ModelAndView view = new ModelAndView();
-    	 view.setViewName("/backend/agent/vitalityconfig");
-         return view;
+    public ModelAndView agentVitalityView() {
+        ModelAndView view = new ModelAndView();
+        view.setViewName("/backend/agent/vitalityconfig");
+        return view;
     }
-    
+
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/vitality")
-    public DataTablePage<AgentVitality> agentVitalityView(DataTableParam param){
-    	DataTablePage<AgentVitality> result = new DataTablePage<>(param);
+    public DataTablePage<AgentVitality> agentVitalityView(DataTableParam param) {
+        DataTablePage<AgentVitality> result = new DataTablePage<>(param);
         if (StringUtils.isEmpty(param)) {
             return result;
         }
@@ -2437,37 +2434,37 @@ public class AgentController {
         condition.put("blockFlag", false);
         ResultData response = agentVitalityService.fetchAgentVitalityByPage(condition, param);
         if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
-        	 result = (DataTablePage<AgentVitality>) response.getData();
+            result = (DataTablePage<AgentVitality>) response.getData();
         }
         return result;
     }
-    
-    @RequestMapping(method = RequestMethod.POST, value = "/vitality/config/{agentVitalityId}")
-    public ModelAndView agentVitalityConfig(@PathVariable("agentVitalityId") String agentVitalityId,@Valid AgentVitalityForm form, BindingResult result, HttpServletRequest request){
-    	 ModelAndView view = new ModelAndView();
-    	 if (result.hasErrors()) {
-             view.setViewName("redirect:/agent/vitality");
-             return view;
-         }
-    	 AgentVitality agentVitality=new AgentVitality(agentVitalityId, Integer.parseInt(form.getVitalityQuantity()), Double.parseDouble(form.getVitalityPrice()));
-    	 ResultData resultData=agentVitalityService.updateAgentVitality(agentVitality);
-    	 if (resultData.getResponseCode() == ResponseCode.RESPONSE_OK) {
-             Subject subject = SecurityUtils.getSubject();
-             User user = (User) subject.getPrincipal();
-             if (user == null) {
-            	 view.setViewName("redirect:/agent/vitality");
-                 return view;
-             }
-             Admin admin = user.getAdmin();
-             BackOperationLog backOperationLog = new BackOperationLog(
-                     admin.getUsername(), toolService.getIP(request), "管理员" + admin.getUsername() + "修改了代理商活跃度配置");
-             logService.createbackOperationLog(backOperationLog);
 
-             view.setViewName("redirect:/agent/vitality");
-             return view;
-         }
-    	 view.setViewName("redirect:/agent/vitality");
-         return view;
+    @RequestMapping(method = RequestMethod.POST, value = "/vitality/config/{agentVitalityId}")
+    public ModelAndView agentVitalityConfig(@PathVariable("agentVitalityId") String agentVitalityId, @Valid AgentVitalityForm form, BindingResult result, HttpServletRequest request) {
+        ModelAndView view = new ModelAndView();
+        if (result.hasErrors()) {
+            view.setViewName("redirect:/agent/vitality");
+            return view;
+        }
+        AgentVitality agentVitality = new AgentVitality(agentVitalityId, Integer.parseInt(form.getVitalityQuantity()), Double.parseDouble(form.getVitalityPrice()));
+        ResultData resultData = agentVitalityService.updateAgentVitality(agentVitality);
+        if (resultData.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            Subject subject = SecurityUtils.getSubject();
+            User user = (User) subject.getPrincipal();
+            if (user == null) {
+                view.setViewName("redirect:/agent/vitality");
+                return view;
+            }
+            Admin admin = user.getAdmin();
+            BackOperationLog backOperationLog = new BackOperationLog(
+                    admin.getUsername(), toolService.getIP(request), "管理员" + admin.getUsername() + "修改了代理商活跃度配置");
+            logService.createbackOperationLog(backOperationLog);
+
+            view.setViewName("redirect:/agent/vitality");
+            return view;
+        }
+        view.setViewName("redirect:/agent/vitality");
+        return view;
     }
 
 }
