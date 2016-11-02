@@ -17,6 +17,11 @@ public class DataTableParam {
     private String sEcho;
     
 
+    private int iSortCol_0;
+
+    private String sSortDir_0;
+
+
     public int getiDisplayStart() {
         return iDisplayStart;
     }
@@ -47,6 +52,22 @@ public class DataTableParam {
 
     public void setsEcho(String sEcho) {
         this.sEcho = sEcho;
+    }
+
+    public int getiSortCol_0() {
+        return iSortCol_0;
+    }
+
+    public void setiSortCol_0(int iSortCol_0) {
+        this.iSortCol_0 = iSortCol_0;
+    }
+
+    public String getsSortDir_0() {
+        return sSortDir_0;
+    }
+
+    public void setsSortDir_0(String sSortDir_0) {
+        this.sSortDir_0 = sSortDir_0;
     }
 
     public int getPageNum() {

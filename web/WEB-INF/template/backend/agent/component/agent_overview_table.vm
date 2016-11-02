@@ -28,17 +28,17 @@
                 <h4 class="modal-title">提示</h4>
             </div>
             <div class="modal-body">
-              <div class="btn-group" id="main">
-                   <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
-                      选择上级代理商 <span class="caret"></span>
-                   </button>
-                   <ul id="select" class="dropdown-menu" role="menu" style="height:200px;overflow:scroll">
-                             
-                  </ul>
+                <div class="btn-group" id="main">
+                    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
+                        选择上级代理商 <span class="caret"></span>
+                    </button>
+                    <ul id="select" class="dropdown-menu" role="menu" style="height:200px;overflow:scroll">
+
+                    </ul>
                 </div>
-             </div>
+            </div>
             <div class="modal-footer">
-               <button type="button" class="btn btn-default" data-dismiss="modal">取消</button> 
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
             </div>
         </div>
     </div>
@@ -51,9 +51,9 @@
                 <h4 class="modal-title">提示</h4>
             </div>
             <div class="modal-body">
-               <p class="form-group">
-                   禁用该代理商后，该代理商的信息将会被注销掉，该代理商的手机号码可以被重新注册！！！
-               </p>
+                <p class="form-group">
+                    禁用该代理商后，该代理商的信息将会被注销掉，该代理商的手机号码可以被重新注册！！！
+                </p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
@@ -69,10 +69,10 @@
                 <button type="button" class="close" data-dismiss="modal">x</button>
                 <h4 class="modal-title">警告</h4>
             </div>
-           <div class="modal-body">
-               <p class="form-group">
-                   一个代理商的上级代理商的上级代理商(或上上级代理商。。。)不能是他自己！！！
-               </p>
+            <div class="modal-body">
+                <p class="form-group">
+                    一个代理商的上级代理商的上级代理商(或上上级代理商。。。)不能是他自己！！！
+                </p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">确认</button>
@@ -86,9 +86,8 @@
     $(document).ready(function () {
         $("#overview_agent_table").DataTable({
             searching: true,
-            ordering: true,
             paging: true,
-            "order": [[ 0, "desc" ]],
+            aaSorting: [[1, "desc"]],
             "sPaginationType": "full_numbers",
             "bPaginate": true,
             "bLengthChange": true,
@@ -119,8 +118,8 @@
             columns: [
                 {
                     title: "姓名", "mRender": function (data, type, full) {
-                    var url="${path.concat('/agent/detail/')}"+full.agentId;
-                    var operation = "<a id='" + full.agentId + "' href='" + url + "'>"+full.name+"</a>";
+                    var url = "${path.concat('/agent/detail/')}" + full.agentId;
+                    var operation = "<a id='" + full.agentId + "' href='" + url + "'>" + full.name + "</a>";
                     return operation;
                 }
                 },
@@ -355,65 +354,65 @@
             document.getElementById("model_quantity").innerHTML = node1;
         });
     }
-    
-    var id;
-    function setId(obj){
-       id=obj.id;
-    }
-    
 
-    function modifyUpperAgent(obj){
-    	 id=obj.id;
-    	 var url = "${path.concat('/agent/list/')}" + obj.id;
-         $.post(url,function(result){
-        	 if(result.responseCode=="RESPONSE_OK"){
-        		var agentList=result.data;
+    var id;
+    function setId(obj) {
+        id = obj.id;
+    }
+
+
+    function modifyUpperAgent(obj) {
+        id = obj.id;
+        var url = "${path.concat('/agent/list/')}" + obj.id;
+        $.post(url, function (result) {
+            if (result.responseCode == "RESPONSE_OK") {
+                var agentList = result.data;
                 var f = document.getElementById("select");
                 var childs = f.childNodes;
                 for (var i = childs.length - 1; i >= 0; i--) {
                     f.removeChild(childs[i]);
                 }
-        		for(var i=0;i<agentList.length;i++){
-        			var agent=agentList[i];                                      
-        			var node="<li><a id='" + agent.agentId + "' onclick=select(this) href='#'>"+agent.name+"</a></li>";
-        			$("#select").append(node);
-        		}
-        		 
-        	 }
-         });
+                for (var i = 0; i < agentList.length; i++) {
+                    var agent = agentList[i];
+                    var node = "<li><a id='" + agent.agentId + "' onclick=select(this) href='#'>" + agent.name + "</a></li>";
+                    $("#select").append(node);
+                }
+
+            }
+        });
     }
-    
-    function select(obj){
-    	 var url = "${path.concat('/agent/modifyUpperAgent/')}"+id+"/"+obj.id; 	
-    	 $.post(url,function(result){
-    		 if(result.responseCode=="RESPONSE_OK"){
-    			 $("#modify_modal").modal('hide');
-    		 }else if(result.description=="recursion"){
-    			 $("#waring_modal").modal('show');
-    		 }else{
-    			 
-    		 }
-    	 });
+
+    function select(obj) {
+        var url = "${path.concat('/agent/modifyUpperAgent/')}" + id + "/" + obj.id;
+        $.post(url, function (result) {
+            if (result.responseCode == "RESPONSE_OK") {
+                $("#modify_modal").modal('hide');
+            } else if (result.description == "recursion") {
+                $("#waring_modal").modal('show');
+            } else {
+
+            }
+        });
     }
-    
-   $("#dialog_modal").modal({
-            show: false,
-            keyboard: true
-   });
-   
-   $("#modify_modal").modal({
-       show: false,
-       keyboard: true
-   });
-   
-   $("#waring_modal").modal({
-       show: false,
-       keyboard: true
-   });
-   
-   $("#dialog_confirm").on('click', function () {
-       var url = "${path.concat('/agent/forbid/')}" + id;
-       window.location.href=url;
+
+    $("#dialog_modal").modal({
+        show: false,
+        keyboard: true
+    });
+
+    $("#modify_modal").modal({
+        show: false,
+        keyboard: true
+    });
+
+    $("#waring_modal").modal({
+        show: false,
+        keyboard: true
+    });
+
+    $("#dialog_confirm").on('click', function () {
+        var url = "${path.concat('/agent/forbid/')}" + id;
+        window.location.href = url;
     });
 
 </script>
