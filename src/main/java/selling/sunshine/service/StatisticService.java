@@ -34,5 +34,9 @@ public interface StatisticService {
     ResultData purchaseRecordEveryday();
     
     ResultData purchaseRecordEveryMonth();
+    
+    ResultData purchaseRecordEveryday2();
+    
+    ResultData purchaseRecordEveryMonth2();
 
 }
