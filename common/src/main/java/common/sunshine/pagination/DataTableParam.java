@@ -15,6 +15,7 @@ public class DataTableParam {
 
     /*information for DataTables to use for rendering*/
     private String sEcho;
+    
 
     public int getiDisplayStart() {
         return iDisplayStart;
@@ -56,4 +57,7 @@ public class DataTableParam {
         }
         return num;
     }
+
+
+    
 }
