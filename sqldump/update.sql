@@ -531,73 +531,105 @@ CREATE TABLE IF NOT EXISTS `selling`.`express_application` (
     ON UPDATE NO ACTION
 )
   ENGINE = InnoDB;
-  
+
 ##2016年9月14日更新
-ALTER TABLE `selling`.`agent` 
-ADD COLUMN `customer_service` TINYINT(1) NOT NULL DEFAULT '0' AFTER `create_time`;
+ALTER TABLE `selling`.`agent`
+ADD COLUMN `customer_service` TINYINT(1) NOT NULL DEFAULT '0'
+AFTER `create_time`;
 
 
 ##2016年9月13日更新
 CREATE TABLE IF NOT EXISTS `selling`.`short_url` (
-  `url_id`      VARCHAR(20)     NOT NULL,
-  `long_url`    VARCHAR(2000)   NULL,
-  `short_url`   VARCHAR(255)    NULL,
-  `block_flag`  TINYINT(1)      NOT NULL,
-  `create_time` DATETIME        NOT NULL,
+  `url_id`      VARCHAR(20)   NOT NULL,
+  `long_url`    VARCHAR(2000) NULL,
+  `short_url`   VARCHAR(255)  NULL,
+  `block_flag`  TINYINT(1)    NOT NULL,
+  `create_time` DATETIME      NOT NULL,
   PRIMARY KEY (`url_id`)
 )
   ENGINE = InnoDB;
 
 ##2016年9月23日更新
 ALTER TABLE `selling`.`agent`
-ADD COLUMN `agent_card` VARCHAR(50) DEFAULT NULL AFTER `agent_gender`;
+ADD COLUMN `agent_card` VARCHAR(50) DEFAULT NULL
+AFTER `agent_gender`;
 
 ##2016年9月27日更新
-ALTER TABLE `selling`.`refund_config` 
-ADD COLUMN `isUniversal` TINYINT(1) NOT NULL DEFAULT '1' AFTER `create_time`,
-ADD COLUMN `universal_month` INT(11) NOT NULL DEFAULT '1' AFTER `isUniversal`;
-ALTER TABLE `selling`.`refund_config` 
-CHANGE COLUMN `isUniversal` `universal` TINYINT(1) NOT NULL DEFAULT '1' ;
+ALTER TABLE `selling`.`refund_config`
+ADD COLUMN `isUniversal` TINYINT(1) NOT NULL DEFAULT '1'
+AFTER `create_time`,
+ADD COLUMN `universal_month` INT(11) NOT NULL DEFAULT '1'
+AFTER `isUniversal`;
+ALTER TABLE `selling`.`refund_config`
+CHANGE COLUMN `isUniversal` `universal` TINYINT(1) NOT NULL DEFAULT '1';
 
 ##2016年9月28日更新
 ALTER TABLE `selling`.`goods_thumbnail`
-ADD COLUMN `type` VARCHAR(50) DEFAULT NULL AFTER `goods_id`;
+ADD COLUMN `type` VARCHAR(50) DEFAULT NULL
+AFTER `goods_id`;
 
 ALTER TABLE `selling`.`goods`
-ADD COLUMN `standard` VARCHAR(50) DEFAULT NULL AFTER `agent_price`;
+ADD COLUMN `standard` VARCHAR(50) DEFAULT NULL
+AFTER `agent_price`;
 
 ##2016年10月24日更新
 CREATE TABLE `selling`.`agent_vitality` (
-  `agentVitality_id` VARCHAR(20) NOT NULL,
-  `vitality_quantity` INT(11) NOT NULL DEFAULT 0,
-  `vitality_price` VARCHAR(45) NOT NULL DEFAULT 0,
-  `block_flag` TINYINT(1) NOT NULL DEFAULT 0,
-  `create_time` DATETIME NOT NULL,
-  PRIMARY KEY (`agentVitality_id`));
-INSERT INTO `selling`.`agent_vitality` (`agentVitality_id`, `vitality_quantity`, `vitality_price`, `block_flag`, `create_time`) VALUES ('VIT00000001', '1', '0', '0', '2016-10-24 00:10:00');
+  `agentVitality_id`  VARCHAR(20) NOT NULL,
+  `vitality_quantity` INT(11)     NOT NULL DEFAULT 0,
+  `vitality_price`    VARCHAR(45) NOT NULL DEFAULT 0,
+  `block_flag`        TINYINT(1)  NOT NULL DEFAULT 0,
+  `create_time`       DATETIME    NOT NULL,
+  PRIMARY KEY (`agentVitality_id`)
+);
+INSERT INTO `selling`.`agent_vitality` (`agentVitality_id`, `vitality_quantity`, `vitality_price`, `block_flag`, `create_time`)
+VALUES ('VIT00000001', '1', '0', '0', '2016-10-24 00:10:00');
+
 
 ##2016年11月2日更新
 CREATE OR REPLACE VIEW order_item_sum(agent_id, order_type, order_id, order_item_status, goods_quantity, order_item_price, customer_name, block_flag, create_time)
-AS SELECT 
-	o.agent_id              AS agent_id,
-	o.order_type            AS order_type,
-	oi.order_item_id        AS order_id,
-	oi.order_item_status    AS order_item_status,
-	oi.goods_quantity       AS goods_quantity,
-	oi.order_item_price     AS order_item_price,
-	c.customer_name         AS customer_name,
-	oi.block_flag           AS block_flag,
-	oi.create_time          AS create_time
-FROM (order_item oi LEFT JOIN `order` o ON oi.order_id = o.order_id) LEFT JOIN `customer` c ON oi.customer_id = c.customer_id
-UNION ALL 
-SELECT 
-	co.agent_id             AS agent_id,
-	2                       AS order_type,
-	co.order_id             AS order_id,
-	co.order_status         AS order_item_status,
-	co.quantity             AS goods_quantity,
-	co.total_price          AS order_item_price,
-	co.receiver_name        AS customer_name,
-	co.block_flag           AS block_flag,
-	co.create_time          AS create_time
-FROM customer_order co;
+AS SELECT
+     o.agent_id           AS agent_id,
+     o.order_type         AS order_type,
+     oi.order_item_id     AS order_id,
+     oi.order_item_status AS order_item_status,
+     oi.goods_quantity    AS goods_quantity,
+     oi.order_item_price  AS order_item_price,
+     c.customer_name      AS customer_name,
+     oi.block_flag        AS block_flag,
+     oi.create_time       AS create_time
+   FROM (order_item oi LEFT JOIN `order` o ON oi.order_id = o.order_id) LEFT JOIN `customer` c
+       ON oi.customer_id = c.customer_id
+   UNION ALL
+   SELECT
+     co.agent_id      AS agent_id,
+     2                AS order_type,
+     co.order_id      AS order_id,
+     co.order_status  AS order_item_status,
+     co.quantity      AS goods_quantity,
+     co.total_price   AS order_item_price,
+     co.receiver_name AS customer_name,
+     co.block_flag    AS block_flag,
+     co.create_time   AS create_time
+   FROM customer_order co;
+
+-- -----------------------------------------------------
+-- Table `selling`.`agent_kpi`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `selling`.`agent_kpi` (
+  `kpi_id`                VARCHAR(20) NOT NULL,
+  `agent_id`              VARCHAR(20) NOT NULL,
+  `agent_name`            VARCHAR(45) NOT NULL,
+  `customer_quantity`     INT         NOT NULL,
+  `direct_agent_quantity` INT         NOT NULL,
+  `agent_contribution`    INT         NOT NULL,
+  `block_flag`            TINYINT(1)  NOT NULL,
+  `create_time`           DATETIME    NOT NULL,
+  PRIMARY KEY (`kpi_id`),
+  INDEX `fk_agent_kpi_agent1_idx` (`agent_id` ASC),
+  CONSTRAINT `fk_agent_kpi_agent1`
+  FOREIGN KEY (`agent_id`)
+  REFERENCES `selling`.`agent` (`agent_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+)
+  ENGINE = InnoDB;
