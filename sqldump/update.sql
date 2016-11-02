@@ -531,47 +531,79 @@ CREATE TABLE IF NOT EXISTS `selling`.`express_application` (
     ON UPDATE NO ACTION
 )
   ENGINE = InnoDB;
-  
+
 ##2016年9月14日更新
-ALTER TABLE `selling`.`agent` 
-ADD COLUMN `customer_service` TINYINT(1) NOT NULL DEFAULT '0' AFTER `create_time`;
+ALTER TABLE `selling`.`agent`
+ADD COLUMN `customer_service` TINYINT(1) NOT NULL DEFAULT '0'
+AFTER `create_time`;
 
 
 ##2016年9月13日更新
 CREATE TABLE IF NOT EXISTS `selling`.`short_url` (
-  `url_id`      VARCHAR(20)     NOT NULL,
-  `long_url`    VARCHAR(2000)   NULL,
-  `short_url`   VARCHAR(255)    NULL,
-  `block_flag`  TINYINT(1)      NOT NULL,
-  `create_time` DATETIME        NOT NULL,
+  `url_id`      VARCHAR(20)   NOT NULL,
+  `long_url`    VARCHAR(2000) NULL,
+  `short_url`   VARCHAR(255)  NULL,
+  `block_flag`  TINYINT(1)    NOT NULL,
+  `create_time` DATETIME      NOT NULL,
   PRIMARY KEY (`url_id`)
 )
   ENGINE = InnoDB;
 
 ##2016年9月23日更新
 ALTER TABLE `selling`.`agent`
-ADD COLUMN `agent_card` VARCHAR(50) DEFAULT NULL AFTER `agent_gender`;
+ADD COLUMN `agent_card` VARCHAR(50) DEFAULT NULL
+AFTER `agent_gender`;
 
 ##2016年9月27日更新
-ALTER TABLE `selling`.`refund_config` 
-ADD COLUMN `isUniversal` TINYINT(1) NOT NULL DEFAULT '1' AFTER `create_time`,
-ADD COLUMN `universal_month` INT(11) NOT NULL DEFAULT '1' AFTER `isUniversal`;
-ALTER TABLE `selling`.`refund_config` 
-CHANGE COLUMN `isUniversal` `universal` TINYINT(1) NOT NULL DEFAULT '1' ;
+ALTER TABLE `selling`.`refund_config`
+ADD COLUMN `isUniversal` TINYINT(1) NOT NULL DEFAULT '1'
+AFTER `create_time`,
+ADD COLUMN `universal_month` INT(11) NOT NULL DEFAULT '1'
+AFTER `isUniversal`;
+ALTER TABLE `selling`.`refund_config`
+CHANGE COLUMN `isUniversal` `universal` TINYINT(1) NOT NULL DEFAULT '1';
 
 ##2016年9月28日更新
 ALTER TABLE `selling`.`goods_thumbnail`
-ADD COLUMN `type` VARCHAR(50) DEFAULT NULL AFTER `goods_id`;
+ADD COLUMN `type` VARCHAR(50) DEFAULT NULL
+AFTER `goods_id`;
 
 ALTER TABLE `selling`.`goods`
-ADD COLUMN `standard` VARCHAR(50) DEFAULT NULL AFTER `agent_price`;
+ADD COLUMN `standard` VARCHAR(50) DEFAULT NULL
+AFTER `agent_price`;
 
 ##2016年10月24日更新
 CREATE TABLE `selling`.`agent_vitality` (
-  `agentVitality_id` VARCHAR(20) NOT NULL,
-  `vitality_quantity` INT(11) NOT NULL DEFAULT 0,
-  `vitality_price` VARCHAR(45) NOT NULL DEFAULT 0,
-  `block_flag` TINYINT(1) NOT NULL DEFAULT 0,
+  `agentVitality_id`  VARCHAR(20) NOT NULL,
+  `vitality_quantity` INT(11)     NOT NULL DEFAULT 0,
+  `vitality_price`    VARCHAR(45) NOT NULL DEFAULT 0,
+  `block_flag`        TINYINT(1)  NOT NULL DEFAULT 0,
+  `create_time`       DATETIME    NOT NULL,
+  PRIMARY KEY (`agentVitality_id`)
+);
+INSERT INTO `selling`.`agent_vitality` (`agentVitality_id`, `vitality_quantity`, `vitality_price`, `block_flag`, `create_time`)
+VALUES ('VIT00000001', '1', '0', '0', '2016-10-24 00:10:00');
+
+
+##2016年11月2日更新，添加agent_kpi表
+
+-- -----------------------------------------------------
+-- Table `selling`.`agent_kpi`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `selling`.`agent_kpi` (
+  `kpi_id` VARCHAR(20) NOT NULL,
+  `agent_id` VARCHAR(20) NOT NULL,
+  `agent_name` VARCHAR(45) NOT NULL,
+  `customer_quantity` INT NOT NULL,
+  `direct_agent_quantity` INT NOT NULL,
+  `agent_contribution` INT NOT NULL,
+  `block_flag` TINYINT(1) NOT NULL,
   `create_time` DATETIME NOT NULL,
-  PRIMARY KEY (`agentVitality_id`));
-INSERT INTO `selling`.`agent_vitality` (`agentVitality_id`, `vitality_quantity`, `vitality_price`, `block_flag`, `create_time`) VALUES ('VIT00000001', '1', '0', '0', '2016-10-24 00:10:00');
+  PRIMARY KEY (`kpi_id`),
+  INDEX `fk_agent_kpi_agent1_idx` (`agent_id` ASC),
+  CONSTRAINT `fk_agent_kpi_agent1`
+  FOREIGN KEY (`agent_id`)
+  REFERENCES `selling`.`agent` (`agent_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+  ENGINE = InnoDB;
