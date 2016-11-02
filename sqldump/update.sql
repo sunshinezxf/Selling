@@ -577,11 +577,10 @@ CREATE TABLE `selling`.`agent_vitality` (
 INSERT INTO `selling`.`agent_vitality` (`agentVitality_id`, `vitality_quantity`, `vitality_price`, `block_flag`, `create_time`) VALUES ('VIT00000001', '1', '0', '0', '2016-10-24 00:10:00');
 
 ##2016年11月2日更新
-CREATE OR REPLACE VIEW order_item_sum(agent_id, order_type, goods_id, order_id, order_item_status, goods_quantity, order_item_price, customer_name, block_flag, create_time)
+CREATE OR REPLACE VIEW order_item_sum(agent_id, order_type, order_id, order_item_status, goods_quantity, order_item_price, customer_name, block_flag, create_time)
 AS SELECT 
-	o.agent_id		AS agent_id,
+	o.agent_id              AS agent_id,
 	o.order_type            AS order_type,
-	oi.goods_id             AS goods_id,
 	oi.order_item_id        AS order_id,
 	oi.order_item_status    AS order_item_status,
 	oi.goods_quantity       AS goods_quantity,
@@ -594,7 +593,6 @@ UNION ALL
 SELECT 
 	co.agent_id             AS agent_id,
 	2                       AS order_type,
-	co.goods_id             AS goods_id,
 	co.order_id             AS order_id,
 	co.order_status         AS order_item_status,
 	co.quantity             AS goods_quantity,
