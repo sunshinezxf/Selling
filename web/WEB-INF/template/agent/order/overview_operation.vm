@@ -5,9 +5,6 @@
     <p id="refund_condition" class="page_desc">更多关于订单的操作</p>
 </div>
 <div class="bd">
-    <div class="weui_btn_area clear-margin-top">
-        <a href="${path.concat('/agent/order/manage/2')}" class="weui_btn weui_btn_plain_primary">查看详情</a>
-    </div>
     <div class="weui_tab">
         <div class="weui_navbar">
             <div class="weui_navbar_item " id="overview">

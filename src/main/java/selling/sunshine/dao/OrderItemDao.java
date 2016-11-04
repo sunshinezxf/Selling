@@ -11,5 +11,7 @@ public interface OrderItemDao {
 
     ResultData queryOrderItem(Map<String, Object> condition);
     
+    ResultData queryOrderItemSum(Map<String, Object> condition);
+    
     ResultData updateOrderItem(OrderItem orderItem);
 }

@@ -86,7 +86,7 @@
     <bean id="checkOrderPoolTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="checkOrderPoolDetail"></property>
         <property name="cronExpression">
-            <value>0 33 16 * * ?</value>
+            <value>0 50 0 1 * ?</value>
         </property>
     </bean>
 

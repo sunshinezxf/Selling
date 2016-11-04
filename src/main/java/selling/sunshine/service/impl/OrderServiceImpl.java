@@ -20,6 +20,7 @@ import common.sunshine.model.selling.order.OrderItem;
 import common.sunshine.pagination.DataTableParam;
 import common.sunshine.pagination.MobilePageParam;
 import selling.sunshine.service.OrderService;
+import selling.sunshine.vo.order.OrderItemSum;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
 
@@ -253,6 +254,22 @@ public class OrderServiceImpl implements OrderService {
         }
         return result;
     }
+    
+    @Override
+	public ResultData fetchOrderItemSum(Map<String, Object> condition) {
+    	ResultData result = new ResultData();
+        ResultData fetchResponse = orderItemDao.queryOrderItemSum(condition);
+        result.setResponseCode(fetchResponse.getResponseCode());
+        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            if (((List<OrderItemSum>) fetchResponse.getData()).isEmpty()) {
+                result.setResponseCode(ResponseCode.RESPONSE_NULL);
+            }
+            result.setData(fetchResponse.getData());
+        } else {
+            result.setDescription(fetchResponse.getDescription());
+        }
+        return result;
+	}
 
     @Override
     public ResultData updateOrderItem(OrderItem orderItem) {
@@ -315,4 +332,5 @@ public class OrderServiceImpl implements OrderService {
 	public ResultData checkOrderPool(Map<String, Object> condition) {
 		return orderPoolDao.checkOrderPool(condition);
 	}
+
 }
