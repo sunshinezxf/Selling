@@ -6,7 +6,7 @@
 </div>
 <div class="bd">
     <div class="weui_btn_area clear-margin-top">
-        <a id="not_pay_btn" class="weui_btn weui_btn_plain_primary" style="width:49%;display:inline-block;">未付款</a>
+        <a id="not_pay_btn" class="weui_btn weui_btn_default" style="width:49%;display:inline-block;">未付款</a>
         <a id="payed_btn" class="weui_btn weui_btn_plain_primary" style="width:49%;display:inline-block;">已付款</a>
     </div>
     <div class="weui_tab" id="order_not_pay" style="display:none;">
@@ -240,6 +240,10 @@
       	var current = $(".weui_navbar").find(".weui_bar_item_on");
         current.removeClass("weui_bar_item_on");
         current.css("font-weight","normal");
+        $("#not_pay_btn").removeClass("weui_btn_default");
+        $("#not_pay_btn").addClass("weui_btn_plain_primary");
+        $("#payed_btn").removeClass("weui_btn_plain_primary");
+        $("#payed_btn").addClass("weui_btn_default");
         $("#saved").css("font-weight","bold");
         $("#saved").addClass("weui_bar_item_on");
         type = 0;
@@ -252,6 +256,10 @@
     	var current = $(".weui_navbar").find(".weui_bar_item_on");
         current.removeClass("weui_bar_item_on");
         current.css("font-weight","normal");
+        $("#payed_btn").removeClass("weui_btn_default");
+        $("#payed_btn").addClass("weui_btn_plain_primary");
+        $("#not_pay_btn").removeClass("weui_btn_plain_primary");
+        $("#not_pay_btn").addClass("weui_btn_default");
         $("#paid").css("font-weight","bold");
         $("#paid").addClass("weui_bar_item_on");
         type = 2;
