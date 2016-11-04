@@ -6,9 +6,10 @@
 </div>
 <div class="bd">
     <div class="weui_btn_area clear-margin-top">
-        <a href="${path.concat('/agent/order/overview')}" class="weui_btn weui_btn_plain_primary">订单概览</a>
+        <a id="not_pay_btn" class="weui_btn weui_btn_plain_primary" style="width:49%;display:inline-block;">未付款</a>
+        <a id="payed_btn" class="weui_btn weui_btn_plain_primary" style="width:49%;display:inline-block;">已付款</a>
     </div>
-   <div class="weui_tab" id="order_not_pay" style="display:none;">
+    <div class="weui_tab" id="order_not_pay" style="display:none;">
         <div class="weui_navbar">
             <div class="weui_navbar_item" id="saved">
                 已保存           
@@ -159,7 +160,7 @@
     	}
     }
     
-    $.get_order_not_payed = function(){
+    $.get_order_not_pay = function(){
 		var url = "${path.concat('/agent/order/listnotpay')}/" + type;
 		$.getJSON(url, function(data){
     		if(data.description == "您需要重新登录"){
@@ -179,9 +180,7 @@
     				"<p>" + time[0] + "年" + parseInt(time[1]) + "月" + time[2] + "日<span style='color:#888;'></span></p>" +
     				"</div>" + 
     				"<div class='weui_cell_ft'>含" + val.orderItems.length + "个订单项</div>" + 
-    				"</a>" +
-					"<div class='order_detail' style='display:none;'>" +
-					"</div>"/				    				
+    				"</a>";
     			$("#order_list_not_pay").append(html);
     			$("#" + val.orderId).on("click", function(){
     				window.location =  "${path.concat('/agent/order/detail/" + val.orderId + "')}";
@@ -227,9 +226,7 @@
     				"<p>" + time[0] + "年" + parseInt(time[1]) + "月" + time[2] + "日<span style='color:#888;'>" + typeString + "</span></p>" +
     				"</div>" + 
     				"<div class='weui_cell_ft'>" + val.customerName + "(" + val.goodsQuantity + "瓶)</div>" + 
-    				"</a>" +
-					"<div class='order_detail' style='display:none;'>"+
-					"</div>";				    				
+    				"</a>";
     			$("#order_list_payed").append(html);
     			$("#" + val.orderId).on("click", function(){
     				window.location =  "${path.concat('/agent/orderitem/detail/" + val.orderId + "')}";
@@ -238,6 +235,30 @@
     		$("#loadingToast").hide();
     	});
     }
+    
+    $("#not_pay_btn").on("click", function(){
+      	var current = $(".weui_navbar").find(".weui_bar_item_on");
+        current.removeClass("weui_bar_item_on");
+        current.css("font-weight","normal");
+        $("#saved").css("font-weight","bold");
+        $("#saved").addClass("weui_bar_item_on");
+        type = 0;
+        $.get_order();
+    	$("#order_payed").hide();
+    	$("#order_not_pay").show();
+    });
+    
+    $("#payed_btn").on("click", function(){
+    	var current = $(".weui_navbar").find(".weui_bar_item_on");
+        current.removeClass("weui_bar_item_on");
+        current.css("font-weight","normal");
+        $("#paid").css("font-weight","bold");
+        $("#paid").addClass("weui_bar_item_on");
+        type = 2;
+        $.get_order();
+    	$("#order_not_pay").hide();
+    	$("#order_payed").show();
+    });
     
     Date.prototype.format = function (format) {
     var o = {
