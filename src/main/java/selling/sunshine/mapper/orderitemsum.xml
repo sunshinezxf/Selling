@@ -3,7 +3,8 @@
 <mapper namespace="selling.order.orderitemsum">
 	<resultMap id="orderItemSumVo" type="selling.sunshine.vo.order.OrderItemSum">
 		<result property="orderId" column="order_id"></result>
-		<result property="orderType" column="order_type"></result>
+		<result property="orderType" column="order_type" 
+		typeHandler="selling.sunshine.handler.mybatis.order.OrderTypeHandler"></result>
 		<result property="status" column="order_item_status" 
 		typeHandler="selling.sunshine.handler.mybatis.order.OrderItemStatusHandler"></result>
 		<result property="goodsQuantity" column="goods_quantity"></result>
@@ -30,7 +31,7 @@
     	<if test="orderId != null and orderId != ''">
             AND order_id = #{orderId}
         </if>
-        <if test="orderType != null and ordertype !=''">
+        <if test="orderType != null and orderType !=''">
         	AND order_type = #{orderType}
         </if>
     	<if test="status != null and status != ''">
@@ -46,12 +47,17 @@
             ORDER BY ${rule}
         </if>
         <if test="rule == null">
-            ORDER BY create_time ASC
+            ORDER BY create_time DESC
         </if>
         <if test="offset != null and limit != null">
         	LIMIT #{offset}, #{limit}
         </if>
     </select>
     
+    <select id="agentLiteQuery" parameterType="java.util.Map" resultMap="agentLiteVo">
+        SELECT agent_id, agent_name, agent_phone
+        FROM agent
+        WHERE agent_id = #{agentId}
+    </select>
     
 </mapper>

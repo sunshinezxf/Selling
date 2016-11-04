@@ -1,5 +1,5 @@
 <div class="tabbar">
-<div class="weui_tab_bd" id="scroller">
+<div class="weui_tab_bd">
 <div class="hd">
     <h1 class="page_title">订单管理</h1>
     <p id="refund_condition" class="page_desc">更多关于订单的操作</p>
@@ -8,9 +8,19 @@
     <div class="weui_btn_area clear-margin-top">
         <a href="${path.concat('/agent/order/overview')}" class="weui_btn weui_btn_plain_primary">订单概览</a>
     </div>
-    <div id="order_not_pay" style="display:none">
-    	<div id="order_list_not_pay" class="weui_cells weui_cells_access clear-margin-top">
-    	</div>
+   <div class="weui_tab" id="order_not_pay" style="display:none;">
+        <div class="weui_navbar">
+            <div class="weui_navbar_item" id="saved">
+                已保存           
+            </div>
+            <div class="weui_navbar_item" id="submitted">
+                待付款
+            </div>
+        </div>
+        <div class="weui_tab_bd" >
+            <div id="order_list_not_pay" class="weui_cells weui_cells_access clear-margin-top">
+            </div>
+        </div>
     </div>
     <div class="weui_tab" id="order_payed">
         <div class="weui_navbar">
@@ -24,7 +34,7 @@
                 已结束
             </div>
         </div>
-        <div class="weui_tab_bd" >
+        <div class="weui_tab_bd" id="scroller">
             <div id="order_list_payed" class="weui_cells weui_cells_access clear-margin-top">
             </div>
         </div>
@@ -54,18 +64,28 @@
 			$("#refund_condition").html("社群奖励进度： " + num + "件");		
 		});
 		
-		
+		//判断是否需要动态下拉加载
+		isScroll = false;
+		type = ${type};
 		$.get_order(${type});
-		switch(${type}){
-		case 1:
+		switch(type){
+		case 0:
+			$("#saved").css("font-weight","bold");
+            $("#saved").addClass("weui_bar_item_on");
+            break;
+        case 1:
+        	$("#submitted").css("font-weight","bold");
+            $("#submitted").addClass("weui_bar_item_on");
+            break;
+		case 2:
 			$("#paid").css("font-weight","bold");
             $("#paid").addClass("weui_bar_item_on");
             break;
-		case 2:
+		case 3:
 			$("#shipped").css("font-weight","bold");
             $("#shipped").addClass("weui_bar_item_on");
             break;
-		case 3:
+		case 4:
 			$("#closed").css("font-weight","bold");
             $("#closed").addClass("weui_bar_item_on");
             break;
@@ -80,12 +100,21 @@
         if (current_id != target_id) {
             current.removeClass("weui_bar_item_on");
             current.css("font-weight","normal");
-            if (target_id == "paid") {
-				$.get_order(1);
+            if(target_id == "saved"){
+            	type = 0;
+            	$.get_order();
+            } else if (target_id == "submitted") {
+            	type = 1;
+				$.get_order();
+            } else if (target_id == "paid") {
+            	type = 2;
+				$.get_order();
             } else if (target_id == "shipped") {
-				$.get_order(2);
+            	type = 3;
+				$.get_order();
             } else if (target_id == "closed") {
-				$.get_order(3);
+            	type = 4;
+				$.get_order();
             }
             $(this).css("font-weight","bold");
             $(this).addClass("weui_bar_item_on")
@@ -97,49 +126,86 @@
     	contentH = $(this).get(0).scrollHeight;
     	scrollTop = $(this).scrollTop();
     	bottomTop = $("#bottom_tabbar").height();
-    	console.debug("--------")
-    	console.debug(viewH);
-    	console.debug(contentH);
-    	console.debug(scrollTop);
     	if(contentH - viewH - scrollTop - bottomTop < 10){
     		console.debug("I reach bottom");
+    		if(isScroll){
+    			offset += limit;
+    			$.get_order_payed();
+    			return true;
+    		}
     	}
+    	return false;
     });
     
+    
     //异步获取订单
-    $.get_order = function(type){
-    	if(type == 0){
+    $.get_order = function(){
+    	if(type == 0 || type == 1){
+    		isScroll = false;
     		$("#order_payed").hide();
     		$("#order_not_pay").show();
     		$("#loadingToast").show();
+    		$("#order_list_not_pay").empty();
     		$.get_order_not_pay();
     	}else{
+    		isScroll = true;
+    		offset = 0;
+    		limit = 10;
     		$("#order_not_pay").hide();
     		$("#order_payed").show();
     		$("#loadingToast").show();
-    		$.get_order_payed(type);
+    		$("#order_list_payed").empty();
+    		$.get_order_payed();
     	}
-    	
-    	
     }
     
     $.get_order_not_payed = function(){
-    	$("#order_list_not_pay").empty();
-    	var
-    }
-    
-    $.get_order_payed = function(type){
-    	$("#order_list_payed").empty();
-    	var url = "${path.concat('/agent/order/list')}/" + type;
-    	$.getJSON(url, function(data){
+		var url = "${path.concat('/agent/order/listnotpay')}/" + type;
+		$.getJSON(url, function(data){
     		if(data.description == "您需要重新登录"){
     			window.location="${path.concat('/agent/login')}"; 
     			return;
     		}
     		var list = data.data;
     		$.each(list, function(i, val){
+    			var	timeString = (new Date(val.createAt)).format("yyyy MM dd");
+    			var time = timeString.split(" ");
+    			var html = 
+    				"<a class='weui_cell' id='" + val.orderId+ "'>" + 
+    				"<div class='weui_cell_hd'>" + 
+    				"<i class='icon icon_article'></i>" + 
+    				"</div>" + 
+    				"<div class='weui_cell_bd weui_cell_primary'>" +
+    				"<p>" + time[0] + "年" + parseInt(time[1]) + "月" + time[2] + "日<span style='color:#888;'></span></p>" +
+    				"</div>" + 
+    				"<div class='weui_cell_ft'>含" + val.orderItems.length + "个订单项</div>" + 
+    				"</a>" +
+					"<div class='order_detail' style='display:none;'>" +
+					"</div>"/				    				
+    			$("#order_list_not_pay").append(html);
+    			$("#" + val.orderId).on("click", function(){
+    				window.location =  "${path.concat('/agent/order/detail/" + val.orderId + "')}";
+    			});
+    		});
+    		$("#loadingToast").hide();
+    	});
+    }
+    
+    $.get_order_payed = function(){
+    	var url = "${path.concat('/agent/order/listpayed')}/" + type + "/" + offset + "/" + limit;
+    	$.getJSON(url, function(data){
+    		if(data.description == "您需要重新登录"){
+    			window.location="${path.concat('/agent/login')}"; 
+    			return;
+    		}
+    		var list = data.data;
+    		if(list.length == 0){
+    			isScroll = false;
+    		}
+    		$.each(list, function(i, val){
+    			console.debug(val);
     			var typeString = "";
-    			switch(val.type){
+    			switch(val.orderType){
     			case "ORDINARY":
     				break;
     			case "GIFT":
@@ -160,46 +226,19 @@
     				"<div class='weui_cell_bd weui_cell_primary'>" +
     				"<p>" + time[0] + "年" + parseInt(time[1]) + "月" + time[2] + "日<span style='color:#888;'>" + typeString + "</span></p>" +
     				"</div>" + 
-    				"<div class='weui_cell_ft'>含" + val.orderItems.length + "个订单项</div>" + 
+    				"<div class='weui_cell_ft'>" + val.customerName + "(" + val.goodsQuantity + "瓶)</div>" + 
     				"</a>" +
-					"<div class='order_detail' style='display:none;'>"					    				
-    			for(var j = 0; j < val.orderItems.length; j++){
-    				var wuliu = "";
-    				switch(val.orderItems[j].status){
-    				case "NOT_PAYED":wuliu = "(未付款)";break;
-    				case "PAYED":wuliu="(已付款)";break;
-    				case "SHIPPED":wuliu="(已发货)";break;
-    				case "RECEIVED":wuliu="(已签收)";break;
-    				default:break;
-    				}
-    				html += 
-    				"<a class='weui_cell order_item"+ val.orderId + "'>" +
-    				"<div class='weui_cell_bd weui_cell_primary'>" +
-    				"<p>" + val.orderItems[j].customer.name +"<span style='color:#888;'>" + wuliu + "</span></p>" + 
-    				"</div>" + 
-    				"<div class='weui_cell_ft'>查看详情</div>"
-    				"</a>";
-    			}
-    			html += "</div>";
+					"<div class='order_detail' style='display:none;'>"+
+					"</div>";				    				
     			$("#order_list_payed").append(html);
-    			downId = 0;
-    			$("#" + val.orderId).on("click",function(){
-    				$("#" + val.orderId).next().slideToggle();
-    				if(val.orderId != downId){
-    					$("#" + downId).next().slideToggle();
-    					downId = val.orderId;
-    				}else{
-    					downId = 0;	
-    				}
-    			});
-    			$(".order_item" + val.orderId).on("click", function(){
-    				window.location =  "${path.concat('/agent/order/detail/" + val.orderId + "')}";
+    			$("#" + val.orderId).on("click", function(){
+    				window.location =  "${path.concat('/agent/orderitem/detail/" + val.orderId + "')}";
     			});
     		});
     		$("#loadingToast").hide();
     	});
     }
-        
+    
     Date.prototype.format = function (format) {
     var o = {
         "M+": this.getMonth() + 1,

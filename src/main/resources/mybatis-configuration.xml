@@ -12,6 +12,7 @@
         <mapper resource="selling/sunshine/mapper/role.xml"/>
         <mapper resource="selling/sunshine/mapper/order.xml"/>
         <mapper resource="selling/sunshine/mapper/orderitem.xml"/>
+        <mapper resource="selling/sunshine/mapper/orderitemsum.xml"/>
         <mapper resource="selling/sunshine/mapper/customer.xml"/>
         <mapper resource="selling/sunshine/mapper/customerorder.xml"/>
         <mapper resource="selling/sunshine/mapper/customerorderbill.xml"/>
