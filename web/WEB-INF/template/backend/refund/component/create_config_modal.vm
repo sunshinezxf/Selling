@@ -20,7 +20,8 @@
                         <div id="set_month" class="col-xs-8 col-sm-8 col-md-8 col-lg-9" style="padding-top:10px;">
                             <span>前</span>
                             <select name="apply_months">
-                                <option value="1" selected="selected">1</option>
+                                <option value="" selected="selected">请选择</option>
+                                <option value="1">1</option>
                                 <option value="2">2</option>
                                 <option value="3">3</option>
                                 <option value="4">4</option>
@@ -91,15 +92,10 @@
     });
 
     $("#create_config_confirm").on('click', function () {
-    	
-       
-    	if($("#universal").val() == "普遍适用" || $("#universal").val().indexOf("个月适用") >= 0){
-    		 var url = "${path.concat('/refund/config/create/')}${goodsId}";
-    	     $("#create_config_form").attr("action", url);
-    	     $("#create_config_form").attr("method", "post");
-    	     $("#create_config_form").submit();
-    	}
-       
+        var url = "${path.concat('/refund/config/create/')}${goodsId}";
+    	$("#create_config_form").attr("action", url);
+    	$("#create_config_form").attr("method", "post");
+    	$("#create_config_form").submit(); 
     });
     
 </script>
