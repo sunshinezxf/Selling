@@ -8,8 +8,10 @@ import java.sql.Timestamp;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -467,10 +469,13 @@ public class EventController {
 		ResultData fetchResponse = eventService.fetchEventApplication(condition);
 		if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
 			List<EventApplication> eventApplications=(List<EventApplication>)fetchResponse.getData();
+			Set<String> phone=new HashSet<>();
 			for(EventApplication eventApplication:eventApplications){
-				messageService.send(eventApplication.getDoneePhone(), "您获赠并服用云草超细三七粉后，身体健康状况有否改善？关注微信号：ycgm2016，得到更多的服务。【云草纲目】");
-				messageService.send(eventApplication.getDonorPhone(), "您获赠并服用云草超细三七粉后，身体健康状况有否改善？关注微信号：ycgm2016，得到更多的服务。【云草纲目】");
+				phone.add(eventApplication.getDonorPhone());
+				phone.add(eventApplication.getDoneePhone());
 			}
+			
+			messageService.send(phone, "您获赠并服用云草超细三七粉后，身体健康状况有否改善？关注微信号：ycgm2016，得到更多的服务。【云草纲目】");
 		}
 		return resultData;
 	}
