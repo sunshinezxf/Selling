@@ -457,5 +457,22 @@ public class EventController {
 		}
 		return resultData;
 	}
+	
+	@RequestMapping(method = RequestMethod.POST, value = "/sendMessageAll/{eventId}")
+	public ResultData sendMessageAll(@PathVariable("eventId") String eventId){
+		ResultData resultData=new ResultData();
+		Map<String, Object> condition = new HashMap<>();
+		condition.put("eventId", eventId);
+		condition.put("status", ApplicationStatus.APPROVED.getCode());
+		ResultData fetchResponse = eventService.fetchEventApplication(condition);
+		if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+			List<EventApplication> eventApplications=(List<EventApplication>)fetchResponse.getData();
+			for(EventApplication eventApplication:eventApplications){
+				messageService.send(eventApplication.getDoneePhone(), "您获赠并服用云草超细三七粉后，身体健康状况有否改善？关注微信号：ycgm2016，得到更多的服务。【云草纲目】");
+				messageService.send(eventApplication.getDonorPhone(), "您获赠并服用云草超细三七粉后，身体健康状况有否改善？关注微信号：ycgm2016，得到更多的服务。【云草纲目】");
+			}
+		}
+		return resultData;
+	}
 
 }
