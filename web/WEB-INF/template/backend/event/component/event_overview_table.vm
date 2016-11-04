@@ -133,7 +133,7 @@
                     if(full.blockFlag){
                     	 var send_button = "<button type='button' class='btn btn-info btn-group-sm' id='ID" + full.eventId + "' onclick=getId(this) data-toggle='modal' data-target='#dialog_modal'>通知申请人</button>&nbsp;"
                          operation += send_button;
-                         var send_all_button = "<button type='button' class='btn btn-info btn-group-sm' id='ID" + full.eventId + "' onclick=getId(this) data-toggle='modal' data-target='#dialog_modal_all'>通知所有人</button>&nbsp;"
+                         var send_all_button = "<button type='button' class='btn btn-info btn-group-sm' id='AID" + full.eventId + "' onclick=getId(this) data-toggle='modal' data-target='#dialog_modal_all'>通知所有人</button>&nbsp;"
                          operation += send_all_button;
                     }
                     return operation;
@@ -187,7 +187,7 @@
     });
     
     $("#dialog_confirm_all").on('click', function () {
-    	var id=eventId.substring(2);
+    	var id=eventId.substring(3);
     	$.post("${path.concat('/event/sendMessageAll/')}"+id,function(result){
     		if(result.responseCode=='RESPONSE_OK'){
     			$("#dialog_modal2").modal('show');
