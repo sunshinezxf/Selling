@@ -268,7 +268,7 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
                                                  + "盒，达到返现标准，返现" + refundRecord.getAmount() + "元");
                              }
                              refundRecord.setOrderPool(poolList.get(j));
-                             refundRecord.setTitle(time + "日" + "返现账单");
+                             refundRecord.setTitle(time + "返现账单");
                              refundRecord.setAgent(new common.sunshine.model.selling.agent.lite.Agent(agent));
                              refundRecord.setLevel(CashBackLevel.SELF);
                              refundRecord.setBlockFlag(false);

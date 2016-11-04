@@ -1,6 +1,7 @@
 package selling.sunshine.controller;
 
 import com.alibaba.fastjson.JSONArray;
+
 import com.alibaba.fastjson.JSONObject;
 import common.sunshine.model.selling.admin.Admin;
 import common.sunshine.model.selling.user.User;
@@ -99,12 +100,12 @@ public class RefundController {
         goods = ((List<Goods4Customer>) commodityService.fetchGoods4Customer(condition).getData()).get(0);
         RefundConfig config = new RefundConfig(goods, Integer.parseInt(form.getAmountTrigger()), Double.parseDouble(form.getLevel1Percent()), Double.parseDouble(form.getLevel2Percent()), Double.parseDouble(form.getLevel3Percent()), Integer.parseInt(form.getMonthConfig()));
         config.setRefundConfigId(configId);
-        if (form.getUniversal().equals("普遍适用")) {
-			config.setUniversal(true);
+		if (form.getApplyMonths() != null) {
+			condition.put("universal", false);
 			config.setUniversalMonth(1);
-		}else {
-			config.setUniversal(false);
-			config.setUniversalMonth(Integer.parseInt(form.getUniversal().split("个")[0].substring(1)));
+		} else {
+			condition.put("universal", true);
+			config.setUniversalMonth(Integer.parseInt(form.getApplyMonths()));
 		}
         ResultData createResponse = refundService.createRefundConfig(config);
         if (createResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
@@ -137,10 +138,10 @@ public class RefundController {
         Map<String, Object> condition = new HashMap<>();
         condition.put("goodsId", goodsId);
         condition.put("blockFlag", false);
-        if (form.getUniversal().equals("普遍适用")) {
-        	 condition.put("universal", true);
-        }else if (form.getUniversal().contains("个月适用")) {
+        if (form.getApplyMonths()!=null) {
         	 condition.put("universal", false);
+        }else{
+        	 condition.put("universal", true);
 		}
         if(refundService.fetchRefundConfig(condition).getResponseCode()!=ResponseCode.RESPONSE_NULL){
         	view.setViewName("redirect:/refund/configList/goods/"+goodsId);
@@ -151,15 +152,18 @@ public class RefundController {
         goods = ((List<Goods4Customer>) commodityService.fetchGoods4Customer(condition).getData()).get(0);
         RefundConfig config = new RefundConfig(goods, Integer.parseInt(form.getAmountTrigger()), Double.parseDouble(form.getLevel1Percent()), Double.parseDouble(form.getLevel2Percent()), Double.parseDouble(form.getLevel3Percent()), Integer.parseInt(form.getMonthConfig()));
         config.setRefundConfigId("null");
-        if (form.getUniversal().equals("普遍适用")) {
-			config.setUniversal(true);
+        if (form.getApplyMonths()!=null) {
+       	 condition.put("universal", false);
+       }else{
+       	 condition.put("universal", true);
+       	config.setUniversalMonth(Integer.parseInt(form.getApplyMonths()));
+		}
+		if (form.getApplyMonths() != null) {
+			condition.put("universal", false);
 			config.setUniversalMonth(1);
-		}else if(form.getUniversal().contains("个月适用")){
-			config.setUniversal(false);
-			config.setUniversalMonth(Integer.parseInt(form.getUniversal().split("个")[0].substring(1)));
-		}else {
-			view.setViewName("redirect:/refund/configList/goods/"+goodsId);
-            return view;
+		} else {
+			condition.put("universal", true);
+			config.setUniversalMonth(Integer.parseInt(form.getApplyMonths()));
 		}
         ResultData createResponse = refundService.createRefundConfig(config);
         if (createResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {

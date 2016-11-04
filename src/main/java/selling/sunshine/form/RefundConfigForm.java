@@ -19,7 +19,8 @@ public class RefundConfigForm {
     @NotNull
     private String monthConfig;
     @NotNull
-    private String universal;
+    private String applyMonths;
+
 
     public String getGoodsId() {
         return goodsId;
@@ -69,13 +70,15 @@ public class RefundConfigForm {
 		this.monthConfig = monthConfig;
 	}
 
-	public String getUniversal() {
-		return universal;
+	public String getApplyMonths() {
+		return applyMonths;
 	}
 
-	public void setUniversal(String universal) {
-		this.universal = universal;
+	public void setApplyMonths(String applyMonths) {
+		this.applyMonths = applyMonths;
 	}
+
+
 	
 	
 
