@@ -6,40 +6,63 @@
                 <h4 class="modal-title">新建返现配置</h4>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal" id="create_config_form">
-                    <p class="form-group">
-                        <label class="col-sm-4 col-md-4 col-lg-3">适用情况:</label>&nbsp;&nbsp;
-                        <input type="text" id="universal" name="universal" />
-                        <text>*请输入："前X个月适用" 或者 "普遍适用"</text>
-                    </p>
-                    <p class="form-group">
+                <form class="form-horizontal" role="form" id="create_config_form">
+                    <div class="form-group">
+                        <label class="col-xs-4 col-sm-4 col-md-4 col-lg-3">适用情况:</label>
+                        <div class="col-xs-8 col-sm-8 col-md-8 col-lg-9">
+                            <label class="radio-inline" style="padding-top:0;">
+                                <input type="radio" name="apply_radio" id="partial_apply_radio"/>部分适用
+                            </label>
+                            <label class="radio-inline" style="padding-top:0;">
+                                <input type="radio" name="apply_radio" id="apply_radio"/>普遍适用
+                            </label>
+                        </div>
+                        <div id="set_month" class="col-xs-8 col-sm-8 col-md-8 col-lg-9" style="padding-top:10px;">
+                            <span>前</span>
+                            <select name="apply_months">
+                                <option value="1" selected="selected">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                                <option value="11">11</option>
+                            </select>
+                            <span>个月适用</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label class="col-sm-4 col-md-4 col-lg-3">返现标准数量为:</label>&nbsp;&nbsp;
                         <input type="number" id="config_trigger" name="amountTrigger" value="0" autocomplete="off"/>&nbsp;<span>件</span>
-                    </p>
-                    <p class="form-group">
+                    </div>
+                    <div class="form-group">
                         <label class="col-sm-4 col-md-4 col-lg-3">自己返现:</label>&nbsp;&nbsp;
                         <input type="number" name="level1Percent" value="0"
                                autocomplete="off"/>&nbsp;<span>元/件</span>
-                    </p>
-                    <p class="form-group">
+                    </div>
+                    <div class="form-group">
                         <label class="col-sm-4 col-md-4 col-lg-3">直接关联返现:</label>&nbsp;&nbsp;
                         <input type="number" name="level2Percent" value="0"
                                autocomplete="off"/>&nbsp;<span>元/件</span>
-                    </p>
-                     <p class="form-group">
+                    </div>
+                    <div class="form-group">
                         <label class="col-sm-4 col-md-4 col-lg-3">间接关联返现:</label>&nbsp;&nbsp;
                         <input type="number" name="level3Percent" value="0"
                                autocomplete="off"/>&nbsp;<span>元/件</span>
-                    </p>
-                    <p class="form-group">
+                    </div>
+                    <div class="form-group">
                         <label class="col-sm-4 col-md-4 col-lg-3">月份配置:</label>&nbsp;&nbsp;
                         <input type="number" name="monthConfig" value="1"
                                autocomplete="off"/>&nbsp;<span>个月</span>
-                    </p>
+                    </div>
 
-                    <p class="form-group">
+                    <div class="form-group">
                         <label class="col-sm-12 col-md-12 col-lg-12">*已经存在某类型的适用情况的返现配置了，则不允许添加同类型的适用情况的返现配置，只能修改</label>
-                    </p>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
@@ -55,6 +78,16 @@
             show: false,
             keyboard: true
         });
+        
+        $("#set_month").hide();
+    });
+    
+    $("#partial_apply_radio").click(function(){
+        $("#set_month").show();
+    });
+    
+    $("#apply_radio").click(function(){
+        $("#set_month").hide();
     });
 
     $("#create_config_confirm").on('click', function () {
@@ -68,4 +101,5 @@
     	}
        
     });
+    
 </script>
