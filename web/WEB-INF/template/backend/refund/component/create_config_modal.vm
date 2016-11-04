@@ -19,7 +19,7 @@
                         </div>
                         <div id="set_month" class="col-xs-8 col-sm-8 col-md-8 col-lg-9" style="padding-top:10px;">
                             <span>前</span>
-                            <select name="apply_months">
+                            <select id="apply_months" name="apply_months">
                                 <option value="" selected="selected"></option>
                                 <option value="1">1</option>
                                 <option value="2">2</option>
@@ -81,6 +81,7 @@
         });
         
         $("#set_month").hide();
+        $("#apply_months").val("");
     });
     
     $("#partial_apply_radio").click(function(){
@@ -89,6 +90,7 @@
     
     $("#apply_radio").click(function(){
         $("#set_month").hide();
+        $("#apply_months").val("");
     });
 
     $("#create_config_confirm").on('click', function () {
