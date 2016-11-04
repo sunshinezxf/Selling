@@ -53,6 +53,21 @@ public class OrderItemDaoImpl extends BaseDao implements OrderItemDao {
             return result;
         }
     }
+    
+    @Override
+	public ResultData queryOrderItemSum(Map<String, Object> condition) {
+    	ResultData result = new ResultData();
+        try {
+            List<OrderItem> list = sqlSession.selectList("selling.order.orderitemsum.query", condition);
+            result.setData(list);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription(e.getMessage());
+        } finally {
+            return result;
+        }
+	}
 
     @Override
     public ResultData updateOrderItem(OrderItem orderItem) {
@@ -71,4 +86,5 @@ public class OrderItemDaoImpl extends BaseDao implements OrderItemDao {
             }
         }
     }
+
 }

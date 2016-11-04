@@ -1297,10 +1297,50 @@ public class AgentController {
         view.setViewName("/agent/order/overview");
         return view;
     }
-
+    
     @ResponseBody
-    @RequestMapping(method = RequestMethod.GET, value = "/order/list/{type}")
-    public ResultData viewOrderList(@PathVariable("type") String type) {
+    @RequestMapping(method = RequestMethod.GET, value = "/order/listnotpay/{type}")
+    public ResultData viewOrderListNotPay(@PathVariable("type") String type){
+    	 Subject subject = SecurityUtils.getSubject();
+         User user = (User) subject.getPrincipal();
+         ResultData result = new ResultData();
+         if (user == null) {
+             result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+             result.setDescription("您需要重新登录");
+             return result;
+         }
+         List<Integer> status = new ArrayList<>();
+         switch (Integer.parseInt(type)) {
+             case 0:
+                 status.add(0);
+                 break;
+             case 1:
+                 status.add(1);
+                 break;
+             default:
+            	 status.add(0);
+         }
+         List<SortRule> orderBy = new ArrayList<>();
+         orderBy.add(new SortRule("create_time", "desc"));
+         Map<String, Object> condition = new HashMap<>();
+         condition.put("agentId", user.getAgent().getAgentId());
+         condition.put("status", status);
+         condition.put("sort", orderBy);
+         condition.put("blockFlag", false);
+         ResultData fetchResponse = orderService.fetchOrder(condition);
+         List<Order> orderList = (List<Order>) fetchResponse.getData();
+         if (fetchResponse.getResponseCode() != ResponseCode.RESPONSE_ERROR) {
+             result.setData(orderList);
+         } else {
+             result.setResponseCode(fetchResponse.getResponseCode());
+             result.setDescription(fetchResponse.getDescription());
+         }
+         return result;
+    }
+    
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.GET, value = "/order/listpayed/{type}")
+    public ResultData viewOrderListPayed(@PathVariable("type") String type) {
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         ResultData result = new ResultData();
@@ -1311,20 +1351,20 @@ public class AgentController {
         }
         List<Integer> status = new ArrayList<>();
         switch (Integer.parseInt(type)) {
-            case 0:
-                status.add(0);
+            case 2:
                 status.add(1);
                 break;
-            case 1:
-                status.add(2);
-                status.add(3);
-                break;
-            case 2:
-                status.add(4);
-                break;
             case 3:
-                status.add(5);
+                status.add(2);
                 break;
+            case 4:
+            	status.add(3);
+            	status.add(4);
+            	status.add(5);
+            	status.add(6);
+            	break;
+            default:
+            	status.add(1);
         }
         List<SortRule> orderBy = new ArrayList<>();
         orderBy.add(new SortRule("create_time", "desc"));

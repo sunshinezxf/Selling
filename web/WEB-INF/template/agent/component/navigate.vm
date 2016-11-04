@@ -1,9 +1,15 @@
-<div class="weui_tabbar">
+<div class="weui_tabbar" id="bottom_tabbar">
     <a class="weui_tabbar_item" id="place_order">
         <div class="weui_tabbar_icon">
             <img src="${path.concat('/material/images/icon_nav_article.png')}" alt=""/>
         </div>
         <p class="weui_tabbar_label">下单</p>
+    </a>
+    <a class="weui_tabbar_item" id="order_view">
+        <div class="weui_tabbar_icon">
+            <img src="${path.concat('/material/images/icon_nav_article.png')}" alt=""/>
+        </div>
+        <p class="weui_tabbar_label">订单</p>
     </a>
     <a class="weui_tabbar_item" id="view_customer">
         <div class="weui_tabbar_icon">
@@ -27,6 +33,8 @@
             var URL = "";
             if (target_id == "place_order") {
                 URL = "${path.concat('/agent/order/place')}";
+            } else if (target_id == "order_view") {
+            	URL = "${path.concat('/agent/order/manage/2')}";
             } else if (target_id == "view_customer") {
                 URL = "${path.concat('/agent/customer/manage')}";
             } else if (target_id == "info_me") {

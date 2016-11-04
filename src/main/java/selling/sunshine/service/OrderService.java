@@ -39,6 +39,8 @@ public interface OrderService {
     ResultData cancel(Order order);
 
     ResultData fetchOrderItem(Map<String, Object> condition);
+    
+    ResultData fetchOrderItemSum(Map<String, Object> condition);
 
     ResultData updateOrderItem(OrderItem orderItem);
     
