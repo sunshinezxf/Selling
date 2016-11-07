@@ -13,7 +13,7 @@ public class OrderItemSum extends Entity {
 	private OrderItemStatus status;
 	private int goodsQuantity;
 	private double orderItemPrice;
-	private String customer_name;
+	private String customerName;
 
 	public Agent getAgent() {
 		return agent;
@@ -63,12 +63,12 @@ public class OrderItemSum extends Entity {
 		this.orderItemPrice = orderItemPrice;
 	}
 
-	public String getCustomer_name() {
-		return customer_name;
+	public String getCustomerName() {
+		return customerName;
 	}
 
-	public void setCustomer_name(String customer_name) {
-		this.customer_name = customer_name;
+	public void setCustomerName(String customerName) {
+		this.customerName = customerName;
 	}
 
 }

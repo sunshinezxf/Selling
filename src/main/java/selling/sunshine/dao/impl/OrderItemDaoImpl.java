@@ -58,6 +58,7 @@ public class OrderItemDaoImpl extends BaseDao implements OrderItemDao {
 	public ResultData queryOrderItemSum(Map<String, Object> condition) {
     	ResultData result = new ResultData();
         try {
+        	condition = handle(condition);
             List<OrderItem> list = sqlSession.selectList("selling.order.orderitemsum.query", condition);
             result.setData(list);
         } catch (Exception e) {

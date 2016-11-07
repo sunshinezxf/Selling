@@ -53,6 +53,7 @@ import selling.sunshine.model.sum.VolumeTotal;
 import selling.sunshine.service.*;
 import selling.sunshine.utils.*;
 import selling.sunshine.vo.cashback.CashBack;
+import selling.sunshine.vo.order.OrderItemSum;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -1339,8 +1340,8 @@ public class AgentController {
     }
     
     @ResponseBody
-    @RequestMapping(method = RequestMethod.GET, value = "/order/listpayed/{type}")
-    public ResultData viewOrderListPayed(@PathVariable("type") String type) {
+    @RequestMapping(method = RequestMethod.GET, value = "/order/listpayed/{type}/{offset}/{limit}")
+    public ResultData viewOrderListPayed(@PathVariable("type") String type, @PathVariable("offset") int offset, @PathVariable("limit") int limit) {
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         ResultData result = new ResultData();
@@ -1370,55 +1371,15 @@ public class AgentController {
         orderBy.add(new SortRule("create_time", "desc"));
         Map<String, Object> condition = new HashMap<>();
         condition.put("agentId", user.getAgent().getAgentId());
-        condition.put("status", status);
+        condition.put("statusList", status);
         condition.put("sort", orderBy);
+        condition.put("offset", offset);
+        condition.put("limit", limit);
         condition.put("blockFlag", false);
-        ResultData fetchResponse = orderService.fetchOrder(condition);
-        List<Order> orderList = (List<Order>) fetchResponse.getData();
-        if (Integer.parseInt(type) == 1 || Integer.parseInt(type) == 2 || Integer.parseInt(type) == 3) {
-            //customerOrder与代理商Order合并
-            condition.clear();
-            List<Integer> customerStatus = new ArrayList<Integer>();
-            if (Integer.parseInt(type) == 1) {
-                customerStatus.add(1);
-            } else if (Integer.parseInt(type) == 2) {
-                customerStatus.add(2);
-            } else {
-                customerStatus.add(3);
-                customerStatus.add(4);
-            }
-            condition.put("agentId", user.getAgent().getAgentId());
-            condition.put("status", customerStatus);
-            ResultData fetchCustomerOrderResponse = orderService.fetchCustomerOrder(condition);
-            //这两个List可能为NULL，使用时请注意判断
-            if (orderList == null) {
-                orderList = new ArrayList<Order>();
-            }
-            List<CustomerOrder> customerOrderList = (List<CustomerOrder>) fetchCustomerOrderResponse.getData();
-            if (customerOrderList != null) {
-                for (CustomerOrder customerOrder : customerOrderList) {
-                    List<OrderItem> orderItemList = new ArrayList<OrderItem>();
-                    OrderItem orderItem = new OrderItem(customerOrder);
-                    orderItemList.add(orderItem);
-                    Order order = new Order();
-                    order.setAgent(user.getAgent());
-                    order.setOrderId(customerOrder.getOrderId());
-                    order.setOrderItems(orderItemList);
-                    order.setPrice(customerOrder.getTotalPrice());
-                    order.setCreateAt(customerOrder.getCreateAt());
-                    order.setType(OrderType.CUSTOMER);
-                    orderList.add(order);
-                }
-                orderList.sort(new Comparator<Order>() {
-                    @Override
-                    public int compare(Order o1, Order o2) {
-                        return o2.getCreateAt().compareTo(o1.getCreateAt());
-                    }
-                });
-            }
-        }
+        ResultData fetchResponse = orderService.fetchOrderItemSum(condition);
+        List<OrderItemSum> orderItemSumList = (List<OrderItemSum>) fetchResponse.getData();
         if (fetchResponse.getResponseCode() != ResponseCode.RESPONSE_ERROR) {
-            result.setData(orderList);
+            result.setData(orderItemSumList);
         } else {
             result.setResponseCode(fetchResponse.getResponseCode());
             result.setDescription(fetchResponse.getDescription());
@@ -1426,6 +1387,11 @@ public class AgentController {
         return result;
     }
 
+    /**
+     * 代理商查看Order的方法，现用于查看未处理的订单
+     * @param orderId
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/order/detail/{orderId}")
     public ModelAndView viewOrder(@PathVariable("orderId") String orderId) {
         ModelAndView view = new ModelAndView();
@@ -1450,6 +1416,87 @@ public class AgentController {
                 return view;
             }
             order = ((List<Order>) fetchOrderResponse.getData()).get(0);
+        } else if (orderId.startsWith("CUO")) {
+            condition.put("agentId", user.getAgent().getAgentId());
+            condition.put("orderId", orderId);
+            ResultData fetchCustomerOrderResponse = orderService.fetchCustomerOrder(condition);
+            if (fetchCustomerOrderResponse.getResponseCode() != ResponseCode.RESPONSE_OK || ((List<CustomerOrder>) fetchCustomerOrderResponse.getData()).isEmpty()) {
+                Prompt prompt = new Prompt(PromptCode.WARNING, "提示信息", "未找到该订单", "/agent/manage/2");
+                view.addObject("prompt", prompt);
+                WechatConfig.oauthWechat(view, "/agent/prompt");
+                view.setViewName("/agent/prompt");
+                return view;
+            }
+            CustomerOrder customerOrder = ((List<CustomerOrder>) fetchCustomerOrderResponse.getData()).get(0);
+            List<OrderItem> orderItemList = new ArrayList<OrderItem>();
+            OrderItem orderItem = new OrderItem(customerOrder);
+            orderItemList.add(orderItem);
+            order = new Order();
+            order.setAgent(user.getAgent());
+            order.setCreateAt(customerOrder.getCreateAt());
+            order.setOrderId(customerOrder.getOrderId());
+            order.setOrderItems(orderItemList);
+            order.setPrice(customerOrder.getTotalPrice());
+            order.setStatus(OrderStatus.PAYED);
+            order.setType(OrderType.CUSTOMER);
+        }
+        view.addObject("order", order);
+        view.addObject("status", order.getStatus());
+        view.addObject("operation", "VIEW");
+        WechatConfig.oauthWechat(view, "/agent/order/modify");
+        view.setViewName("/agent/order/modify");
+        return view;
+    }
+    
+    /**
+     * 代理商查看OrderItem和CustomerOrder的方法，现用于查看已经付款的订单
+     * @param orderId
+     * @return
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "/orderitem/detail/{orderId}")
+    public ModelAndView viewOrderItem(@PathVariable("orderId") String orderId) {
+        ModelAndView view = new ModelAndView();
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        if (user == null) {
+            WechatConfig.oauthWechat(view, "/agent/login");
+            view.setViewName("/agent/login");
+            return view;
+        }
+        Map<String, Object> condition = new HashMap<>();
+        Order order = null;
+        if (orderId.startsWith("ORI")) {
+        	condition.put("orderItemId", orderId);
+            ResultData fetchOrderItemResponse = orderService.fetchOrderItem(condition);
+            if (fetchOrderItemResponse.getResponseCode() != ResponseCode.RESPONSE_OK || ((List<OrderItem>) fetchOrderItemResponse.getData()).isEmpty()) {
+                Prompt prompt = new Prompt(PromptCode.WARNING, "提示信息", "未找到该订单", "/agent/manage/2");
+                view.addObject("prompt", prompt);
+                WechatConfig.oauthWechat(view, "/agent/prompt");
+                view.setViewName("/agent/prompt");
+                return view;
+            }
+            List<OrderItem> orderItemList = ((List<OrderItem>) fetchOrderItemResponse.getData());
+            OrderItem orderItem  = orderItemList.get(0);
+            condition.clear();
+            condition.put("customerId", orderItem.getCustomer().getCustomerId());
+            ResultData fetchCustomerResponse = customerService.fetchCustomer(condition);
+            if(fetchCustomerResponse.getResponseCode() == ResponseCode.RESPONSE_OK){
+            	orderItem.setCustomer(((List<Customer>)fetchCustomerResponse.getData()).get(0));
+            } else{
+            	Customer customer = new Customer();
+            	CustomerPhone customerPhone = new CustomerPhone();
+            	customerPhone.setPhone("未知");
+            	customer.setPhone(customerPhone);
+            	orderItem.setCustomer(customer);
+            }
+            order = new Order();
+            order.setAgent(user.getAgent());
+            order.setCreateAt(orderItem.getCreateAt());
+            order.setOrderId(orderItem.getOrder().getOrderId());
+            order.setOrderItems(orderItemList);
+            order.setPrice(orderItem.getOrderItemPrice());
+            order.setStatus(OrderStatus.PAYED);
+            order.setType(orderItem.getOrder().getType());
         } else if (orderId.startsWith("CUO")) {
             condition.put("agentId", user.getAgent().getAgentId());
             condition.put("orderId", orderId);
