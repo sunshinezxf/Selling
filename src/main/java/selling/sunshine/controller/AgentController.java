@@ -1184,11 +1184,11 @@ public class AgentController {
             } else if (type.equals("gift")) {
                 ResultData fetchGiftResponse = agentService.updateAgentGift(giftConfigs);
                 if (fetchGiftResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-                    Prompt prompt = new Prompt("提示", "赠送成功", "/agent/order/manage/1");
+                    Prompt prompt = new Prompt("提示", "赠送成功", "/agent/order/manage/2");
                     attr.addFlashAttribute("prompt", prompt);
                     view.setViewName("redirect:/agent/prompt");
                 } else {
-                    Prompt prompt = new Prompt("提示", "赠送申请成功，审核通过后即可送出", "/agent/order/manage/1");
+                    Prompt prompt = new Prompt("提示", "赠送申请成功，审核通过后即可送出", "/agent/order/manage/2");
                     attr.addFlashAttribute("prompt", prompt);
                     view.setViewName("redirect:/agent/prompt");
                 }

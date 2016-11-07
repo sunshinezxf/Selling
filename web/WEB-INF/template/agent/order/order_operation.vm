@@ -1,5 +1,4 @@
-<div class="tabbar">
-<div class="weui_tab_bd">
+<div class="weui_tab_bd" id="scroller">
 <div class="hd">
     <h1 class="page_title">订单管理</h1>
     <p id="refund_condition" class="page_desc">更多关于订单的操作</p>
@@ -18,9 +17,11 @@
                 待付款
             </div>
         </div>
-        <div class="weui_tab_bd" >
-            <div id="order_list_not_pay" class="weui_cells weui_cells_access clear-margin-top">
-            </div>
+        <div style="padding-top:50px;">
+        </div>
+        <div id="order_list_not_pay" class="weui_cells weui_cells_access clear-margin-top">
+        </div>
+        <div style="padding-bottom:55px;">
         </div>
     </div>
     <div class="weui_tab" id="order_payed">
@@ -35,35 +36,20 @@
                 已结束
             </div>
         </div>
-        <div class="weui_tab_bd" id="scroller">
-            <div id="order_list_payed" class="weui_cells weui_cells_access clear-margin-top">
-            </div>
+        <div style="padding-top:50px;">
+        </div>
+        <div id="order_list_payed" class="weui_cells weui_cells_access clear-margin-top">
+        </div>
+        <div style="padding-bottom:55px;">
         </div>
     </div>
 </div>
 #parse("/agent/loading.vm")
 </div>
 #parse("/agent/component/navigate.vm")
-</div>
 <script>
 	$(document).ready(function(){
-		var url = "${path.concat('/refund/calculateRefund')}";
-		$.get(url, function(result){
-			console.debug(result);
-			if(result.responseCode != "RESPONSE_OK"){
-				return;
-			}
-			var data = result.data;
-			var config = data[0];
-			if($.isEmptyObject(config)){
-				return;
-			}
-			var num = 0;
-			for(var i = 0; i < data.length; i++){
-				num += data[i]['quantity'];
-			} 
-			$("#refund_condition").html("社群奖励进度： " + num + "件");		
-		});
+		$("#order_view").addClass("weui_bar_item_on");
 		
 		//判断是否需要动态下拉加载
 		isScroll = false;
@@ -130,12 +116,15 @@
             } else if (target_id == "paid") {
             	type = 2;
 				$.get_order();
+				$.check_scroller();
             } else if (target_id == "shipped") {
             	type = 3;
 				$.get_order();
+				$.check_scroller();
             } else if (target_id == "closed") {
             	type = 4;
 				$.get_order();
+				$.check_scroller();
             }
             $(this).css("font-weight","bold");
             $(this).addClass("weui_bar_item_on")
@@ -143,20 +132,25 @@
     });
     
     $("#scroller").scroll(function(){
-    	viewH = $(this).height();
-    	contentH = $(this).get(0).scrollHeight;
-    	scrollTop = $(this).scrollTop();
+    	$.check_scroller();
+    });
+    
+    $.check_scroller = function(){
+    	viewH = $("#scroller").height();
+    	contentH = $("#scroller").get(0).scrollHeight;
+    	scrollTop = $("#scroller").scrollTop();
     	bottomTop = $("#bottom_tabbar").height();
     	if(contentH - viewH - scrollTop - bottomTop < 10){
     		console.debug("I reach bottom");
     		if(isScroll){
     			offset += limit;
+    			$("#loadingToast").show();
     			$.get_order_payed();
     			return true;
     		}
     	}
     	return false;
-    });
+    }
     
     
     //异步获取订单
@@ -222,7 +216,6 @@
     			isScroll = false;
     		}
     		$.each(list, function(i, val){
-    			console.debug(val);
     			var typeString = "";
     			switch(val.orderType){
     			case "ORDINARY":
