@@ -6,7 +6,7 @@
 </div>
 <div class="bd">
     <div class="weui_btn_area clear-margin-top">
-        <a id="not_pay_btn" class="weui_btn weui_btn_default" style="width:49%;display:inline-block;">未付款</a>
+        <a id="not_pay_btn" class="weui_btn weui_btn_plain_default" style="width:49%;display:inline-block;">未付款</a>
         <a id="payed_btn" class="weui_btn weui_btn_plain_primary" style="width:49%;display:inline-block;">已付款</a>
     </div>
     <div class="weui_tab" id="order_not_pay" style="display:none;">
@@ -71,22 +71,42 @@
 		$.get_order(${type});
 		switch(type){
 		case 0:
+			$("#not_pay_btn").removeClass("weui_btn_plain_default");
+	        $("#not_pay_btn").addClass("weui_btn_plain_primary");
+	        $("#payed_btn").removeClass("weui_btn_plain_primary");
+	        $("#payed_btn").addClass("weui_btn_plain_default");
 			$("#saved").css("font-weight","bold");
             $("#saved").addClass("weui_bar_item_on");
             break;
         case 1:
+	        $("#not_pay_btn").removeClass("weui_btn_plain_default");
+	        $("#not_pay_btn").addClass("weui_btn_plain_primary");
+	        $("#payed_btn").removeClass("weui_btn_plain_primary");
+	        $("#payed_btn").addClass("weui_btn_plain_default");
         	$("#submitted").css("font-weight","bold");
             $("#submitted").addClass("weui_bar_item_on");
             break;
 		case 2:
+			$("#payed_btn").removeClass("weui_btn_plain_default");
+	        $("#payed_btn").addClass("weui_btn_plain_primary");
+	        $("#not_pay_btn").removeClass("weui_btn_plain_primary");
+	        $("#not_pay_btn").addClass("weui_btn_plain_default");
 			$("#paid").css("font-weight","bold");
             $("#paid").addClass("weui_bar_item_on");
             break;
 		case 3:
+			$("#payed_btn").removeClass("weui_btn_plain_default");
+	        $("#payed_btn").addClass("weui_btn_plain_primary");
+	        $("#not_pay_btn").removeClass("weui_btn_plain_primary");
+	        $("#not_pay_btn").addClass("weui_btn_plain_default");
 			$("#shipped").css("font-weight","bold");
             $("#shipped").addClass("weui_bar_item_on");
             break;
 		case 4:
+			$("#payed_btn").removeClass("weui_btn_plain_default");
+	        $("#payed_btn").addClass("weui_btn_plain_primary");
+	        $("#not_pay_btn").removeClass("weui_btn_plain_primary");
+	        $("#not_pay_btn").addClass("weui_btn_plain_default");
 			$("#closed").css("font-weight","bold");
             $("#closed").addClass("weui_bar_item_on");
             break;
@@ -240,10 +260,10 @@
       	var current = $(".weui_navbar").find(".weui_bar_item_on");
         current.removeClass("weui_bar_item_on");
         current.css("font-weight","normal");
-        $("#not_pay_btn").removeClass("weui_btn_default");
+        $("#not_pay_btn").removeClass("weui_btn_plain_default");
         $("#not_pay_btn").addClass("weui_btn_plain_primary");
         $("#payed_btn").removeClass("weui_btn_plain_primary");
-        $("#payed_btn").addClass("weui_btn_default");
+        $("#payed_btn").addClass("weui_btn_plain_default");
         $("#saved").css("font-weight","bold");
         $("#saved").addClass("weui_bar_item_on");
         type = 0;
@@ -256,10 +276,10 @@
     	var current = $(".weui_navbar").find(".weui_bar_item_on");
         current.removeClass("weui_bar_item_on");
         current.css("font-weight","normal");
-        $("#payed_btn").removeClass("weui_btn_default");
+        $("#payed_btn").removeClass("weui_btn_plain_default");
         $("#payed_btn").addClass("weui_btn_plain_primary");
         $("#not_pay_btn").removeClass("weui_btn_plain_primary");
-        $("#not_pay_btn").addClass("weui_btn_default");
+        $("#not_pay_btn").addClass("weui_btn_plain_default");
         $("#paid").css("font-weight","bold");
         $("#paid").addClass("weui_bar_item_on");
         type = 2;
