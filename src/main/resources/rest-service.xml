@@ -52,4 +52,6 @@
     <bean id="shortUrlService" class="selling.sunshine.service.impl.ShortUrlServiceImpl"></bean>
     
     <bean id="agentVitalityService" class="selling.sunshine.service.impl.AgentVitalityServiceImpl"></bean>
+    
+    <bean id="agentKPIService" class="selling.sunshine.service.impl.AgentKPIServiceImpl"></bean>
 </beans>
