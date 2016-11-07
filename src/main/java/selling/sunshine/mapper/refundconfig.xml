@@ -56,7 +56,7 @@
         <set>
             block_flag = #{blockFlag}
         </set>
-        WHERE goods_id = #{goods.goodsId}
+        WHERE refund_config_id = #{refundConfigId}
     </update>
 
     <select id="goods4AgentQuery" parameterType="java.util.Map" resultMap="goods4AgentVo">

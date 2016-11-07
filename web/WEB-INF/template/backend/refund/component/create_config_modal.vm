@@ -97,7 +97,15 @@
         var url = "${path.concat('/refund/config/create/')}${goodsId}";
     	$("#create_config_form").attr("action", url);
     	$("#create_config_form").attr("method", "post");
-    	$("#create_config_form").submit(); 
+    	if(!$("#set_month").is(":hidden")){
+    			if($("#apply_months").val()==""){
+    				
+    			}else{
+    				$("#create_config_form").submit(); 
+    			}
+    	}else{
+    		$("#create_config_form").submit(); 
+    	}
     });
     
 </script>

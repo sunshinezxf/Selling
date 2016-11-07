@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="selling.agent.kpi">
+
+ <resultMap id="agentKPIVo" type="common.sunshine.model.selling.agent.AgentKPI">
+     <result property="kpiId" column="kpi_id"></result>
+     <result property="agentId" column="agent_id"></result>
+     <result property="agentName" column="agent_name"></result>
+     <result property="customerQuantity" column="customer_quantity"></result>
+     <result property="directAgentQuantity" column="direct_agent_quantity"></result>
+     <result property="agentContribution" column="agent_contribution"></result>
+     <result property="blockFlag" column="block_flag"></result>
+     <result property="createAt" column="create_time"></result>
+ </resultMap>
+
+<select id="query" parameterType="java.util.Map" resultMap="agentKPIVo">
+   SELECT kpi_id, agent_id,agent_name, customer_quantity, direct_agent_quantity, agent_contribution,block_flag, create_time
+        FROM agent_kpi
+        WHERE 1 = 1
+        <if test="agentId != null and agentId != ''">
+            AND agent_id = #{agentId}
+        </if>
+        <if test="kpiId != null and kpiId != ''">
+            AND kpi_id = #{kpiId}
+        </if>
+</select>
+
+    <insert id="insert" parameterType="common.sunshine.model.selling.agent.AgentKPI" useGeneratedKeys="false">
+        INSERT INTO agent_kpi
+        <set>
+            kpi_id = #{kpiId},
+            agent_id = #{agentId},
+            agent_name = #{agentName},
+            customer_quantity = #{customerQuantity},
+            direct_agent_quantity = #{directAgentQuantity},
+            agent_contribution = #{agentContribution},
+            block_flag = #{blockFlag},
+            create_time = #{createAt},
+        </set>
+    </insert>
+    
+     <update id="update" parameterType="common.sunshine.model.selling.agent.AgentKPI" useGeneratedKeys="false">
+        UPDATE agent_kpi
+        <set>
+            <if test="customerQuantity != null and customerQuantity != ''">
+                customer_quantity = #{customerQuantity},
+            </if>
+            <if test="directAgentQuantity != null and directAgentQuantity != ''">
+                direct_agent_quantity = #{directAgentQuantity},
+            </if>
+            <if test="agentContribution != null and agentContribution != ''">
+                agent_contribution = #{agentContribution},
+            </if>
+            <if test="blockFlag != null">
+                block_flag = #{blockFlag}
+            </if>
+        </set>
+        WHERE kpi_id = #{kpiId}
+    </update>
+</mapper>
