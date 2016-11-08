@@ -1220,7 +1220,14 @@ public class AgentController {
             view.setViewName("/agent/login");
             return view;
         }
+        
+        //以下是新版本代理商的信息
+        Map<String, Object> condition = new HashMap<String, Object>();
+        condition.put("agentId", user.getAgent().getAgentId());
+        ResultData fetchOrderItemSumResponse = orderService.fetchOrderItemSum(condition);
+        //if(fetchOrderItemSumResponse)
         //以下是本代理商的信息
+        /*
         ResultData fetchOverviewInfoResponse = refundService.calculateQuantityAll(user.getAgent().getAgentId());
         if (fetchOverviewInfoResponse.getResponseCode() != ResponseCode.RESPONSE_OK || ((List<TotalQuantityAll>) fetchOverviewInfoResponse.getData()).isEmpty()) {
             Prompt prompt = new Prompt(PromptCode.WARNING, "提示信息", "未找到详细信息", "/agent/manage/2");
@@ -1270,6 +1277,7 @@ public class AgentController {
         wait.add(waitMoney);
         view.addObject("overviewInfo", overviewInfo.get(0));
         view.addObject("wait", wait);
+        */
         //以下是下级代理商的信息
         condition.clear();
         common.sunshine.model.selling.agent.lite.Agent agentlite = new common.sunshine.model.selling.agent.lite.Agent();
