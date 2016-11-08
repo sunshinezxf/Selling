@@ -27,7 +27,7 @@
     <div class="weui_tab" id="order_payed">
         <div class="weui_navbar">
             <div class="weui_navbar_item" id="paid">
-                未发货
+                待发货
             </div>
             <div class="weui_navbar_item" id="shipped">
                 已发货
