@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import common.sunshine.model.selling.admin.Admin;
 import common.sunshine.model.selling.agent.Agent;
+import common.sunshine.model.selling.agent.AgentKPI;
 import common.sunshine.model.selling.agent.Credit;
 import common.sunshine.model.selling.customer.Customer;
 import common.sunshine.model.selling.customer.CustomerPhone;
@@ -122,6 +123,9 @@ public class AgentController {
 
     @Autowired
     private AgentVitalityService agentVitalityService;
+    
+    @Autowired
+    private AgentKPIService agentKPIService;
 
     /**
      * 根据微信服务号的菜单入口传參,获取当前微信用户,并返回绑定账号页面
@@ -801,6 +805,10 @@ public class AgentController {
                 view.addObject("prompt", prompt);
                 WechatConfig.oauthWechat(view, "/agent/prompt");
                 view.setViewName("/agent/prompt");
+                //构建agentKPI信息
+                AgentKPI agentKPI=new AgentKPI("", agent.getAgentId(),agent.getName(), 0, 0, 0);
+                agentKPI.setBlockFlag(true);
+                agentKPIService.createAgentKPI(agentKPI);
                 return view;
             } else {
                 view.setViewName("redirect:/agent/register");
@@ -1895,7 +1903,7 @@ public class AgentController {
         condition.put("granted", true);
         ResultData fetchResponse = agentService.fetchAgent(condition);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            Agent targetAgent = ((List<Agent>) agentService.fetchAgent(condition).getData()).get(0);
+            Agent targetAgent = ((List<Agent>) fetchResponse.getData()).get(0);
             condition.clear();
             condition.put("phone", targetAgent.getPhone());
             condition.put("customerBlockFlag", false);
@@ -1907,6 +1915,15 @@ public class AgentController {
                 Customer customer = ((List<Customer>) customerService.fetchCustomer(condition).getData()).get(0);
                 customerService.deleteCustomer(customer);
             }
+            //授权的同时更改agentKPI表的内容
+            condition.clear();
+            condition.put("agentId", agentId);
+            fetchResponse=agentKPIService.fetchAgentKPI(condition);
+            if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+				AgentKPI agentKPI=((List<AgentKPI>)fetchResponse.getData()).get(0);
+				agentKPI.setBlockFlag(false);
+				agentKPIService.updateAgentKPI(agentKPI);
+			}
             Subject subject = SecurityUtils.getSubject();
             User user = (User) subject.getPrincipal();
             if (user == null) {
@@ -1934,7 +1951,7 @@ public class AgentController {
         condition.put("agentId", agentId);
         ResultData fetchResponse = agentService.fetchAgent(condition);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            Agent agent = ((List<Agent>) agentService.fetchAgent(condition).getData()).get(0);
+            Agent agent = ((List<Agent>) fetchResponse.getData()).get(0);
             agent.setGranted(false);
             agent.setBlockFlag(true);
             ResultData updateResponse = agentService.updateAgent(agent);
@@ -1942,6 +1959,15 @@ public class AgentController {
                 view.setViewName("redirect:/agent/overview");
                 return view;
             }
+            //授权不通过的同时更改agentKPI表的内容
+            condition.clear();
+            condition.put("agentId", agentId);
+            fetchResponse=agentKPIService.fetchAgentKPI(condition);
+            if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+				AgentKPI agentKPI=((List<AgentKPI>)fetchResponse.getData()).get(0);
+				agentKPI.setBlockFlag(true);
+				agentKPIService.updateAgentKPI(agentKPI);
+			}
             Subject subject = SecurityUtils.getSubject();
             User user = (User) subject.getPrincipal();
             if (user == null) {
@@ -2106,16 +2132,28 @@ public class AgentController {
         condition.put("agentId", agentId);
         condition.put("granted", true);
         condition.put("blockFlag", false);
-        agent = ((List<Agent>) agentService.fetchAgent(condition).getData()).get(0);
-        agent.setAgentId(agentId);
-        agent.setGranted(true);
-        agent.setBlockFlag(true);
-        ResultData updateResponse = agentService.updateAgent(agent);
-        if (updateResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
-            view.setViewName("redirect:/agent/overview");
-            return view;
-        }
-
+        ResultData fetchResponse=agentService.fetchAgent(condition);
+        if (fetchResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+        	agent = ((List<Agent>) agentService.fetchAgent(condition).getData()).get(0);
+            agent.setAgentId(agentId);
+            agent.setGranted(true);
+            agent.setBlockFlag(true);
+            ResultData updateResponse = agentService.updateAgent(agent);
+            if (updateResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+                view.setViewName("redirect:/agent/overview");
+                return view;
+            }
+            //禁止的同时更改agentKPI表的内容
+            condition.clear();
+            condition.put("agentId", agentId);
+            fetchResponse=agentKPIService.fetchAgentKPI(condition);
+            if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+    			AgentKPI agentKPI=((List<AgentKPI>)fetchResponse.getData()).get(0);
+    			agentKPI.setBlockFlag(true);
+    			agentKPIService.updateAgentKPI(agentKPI);
+    		}
+		}
+            
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         if (user == null) {
