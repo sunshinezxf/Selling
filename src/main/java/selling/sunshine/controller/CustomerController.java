@@ -21,9 +21,11 @@ import selling.sunshine.form.CustomerForm;
 import selling.sunshine.form.PurchaseForm;
 import common.sunshine.utils.SortRule;
 import common.sunshine.model.selling.agent.Agent;
+import common.sunshine.model.selling.agent.AgentKPI;
 import common.sunshine.model.selling.goods.Goods4Customer;
 import common.sunshine.pagination.DataTablePage;
 import common.sunshine.pagination.DataTableParam;
+import selling.sunshine.service.AgentKPIService;
 import selling.sunshine.service.AgentService;
 import selling.sunshine.service.CommodityService;
 import selling.sunshine.service.CustomerService;
@@ -53,6 +55,9 @@ public class CustomerController {
 
     @Autowired
     private CommodityService commodityService;
+    
+    @Autowired
+    private AgentKPIService agentKPIService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/overview/{agentId}")
     public ModelAndView overview(@PathVariable String agentId) {
@@ -123,12 +128,22 @@ public class CustomerController {
             resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
             return resultData;
         }
+     
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         common.sunshine.model.selling.agent.lite.Agent agent = user.getAgent();
         Customer customer = new Customer(customerForm.getName(),
                 customerForm.getAddress(), customerForm.getPhone(), agent);
         resultData = customerService.createCustomer(customer);
+        //添加顾客，要对顾客对应的代理商的agentKPI表进行修改
+        condition.clear();
+        condition.put("agentId", agent.getAgentId());
+        ResultData fetchResponse=agentKPIService.fetchAgentKPI(condition);
+        if (fetchResponse.getResponseCode()==ResponseCode.RESPONSE_OK) {
+        	 AgentKPI agentKPI=((List<AgentKPI>)fetchResponse).get(0);
+        	 agentKPI.setCustomerQuantity(agentKPI.getCustomerQuantity()+1);
+        	 agentKPIService.updateAgentKPI(agentKPI);
+		}
         return resultData;
     }
 
@@ -214,6 +229,15 @@ public class CustomerController {
             response.setDescription(updateResponse.getDescription());
             return response;
         }
+        //删除顾客，要对顾客对应的代理商的agentKPI表进行修改
+        condition.clear();
+        condition.put("agentId", user.getAgent().getAgentId());
+        ResultData fetchResponse=agentKPIService.fetchAgentKPI(condition);
+        if (fetchResponse.getResponseCode()==ResponseCode.RESPONSE_OK) {
+        	 AgentKPI agentKPI=((List<AgentKPI>)fetchResponse).get(0);
+        	 agentKPI.setCustomerQuantity(agentKPI.getCustomerQuantity()-1);
+        	 agentKPIService.updateAgentKPI(agentKPI);
+		}
         response.setData(updateResponse.getData());
         return response;
     }

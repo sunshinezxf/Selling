@@ -20,6 +20,13 @@ public class AgentKPI extends Entity {
 		this.directAgentQuantity = directAgentQuantity;
 		this.agentContribution = agentContribution;
 	}
+	
+	
+
+	public AgentKPI() {
+		super();
+	}
+
 
 	public String getKpiId() {
 		return kpiId;
