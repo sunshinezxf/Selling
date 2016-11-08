@@ -1,7 +1,7 @@
 <div class="weui_tabbar" id="bottom_tabbar">
     <a class="weui_tabbar_item" id="place_order">
         <div class="weui_tabbar_icon">
-            <img src="${path.concat('/material/images/icon_nav_article.png')}" alt=""/>
+            <img src="${path.concat('/material/images/icon_nav_button.png')}" alt=""/>
         </div>
         <p class="weui_tabbar_label">下单</p>
     </a>

@@ -1,12 +1,11 @@
-<div class="tabbar">
-<div class="weui_tab_bd">
+<div class="weui_tab_bd" id="scroller">
 <div class="hd">
     <h1 class="page_title">订单管理</h1>
     <p id="refund_condition" class="page_desc">更多关于订单的操作</p>
 </div>
 <div class="bd">
     <div class="weui_btn_area clear-margin-top">
-        <a id="not_pay_btn" class="weui_btn weui_btn_default" style="width:49%;display:inline-block;">未付款</a>
+        <a id="not_pay_btn" class="weui_btn weui_btn_plain_default" style="width:49%;display:inline-block;">未付款</a>
         <a id="payed_btn" class="weui_btn weui_btn_plain_primary" style="width:49%;display:inline-block;">已付款</a>
     </div>
     <div class="weui_tab" id="order_not_pay" style="display:none;">
@@ -18,15 +17,17 @@
                 待付款
             </div>
         </div>
-        <div class="weui_tab_bd" >
-            <div id="order_list_not_pay" class="weui_cells weui_cells_access clear-margin-top">
-            </div>
+        <div style="padding-top:50px;">
+        </div>
+        <div id="order_list_not_pay" class="weui_cells weui_cells_access clear-margin-top">
+        </div>
+        <div style="padding-bottom:55px;">
         </div>
     </div>
     <div class="weui_tab" id="order_payed">
         <div class="weui_navbar">
             <div class="weui_navbar_item" id="paid">
-                未发货
+                待发货
             </div>
             <div class="weui_navbar_item" id="shipped">
                 已发货
@@ -35,35 +36,20 @@
                 已结束
             </div>
         </div>
-        <div class="weui_tab_bd" id="scroller">
-            <div id="order_list_payed" class="weui_cells weui_cells_access clear-margin-top">
-            </div>
+        <div style="padding-top:50px;">
+        </div>
+        <div id="order_list_payed" class="weui_cells weui_cells_access clear-margin-top">
+        </div>
+        <div style="padding-bottom:55px;">
         </div>
     </div>
 </div>
 #parse("/agent/loading.vm")
 </div>
 #parse("/agent/component/navigate.vm")
-</div>
 <script>
 	$(document).ready(function(){
-		var url = "${path.concat('/refund/calculateRefund')}";
-		$.get(url, function(result){
-			console.debug(result);
-			if(result.responseCode != "RESPONSE_OK"){
-				return;
-			}
-			var data = result.data;
-			var config = data[0];
-			if($.isEmptyObject(config)){
-				return;
-			}
-			var num = 0;
-			for(var i = 0; i < data.length; i++){
-				num += data[i]['quantity'];
-			} 
-			$("#refund_condition").html("社群奖励进度： " + num + "件");		
-		});
+		$("#order_view").addClass("weui_bar_item_on");
 		
 		//判断是否需要动态下拉加载
 		isScroll = false;
@@ -71,22 +57,42 @@
 		$.get_order(${type});
 		switch(type){
 		case 0:
+			$("#not_pay_btn").removeClass("weui_btn_plain_default");
+	        $("#not_pay_btn").addClass("weui_btn_plain_primary");
+	        $("#payed_btn").removeClass("weui_btn_plain_primary");
+	        $("#payed_btn").addClass("weui_btn_plain_default");
 			$("#saved").css("font-weight","bold");
             $("#saved").addClass("weui_bar_item_on");
             break;
         case 1:
+	        $("#not_pay_btn").removeClass("weui_btn_plain_default");
+	        $("#not_pay_btn").addClass("weui_btn_plain_primary");
+	        $("#payed_btn").removeClass("weui_btn_plain_primary");
+	        $("#payed_btn").addClass("weui_btn_plain_default");
         	$("#submitted").css("font-weight","bold");
             $("#submitted").addClass("weui_bar_item_on");
             break;
 		case 2:
+			$("#payed_btn").removeClass("weui_btn_plain_default");
+	        $("#payed_btn").addClass("weui_btn_plain_primary");
+	        $("#not_pay_btn").removeClass("weui_btn_plain_primary");
+	        $("#not_pay_btn").addClass("weui_btn_plain_default");
 			$("#paid").css("font-weight","bold");
             $("#paid").addClass("weui_bar_item_on");
             break;
 		case 3:
+			$("#payed_btn").removeClass("weui_btn_plain_default");
+	        $("#payed_btn").addClass("weui_btn_plain_primary");
+	        $("#not_pay_btn").removeClass("weui_btn_plain_primary");
+	        $("#not_pay_btn").addClass("weui_btn_plain_default");
 			$("#shipped").css("font-weight","bold");
             $("#shipped").addClass("weui_bar_item_on");
             break;
 		case 4:
+			$("#payed_btn").removeClass("weui_btn_plain_default");
+	        $("#payed_btn").addClass("weui_btn_plain_primary");
+	        $("#not_pay_btn").removeClass("weui_btn_plain_primary");
+	        $("#not_pay_btn").addClass("weui_btn_plain_default");
 			$("#closed").css("font-weight","bold");
             $("#closed").addClass("weui_bar_item_on");
             break;
@@ -110,12 +116,15 @@
             } else if (target_id == "paid") {
             	type = 2;
 				$.get_order();
+				$.check_scroller();
             } else if (target_id == "shipped") {
             	type = 3;
 				$.get_order();
+				$.check_scroller();
             } else if (target_id == "closed") {
             	type = 4;
 				$.get_order();
+				$.check_scroller();
             }
             $(this).css("font-weight","bold");
             $(this).addClass("weui_bar_item_on")
@@ -123,20 +132,25 @@
     });
     
     $("#scroller").scroll(function(){
-    	viewH = $(this).height();
-    	contentH = $(this).get(0).scrollHeight;
-    	scrollTop = $(this).scrollTop();
+    	$.check_scroller();
+    });
+    
+    $.check_scroller = function(){
+    	viewH = $("#scroller").height();
+    	contentH = $("#scroller").get(0).scrollHeight;
+    	scrollTop = $("#scroller").scrollTop();
     	bottomTop = $("#bottom_tabbar").height();
     	if(contentH - viewH - scrollTop - bottomTop < 10){
     		console.debug("I reach bottom");
     		if(isScroll){
     			offset += limit;
+    			$("#loadingToast").show();
     			$.get_order_payed();
     			return true;
     		}
     	}
     	return false;
-    });
+    }
     
     
     //异步获取订单
@@ -202,7 +216,6 @@
     			isScroll = false;
     		}
     		$.each(list, function(i, val){
-    			console.debug(val);
     			var typeString = "";
     			switch(val.orderType){
     			case "ORDINARY":
@@ -240,10 +253,10 @@
       	var current = $(".weui_navbar").find(".weui_bar_item_on");
         current.removeClass("weui_bar_item_on");
         current.css("font-weight","normal");
-        $("#not_pay_btn").removeClass("weui_btn_default");
+        $("#not_pay_btn").removeClass("weui_btn_plain_default");
         $("#not_pay_btn").addClass("weui_btn_plain_primary");
         $("#payed_btn").removeClass("weui_btn_plain_primary");
-        $("#payed_btn").addClass("weui_btn_default");
+        $("#payed_btn").addClass("weui_btn_plain_default");
         $("#saved").css("font-weight","bold");
         $("#saved").addClass("weui_bar_item_on");
         type = 0;
@@ -256,10 +269,10 @@
     	var current = $(".weui_navbar").find(".weui_bar_item_on");
         current.removeClass("weui_bar_item_on");
         current.css("font-weight","normal");
-        $("#payed_btn").removeClass("weui_btn_default");
+        $("#payed_btn").removeClass("weui_btn_plain_default");
         $("#payed_btn").addClass("weui_btn_plain_primary");
         $("#not_pay_btn").removeClass("weui_btn_plain_primary");
-        $("#not_pay_btn").addClass("weui_btn_default");
+        $("#not_pay_btn").addClass("weui_btn_plain_default");
         $("#paid").css("font-weight","bold");
         $("#paid").addClass("weui_bar_item_on");
         type = 2;

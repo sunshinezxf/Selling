@@ -26,7 +26,11 @@
                                             <span>${orderItem.goods.name}</span>&nbsp;x<span>${orderItem.goodsQuantity}</span>&nbsp;(<span>${orderItem.orderItemPrice}</span>元)&nbsp;
                                         </div>
                                     </div>
+                                    #if(${operation} == "VIEW")
+                                    <div class="order_item_body">
+                                    #else
                                     <div class="order_item_body" style="display:none;">
+                                    #end
                                         <a class="weui_cell">
                                             <div class="weui_cell_bd weui_cell_primary">
                                                 <p>客户信息</p>
