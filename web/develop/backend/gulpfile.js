@@ -15,6 +15,12 @@ gulp.task('script', function () {
     return gulp.src('/develop/backend/material/js/*.js').pipe(uglify()).pipe(gulp.dest('/material/js/backend/'))
 });
 
+gulp.task('html', function () {
+    return gulp.src('template/**.vm').pipe(gulp.dest('../../WEB-INF/template/backend/'));
+});
+
+gulp.watch('template/**.vm', ['html']);
+
 gulp.task('build', function () {
 
 });

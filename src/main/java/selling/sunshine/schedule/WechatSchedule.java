@@ -12,6 +12,8 @@ public class WechatSchedule {
     private Logger logger = LoggerFactory.getLogger(WechatSchedule.class);
 
     public void schedule() {
-        PlatformConfig.setAccessToken(WechatUtil.queryAccessToken());
+        String token = WechatUtil.queryAccessToken();
+        PlatformConfig.setAccessToken(token);
+        logger.info("Refresh wechat token: " + token);
     }
 }
