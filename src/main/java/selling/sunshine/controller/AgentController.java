@@ -2022,6 +2022,15 @@ public class AgentController {
                 view.setViewName("redirect:/agent/check/" + agentId);
                 return view;
             }
+            //配置上下级代理商时对应的代理商的agentKPI表进行修改
+            condition.clear();
+            condition.put("agentId", upperAgentId);
+            fetchResponse=agentKPIService.fetchAgentKPI(condition);
+            if (fetchResponse.getResponseCode()==ResponseCode.RESPONSE_OK) {
+            	 AgentKPI agentKPI=((List<AgentKPI>)fetchResponse).get(0);
+            	 agentKPI.setDirectAgentQuantity(agentKPI.getDirectAgentQuantity()+1);
+            	 agentKPIService.updateAgentKPI(agentKPI);
+    		}
             Subject subject = SecurityUtils.getSubject();
             User user = (User) subject.getPrincipal();
             if (user == null) {
@@ -2087,12 +2096,17 @@ public class AgentController {
         ResultData fetchResponse = agentService.fetchAgent(condition);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             Agent agent = ((List<Agent>) agentService.fetchAgent(condition).getData()).get(0);
+            //避免重复配置相同的上级代理商
+            if (agent.getUpperAgent().getAgentId().equals(upperAgentId)) {
+            	 return resultData;
+			}
             condition.put("agentId", upperAgentId);
 
             fetchResponse = agentService.fetchAgent(condition);
             if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
                 Agent upperAgent = ((List<Agent>) agentService.fetchAgent(condition).getData()).get(0);
                 while (upperAgent.getUpperAgent() != null) {
+                	//上下级关系不能出现闭环
                     if (upperAgent.getUpperAgent().getAgentId().equals(agentId)) {
                         resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
                         resultData.setDescription("recursion");
@@ -2115,6 +2129,15 @@ public class AgentController {
                 resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
                 return resultData;
             }
+            //配置新的上下级代理关系要对对应的代理商的agentKPI表进行修改
+            condition.clear();
+            condition.put("agentId", upperAgentId);
+            fetchResponse=agentKPIService.fetchAgentKPI(condition);
+            if (fetchResponse.getResponseCode()==ResponseCode.RESPONSE_OK) {
+            	 AgentKPI agentKPI=((List<AgentKPI>)fetchResponse).get(0);
+            	 agentKPI.setDirectAgentQuantity(agentKPI.getDirectAgentQuantity()+1);
+            	 agentKPIService.updateAgentKPI(agentKPI);
+    		}
             Subject subject = SecurityUtils.getSubject();
             User user = (User) subject.getPrincipal();
             if (user == null) {
