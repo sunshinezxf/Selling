@@ -1233,7 +1233,14 @@ public class AgentController {
         Map<String, Object> condition = new HashMap<String, Object>();
         condition.put("agentId", user.getAgent().getAgentId());
         ResultData fetchOrderItemSumResponse = orderService.fetchOrderItemSum(condition);
-        //if(fetchOrderItemSumResponse)
+        if(fetchOrderItemSumResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR){
+        	Prompt prompt = new Prompt(PromptCode.WARNING, "提示信息", "未找到详细信息", "/agent/manage/2");
+            view.addObject("prompt", prompt);
+            WechatConfig.oauthWechat(view, "/agent/prompt");
+            view.setViewName("/agent/prompt");
+            return view;
+        }
+        List<OrderItemSum> orderItemSumList = (List<OrderItemSum>) fetchOrderItemSumResponse.getData();
         //以下是本代理商的信息
         /*
         ResultData fetchOverviewInfoResponse = refundService.calculateQuantityAll(user.getAgent().getAgentId());
