@@ -8,6 +8,7 @@ import common.sunshine.model.selling.order.support.OrderType;
 
 public class OrderItemSum extends Entity {
 	private Agent agent;
+	private Goods4Agent goods;
 	private OrderType orderType;
 	private String orderId;
 	private OrderItemStatus status;
@@ -21,6 +22,14 @@ public class OrderItemSum extends Entity {
 
 	public void setAgent(Agent agent) {
 		this.agent = agent;
+	}
+
+	public Goods4Agent getGoods() {
+		return goods;
+	}
+
+	public void setGoods(Goods4Agent goods) {
+		this.goods = goods;
 	}
 
 	public OrderType getOrderType() {
