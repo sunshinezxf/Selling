@@ -118,6 +118,7 @@
                     return operation;
                 }
                 },
+                {title: "代理商", "mData": "agent.name"},
                 {title: "总计", "mData": "quantity"},
                 {title: "总价", "mData": "totalPrice"},
                 {
@@ -224,6 +225,7 @@
                     return operation;
                 }
                 },
+                {title: "代理商", "mData": "agent.name"},
                 {title: "总计", "mData": "quantity"},
                 {title: "总价", "mData": "totalPrice"},
                 {
