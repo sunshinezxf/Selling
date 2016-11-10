@@ -118,7 +118,16 @@
                     return operation;
                 }
                 },
-                {title: "代理商", "mData": "agent.name"},
+                {
+                    title: "代理商", "mRender": function (data, type, full) {
+                    if(full.agent==null){
+                    	operation="无";
+                    }else{
+                    	operation=full.agent.name;
+                    }
+                    return operation;
+                }
+                },
                 {title: "总计", "mData": "quantity"},
                 {title: "总价", "mData": "totalPrice"},
                 {
@@ -225,7 +234,16 @@
                     return operation;
                 }
                 },
-                {title: "代理商", "mData": "agent.name"},
+                {
+                    title: "代理商", "mRender": function (data, type, full) {
+                    if(full.agent==null){
+                    	operation="无";
+                    }else{
+                    	operation=full.agent.name;
+                    }
+                    return operation;
+                }
+                },
                 {title: "总计", "mData": "quantity"},
                 {title: "总价", "mData": "totalPrice"},
                 {
