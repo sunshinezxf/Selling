@@ -1,6 +1,7 @@
 package promotion.sunshine.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.thoughtworks.xstream.XStream;
 import common.sunshine.model.wechat.*;
 import common.sunshine.utils.Encryption;
@@ -21,7 +22,6 @@ import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -78,20 +78,21 @@ public class WechatController {
             final InMessage message = (InMessage) content.fromXML(input);
             HttpSession session = request.getSession();
             session.setAttribute("openId", message.getFromUserName());
-            new Thread() {
-                @Override
-                public void run() {
-                	String token = PlatformConfig.getAccessToken();
-                    Follower follower = WechatUtil.queryUserInfo(message.getFromUserName(), token);
-                    follower.setChannel("dingyue");
-                    logger.debug("imhere2");
-                    ResultData rtn = followerService.subscribe(follower);
-                    logger.debug(JSON.toJSONString(rtn));
-                }
-            }.start();
+            logger.debug(JSONObject.toJSONString(message));
             switch (message.getMsgType()) {
                 case "event":
                     if (message.getEvent().equals("subscribe")) {
+                        new Thread() {
+                            @Override
+                            public void run() {
+                                String token = PlatformConfig.getAccessToken();
+                                Follower follower = WechatUtil.queryUserInfo(message.getFromUserName(), token);
+                                follower.setChannel("dingyue");
+                                logger.debug("imhere2");
+                                ResultData rtn = followerService.subscribe(follower);
+                                logger.debug(JSON.toJSONString(rtn));
+                            }
+                        }.start();
                         content.alias("xml", Articles.class);
                         content.alias("item", Article.class);
                         Articles result = new Articles();
@@ -159,7 +160,7 @@ public class WechatController {
                     break;
                 case "text":
                     if (message.getContent().equals("团圆")) {
-                    	/*
+                        /*
                         String openId = message.getFromUserName();
                         content.alias("xml", TextOutMessage.class);
                         TextOutMessage result = new TextOutMessage();
@@ -204,26 +205,38 @@ public class WechatController {
         welcome.setTitle("我们的故事｜关于家人关于爱");
         welcome.setDescription("云草纲目，每一瓶，都是家人与朋友满满的爱。");
         welcome.setPicUrl("https://mmbiz.qlogo.cn/mmbiz/zhe7KjM5iaS8Z1VmBFxR793iaJhia9fKCkz0BibJy4bWnLrhLlWHVAqibXGZQz1KiaqWBg6Ikzw7Mbs97EHq1bO6uZibw/0?wx_fmt=jpeg");
-        welcome.setUrl("http://mp.weixin.qq.com/s?__biz=MzI1OTMyNTI1NQ==&mid=2247483666&idx=1&sn=84bdafae0d39c1c9d4c1b85bb8bf184a");
+        welcome.setUrl("http://mp.weixin.qq.com/s?__biz=MzI1OTMyNTI1NQ==&mid=100000002&idx=1&sn=3fd71feb926b721f1b2473f70f76f85a#rd");
         list.add(welcome);
+        Article effect = new Article();
+        effect.setTitle("千金不换｜三七功效，看这一篇就够啦！");
+        effect.setDescription("看似矛盾的两种功能——止血与活血，竟然在三七上完美呈现，这是中药的神奇之处。三七这种看似矛盾的和谐，正是中国文化的核心，也是中药的核心。《中庸》说道，“致中和，天地位焉，万物育焉。血气不和，百病生。”三七是和血的良药。血气和，方能健康长寿。");
+        effect.setPicUrl("https://mmbiz.qlogo.cn/mmbiz/zhe7KjM5iaS8h1soIe4bdE2y2aYpuTXQMjDycicIFo8AfCWVCdXrMk2MQlct4MmPOicKneBVfIz3rPhaItK3iapMzQ/0?wx_fmt=jpeg");
+        effect.setUrl("http://mp.weixin.qq.com/s?__biz=MzI1OTMyNTI1NQ==&mid=100000002&idx=2&sn=6ea6d17d26798283c12b7abddbcf8d21#rd");
+        list.add(effect);
         Article product = new Article();
         product.setTitle("何为三七｜参中之王，千金不换");
         product.setDescription("现代研究发现，三七的化学成分和药理作用与人参相似，但其治疗外伤和心血管病的功能则是人参无法比拟的。因为人们对三七的药效的了解比人参晚了1000多年；所以，三七的名气没有人参那么大，但是他却是名副其实的参中之王。");
         product.setPicUrl("https://mmbiz.qlogo.cn/mmbiz/zhe7KjM5iaS8HCZAY1KWib9AHYx7fscNkiaic5ZJDKB1jY1xEmFxzCAlKvEDaSdwwCCLuv2EaE2SjDm8LDhU23a74Q/0?wx_fmt=jpeg");
-        product.setUrl("http://mp.weixin.qq.com/s?__biz=MzIwNjI1OTY2Mg==&mid=2650661098&idx=1&sn=74b3f4690b182c295ba8b8ffc1e65b38");
+        product.setUrl("http://mp.weixin.qq.com/s?__biz=MzI1OTMyNTI1NQ==&mid=100000002&idx=3&sn=06b800b2272b0da17b57a35ba880a3b5#rd");
         list.add(product);
-        Article effect = new Article();
-        effect.setTitle("参中之王｜三七功效，看这一篇就够啦！");
-        effect.setDescription("看似矛盾的两种功能——止血与活血，竟然在三七上完美呈现，这是中药的神奇之处。三七这种看似矛盾的和谐，正是中国文化的核心，也是中药的核心。《中庸》说道，“致中和，天地位焉，万物育焉。血气不和，百病生。”三七是和血的良药。血气和，方能健康长寿。");
-        effect.setPicUrl("https://mmbiz.qlogo.cn/mmbiz/zhe7KjM5iaS8h1soIe4bdE2y2aYpuTXQMjDycicIFo8AfCWVCdXrMk2MQlct4MmPOicKneBVfIz3rPhaItK3iapMzQ/0?wx_fmt=jpeg");
-        effect.setUrl("https://mp.weixin.qq.com/s?__biz=MzI1OTMyNTI1NQ==&mid=2247483670&idx=1&sn=ff34c12e664c54bcb6a9135d8cb6a54c");
-        list.add(effect);
         Article manufact = new Article();
         manufact.setTitle("制作工艺｜一颗三七的蜕变");
         manufact.setDescription("历经波澜，粉身碎骨，只为以最棒的姿态来到您的面前，每一粒三七粉都是满满的深情切意。");
         manufact.setPicUrl("https://mmbiz.qlogo.cn/mmbiz/zhe7KjM5iaS8Z1VmBFxR793iaJhia9fKCkzOXSogNWy72UyffanIVxDrWYNibWibVGODmpacwhCWRHBZTALzMfDCHpg/0?wx_fmt=png");
-        manufact.setUrl("http://mp.weixin.qq.com/s?__biz=MzI1OTMyNTI1NQ==&mid=2247483673&idx=1&sn=2f5f641373d96503219dae12eda7f4d4");
+        manufact.setUrl("http://mp.weixin.qq.com/s?__biz=MzI1OTMyNTI1NQ==&mid=100000002&idx=4&sn=2142332eba0a6764c41b380b17d0b06d#rd");
         list.add(manufact);
+        Article guidance = new Article();
+        guidance.setTitle("使用指南｜三七那么好，该怎么物尽其用？");
+        guidance.setDescription("三七作为一种具有活血化瘀、止血定痛等多种药效的中药，功效广为人知。但并不是每个人都适合服用三七，也不是服用的越多效果就一定好，服用不当反而会伤害身体。炎炎夏日，来份三七美食，既养生又好吃～");
+        guidance.setPicUrl("https://mmbiz.qlogo.cn/mmbiz/LvSutA9l9GqJsJ1bnfj330qsRziaECfFPyB5A9Y9XpiaTaFwZucAJwLEBAqXe62jxOMAATYDRrIASz7gBRhymcNQ/0?wx_fmt=jpeg");
+        guidance.setUrl("http://mp.weixin.qq.com/s?__biz=MzI1OTMyNTI1NQ==&mid=100000002&idx=5&sn=f25e272574d1c10549d2f513b31f0361#rd");
+        list.add(guidance);
+        Article eye = new Article();
+        eye.setTitle("火眼金睛｜市场乱象中，如何辨别好的三七？");
+        eye.setDescription("今年2月，市民范女士反映：“我看电视里说常吃三七粉对身体好，，就去药店花了600多元买了一斤。回家一看，发现粉质粗糙，像沙子一样，而且喝起来也不苦，只有木屑似的味道。我怀疑自己买的是假三七粉，但又不能确定。我就想问问，三七粉如何辨别真伪？”");
+        eye.setPicUrl("https://mmbiz.qlogo.cn/mmbiz/LvSutA9l9GqJsJ1bnfj330qsRziaECfFPBiabSpVd49CbpyeGomAicTctcicpmnkr2kkibe9PibJzW5LL2xB7FXLibSYA/0?wx_fmt=jpeg");
+        eye.setUrl("http://mp.weixin.qq.com/s?__biz=MzI1OTMyNTI1NQ==&mid=100000002&idx=6&sn=03566bbbcd37522c0c1aebee3add30cc#rd");
+        list.add(eye);
         return list;
     }
 }

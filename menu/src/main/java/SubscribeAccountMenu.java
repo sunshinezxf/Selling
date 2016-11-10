@@ -26,7 +26,6 @@ public class SubscribeAccountMenu {
     //线上
     private final static String CUSTOMER_PURCHASE_URL = "http://www.yuncaogangmu.com/commodity/viewlist";
     //测试
-    //private final static String CUSTOMER_PURCHASE_URL = "http://measure.yuncaogangmu.com/commodity/viewlist";
     private final static String LETHE_URL = "http://www.yuncaogangmu.com/agent/lethe";
     private final static String TUOZHAN_URL = "http://www.yuncaogangmu.com/agent/invite";
     private final static String SHARE_URL = "http://www.yuncaogangmu.com/agent/personalsale";
@@ -34,6 +33,13 @@ public class SubscribeAccountMenu {
     private final static String LOGIN_URL = "http://www.yuncaogangmu.com/agent/login";
     private final static String SEARCH_URL = "http://www.yuncaogangmu.com/customer/consult";
 
+    /**
+     * 调用此方法需传入appid和secret，现默认不使用该方法获取
+     *
+     * @param appId
+     * @param secret
+     * @return
+     */
     public static String queryAccessToken(String appId, String secret) {
         String result = "";
         String url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" + appId + "&secret=" + secret;
@@ -63,7 +69,7 @@ public class SubscribeAccountMenu {
         }
     }
 
-    public static String createMenu() {
+    public static String createMenu(String token) {
 
         JSONObject sanqi1 = new JSONObject();
         sanqi1.put("name", "参中之王");
@@ -83,11 +89,12 @@ public class SubscribeAccountMenu {
             e.printStackTrace();
         }
 
-        JSONObject sanqi3 = new JSONObject();
-        sanqi3.put("name", "养生美食");
-        sanqi3.put("type", "view");
+        //养生美食
+        JSONObject ysms = new JSONObject();
+        ysms.put("name", "养生美食");
+        ysms.put("type", "view");
         try {
-            sanqi3.put("url", "http://mp.weixin.qq.com/s?__biz=MzIwNjI1OTY2Mg==&mid=503177452&idx=1&sn=a69770f51e67758a86b4990b2fe01b3a&scene=18#wechat_redirect");
+            ysms.put("url", "http://mp.weixin.qq.com/s?__biz=MzI1OTMyNTI1NQ==&mid=100000870&idx=1&sn=79774b8cd7672de804e597ed9ff1a8e5&chksm=6a7be84e5d0c615833c8dd1163f5d072ef5876a6d22d647af55f56439bf6fffc16927cbbab82#rd");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -110,28 +117,11 @@ public class SubscribeAccountMenu {
             e.printStackTrace();
         }
 
-        JSONObject ycgm2 = new JSONObject();
-        ycgm2.put("name", "招聘信息");
-        ycgm2.put("type", "view");
-        try {
-            ycgm2.put("url", "http://mp.weixin.qq.com/s?__biz=MzIwNjI1OTY2Mg==&mid=2650661085&idx=1&sn=a3120a6c436ab6c5706e8cdc1b102994&scene=18#wechat_redirect");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        JSONObject ycgm3 = new JSONObject();
-        ycgm3.put("name", "我的奋斗");
-        ycgm3.put("type", "view");
-        try {
-            ycgm3.put("url", "http://mp.weixin.qq.com/s?__biz=MzIwNjI1OTY2Mg==&mid=2650661078&idx=1&sn=2bb670e20b5c19f778ef8d805e0d4d78&scene=18#wechat_redirect");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         JSONArray sanqi = new JSONArray();
         sanqi.add(sanqi1);
         sanqi.add(sanqi2);
-        sanqi.add(sanqi3);
+        sanqi.add(ysms);
         sanqi.add(sanqi4);
         sanqi.add(ycgm);
 
@@ -141,48 +131,10 @@ public class SubscribeAccountMenu {
 
         JSONArray yc = new JSONArray();
         yc.add(ycgm);
-        yc.add(ycgm2);
-        yc.add(ycgm3);
 
         JSONObject ycButton = new JSONObject();
         ycButton.put("name", "云草纲目");
         ycButton.put("sub_button", yc);
-
-
-//	        JSONObject agent_bind = new JSONObject();
-//	        agent_bind.put("name", "账号绑定");
-//	        agent_bind.put("type", "view");
-//	        try {
-//	            agent_bind.put("url", "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx67fcdc4fa58f7578&redirect_uri=" + URLEncoder.encode(BIND_ACCOUNT_URL, "utf-8") + "&response_type=code&scope=snsapi_base&state=view#wechat_redirect");
-//	        } catch (Exception e) {
-//	            e.printStackTrace();
-//	        }
-
-
-//	        JSONObject giftEvent = new JSONObject();
-//			giftEvent.put("name", "中秋活动");
-//			giftEvent.put("type", "click");
-//			giftEvent.put("key", "giftEvent");
-//
-//			JSONObject queryEvent = new JSONObject();
-//			queryEvent.put("name", "查询申请");
-//			queryEvent.put("type", "view");
-//			queryEvent.put("url", "http://event.yuncaogangmu.com/event/consultapplication");
-//
-//			JSONObject eventTip = new JSONObject();
-//			eventTip.put("name", "申请指南");
-//			eventTip.put("type", "view");
-//			eventTip.put("url", "http://mp.weixin.qq.com/s?__biz=MzI1OTMyNTI1NQ==&mid=2247483897&idx=1&sn=462889d76e9dc55e4fbe9650d2a097d8&scene=0#wechat_redirect");
-
-//			JSONArray eventArray = new JSONArray();
-//			eventArray.add(giftEvent);
-//			eventArray.add(queryEvent);
-//			eventArray.add(eventTip);
-
-//			JSONObject eventButton = new JSONObject();
-//			eventButton.put("name", "活动");
-//			eventButton.put("sub_button", eventArray);
-
 
         JSONObject purchase = new JSONObject();
         purchase.put("name", "三七购买");
@@ -224,7 +176,6 @@ public class SubscribeAccountMenu {
         buttons.add(customerButton);
         JSONObject menu = new JSONObject();
         menu.put("button", buttons);
-        String token = queryAccessToken(APPID, SECRET);
         String link = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=" + token;
         try {
             URL url = new URL(link);
@@ -255,8 +206,7 @@ public class SubscribeAccountMenu {
         return "创建菜单失败";
     }
 
-    public static String deleteMenu() {
-        String token = queryAccessToken(APPID, SECRET);
+    public static String deleteMenu(String token) {
         String link = "https://api.weixin.qq.com/cgi-bin/menu/delete?access_token=" + token;
         try {
             URL url = new URL(link);
@@ -286,9 +236,10 @@ public class SubscribeAccountMenu {
     }
 
     public static void main(String[] args) {
-        String deleteMessage = SubscribeAccountMenu.deleteMenu();
+        String token = queryAccessToken(APPID, SECRET);
+        String deleteMessage = SubscribeAccountMenu.deleteMenu(token);
         System.out.println("删除操作: " + deleteMessage);
-        String createMessage = SubscribeAccountMenu.createMenu();
+        String createMessage = SubscribeAccountMenu.createMenu(token);
         System.out.println("创建操作" + createMessage);
     }
 }
