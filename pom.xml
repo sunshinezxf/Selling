@@ -9,6 +9,7 @@
     <modules>
         <module>promotion</module>
         <module>common</module>
+        <module>menu</module>
     </modules>
     <packaging>pom</packaging>
 

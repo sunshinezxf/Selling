@@ -586,11 +586,12 @@ VALUES ('VIT00000001', '1', '0', '0', '2016-10-24 00:10:00');
 
 
 ##2016年11月2日更新
-CREATE OR REPLACE VIEW order_item_sum(agent_id, order_type, order_id, order_item_status, goods_quantity, order_item_price, customer_name, block_flag, create_time)
+CREATE OR REPLACE VIEW order_item_sum(agent_id, order_type, order_id, goods_id, order_item_status, goods_quantity, order_item_price, customer_name, block_flag, create_time)
 AS SELECT
      o.agent_id           AS agent_id,
      o.order_type         AS order_type,
      oi.order_item_id     AS order_id,
+     oi.goods_id          AS goods_id,
      oi.order_item_status AS order_item_status,
      oi.goods_quantity    AS goods_quantity,
      oi.order_item_price  AS order_item_price,
@@ -604,6 +605,7 @@ AS SELECT
      co.agent_id      AS agent_id,
      2                AS order_type,
      co.order_id      AS order_id,
+     co.goods_id      AS goods_id,
      co.order_status  AS order_item_status,
      co.quantity      AS goods_quantity,
      co.total_price   AS order_item_price,
