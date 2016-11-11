@@ -46,7 +46,7 @@
     </resultMap>
     
     <resultMap id="purchaseRecordViewVo" type="selling.sunshine.model.sum.Vendition">
-        <result property="goodsId" column="good_id"></result>
+        <result property="goodsId" column="goods_id"></result>
         <result property="goodsName" column="goods_name"></result>
         <result property="orderType" column="order_type"></result>
         <result property="goodsQuantity" column="goods_quantity"></result>
@@ -307,7 +307,7 @@ select agent_id,sum(quantity) as quantity from customer_order
 
 <select id="purchaseRecordView" resultMap="purchaseRecordViewVo">
 select goods_id, goods_name, order_type, sum(goods_quantity) as goods_quantity, sum(record_price) as record_price
-from purchase_record_view
+from purchase_record_view 
 where 1 = 1
 <if test="status != null and status != ''">
 	and record_status in 
