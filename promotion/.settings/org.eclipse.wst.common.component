@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="promotion.selling-1.0.4-SNAPSHOT">
+        <wb-resource deploy-path="/WEB-INF/web.xml" source-path="/web/WEB-INF/web.xml"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
+        <wb-resource deploy-path="/" source-path="/web" tag="defaultRootSource"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/java"/>
+        <dependent-module archiveName="common.selling-1.0.4-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/common.selling/common.selling">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <property name="context-root" value="promotion.selling"/>
+        <property name="java-output-path" value="/promotion.selling/target/classes"/>
+    </wb-module>
+</project-modules>
