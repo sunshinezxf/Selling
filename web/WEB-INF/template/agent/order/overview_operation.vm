@@ -18,28 +18,60 @@
             <div id="overviewlist" class="weui_cells clear-margin-top">
 	    			<div class="weui_cell">
 			            <div class="weui_cell_bd weui_cell_primary">
-			                <p>今日销售：${overviewInfo.quantity2}瓶</p>
+			                <p id="day_quantity_sum">今日销售：0瓶</p>
 			            </div>
-			            <div class="weui_cell_ft"><span style="color:#888;">${overviewInfo.price2}元</span></div>
+			            <div id="day_price_sum" class="weui_cell_ft" style="color:#000000">0元</div>
 			        </div>
+			        #foreach($orderSum in $dayList)
 			        <div class="weui_cell">
 			            <div class="weui_cell_bd weui_cell_primary">
-			                <p>本月销售：${overviewInfo.quantity1}瓶</p>
+			                <p style="color:#888">&nbsp;${orderSum.goods.name}</p>
 			            </div>
-			            <div class="weui_cell_ft"><span style="color:#888;">${overviewInfo.price1}元</span></div>
+			            <div class="weui_cell_ft">(<span class="day_quantity">${orderSum.quantity}</span>瓶)<span class="day_price">${orderSum.totalPrice}</span>元</div>
 			        </div>
+			        #end
 			        <div class="weui_cell">
 			            <div class="weui_cell_bd weui_cell_primary">
-			                <p>累计销售：${overviewInfo.quantity3}瓶</p>
+			                <p id="month_quantity_sum">本月销售：0瓶</p>
 			            </div>
-			            <div class="weui_cell_ft"><span style="color:#888;">${overviewInfo.price3}元</span></div>
+			            <div id="month_price_sum" class="weui_cell_ft" style="color:#000000">0元</div>
 			        </div>
+			        #foreach($orderSum in $monthList)
+			         <div class="weui_cell">
+			            <div class="weui_cell_bd weui_cell_primary">
+			                <p style="color:#888">&nbsp;${orderSum.goods.name}</p>
+			            </div>
+			            <div class="weui_cell_ft">(<span class="month_quantity">${orderSum.quantity}</span>瓶)<span class="month_price">${orderSum.totalPrice}</span>元</div>
+			        </div>
+			        #end
 			        <div class="weui_cell">
 			            <div class="weui_cell_bd weui_cell_primary">
-			                <p>等待发货：${wait.get(0)}瓶</p>
+			                <p id="buy_quantity_sum">累计销售：0瓶</p>
 			            </div>
-			            <div class="weui_cell_ft"><span style="color:#888;">${wait.get(1)}元</span></div>
+			            <div id="buy_price_sum" class="weui_cell_ft" style="color:#000000">0元</div>
 			        </div>
+			        #foreach($orderSum in $buyList)
+			         <div class="weui_cell">
+			            <div class="weui_cell_bd weui_cell_primary">
+			                <p style="color:#888">&nbsp;${orderSum.goods.name}</p>
+			            </div>
+			            <div class="weui_cell_ft">(<span class="buy_quantity">${orderSum.quantity}</span>瓶)<span class="buy_price">${orderSum.totalPrice}</span>元</div>
+			        </div>
+			        #end
+			        <div class="weui_cell">
+			            <div class="weui_cell_bd weui_cell_primary">
+			                <p id="wait_quantity_sum">等待发货：0瓶</p>
+			            </div>
+			            <div id="wait_price_sum" class="weui_cell_ft" style="color:#000000">0元</div>
+			        </div>
+			        #foreach($orderSum in $waitList)
+			         <div class="weui_cell">
+			            <div class="weui_cell_bd weui_cell_primary">
+			                <p style="color:#888">&nbsp;${orderSum.goods.name}</p>
+			            </div>
+			            <div class="weui_cell_ft">(<span class="wait_quantity">${orderSum.quantity}</span>瓶)<span class="wait_price">${orderSum.totalPrice}</span>元</div>
+			        </div>
+			        #end
             </div>
             <div id="agentslist" style="display:none" class="weui_cells clear-margin-top">
     			#foreach($agent in $agents)
@@ -61,6 +93,47 @@
 $(function(){
 	$("#overview").css("font-weight","bold");
     $("#overview").addClass("weui_bar_item_on");
+    var day_quantity = 0;
+    var month_quantity = 0;
+    var buy_quantity = 0;
+    var wait_quantity = 0;
+    var day_price = 0;
+    var month_price = 0;
+    var buy_price = 0;
+    var wait_price = 0;
+    $.each($(".day_quantity"), function(i, val){
+    	day_quantity += parseInt($(val).text());
+    	
+    });
+    $.each($(".month_quantity"), function(i, val){
+    	month_quantity += parseInt($(val).text())
+    });
+    $.each($(".buy_quantity"), function(i, val){
+    	buy_quantity += parseInt($(val).text())
+    });
+    $.each($(".wait_quantity"), function(i, val){
+    	wait_quantity += parseInt($(val).text())
+    });
+    $.each($(".day_price"), function(i, val){
+    	day_price += parseFloat($(val).text());
+    });
+    $.each($(".month_price"), function(i, val){
+    	month_price += parseFloat($(val).text());
+    });
+    $.each($(".buy_price"), function(i, val){
+    	buy_price += parseFloat($(val).text());
+    });
+    $.each($(".wait_price"), function(i, val){
+    	wait_price += parseFloat($(val).text());
+    });
+    $("#day_quantity_sum").html("今日销售:" + day_quantity + "瓶");
+    $("#month_quantity_sum").html("本月销售:" + month_quantity + "瓶");
+    $("#buy_quantity_sum").html("累计销售:" + buy_quantity + "瓶");
+    $("#wait_quantity_sum").html("等待发货:" + wait_quantity + "瓶");
+    $("#day_price_sum").html(day_price + "元");
+    $("#month_price_sum").html(month_price + "元");
+    $("#buy_price_sum").html(buy_price + "元");
+    $("#wait_price_sum").html(wait_price + "元");
 });
 
 $("#overview").on("click", function(){

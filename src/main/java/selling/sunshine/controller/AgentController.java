@@ -55,6 +55,7 @@ import selling.sunshine.service.*;
 import selling.sunshine.utils.*;
 import selling.sunshine.vo.cashback.CashBack;
 import selling.sunshine.vo.order.OrderItemSum;
+import selling.sunshine.vo.order.OrderSumOverview;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -1240,7 +1241,100 @@ public class AgentController {
             view.setViewName("/agent/prompt");
             return view;
         }
+        Date date = new Date(System.currentTimeMillis());
+        SimpleDateFormat sdfMonth = new SimpleDateFormat("yyyy-MM");
+        SimpleDateFormat sdfDay = new SimpleDateFormat("yyyy-MM-dd");
+        String month = sdfMonth.format(date);
+        String day = sdfDay.format(date);
         List<OrderItemSum> orderItemSumList = (List<OrderItemSum>) fetchOrderItemSumResponse.getData();
+        List<OrderSumOverview> buyList = new ArrayList<OrderSumOverview>();
+        List<OrderSumOverview> dayList = new ArrayList<OrderSumOverview>();
+        List<OrderSumOverview> monthList = new ArrayList<OrderSumOverview>();
+        List<OrderSumOverview> waitList = new ArrayList<OrderSumOverview>();
+        for(OrderItemSum orderItemSum : orderItemSumList){
+        	boolean find = false;
+        	if(orderItemSum.getOrderType() != OrderType.GIFT){
+        		//统计累计销售
+        		for(OrderSumOverview orderSumOverview : buyList){
+        			if(orderSumOverview.getGoods().getGoodsId().equals(orderItemSum.getGoods().getGoodsId())){
+        				find = true;
+        				orderSumOverview.setQuantity(orderSumOverview.getQuantity() + orderItemSum.getGoodsQuantity());
+        				orderSumOverview.setTotalPrice(orderSumOverview.getTotalPrice() + orderItemSum.getOrderItemPrice());
+        				break;
+        			}
+        		}
+        		if(!find){
+        			OrderSumOverview orderSumOverview = new OrderSumOverview();
+        			orderSumOverview.setGoods(orderItemSum.getGoods());
+        			orderSumOverview.setQuantity(orderItemSum.getGoodsQuantity());
+        			orderSumOverview.setTotalPrice(orderItemSum.getOrderItemPrice());
+        			buyList.add(orderSumOverview);
+        		}
+        		//统计本月销售
+        		find = false;
+        		String orderTime = orderItemSum.getCreateAt().toString();
+        		if(orderTime.startsWith(month)){
+        			for(OrderSumOverview orderSumOverview : monthList){
+            			if(orderSumOverview.getGoods().getGoodsId().equals(orderItemSum.getGoods().getGoodsId())){
+            				find = true;
+            				orderSumOverview.setQuantity(orderSumOverview.getQuantity() + orderItemSum.getGoodsQuantity());
+            				orderSumOverview.setTotalPrice(orderSumOverview.getTotalPrice() + orderItemSum.getOrderItemPrice());
+            				break;
+            			}
+            		}
+            		if(!find){
+            			OrderSumOverview orderSumOverview = new OrderSumOverview();
+            			orderSumOverview.setGoods(orderItemSum.getGoods());
+            			orderSumOverview.setQuantity(orderItemSum.getGoodsQuantity());
+            			orderSumOverview.setTotalPrice(orderItemSum.getOrderItemPrice());
+            			monthList.add(orderSumOverview);
+            		}
+        		}
+        		//统计今日销售
+        		find = false;
+        		if(orderTime.startsWith(day)){
+        			for(OrderSumOverview orderSumOverview : dayList){
+            			if(orderSumOverview.getGoods().getGoodsId().equals(orderItemSum.getGoods().getGoodsId())){
+            				find = true;
+            				orderSumOverview.setQuantity(orderSumOverview.getQuantity() + orderItemSum.getGoodsQuantity());
+            				orderSumOverview.setTotalPrice(orderSumOverview.getTotalPrice() + orderItemSum.getOrderItemPrice());
+            				break;
+            			}
+            		}
+            		if(!find){
+            			OrderSumOverview orderSumOverview = new OrderSumOverview();
+            			orderSumOverview.setGoods(orderItemSum.getGoods());
+            			orderSumOverview.setQuantity(orderItemSum.getGoodsQuantity());
+            			orderSumOverview.setTotalPrice(orderItemSum.getOrderItemPrice());
+            			dayList.add(orderSumOverview);
+            		}
+        		}
+        	}
+        	//统计等待发货
+        	find = false;
+        	if(orderItemSum.getStatus() == OrderItemStatus.PAYED){
+        		for(OrderSumOverview orderSumOverview : waitList){
+        			if(orderSumOverview.getGoods().getGoodsId().equals(orderItemSum.getGoods().getGoodsId())){
+        				find = true;
+        				orderSumOverview.setQuantity(orderSumOverview.getQuantity() + orderItemSum.getGoodsQuantity());
+        				orderSumOverview.setTotalPrice(orderSumOverview.getTotalPrice() + orderItemSum.getOrderItemPrice());
+        				break;
+        			}
+        		}
+        		if(!find){
+        			OrderSumOverview orderSumOverview = new OrderSumOverview();
+        			orderSumOverview.setGoods(orderItemSum.getGoods());
+        			orderSumOverview.setQuantity(orderItemSum.getGoodsQuantity());
+        			orderSumOverview.setTotalPrice(orderItemSum.getOrderItemPrice());
+        			waitList.add(orderSumOverview);
+        		}
+        	}
+        }
+        
+        view.addObject("dayList", dayList);
+        view.addObject("monthList", monthList);
+        view.addObject("buyList", buyList);
+        view.addObject("waitList", waitList);
         //以下是本代理商的信息
         /*
         ResultData fetchOverviewInfoResponse = refundService.calculateQuantityAll(user.getAgent().getAgentId());
