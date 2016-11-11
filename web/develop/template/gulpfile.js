@@ -4,7 +4,7 @@
 var gulp = require('gulp');
 
 gulp.task('html', function () {
-    return gulp.src('./**.vm').pipe(gulp.dest('../../WEB-INF/template/backend/'));
+    return gulp.src('backend/**').pipe(gulp.dest('../../WEB-INF/template/backend/'));
 });
 
 gulp.watch('./**.vm', ['html']);

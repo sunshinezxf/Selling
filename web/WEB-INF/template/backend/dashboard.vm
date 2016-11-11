@@ -2,8 +2,8 @@
 <html lang="zh_CN">
 <head>
     #parse("/backend/component/init.vm")
-    #parse("/backend/component/init_highcharts.vm")
     #parse("/backend/initialization/echarts.lib.vm")
+    #parse("/backend/component/init_highcharts.vm")
     #parse("/backend/component/init_dashboard.vm")
     <title>首页</title>
 </head>
