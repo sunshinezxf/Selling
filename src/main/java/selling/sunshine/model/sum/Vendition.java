@@ -7,6 +7,7 @@ public class Vendition {
 	private int orderType;
 	private int goodsQuantity;
 	private double recordPrice;
+	
 	public String getGoodsId() {
 		return goodsId;
 	}

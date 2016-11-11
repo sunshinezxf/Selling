@@ -1,0 +1,76 @@
+<div id="goods_sales_volume" class="container-fluid"></div>
+<script>
+    var goods_sales_volume_monthly = "${path.concat('/commodity/volume/monthly')}";
+
+    var goods_sales_volume_total = "${path.concat('/commodity/volume')}";
+    $.ajax({
+        url: goods_sales_volume_monthly,
+        type: "GET",
+        dataType: "json",
+        success: init_month(result),
+        failure: default_init()
+    });
+
+    function init_month(result) {
+        var volume_chart = echarts.init($("#goods_sales_volume"));
+
+        var option = {
+            title: {
+                text: "商品销量统计图"
+            },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            yAxis: [{
+                type: 'category',
+                data: ['四川', '福健', '湖北', '河南', '浙江', '江苏', '山东', '上海', '广东', '北京'],
+                axisTick: {
+                    alignWithLabel: true
+                }
+            }],
+            xAxis: [{
+                type: 'value'
+            }],
+            backgroundColor: '#ffffff',
+            series: [{
+                name: '累计销量',
+                type: 'bar',
+                barWidth: '40%',
+                data: [7700, 8800, 9900, 11100, 14200, 16000, 18400, 20500, 22600, 24700],
+                label: {
+                    normal: {
+                        show: true,
+                        position: 'right',
+                        textStyle: {
+                            color: ''
+                        }
+                    }
+                },
+                itemStyle: {
+                    normal: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [{
+                            offset: 0,
+                            color: 'lightBlue'
+                        }, {
+                            offset: 1,
+                            color: '#3398DB'
+                        }], false)
+                    }
+                }
+            }]
+        }
+    }
+
+    function default_init() {
+        
+    }
+</script>
