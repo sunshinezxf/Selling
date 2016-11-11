@@ -10,6 +10,7 @@
 <div class="container">
     #parse("/backend/component/login_form.vm")
 </div>
+
     #parse("/backend/component/footer.vm")
 </body>
 </html>
