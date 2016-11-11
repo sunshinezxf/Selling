@@ -229,11 +229,7 @@
             <version>2.0</version>
         </dependency>
         
-         <dependency>
-            <groupId>sunshine</groupId>
-            <artifactId>common.selling</artifactId>
-            <version>1.0.4-SNAPSHOT</version>
-        </dependency>
+
 
     </dependencies>
 
