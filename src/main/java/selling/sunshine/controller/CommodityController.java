@@ -4,8 +4,15 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import common.sunshine.model.selling.admin.Admin;
 import common.sunshine.model.selling.agent.Agent;
+import common.sunshine.model.selling.goods.Goods4Customer;
+import common.sunshine.model.selling.goods.Thumbnail;
 import common.sunshine.model.selling.order.CustomerOrder;
 import common.sunshine.model.selling.user.User;
+import common.sunshine.pagination.DataTablePage;
+import common.sunshine.pagination.DataTableParam;
+import common.sunshine.utils.ResponseCode;
+import common.sunshine.utils.ResultData;
+import common.sunshine.utils.SortRule;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
@@ -18,16 +25,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import selling.sunshine.form.GoodsForm;
-import common.sunshine.utils.SortRule;
-import selling.sunshine.model.*;
+import selling.sunshine.model.BackOperationLog;
 import selling.sunshine.model.sum.Vendition;
-import common.sunshine.model.selling.goods.Goods4Customer;
-import common.sunshine.model.selling.goods.Thumbnail;
-import common.sunshine.pagination.DataTablePage;
-import common.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.*;
-import common.sunshine.utils.ResponseCode;
-import common.sunshine.utils.ResultData;
 import selling.sunshine.utils.WechatConfig;
 import selling.sunshine.utils.WechatUtil;
 
@@ -46,601 +46,601 @@ import java.util.Map;
 @RestController
 public class CommodityController {
 
-	private Logger logger = LoggerFactory.getLogger(CommodityController.class);
+    private Logger logger = LoggerFactory.getLogger(CommodityController.class);
 
-	@Autowired
-	private CommodityService commodityService;
+    @Autowired
+    private CommodityService commodityService;
 
-	@Autowired
-	private AgentService agentService;
+    @Autowired
+    private AgentService agentService;
 
-	@Autowired
-	private OrderService orderService;
+    @Autowired
+    private OrderService orderService;
 
-	@Autowired
-	private UploadService uploadService;
+    @Autowired
+    private UploadService uploadService;
 
-	@Autowired
-	private ToolService toolService;
+    @Autowired
+    private ToolService toolService;
 
-	@Autowired
-	private LogService logService;
+    @Autowired
+    private LogService logService;
 
-	@Autowired
-	private StatisticService statisticService;
+    @Autowired
+    private StatisticService statisticService;
 
-	@RequestMapping(method = RequestMethod.GET, value = "/create")
-	public ModelAndView create() {
-		ModelAndView view = new ModelAndView();
-		view.setViewName("/backend/goods/create");
-		return view;
-	}
+    @RequestMapping(method = RequestMethod.GET, value = "/create")
+    public ModelAndView create() {
+        ModelAndView view = new ModelAndView();
+        view.setViewName("/backend/goods/create");
+        return view;
+    }
 
-	@RequestMapping(method = RequestMethod.POST, value = "/create")
-	public ModelAndView create(@Valid GoodsForm form, BindingResult result, HttpServletRequest request) {
-		ModelAndView view = new ModelAndView();
-		if (result.hasErrors()) {
-			view.setViewName("redirect:/commodity/create");
-			return view;
-		}
+    @RequestMapping(method = RequestMethod.POST, value = "/create")
+    public ModelAndView create(@Valid GoodsForm form, BindingResult result, HttpServletRequest request) {
+        ModelAndView view = new ModelAndView();
+        if (result.hasErrors()) {
+            view.setViewName("redirect:/commodity/create");
+            return view;
+        }
 
-		Goods4Customer goods = new Goods4Customer(form.getName(), Double.parseDouble(form.getAgentPrice()),
-				Double.parseDouble(form.getPrice()), form.getDescription(), form.getStandard());
-		goods.setBlockFlag(form.isBlock());
-		ResultData response = commodityService.createGoods4Customer(goods);
-		if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
-			List<Thumbnail> thumbnails = (List<Thumbnail>) commodityService.fetchThumbnail().getData();
-			for (Thumbnail thumbnail : thumbnails) {
-				thumbnail.setGoods((Goods4Customer) response.getData());
-			}
-			commodityService.updateThumbnails(thumbnails);
+        Goods4Customer goods = new Goods4Customer(form.getName(), Double.parseDouble(form.getAgentPrice()),
+                Double.parseDouble(form.getPrice()), form.getDescription(), form.getStandard());
+        goods.setBlockFlag(form.isBlock());
+        ResultData response = commodityService.createGoods4Customer(goods);
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            List<Thumbnail> thumbnails = (List<Thumbnail>) commodityService.fetchThumbnail().getData();
+            for (Thumbnail thumbnail : thumbnails) {
+                thumbnail.setGoods((Goods4Customer) response.getData());
+            }
+            commodityService.updateThumbnails(thumbnails);
 
-			Subject subject = SecurityUtils.getSubject();
-			User user = (User) subject.getPrincipal();
-			if (user == null) {
-				view.setViewName("redirect:/commodity/create");
-				return view;
-			}
-			Admin admin = user.getAdmin();
-			BackOperationLog backOperationLog = new BackOperationLog(admin.getUsername(), toolService.getIP(request),
-					"管理员" + admin.getUsername() + "添加了一个新商品，商品名称:" + form.getName());
-			logService.createbackOperationLog(backOperationLog);
-			view.setViewName("redirect:/commodity/overview");
-			return view;
-		} else {
-			view.setViewName("redirect:/commodity/create");
-			return view;
-		}
-	}
+            Subject subject = SecurityUtils.getSubject();
+            User user = (User) subject.getPrincipal();
+            if (user == null) {
+                view.setViewName("redirect:/commodity/create");
+                return view;
+            }
+            Admin admin = user.getAdmin();
+            BackOperationLog backOperationLog = new BackOperationLog(admin.getUsername(), toolService.getIP(request),
+                    "管理员" + admin.getUsername() + "添加了一个新商品，商品名称:" + form.getName());
+            logService.createbackOperationLog(backOperationLog);
+            view.setViewName("redirect:/commodity/overview");
+            return view;
+        } else {
+            view.setViewName("redirect:/commodity/create");
+            return view;
+        }
+    }
 
-	@RequestMapping(method = RequestMethod.GET, value = "/edit/{goodsId}")
-	public ModelAndView edit(@PathVariable("goodsId") String goodsId) {
-		ModelAndView view = new ModelAndView();
-		Map<String, Object> condition = new HashMap<>();
-		condition.put("goodsId", goodsId);
-		ResultData resultData = commodityService.fetchGoods4Customer(condition);
-		if (resultData.getResponseCode() != ResponseCode.RESPONSE_OK) {
-			view.setViewName("redirect:/commodity/overview");
-			return view;
-		}
-		Goods4Customer target = ((ArrayList<Goods4Customer>) resultData.getData()).get(0);
-		view.addObject("goods", target);
+    @RequestMapping(method = RequestMethod.GET, value = "/edit/{goodsId}")
+    public ModelAndView edit(@PathVariable("goodsId") String goodsId) {
+        ModelAndView view = new ModelAndView();
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("goodsId", goodsId);
+        ResultData resultData = commodityService.fetchGoods4Customer(condition);
+        if (resultData.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            view.setViewName("redirect:/commodity/overview");
+            return view;
+        }
+        Goods4Customer target = ((ArrayList<Goods4Customer>) resultData.getData()).get(0);
+        view.addObject("goods", target);
 
-		view.setViewName("/backend/goods/update");
-		return view;
-	}
+        view.setViewName("/backend/goods/update");
+        return view;
+    }
 
-	@RequestMapping(method = RequestMethod.POST, value = "/thumbnails/{goodsId}")
-	@ResponseBody
-	public String thumbnails(@PathVariable("goodsId") String goodsId) {
+    @RequestMapping(method = RequestMethod.POST, value = "/thumbnails/{goodsId}")
+    @ResponseBody
+    public String thumbnails(@PathVariable("goodsId") String goodsId) {
 
-		Map<String, Object> condition = new HashMap<>();
-		condition.put("goodsId", goodsId);
-		condition.put("type", "slide");
-		ResultData resultData = commodityService.fetchThumbnail(condition);
-		List<Thumbnail> thumbnails = (List<Thumbnail>) resultData.getData();
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("goodsId", goodsId);
+        condition.put("type", "slide");
+        ResultData resultData = commodityService.fetchThumbnail(condition);
+        List<Thumbnail> thumbnails = (List<Thumbnail>) resultData.getData();
 
-		JSONArray resultArray = new JSONArray();
-		JSONArray initialPreviewArray = new JSONArray();
-		JSONArray initialPreviewConfigArray = new JSONArray();
-		if (thumbnails.size() == 0) {
+        JSONArray resultArray = new JSONArray();
+        JSONArray initialPreviewArray = new JSONArray();
+        JSONArray initialPreviewConfigArray = new JSONArray();
+        if (thumbnails.size() == 0) {
 
-			resultArray.add(initialPreviewArray);
-			resultArray.add(initialPreviewConfigArray);
-			return resultArray.toJSONString();
-		}
-		for (Thumbnail thumbnail : thumbnails) {
-			JSONObject initialPreviewConfigObject = new JSONObject();
-			// initialPreviewArray.add("/selling" + thumbnail.getPath());
-			initialPreviewArray.add(thumbnail.getPath());
-			// initialPreviewConfigObject.put(
-			// "url",
-			// "/selling/commodity/delete/Thumbnail/"
-			// + thumbnail.getThumbnailId());
-			initialPreviewConfigObject.put("url", "/commodity/delete/Thumbnail/" + thumbnail.getThumbnailId());
-			initialPreviewConfigObject.put("key", thumbnail.getThumbnailId());
-			initialPreviewConfigArray.add(initialPreviewConfigObject);
-		}
-		resultArray.add(initialPreviewArray);
-		resultArray.add(initialPreviewConfigArray);
-		return resultArray.toJSONString();
+            resultArray.add(initialPreviewArray);
+            resultArray.add(initialPreviewConfigArray);
+            return resultArray.toJSONString();
+        }
+        for (Thumbnail thumbnail : thumbnails) {
+            JSONObject initialPreviewConfigObject = new JSONObject();
+            // initialPreviewArray.add("/selling" + thumbnail.getPath());
+            initialPreviewArray.add(thumbnail.getPath());
+            // initialPreviewConfigObject.put(
+            // "url",
+            // "/selling/commodity/delete/Thumbnail/"
+            // + thumbnail.getThumbnailId());
+            initialPreviewConfigObject.put("url", "/commodity/delete/Thumbnail/" + thumbnail.getThumbnailId());
+            initialPreviewConfigObject.put("key", thumbnail.getThumbnailId());
+            initialPreviewConfigArray.add(initialPreviewConfigObject);
+        }
+        resultArray.add(initialPreviewArray);
+        resultArray.add(initialPreviewConfigArray);
+        return resultArray.toJSONString();
 
-	}
+    }
 
-	@RequestMapping(method = RequestMethod.POST, value = "/picture/{goodsId}")
-	@ResponseBody
-	public String picture(@PathVariable("goodsId") String goodsId) {
+    @RequestMapping(method = RequestMethod.POST, value = "/picture/{goodsId}")
+    @ResponseBody
+    public String picture(@PathVariable("goodsId") String goodsId) {
 
-		Map<String, Object> condition = new HashMap<>();
-		condition.put("goodsId", goodsId);
-		condition.put("type", "cover");
-		ResultData resultData = commodityService.fetchThumbnail(condition);
-		List<Thumbnail> thumbnails = (List<Thumbnail>) resultData.getData();
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("goodsId", goodsId);
+        condition.put("type", "cover");
+        ResultData resultData = commodityService.fetchThumbnail(condition);
+        List<Thumbnail> thumbnails = (List<Thumbnail>) resultData.getData();
 
-		JSONArray resultArray = new JSONArray();
-		JSONArray initialPreviewArray = new JSONArray();
-		JSONArray initialPreviewConfigArray = new JSONArray();
-		if (thumbnails.size() == 0) {
+        JSONArray resultArray = new JSONArray();
+        JSONArray initialPreviewArray = new JSONArray();
+        JSONArray initialPreviewConfigArray = new JSONArray();
+        if (thumbnails.size() == 0) {
 
-			resultArray.add(initialPreviewArray);
-			resultArray.add(initialPreviewConfigArray);
-			return resultArray.toJSONString();
-		}
-		for (Thumbnail thumbnail : thumbnails) {
-			JSONObject initialPreviewConfigObject = new JSONObject();
-			// initialPreviewArray.add("/selling" + thumbnail.getPath());
-			initialPreviewArray.add(thumbnail.getPath());
-			// initialPreviewConfigObject.put(
-			// "url",
-			// "/selling/commodity/delete/Thumbnail/"
-			// + thumbnail.getThumbnailId());
-			initialPreviewConfigObject.put("url", "/commodity/delete/Thumbnail/" + thumbnail.getThumbnailId());
-			initialPreviewConfigObject.put("key", thumbnail.getThumbnailId());
-			initialPreviewConfigArray.add(initialPreviewConfigObject);
-		}
-		resultArray.add(initialPreviewArray);
-		resultArray.add(initialPreviewConfigArray);
-		return resultArray.toJSONString();
+            resultArray.add(initialPreviewArray);
+            resultArray.add(initialPreviewConfigArray);
+            return resultArray.toJSONString();
+        }
+        for (Thumbnail thumbnail : thumbnails) {
+            JSONObject initialPreviewConfigObject = new JSONObject();
+            // initialPreviewArray.add("/selling" + thumbnail.getPath());
+            initialPreviewArray.add(thumbnail.getPath());
+            // initialPreviewConfigObject.put(
+            // "url",
+            // "/selling/commodity/delete/Thumbnail/"
+            // + thumbnail.getThumbnailId());
+            initialPreviewConfigObject.put("url", "/commodity/delete/Thumbnail/" + thumbnail.getThumbnailId());
+            initialPreviewConfigObject.put("key", thumbnail.getThumbnailId());
+            initialPreviewConfigArray.add(initialPreviewConfigObject);
+        }
+        resultArray.add(initialPreviewArray);
+        resultArray.add(initialPreviewConfigArray);
+        return resultArray.toJSONString();
 
-	}
+    }
 
-	@RequestMapping(method = RequestMethod.POST, value = "/edit/{goodsId}")
-	public ModelAndView edit(@PathVariable("goodsId") String goodsId, @Valid GoodsForm form, BindingResult result,
-			HttpServletRequest request) {
-		ModelAndView view = new ModelAndView();
-		if (result.hasErrors()) {
-			view.setViewName("redirect:/commodity/overview");
-			return view;
-		}
-		Map<String, Object> condition = new HashMap<String, Object>();
-		condition.put("goodsId", goodsId);
-		ResultData queryData = commodityService.fetchGoods4Customer(condition);
-		Goods4Customer oldGoods = ((List<Goods4Customer>) queryData.getData()).get(0);
-		Goods4Customer goods = new Goods4Customer(form.getName(), Double.parseDouble(form.getAgentPrice()),
-				Double.parseDouble(form.getPrice()), form.getDescription(), form.getStandard());
-		goods.setBlockFlag(form.isBlock());
-		goods.setGoodsId(goodsId);
-		ResultData response = commodityService.updateGoods4Customer(goods);
+    @RequestMapping(method = RequestMethod.POST, value = "/edit/{goodsId}")
+    public ModelAndView edit(@PathVariable("goodsId") String goodsId, @Valid GoodsForm form, BindingResult result,
+                             HttpServletRequest request) {
+        ModelAndView view = new ModelAndView();
+        if (result.hasErrors()) {
+            view.setViewName("redirect:/commodity/overview");
+            return view;
+        }
+        Map<String, Object> condition = new HashMap<String, Object>();
+        condition.put("goodsId", goodsId);
+        ResultData queryData = commodityService.fetchGoods4Customer(condition);
+        Goods4Customer oldGoods = ((List<Goods4Customer>) queryData.getData()).get(0);
+        Goods4Customer goods = new Goods4Customer(form.getName(), Double.parseDouble(form.getAgentPrice()),
+                Double.parseDouble(form.getPrice()), form.getDescription(), form.getStandard());
+        goods.setBlockFlag(form.isBlock());
+        goods.setGoodsId(goodsId);
+        ResultData response = commodityService.updateGoods4Customer(goods);
 
-		List<Thumbnail> thumbnails = (List<Thumbnail>) commodityService.fetchThumbnail().getData();
-		for (Thumbnail thumbnail : thumbnails) {
-			thumbnail.setGoods((Goods4Customer) response.getData());
-		}
-		commodityService.updateThumbnails(thumbnails);
-		Subject subject = SecurityUtils.getSubject();
-		User user = (User) subject.getPrincipal();
-		if (user == null) {
-			view.setViewName("redirect:/commodity/overview");
-			return view;
-		}
-		Admin admin = user.getAdmin();
-		BackOperationLog backOperationLog = new BackOperationLog(admin.getUsername(), toolService.getIP(request),
-				"管理员" + admin.getUsername() + "将商品名称为" + oldGoods.getName() + "的商品信息修改了");
-		logService.createbackOperationLog(backOperationLog);
-		view.setViewName("redirect:/commodity/overview");
-		return view;
+        List<Thumbnail> thumbnails = (List<Thumbnail>) commodityService.fetchThumbnail().getData();
+        for (Thumbnail thumbnail : thumbnails) {
+            thumbnail.setGoods((Goods4Customer) response.getData());
+        }
+        commodityService.updateThumbnails(thumbnails);
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        if (user == null) {
+            view.setViewName("redirect:/commodity/overview");
+            return view;
+        }
+        Admin admin = user.getAdmin();
+        BackOperationLog backOperationLog = new BackOperationLog(admin.getUsername(), toolService.getIP(request),
+                "管理员" + admin.getUsername() + "将商品名称为" + oldGoods.getName() + "的商品信息修改了");
+        logService.createbackOperationLog(backOperationLog);
+        view.setViewName("redirect:/commodity/overview");
+        return view;
 
-	}
+    }
 
-	@RequestMapping(method = RequestMethod.GET, value = "/overview")
-	public ModelAndView overview() {
-		ModelAndView view = new ModelAndView();
-		view.setViewName("/backend/goods/overview");
-		return view;
-	}
+    @RequestMapping(method = RequestMethod.GET, value = "/overview")
+    public ModelAndView overview() {
+        ModelAndView view = new ModelAndView();
+        view.setViewName("/backend/goods/overview");
+        return view;
+    }
 
-	@ResponseBody
-	@RequestMapping(method = RequestMethod.POST, value = "/overview")
-	public DataTablePage<Goods4Customer> overview(DataTableParam param) {
-		DataTablePage<Goods4Customer> result = new DataTablePage<>(param);
-		if (StringUtils.isEmpty(param)) {
-			return result;
-		}
-		Map<String, Object> condition = new HashMap<>();
-		ResultData response = commodityService.fetchGoods4Customer(condition, param);
-		if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
-			result = (DataTablePage<Goods4Customer>) response.getData();
-		}
-		return result;
-	}
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value = "/overview")
+    public DataTablePage<Goods4Customer> overview(DataTableParam param) {
+        DataTablePage<Goods4Customer> result = new DataTablePage<>(param);
+        if (StringUtils.isEmpty(param)) {
+            return result;
+        }
+        Map<String, Object> condition = new HashMap<>();
+        ResultData response = commodityService.fetchGoods4Customer(condition, param);
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result = (DataTablePage<Goods4Customer>) response.getData();
+        }
+        return result;
+    }
 
-	@RequestMapping(method = RequestMethod.GET, value = "/viewlist")
-	public ModelAndView viewList(HttpServletRequest request, String agentId, String code, String state) {
-		ModelAndView view = new ModelAndView();
-		String openId = null;
-		if (StringUtils.isEmpty(code) || StringUtils.isEmpty(state)) {
-			HttpSession session = request.getSession();
-			if (session.getAttribute("openId") == null || session.getAttribute("openId").equals("")) {
-				WechatConfig.oauthWechat(view, "/customer/component/goods_error_msg");
-				view.setViewName("/customer/component/goods_error_msg");
-				return view;
-			}
-		}
-		if (code != null && !code.equals("")) {
-			openId = WechatUtil.queryOauthOpenId(code);
-		}
-		if (openId == null || openId.equals("")) {
-			HttpSession session = request.getSession();
-			if (session.getAttribute("openId") != null && !session.getAttribute("openId").equals("")) {
-				openId = (String) session.getAttribute("openId");
-			}
-		}
-		if (openId == null || openId.equals("")) {
-			WechatConfig.oauthWechat(view, "/customer/component/goods_error_msg");
-			view.setViewName("/customer/component/goods_error_msg");
-			return view;
-		}
-		if (!StringUtils.isEmpty(openId)) {
-			HttpSession session = request.getSession();
-			session.setAttribute("openId", openId);
-		}
-		Map<String, Object> condition = new HashMap<String, Object>();
-		condition.put("blockFlag", false);
-		ResultData fetchGoodsData = commodityService.fetchGoods4Customer(condition);
-		if (fetchGoodsData.getResponseCode() != ResponseCode.RESPONSE_OK) {
-			WechatConfig.oauthWechat(view, "/customer/component/goods_error_msg");
-			view.setViewName("/customer/component/goods_error_msg");
-			return view;
-		}
-		List<Goods4Customer> goods4Customers = (List<Goods4Customer>) fetchGoodsData.getData();
-		for (Goods4Customer goods : goods4Customers) {
-			List<Thumbnail> thumbnails = goods.getThumbnails();
-			List<Thumbnail> newThumbnails = new ArrayList<Thumbnail>();
-			for (Thumbnail thumbnail : thumbnails) {
-				if (thumbnail.getType().equals("cover")) {
-					newThumbnails.add(thumbnail);
-				}
-			}
-			goods.setThumbnails(newThumbnails);
-		}
-		view.addObject("goodsList", goods4Customers);
-		view.setViewName("/customer/goods/goods_list");
-		return view;
-	}
+    @RequestMapping(method = RequestMethod.GET, value = "/viewlist")
+    public ModelAndView viewList(HttpServletRequest request, String agentId, String code, String state) {
+        ModelAndView view = new ModelAndView();
+        String openId = null;
+        if (StringUtils.isEmpty(code) || StringUtils.isEmpty(state)) {
+            HttpSession session = request.getSession();
+            if (session.getAttribute("openId") == null || session.getAttribute("openId").equals("")) {
+                WechatConfig.oauthWechat(view, "/customer/component/goods_error_msg");
+                view.setViewName("/customer/component/goods_error_msg");
+                return view;
+            }
+        }
+        if (code != null && !code.equals("")) {
+            openId = WechatUtil.queryOauthOpenId(code);
+        }
+        if (openId == null || openId.equals("")) {
+            HttpSession session = request.getSession();
+            if (session.getAttribute("openId") != null && !session.getAttribute("openId").equals("")) {
+                openId = (String) session.getAttribute("openId");
+            }
+        }
+        if (openId == null || openId.equals("")) {
+            WechatConfig.oauthWechat(view, "/customer/component/goods_error_msg");
+            view.setViewName("/customer/component/goods_error_msg");
+            return view;
+        }
+        if (!StringUtils.isEmpty(openId)) {
+            HttpSession session = request.getSession();
+            session.setAttribute("openId", openId);
+        }
+        Map<String, Object> condition = new HashMap<String, Object>();
+        condition.put("blockFlag", false);
+        ResultData fetchGoodsData = commodityService.fetchGoods4Customer(condition);
+        if (fetchGoodsData.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            WechatConfig.oauthWechat(view, "/customer/component/goods_error_msg");
+            view.setViewName("/customer/component/goods_error_msg");
+            return view;
+        }
+        List<Goods4Customer> goods4Customers = (List<Goods4Customer>) fetchGoodsData.getData();
+        for (Goods4Customer goods : goods4Customers) {
+            List<Thumbnail> thumbnails = goods.getThumbnails();
+            List<Thumbnail> newThumbnails = new ArrayList<Thumbnail>();
+            for (Thumbnail thumbnail : thumbnails) {
+                if (thumbnail.getType().equals("cover")) {
+                    newThumbnails.add(thumbnail);
+                }
+            }
+            goods.setThumbnails(newThumbnails);
+        }
+        view.addObject("goodsList", goods4Customers);
+        view.setViewName("/customer/goods/goods_list");
+        return view;
+    }
 
-	@RequestMapping(method = RequestMethod.GET, value = "/{goodsId}")
-	public ModelAndView view(HttpServletRequest request, @PathVariable("goodsId") String goodsId, String agentId,
-			String code, String state) {
-		ModelAndView view = new ModelAndView();
-		String openId = null;
-		if (StringUtils.isEmpty(code) || StringUtils.isEmpty(state)) {
-			HttpSession session = request.getSession();
-			if (session.getAttribute("openId") == null || session.getAttribute("openId").equals("")) {
-				WechatConfig.oauthWechat(view, "/customer/component/goods_error_msg");
-				view.setViewName("/customer/component/goods_error_msg");
-				return view;
-			}
-		}
-		if (code != null && !code.equals("")) {
-			openId = WechatUtil.queryOauthOpenId(code);
-		}
-		if (openId == null || openId.equals("")) {
-			HttpSession session = request.getSession();
-			if (session.getAttribute("openId") != null && !session.getAttribute("openId").equals("")) {
-				openId = (String) session.getAttribute("openId");
-			}
-		}
-		view.addObject("wechat", openId);
-		if (openId == null || openId.equals("")) {
-			WechatConfig.oauthWechat(view, "/customer/component/goods_error_msg");
-			view.setViewName("/customer/component/goods_error_msg");
-			return view;
-		}
-		if (!StringUtils.isEmpty(openId)) {
-			HttpSession session = request.getSession();
-			session.setAttribute("openId", openId);
-		}
-		Map<String, Object> condition = new HashMap<>();
-		condition.put("wechat", openId);
-		List<SortRule> rules = new ArrayList<>();
-		rules.add(new SortRule("create_time", "desc"));
-		condition.put("sort", rules);
-		ResultData response = orderService.fetchCustomerOrder(condition);
-		if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
-			List<CustomerOrder> list = (List<CustomerOrder>) response.getData();
-			view.addObject("history", list.get(0));
-		}
-		condition.clear();
-		condition.put("goodsId", goodsId);
-		condition.put("blockFlag", false);
-		ResultData fetchCommodityData = commodityService.fetchGoods4Customer(condition);
-		if (fetchCommodityData.getResponseCode() != ResponseCode.RESPONSE_OK) {
-			// 商品不存在错误页面!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-			WechatConfig.oauthWechat(view, "/customer/component/goods_error_msg");
-			view.setViewName("/customer/component/goods_error_msg");
-			return view;
-		}
-		Goods4Customer goods = ((List<Goods4Customer>) fetchCommodityData.getData()).get(0);
-		if (!StringUtils.isEmpty(agentId)) {
-			condition.clear();
-			condition.put("agentId", agentId);
-			condition.put("granted", true);
-			condition.put("blockFlag", false);
-			ResultData fetchAgentData = agentService.fetchAgent(condition);
-			if (fetchAgentData.getResponseCode() != ResponseCode.RESPONSE_OK) {
-				// 代理商不存在错误页面!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-				WechatConfig.oauthWechat(view, "/customer/component/agent_error_msg");
-				view.setViewName("/customer/component/agent_error_msg");
-				return view;
-			}
-			Agent agent = ((List<Agent>) fetchAgentData.getData()).get(0);
-			view.addObject("agent", agent);
-		}
-		for (int i = 0; i < goods.getThumbnails().size(); i++) {
-			if (goods.getThumbnails().get(i).getType().equals("cover")) {
-				goods.getThumbnails().remove(i);
-				break;
-			}
-		}
-		view.addObject("goods", goods);
-		WechatConfig.oauthWechat(view, "/customer/goods/detail");
-		view.setViewName("/customer/goods/detail");
-		return view;
-	}
+    @RequestMapping(method = RequestMethod.GET, value = "/{goodsId}")
+    public ModelAndView view(HttpServletRequest request, @PathVariable("goodsId") String goodsId, String agentId,
+                             String code, String state) {
+        ModelAndView view = new ModelAndView();
+        String openId = null;
+        if (StringUtils.isEmpty(code) || StringUtils.isEmpty(state)) {
+            HttpSession session = request.getSession();
+            if (session.getAttribute("openId") == null || session.getAttribute("openId").equals("")) {
+                WechatConfig.oauthWechat(view, "/customer/component/goods_error_msg");
+                view.setViewName("/customer/component/goods_error_msg");
+                return view;
+            }
+        }
+        if (code != null && !code.equals("")) {
+            openId = WechatUtil.queryOauthOpenId(code);
+        }
+        if (openId == null || openId.equals("")) {
+            HttpSession session = request.getSession();
+            if (session.getAttribute("openId") != null && !session.getAttribute("openId").equals("")) {
+                openId = (String) session.getAttribute("openId");
+            }
+        }
+        view.addObject("wechat", openId);
+        if (openId == null || openId.equals("")) {
+            WechatConfig.oauthWechat(view, "/customer/component/goods_error_msg");
+            view.setViewName("/customer/component/goods_error_msg");
+            return view;
+        }
+        if (!StringUtils.isEmpty(openId)) {
+            HttpSession session = request.getSession();
+            session.setAttribute("openId", openId);
+        }
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("wechat", openId);
+        List<SortRule> rules = new ArrayList<>();
+        rules.add(new SortRule("create_time", "desc"));
+        condition.put("sort", rules);
+        ResultData response = orderService.fetchCustomerOrder(condition);
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            List<CustomerOrder> list = (List<CustomerOrder>) response.getData();
+            view.addObject("history", list.get(0));
+        }
+        condition.clear();
+        condition.put("goodsId", goodsId);
+        condition.put("blockFlag", false);
+        ResultData fetchCommodityData = commodityService.fetchGoods4Customer(condition);
+        if (fetchCommodityData.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            // 商品不存在错误页面!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            WechatConfig.oauthWechat(view, "/customer/component/goods_error_msg");
+            view.setViewName("/customer/component/goods_error_msg");
+            return view;
+        }
+        Goods4Customer goods = ((List<Goods4Customer>) fetchCommodityData.getData()).get(0);
+        if (!StringUtils.isEmpty(agentId)) {
+            condition.clear();
+            condition.put("agentId", agentId);
+            condition.put("granted", true);
+            condition.put("blockFlag", false);
+            ResultData fetchAgentData = agentService.fetchAgent(condition);
+            if (fetchAgentData.getResponseCode() != ResponseCode.RESPONSE_OK) {
+                // 代理商不存在错误页面!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                WechatConfig.oauthWechat(view, "/customer/component/agent_error_msg");
+                view.setViewName("/customer/component/agent_error_msg");
+                return view;
+            }
+            Agent agent = ((List<Agent>) fetchAgentData.getData()).get(0);
+            view.addObject("agent", agent);
+        }
+        for (int i = 0; i < goods.getThumbnails().size(); i++) {
+            if (goods.getThumbnails().get(i).getType().equals("cover")) {
+                goods.getThumbnails().remove(i);
+                break;
+            }
+        }
+        view.addObject("goods", goods);
+        WechatConfig.oauthWechat(view, "/customer/goods/detail");
+        view.setViewName("/customer/goods/detail");
+        return view;
+    }
 
-	@RequestMapping(method = RequestMethod.GET, value = "/customerorder")
-	public ModelAndView customerOrder(String orderId) {
-		ModelAndView view = new ModelAndView();
-		Map<String, Object> condition = new HashMap<>();
-		if (!StringUtils.isEmpty(orderId)) {
-			condition.put("orderId", orderId);
-		}
-		if (condition.isEmpty()) {
-			// 订单不存在错误页面
-			WechatConfig.oauthWechat(view, "/customer/component/order_error_msg");
-			view.setViewName("/customer/component/order_error_msg");
-			return view;
-		}
-		ResultData fetchCustomerOrderData = orderService.fetchCustomerOrder(condition);
-		if (fetchCustomerOrderData.getResponseCode() != ResponseCode.RESPONSE_OK) {
-			// 订单不存在错误页面
-			WechatConfig.oauthWechat(view, "/customer/component/order_error_msg");
-			view.setViewName("/customer/component/order_error_msg");
-			return view;
-		}
-		CustomerOrder customerOrder = ((List<CustomerOrder>) fetchCustomerOrderData.getData()).get(0);
-		view.addObject("customerOrder", customerOrder);
-		WechatConfig.oauthWechat(view, "/customer/order/detail");
-		view.setViewName("/customer/order/detail");
-		return view;
-	}
+    @RequestMapping(method = RequestMethod.GET, value = "/customerorder")
+    public ModelAndView customerOrder(String orderId) {
+        ModelAndView view = new ModelAndView();
+        Map<String, Object> condition = new HashMap<>();
+        if (!StringUtils.isEmpty(orderId)) {
+            condition.put("orderId", orderId);
+        }
+        if (condition.isEmpty()) {
+            // 订单不存在错误页面
+            WechatConfig.oauthWechat(view, "/customer/component/order_error_msg");
+            view.setViewName("/customer/component/order_error_msg");
+            return view;
+        }
+        ResultData fetchCustomerOrderData = orderService.fetchCustomerOrder(condition);
+        if (fetchCustomerOrderData.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            // 订单不存在错误页面
+            WechatConfig.oauthWechat(view, "/customer/component/order_error_msg");
+            view.setViewName("/customer/component/order_error_msg");
+            return view;
+        }
+        CustomerOrder customerOrder = ((List<CustomerOrder>) fetchCustomerOrderData.getData()).get(0);
+        view.addObject("customerOrder", customerOrder);
+        WechatConfig.oauthWechat(view, "/customer/order/detail");
+        view.setViewName("/customer/order/detail");
+        return view;
+    }
 
-	@RequestMapping(method = RequestMethod.POST, value = "/detail/{goodsId}")
-	public ResultData detail(@PathVariable("goodsId") String goodsId) {
-		ResultData resultData = new ResultData();
-		Map<String, Object> dataMap = new HashMap<>();
+    @RequestMapping(method = RequestMethod.POST, value = "/detail/{goodsId}")
+    public ResultData detail(@PathVariable("goodsId") String goodsId) {
+        ResultData resultData = new ResultData();
+        Map<String, Object> dataMap = new HashMap<>();
 
-		Map<String, Object> condition = new HashMap<>();
-		condition.put("goodsId", goodsId);
-		ResultData queryData = commodityService.fetchGoods4Customer(condition);
-		if (queryData.getData() != null) {
-			Goods4Customer goods = ((List<Goods4Customer>) queryData.getData()).get(0);
-			dataMap.put("goods", goods);
-			List<Thumbnail> thumbnails = (List<Thumbnail>) commodityService.fetchThumbnail(condition).getData();
-			if (thumbnails.size() != 0) {
-				dataMap.put("thumbnails", thumbnails);
-			} else {
-				dataMap.put("thumbnails", 0);
-			}
-		}
-		resultData.setData(dataMap);
-		return resultData;
-	}
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("goodsId", goodsId);
+        ResultData queryData = commodityService.fetchGoods4Customer(condition);
+        if (queryData.getData() != null) {
+            Goods4Customer goods = ((List<Goods4Customer>) queryData.getData()).get(0);
+            dataMap.put("goods", goods);
+            List<Thumbnail> thumbnails = (List<Thumbnail>) commodityService.fetchThumbnail(condition).getData();
+            if (thumbnails.size() != 0) {
+                dataMap.put("thumbnails", thumbnails);
+            } else {
+                dataMap.put("thumbnails", 0);
+            }
+        }
+        resultData.setData(dataMap);
+        return resultData;
+    }
 
-	@RequestMapping(method = RequestMethod.GET, value = "/forbid/{goodsId}")
-	public ModelAndView forbid(@PathVariable("goodsId") String goodsId, HttpServletRequest request) {
-		ModelAndView view = new ModelAndView();
-		Map<String, Object> condition = new HashMap<String, Object>();
-		condition.put("goodsId", goodsId);
-		ResultData resultData = commodityService.fetchGoods4Customer(condition);
-		if (resultData.getResponseCode() != ResponseCode.RESPONSE_OK) {
-			view.setViewName("redirect:/commodity/overview");
-			return view;
-		}
-		Goods4Customer target = ((List<Goods4Customer>) resultData.getData()).get(0);
-		target.setBlockFlag(true);
-		ResultData response = commodityService.updateGoods4Customer(target);
-		if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
-			Subject subject = SecurityUtils.getSubject();
-			User user = (User) subject.getPrincipal();
-			if (user == null) {
-				view.setViewName("redirect:/commodity/overview");
-				return view;
-			}
-			Admin admin = user.getAdmin();
-			BackOperationLog backOperationLog = new BackOperationLog(admin.getUsername(), toolService.getIP(request),
-					"管理员" + admin.getUsername() + "将商品" + target.getName() + "下架");
-			logService.createbackOperationLog(backOperationLog);
-			view.setViewName("redirect:/commodity/overview");
-		} else {
-			view.setViewName("redirect:/commodity/overview");
-		}
-		return view;
-	}
+    @RequestMapping(method = RequestMethod.GET, value = "/forbid/{goodsId}")
+    public ModelAndView forbid(@PathVariable("goodsId") String goodsId, HttpServletRequest request) {
+        ModelAndView view = new ModelAndView();
+        Map<String, Object> condition = new HashMap<String, Object>();
+        condition.put("goodsId", goodsId);
+        ResultData resultData = commodityService.fetchGoods4Customer(condition);
+        if (resultData.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            view.setViewName("redirect:/commodity/overview");
+            return view;
+        }
+        Goods4Customer target = ((List<Goods4Customer>) resultData.getData()).get(0);
+        target.setBlockFlag(true);
+        ResultData response = commodityService.updateGoods4Customer(target);
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            Subject subject = SecurityUtils.getSubject();
+            User user = (User) subject.getPrincipal();
+            if (user == null) {
+                view.setViewName("redirect:/commodity/overview");
+                return view;
+            }
+            Admin admin = user.getAdmin();
+            BackOperationLog backOperationLog = new BackOperationLog(admin.getUsername(), toolService.getIP(request),
+                    "管理员" + admin.getUsername() + "将商品" + target.getName() + "下架");
+            logService.createbackOperationLog(backOperationLog);
+            view.setViewName("redirect:/commodity/overview");
+        } else {
+            view.setViewName("redirect:/commodity/overview");
+        }
+        return view;
+    }
 
-	@RequestMapping(method = RequestMethod.GET, value = "/enable/{goodsId}")
-	public ModelAndView enable(@PathVariable("goodsId") String goodsId, HttpServletRequest request) {
-		ModelAndView view = new ModelAndView();
-		Map<String, Object> condition = new HashMap<>();
-		condition.put("goodsId", goodsId);
-		ResultData resultData = commodityService.fetchGoods4Customer(condition);
-		if (resultData.getResponseCode() != ResponseCode.RESPONSE_OK) {
-			view.setViewName("redirect:/commodity/overview");
-			return view;
-		}
-		Goods4Customer target = ((List<Goods4Customer>) resultData.getData()).get(0);
-		target.setBlockFlag(false);
-		ResultData response = commodityService.updateGoods4Customer(target);
-		if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
-			Subject subject = SecurityUtils.getSubject();
-			User user = (User) subject.getPrincipal();
-			if (user == null) {
-				view.setViewName("redirect:/commodity/overview");
-				return view;
-			}
-			Admin admin = user.getAdmin();
-			BackOperationLog backOperationLog = new BackOperationLog(admin.getUsername(), toolService.getIP(request),
-					"管理员" + admin.getUsername() + "将商品" + target.getName() + "上架");
-			logService.createbackOperationLog(backOperationLog);
-			view.setViewName("redirect:/commodity/overview");
-		} else {
-			view.setViewName("redirect:/commodity/overview");
-		}
-		return view;
-	}
+    @RequestMapping(method = RequestMethod.GET, value = "/enable/{goodsId}")
+    public ModelAndView enable(@PathVariable("goodsId") String goodsId, HttpServletRequest request) {
+        ModelAndView view = new ModelAndView();
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("goodsId", goodsId);
+        ResultData resultData = commodityService.fetchGoods4Customer(condition);
+        if (resultData.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            view.setViewName("redirect:/commodity/overview");
+            return view;
+        }
+        Goods4Customer target = ((List<Goods4Customer>) resultData.getData()).get(0);
+        target.setBlockFlag(false);
+        ResultData response = commodityService.updateGoods4Customer(target);
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            Subject subject = SecurityUtils.getSubject();
+            User user = (User) subject.getPrincipal();
+            if (user == null) {
+                view.setViewName("redirect:/commodity/overview");
+                return view;
+            }
+            Admin admin = user.getAdmin();
+            BackOperationLog backOperationLog = new BackOperationLog(admin.getUsername(), toolService.getIP(request),
+                    "管理员" + admin.getUsername() + "将商品" + target.getName() + "上架");
+            logService.createbackOperationLog(backOperationLog);
+            view.setViewName("redirect:/commodity/overview");
+        } else {
+            view.setViewName("redirect:/commodity/overview");
+        }
+        return view;
+    }
 
-	@ResponseBody
-	@RequestMapping(method = RequestMethod.POST, value = "/upload")
-	public String upload(MultipartHttpServletRequest request) {
-		String context = request.getSession().getServletContext().getRealPath("/");
-		JSONObject resultObject = new JSONObject();
-		try {
-			String filename = "thumbnail";
-			MultipartFile file = request.getFile(filename);
-			if (file != null) {
-				ResultData response = uploadService.upload(file, context);
-				if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
-					Thumbnail thumbnail = new Thumbnail((String) response.getData(), "slide");
-					String thumbnailId = ((Thumbnail) commodityService.createThumbnail(thumbnail).getData())
-							.getThumbnailId();
-					JSONArray initialPreviewArray = new JSONArray();
-					JSONArray initialPreviewConfigArray = new JSONArray();
-					JSONObject initialPreviewConfigObject = new JSONObject();
-					// initialPreviewArray.add("/selling" +
-					// response.getData().toString());
-					initialPreviewArray.add(response.getData().toString());
-					// initialPreviewConfigObject.put("url",
-					// "/selling/commodity/delete/Thumbnail/"+thumbnailId);
-					initialPreviewConfigObject.put("url", "/commodity/delete/Thumbnail/" + thumbnailId);
-					initialPreviewConfigObject.put("key", thumbnailId);
-					initialPreviewConfigArray.add(initialPreviewConfigObject);
-					resultObject.put("initialPreview", initialPreviewArray);
-					resultObject.put("initialPreviewConfig", initialPreviewConfigArray);
-					return resultObject.toJSONString();
-				}
-			}
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-		}
-		resultObject.put("error", "上传此图片发生错误，请重试！");
-		return resultObject.toJSONString();
-	}
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value = "/upload")
+    public String upload(MultipartHttpServletRequest request) {
+        String context = request.getSession().getServletContext().getRealPath("/");
+        JSONObject resultObject = new JSONObject();
+        try {
+            String filename = "thumbnail";
+            MultipartFile file = request.getFile(filename);
+            if (file != null) {
+                ResultData response = uploadService.upload(file, context);
+                if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                    Thumbnail thumbnail = new Thumbnail((String) response.getData(), "slide");
+                    String thumbnailId = ((Thumbnail) commodityService.createThumbnail(thumbnail).getData())
+                            .getThumbnailId();
+                    JSONArray initialPreviewArray = new JSONArray();
+                    JSONArray initialPreviewConfigArray = new JSONArray();
+                    JSONObject initialPreviewConfigObject = new JSONObject();
+                    // initialPreviewArray.add("/selling" +
+                    // response.getData().toString());
+                    initialPreviewArray.add(response.getData().toString());
+                    // initialPreviewConfigObject.put("url",
+                    // "/selling/commodity/delete/Thumbnail/"+thumbnailId);
+                    initialPreviewConfigObject.put("url", "/commodity/delete/Thumbnail/" + thumbnailId);
+                    initialPreviewConfigObject.put("key", thumbnailId);
+                    initialPreviewConfigArray.add(initialPreviewConfigObject);
+                    resultObject.put("initialPreview", initialPreviewArray);
+                    resultObject.put("initialPreviewConfig", initialPreviewConfigArray);
+                    return resultObject.toJSONString();
+                }
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        resultObject.put("error", "上传此图片发生错误，请重试！");
+        return resultObject.toJSONString();
+    }
 
-	@ResponseBody
-	@RequestMapping(method = RequestMethod.POST, value = "/uploadthumbnail")
-	public String uploadThumbnail(MultipartHttpServletRequest request) {
-		String context = request.getSession().getServletContext().getRealPath("/");
-		JSONObject resultObject = new JSONObject();
-		try {
-			String filename = "picture";
-			MultipartFile file = request.getFile(filename);
-			if (file != null) {
-				ResultData response = uploadService.upload(file, context);
-				if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
-					Thumbnail thumbnail = new Thumbnail((String) response.getData(), "cover");
-					String thumbnailId = ((Thumbnail) commodityService.createThumbnail(thumbnail).getData())
-							.getThumbnailId();
-					JSONArray initialPreviewArray = new JSONArray();
-					JSONArray initialPreviewConfigArray = new JSONArray();
-					JSONObject initialPreviewConfigObject = new JSONObject();
-					// initialPreviewArray.add("/selling" +
-					// response.getData().toString());
-					initialPreviewArray.add(response.getData().toString());
-					// initialPreviewConfigObject.put("url",
-					// "/selling/commodity/delete/Thumbnail/"+thumbnailId);
-					initialPreviewConfigObject.put("url", "/commodity/delete/Thumbnail/" + thumbnailId);
-					initialPreviewConfigObject.put("key", thumbnailId);
-					initialPreviewConfigArray.add(initialPreviewConfigObject);
-					resultObject.put("initialPreview", initialPreviewArray);
-					resultObject.put("initialPreviewConfig", initialPreviewConfigArray);
-					return resultObject.toJSONString();
-				}
-			}
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-		}
-		resultObject.put("error", "上传此图片发生错误，请重试！");
-		return resultObject.toJSONString();
-	}
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value = "/uploadthumbnail")
+    public String uploadThumbnail(MultipartHttpServletRequest request) {
+        String context = request.getSession().getServletContext().getRealPath("/");
+        JSONObject resultObject = new JSONObject();
+        try {
+            String filename = "picture";
+            MultipartFile file = request.getFile(filename);
+            if (file != null) {
+                ResultData response = uploadService.upload(file, context);
+                if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                    Thumbnail thumbnail = new Thumbnail((String) response.getData(), "cover");
+                    String thumbnailId = ((Thumbnail) commodityService.createThumbnail(thumbnail).getData())
+                            .getThumbnailId();
+                    JSONArray initialPreviewArray = new JSONArray();
+                    JSONArray initialPreviewConfigArray = new JSONArray();
+                    JSONObject initialPreviewConfigObject = new JSONObject();
+                    // initialPreviewArray.add("/selling" +
+                    // response.getData().toString());
+                    initialPreviewArray.add(response.getData().toString());
+                    // initialPreviewConfigObject.put("url",
+                    // "/selling/commodity/delete/Thumbnail/"+thumbnailId);
+                    initialPreviewConfigObject.put("url", "/commodity/delete/Thumbnail/" + thumbnailId);
+                    initialPreviewConfigObject.put("key", thumbnailId);
+                    initialPreviewConfigArray.add(initialPreviewConfigObject);
+                    resultObject.put("initialPreview", initialPreviewArray);
+                    resultObject.put("initialPreviewConfig", initialPreviewConfigArray);
+                    return resultObject.toJSONString();
+                }
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        resultObject.put("error", "上传此图片发生错误，请重试！");
+        return resultObject.toJSONString();
+    }
 
-	@ResponseBody
-	@RequestMapping(method = RequestMethod.POST, value = "/delete/Thumbnail/{thumbnailId}")
-	public String deleteThumbnail(@PathVariable("thumbnailId") String thumbnailId) {
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value = "/delete/Thumbnail/{thumbnailId}")
+    public String deleteThumbnail(@PathVariable("thumbnailId") String thumbnailId) {
 
-		commodityService.deleteGoodsThumbnail(thumbnailId);
+        commodityService.deleteGoodsThumbnail(thumbnailId);
 
-		JSONObject resultObject = new JSONObject();
-		JSONArray initialPreviewArray = new JSONArray();
-		JSONArray initialPreviewConfigArray = new JSONArray();
-		resultObject.put("initialPreview", initialPreviewArray);
-		resultObject.put("initialPreviewConfig", initialPreviewConfigArray);
+        JSONObject resultObject = new JSONObject();
+        JSONArray initialPreviewArray = new JSONArray();
+        JSONArray initialPreviewConfigArray = new JSONArray();
+        resultObject.put("initialPreview", initialPreviewArray);
+        resultObject.put("initialPreviewConfig", initialPreviewConfigArray);
 
-		return resultObject.toJSONString();
-	}
+        return resultObject.toJSONString();
+    }
 
-	@ResponseBody
-	@RequestMapping(method = RequestMethod.GET, value = "/volume/monthly")
-	public ResultData volumeMonthly() {
-		ResultData resultData = new ResultData();
-		JSONArray array = new JSONArray();
-		Map<String, Object> condition = new HashMap<>();
-		condition.put("monthly", true);
-		condition.put("type", 0);
-		ResultData queryData = statisticService.purchaseRecord(condition);
-		if (queryData.getResponseCode() == ResponseCode.RESPONSE_OK) {
-			List<Vendition> monthlyGoods = (List<Vendition>) resultData.getData();
-			for (Vendition vendition : monthlyGoods) {
-				JSONObject object = new JSONObject();
-				object.put("goodsId", vendition.getGoodsId());
-				object.put("goodsName", vendition.getGoodsName());
-				object.put("goodsQuantity", vendition.getGoodsQuantity());
-				array.add(object);
-			}
-		}
-		resultData.setData(array);
-		return resultData;
-	}
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.GET, value = "/volume/monthly")
+    public ResultData volumeMonthly() {
+        ResultData resultData = new ResultData();
+        JSONArray array = new JSONArray();
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("monthly", true);
+        condition.put("type", 0);
+        ResultData queryData = statisticService.purchaseRecord(condition);
+        if (queryData.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            List<Vendition> monthlyGoods = (List<Vendition>) queryData.getData();
+            for (Vendition vendition : monthlyGoods) {
+                JSONObject object = new JSONObject();
+                object.put("goodsId", vendition.getGoodsId());
+                object.put("goodsName", vendition.getGoodsName());
+                object.put("goodsQuantity", vendition.getGoodsQuantity());
+                array.add(object);
+            }
+        }
+        resultData.setData(array);
+        return resultData;
+    }
 
-	@ResponseBody
-	@RequestMapping(method = RequestMethod.GET, value = "/volume")
-	public ResultData volume() {
-		ResultData resultData = new ResultData();
-		JSONArray array = new JSONArray();
-		Map<String, Object> condition = new HashMap<>();
-		condition.put("type", 0);
-		ResultData queryData = statisticService.purchaseRecord(condition);
-		if (queryData.getResponseCode() == ResponseCode.RESPONSE_OK) {
-			List<Vendition> monthlyGoods = (List<Vendition>) resultData.getData();
-			for (Vendition vendition : monthlyGoods) {
-				JSONObject object = new JSONObject();
-				object.put("goodsId", vendition.getGoodsId());
-				object.put("goodsName", vendition.getGoodsName());
-				object.put("goodsQuantity", vendition.getGoodsQuantity());
-				array.add(object);
-			}
-		}
-		resultData.setData(array);
-		return resultData;
-	}
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.GET, value = "/volume")
+    public ResultData volume() {
+        ResultData resultData = new ResultData();
+        JSONArray array = new JSONArray();
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("type", 0);
+        ResultData queryData = statisticService.purchaseRecord(condition);
+        if (queryData.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            List<Vendition> monthlyGoods = (List<Vendition>) queryData.getData();
+            for (Vendition vendition : monthlyGoods) {
+                JSONObject object = new JSONObject();
+                object.put("goodsId", vendition.getGoodsId());
+                object.put("goodsName", vendition.getGoodsName());
+                object.put("goodsQuantity", vendition.getGoodsQuantity());
+                array.add(object);
+            }
+        }
+        resultData.setData(array);
+        return resultData;
+    }
 
 }
