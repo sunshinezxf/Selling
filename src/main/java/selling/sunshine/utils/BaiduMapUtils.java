@@ -17,12 +17,12 @@ import org.apache.commons.lang.StringUtils;
 
 public class BaiduMapUtils {
 
-	private String ak = "YkGjlR5HVXkCIg07B02dfKRZYUCpeUPW";
+	private static String ak = "YkGjlR5HVXkCIg07B02dfKRZYUCpeUPW";
 
 	/*
 	 * 根据详细地理位置获取经纬度
 	 */
-	public Map<String, BigDecimal> getLatAndLngByAddress(String addr) {
+	public static Map<String, BigDecimal> getLatAndLngByAddress(String addr) {
 		String address = "";
 		String lat = "";
 		String lng = "";
@@ -67,7 +67,7 @@ public class BaiduMapUtils {
 	/*
 	 * 根据经纬度获取详细地理位置
 	 */
-	public  Map<String, String> testPost(String x, String y) throws IOException {
+	public static Map<String, String> getAddressByLatAndLng(String x, String y) throws IOException {
 		URL url = new URL("http://api.map.baidu.com/geocoder?" + ak + "=您的密钥" + "&callback=renderReverse&location=" + x
 				+ "," + y + "&output=json");
 		URLConnection connection = url.openConnection();
@@ -90,7 +90,6 @@ public class BaiduMapUtils {
 			sb.append(res.trim());
 		}
 		String str = sb.toString();
-		System.out.println(str);
 		Map<String, String> map = null;
 		if (StringUtils.isNotEmpty(str)) {
 			int addStart = str.indexOf("formatted_address\":");
@@ -99,6 +98,12 @@ public class BaiduMapUtils {
 				String address = str.substring(addStart + 20, addEnd);
 				map = new HashMap<String, String>();
 				map.put("address", address);
+				int start=str.indexOf("province\":");
+				int end = str.indexOf("\",\"street");
+				if(start > 0 && end > 0){
+					String province = str.substring(start + 11, end);
+					map.put("province", province);
+				}
 				return map;
 			}
 		}
