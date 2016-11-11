@@ -32,7 +32,7 @@
 	</resultMap>
     
     <select id="query" parameterType="java.util.Map" resultMap="orderItemSumVo">
-    	SELECT agent_id, order_type, order_id, order_item_status, goods_quantity, order_item_price, customer_name, block_flag, create_time
+    	SELECT agent_id, order_type, order_id, goods_id, order_item_status, goods_quantity, order_item_price, customer_name, block_flag, create_time
     	FROM order_item_sum
     	WHERE 1 = 1
     	<if test="agentId != null and agentId !=''">
@@ -40,6 +40,9 @@
     	</if>
     	<if test="orderId != null and orderId != ''">
             AND order_id = #{orderId}
+        </if>
+        <if test="goodsId != null and goodsId != ''">
+        	AND goods_id = #{goodsId}
         </if>
         <if test="orderType != null and orderType !=''">
         	AND order_type = #{orderType}
