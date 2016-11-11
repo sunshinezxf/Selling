@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "echarts": "^3.3.1",
     "gulp": "^3.9.1",
     "gulp-sass": "^2.3.2",
     "gulp-uglify": "^2.0.0",
