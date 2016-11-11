@@ -1,6 +1,7 @@
 package selling.sunshine.controller;
 
 import com.alibaba.fastjson.JSONArray;
+
 import com.alibaba.fastjson.JSONObject;
 
 import org.slf4j.Logger;
@@ -15,14 +16,19 @@ import org.springframework.web.bind.annotation.RestController;
 import selling.sunshine.model.sum.AgentGoods;
 import selling.sunshine.model.sum.OrderSeries;
 import selling.sunshine.model.sum.OrderStatistics;
+import common.sunshine.model.selling.customer.Customer;
 import common.sunshine.pagination.DataTablePage;
 import common.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.AgentService;
+import selling.sunshine.service.CustomerService;
 import selling.sunshine.service.OrderService;
 import selling.sunshine.service.StatisticService;
+import selling.sunshine.utils.BaiduMapUtils;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
 
+import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,6 +50,9 @@ public class StatisticController {
 
     @Autowired
     private StatisticService statisticService;
+    
+    @Autowired
+    private CustomerService customerService;
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/order")
@@ -262,5 +271,37 @@ public class StatisticController {
         return result;
     }
     
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.GET, value = "/sales/area")
+    public ResultData salesArea() throws IOException {
+    	ResultData resultData=new ResultData();
+    	Map<String, Object> condition=new HashMap<>();
+    	condition.put("blockFlag", false);
+    	ResultData queryData=customerService.fetchCustomer(condition);
+    	if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
+    		List<Customer> customers=(List<Customer>)queryData.getData();
+    		Map<String, Integer> map=new HashMap<>();
+    		for (Customer customer:customers) {
+				Map<String, BigDecimal> map1 = BaiduMapUtils.getLatAndLngByAddress(customer.getAddress().getAddress());
+				BigDecimal lat=map1.get("lat");
+				BigDecimal lng=map1.get("lng");
+				Map<String, String> map2=BaiduMapUtils.getAddressByLatAndLng(String.valueOf(lat), String.valueOf(lng));
+				String province=map2.get("province");
+				if (map.containsKey(province)) {
+					map.put(province, map.get(province)+1);
+				}else {
+					map.put(province, 1);
+				}
+			}
+    		resultData.setData(map);
+		}
+    	return resultData;
+	}
     
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.GET, value = "/agent/ranking")
+    public ResultData agentRanking(){
+    	ResultData resultData=new ResultData();
+    	return resultData;
+    }
 }
