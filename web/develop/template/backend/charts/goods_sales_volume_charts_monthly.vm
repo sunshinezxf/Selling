@@ -1,0 +1,70 @@
+<div id="goods_sales_volume" class="container-fluid" style="height: 350px;"></div>
+<script>
+    var goods_sales_volume_monthly = "${path.concat('/commodity/volume/monthly')}";
+
+    var goods_sales_volume_total = "${path.concat('/commodity/volume')}";
+
+    $(document).ready(function () {
+
+        $.get(goods_sales_volume_monthly, function (result) {
+            var volume_chart = echarts.init(document.getElementById('goods_sales_volume'));
+
+            option = {
+                title: {
+                    text: "商品月度销量统计"
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'shadow'
+                    }
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                yAxis: [{
+                    type: 'category',
+                    data: ['四川', '福健', '湖北', '河南'],
+                    axisTick: {
+                        alignWithLabel: true
+                    }
+                }],
+                xAxis: [{
+                    type: 'value'
+                }],
+                backgroundColor: '#ffffff',
+                series: [{
+                    name: '月度销量',
+                    type: 'bar',
+                    barWidth: '40%',
+                    data: [7700, 8800, 9900, 11100],
+                    label: {
+                        normal: {
+                            show: true,
+                            position: 'right',
+                            textStyle: {
+                                color: ''
+                            }
+                        }
+                    },
+                    itemStyle: {
+                        normal: {
+                            color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [{
+                                offset: 0,
+                                color: 'lightBlue'
+                            }, {
+                                offset: 1,
+                                color: '#3398DB'
+                            }], false)
+                        }
+                    }
+                }]
+            }
+
+            volume_chart.setOption(option);
+        });
+    });
+</script>
