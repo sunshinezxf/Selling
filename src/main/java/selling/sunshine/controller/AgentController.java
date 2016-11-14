@@ -1233,6 +1233,14 @@ public class AgentController {
         //以下是新版本代理商的信息
         Map<String, Object> condition = new HashMap<String, Object>();
         condition.put("agentId", user.getAgent().getAgentId());
+        List<Integer> status = new ArrayList<>();
+        status.add(1);
+        status.add(2);
+        status.add(3);
+        status.add(4);
+        status.add(5);
+        status.add(6);
+        condition.put("statusList", status);
         ResultData fetchOrderItemSumResponse = orderService.fetchOrderItemSum(condition);
         if(fetchOrderItemSumResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR){
         	Prompt prompt = new Prompt(PromptCode.WARNING, "提示信息", "未找到详细信息", "/agent/manage/2");
@@ -1335,58 +1343,6 @@ public class AgentController {
         view.addObject("monthList", monthList);
         view.addObject("buyList", buyList);
         view.addObject("waitList", waitList);
-        //以下是本代理商的信息
-        /*
-        ResultData fetchOverviewInfoResponse = refundService.calculateQuantityAll(user.getAgent().getAgentId());
-        if (fetchOverviewInfoResponse.getResponseCode() != ResponseCode.RESPONSE_OK || ((List<TotalQuantityAll>) fetchOverviewInfoResponse.getData()).isEmpty()) {
-            Prompt prompt = new Prompt(PromptCode.WARNING, "提示信息", "未找到详细信息", "/agent/manage/2");
-            view.addObject("prompt", prompt);
-            WechatConfig.oauthWechat(view, "/agent/prompt");
-            view.setViewName("/agent/prompt");
-            return view;
-        }
-        List<TotalQuantityAll> overviewInfo = (List<TotalQuantityAll>) fetchOverviewInfoResponse.getData();
-        int waitShipped = 0;
-        double waitMoney = 0.0;
-        Map<String, Object> condition = new HashMap<String, Object>();
-        List<Integer> status = new ArrayList<>();
-        status.add(2);
-        status.add(3);
-        condition.put("status", status);
-        condition.put("agentId", user.getAgent().getAgentId());
-        condition.put("blockFlag", false);
-        ResultData fetchOrderResponse = orderService.fetchOrder(condition);
-        if (fetchOrderResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            List<Order> orderList = (List<Order>) fetchOrderResponse.getData();
-            for (Order order : orderList) {
-                List<OrderItem> orderItems = order.getOrderItems();
-                for (OrderItem orderItem : orderItems) {
-                    if (orderItem.getStatus() == OrderItemStatus.PAYED) {
-                        waitShipped += orderItem.getGoodsQuantity();
-                        waitMoney += orderItem.getOrderItemPrice();
-                    }
-                }
-            }
-        }
-        condition.clear();
-        status.clear();
-        status.add(1);
-        condition.put("agentId", user.getAgent().getAgentId());
-        condition.put("status", status);
-        ResultData fetchCustomerOrderResponse = orderService.fetchCustomerOrder(condition);
-        if (fetchCustomerOrderResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            List<CustomerOrder> customerOrderList = (List<CustomerOrder>) fetchCustomerOrderResponse.getData();
-            for (CustomerOrder customerOrder : customerOrderList) {
-                waitShipped += customerOrder.getQuantity();
-                waitMoney += customerOrder.getTotalPrice();
-            }
-        }
-        List wait = new ArrayList<>();
-        wait.add(waitShipped);
-        wait.add(waitMoney);
-        view.addObject("overviewInfo", overviewInfo.get(0));
-        view.addObject("wait", wait);
-        */
         //以下是下级代理商的信息
         condition.clear();
         common.sunshine.model.selling.agent.lite.Agent agentlite = new common.sunshine.model.selling.agent.lite.Agent();
