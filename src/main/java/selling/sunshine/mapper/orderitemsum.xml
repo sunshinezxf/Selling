@@ -47,6 +47,12 @@
         <if test="orderType != null and orderType !=''">
         	AND order_type = #{orderType}
         </if>
+        <if test="orderTypeList != null and orderTypeList != ''">
+            AND order_type IN
+            <foreach collection="orderTypeList" item="mode" index="index" open="(" close=")" separator=",">
+                #{mode}
+            </foreach>
+        </if>
     	<if test="status != null and status != ''">
             AND order_item_status = #{status}
         </if>

@@ -7,6 +7,7 @@ public class OrderSumOverview {
 	
 	private Goods4Agent goods;
 	
+	
 	private int quantity;
 	
 	private double totalPrice;
@@ -19,7 +20,7 @@ public class OrderSumOverview {
 	public void setGoods(Goods4Agent goods) {
 		this.goods = goods;
 	}
-
+	
 	public int getQuantity() {
 		return quantity;
 	}
