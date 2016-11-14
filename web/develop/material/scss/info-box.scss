@@ -21,6 +21,26 @@ div {
     background: rgba(0, 0, 0, 0.2)
   }
 
+  .info-box-content {
+    padding: 5px 10px;
+    margin-left: 90px
+  }
+
+  .info-box-text {
+    display: block;
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-transform: uppercase
+  }
+
+  .info-box-number {
+    display: block;
+    font-weight: bold;
+    font-size: 18px
+  }
+
   .alert {
     padding: 0;
   }
@@ -31,5 +51,21 @@ div {
       box-sizing: border-box;
       line-height: 90px;
     }
+  }
+
+  .bg-green {
+    background-color: #00a65a !important
+  }
+
+  .bg-yellow {
+    background-color: #f39c12 !important
+  }
+
+  .bg-aqua {
+    background-color: #00c0ef !important
+  }
+
+  .bg-red {
+    background-color: #dd4b39 !important
   }
 }

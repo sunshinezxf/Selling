@@ -48,9 +48,15 @@ public class BaiduMapUtils {
 				BufferedReader br = new BufferedReader(insr);
 				String data = null;
 				if ((data = br.readLine()) != null) {
-					lat = data.substring(data.indexOf("\"lat\":") + ("\"lat\":").length(),
-							data.indexOf("},\"precise\""));
-					lng = data.substring(data.indexOf("\"lng\":") + ("\"lng\":").length(), data.indexOf(",\"lat\""));
+					if (data.charAt(10)=='0') {
+						lat = data.substring(data.indexOf("\"lat\":") + ("\"lat\":").length(),
+								data.indexOf("},\"precise\""));
+						lng = data.substring(data.indexOf("\"lng\":") + ("\"lng\":").length(), data.indexOf(",\"lat\""));
+						Map<String, BigDecimal> map = new HashMap<String, BigDecimal>();
+						map.put("lat", new BigDecimal(lat));
+						map.put("lng", new BigDecimal(lng));
+						return map;
+					}					
 				}
 				insr.close();
 			}
@@ -58,8 +64,6 @@ public class BaiduMapUtils {
 
 		}
 		Map<String, BigDecimal> map = new HashMap<String, BigDecimal>();
-		map.put("lat", new BigDecimal(lat));
-		map.put("lng", new BigDecimal(lng));
 		return map;
 	}
 

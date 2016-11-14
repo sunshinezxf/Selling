@@ -2,9 +2,10 @@
 <html lang="zh_CN">
 <head>
     #parse("/backend/component/init.vm")
-    #parse("/backend/initialization/echarts.lib.vm")
     #parse("/backend/component/init_highcharts.vm")
+    #parse("/backend/initialization/echarts.lib.vm")
     #parse("/backend/component/init_dashboard.vm")
+    <link rel="stylesheet" href="${path.concat('/material/css/backend/info-box.css')}">
     <title>首页</title>
 </head>
 <body>
