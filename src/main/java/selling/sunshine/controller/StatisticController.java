@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import selling.sunshine.model.sum.AgentGoods;
 import selling.sunshine.model.sum.OrderSeries;
 import selling.sunshine.model.sum.OrderStatistics;
+import selling.sunshine.model.sum.Vendition;
 import selling.sunshine.service.AgentService;
 import selling.sunshine.service.CustomerService;
 import selling.sunshine.service.OrderService;
@@ -308,8 +309,26 @@ public class StatisticController {
     public ResultData sales(@PathVariable("type") String type) {
         ResultData result = new ResultData();
         Map<String, Object> condition = new HashMap<>();
-        condition.put("filter", type);
-
+        if (type.equals("daily")) {
+        	 condition.put("daily", true);        	
+		}else if (type.equals("monthly")) {
+			 condition.put("monthly", true);
+		}
+        condition.put("type", 0);
+        ResultData queryData = statisticService.purchaseRecord(condition);
+        if (queryData.getResponseCode() == ResponseCode.RESPONSE_OK) {
+        	 List<Vendition> goods = (List<Vendition>) queryData.getData();
+        	 double price=0.0;
+        	 for (Vendition vendition : goods) {
+        		 price+=vendition.getRecordPrice();
+        	 }
+        	 result.setData(price);
+        	 return result;
+        }else if (queryData.getResponseCode() ==ResponseCode.RESPONSE_ERROR) {
+        	result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            return result;
+		}
+        result.setResponseCode(ResponseCode.RESPONSE_NULL);
         return result;
     }
 }

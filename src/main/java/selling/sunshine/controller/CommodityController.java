@@ -616,8 +616,13 @@ public class CommodityController {
                 object.put("goodsQuantity", vendition.getGoodsQuantity());
                 array.add(object);
             }
-        }
-        resultData.setData(array);
+            resultData.setData(array);
+            return resultData;
+        }else if (queryData.getResponseCode() ==ResponseCode.RESPONSE_ERROR) {
+        	resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            return resultData;
+		}
+        resultData.setResponseCode(ResponseCode.RESPONSE_NULL);
         return resultData;
     }
 
@@ -630,16 +635,21 @@ public class CommodityController {
         condition.put("type", 0);
         ResultData queryData = statisticService.purchaseRecord(condition);
         if (queryData.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            List<Vendition> monthlyGoods = (List<Vendition>) queryData.getData();
-            for (Vendition vendition : monthlyGoods) {
+            List<Vendition> goods = (List<Vendition>) queryData.getData();
+            for (Vendition vendition : goods) {
                 JSONObject object = new JSONObject();
                 object.put("goodsId", vendition.getGoodsId());
                 object.put("goodsName", vendition.getGoodsName());
                 object.put("goodsQuantity", vendition.getGoodsQuantity());
                 array.add(object);
             }
-        }
-        resultData.setData(array);
+            resultData.setData(array);
+            return resultData;
+        }else if (queryData.getResponseCode() ==ResponseCode.RESPONSE_ERROR) {
+        	resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            return resultData;
+		}
+        resultData.setResponseCode(ResponseCode.RESPONSE_NULL);
         return resultData;
     }
 
