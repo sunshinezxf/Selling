@@ -1,0 +1,15 @@
+#parse("/common/util.vm")
+<html lang="zh_CN">
+<head>
+    #parse("/backend/component/init.vm")
+    <link rel="stylesheet" href="${path.concat('/material/css/backend/signin.css')}"/>
+    <title>登录</title>
+</head>
+<body>
+    #parse("/backend/component/navigate_without_login.vm")
+<div class="container">
+    #parse("/backend/component/login_form.vm")
+</div>
+    #parse("/backend/component/footer.vm")
+</body>
+</html>
