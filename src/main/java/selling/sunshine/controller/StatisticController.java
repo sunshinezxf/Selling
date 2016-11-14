@@ -294,8 +294,8 @@ public class StatisticController {
     }
 
     @ResponseBody
-    @RequestMapping(method = RequestMethod.GET, value = "/agent/ranking")
-    public ResultData agentRanking() {
+    @RequestMapping(method = RequestMethod.GET, value = "/agent/ranking/{goodsId}")
+    public ResultData agentRanking(@PathVariable("goodsId") String goodsId) {
         ResultData resultData = new ResultData();
         return resultData;
     }

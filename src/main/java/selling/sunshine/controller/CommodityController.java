@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import common.sunshine.model.selling.admin.Admin;
 import common.sunshine.model.selling.agent.Agent;
+import common.sunshine.model.selling.goods.Goods4Agent;
 import common.sunshine.model.selling.goods.Goods4Customer;
 import common.sunshine.model.selling.goods.Thumbnail;
 import common.sunshine.model.selling.order.CustomerOrder;
@@ -599,58 +600,78 @@ public class CommodityController {
     }
 
     @ResponseBody
-    @RequestMapping(method = RequestMethod.GET, value = "/volume/monthly")
-    public ResultData volumeMonthly() {
-        ResultData resultData = new ResultData();
-        JSONArray array = new JSONArray();
-        Map<String, Object> condition = new HashMap<>();
-        condition.put("monthly", true);
-        condition.put("type", 0);
-        ResultData queryData = statisticService.purchaseRecord(condition);
-        if (queryData.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            List<Vendition> monthlyGoods = (List<Vendition>) queryData.getData();
-            for (Vendition vendition : monthlyGoods) {
-                JSONObject object = new JSONObject();
-                object.put("goodsId", vendition.getGoodsId());
-                object.put("goodsName", vendition.getGoodsName());
-                object.put("goodsQuantity", vendition.getGoodsQuantity());
-                array.add(object);
-            }
-            resultData.setData(array);
-            return resultData;
-        }else if (queryData.getResponseCode() ==ResponseCode.RESPONSE_ERROR) {
-        	resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
-            return resultData;
-		}
-        resultData.setResponseCode(ResponseCode.RESPONSE_NULL);
-        return resultData;
-    }
-
-    @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/volume")
     public ResultData volume() {
         ResultData resultData = new ResultData();
         JSONArray array = new JSONArray();
         Map<String, Object> condition = new HashMap<>();
-        condition.put("type", 0);
-        ResultData queryData = statisticService.purchaseRecord(condition);
+        condition.put("blockFlag", false);
+        ResultData queryData=commodityService.fetchGoods4Agent(condition);
         if (queryData.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            List<Vendition> goods = (List<Vendition>) queryData.getData();
-            for (Vendition vendition : goods) {
-                JSONObject object = new JSONObject();
-                object.put("goodsId", vendition.getGoodsId());
-                object.put("goodsName", vendition.getGoodsName());
-                object.put("goodsQuantity", vendition.getGoodsQuantity());
-                array.add(object);
-            }
-            resultData.setData(array);
-            return resultData;
+        	 List<Goods4Agent> goodsList=(List<Goods4Agent>) queryData.getData();//所有没有下架的商品
+        	 Map<String, Integer> map=new HashMap<>();
+        	 for (Goods4Agent goods:goodsList) {
+        		 map.put(goods.getGoodsId(), 1);
+			 }  
+        	 condition.clear();
+        	 condition.put("type", 0);
+             queryData = statisticService.purchaseRecord(condition);
+             if (queryData.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                 List<Vendition> venditions = (List<Vendition>) queryData.getData();
+                 condition.put("monthly", true);
+                 queryData = statisticService.purchaseRecord(condition);
+                 if (queryData.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                	 List<Vendition> monthlyVenditions = (List<Vendition>) queryData.getData();
+                	 for (int i = 0; i < venditions.size(); i++) {
+						for (int j = 0; j < monthlyVenditions.size(); j++) {
+							if (venditions.get(i).getGoodsId().equals(monthlyVenditions.get(j).getGoodsId())) {
+								if (map.containsKey(venditions.get(i).getGoodsId())) {
+									 JSONObject object = new JSONObject();
+									 object.put("goodsId", venditions.get(i).getGoodsId());
+				                     object.put("goodsName", venditions.get(i).getGoodsName());
+				                     object.put("monthQuantity", venditions.get(i).getGoodsQuantity());
+				                     object.put("overallQuantity", monthlyVenditions.get(j).getGoodsQuantity());
+				                     array.add(object);
+				                     map.put(venditions.get(i).getGoodsId(), 2);
+				                     break;
+								}
+							}
+						}
+					 }
+                	 for (String key : map.keySet()) {
+						if (map.get(key)==1) {
+							JSONObject object = new JSONObject();
+							for (Goods4Agent goods:goodsList) {
+								if (goods.getGoodsId().equals(key)) {
+									object.put("goodsId", key);
+				                    object.put("goodsName", goods.getName());
+				                    object.put("monthQuantity", 0);
+				                    object.put("overallQuantity", 0);
+				                    array.add(object);
+								}
+							}							
+						}
+					 }
+                	 resultData.setData(array);
+                     return resultData;
+                 }else if (queryData.getResponseCode() ==ResponseCode.RESPONSE_ERROR) {
+                 	resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
+                    return resultData;
+        		}
+             }else if (queryData.getResponseCode() ==ResponseCode.RESPONSE_ERROR) {
+             	resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
+                return resultData;
+    		}
         }else if (queryData.getResponseCode() ==ResponseCode.RESPONSE_ERROR) {
         	resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
             return resultData;
 		}
+        
+
         resultData.setResponseCode(ResponseCode.RESPONSE_NULL);
         return resultData;
     }
+
+    
 
 }
