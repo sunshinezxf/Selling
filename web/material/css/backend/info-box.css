@@ -22,6 +22,14 @@ div .info-box-content {
   padding: 5px 10px;
   margin-left: 90px; }
 
+div .info-box-text {
+  display: block;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-transform: uppercase; }
+
 div .info-box-number {
   display: block;
   font-weight: bold;
