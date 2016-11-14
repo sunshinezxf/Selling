@@ -617,12 +617,13 @@ public class CommodityController {
                 array.add(object);
             }
             resultData.setData(array);
-            return resultData;
-        }else if (queryData.getResponseCode() ==ResponseCode.RESPONSE_ERROR) {
-        	resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
-            return resultData;
-		}
-        resultData.setResponseCode(ResponseCode.RESPONSE_NULL);
+        } else if (queryData.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
+            resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            resultData.setDescription(queryData.getDescription());
+        } else {
+            resultData.setResponseCode(ResponseCode.RESPONSE_NULL);
+            resultData.setData(queryData.getData());
+        }
         return resultData;
     }
 
@@ -644,12 +645,13 @@ public class CommodityController {
                 array.add(object);
             }
             resultData.setData(array);
-            return resultData;
-        }else if (queryData.getResponseCode() ==ResponseCode.RESPONSE_ERROR) {
-        	resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
-            return resultData;
-		}
-        resultData.setResponseCode(ResponseCode.RESPONSE_NULL);
+        } else if (queryData.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
+            resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            resultData.setDescription(queryData.getDescription());
+        } else {
+            resultData.setResponseCode(ResponseCode.RESPONSE_NULL);
+            resultData.setData(queryData.getData());
+        }
         return resultData;
     }
 
