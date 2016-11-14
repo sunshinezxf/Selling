@@ -2,8 +2,6 @@ package selling.sunshine.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-
-import common.sunshine.model.selling.agent.Agent;
 import common.sunshine.model.selling.customer.Customer;
 import common.sunshine.model.selling.goods.Goods4Agent;
 import common.sunshine.pagination.DataTablePage;
@@ -11,7 +9,6 @@ import common.sunshine.pagination.DataTableParam;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
 import common.sunshine.utils.SortRule;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,13 +28,7 @@ import selling.sunshine.vo.order.OrderItemSum;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * Created by sunshine on 6/14/16.
@@ -325,72 +316,73 @@ public class StatisticController {
         orderBy.add(new SortRule("agent_id", "desc"));
         condition.put("sort", orderBy);
         ResultData fetchOrderItemSumResponse = orderService.fetchOrderItemSum(condition);
-        if(fetchOrderItemSumResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR){
-        	resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
-        	return resultData; 
+        if (fetchOrderItemSumResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
+            resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            return resultData;
         }
         //从这里开始处理数据
         List<OrderItemSum> orderItemSumList = (List<OrderItemSum>) fetchOrderItemSumResponse.getData();
-        Map<Goods4Agent, List<AgentPurchase>> goodsMap = new HashMap<Goods4Agent, List<AgentPurchase>>();
-        Map<Goods4Agent, Integer> goodsQuantityMap = new HashMap<Goods4Agent, Integer>();
+        Map<Goods4Agent, List<AgentPurchase>> goodsMap = new HashMap<>();
+        Map<Goods4Agent, Integer> goodsQuantityMap = new HashMap<>();
         Goods4Agent goods = orderItemSumList.get(0).getGoods();
-		goodsMap.put(goods, new ArrayList<AgentPurchase>());
+        goodsMap.put(goods, new ArrayList<>());
         common.sunshine.model.selling.agent.lite.Agent agent = orderItemSumList.get(0).getAgent();
         int quantity = 0;//某商品下，某代理商购买数量
         int total_quantity = 0;//某商品下，所有购买数量
-        for(int i = 0; i < orderItemSumList.size(); i++){
-        	OrderItemSum item = orderItemSumList.get(i);
-        	if(!goods.getGoodsId().equals(item.getGoods().getGoodsId())){
-        		goodsQuantityMap.put(goods, total_quantity);
-        		goods = item.getGoods();
-        		List<AgentPurchase> agentPurchaseList = new ArrayList<AgentPurchase>();
-        		goodsMap.put(goods, agentPurchaseList);
-        		total_quantity = 0;
-        	}
-        	if(item.getAgent() != null && (!agent.getAgentId().equals(item.getAgent().getAgentId()) || !goods.getGoodsId().equals(item.getGoods().getGoodsId()))){
-        		AgentPurchase agentPurchase = new AgentPurchase(agent, quantity);
-        		goodsMap.get(goods).add(agentPurchase);
-        		agent = item.getAgent();
-        		quantity = 0;
-        	}
-        	if(item.getAgent() != null){
-        		quantity += item.getGoodsQuantity();
-        	}
-        	total_quantity += item.getGoodsQuantity();
+        for (int i = 0; i < orderItemSumList.size(); i++) {
+            OrderItemSum item = orderItemSumList.get(i);
+            if (!goods.getGoodsId().equals(item.getGoods().getGoodsId())) {
+                goodsQuantityMap.put(goods, total_quantity);
+                goods = item.getGoods();
+                List<AgentPurchase> agentPurchaseList = new ArrayList<>();
+                goodsMap.put(goods, agentPurchaseList);
+                total_quantity = 0;
+            }
+            if (item.getAgent() != null && (!agent.getAgentId().equals(item.getAgent().getAgentId()) || !goods.getGoodsId().equals(item.getGoods().getGoodsId()))) {
+                AgentPurchase agentPurchase = new AgentPurchase(agent, quantity);
+                goodsMap.get(goods).add(agentPurchase);
+                agent = item.getAgent();
+                quantity = 0;
+            }
+            if (item.getAgent() != null) {
+                quantity += item.getGoodsQuantity();
+            }
+            total_quantity += item.getGoodsQuantity();
         }
-        if(agent != null){
-        	AgentPurchase agentPurchase = new AgentPurchase(agent, quantity);
-        	goodsMap.get(goods).add(agentPurchase);
+        if (agent != null) {
+            AgentPurchase agentPurchase = new AgentPurchase(agent, quantity);
+            goodsMap.get(goods).add(agentPurchase);
         }
         goodsQuantityMap.put(goods, total_quantity);
         //将数据处理成返回的格式
         JSONArray goodsArray = new JSONArray();
-        for(Goods4Agent goods4Agent : goodsMap.keySet()){
-        	JSONObject goodsObject = new JSONObject();
-        	goodsObject.put("goods_id", goods4Agent.getGoodsId());
-        	goodsObject.put("name", goods4Agent.getName());
-        	goodsObject.put("total_quantity", goodsQuantityMap.get(goods4Agent));
-        	JSONArray agentArray = new JSONArray();
-        	List<AgentPurchase> agentPurchaseList = goodsMap.get(goods4Agent);
-        	Collections.sort(agentPurchaseList, new Comparator(){
-				@Override
-				public int compare(Object o1, Object o2) {
-					return ((AgentPurchase)o2).getQuantity() - ((AgentPurchase)o1).getQuantity();
-				}});
-        	for(int i = 0; i < agentPurchaseList.size(); i++){
-        		if(i < 10 || (agentPurchaseList.get(i).getQuantity() == agentPurchaseList.get(i - 1).getQuantity())){
-        			JSONObject agentObject = new JSONObject();
-        			agentObject.put("agent_id", agentPurchaseList.get(i).getAgent().getAgentId());
-        			agentObject.put("agent_name", agentPurchaseList.get(i).getAgent().getName());
-        			agentObject.put("rank", i);
-        			agentObject.put("quantity", agentPurchaseList.get(i).getQuantity());
-        			agentArray.add(agentObject);
-        		} else {
-        			break;
-        		}
-        	}
-        	goodsObject.put("agent_info", agentArray);
-        	goodsArray.add(goodsObject);
+        for (Goods4Agent goods4Agent : goodsMap.keySet()) {
+            JSONObject goodsObject = new JSONObject();
+            goodsObject.put("goods_id", goods4Agent.getGoodsId());
+            goodsObject.put("name", goods4Agent.getName());
+            goodsObject.put("total_quantity", goodsQuantityMap.get(goods4Agent));
+            JSONArray agentArray = new JSONArray();
+            List<AgentPurchase> agentPurchaseList = goodsMap.get(goods4Agent);
+            Collections.sort(agentPurchaseList, new Comparator() {
+                @Override
+                public int compare(Object o1, Object o2) {
+                    return ((AgentPurchase) o2).getQuantity() - ((AgentPurchase) o1).getQuantity();
+                }
+            });
+            for (int i = 0; i < agentPurchaseList.size(); i++) {
+                if (i < 10 || (agentPurchaseList.get(i).getQuantity() == agentPurchaseList.get(i - 1).getQuantity())) {
+                    JSONObject agentObject = new JSONObject();
+                    agentObject.put("agent_id", agentPurchaseList.get(i).getAgent().getAgentId());
+                    agentObject.put("agent_name", agentPurchaseList.get(i).getAgent().getName());
+                    agentObject.put("rank", i);
+                    agentObject.put("quantity", agentPurchaseList.get(i).getQuantity());
+                    agentArray.add(agentObject);
+                } else {
+                    break;
+                }
+            }
+            goodsObject.put("agent_info", agentArray);
+            goodsArray.add(goodsObject);
         }
         resultData.setData(goodsArray);
         return resultData;
@@ -406,24 +398,24 @@ public class StatisticController {
         ResultData result = new ResultData();
         Map<String, Object> condition = new HashMap<>();
         if (type.equals("daily")) {
-        	 condition.put("daily", true);        	
-		}else if (type.equals("monthly")) {
-			 condition.put("monthly", true);
-		}
+            condition.put("daily", true);
+        } else if (type.equals("monthly")) {
+            condition.put("monthly", true);
+        }
         condition.put("type", 0);
         ResultData queryData = statisticService.purchaseRecord(condition);
         if (queryData.getResponseCode() == ResponseCode.RESPONSE_OK) {
-        	 List<Vendition> goods = (List<Vendition>) queryData.getData();
-        	 double price=0.0;
-        	 for (Vendition vendition : goods) {
-        		 price+=vendition.getRecordPrice();
-        	 }
-        	 result.setData(price);
-        	 return result;
-        }else if (queryData.getResponseCode() ==ResponseCode.RESPONSE_ERROR) {
-        	result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            List<Vendition> goods = (List<Vendition>) queryData.getData();
+            double price = 0.0;
+            for (Vendition vendition : goods) {
+                price += vendition.getRecordPrice();
+            }
+            result.setData(price);
             return result;
-		}
+        } else if (queryData.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            return result;
+        }
         result.setResponseCode(ResponseCode.RESPONSE_NULL);
         return result;
     }

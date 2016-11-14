@@ -1,1 +1,66 @@
-<div id="goods_sales_volume" class="container-fluid" style="height: 350px;"></div>
+<div id="sales_area" class="container-fluid" style="height: 400px;"></div>
+<script>
+    var customer_distribution = "${path.concat('/statistic/sales/area')}";
+    $.get(customer_distribution, function (result) {
+        if (result.responseCode != "RESPONSE_ERROR") {
+            var data = result.data;
+            var map_chart = echarts.init(document.getElementById('sales_area'));
+
+            option = {
+                title: {
+                    text: '客户分布情况',
+                    left: 'center'
+                },
+                tooltip: {
+                    trigger: 'item'
+                },
+                legend: {
+                    orient: 'vertical',
+                    left: 'left',
+                    data: ['客户数量']
+                },
+                visualMap: {
+                    min: 0,
+                    max: 2500,
+                    left: 'left',
+                    top: 'bottom',
+                    text: ['高', '低'],
+                    calculable: true
+                },
+                toolbox: {
+                    show: true,
+                    orient: 'vertical',
+                    left: 'right',
+                    top: 'center',
+                    feature: {
+                        dataView: {readOnly: false},
+                        restore: {},
+                        saveAsImage: {}
+                    }
+                },
+                series: [
+                    {
+                        name: '客户数量',
+                        type: 'map',
+                        mapType: 'china',
+                        roam: false,
+                        label: {
+                            normal: {
+                                show: true
+                            },
+                            emphasis: {
+                                show: true
+                            }
+                        },
+                        data: [
+                            {name: '澳门', value: 1}
+                        ]
+                    }
+                ]
+            };
+
+        } else if (result.responseCode == "RESPONSE_ERROR") {
+            console.error(result.description);
+        }
+    });
+</script>

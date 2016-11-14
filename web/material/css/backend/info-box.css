@@ -42,3 +42,15 @@ div span .icon-item {
   text-align: center;
   box-sizing: border-box;
   line-height: 90px; }
+
+div .bg-green {
+  background-color: #00a65a !important; }
+
+div .bg-yellow {
+  background-color: #f39c12 !important; }
+
+div .bg-aqua {
+  background-color: #00c0ef !important; }
+
+div .bg-red {
+  background-color: #dd4b39 !important; }
