@@ -1,17 +1,17 @@
 package selling.sunshine.dao.impl;
 
+import common.sunshine.dao.BaseDao;
+import common.sunshine.pagination.DataTablePage;
+import common.sunshine.pagination.DataTableParam;
+import common.sunshine.utils.ResponseCode;
+import common.sunshine.utils.ResultData;
 import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
-import common.sunshine.dao.BaseDao;
 import selling.sunshine.dao.StatisticDao;
 import selling.sunshine.model.sum.*;
-import common.sunshine.pagination.DataTablePage;
-import common.sunshine.pagination.DataTableParam;
-import common.sunshine.utils.ResponseCode;
-import common.sunshine.utils.ResultData;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -292,6 +292,9 @@ public class StatisticDaoImpl extends BaseDao implements StatisticDao {
         ResultData result = new ResultData();
         try {
             List<Vendition> list = sqlSession.selectList("selling.statistic.purchaseRecordView", condition);
+            if (list.isEmpty()) {
+                result.setResponseCode(ResponseCode.RESPONSE_NULL);
+            }
             result.setData(list);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -316,9 +319,9 @@ public class StatisticDaoImpl extends BaseDao implements StatisticDao {
         return result;
     }
 
-	@Override
-	public ResultData queryAgentGoods(Map<String, Object> condition) {
-		ResultData result = new ResultData();
+    @Override
+    public ResultData queryAgentGoods(Map<String, Object> condition) {
+        ResultData result = new ResultData();
         try {
             List<VolumeTotal> list = sqlSession.selectList("selling.volume.agentGoods", condition);
             result.setData(list);
@@ -328,25 +331,25 @@ public class StatisticDaoImpl extends BaseDao implements StatisticDao {
             result.setDescription(e.getMessage());
         }
         return result;
-	}
+    }
 
-	@Override
-	public ResultData agentRanking(Map<String, Object> condition) {
-		ResultData result = new ResultData();
+    @Override
+    public ResultData agentRanking(Map<String, Object> condition) {
+        ResultData result = new ResultData();
         try {
-        	int ranking=(Integer)sqlSession.selectOne("selling.volume.agentRanking", condition);
-        	result.setData(ranking);
+            int ranking = (Integer) sqlSession.selectOne("selling.volume.agentRanking", condition);
+            result.setData(ranking);
         } catch (Exception e) {
             logger.error(e.getMessage());
             result.setResponseCode(ResponseCode.RESPONSE_ERROR);
             result.setDescription(e.getMessage());
         }
-		return result;
-	}
+        return result;
+    }
 
-	@Override
-	public ResultData purchaseRecordEveryday() {
-		ResultData result = new ResultData();
+    @Override
+    public ResultData purchaseRecordEveryday() {
+        ResultData result = new ResultData();
         try {
             List<Map<String, Object>> list = sqlSession.selectList("selling.statistic.purchaseRecordEveryday");
             result.setData(list);
@@ -356,11 +359,11 @@ public class StatisticDaoImpl extends BaseDao implements StatisticDao {
             result.setDescription(e.getMessage());
         }
         return result;
-	}
+    }
 
-	@Override
-	public ResultData purchaseRecordEveryMonth() {
-		ResultData result = new ResultData();
+    @Override
+    public ResultData purchaseRecordEveryMonth() {
+        ResultData result = new ResultData();
         try {
             List<Map<String, Object>> list = sqlSession.selectList("selling.statistic.purchaseRecordEveryMonth");
             result.setData(list);
@@ -370,6 +373,6 @@ public class StatisticDaoImpl extends BaseDao implements StatisticDao {
             result.setDescription(e.getMessage());
         }
         return result;
-	}
+    }
 
 }

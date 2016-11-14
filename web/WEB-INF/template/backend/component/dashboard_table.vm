@@ -8,7 +8,36 @@
         </div>
     </div>
 
-    #parse("/backend/charts/goods_sales_volume_charts.vm")
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                    #parse("/backend/charts/goods_sales_volume_charts.vm")
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                    <div class="box info-box">
+                        <span class="info-box-icon alert alert-success">
+                            <i class="glyphicon glyphicon-list-alt icon-item"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                    <div class="box info-box">
+                        <span class="info-box-icon alert alert-success">
+                            <i class="glyphicon glyphicon-list-alt icon-item"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                    <div class="box info-box">
+                        <span class="info-box-icon alert alert-success">
+                            <i class="glyphicon glyphicon-list-alt icon-item"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     #parse("/backend/component/sales_charts.vm")
 

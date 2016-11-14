@@ -1,0 +1,64 @@
+<div id="goods_sales_volume" class="container-fluid" style="height: 350px;"></div>
+<script>
+    var goods_sales_volume_monthly = "${path.concat('/commodity/volume/monthly')}";
+
+    var goods_sales_volume_overall = "${path.concat('/commodity/volume')}";
+
+    $(document).ready(function () {
+
+        $.get(goods_sales_volume_monthly, function (month_result) {
+            $.get(goods_sales_volume_overall, function (overall_result) {
+                if (month_result.responseCode != "RESPONSE_ERROR") {
+                    var month_data = month_result.data;
+
+                    var volume_chart = echarts.init(document.getElementById('goods_sales_volume'));
+                    option = {
+                        title: {
+                            text: '商品销售统计',
+                        },
+                        tooltip: {
+                            trigger: 'axis'
+                        },
+                        legend: {
+                            data: ['2011年', '2012年']
+                        },
+                        color: [
+                            '#2ec7c9', '#b6a2de', '#5ab1ef', '#ffb980', '#d87a80',
+                            '#8d98b3', '#e5cf0d', '#97b552', '#95706d', '#dc69aa',
+                            '#07a2a4', '#9a7fd1', '#588dd5', '#f5994e', '#c05050',
+                            '#59678c', '#c9ab00', '#7eb00a', '#6f5553', '#c14089'
+                        ],
+                        calculable: true,
+                        xAxis: [
+                            {
+                                type: 'value',
+                                boundaryGap: [0, 0.01]
+                            }
+                        ],
+                        yAxis: [
+                            {
+                                type: 'category',
+                                data: ['巴西', '印尼', '美国', '印度', '中国']
+                            }
+                        ],
+                        series: [
+                            {
+                                name: '2011年',
+                                type: 'bar',
+                                data: [18203, 23489, 29034, 104970, 131744]
+                            },
+                            {
+                                name: '2012年',
+                                type: 'bar',
+                                data: [19325, 23438, 31000, 121594, 134141]
+                            }
+                        ]
+                    };
+                    volume_chart.setOption(option);
+                } else if (month_result.responseCode == "RESPONSE_ERROR") {
+                    console.error(month_result.description);
+                }
+            });
+        });
+    });
+</script>

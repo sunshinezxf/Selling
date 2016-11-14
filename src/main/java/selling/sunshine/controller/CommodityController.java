@@ -666,8 +666,7 @@ public class CommodityController {
         	resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
             return resultData;
 		}
-        
-
+       
         resultData.setResponseCode(ResponseCode.RESPONSE_NULL);
         return resultData;
     }
