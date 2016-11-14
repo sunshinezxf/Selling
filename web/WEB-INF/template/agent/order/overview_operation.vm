@@ -14,8 +14,9 @@
                 邀请概览
             </div>
         </div>
-        <div class="weui_tab_bd">
             <div id="overviewlist" class="weui_cells clear-margin-top">
+	    			<div style="padding-top:50px;">
+        			</div>
 	    			<div class="weui_cell">
 			            <div class="weui_cell_bd weui_cell_primary">
 			                <p id="day_quantity_sum">今日销售：0瓶</p>
@@ -72,8 +73,12 @@
 			            <div class="weui_cell_ft">(<span class="wait_quantity">${orderSum.quantity}</span>瓶)<span class="wait_price">${orderSum.totalPrice}</span>元</div>
 			        </div>
 			        #end
+			        <div style="padding-bottom:55px;">
+        			</div>
             </div>
             <div id="agentslist" style="display:none" class="weui_cells clear-margin-top">
+    			<div style="padding-top:50px;">
+        		</div>
     			#foreach($agent in $agents)
     			<div class="weui_cell">
 		            <div class="weui_cell_bd weui_cell_primary">
@@ -82,8 +87,9 @@
 		            <div class="weui_cell_ft">${agent.get(1)}</div>
 		        </div>
     			#end
+    			<div style="padding-bottom:55px;">
+        		</div>
             </div>
-        </div>
     </div>
 </div>
 </div>
