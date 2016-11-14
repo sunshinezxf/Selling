@@ -6,16 +6,15 @@
         $.get(goods_sales_volume, function (result) {
             if (result.responseCode != "RESPONSE_ERROR") {
                 var data = result.data;
-                alert(data);
                 var volume_chart = echarts.init(document.getElementById('goods_sales_volume'));
                 var goods_list = [];
                 var goods_sale_monthly = [];
                 var goods_sale_overall = [];
                 var length = data.length;
                 for (var i = 0; i < length; i++) {
-                    goods_list.push[data[i].goodsName];
-                    goods_sale_monthly.push[data[i].monthQuantity];
-                    goods_sale_overall.push[data[i].overallQuantity];
+                    goods_list.push(data[i].goodsName);
+                    goods_sale_monthly.push(data[i].monthQuantity);
+                    goods_sale_overall.push(data[i].overallQuantity);
                 }
                 option = {
                     title: {
@@ -37,13 +36,16 @@
                     xAxis: [
                         {
                             type: 'value',
-                            boundaryGap: [0, 0.01]
+                            boundaryGap: [0, 0.1]
                         }
                     ],
                     yAxis: [
                         {
                             type: 'category',
-                            data: goods_list
+                            data: goods_list,
+                            axisLabel: {
+                                interval: 0
+                            }
                         }
                     ],
                     series: [
@@ -60,6 +62,9 @@
                     ]
                 };
                 volume_chart.setOption(option);
+                window.addEventListener('resize', function () {
+                    volume_chart.resize();
+                });
             } else if (result.responseCode == "RESPONSE_ERROR") {
                 console.error(result.description);
             }

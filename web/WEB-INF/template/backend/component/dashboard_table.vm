@@ -19,6 +19,10 @@
                         <span class="info-box-icon alert alert-success">
                             <i class="glyphicon glyphicon-list-alt icon-item"></i>
                         </span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-number" id="daily_sales"></span>
+                        </div>
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
@@ -26,6 +30,10 @@
                         <span class="info-box-icon alert alert-success">
                             <i class="glyphicon glyphicon-list-alt icon-item"></i>
                         </span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-number" id="monthly_sales"></span>
+                        </div>
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
@@ -33,8 +41,38 @@
                         <span class="info-box-icon alert alert-success">
                             <i class="glyphicon glyphicon-list-alt icon-item"></i>
                         </span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-number" id="overall_sales"></span>
+                        </div>
                     </div>
                 </div>
+                <script>
+                    var daily_url = "${path.concat('/statistic/sales/volume/daily')}";
+                    var monthly_url = "${path.concat('/statistic/sales/volume/monthly')}";
+                    var overall_url = "${path.concat('/statistic/sales/volume/overall')}";
+                    $.get(overall_url, function (result) {
+                        if (result.responseCode == 'RESPONSE_OK') {
+                            $("#overall_sales").html(result.data + "元");
+                        } else {
+                            $("#overall_sales").html("暂无数据");
+                        }
+                    });
+                    $.get(monthly_url, function (result) {
+                        if (result.responseCode == 'RESPONSE_OK') {
+                            $("#monthly_sales").html(result.data + "元");
+                        } else {
+                            $("#monthly_sales").html("暂无数据");
+                        }
+                    });
+                    $.get(monthly_url, function (result) {
+                        if (result.responseCode == 'RESPONSE_OK') {
+                            $("#daily_sales").html(result.data + "元");
+                        } else {
+                            $("#daily_sales").html("暂无数据");
+                        }
+                    });
+                </script>
             </div>
         </div>
     </div>

@@ -18,6 +18,15 @@ div .info-box-icon {
   line-height: 90px;
   background: rgba(0, 0, 0, 0.2); }
 
+div .info-box-content {
+  padding: 5px 10px;
+  margin-left: 90px; }
+
+div .info-box-number {
+  display: block;
+  font-weight: bold;
+  font-size: 18px; }
+
 div .alert {
   padding: 0; }
 

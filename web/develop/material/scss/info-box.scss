@@ -21,6 +21,17 @@ div {
     background: rgba(0, 0, 0, 0.2)
   }
 
+  .info-box-content {
+    padding: 5px 10px;
+    margin-left: 90px
+  }
+
+  .info-box-number {
+    display: block;
+    font-weight: bold;
+    font-size: 18px
+  }
+
   .alert {
     padding: 0;
   }
