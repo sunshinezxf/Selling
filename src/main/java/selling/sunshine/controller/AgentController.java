@@ -47,6 +47,7 @@ import selling.sunshine.model.BackOperationLog;
 import selling.sunshine.model.OrderPool;
 import selling.sunshine.model.ShipConfig;
 import selling.sunshine.model.cashback.CashBackRecord;
+import selling.sunshine.model.gift.GiftApply;
 import selling.sunshine.model.gift.GiftConfig;
 import selling.sunshine.model.sum.TotalQuantityAll;
 import selling.sunshine.model.sum.Volume;
@@ -698,6 +699,18 @@ public class AgentController {
         } else {
             view.addObject("giftConfigs", (List<GiftConfig>) fetchGiftConfigResponse.getData());
         }
+        
+        condition.clear();
+        condition.put("agentId", user.getAgent().getAgentId());
+        List<SortRule> orderBy = new ArrayList<>();
+        orderBy.add(new SortRule("create_time", "desc"));
+        condition.put("sort", orderBy);
+        ResultData fetchApplyResponse = agentService.fetchGiftApply(condition);
+        if(fetchApplyResponse.getResponseCode() == ResponseCode.RESPONSE_OK){
+        	GiftApply apply = ((List<GiftApply>)fetchApplyResponse.getData()).get(0);
+        	view.addObject("lastApply", apply);
+        }
+        
         view.setViewName("/agent/etc/gift");
         return view;
     }

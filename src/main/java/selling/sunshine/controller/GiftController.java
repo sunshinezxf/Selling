@@ -30,6 +30,7 @@ import selling.sunshine.utils.Prompt;
 import selling.sunshine.utils.PromptCode;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
+import common.sunshine.utils.SortRule;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -142,6 +143,23 @@ public class GiftController {
         }
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
+        
+        Map<String, Object> condition = new HashMap<String, Object>();
+        condition.clear();
+        condition.put("agentId", user.getAgent().getAgentId());
+        List<SortRule> orderBy = new ArrayList<>();
+        orderBy.add(new SortRule("create_time", "desc"));
+        condition.put("sort", orderBy);
+        ResultData fetchApplyResponse = agentService.fetchGiftApply(condition);
+        if(fetchApplyResponse.getResponseCode() == ResponseCode.RESPONSE_OK){
+        	GiftApply apply = ((List<GiftApply>)fetchApplyResponse.getData()).get(0);
+        	if(apply.getStatus() == GiftApplyStatus.APPLYED){
+        		Prompt prompt = new Prompt(PromptCode.DANGER, "操作提示", "您有审核中的赠送申请，请先等待审核", "/agent/gift");
+                view.addObject("prompt", prompt);
+                view.setViewName("/agent/prompt");
+                return view;
+        	}
+        }
         Agent agent = user.getAgent();
         Goods4Agent goods = new Goods4Agent();
         goods.setGoodsId(form.getGoodsId());
