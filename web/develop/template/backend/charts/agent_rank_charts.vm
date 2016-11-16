@@ -1,0 +1,59 @@
+<div id="agent_rank_charts" class="container-fluid" style="height: 300px">
+    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
+        <div
+    </div>
+</div>
+<script>
+    var agent_rank_url = "${path.concat('/statistic/agent/rank')}";
+
+    $.get(agent_rank_url, function (result) {
+        if (result.responseCode != "RESPONSE_ERROR") {
+            var data = result.data;
+            var rank_chart = echarts.init(document.getElementById('agent_rank'));
+
+            for (var i = 0; i < data.length; i++) {
+                console.debug(JSON.stringify(data[i]));
+            }
+//            option = {
+//                title: {
+//                    text: '代理商',
+//                    subtext: '纯属虚构',
+//                    x: 'center'
+//                },
+//                tooltip: {
+//                    trigger: 'item',
+//                    formatter: "{a} <br/>{b} : {c} ({d}%)"
+//                },
+//                legend: {
+//                    orient: 'vertical',
+//                    left: 'left',
+//                    data: ['直接访问', '邮件营销', '联盟广告', '视频广告', '搜索引擎']
+//                },
+//                series: [
+//                    {
+//                        name: '访问来源',
+//                        type: 'pie',
+//                        radius: '55%',
+//                        center: ['50%', '60%'],
+//                        data: [
+//                            {value: 335, name: '直接访问'},
+//                            {value: 310, name: '邮件营销'},
+//                            {value: 234, name: '联盟广告'},
+//                            {value: 135, name: '视频广告'},
+//                            {value: 1548, name: '搜索引擎'}
+//                        ],
+//                        itemStyle: {
+//                            emphasis: {
+//                                shadowBlur: 10,
+//                                shadowOffsetX: 0,
+//                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+//                            }
+//                        }
+//                    }
+//                ]
+//            }
+        } else if (result.responseCode == "RESPONSE_ERROR") {
+            console.error(result.description);
+        }
+    });
+</script>
