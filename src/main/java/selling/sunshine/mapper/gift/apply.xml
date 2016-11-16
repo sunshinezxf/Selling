@@ -59,6 +59,9 @@
         <if test="blockFlag != null">
             AND block_flag = #{blockFlag}
         </if>
+        <if test="rule != null and rule != ''">
+            ORDER BY ${rule}
+        </if>
     </select>
 
     <update id="update" parameterType="selling.sunshine.model.gift.GiftApply">
