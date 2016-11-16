@@ -347,6 +347,9 @@ public class StatisticServiceImpl implements StatisticService {
             return result;
         }
         List<Map<String, Object>> list = (List<Map<String, Object>>) response.getData();
+        if (list.isEmpty()) {
+            return result;
+        }
         Map<String, Object> condition = new HashMap<>();
         if (commodityDao.queryGoods4Agent(condition).getResponseCode() == ResponseCode.RESPONSE_OK) {
             List<Goods4Agent> goods = (List<Goods4Agent>) commodityDao.queryGoods4Agent(condition).getData();

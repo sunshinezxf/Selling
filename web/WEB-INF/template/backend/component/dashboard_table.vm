@@ -82,6 +82,9 @@
         ##                    #parse("/backend/charts/sales_distribution_charts.vm")
         ##                </div>
         ##            </div>
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
+                #parse("/backend/charts/agent_rank_charts.vm")
+            </div>
         </div>
     </div>
 
