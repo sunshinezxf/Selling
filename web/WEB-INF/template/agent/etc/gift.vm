@@ -9,8 +9,17 @@
 	<div class="tabbar">
     <div class="hd">
         <h1 class="page_title">三七赠送</h1>
-
-        <p class="page_desc">我们为您提供了数件可供赠送的商品</p>
+		#if(!${lastApply})
+        <p class="page_desc">您还没有申请过赠送</p>
+        #else
+        #if(${lastApply.status} == 'APPLYED')
+        <p class="page_desc">上次申请：${lastApply.line}盒${lastApply.goods.name}(待审核)</p>
+        #elseif(${lastApply.status} == 'PROCESSED')
+        <p class="page_desc">上次申请：${lastApply.line}盒${lastApply.goods.name}(已通过)</p>
+        #else
+        <p class="page_desc">上次申请：${lastApply.line}盒${lastApply.goods.name}(未通过)</p>
+        #end
+        #end
     </div>
     <div class="bd">
 		<div class="weui_btn_area clear-margin-top">
@@ -27,7 +36,11 @@
 	    	#end
 	    </div>
 	    <div class="weui_btn_area">
+	    	#if(${lastApply} && ${lastApply.status} == 'APPLYED')
+	    	<a type="button" class="weui_btn weui_btn_default weui_btn_disabled" id="apply_btn">有待审核申请</a>
+	    	#else
 	        <a href="${path.concat('/gift/apply')}" type="button" class="weui_btn weui_btn_primary" id="apply_btn">申请赠送</a>
+	        #end
 	    </div>
     </div>
     #parse("/agent/component/navigate.vm")
