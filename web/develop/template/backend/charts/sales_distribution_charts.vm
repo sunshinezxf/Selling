@@ -3,10 +3,6 @@
 <script>
     var customer_distribution = "${path.concat('/statistic/sales/area')}";
 
-    function randomData() {
-        return Math.round(Math.random() * 1000);
-    }
-
     $.get(customer_distribution, function (result) {
         if (result.responseCode != "RESPONSE_ERROR") {
             var data = result.data;
