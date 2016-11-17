@@ -10,7 +10,7 @@ import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TenXunMapAPI {
+public class TencentMapAPI {
      static String key="7VKBZ-HEYRD-D624I-HTE3L-3O5WV-VRBV7";
      
      public static Map<String, String> getDetailInfoByAddress(String address){
