@@ -38,9 +38,9 @@ public class CustomerAddressSchedule {
 						customerAddress.setDistrict(map.get("district"));
 					}else {
 						if (address.contains("苏州工业园区")) {
-							customerAddress.setProvince("江苏省");
-							customerAddress.setCity("苏州市");
-							customerAddress.setDistrict("吴中区");
+							customerAddress.setProvince("江苏");
+							customerAddress.setCity("苏州");
+							customerAddress.setDistrict("吴中");
 						}else if (address.contains("县")) {
 							map =TenXunMapAPI.getDetailInfoByAddress(address.substring(0,address.indexOf("县")));
 							if (map.containsKey("province")&&map.containsKey("city")&&map.containsKey("district")) {
