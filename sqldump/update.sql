@@ -635,9 +635,24 @@ CREATE TABLE IF NOT EXISTS `selling`.`agent_kpi` (
     ON UPDATE NO ACTION
 )
   ENGINE = InnoDB;
- 
- ##2016年11月15日更新
-ALTER TABLE `selling`.`customer_address` 
-ADD COLUMN `province` VARCHAR(20)  AFTER `create_time`,
-ADD COLUMN `city` VARCHAR(45)   AFTER `province`,
-ADD COLUMN `district` VARCHAR(45)  AFTER `city`;
+
+##2016年11月15日更新
+ALTER TABLE `selling`.`customer_address`
+ADD COLUMN `province` VARCHAR(20)
+AFTER `address`,
+ADD COLUMN `city` VARCHAR(45)
+AFTER `province`,
+ADD COLUMN `district` VARCHAR(45)
+AFTER `city`;
+
+
+## 2016年11月17日
+CREATE TABLE IF NOT EXISTS `selling`.`contribution_factor` (
+  `factor_id`     VARCHAR(20) NOT NULL,
+  `factor_name`   VARCHAR(45) NOT NULL,
+  `factor_weight` DOUBLE      NOT NULL DEFAULT 0,
+  `block_flag`    TINYINT(1)  NOT NULL DEFAULT 0,
+  `create_time`   DATETIME    NOT NULL,
+  PRIMARY KEY (`factor_id`)
+)
+  ENGINE = InnoDB;

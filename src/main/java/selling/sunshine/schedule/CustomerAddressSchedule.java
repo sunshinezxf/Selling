@@ -13,7 +13,7 @@ import common.sunshine.model.selling.customer.CustomerAddress;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
 import selling.sunshine.service.CustomerService;
-import selling.sunshine.utils.TenXunMapAPI;
+import selling.sunshine.utils.TencentMapAPI;
 
 public class CustomerAddressSchedule {
 	
@@ -31,18 +31,18 @@ public class CustomerAddressSchedule {
 				if (customerAddress.getProvince()==null) {
 					String address=customerAddress.getAddress().replace(" ", "");
 					address=address.replace("，", "");
-					Map<String, String> map =TenXunMapAPI.getDetailInfoByAddress(address);
+					Map<String, String> map = TencentMapAPI.getDetailInfoByAddress(address);
 					if (map.containsKey("province")&&map.containsKey("city")&&map.containsKey("district")) {
 						customerAddress.setProvince(map.get("province"));
 						customerAddress.setCity(map.get("city"));
 						customerAddress.setDistrict(map.get("district"));
 					}else {
 						if (address.contains("苏州工业园区")) {
-							customerAddress.setProvince("江苏省");
-							customerAddress.setCity("苏州市");
-							customerAddress.setDistrict("吴中区");
+							customerAddress.setProvince("江苏");
+							customerAddress.setCity("苏州");
+							customerAddress.setDistrict("吴中");
 						}else if (address.contains("县")) {
-							map =TenXunMapAPI.getDetailInfoByAddress(address.substring(0,address.indexOf("县")));
+							map = TencentMapAPI.getDetailInfoByAddress(address.substring(0, address.indexOf("县")));
 							if (map.containsKey("province")&&map.containsKey("city")&&map.containsKey("district")) {
 								customerAddress.setProvince(map.get("province"));
 								customerAddress.setCity(map.get("city"));

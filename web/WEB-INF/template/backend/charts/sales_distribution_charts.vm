@@ -1,46 +1,49 @@
-<div id="sales_area" class="container-fluid" style="height: 400px;"></div>
+<div id="sales_area" class="container-fluid" style="width: 100%; height: 800px;"></div>
+<script src="${path.concat('/plugins/echarts/js/china.js')}"></script>
 <script>
     var customer_distribution = "${path.concat('/statistic/sales/area')}";
+
+    function randomData() {
+        return Math.round(Math.random() * 1000);
+    }
+
     $.get(customer_distribution, function (result) {
         if (result.responseCode != "RESPONSE_ERROR") {
             var data = result.data;
-            var map_chart = echarts.init(document.getElementById('sales_area'));
+
+            var map_chart = echarts.init(document.getElementById('sales_area'), 'macarons');
+
+            var min_value = 0;
+            var max_value = 0;
+
+            for (var i = 0; i < data.length; i++) {
+                if (i == 0) {
+                    min_value = data[i].value;
+                    continue;
+                }
+                min_value = (min_value > data[i].value) ? data[i].value : min_value;
+                max_value = (max_value < data[i].value) ? data[i].value : max_value;
+            }
 
             option = {
                 title: {
-                    text: '客户分布情况',
+                    text: '全国客户区域分布图',
                     left: 'center'
                 },
                 tooltip: {
                     trigger: 'item'
                 },
-                legend: {
-                    orient: 'vertical',
-                    left: 'left',
-                    data: ['客户数量']
-                },
                 visualMap: {
-                    min: 0,
-                    max: 2500,
-                    left: 'left',
-                    top: 'bottom',
-                    text: ['高', '低'],
+                    min: min_value,
+                    max: max_value,
+                    x: 'left',
+                    y: 'bottom',
+                    text: ['高', '低'],           // 文本，默认为数值文本
                     calculable: true
-                },
-                toolbox: {
-                    show: true,
-                    orient: 'vertical',
-                    left: 'right',
-                    top: 'center',
-                    feature: {
-                        dataView: {readOnly: false},
-                        restore: {},
-                        saveAsImage: {}
-                    }
                 },
                 series: [
                     {
-                        name: '客户数量',
+                        name: '全国客户区域分布',
                         type: 'map',
                         mapType: 'china',
                         roam: false,
@@ -52,13 +55,12 @@
                                 show: true
                             }
                         },
-                        data: [
-                            {name: '澳门', value: 1}
-                        ]
+                        data: data
                     }
                 ]
             };
 
+            map_chart.setOption(option);
         } else if (result.responseCode == "RESPONSE_ERROR") {
             console.error(result.description);
         }

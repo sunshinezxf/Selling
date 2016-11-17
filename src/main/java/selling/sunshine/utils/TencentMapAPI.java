@@ -10,7 +10,7 @@ import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TenXunMapAPI {
+public class TencentMapAPI {
      static String key="7VKBZ-HEYRD-D624I-HTE3L-3O5WV-VRBV7";
      
      public static Map<String, String> getDetailInfoByAddress(String address){
@@ -39,17 +39,36 @@ public class TenXunMapAPI {
 				while ((data = br.readLine()) != null) {
 					if (data.contains("province")) {
 						data=data.trim();	
-						String province=data.substring(13, data.length()-2);						
-						map.put("province", province);
+						String province=data.substring(13, data.length()-2);
+						switch (province) {
+						case "广西壮族自治区":
+							map.put("province", "广西");
+							break;
+						case "西藏自治区":
+							map.put("province", "西藏");
+							break;
+						case "新疆维吾尔自治区":
+							map.put("province", "新疆");
+							break;
+						case "内蒙古自治区":
+							map.put("province", "内蒙古");
+							break;
+						case "宁夏回族自治区":
+							map.put("province", "宁夏");
+							break;
+						default:
+							map.put("province", province.substring(0,province.length()-1));
+							break;
+						}
 					}
 					if (data.contains("city")) {	
 						data=data.trim();
-						String city=data.substring(9, data.length()-2);
+						String city=data.substring(9, data.length()-3);
 						map.put("city", city);
 					}
 					if (data.contains("district")) {
 						data=data.trim();	
-						String district=data.substring(13, data.length()-2);
+						String district=data.substring(13, data.length()-3);
 						map.put("district", district);
 					}
 				}
