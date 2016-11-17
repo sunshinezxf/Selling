@@ -287,7 +287,14 @@ public class StatisticController {
 					}
 				}
 			}
-			resultData.setData(map);
+			JSONArray array=new JSONArray();
+			for (String key : map.keySet()) {
+				JSONObject object=new JSONObject();
+				object.put("province", key);
+				object.put("quantity", map.get(key));
+				array.add(object);
+			}
+			resultData.setData(array);
 			return resultData;
 		}
 		return resultData;
