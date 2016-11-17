@@ -16,7 +16,7 @@
                 rank_charts_inner_div.attr('style', "height: 350px;");
                 $("#agent_rank_charts").append(rank_charts_inner_div);
 
-                var rank_chart = echarts.init(document.getElementById(id));
+                var rank_chart = echarts.init(document.getElementById(id), 'macarons');
 
                 var name = data[i].name;
 

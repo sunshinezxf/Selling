@@ -15,8 +15,8 @@
                     #parse("/backend/charts/goods_sales_volume_charts.vm")
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                    <div class="box info-box bg-yellow">
-                        <span class="info-box-icon alert alert-success">
+                    <div class="box info-box bg-macaron-red">
+                        <span class="info-box-icon">
                             <i class="glyphicon glyphicon-list-alt icon-item"></i>
                         </span>
 
@@ -27,8 +27,8 @@
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                    <div class="box info-box bg-red">
-                        <span class="info-box-icon alert alert-success">
+                    <div class="box info-box bg-macaron-yellow">
+                        <span class="info-box-icon">
                             <i class="glyphicon glyphicon-list-alt icon-item"></i>
                         </span>
 
@@ -39,8 +39,8 @@
                     </div>
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                    <div class="box info-box bg-aqua">
-                        <span class="info-box-icon alert alert-success">
+                    <div class="box info-box bg-macaron-blue">
+                        <span class="info-box-icon">
                             <i class="glyphicon glyphicon-list-alt icon-item"></i>
                         </span>
 
