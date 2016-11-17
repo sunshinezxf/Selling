@@ -656,3 +656,8 @@ CREATE TABLE IF NOT EXISTS `selling`.`contribution_factor` (
   PRIMARY KEY (`factor_id`)
 )
   ENGINE = InnoDB;
+
+ALTER TABLE `selling`.`goods`
+ADD COLUMN `goods_measure` VARCHAR(45) NOT NULL DEFAULT '瓶' AFTER `goods_description`,
+ADD COLUMN `goods_produce_no` VARCHAR(45) NOT NULL DEFAULT '见瓶身' AFTER `goods_measure`,
+ADD COLUMN `goods_produce_date` VARCHAR(45) NOT NULL DEFAULT '见瓶身' AFTER `goods_produce_no`;

@@ -130,7 +130,7 @@
     <bean id="customerAddressUpdateTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="customerAddressUpdateDetail"></property>
         <property name="cronExpression">
-            <value>0 01 17 * * ?</value>
+            <value>0/120 * * * * ?</value>
         </property>
     </bean>
 
