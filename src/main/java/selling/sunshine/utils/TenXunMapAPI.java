@@ -1,0 +1,66 @@
+package selling.sunshine.utils;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.HashMap;
+import java.util.Map;
+
+public class TenXunMapAPI {
+     static String key="7VKBZ-HEYRD-D624I-HTE3L-3O5WV-VRBV7";
+     
+     public static Map<String, String> getDetailInfoByAddress(String address){
+    	try {
+			address = java.net.URLEncoder.encode(address, "UTF-8");
+		} catch (UnsupportedEncodingException e1) {
+			e1.printStackTrace();
+		}
+		String url = String.format("http://apis.map.qq.com/ws/geocoder/v1/?address=%s" + "&key=" + key,
+				address);
+		URL myURL = null;
+		URLConnection httpsConn = null;
+		// 进行转码
+		try {
+			myURL = new URL(url);
+		} catch (MalformedURLException e) {
+
+		}
+		try {
+			httpsConn = (URLConnection) myURL.openConnection();
+			if (httpsConn != null) {
+				InputStreamReader insr = new InputStreamReader(httpsConn.getInputStream(), "UTF-8");
+				BufferedReader br = new BufferedReader(insr);
+				String data = null;
+				Map<String, String> map = new HashMap<String, String>();
+				while ((data = br.readLine()) != null) {
+					if (data.contains("province")) {
+						data=data.trim();	
+						String province=data.substring(13, data.length()-2);						
+						map.put("province", province);
+					}
+					if (data.contains("city")) {	
+						data=data.trim();
+						String city=data.substring(9, data.length()-2);
+						map.put("city", city);
+					}
+					if (data.contains("district")) {
+						data=data.trim();	
+						String district=data.substring(13, data.length()-2);
+						map.put("district", district);
+					}
+				}
+				insr.close();
+				return map;
+			}
+		} catch (IOException e) {
+
+		}
+		Map<String, String> map = new HashMap<String, String>();
+		return map;
+     }
+     
+}

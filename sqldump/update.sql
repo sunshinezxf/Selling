@@ -635,3 +635,9 @@ CREATE TABLE IF NOT EXISTS `selling`.`agent_kpi` (
     ON UPDATE NO ACTION
 )
   ENGINE = InnoDB;
+ 
+ ##2016年11月15日更新
+ALTER TABLE `selling`.`customer_address` 
+ADD COLUMN `province` VARCHAR(20)  AFTER `create_time`,
+ADD COLUMN `city` VARCHAR(45)   AFTER `province`,
+ADD COLUMN `district` VARCHAR(45)  AFTER `city`;

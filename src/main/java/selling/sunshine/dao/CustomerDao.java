@@ -1,6 +1,7 @@
 package selling.sunshine.dao;
 
 import common.sunshine.model.selling.customer.Customer;
+import common.sunshine.model.selling.customer.CustomerAddress;
 import common.sunshine.pagination.DataTableParam;
 import common.sunshine.utils.ResultData;
 
@@ -23,4 +24,6 @@ public interface CustomerDao {
     ResultData queryCustomerPhone(Map<String, Object> condition);
     
     ResultData queryCustomerAddress(Map<String, Object> condition);
+    
+    ResultData updateCustomerAddress(CustomerAddress customerAddress);
 }

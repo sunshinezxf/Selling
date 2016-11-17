@@ -1,6 +1,7 @@
 package selling.sunshine.service;
 
 import common.sunshine.model.selling.customer.Customer;
+import common.sunshine.model.selling.customer.CustomerAddress;
 import common.sunshine.pagination.DataTableParam;
 import common.sunshine.utils.ResultData;
 
@@ -23,4 +24,6 @@ public interface CustomerService {
     ResultData fetchCustomerPhone(Map<String, Object> condition);
     
     ResultData fetchCustomerAddress(Map<String, Object> condition);
+    
+    ResultData updateCustomerAddress(CustomerAddress customerAddress);
 }

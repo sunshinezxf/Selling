@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import selling.sunshine.dao.CustomerDao;
 import common.sunshine.model.selling.customer.Customer;
+import common.sunshine.model.selling.customer.CustomerAddress;
 import common.sunshine.model.selling.customer.CustomerPhone;
 import common.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.CustomerService;
@@ -122,6 +123,19 @@ public class CustomerServiceImpl implements CustomerService {
         }
         return result;
     }
+
+	@Override
+	public ResultData updateCustomerAddress(CustomerAddress customerAddress) {
+		ResultData result = new ResultData();
+		ResultData updateResponse = customerDao.updateCustomerAddress(customerAddress);
+		result.setResponseCode(updateResponse.getResponseCode());
+		if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+			result.setData(updateResponse.getData());
+		} else {
+			result.setDescription(updateResponse.getDescription());
+		}
+		return result;
+	}
 
 
 }

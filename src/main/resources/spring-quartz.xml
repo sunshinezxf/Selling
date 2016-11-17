@@ -13,6 +13,9 @@
     <bean id="expressSchedule" class="selling.sunshine.schedule.ExpressSchedule"></bean>
     
     <bean id="customerOrderSchedule" class="selling.sunshine.schedule.CustomerOrderSchedule"></bean>
+    
+    <bean id="customerAddressSchedule" class="selling.sunshine.schedule.CustomerAddressSchedule"></bean>
+    
 
     <bean id="poolDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <property name="targetObject" ref="poolSchedule"></property>
@@ -58,6 +61,12 @@
     
     <bean id="checkDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <property name="targetObject" ref="customerOrderSchedule"></property>
+        <property name="targetMethod" value="schedule"></property>
+        <property name="concurrent" value="false"></property>
+    </bean>
+    
+    <bean id="customerAddressUpdateDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="customerAddressSchedule"></property>
         <property name="targetMethod" value="schedule"></property>
         <property name="concurrent" value="false"></property>
     </bean>
@@ -117,6 +126,13 @@
             <value>0 0 0 * * ?</value>
         </property>
     </bean>
+    
+    <bean id="customerAddressUpdateTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="customerAddressUpdateDetail"></property>
+        <property name="cronExpression">
+            <value>0 01 17 * * ?</value>
+        </property>
+    </bean>
 
     <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="triggers">
@@ -129,6 +145,7 @@
                 <ref bean="expressTrigger"></ref>
                 <ref bean="checkTrigger"></ref>
                 <ref bean="checkOrderPoolTrigger"></ref>
+                <ref bean="customerAddressUpdateTrigger"></ref>
             </list>
         </property>
     </bean>

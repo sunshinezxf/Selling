@@ -278,13 +278,8 @@ public class StatisticController {
 			List<Customer> customers = (List<Customer>) queryData.getData();
 			Map<String, Integer> map = new HashMap<>();
 			for (Customer customer : customers) {
-				Map<String, BigDecimal> map1 = BaiduMapUtils.getLatAndLngByAddress(customer.getAddress().getAddress());
-				BigDecimal lat = map1.get("lat");
-				BigDecimal lng = map1.get("lng");
-				Map<String, String> map2 = BaiduMapUtils.getAddressByLatAndLng(String.valueOf(lat),
-						String.valueOf(lng));				
-				if (map2 != null) {
-					String province = map2.get("province");					
+				String province=customer.getAddress().getProvince();
+				if (province != null) {			
 					if (map.containsKey(province)) {
 						map.put(province, map.get(province) + 1);
 					} else {

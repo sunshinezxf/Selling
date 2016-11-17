@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import common.sunshine.dao.BaseDao;
 import selling.sunshine.dao.CustomerDao;
+import selling.sunshine.utils.TenXunMapAPI;
 import common.sunshine.model.selling.customer.Customer;
 import common.sunshine.model.selling.customer.CustomerAddress;
 import common.sunshine.model.selling.customer.CustomerPhone;
@@ -55,6 +56,16 @@ public class CustomerDaoImpl extends BaseDao implements CustomerDao {
                 CustomerAddress address = customer.getAddress();
                 address.setAddressId(IDGenerator.generate("ADR"));
                 address.setCustomer(customer);
+                Map<String, String> map =TenXunMapAPI.getDetailInfoByAddress(address.getAddress());
+				if (map.containsKey("province")) {
+					address.setProvince(map.get("province"));
+				}
+				if (map.containsKey("city")) {
+					address.setCity(map.get("city"));
+				}
+				if (map.containsKey("district")) {
+					address.setDistrict(map.get("district"));
+				}
                 sqlSession.insert("selling.customer.address.insert", address);
                 //从数据库中获取刚插入的记录
                 Map<String, Object> condition = new HashMap<>();
@@ -105,6 +116,16 @@ public class CustomerDaoImpl extends BaseDao implements CustomerDao {
                     if (currentAddress == null || (currentAddress != null && !address.getAddress().equals(currentAddress.getAddress()))) {
                         address.setAddressId(IDGenerator.generate("ADR"));
                         address.setCustomer(customer);
+                        Map<String, String> map =TenXunMapAPI.getDetailInfoByAddress(address.getAddress());
+        				if (map.containsKey("province")) {
+        					address.setProvince(map.get("province"));
+        				}
+        				if (map.containsKey("city")) {
+        					address.setCity(map.get("city"));
+        				}
+        				if (map.containsKey("district")) {
+        					address.setDistrict(map.get("district"));
+        				}
                         sqlSession.insert("selling.customer.address.insert", address);
                         if (currentAddress != null) {
                             sqlSession.update("selling.customer.address.block", currentAddress);
@@ -250,6 +271,23 @@ public class CustomerDaoImpl extends BaseDao implements CustomerDao {
             return result;
         }
     }
+
+	@Override
+	public ResultData updateCustomerAddress(CustomerAddress customerAddress) {
+		ResultData result = new ResultData();
+		synchronized (lock) {
+			try {
+				sqlSession.update("selling.customer.address.update", customerAddress);
+				result.setData(customerAddress);
+			} catch (Exception e) {
+				logger.error(e.getMessage());
+				result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+				result.setDescription(e.getMessage());
+			} finally {
+				return result;
+			}
+		}
+	}
 
 
 }

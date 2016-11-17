@@ -31,8 +31,11 @@ public class BaiduMapUtils {
 		} catch (UnsupportedEncodingException e1) {
 			e1.printStackTrace();
 		}
+		addr=addr.replace(" ", "");
+		System.err.println(addr);
+		System.err.println(address);
 		String url = String.format("http://api.map.baidu.com/geocoder/v2/?" + "ak=" + ak + "&output=json&address=%s",
-				address);
+				addr);
 		URL myURL = null;
 		URLConnection httpsConn = null;
 		// 进行转码
@@ -56,6 +59,10 @@ public class BaiduMapUtils {
 						map.put("lat", new BigDecimal(lat));
 						map.put("lng", new BigDecimal(lng));
 						return map;
+					}else {
+						System.err.println(address);
+						System.err.println(addr);
+						System.err.println(data);
 					}					
 				}
 				insr.close();
@@ -110,6 +117,8 @@ public class BaiduMapUtils {
 				}
 				return map;
 			}
+		}else {
+			System.err.println(res);
 		}
 
 		return null;

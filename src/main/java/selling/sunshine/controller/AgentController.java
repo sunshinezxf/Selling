@@ -2221,7 +2221,7 @@ public class AgentController {
         condition.put("granted", true);
         condition.put("blockFlag", false);
         ResultData fetchResponse=agentService.fetchAgent(condition);
-        if (fetchResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
         	agent = ((List<Agent>) agentService.fetchAgent(condition).getData()).get(0);
             agent.setAgentId(agentId);
             agent.setGranted(true);

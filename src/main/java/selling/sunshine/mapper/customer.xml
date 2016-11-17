@@ -6,6 +6,9 @@
         <result property="address" column="address"></result>
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
+        <result property="province" column="province"></result>
+        <result property="city" column="city"></result>
+        <result property="district" column="district"></result>
     </resultMap>
 
     <resultMap id="phoneVo" type="common.sunshine.model.selling.customer.CustomerPhone">
@@ -66,7 +69,7 @@
     </update>
 
     <select id="addressQuery" parameterType="java.util.Map" resultMap="addressVo">
-        SELECT customer_address_id, address, block_flag, create_time
+        SELECT customer_address_id, address, block_flag, create_time,province,city,district
         FROM customer_address
         WHERE customer_id = #{customerId}
         AND block_flag = 0

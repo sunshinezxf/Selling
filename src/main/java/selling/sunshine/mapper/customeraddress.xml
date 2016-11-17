@@ -13,11 +13,14 @@
         <result property="address" column="address"></result>
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
+        <result property="province" column="province"></result>
+        <result property="city" column="city"></result>
+        <result property="district" column="district"></result>
         <association property="customer" column="customerId = customer_id" select="customerQuery"></association>
     </resultMap>
 
     <select id="query" parameterType="java.util.Map" resultMap="addressVo">
-        SELECT customer_address_id, customer_id, address, block_flag, create_time
+        SELECT customer_address_id, customer_id, address, block_flag, create_time,province,city,district
         FROM customer_address
         WHERE 1 = 1
         <if test="customerId != null and customerId != ''">
@@ -52,14 +55,29 @@
     </update>
 
     <insert id="insert" parameterType="common.sunshine.model.selling.customer.CustomerAddress" useGeneratedKeys="false">
-        INSERT INTO customer_address(customer_address_id, customer_id, address, block_flag, create_time)
-        VALUES (#{addressId}, #{customer.customerId}, #{address}, #{blockFlag}, #{createAt})
+        INSERT INTO customer_address(customer_address_id, customer_id, address, block_flag, create_time,province,city,district)
+        VALUES (#{addressId}, #{customer.customerId}, #{address}, #{blockFlag}, #{createAt},#{province},#{city},#{district})
     </insert>
 
     <update id="block" parameterType="common.sunshine.model.selling.customer.CustomerAddress" useGeneratedKeys="false">
         UPDATE customer_address
         <set>
             block_flag = 1
+        </set>
+        WHERE 1 = 1
+        <if test="addressId != null and addressId != ''">
+            AND customer_address_id = #{addressId}
+        </if>
+    </update>
+    
+    <update id="update" parameterType="common.sunshine.model.selling.customer.CustomerAddress" useGeneratedKeys="false">
+        UPDATE customer_address
+        <set>
+            province=#{province},
+            city=#{city},
+            district=#{district},
+            address=#{address},
+            block_flag=#{blockFlag}
         </set>
         WHERE 1 = 1
         <if test="addressId != null and addressId != ''">
