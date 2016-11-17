@@ -13,7 +13,7 @@
                 var rank_charts_inner_div = $("<div></div>");
                 var id = "rank_charts_" + data[i].goods_id;
                 rank_charts_inner_div.attr('id', id);
-                rank_charts_inner_div.attr('style', "height: 300px;");
+                rank_charts_inner_div.attr('style', "height: 350px;");
                 $("#agent_rank_charts").append(rank_charts_inner_div);
 
                 var rank_chart = echarts.init(document.getElementById(id));
@@ -35,7 +35,8 @@
 
                 option = {
                     title: {
-                        text: name + "代理商销售排名",
+                        text: "代理销售排名",
+                        subtext: name,
                         x: 'center'
                     },
                     tooltip: {

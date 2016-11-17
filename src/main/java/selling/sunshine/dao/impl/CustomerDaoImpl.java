@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import common.sunshine.dao.BaseDao;
 import selling.sunshine.dao.CustomerDao;
-import selling.sunshine.utils.TenXunMapAPI;
+import selling.sunshine.utils.TencentMapAPI;
 import common.sunshine.model.selling.customer.Customer;
 import common.sunshine.model.selling.customer.CustomerAddress;
 import common.sunshine.model.selling.customer.CustomerPhone;
@@ -56,7 +56,7 @@ public class CustomerDaoImpl extends BaseDao implements CustomerDao {
                 CustomerAddress address = customer.getAddress();
                 address.setAddressId(IDGenerator.generate("ADR"));
                 address.setCustomer(customer);
-                Map<String, String> map =TenXunMapAPI.getDetailInfoByAddress(address.getAddress());
+                Map<String, String> map = TencentMapAPI.getDetailInfoByAddress(address.getAddress());
 				if (map.containsKey("province")) {
 					address.setProvince(map.get("province"));
 				}
@@ -116,7 +116,7 @@ public class CustomerDaoImpl extends BaseDao implements CustomerDao {
                     if (currentAddress == null || (currentAddress != null && !address.getAddress().equals(currentAddress.getAddress()))) {
                         address.setAddressId(IDGenerator.generate("ADR"));
                         address.setCustomer(customer);
-                        Map<String, String> map =TenXunMapAPI.getDetailInfoByAddress(address.getAddress());
+                        Map<String, String> map = TencentMapAPI.getDetailInfoByAddress(address.getAddress());
         				if (map.containsKey("province")) {
         					address.setProvince(map.get("province"));
         				}
