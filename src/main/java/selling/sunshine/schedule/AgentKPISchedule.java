@@ -45,6 +45,7 @@ public class AgentKPISchedule {
 					agentKPI.setBlockFlag(true);
 				}
 				//顾客人数
+				condition.clear();
 				condition.put("agentId", agent.getAgentId());				
 				queryData=customerService.fetchCustomer(condition);
 				if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
