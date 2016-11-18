@@ -656,3 +656,8 @@ CREATE TABLE IF NOT EXISTS `selling`.`contribution_factor` (
   PRIMARY KEY (`factor_id`)
 )
   ENGINE = InnoDB;
+  
+ INSERT INTO `selling`.`contribution_factor` (factor_id,factor_name) 
+ VALUES('FAC00000001','购买商品总数量'),
+ VALUES('FAC00000002','购买商品总金额'),
+ VALUES('FAC00000003','下级代理商人数');
