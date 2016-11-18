@@ -29,9 +29,6 @@ public class CustomerAddressSchedule {
 			List<CustomerAddress> addresses=(List<CustomerAddress>)queryData.getData();
 			for (CustomerAddress customerAddress:addresses) {
 				if (customerAddress.getProvince()==null) {
-					if (customerAddress.getAddress().equals("江苏扬州宝应县宝应县碧桂园小区15幢1702室")) {
-						System.err.println("test");
-					}
 					String address=customerAddress.getAddress().replace(" ", "");
 					address=address.replace("，", "");
 					Map<String, String> map = TencentMapAPI.getDetailInfoByAddress(address);

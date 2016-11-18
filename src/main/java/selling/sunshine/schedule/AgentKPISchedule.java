@@ -1,5 +1,6 @@
 package selling.sunshine.schedule;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,8 @@ import common.sunshine.utils.ResultData;
 import selling.sunshine.service.AgentKPIService;
 import selling.sunshine.service.AgentService;
 import selling.sunshine.service.CustomerService;
+import selling.sunshine.service.OrderService;
+import selling.sunshine.vo.order.OrderItemSum;
 
 public class AgentKPISchedule {
 	
@@ -29,6 +32,9 @@ public class AgentKPISchedule {
 	
 	@Autowired
 	private CustomerService customerService;
+	
+	@Autowired
+	private OrderService orderService;
 	
 	public void schedule() {
 		Map<String, Object> condition=new HashMap<>();
@@ -61,6 +67,30 @@ public class AgentKPISchedule {
 					agentKPI.setDirectAgentQuantity(directAgents.size());
 				}
 				//贡献度
+				//贡献度计算公式  贡献度=购买商品总数量*百分比+购买商品总金额*百分比+下级代理商人数*百分比
+				condition.clear();
+				condition.put("agentId", agent.getAgentId());
+				List<Integer> orderTypeList=new ArrayList<>();
+				orderTypeList.add(0);
+				orderTypeList.add(2);
+				condition.put("orderTypeList", orderTypeList);
+				List<Integer> statusList=new ArrayList<>();
+				statusList.add(1);
+				statusList.add(2);
+				statusList.add(3);
+				condition.put("statusList", statusList);
+				queryData=orderService.fetchOrderItemSum(condition);
+				if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
+					List<OrderItemSum> list=(List<OrderItemSum>)queryData.getData();
+					int quantity=0;
+					double price=0.0;
+					//查询并计算得到购买商品总数和购买商品总金额
+					for (OrderItemSum item : list) {
+						quantity+=item.getGoodsQuantity();
+						price+=item.getOrderItemPrice();
+					}
+					
+				}
 				//agentKPI.setAgentContribution(agentContribution);
 				agentKPIService.updateAgentKPI(agentKPI);
 			}
