@@ -75,6 +75,16 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label class="col-sm-2 col-md-2 col-lg-2 control-label" for="goods_measure">
+                        计量单位
+                    </label>
+
+                    <div class="col-sm-8 col-md-8 col-lg-8">
+                        <input type="text" class="form-control" id="goods_measure" name="measure"
+                               placeholder="商品计量单位，例如：瓶，盒" required="" autocomplete="off"/>
+                    </div>
+                </div>
+                <div class="form-group">
                     <label class="col-sm-2 col-md-2 col-lg-2 control-label" for="goods_description">
                         商品描述
                     </label>
@@ -82,6 +92,26 @@
                     <div class="col-sm-8 col-md-8 col-lg-8">
                         <input type="text" class="form-control" id="goods_description" name="description"
                                placeholder="商品描述" required="" autocomplete="off"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 col-md-2 col-lg-2 control-label" for="goods_number">
+                        生产批号
+                    </label>
+
+                    <div class="col-sm-8 col-md-8 col-lg-8">
+                        <input type="text" class="form-control" id="goods_number" name="produceNo"
+                               placeholder="商品生产批号" required="" autocomplete="off"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 col-md-2 col-lg-2 control-label" for="goods_date">
+                        生产日期
+                    </label>
+
+                    <div class="col-sm-8 col-md-8 col-lg-8">
+                        <input type="text" class="form-control" id="goods_date" name="produceDate"
+                               placeholder="商品生产日期" required="" autocomplete="off"/>
                     </div>
                 </div>
                 <div class="form-group">
