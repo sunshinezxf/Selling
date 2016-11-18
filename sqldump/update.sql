@@ -656,8 +656,15 @@ CREATE TABLE IF NOT EXISTS `selling`.`contribution_factor` (
   PRIMARY KEY (`factor_id`)
 )
   ENGINE = InnoDB;
-  
+
  INSERT INTO `selling`.`contribution_factor` (factor_id,factor_name) 
  VALUES('FAC00000001','购买商品总数量'),
  VALUES('FAC00000002','购买商品总金额'),
  VALUES('FAC00000003','下级代理商人数');
+
+
+ALTER TABLE `selling`.`goods`
+ADD COLUMN `goods_measure` VARCHAR(45) NOT NULL DEFAULT '瓶' AFTER `goods_description`,
+ADD COLUMN `goods_produce_no` VARCHAR(45) NOT NULL DEFAULT '见瓶身' AFTER `goods_measure`,
+ADD COLUMN `goods_produce_date` VARCHAR(45) NOT NULL DEFAULT '见瓶身' AFTER `goods_produce_no`;
+

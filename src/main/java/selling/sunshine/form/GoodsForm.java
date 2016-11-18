@@ -14,8 +14,14 @@ public class GoodsForm {
     private String agentPrice;
     @NotNull
     private String description;
-    
+
     private String standard;
+
+    private String measure;
+
+    private String produceNo;
+
+    private String produceDate;
 
     private String[] path;
 
@@ -54,14 +60,38 @@ public class GoodsForm {
     }
 
     public String getStandard() {
-		return standard;
-	}
+        return standard;
+    }
 
-	public void setStandard(String standard) {
-		this.standard = standard;
-	}
+    public void setStandard(String standard) {
+        this.standard = standard;
+    }
 
-	public String[] getPath() {
+    public String getMeasure() {
+        return measure;
+    }
+
+    public void setMeasure(String measure) {
+        this.measure = measure;
+    }
+
+    public String getProduceNo() {
+        return produceNo;
+    }
+
+    public void setProduceNo(String produceNo) {
+        this.produceNo = produceNo;
+    }
+
+    public String getProduceDate() {
+        return produceDate;
+    }
+
+    public void setProduceDate(String produceDate) {
+        this.produceDate = produceDate;
+    }
+
+    public String[] getPath() {
         return path;
     }
 

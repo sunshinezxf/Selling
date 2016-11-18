@@ -19,10 +19,10 @@
             </div>
         </div>
     </div>
-    <div class="weui_btn_area">
-        <button type="button" class="weui_btn weui_btn_primary" id="update_confirm_btn">确认修改</button>
-        <button type="button" class="weui_btn weui_btn_warn" id="update_delete_btn">删除客户</a>
-        <button type="button" class="weui_btn weui_btn_default" id="update_cancel_btn">取消</button>
+    <div class="weui_btn_area" style="text-align:center">
+    	<button type="button" class="weui_btn weui_btn_mini weui_btn_warn"  style="width:30%" id="update_delete_btn">删除客户</button>
+        <button type="button" class="weui_btn weui_btn_mini weui_btn_primary"  style="width:30%" id="update_confirm_btn">确认修改</button>
+        <button type="button" class="weui_btn weui_btn_mini weui_btn_default"  style="width:30%" id="update_cancel_btn">返回</button>
     </div>  
 </div>
 <div class="weui_dialog_alert" id="dialog" style="display: none;">
@@ -122,6 +122,15 @@
             $("#customer_phone_new").val(customer.phone.phone);
             $("#customer_address_new").val(customer.address.address);            
         });
+        var url = "${path.concat('/customer/info/" + customerId + "')}";
+        $.post(url, function (result) {
+            if(result.responseCode != "RESPONSE_OK"){
+            	return;
+            }
+            var lastOrder = result.data.lastOrder;
+            var salesInfo = result.data.salesInfo;
+        });
+        
         $("#customer_panel").hide();
     }
     

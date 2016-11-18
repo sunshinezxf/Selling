@@ -16,12 +16,16 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.alibaba.fastjson.JSONObject;
+
 import selling.sunshine.form.CustomerAddressForm;
 import selling.sunshine.form.CustomerForm;
 import selling.sunshine.form.PurchaseForm;
 import common.sunshine.utils.SortRule;
 import common.sunshine.model.selling.agent.Agent;
 import common.sunshine.model.selling.agent.AgentKPI;
+import common.sunshine.model.selling.goods.Goods4Agent;
 import common.sunshine.model.selling.goods.Goods4Customer;
 import common.sunshine.pagination.DataTablePage;
 import common.sunshine.pagination.DataTableParam;
@@ -30,6 +34,7 @@ import selling.sunshine.service.AgentService;
 import selling.sunshine.service.CommodityService;
 import selling.sunshine.service.CustomerService;
 import selling.sunshine.service.OrderService;
+import selling.sunshine.vo.order.OrderItemSum;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
 
@@ -257,6 +262,116 @@ public class CustomerController {
             fetchResponse.setDescription(fetchResponse.getDescription());
         }
         return result;
+    }
+    
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.GET, value = "/info/{customerId}")
+    public ResultData fetchCustomerInfo(@PathVariable("customerId") String customerId) {
+    	Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        ResultData result = new ResultData();
+        if (user == null) {
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription("您需要重新登录");
+            return result;
+        }
+    	Map<String, Object> condition = new HashMap<String, Object>();
+    	condition.put("customerId", customerId);
+    	condition.put("blockFlag", false);
+    	ResultData fetchCustomerResponse = customerService.fetchCustomer(condition);
+    	if(fetchCustomerResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
+    		result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+    		result.setDescription("未找到该客户");
+    		return result;
+    	}
+    	//以下是查找该客户最近一次的购买订单，顺便统计该客户的各商品购买盒数
+    	OrderItemSum orderItemSum = null;
+    	Map<String, Object[]> goodsMap = new HashMap<String, Object[]>();//商品ID->(商品name, 购买数量quantity)
+    	Customer customer = ((List<Customer>)fetchCustomerResponse.getData()).get(0);
+    	String phone = customer.getPhone().getPhone();
+    	condition.clear();
+    	condition.put("customerId", customer.getCustomerId());
+    	List<Integer> statusList = new ArrayList<>();
+    	statusList.add(1);
+    	statusList.add(2);
+    	statusList.add(3);
+    	statusList.add(4);
+    	statusList.add(5);
+    	statusList.add(6);
+    	condition.put("statusList", statusList);
+    	condition.put("blockFlag", false);
+    	List<SortRule> orderBy = new ArrayList<>();
+        orderBy.add(new SortRule("create_time", "desc"));
+        condition.put("sort", orderBy);
+    	ResultData fetchOrderItemResponse = orderService.fetchOrderItem(condition);
+    	if(fetchOrderItemResponse.getResponseCode() == ResponseCode.RESPONSE_OK){
+    		//分商品统计购买数量
+    		for(OrderItem orderItem : (List<OrderItem>)fetchOrderItemResponse.getData()){
+    			if(goodsMap.containsKey(orderItem.getGoods().getGoodsId())){
+    				Object[] goodsInfo = goodsMap.get(orderItem.getGoods().getGoodsId());
+    				goodsInfo[1] = (Integer)goodsInfo[1] + orderItem.getGoodsQuantity();
+    			} else {
+    				Object[] goodsInfo = new Object[2];
+    				goodsInfo[0] = orderItem.getGoods().getName();
+    				goodsInfo[1] = orderItem.getGoodsQuantity();
+    				goodsMap.put(orderItem.getGoods().getGoodsId(), goodsInfo);
+    			}
+    		}
+    		
+    		OrderItem orderItem = ((List<OrderItem>)fetchOrderItemResponse.getData()).get(0);
+    		condition.clear();
+    		condition.put("agentId", user.getAgent().getAgentId());
+    		condition.put("orderId", orderItem.getOrderItemId());
+    		condition.put("blockFlag", false);
+    		ResultData fetchOrderItemSumResponse = orderService.fetchOrderItemSum(condition);
+    		if(fetchOrderItemSumResponse.getResponseCode() == ResponseCode.RESPONSE_OK){
+    			orderItemSum = ((List<OrderItemSum>)fetchOrderItemSumResponse.getData()).get(0);
+    		}
+    	}
+    	condition.clear();
+    	condition.put("receiverPhone", phone);
+    	condition.put("agentId", user.getAgent().getAgentId());
+    	condition.put("blockFlag", false);
+    	condition.put("status", statusList);
+    	condition.put("sort", orderBy);
+    	ResultData fetchCustomerOrderResponse = orderService.fetchCustomerOrder(condition);
+    	if(fetchCustomerOrderResponse.getResponseCode() == ResponseCode.RESPONSE_OK){
+    		//分商品统计购买数量
+    		for(CustomerOrder customerOrder : (List<CustomerOrder>)fetchCustomerOrderResponse.getData()){
+    			if(goodsMap.containsKey(customerOrder.getGoods().getGoodsId())){
+    				Object[] goodsInfo = goodsMap.get(customerOrder.getGoods().getGoodsId());
+    				goodsInfo[1] = (Integer)goodsInfo[1] + customerOrder.getQuantity();
+    			} else {
+    				Object[] goodsInfo = new Object[2];
+    				goodsInfo[0] = customerOrder.getGoods().getName();
+    				goodsInfo[1] = customerOrder.getQuantity();
+    				goodsMap.put(customerOrder.getGoods().getGoodsId(), goodsInfo);
+    			}
+    		}
+    		
+    		CustomerOrder customerOrder = ((List<CustomerOrder>)fetchCustomerOrderResponse.getData()).get(0);
+    		condition.clear();
+    		condition.put("agentId", user.getAgent().getAgentId());
+    		condition.put("orderId", customerOrder.getOrderId());
+    		condition.put("blockFlag", false);
+    		ResultData fetchOrderItemSumResponse = orderService.fetchOrderItemSum(condition);
+    		if(fetchOrderItemSumResponse.getResponseCode() == ResponseCode.RESPONSE_OK){
+    			OrderItemSum orderItemSumTmp = ((List<OrderItemSum>)fetchOrderItemSumResponse.getData()).get(0);
+    			if(orderItemSum == null || orderItemSumTmp.getCreateAt().after(orderItemSum.getCreateAt())){
+    				orderItemSum = orderItemSumTmp;
+    			}
+    		}
+    	}
+    	JSONObject infoObject = new JSONObject();
+    	infoObject.put("lastOrder", orderItemSum);
+    	JSONObject goodsObject = new JSONObject();
+    	for(String goodsId : goodsMap.keySet()){
+    		Object[] tmp = goodsMap.get(goodsId);
+    		goodsObject.put((String) tmp[0], tmp[1]);
+    	}
+    	infoObject.put("salesInfo", goodsObject);
+    	result.setData(infoObject);
+    	return result;
     }
 
     @ResponseBody

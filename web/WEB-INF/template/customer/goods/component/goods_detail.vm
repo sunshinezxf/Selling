@@ -90,11 +90,11 @@
             </tr>
             <tr>
                 <td class="p_hd">生产批号</td>
-                <td class="p_bd">见瓶身</td>
+                <td class="p_bd">${goods.produceNo}</td>
             </tr>
             <tr>
                 <td class="p_hd" style="border-bottom:none;">生产日期</td>
-                <td class="p_bd" style="border-bottom:none;">见瓶身</td>
+                <td class="p_bd" style="border-bottom:none;">${goods.produceDate}</td>
             </tr>
         </table>
     </div>
