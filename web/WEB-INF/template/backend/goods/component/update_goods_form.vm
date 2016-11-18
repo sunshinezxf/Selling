@@ -81,7 +81,7 @@
 
                     <div class="col-sm-8 col-md-8 col-lg-8">
                         <input type="text" class="form-control" id="goods_measure" name="measure"
-                               placeholder="商品计量单位，例如：瓶，盒" required="" autocomplete="off"/>
+                               value=${goods.measure} required="" autocomplete="off"/>
                     </div>
                 </div>
                 <div class="form-group">
@@ -101,7 +101,7 @@
 
                     <div class="col-sm-8 col-md-8 col-lg-8">
                         <input type="text" class="form-control" id="goods_number" name="produceNo"
-                               placeholder="商品生产批号" required="" autocomplete="off"/>
+                               value=${goods.produceNo} required="" autocomplete="off"/>
                     </div>
                 </div>
                 <div class="form-group">
@@ -111,7 +111,7 @@
 
                     <div class="col-sm-8 col-md-8 col-lg-8">
                         <input type="text" class="form-control" id="goods_date" name="produceDate"
-                               placeholder="商品生产日期" required="" autocomplete="off"/>
+                               value=${goods.produceDate} required="" autocomplete="off"/>
                     </div>
                 </div>
                 <div class="form-group">
