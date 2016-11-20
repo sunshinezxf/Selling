@@ -1,21 +1,26 @@
 #parse("/common/util.vm")
 <html lang="zh_CN">
 <head>
-    #parse("/backend/component/init.vm")
-    #parse("/backend/component/init_highcharts.vm")
-    #parse("/backend/initialization/echarts.lib.vm")
-    #parse("/backend/component/init_dashboard.vm")
+    #parse("/backend/initialization/init.vm")
+    #parse("/backend/common/echarts.lib.vm")
     <link rel="stylesheet" href="${path.concat('/material/css/backend/info-box.css')}">
     <title>首页</title>
 </head>
-<body>
-    #parse("/backend/component/navigate_with_login.vm")
-<div class="container-fluid">
-    #parse("/backend/component/sidebar.vm")
-    #parse("/backend/component/dashboard_table.vm")
+<body id="dashboard" class="started pushable" ontouchstart>
+    #parse("/backend/common/mobile_sidebar.vm")
+    #parse("/backend/common/mobile_navigate_with_login.vm")
+<div class="pusher">
+    <div class="full height">
+        <div class="constant">
+            #parse("/backend/common/navigate_with_login.vm")
+            #parse("/backend/common/sidebar.vm")
+        </div>
+        <div class="content">
+            #parse("/backend/common/dashboard_table.vm")
+        </div>
+    </div>
 </div>
 </body>
-<script>
-
+<script type="text/javascript">
 </script>
 </html>

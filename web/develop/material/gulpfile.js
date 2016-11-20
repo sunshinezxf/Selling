@@ -12,7 +12,7 @@ gulp.task('sass', function () {
 });
 
 gulp.task('script', function () {
-    return gulp.src('./js/**.js').pipe(uglify()).pipe(gulp.dest('/material/js/backend/'))
+    return gulp.src('./js/**.js').pipe(uglify()).pipe(gulp.dest('../../material/js/backend/'))
 });
 
 gulp.task('build', function () {
