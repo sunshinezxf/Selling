@@ -42,30 +42,6 @@
   }
 }
 
-#dashboard{
-  .full.height{
-    > .constant{
-      position: relative;
-      z-index: 1;
-      background-color: #1b1c1d;
-      -webkit-box-flex: 0;
-      -webkit-flex: 0 0 auto;
-      -ms-flex: 0 0 auto;
-      flex: 0 0 auto;
-    }
-  }
-}
-
-#dashboard{
-  .content{
-    -webkit-box-flex: 1;
-    -webkit-flex: 1 1 auto;
-    -ms-flex: 1 1 auto;
-    flex: 1 1 auto;
-    min-width: 0px;
-  }
-}
-
 #sidebar{
   background:#F0F0F0;
 }

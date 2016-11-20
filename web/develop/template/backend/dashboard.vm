@@ -15,7 +15,7 @@
             #parse("/backend/common/navigate_with_login.vm")
             #parse("/backend/common/sidebar.vm")
         </div>
-        <div class="content">
+        <div class="ui main container">
             #parse("/backend/common/dashboard_table.vm")
         </div>
     </div>
