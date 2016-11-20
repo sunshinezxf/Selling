@@ -298,15 +298,7 @@
         $("#delete_dialog").fadeIn();
     });
     $("#return_order_btn").click(function () {
-        #if(${status} == "SAVED" && ${operation} == "VIEW")
-            window.location = "${path.concat('/agent/order/manage/0')}";
-        #elseif(${status} == "SUBMITTED" && ${operation} == "VIEW")
-            window.location = "${path.concat('/agent/order/manage/1')}";
-        #elseif(${status} == "FINISHIED" && ${operation} == "VIEW")
-            window.location = "${path.concat('/agent/order/manage/3')}";
-        #else
-            window.location = "${path.concat('/agent/order/manage/2')}";
-        #end
+    	location.href=history.go(-1);
     });
     $("#delete_dialog").find(".weui_btn_dialog.default").click(function () {
         $("#delete_dialog").hide();

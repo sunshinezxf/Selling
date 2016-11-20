@@ -17,6 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import selling.sunshine.form.CustomerAddressForm;
@@ -364,12 +365,15 @@ public class CustomerController {
     	}
     	JSONObject infoObject = new JSONObject();
     	infoObject.put("lastOrder", orderItemSum);
-    	JSONObject goodsObject = new JSONObject();
+    	JSONArray goodsArray = new JSONArray();
     	for(String goodsId : goodsMap.keySet()){
     		Object[] tmp = goodsMap.get(goodsId);
-    		goodsObject.put((String) tmp[0], tmp[1]);
+    		JSONObject goodsObject = new JSONObject();
+    		goodsObject.put("name", tmp[0]);
+    		goodsObject.put("quantity", tmp[1]);
+    		goodsArray.add(goodsObject);
     	}
-    	infoObject.put("salesInfo", goodsObject);
+    	infoObject.put("salesInfo", goodsArray);
     	result.setData(infoObject);
     	return result;
     }

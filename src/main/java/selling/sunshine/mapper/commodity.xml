@@ -112,6 +112,15 @@
             <if test="standard != null">
             	standard = #{standard},
             </if>
+            <if test="measure != null">
+                goods_measure = #{measure},
+            </if>
+            <if test="produceNo != null">
+                goods_produce_no = #{produceNo},
+            </if>
+            <if test="produceDate != null">
+                goods_produce_date = #{produceDate},
+            </if>
             <if test="blockFlag != null">
                 block_flag = #{blockFlag},
             </if>
