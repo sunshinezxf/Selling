@@ -13,10 +13,9 @@
         <div class="col-md-12 col-lg-12" style="margin-bottom:2em;">
             <a href="${path.concat('/message/send')}" class="btn btn-primary">短信推送</a>&nbsp;
             <a href="${path.concat('/agent/downloadAgentExcel')}" class="btn btn-primary">代理信息下载</a>
-            <a href="${path.concat('/agent/kpi')}" class="btn btn-primary">agentKPI</a>
         </div>
         <div class="col-md-12 col-lg-12">
-            <table id="overview_agent_table" class="table table-striped table-bordered" cellspacing="0" width="100%">
+            <table id="agent_kpi_table" class="table table-striped table-bordered" cellspacing="0" width="100%">
             </table>
         </div>
     </div>
@@ -85,10 +84,10 @@
 #parse("/backend/order/component/order_item_modal.vm")
 <script>
     $(document).ready(function () {
-        $("#overview_agent_table").DataTable({
+        $("#agent_kpi_table").DataTable({
             searching: true,
             paging: true,
-            aaSorting: [[1, "desc"]],
+            aaSorting: [[0, "asc"]],
             "sPaginationType": "full_numbers",
             "bPaginate": true,
             "bLengthChange": true,
@@ -98,7 +97,7 @@
             "bProcessing": true,
             "bServerSide": true,
             "bInfoFiltered": false,
-            "sAjaxSource": '${path.concat('/agent/overview')}',
+            "sAjaxSource": '${path.concat('/agent/kpi')}',
             "infoFiltered": false,
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                 $(nRow).removeClass('dataTable');
@@ -120,27 +119,13 @@
                 {
                     title: "姓名", "mRender": function (data, type, full) {
                     var url = "${path.concat('/agent/detail/')}" + full.agentId;
-                    var operation = "<a id='" + full.agentId + "' href='" + url + "'>" + full.name + "</a>";
+                    var operation = "<a id='" + full.agentId + "' href='" + url + "'>" + full.agentName + "</a>";
                     return operation;
                 }
                 },
-                {title: "手机", "mData": "phone"},
-                {
-                    title: "注册时间", "mRender": function (data, type, full) {
-                    return ((new Date(full.createAt)).format("yyyy/MM/dd hh:mm"));
-                }
-                },
-                {
-                    title: "审核状态", "mRender": function (data, type, full) {
-                    var operation = "";
-                    if (full.granted == true) {
-                        operation += "已审核通过";
-                    } else {
-                        operation += "审核未通过";
-                    }
-                    return operation;
-                }
-                },
+                {title: "客户数", "mData": "customerQuantity"},
+                {title: "下级代理商数", "mData": "directAgentQuantity"},
+                {title: "贡献度", "mData": "agentContribution"},
                 {
                     title: "操作", "mRender": function (data, type, full) {
                     var operation = "";
