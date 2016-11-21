@@ -4,9 +4,21 @@
     @content;
   }
 }
-@include min-screen(1145px) {
+@include min-screen(768px) {
   #mobileTopMenu{
     display: none;
+  }
+  .ui.container {
+    width: 100%;
+  }
+  .ui.accordion.menu{
+    .item{
+      .content.menu{
+        > .item{
+          margin-left:2em;
+        }
+      }
+    }
   }
 }
 
@@ -16,13 +28,24 @@
     @content;
   }
 }
-@include max-screen(1144px) {
+@include max-screen(767px) {
   #dashboard{
     .full.height{
       > .constant {
         display: none;
       }
     }
+  }
+  .ui.container {
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+}
+
+.pushable{
+  > .pusher{
+    overflow: visible;
   }
 }
 
@@ -38,6 +61,20 @@
       -ms-flex-direction: row;
       flex-direction: row;
       height: 100%;
+    }
+  }
+}
+
+#dashboard{
+  .full.height{
+    > .constant {
+      position: relative;
+      z-index: 1;
+      background-color: #1b1c1d;
+      -webkit-box-flex: 0;
+      -webkit-flex: 0 0 auto;
+      -ms-flex: 0 0 auto;
+      flex: 0 0 auto;
     }
   }
 }
