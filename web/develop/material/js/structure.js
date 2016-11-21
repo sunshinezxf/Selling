@@ -26,7 +26,7 @@ $(document).ready(function(){
 
 function isImgLoad(callback){
     // 查找所有图片，迭代处理
-    $('.image').each(function(){
+    $('#logo').each(function(){
         // 找到为0就将isLoad设为false，并退出each
         if(this.height === 0){
             isLoad = false;
