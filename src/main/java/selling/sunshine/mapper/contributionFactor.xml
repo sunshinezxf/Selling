@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="selling.contributionFactor">
+
+   <resultMap id="contributionFactorVo" type="selling.sunshine.model.ContributionFactor">
+        <result property="factorId" column="factor_id"></result>
+        <result property="factorName" column="factor_name"></result>
+        <result property="factorWeight" column="factor_weight"></result>
+        <result property="blockFlag" column="block_flag"></result>
+		<result property="createAt" column="create_time"></result>
+    </resultMap>
+    
+    <select id="query" parameterType="java.util.Map" resultMap="contributionFactorVo">
+        SELECT factor_id, factor_name, factor_weight, block_flag, create_time
+    	FROM contribution_factor
+    	WHERE 1 = 1
+    	<if test="factorId != null and factorId !=''">
+    		AND factor_id = #{factorId}
+    	</if>
+    </select>
+    
+    <insert id="insert" parameterType="selling.sunshine.model.ContributionFactor" useGeneratedKeys="false">
+        INSERT INTO contribution_factor
+        <set>
+            factor_id = #{factorId},
+            factor_name = #{factorName},
+            factor_weight = #{factorWeight},
+            block_flag = #{blockFlag},
+            create_time = #{createAt},
+        </set>
+    </insert>
+    
+     <update id="update" parameterType="selling.sunshine.model.ContributionFactor" useGeneratedKeys="false">
+        UPDATE contribution_factor
+        <set>
+            <if test="factorName != null and factorName != ''">
+                factor_name = #{factorName},
+            </if>
+            <if test="factorWeight != null and factorWeight != ''">
+                factor_weight = #{factorWeight},
+            </if>
+            <if test="blockFlag != null">
+                block_flag = #{blockFlag}
+            </if>
+        </set>
+        WHERE factor_id = #{factorId}
+    </update>
+</mapper>

@@ -13,7 +13,7 @@
      <result property="createAt" column="create_time"></result>
  </resultMap>
 
-<select id="query" parameterType="java.util.Map" resultMap="agentKPIVo">
+   <select id="query" parameterType="java.util.Map" resultMap="agentKPIVo">
    SELECT kpi_id, agent_id,agent_name, customer_quantity, direct_agent_quantity, agent_contribution,block_flag, create_time
         FROM agent_kpi
         WHERE 1 = 1
@@ -23,7 +23,17 @@
         <if test="kpiId != null and kpiId != ''">
             AND kpi_id = #{kpiId}
         </if>
-</select>
+        <if test="blockFlag != null">
+            AND block_flag = #{blockFlag}
+        </if>
+        <if test="search !=null and search != ''">
+           AND (agent_name LIKE BINARY #{search} OR customer_quantity LIKE BINARY #{search} OR direct_agent_quantity LIKE BINARY
+            #{search} OR agent_contribution LIKE BINARY #{search})
+        </if> 
+        <if test="sort !=null and sort != ''">
+                ORDER BY BINARY ${sort} 
+        </if> 
+    </select>
 
     <insert id="insert" parameterType="common.sunshine.model.selling.agent.AgentKPI" useGeneratedKeys="false">
         INSERT INTO agent_kpi

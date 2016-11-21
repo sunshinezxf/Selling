@@ -105,4 +105,8 @@
     <bean id="agentKPIDao" class="selling.sunshine.dao.impl.AgentKPIDaoImpl">
         <property name="sqlSession" ref="sqlSession"></property>
     </bean>
+    
+    <bean id="contributionFactorDao" class="selling.sunshine.dao.impl.ContributionFactorDaoImpl">
+        <property name="sqlSession" ref="sqlSession"></property>
+    </bean>
 </beans>

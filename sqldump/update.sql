@@ -657,10 +657,9 @@ CREATE TABLE IF NOT EXISTS `selling`.`contribution_factor` (
 )
   ENGINE = InnoDB;
 
- INSERT INTO `selling`.`contribution_factor` (factor_id,factor_name) 
- VALUES('FAC00000001','购买商品总数量'),
- VALUES('FAC00000002','购买商品总金额'),
- VALUES('FAC00000003','下级代理商人数');
+ INSERT INTO `selling`.`contribution_factor` (factor_id,factor_name,create_time) VALUES('FAC00000001','购买商品总数量','2016-11-18');
+ INSERT INTO `selling`.`contribution_factor` (factor_id,factor_name,create_time) VALUES('FAC00000002','购买商品总金额','2016-11-18');
+ INSERT INTO `selling`.`contribution_factor` (factor_id,factor_name,create_time) VALUES('FAC00000003','下级代理商人数','2016-11-18');
 
 
 ALTER TABLE `selling`.`goods`

@@ -41,5 +41,6 @@
         <mapper resource="selling/sunshine/mapper/shorturl.xml"/>
         <mapper resource="selling/sunshine/mapper/agentvitality.xml"/>
         <mapper resource="selling/sunshine/mapper/agentkpi.xml"/>
+        <mapper resource="selling/sunshine/mapper/contributionFactor.xml"/>
     </mappers>
 </configuration>
