@@ -86,7 +86,7 @@ public class CommodityController {
         }
 
         Goods4Customer goods = new Goods4Customer(form.getName(), Double.parseDouble(form.getAgentPrice()),
-                Double.parseDouble(form.getPrice()), form.getDescription(), form.getStandard());
+                Double.parseDouble(form.getPrice()), form.getDescription(), form.getStandard(), form.getMeasure(), form.getProduceNo(), form.getProduceDate());
         goods.setBlockFlag(form.isBlock());
         ResultData response = commodityService.createGoods4Customer(goods);
         if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
@@ -218,7 +218,7 @@ public class CommodityController {
         ResultData queryData = commodityService.fetchGoods4Customer(condition);
         Goods4Customer oldGoods = ((List<Goods4Customer>) queryData.getData()).get(0);
         Goods4Customer goods = new Goods4Customer(form.getName(), Double.parseDouble(form.getAgentPrice()),
-                Double.parseDouble(form.getPrice()), form.getDescription(), form.getStandard());
+                Double.parseDouble(form.getPrice()), form.getDescription(), form.getStandard(), form.getMeasure(), form.getProduceNo(), form.getProduceDate());
         goods.setBlockFlag(form.isBlock());
         goods.setGoodsId(goodsId);
         ResultData response = commodityService.updateGoods4Customer(goods);

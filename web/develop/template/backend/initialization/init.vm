@@ -1,0 +1,8 @@
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="${path.concat('/plugins/semantic/dist/semantic.min.css')}"/>
+<link rel="stylesheet" href="${path.concat('/material/css/backend/structure.css')}"/>
+<script type="text/javascript" src="${path.concat('/plugins/jquery/jquery-1.12.3.min.js')}"></script>
+<script type="text/javascript" src="${path.concat('/plugins/semantic/dist/semantic.min.js')}"></script>
+<script type="text/javascript" src="${path.concat('/material/js/backend/structure.js')}"></script>

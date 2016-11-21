@@ -1,0 +1,51 @@
+<div id="sidebar" class="ui large left fixed vertical accordion menu">
+    <div class="item">
+        <i class=" teal dashboard icon left"></i>
+        首页
+    </div>
+    <div class="item">
+        <a class="title"><i class="teal user icon left"></i><i class="dropdown icon"></i>代理管理</a>
+        <div class="content menu">
+            <a class="item">代理概览</a>
+        </div>
+    </div>
+    <div class="item">
+        <a class="title"><i class="teal file text icon left"></i><i class="dropdown icon"></i>订单管理</a>
+        <div class="content menu">
+            <a class="item">代理商订单</a>
+        </div>
+    </div>
+    <div class="item">
+        <a class="title"><i class="teal gift icon left"></i><i class="dropdown icon"></i>商品管理</a>
+        <div class="content menu">
+            <a class="item">添加商品</a>
+        </div>
+    </div>
+    <div class="item">
+        <a class="title"><i class="teal payment icon left"></i><i class="dropdown icon"></i>返现管理</a>
+        <div class="content menu">
+            <a class="item">当月返现</a>
+        </div>
+    </div>
+    <div class="item">
+        <a class="title"><i class="teal calendar icon left"></i><i class="dropdown icon"></i>活动管理</a>
+        <div class="content menu">
+            <a class="item">添加活动</a>
+        </div>
+    </div>
+    <div class="item">
+        <a class="title"><i class="teal line chart icon left"></i><i class="dropdown icon"></i>报表专区</a>
+        <div class="content menu">
+            <a class="item">报表下载</a>
+        </div>
+    </div>
+    <div class="item">
+        <a class="title"><i class="teal setting icon left"></i><i class="dropdown icon"></i>账号管理</a>
+        <div class="content menu">
+            <a class="item">添加账号</a>
+        </div>
+    </div>
+    <div class="item">
+        <i class="teal history icon left"></i>日志查询
+    </div>
+</div>

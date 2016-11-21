@@ -1,0 +1,81 @@
+@mixin min-screen($res){
+  @media only screen and ( min-width: $res )
+  {
+    @content;
+  }
+}
+@include min-screen(1145px) {
+  #mobileTopMenu{
+    display: none;
+  }
+}
+
+@mixin max-screen($res){
+  @media only screen and ( max-width: $res )
+  {
+    @content;
+  }
+}
+@include max-screen(1144px) {
+  #dashboard{
+    .full.height{
+      > .constant {
+        display: none;
+      }
+    }
+  }
+}
+
+#dashboard{
+  > .pusher{
+    > .full.height{
+      background-color: #FFFFFF;
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-flex-direction: row;
+      -ms-flex-direction: row;
+      flex-direction: row;
+      height: 100%;
+    }
+  }
+}
+
+#sidebar{
+  background:#F0F0F0;
+}
+
+#mobileLogo{
+  font-family:STXingkai;
+  font-size:1.4em;
+  font-weight:normal;
+  color:#16BCB4;
+}
+
+
+.ui.vertical.menu{
+  .item{
+    letter-spacing:.2em;
+    cursor: pointer;
+  }
+}
+
+.ui.vertical.menu{
+  .item{
+    i.icon.left{
+      float:left;
+      margin: 0 .5em 0 0;
+    }
+  }
+}
+
+.ui.accordion.menu{
+  .item{
+    .title{
+      > .dropdown.icon{
+        transform:rotate(0deg);
+      }
+    }
+  }
+}
