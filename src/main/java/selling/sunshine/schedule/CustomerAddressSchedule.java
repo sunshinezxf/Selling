@@ -36,23 +36,25 @@ public class CustomerAddressSchedule {
 						customerAddress.setProvince(map.get("province"));
 						customerAddress.setCity(map.get("city"));
 						customerAddress.setDistrict(map.get("district"));
+						customerService.updateCustomerAddress(customerAddress);
 					}else {
 						if (address.contains("苏州工业园区")) {
 							customerAddress.setProvince("江苏");
 							customerAddress.setCity("苏州");
 							customerAddress.setDistrict("吴中");
+							customerService.updateCustomerAddress(customerAddress);
 						}else if (address.contains("县")) {
 							map = TencentMapAPI.getDetailInfoByAddress(address.substring(0, address.indexOf("县")));
 							if (map.containsKey("province")&&map.containsKey("city")&&map.containsKey("district")) {
 								customerAddress.setProvince(map.get("province"));
 								customerAddress.setCity(map.get("city"));
 								customerAddress.setDistrict(map.get("district"));
+								customerService.updateCustomerAddress(customerAddress);
 							}else {
 								logger.error(address);
 							}
 						}
 					}
-					customerService.updateCustomerAddress(customerAddress);
 				}				
 			}
 		}

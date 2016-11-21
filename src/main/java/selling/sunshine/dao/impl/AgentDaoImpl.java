@@ -102,7 +102,7 @@ public class AgentDaoImpl extends BaseDao implements AgentDao {
         condition = handle(condition);
         if (!StringUtils.isEmpty(param.getsSearch())) {  
             String searchParam=param.getsSearch().replace("/", "-");
-        	   condition.put("search", "%"+searchParam+"%");
+        	condition.put("search", "%"+searchParam+"%");
  		}
         ResultData total = queryAgent(condition);
         if (total.getResponseCode() != ResponseCode.RESPONSE_OK) {

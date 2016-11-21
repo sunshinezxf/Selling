@@ -7,6 +7,7 @@ import java.util.Map;
 import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 
 import common.sunshine.dao.BaseDao;
 import common.sunshine.model.selling.agent.AgentKPI;
@@ -79,6 +80,28 @@ public class AgentKPIDaoImpl extends BaseDao implements AgentKPIDao {
 		 ResultData result = new ResultData();
 	        DataTablePage<AgentKPI> page = new DataTablePage<>(param);
 	        condition = handle(condition);
+	        if (!StringUtils.isEmpty(param.getsSearch())) { 
+	        	condition.put("search", "%"+param.getsSearch()+"%");
+	        }
+	        if (!StringUtils.isEmpty(param.getsSortDir_0())) {
+	        	switch (param.getiSortCol_0()) {
+				case 0:
+					condition.put("sort", "convert(agent_name using gbk) "+param.getsSortDir_0());
+					break;
+				case 1:
+					condition.put("sort", "customer_quantity "+param.getsSortDir_0());
+					break;
+				case 2:
+					condition.put("sort", "direct_agent_quantity "+param.getsSortDir_0());
+					break;
+				case 3:
+					condition.put("sort", "agent_contribution "+param.getsSortDir_0());
+					break;
+				default:
+					condition.put("sort", "agent_name "+param.getsSortDir_0());
+					break;
+				}				
+			}
 	        ResultData total = queryAgentKPI(condition);
 	        if (total.getResponseCode() != ResponseCode.RESPONSE_OK) {
 	            result.setResponseCode(ResponseCode.RESPONSE_ERROR);

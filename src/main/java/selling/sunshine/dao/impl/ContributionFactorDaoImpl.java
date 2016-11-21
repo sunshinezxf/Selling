@@ -1,10 +1,10 @@
 package selling.sunshine.dao.impl;
 
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import common.sunshine.dao.BaseDao;
 import common.sunshine.utils.IDGenerator;
 import common.sunshine.utils.ResponseCode;
@@ -38,14 +38,35 @@ public class ContributionFactorDaoImpl extends BaseDao implements ContributionFa
 
 	@Override
 	public ResultData queryContributionFactor(Map<String, Object> condition) {
-		// TODO Auto-generated method stub
-		return null;
+		ResultData result = new ResultData();
+		condition = handle(condition);
+		try {
+			List<ContributionFactor> list = sqlSession.selectList("selling.contributionFactor.query", condition);
+			result.setData(list);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+			result.setDescription(e.getMessage());
+		} finally {
+			return result;
+		}
 	}
 
 	@Override
 	public ResultData updateContributionFactor(ContributionFactor contributionFactor) {
-		// TODO Auto-generated method stub
-		return null;
+		ResultData result = new ResultData();
+		synchronized (lock) {
+			try {
+				sqlSession.update("selling.contributionFactor.update", contributionFactor);
+				result.setData(contributionFactor);
+			} catch (Exception e) {
+				logger.error(e.getMessage());
+				result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+				result.setDescription(e.getMessage());
+			} finally {
+				return result;
+			}
+		}
 	}
 
 }

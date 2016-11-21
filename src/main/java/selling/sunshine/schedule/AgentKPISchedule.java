@@ -14,8 +14,10 @@ import common.sunshine.model.selling.agent.AgentKPI;
 import common.sunshine.model.selling.customer.Customer;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
+import selling.sunshine.model.ContributionFactor;
 import selling.sunshine.service.AgentKPIService;
 import selling.sunshine.service.AgentService;
+import selling.sunshine.service.ContributionFactorService;
 import selling.sunshine.service.CustomerService;
 import selling.sunshine.service.OrderService;
 import selling.sunshine.vo.order.OrderItemSum;
@@ -35,6 +37,9 @@ public class AgentKPISchedule {
 	
 	@Autowired
 	private OrderService orderService;
+	
+	@Autowired
+	private ContributionFactorService contributionFactorService;
 	
 	public void schedule() {
 		Map<String, Object> condition=new HashMap<>();
@@ -89,10 +94,34 @@ public class AgentKPISchedule {
 						quantity+=item.getGoodsQuantity();
 						price+=item.getOrderItemPrice();
 					}
-					
+					int contribution=0;
+					condition.clear();
+					queryData=contributionFactorService.fetchContributionFactor(condition);
+					if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
+						List<ContributionFactor> contributionFactors=(List<ContributionFactor>)queryData.getData();
+						for (ContributionFactor contributionFactor:contributionFactors) {
+							if (contributionFactor.getFactorId().equals("FAC00000001")) {
+								contribution+=contributionFactor.getFactorWeight()*quantity;
+							}else if (contributionFactor.getFactorId().equals("FAC00000002")) {
+								contribution+=contributionFactor.getFactorWeight()*price;
+							}else if (contributionFactor.getFactorId().equals("FAC00000003")) {
+								contribution+=contributionFactor.getFactorWeight()*agentKPI.getDirectAgentQuantity();
+							}
+						}
+						agentKPI.setAgentContribution(contribution);
+					}
 				}
-				//agentKPI.setAgentContribution(agentContribution);
-				agentKPIService.updateAgentKPI(agentKPI);
+				condition.clear();
+				condition.put("agentId", agent.getAgentId());				
+				queryData=agentKPIService.fetchAgentKPI(condition);
+				if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
+					AgentKPI former=((List<AgentKPI>)queryData.getData()).get(0);
+					agentKPI.setKpiId(former.getKpiId());
+					agentKPI.setCreateAt(former.getCreateAt());
+					agentKPIService.updateAgentKPI(agentKPI);
+				}else {
+					agentKPIService.createAgentKPI(agentKPI);
+				}
 			}
 		}
 	}

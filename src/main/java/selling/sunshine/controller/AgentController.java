@@ -2692,5 +2692,29 @@ public class AgentController {
         view.setViewName("redirect:/agent/vitality");
         return view;
     }
+    
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value = "/kpi")
+    public DataTablePage<AgentKPI> agentKPI(DataTableParam param){
+    	DataTablePage<AgentKPI> result = new DataTablePage<>(param);
+        if (StringUtils.isEmpty(param)) {
+            return result;
+        }
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("blockFlag", false);
+        ResultData response = agentKPIService.fetchAgentKPIByPage(condition, param);
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result = (DataTablePage<AgentKPI>) response.getData();
+        }
+        return result;
+    }
+    
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.GET, value = "/kpi")
+    public ModelAndView agentKPI(){
+    	ModelAndView view=new ModelAndView();
+    	view.setViewName("/backend/agent/kpi");
+    	return view;
+    }
 
 }
