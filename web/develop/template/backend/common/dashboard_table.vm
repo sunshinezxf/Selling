@@ -2,15 +2,20 @@
     <div class="row">
         <h1 class="ui header">
             <i class="home icon"></i>
+
             <div class="content">首页
-##                <div class="sub header">
-##                    <div class="ui breadcrumb"><a class="section">首页</a></div>
-##                </div>
+ div        ##                <div class="sub header">
+            ##                    <div class="ui breadcrumb"><a class="section">首页</a></div>
+            ##                </div>
             </div>
         </h1>
     </div>
     <div class="row">
-        <div class="eleven wide column"></div>
-        <div class="five wide column"></div>
+        <div class="eleven wide column">
+            #parse("/backend/charts/goods/sales_volume_charts.vm")
+        </div>
+        <div class="five wide column">
+            #parse("/backend/charts/sales/sales_money_summary.vm")
+        </div>
     </div>
 </div>
