@@ -45,7 +45,7 @@
 
                 option = {
                     title: {
-                        text: "代理销售排名",
+                        text: "代理商销售排名",
                         subtext: name,
                         x: 'center'
                     },
