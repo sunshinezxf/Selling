@@ -1,6 +1,6 @@
 <div class="box info-box bg-macaron-red">
     <span class="info-box-icon">
-        <i class="hourglass empty icon"></i>
+        <i class="white hourglass empty icon"></i>
     </span>
 
     <div class="info-box-content">
@@ -10,7 +10,7 @@
 </div>
 <div class="box info-box bg-macaron-yellow">
     <span class="info-box-icon">
-        <i class="hourglass half icon"></i>
+        <i class="white hourglass half icon"></i>
     </span>
 
     <div class="info-box-content">
@@ -20,7 +20,7 @@
 </div>
 <div class="box info-box bg-macaron-blue">
     <span class="info-box-icon">
-        <i class="hourglass full icon"></i>
+        <i class="white hourglass full icon"></i>
     </span>
 
     <div class="info-box-content">
