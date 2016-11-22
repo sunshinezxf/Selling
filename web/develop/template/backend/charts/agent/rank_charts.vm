@@ -1,5 +1,4 @@
-<div id="agent_rank_charts" class="container-fluid">
-</div>
+<div id="agent_rank_charts" class="row" style="width: 100%; height: 350px;"></div>
 <script>
     var agent_rank_url = "${path.concat('/statistic/agent/rank')}";
 
@@ -7,14 +6,25 @@
         if (result.responseCode != "RESPONSE_ERROR") {
             var data = result.data;
 
+            var n_column = "four";
+            if (data.length == 1) {
+                n_column = "sixteen";
+            }
+            if (data.length == 2) {
+                n_column = "eight";
+            }
+
             for (var i = 0; i < data.length; i++) {
-                console.debug(JSON.stringify(data[i]));
+                var rank_charts_outer_div = $("<div></div>");
+                var id = "rank_charts_" + data[i].goods_id;
+                rank_charts_outer_div.addClass(n_column + ' wide column');
 
                 var rank_charts_inner_div = $("<div></div>");
-                var id = "rank_charts_" + data[i].goods_id;
                 rank_charts_inner_div.attr('id', id);
                 rank_charts_inner_div.attr('style', "height: 350px;");
-                $("#agent_rank_charts").append(rank_charts_inner_div);
+                rank_charts_inner_div.addClass('ui segment');
+                rank_charts_outer_div.append(rank_charts_inner_div);
+                $("#agent_rank_charts").append(rank_charts_outer_div);
 
                 var rank_chart = echarts.init(document.getElementById(id), 'macarons');
 

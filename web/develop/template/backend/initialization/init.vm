@@ -5,4 +5,3 @@
 <link rel="stylesheet" href="${path.concat('/material/css/backend/structure.css')}"/>
 <script type="text/javascript" src="${path.concat('/plugins/jquery/jquery-1.12.3.min.js')}"></script>
 <script type="text/javascript" src="${path.concat('/plugins/semantic/dist/semantic.min.js')}"></script>
-<script type="text/javascript" src="${path.concat('/material/js/backend/structure.js')}"></script>

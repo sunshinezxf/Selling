@@ -1,10 +1,11 @@
-<div class="ui equal width left aligned padded grid">
+<div class="ui padded grid">
+<div class="ui stackable padded grid">
     <div class="row">
         <h1 class="ui header">
             <i class="home icon"></i>
 
             <div class="content">首页
- div        ##                <div class="sub header">
+            ##                <div class="sub header">
             ##                    <div class="ui breadcrumb"><a class="section">首页</a></div>
             ##                </div>
             </div>
@@ -18,4 +19,5 @@
             #parse("/backend/charts/sales/sales_money_summary.vm")
         </div>
     </div>
+    #parse("/backend/charts/agent/rank_charts.vm")
 </div>
