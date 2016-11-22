@@ -10,6 +10,22 @@
             <div class="bd spacing">
                 <button id="add_customer_btn" class="weui_btn weui_btn_plain_primary">新增客户</a>
             </div>
+            
+            <div class="weui_search_bar" style="height:44px;" id="search_bar">
+		        <form class="weui_search_outer">
+		            <div class="weui_search_inner">
+		                <i class="weui_icon_search" style="height:28px;top:50%;margin-top:-7px"></i>
+		                <input type="search" class="weui_search_input" id="search_input" placeholder="搜索" required/>
+		                <a href="javascript:" class="weui_icon_clear" id="search_clear"></a>
+		            </div>
+		            <label for="search_input" class="weui_search_text" id="search_text">
+		                <i class="weui_icon_search"></i>
+		                <span>搜索</span>
+		            </label>
+		        </form>
+		        <a href="javascript:" class="weui_search_cancel" id="search_cancel">取消</a>
+		    </div>
+            
             <div class="weui_panel">
                 <div class="list-cell">
                     <div class="weui_cells weui_cells_access" id="customer_list" style="margin-top:0;">
@@ -44,4 +60,30 @@
           }
         });
     };
+    
+    $('#customer_panel').on('focus', '#search_input', function () {
+        var $weuiSearchBar = $('#search_bar');
+        $weuiSearchBar.addClass('weui_search_focusing');
+    }).on('blur', '#search_input', function () {
+        var $weuiSearchBar = $('#search_bar');
+        $weuiSearchBar.removeClass('weui_search_focusing');
+        if ($(this).val()) {
+            $('#search_text').hide();
+        } else {
+            $('#search_text').show();
+        }
+    }).on('input', '#search_input', function () {
+        var $searchShow = $("#search_show");
+        if ($(this).val()) {
+            $searchShow.show();
+        } else {
+            $searchShow.hide();
+        }
+    }).on('touchend', '#search_cancel', function () {
+        $("#search_show").hide();
+        $('#search_input').val('');
+    }).on('touchend', '#search_clear', function () {
+        $("#search_show").hide();
+        $('#search_input').val('');
+    });
 </script>
