@@ -18,4 +18,5 @@
             #parse("/backend/charts/sales/sales_money_summary.vm")
         </div>
     </div>
+    #parse("/backend/charts/agent/rank_charts.vm")
 </div>
