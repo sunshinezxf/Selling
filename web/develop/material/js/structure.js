@@ -4,14 +4,11 @@ $(document).ready(function () {
     // 判断图片加载状况，加载完成后回调
     isImgLoad(function () {
         // 加载完成
-        $("#sidebar").width($("#logo").css("width"));
-        $("#sidebar").css("top", $("#topMenu").css("height"));
         if ($("#mobileTopMenu").is(":hidden")) {
             $(".full.height").css("marginTop", $("#topMenu").css("height"));
         } else {
             $(".full.height").css("marginTop", $("#mobileTopMenu").css("height"));
         }
-        $(".constant").width($("#logo").css("width"));
     });
 
     $("#menuIcon").click(function () {

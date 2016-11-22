@@ -70,6 +70,7 @@
     > .constant {
       position: relative;
       z-index: 1;
+      width:182px;
       background-color: #1b1c1d;
       -webkit-box-flex: 0;
       -webkit-flex: 0 0 auto;
@@ -81,6 +82,8 @@
 
 #sidebar{
   background:#F0F0F0;
+  width:182px;
+  top:71px;
 }
 
 #mobileLogo{
@@ -114,5 +117,11 @@
         transform:rotate(0deg);
       }
     }
+  }
+}
+
+.ui.top.menu{
+  .header.item:before{
+    display:none;
   }
 }

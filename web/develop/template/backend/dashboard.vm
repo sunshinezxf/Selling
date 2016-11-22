@@ -21,6 +21,7 @@
     </div>
 </div>
 </body>
+<script type="text/javascript" src="${path.concat('/material/js/backend/structure.js')}"></script>
 <script type="text/javascript">
 </script>
 </html>

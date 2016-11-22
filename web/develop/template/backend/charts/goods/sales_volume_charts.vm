@@ -1,4 +1,4 @@
-<div id="goods_sales_volume" class="container-fluid" style="height: 350px;"></div>
+<div id="goods_sales_volume" class="ui segment" style="height: 350px;"></div>
 <script>
     var goods_sales_volume = "${path.concat('/commodity/volume')}";
 
