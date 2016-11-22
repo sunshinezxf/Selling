@@ -42,7 +42,7 @@
                                 formatter: function (params) {
                                     var newParamsName = "";
                                     var paramsNameNumber = params.length;
-                                    var provideNumber = 6;
+                                    var provideNumber = 4;
                                     var rowNumber = Math.ceil(paramsNameNumber / provideNumber);
                                     if (paramsNameNumber > provideNumber) {
                                         for (var p = 0; p < rowNumber; p++) {
