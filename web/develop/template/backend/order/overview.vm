@@ -17,7 +17,7 @@
             #parse("/backend/common/sidebar.vm")
         </div>
         <div class="ui main container">
-            #parse("/backend/order/component/order_overview_table.vm")
+            #parse("/backend/order/component/overview_container.vm")
         </div>
     </div>
 </div>

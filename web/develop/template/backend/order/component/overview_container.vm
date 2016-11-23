@@ -1,0 +1,50 @@
+<div class="ui stackable padded grid" id="">
+    <div class="row">
+        <h1 class="ui header">
+            <i class="home icon"></i>
+
+            <div class="content">
+                订单管理
+                <div class="sub header">
+                    <div class="sub header">
+                        <div class="ui breadcrumb">
+                            <a class="section">订单管理</a>
+
+                            <div class="divider">/</div>
+
+                            <a class="active section">订单概览</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </h1>
+    </div>
+    <div class="row">
+        <div class="column">
+            <button class="ui button primary order_status" target-value="PAYED">已付款</button>
+            <button class="ui button order_status" target-value="NOT_PAYED">未付款</button>
+            <button class="ui button order_status" target-value="SENT">已发货</button>
+            <button class="ui button order_status" target-value="RECEIVED">已签收</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="sixteen wide column">
+            #parse("/backend/order/component/overview_table.vm")
+        </div>
+    </div>
+</div>
+<script>
+    var value = "PAYED";
+
+    $(".order_status").on('click', function () {
+        var value = $(this).attr("target-value");
+        $(".order_status").each(function () {
+            if ($(this).attr("target-value") == value) {
+                $(this).attr("class", "ui primary button order_status");
+            } else {
+                $(this).attr("class", "ui button order_status");
+            }
+        });
+    });
+</script>
