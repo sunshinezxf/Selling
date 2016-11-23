@@ -1,4 +1,4 @@
-<div id="sales_area" class="container-fluid" style="width: 100%; height: 800px;"></div>
+<div id="sales_area" class="ui segment" style="height: 800px;"></div>
 <script src="${path.concat('/plugins/echarts/js/china.js')}"></script>
 <script>
     var customer_distribution = "${path.concat('/statistic/sales/area')}";

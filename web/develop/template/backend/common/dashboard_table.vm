@@ -19,4 +19,9 @@
         </div>
     </div>
     #parse("/backend/charts/agent/rank_charts.vm")
+    <div class="row">
+        <div class="sixteen wide column">
+            #parse("/backend/charts/customer/area_layout_charts.vm")
+        </div>
+    </div>
 </div>

@@ -1,4 +1,4 @@
-<div id="agent_rank_charts" class="row" style="width: 100%; height: 350px;"></div>
+<div id="agent_rank_charts" class="row" style="height: 400px;"></div>
 <script>
     var agent_rank_url = "${path.concat('/statistic/agent/rank')}";
 
@@ -60,7 +60,7 @@
                     },
                     series: [
                         {
-                            name: '访问来源',
+                            name: name + '销售数量',
                             type: 'pie',
                             radius: '55%',
                             center: ['50%', '60%'],
