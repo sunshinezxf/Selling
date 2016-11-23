@@ -21,6 +21,26 @@ $(document).ready(function () {
         }
     });
 
+    $("#sidebar > .item").each(function(){
+        $(this).click(function(){
+            if($(this).find("a").length==0){
+                $(this).addClass("active");
+                $(this).siblings(".item").removeClass("active");
+                $(this).siblings(".item").find("*").removeClass("active");
+            }else{
+                $(this).find(".item").each(function(){
+                    $(this).click(function(){
+                        $(this).addClass("active");
+                        $(this).parent().addClass("active");
+                        $(this).parent().siblings(".title").addClass("active");
+                        $(this).parent().parent().siblings(".item").removeClass("active");
+                        $(this).parent().parent().siblings(".item").find("*").removeClass("active");
+                    })
+                })
+            }
+        })
+    })
+
 });
 
 function isImgLoad(callback) {
