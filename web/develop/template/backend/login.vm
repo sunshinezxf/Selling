@@ -1,7 +1,7 @@
 #parse("/common/util.vm")
 <html lang="zh_CN">
 <head>
-    #parse("/backend/initializtion/init_login.vm")
+    #parse("/backend/initialization/init_login.vm")
     <title>登录</title>
 </head>
 <body>
