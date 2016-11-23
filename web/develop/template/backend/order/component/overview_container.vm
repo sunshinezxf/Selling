@@ -6,14 +6,12 @@
             <div class="content">
                 订单管理
                 <div class="sub header">
-                    <div class="sub header">
-                        <div class="ui breadcrumb">
-                            <a class="section">订单管理</a>
+                    <div class="ui breadcrumb">
+                        <a class="section">订单管理</a>
 
-                            <div class="divider">/</div>
+                        <div class="divider">/</div>
 
-                            <a class="active section">订单概览</a>
-                        </div>
+                        <a class="active section">订单概览</a>
                     </div>
                 </div>
             </div>

@@ -4,7 +4,7 @@
         $("#order_overview_table").DataTable({
             searching: true,
             paging: true,
-            aaSorting: [[1, "desc"]],
+            aaSorting: [[2, "asc"]],
             "sPaginationType": "full_numbers",
             "bPaginate": true,
             "bLengthChange": true,
