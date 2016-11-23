@@ -1,5 +1,3 @@
-<link rel="stylesheet" href="${path.concat('/plugins/datatable/css/dataTables.bootstrap.css')}"/>
+<link rel="stylesheet" href="${path.concat('/material/css/backend/datatable/yuncao-theme.css')}"/>
 <script type="text/javascript" src="${path.concat('/plugins/datatable/js/jquery.dataTables.js')}"></script>
-<script type="text/javascript"
-        src="${path.concat('/plugins/datatable/js/dataTables.bootstrap.min.js')}"></script>
 <script type="text/javascript" src="${path.concat('/material/js/backend/date.js')}"></script>
