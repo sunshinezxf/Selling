@@ -31,7 +31,7 @@
             #{search} OR agent_contribution LIKE BINARY #{search})
         </if> 
         <if test="sort !=null and sort != ''">
-                ORDER BY BINARY ${sort} 
+                ORDER BY ${sort} 
         </if> 
     </select>
 

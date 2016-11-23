@@ -1,7 +1,7 @@
 #set($role = $session.getAttribute("role"))
 <div id="mobileSidebar" class="ui thin left inverted sidebar vertical accordion menu">
     #if($role == "admin" || $role == "express" || $role == "auditor" || $role == "finance")
-    <div class="item">首页</div>
+    <a href="${path.concat('/dashboard')}" class="item">首页</a>
     #end
     #if($role == "admin" || $role == "auditor")
     <div class="item">
@@ -36,6 +36,14 @@
         </div>
     </div>
     #end
+    #if($role == "admin")
+    <div class="item">
+        <a class="title"><i class="dropdown icon"></i>提现管理</a>
+        <div class="content menu">
+            <a class="item">提现申请</a>
+        </div>
+    </div>
+    #end
     #if($role == "admin" || $role == "express")
     <div class="item">
         <a class="title"><i class="dropdown icon"></i>活动管理</a>
@@ -61,6 +69,6 @@
     </div>
     #end
     #if($role == "admin")
-    <div class="item">日志查询</div>
+    <a class="item">日志查询</a>
     #end
 </div>

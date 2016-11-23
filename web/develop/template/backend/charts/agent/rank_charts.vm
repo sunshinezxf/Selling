@@ -25,7 +25,6 @@
                 rank_charts_inner_div.addClass('ui segment');
                 rank_charts_outer_div.append(rank_charts_inner_div);
                 $("#agent_rank_charts").append(rank_charts_outer_div);
-
                 var rank_chart = echarts.init(document.getElementById(id), 'macarons');
 
                 var name = data[i].name;
@@ -35,10 +34,10 @@
                 var agent_list = [];
                 var chart_data = [];
                 var sum = 0;
-                for (var i = 0; i < agents.length; i++) {
-                    agent_list.push(agents[i].agent_name);
-                    chart_data.push({name: agents[i].agent_name, value: agents[i].quantity});
-                    sum += agents[i].quantity;
+                for (var j = 0; j < agents.length; j++) {
+                    agent_list.push(agents[j].agent_name);
+                    chart_data.push({name: agents[j].agent_name, value: agents[j].quantity});
+                    sum += agents[j].quantity;
                 }
                 agent_list.push("其他");
                 chart_data.push({name: "其他", value: total - sum});

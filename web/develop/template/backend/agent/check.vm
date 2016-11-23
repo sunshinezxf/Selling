@@ -3,10 +3,11 @@
 <head>
     #parse("/backend/initialization/init.vm")
     #parse("/backend/common/echarts.lib.vm")
+    #parse("/backend/common/datatable.lib.vm")
     <link rel="stylesheet" href="${path.concat('/material/css/backend/info-box.css')}">
     <title>代理审核</title>
 </head>
-<body id="agent_check" class="started pushable" ontouchstart>
+<body id="dashboard" class="started pushable" ontouchstart>
     #parse("/backend/common/mobile_sidebar.vm")
     #parse("/backend/common/mobile_navigate_with_login.vm")
 <div class="pusher">
@@ -21,4 +22,5 @@
     </div>
 </div>
 </body>
+<script type="text/javascript" src="${path.concat('/material/js/backend/structure.js')}"></script>
 </html>
