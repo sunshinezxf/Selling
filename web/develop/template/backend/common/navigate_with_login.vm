@@ -4,6 +4,6 @@
     </div>
     <div class="right menu">
         <a href="#" class="item">个人中心</a>
-        <a href="#" class="item">退出</a>
+        <a href="${path.concat('/logout')}" class="item">退出</a>
     </div>
 </div>

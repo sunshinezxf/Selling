@@ -38,6 +38,14 @@
         </div>
     </div>
     #end
+     #if($role == "admin")
+    <div class="item">
+        <a class="title"><i class="teal payment icon left"></i><i class="dropdown icon"></i>提现管理</a>
+        <div class="content menu">
+            <a class="item">提现申请</a>
+        </div>
+    </div>
+    #end
     #if($role == "admin" || $role == "express")
     <div class="item">
         <a class="title"><i class="teal calendar icon left"></i><i class="dropdown icon"></i>活动管理</a>
