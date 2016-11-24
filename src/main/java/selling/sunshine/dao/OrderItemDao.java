@@ -1,6 +1,7 @@
 package selling.sunshine.dao;
 
 import common.sunshine.model.selling.order.OrderItem;
+import common.sunshine.pagination.DataTableParam;
 import common.sunshine.utils.ResultData;
 
 import java.util.List;
@@ -12,6 +13,8 @@ public interface OrderItemDao {
     ResultData queryOrderItem(Map<String, Object> condition);
     
     ResultData queryOrderItemSum(Map<String, Object> condition);
+
+    ResultData queryOrderItemSum(Map<String, Object> condition, DataTableParam param);
     
     ResultData updateOrderItem(OrderItem orderItem);
 }

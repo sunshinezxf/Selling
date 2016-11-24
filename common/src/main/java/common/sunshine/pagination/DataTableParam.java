@@ -15,7 +15,8 @@ public class DataTableParam {
 
     /*information for DataTables to use for rendering*/
     private String sEcho;
-    
+
+    private String params;
 
     private int iSortCol_0;
 
@@ -44,6 +45,14 @@ public class DataTableParam {
 
     public void setsSearch(String sSearch) {
         this.sSearch = sSearch;
+    }
+
+    public String getParams() {
+        return params;
+    }
+
+    public void setParams(String params) {
+        this.params = params;
     }
 
     public String getsEcho() {
@@ -80,5 +89,4 @@ public class DataTableParam {
     }
 
 
-    
 }

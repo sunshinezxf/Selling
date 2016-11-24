@@ -1,10 +1,23 @@
 <table id="order_overview_table" class="ui striped table"></table>
 <script>
     $(document).ready(function () {
-        $("#order_overview_table").DataTable({
+        $(".order_status").on('click', function () {
+            value = $(this).attr("target-value");
+            $(".order_status").each(function () {
+                if ($(this).attr("target-value") == value) {
+                    alert("haha");
+                    $(this).attr("class", "ui primary button order_status");
+                } else {
+                    $(this).attr("class", "ui button order_status");
+                }
+            });
+            reload();
+        });
+
+        var table = $("#order_overview_table").DataTable({
             searching: true,
             paging: true,
-            aaSorting: [[2, "asc"]],
+            aaSorting: false,
             "sPaginationType": "full_numbers",
             "bPaginate": true,
             "bLengthChange": true,
@@ -14,7 +27,7 @@
             "bProcessing": true,
             "bServerSide": true,
             "bInfoFiltered": false,
-            "sAjaxSource": '${path.concat('/agent/overview')}',
+            "sAjaxSource": '${path.concat('/order/overview')}',
             "infoFiltered": false,
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                 $(nRow).removeClass('dataTable');
@@ -22,6 +35,11 @@
             },
             "fnInitComplete": function () {
                 $("#overview_agent_table").removeClass('no-footer');
+            },
+            "fnServerParams": function (aoData) {
+                var param = {};
+                param["status"] = value;
+                aoData.push({"name": "params", "value": JSON.stringify(param)});
             },
             "fnServerData": function (sSource, aoData, fnCallback) {
                 $.ajax({
@@ -88,5 +106,9 @@
                 }
             }
         });
+
+        function reload() {
+            table.ajax.reload();
+        }
     });
 </script>

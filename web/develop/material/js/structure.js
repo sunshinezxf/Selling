@@ -4,9 +4,7 @@ $(document).ready(function () {
     // 判断图片加载状况，加载完成后回调
     isImgLoad(function () {
         // 加载完成
-        if ($("#mobileTopMenu").is(":hidden")) {
-            $(".full.height").css("marginTop", $("#topMenu").css("height"));
-        } else {
+        if ($("#mobileTopMenu").is(":visible")) {
             $(".full.height").css("marginTop", $("#mobileTopMenu").css("height"));
         }
     });
