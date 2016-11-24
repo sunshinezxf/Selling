@@ -22,14 +22,14 @@ $(document).ready(function () {
     });
 
    //判断哪个菜单应该展开
-    // var target_id=$(".ui.main.container > .ui.stackable.grid").attr("id");
-    // if($("#" + target_id).parent().hasClass("content")){
-    //     $("#" + target_id).addClass("active");
-    //     $("#" + target_id).parent().addClass("active");
-    //     $("#" + target_id).parent().siblings(".title").addClass("active");.
-    // }else{
-    //     $("#" + target_id).addClass("active");
-    // }
+    var target_id=$(".ui.main.container > .ui.stackable.grid").attr("id");
+    if($("#" + target_id).parent().hasClass("content")){
+        $("#" + target_id).addClass("active");
+        $("#" + target_id).parent().addClass("active");
+        $("#" + target_id).parent().siblings(".title").addClass("active");
+    }else{
+        $("#" + target_id).addClass("active");
+    }
     
 
     $("#sidebar > .item").each(function(){
