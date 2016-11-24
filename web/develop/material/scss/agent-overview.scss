@@ -1,0 +1,18 @@
+.ui.horizontal.statistic {
+  -webkit-box-align: baseline;
+  -ms-flex-align: baseline;
+  align-items: baseline;
+}
+.ui.segment{
+  >.ui.statistic{
+    margin-top: 0;
+  }
+}
+
+#agent_list{
+  cursor:pointer;
+}
+
+#agent_list:hover{
+  background-color: #2185D0 !important;
+}

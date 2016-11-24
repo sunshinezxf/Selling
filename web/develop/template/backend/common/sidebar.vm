@@ -11,7 +11,7 @@
         <a class="title"><i class="teal user icon left"></i><i class="dropdown icon"></i>代理管理</a>
         <div class="content menu">
             <a class="item" href="${path.concat('/agent/check')}">代理审核</a>
-            <a class="item">代理概览</a>
+            <a id="agent_overview" class="item" href="${path.concat('/agent/overview')}">代理概览</a>
         </div>
     </div>
     #end
