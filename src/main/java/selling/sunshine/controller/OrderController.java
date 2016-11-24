@@ -8,6 +8,11 @@ import common.sunshine.model.selling.agent.Agent;
 import common.sunshine.model.selling.bill.CustomerOrderBill;
 import common.sunshine.model.selling.bill.OrderBill;
 import common.sunshine.model.selling.customer.Customer;
+import common.sunshine.model.selling.express.Express;
+import common.sunshine.model.selling.express.Express4Agent;
+import common.sunshine.model.selling.express.Express4Customer;
+import common.sunshine.model.selling.goods.Goods4Agent;
+import common.sunshine.model.selling.goods.Goods4Customer;
 import common.sunshine.model.selling.order.CustomerOrder;
 import common.sunshine.model.selling.order.EventOrder;
 import common.sunshine.model.selling.order.Order;
@@ -15,6 +20,10 @@ import common.sunshine.model.selling.order.OrderItem;
 import common.sunshine.model.selling.order.support.OrderItemStatus;
 import common.sunshine.model.selling.order.support.OrderStatus;
 import common.sunshine.model.selling.user.User;
+import common.sunshine.pagination.DataTablePage;
+import common.sunshine.pagination.DataTableParam;
+import common.sunshine.pagination.MobilePage;
+import common.sunshine.pagination.MobilePageParam;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
 import common.sunshine.utils.SortRule;
@@ -37,22 +46,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import selling.sunshine.form.*;
-import selling.sunshine.model.*;
-import common.sunshine.model.selling.express.Express;
-import common.sunshine.model.selling.express.Express4Agent;
-import common.sunshine.model.selling.express.Express4Customer;
-import common.sunshine.model.selling.goods.Goods4Agent;
-import common.sunshine.model.selling.goods.Goods4Customer;
-import common.sunshine.pagination.DataTablePage;
-import common.sunshine.pagination.DataTableParam;
-import common.sunshine.pagination.MobilePage;
-import common.sunshine.pagination.MobilePageParam;
+import selling.sunshine.form.ExpressForm;
+import selling.sunshine.form.OrderItemForm;
+import selling.sunshine.form.PayForm;
+import selling.sunshine.form.TimeRangeForm;
+import selling.sunshine.model.BackOperationLog;
 import selling.sunshine.service.*;
-import selling.sunshine.utils.*;
+import selling.sunshine.utils.PlatformConfig;
+import selling.sunshine.utils.Prompt;
+import selling.sunshine.utils.PromptCode;
+import selling.sunshine.utils.WechatConfig;
+import selling.sunshine.vo.order.OrderItemSum;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -93,7 +99,7 @@ public class OrderController {
 
     @Autowired
     private IndentService indentService;
-    
+
     @Autowired
     private EventService eventService;
 
@@ -191,6 +197,22 @@ public class OrderController {
         ResultData fetchResponse = orderService.fetchOrder(condition, param);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             result = (DataTablePage<Order>) fetchResponse.getData();
+        }
+        return result;
+    }
+
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value = "/overview")
+    public DataTablePage<OrderItemSum> overview(DataTableParam param) {
+        DataTablePage<OrderItemSum> result = new DataTablePage<>(param);
+        if (StringUtils.isEmpty(param)) {
+            return result;
+        }
+        logger.debug(JSON.toJSONString(param));
+        Map<String, Object> condition = new HashMap<>();
+        ResultData response = orderService.fetchOrderItemSum(condition, param);
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result = (DataTablePage<OrderItemSum>) response.getData();
         }
         return result;
     }
@@ -665,7 +687,7 @@ public class OrderController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/expressOne/{expressId}")
     @ResponseBody
-    public ResultData expressOne(@PathVariable("expressId") String expressId, @RequestBody ExpressForm form,HttpServletRequest request) {
+    public ResultData expressOne(@PathVariable("expressId") String expressId, @RequestBody ExpressForm form, HttpServletRequest request) {
         ResultData resultData = new ResultData();
         List<Express> itemForms = form.getExpressItem();
         String expressNumber = form.getExpressNumber();
@@ -710,15 +732,15 @@ public class OrderController {
                             Subject subject = SecurityUtils.getSubject();
                             User user = (User) subject.getPrincipal();
                             if (user == null) {
-                            	resultData.setData(itemForms);
+                                resultData.setData(itemForms);
                                 return resultData;
                             }
                             Admin admin = user.getAdmin();
                             BackOperationLog backOperationLog = new BackOperationLog(
-                                    admin.getUsername(), toolService.getIP((HttpServletRequest) request), "管理员" + admin.getUsername() + "单独发货，快递单号是："+expressNumber+",订单号是："+order.getOrderId());
+                                    admin.getUsername(), toolService.getIP((HttpServletRequest) request), "管理员" + admin.getUsername() + "单独发货，快递单号是：" + expressNumber + ",订单号是：" + order.getOrderId());
                             logService.createbackOperationLog(backOperationLog);
                         }
-                        
+
                     }
 
                 } else if (linkId.startsWith("CUO")) {
@@ -736,12 +758,12 @@ public class OrderController {
                         Subject subject = SecurityUtils.getSubject();
                         User user = (User) subject.getPrincipal();
                         if (user == null) {
-                        	resultData.setData(itemForms);
+                            resultData.setData(itemForms);
                             return resultData;
                         }
                         Admin admin = user.getAdmin();
                         BackOperationLog backOperationLog = new BackOperationLog(
-                                admin.getUsername(), toolService.getIP((HttpServletRequest) request), "管理员" + admin.getUsername() + "单独发货，快递单号是："+expressNumber+",订单号是："+temp.getOrderId());
+                                admin.getUsername(), toolService.getIP((HttpServletRequest) request), "管理员" + admin.getUsername() + "单独发货，快递单号是：" + expressNumber + ",订单号是：" + temp.getOrderId());
                         logService.createbackOperationLog(backOperationLog);
                     }
                 }

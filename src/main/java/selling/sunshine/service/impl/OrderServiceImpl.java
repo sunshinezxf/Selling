@@ -1,28 +1,20 @@
 package selling.sunshine.service.impl;
 
-import org.slf4j.Logger;
-
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-
-
-import selling.sunshine.dao.CustomerDao;
-import selling.sunshine.dao.CustomerOrderDao;
-import selling.sunshine.dao.OrderDao;
-import selling.sunshine.dao.OrderItemDao;
-import selling.sunshine.dao.OrderPoolDao;
 import common.sunshine.model.selling.customer.Customer;
 import common.sunshine.model.selling.order.CustomerOrder;
 import common.sunshine.model.selling.order.Order;
 import common.sunshine.model.selling.order.OrderItem;
 import common.sunshine.pagination.DataTableParam;
 import common.sunshine.pagination.MobilePageParam;
-import selling.sunshine.service.OrderService;
-import selling.sunshine.vo.order.OrderItemSum;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import selling.sunshine.dao.*;
+import selling.sunshine.service.OrderService;
+import selling.sunshine.vo.order.OrderItemSum;
 
 import java.util.HashMap;
 import java.util.List;
@@ -43,7 +35,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private CustomerOrderDao customerOrderDao;
-    
+
     @Autowired
     private CustomerDao customerDao;
 
@@ -254,10 +246,10 @@ public class OrderServiceImpl implements OrderService {
         }
         return result;
     }
-    
+
     @Override
-	public ResultData fetchOrderItemSum(Map<String, Object> condition) {
-    	ResultData result = new ResultData();
+    public ResultData fetchOrderItemSum(Map<String, Object> condition) {
+        ResultData result = new ResultData();
         ResultData fetchResponse = orderItemDao.queryOrderItemSum(condition);
         result.setResponseCode(fetchResponse.getResponseCode());
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
@@ -269,7 +261,20 @@ public class OrderServiceImpl implements OrderService {
             result.setDescription(fetchResponse.getDescription());
         }
         return result;
-	}
+    }
+
+    @Override
+    public ResultData fetchOrderItemSum(Map<String, Object> condition, DataTableParam param) {
+        ResultData result = new ResultData();
+        ResultData response = orderItemDao.queryOrderItemSum(condition, param);
+        result.setResponseCode(response.getResponseCode());
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(response.getData());
+        } else {
+            result.setDescription(response.getDescription());
+        }
+        return result;
+    }
 
     @Override
     public ResultData updateOrderItem(OrderItem orderItem) {
@@ -297,40 +302,40 @@ public class OrderServiceImpl implements OrderService {
         return result;
     }
 
-	@Override
-	public ResultData check() {
-		ResultData resultData=new ResultData();
-		Map<String, Object> condition=new HashMap<>();
-		ResultData queryData=customerOrderDao.queryOrder(condition);
-		List<CustomerOrder> customerOrders=(List<CustomerOrder>)queryData.getData();
-		for (CustomerOrder customerOrder:customerOrders) {
-			if (customerOrder.getAgent()!=null) {
-				condition.put("agentId", customerOrder.getAgent().getAgentId());
-				queryData=customerDao.queryCustomer(condition);
-				if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
-					List<Customer> customers=(List<Customer>)queryData.getData();
-					boolean flag=false;
-					for (Customer customer:customers) {
-						if (customer.getName().equals(customerOrder.getReceiverName())) {
-							flag=true;
-							break;
-						}
-					}
-					if (!flag) {
-						Customer newCustomer=new Customer(customerOrder.getReceiverName(), customerOrder.getReceiverAddress(),
-								customerOrder.getReceiverPhone(), customerOrder.getAgent());
-						customerDao.insertCustomer(newCustomer);
-					}
-				}
-			}
-		}
-		
-		return resultData;
-	}
+    @Override
+    public ResultData check() {
+        ResultData resultData = new ResultData();
+        Map<String, Object> condition = new HashMap<>();
+        ResultData queryData = customerOrderDao.queryOrder(condition);
+        List<CustomerOrder> customerOrders = (List<CustomerOrder>) queryData.getData();
+        for (CustomerOrder customerOrder : customerOrders) {
+            if (customerOrder.getAgent() != null) {
+                condition.put("agentId", customerOrder.getAgent().getAgentId());
+                queryData = customerDao.queryCustomer(condition);
+                if (queryData.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                    List<Customer> customers = (List<Customer>) queryData.getData();
+                    boolean flag = false;
+                    for (Customer customer : customers) {
+                        if (customer.getName().equals(customerOrder.getReceiverName())) {
+                            flag = true;
+                            break;
+                        }
+                    }
+                    if (!flag) {
+                        Customer newCustomer = new Customer(customerOrder.getReceiverName(), customerOrder.getReceiverAddress(),
+                                customerOrder.getReceiverPhone(), customerOrder.getAgent());
+                        customerDao.insertCustomer(newCustomer);
+                    }
+                }
+            }
+        }
 
-	@Override
-	public ResultData checkOrderPool(Map<String, Object> condition) {
-		return orderPoolDao.checkOrderPool(condition);
-	}
+        return resultData;
+    }
+
+    @Override
+    public ResultData checkOrderPool(Map<String, Object> condition) {
+        return orderPoolDao.checkOrderPool(condition);
+    }
 
 }

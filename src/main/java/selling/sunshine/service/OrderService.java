@@ -39,14 +39,16 @@ public interface OrderService {
     ResultData cancel(Order order);
 
     ResultData fetchOrderItem(Map<String, Object> condition);
-    
+
     ResultData fetchOrderItemSum(Map<String, Object> condition);
 
+    ResultData fetchOrderItemSum(Map<String, Object> condition, DataTableParam param);
+
     ResultData updateOrderItem(OrderItem orderItem);
-    
+
     ResultData updateCustomerOrder(CustomerOrder customerOrder);
-    
+
     ResultData check();
-    
+
     ResultData checkOrderPool(Map<String, Object> condition);
 }
