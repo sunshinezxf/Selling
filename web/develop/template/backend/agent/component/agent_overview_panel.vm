@@ -1,4 +1,4 @@
-<div id="agent_overview" class="ui stackable padded grid">
+<div class="ui stackable padded grid" name="agent_overview">
     <div class="row">
         <h1 class="ui header">
             <i class="home icon"></i>
