@@ -1,4 +1,6 @@
+<link rel="stylesheet" href="${path.concat('/plugins/datatable/css/select.dataTables.min.css')}"/>
 <link rel="stylesheet" href="${path.concat('/plugins/datatable/css/dataTables.semanticui.min.css')}"/>
 <script type="text/javascript" src="${path.concat('/plugins/datatable/js/jquery.dataTables.min.js')}"></script>
+<script type="text/javascript" src="${path.concat('/plugins/datatable/js/dataTables.select.min.js')}"></script>
 <script type="text/javascript" src="${path.concat('/plugins/datatable/js/dataTables.semanticui.min.js')}"></script>
 <script type="text/javascript" src="${path.concat('/material/js/backend/date.js')}"></script>

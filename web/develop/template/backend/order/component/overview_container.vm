@@ -29,7 +29,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="sixteen wide column">
+        <div class="column">
             #parse("/backend/order/component/overview_table.vm")
         </div>
     </div>
