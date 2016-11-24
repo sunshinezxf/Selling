@@ -19,6 +19,9 @@
             </div>
         </div>
     </div>
+    <div class="weui_btn_area" style="text-align:center">
+        <button type="button" class="weui_btn weui_btn_primary" id="order_all">查看所有订单</button>
+    </div> 
     <div class="weui_cells_title" id="last_order_title">最近购买订单</div>
     <div class="weui_cells" id="last_order">
     </div>
@@ -112,6 +115,10 @@
     $("#update_cancel_btn").click(function () {
         $("#update_customer_form").hide();
         $("#customer_panel").fadeIn();
+    });
+    
+    $("#order_all").click(function(){
+    	window.location = "${path.concat('/customer/allOrder/" + customerId + "')}";
     });
     
     

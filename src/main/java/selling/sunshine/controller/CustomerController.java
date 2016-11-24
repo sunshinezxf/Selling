@@ -35,6 +35,7 @@ import selling.sunshine.service.AgentService;
 import selling.sunshine.service.CommodityService;
 import selling.sunshine.service.CustomerService;
 import selling.sunshine.service.OrderService;
+import selling.sunshine.utils.WechatConfig;
 import selling.sunshine.vo.order.OrderItemSum;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
@@ -376,6 +377,83 @@ public class CustomerController {
     	infoObject.put("salesInfo", goodsArray);
     	result.setData(infoObject);
     	return result;
+    }
+    
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.GET, value = "/allOrder/{customerId}")
+    public ModelAndView fetchCustomerAllOrder(@PathVariable("customerId") String customerId){
+    	ModelAndView view = new ModelAndView();
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        if (user == null) {
+            WechatConfig.oauthWechat(view, "/agent/login");
+            view.setViewName("/agent/login");
+            return view;
+        }
+    	Map<String, Object> condition = new HashMap<String, Object>();
+    	condition.put("customerId", customerId);
+    	condition.put("blockFlag", false);
+    	ResultData fetchCustomerResponse = customerService.fetchCustomer(condition);
+    	if(fetchCustomerResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
+    		 WechatConfig.oauthWechat(view, "/agent/login");
+             view.setViewName("/agent/login");
+             return view;
+    	}
+    	
+    	Customer customer = ((List<Customer>)fetchCustomerResponse.getData()).get(0);
+    	String phone = customer.getPhone().getPhone();
+    	condition.clear();
+    	condition.put("customerId", customer.getCustomerId());
+    	List<Integer> statusList = new ArrayList<>();
+    	statusList.add(1);
+    	statusList.add(2);
+    	statusList.add(3);
+    	statusList.add(4);
+    	statusList.add(5);
+    	statusList.add(6);
+    	condition.put("statusList", statusList);
+    	condition.put("blockFlag", false);
+    	List<SortRule> orderBy = new ArrayList<>();
+        orderBy.add(new SortRule("create_time", "desc"));
+        condition.put("sort", orderBy);
+    	ResultData fetchOrderItemResponse = orderService.fetchOrderItem(condition);
+    	List<OrderItem> orderItemList = (List<OrderItem>)(fetchOrderItemResponse.getData()); 
+    	
+    	condition.clear();
+    	condition.put("receiverPhone", phone);
+    	condition.put("agentId", user.getAgent().getAgentId());
+    	condition.put("blockFlag", false);
+    	condition.put("status", statusList);
+    	condition.put("sort", orderBy);
+    	ResultData fetchCustomerOrderResponse = orderService.fetchCustomerOrder(condition);
+    	List<CustomerOrder> customerOrderList = (List<CustomerOrder>)(fetchCustomerOrderResponse.getData());
+    	
+    	List<OrderItemSum> orderItemSumList = new ArrayList<OrderItemSum>();
+    	for(OrderItem orderItem : orderItemList){
+    		condition.clear();
+    		condition.put("agentId", user.getAgent().getAgentId());
+    		condition.put("orderId", orderItem.getOrderItemId());
+    		condition.put("blockFlag", false);
+    		ResultData fetchOrderItemSumResponse = orderService.fetchOrderItemSum(condition);
+    		orderItemSumList.add(((List<OrderItemSum>)(fetchOrderItemSumResponse.getData())).get(0));
+    	}
+    	for(CustomerOrder customerOrder : customerOrderList){
+    		condition.clear();
+    		condition.put("agentId", user.getAgent().getAgentId());
+    		condition.put("orderId", customerOrder.getOrderId());
+    		condition.put("blockFlag", false);
+    		ResultData fetchOrderItemSumResponse = orderService.fetchOrderItemSum(condition);
+    		orderItemSumList.add(((List<OrderItemSum>)(fetchOrderItemSumResponse.getData())).get(0));
+    	}
+    	Collections.sort(orderItemSumList, new Comparator<OrderItemSum>(){
+			@Override
+			public int compare(OrderItemSum o1, OrderItemSum o2) {
+				return o2.getCreateAt().compareTo(o1.getCreateAt());
+			}});
+    	
+    	view.addObject("orderItemSums", orderItemSumList);
+    	view.setViewName("/agent/customer/order_list");
+    	return view;
     }
 
     @ResponseBody
