@@ -2,9 +2,8 @@
 <script>
     $(document).ready(function () {
         $(".order_status").on('click', function () {
-            var value = $(this).attr("target-value");
+            value = $(this).attr("target-value");
             $(".order_status").each(function () {
-                console.debug($(this).attr("target-value") + "==" + value + ($(this).attr("target-value") == value));
                 if ($(this).attr("target-value") == value) {
                     alert("haha");
                     $(this).attr("class", "ui primary button order_status");
@@ -12,7 +11,6 @@
                     $(this).attr("class", "ui button order_status");
                 }
             });
-            value = $(this).attr("target-value");
             reload();
         });
 
