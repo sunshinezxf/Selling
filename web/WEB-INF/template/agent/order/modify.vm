@@ -18,5 +18,4 @@
 </body>
 </html>
 <script>
-	$("#info_me").addClass("weui_bar_item_on");
 </script>

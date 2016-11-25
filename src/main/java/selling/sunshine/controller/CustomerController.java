@@ -376,6 +376,9 @@ public class CustomerController {
     	}
     	infoObject.put("salesInfo", goodsArray);
     	result.setData(infoObject);
+    	if(orderItemSum == null || goodsArray.isEmpty()){
+    		result.setResponseCode(ResponseCode.RESPONSE_NULL);
+    	}
     	return result;
     }
     
@@ -429,21 +432,25 @@ public class CustomerController {
     	List<CustomerOrder> customerOrderList = (List<CustomerOrder>)(fetchCustomerOrderResponse.getData());
     	
     	List<OrderItemSum> orderItemSumList = new ArrayList<OrderItemSum>();
-    	for(OrderItem orderItem : orderItemList){
-    		condition.clear();
-    		condition.put("agentId", user.getAgent().getAgentId());
-    		condition.put("orderId", orderItem.getOrderItemId());
-    		condition.put("blockFlag", false);
-    		ResultData fetchOrderItemSumResponse = orderService.fetchOrderItemSum(condition);
-    		orderItemSumList.add(((List<OrderItemSum>)(fetchOrderItemSumResponse.getData())).get(0));
+    	if(orderItemList != null){
+	    	for(OrderItem orderItem : orderItemList){
+	    		condition.clear();
+	    		condition.put("agentId", user.getAgent().getAgentId());
+	    		condition.put("orderId", orderItem.getOrderItemId());
+	    		condition.put("blockFlag", false);
+	    		ResultData fetchOrderItemSumResponse = orderService.fetchOrderItemSum(condition);
+	    		orderItemSumList.add(((List<OrderItemSum>)(fetchOrderItemSumResponse.getData())).get(0));
+	    	}
     	}
-    	for(CustomerOrder customerOrder : customerOrderList){
-    		condition.clear();
-    		condition.put("agentId", user.getAgent().getAgentId());
-    		condition.put("orderId", customerOrder.getOrderId());
-    		condition.put("blockFlag", false);
-    		ResultData fetchOrderItemSumResponse = orderService.fetchOrderItemSum(condition);
-    		orderItemSumList.add(((List<OrderItemSum>)(fetchOrderItemSumResponse.getData())).get(0));
+    	if(customerOrderList != null){
+	    	for(CustomerOrder customerOrder : customerOrderList){
+	    		condition.clear();
+	    		condition.put("agentId", user.getAgent().getAgentId());
+	    		condition.put("orderId", customerOrder.getOrderId());
+	    		condition.put("blockFlag", false);
+	    		ResultData fetchOrderItemSumResponse = orderService.fetchOrderItemSum(condition);
+	    		orderItemSumList.add(((List<OrderItemSum>)(fetchOrderItemSumResponse.getData())).get(0));
+	    	}
     	}
     	Collections.sort(orderItemSumList, new Comparator<OrderItemSum>(){
 			@Override
@@ -451,6 +458,8 @@ public class CustomerController {
 				return o2.getCreateAt().compareTo(o1.getCreateAt());
 			}});
     	
+    	view.addObject("customerName", customer.getName());
+    	view.addObject("customerPhone", customer.getPhone().getPhone());
     	view.addObject("orderItemSums", orderItemSumList);
     	view.setViewName("/agent/customer/order_list");
     	return view;
