@@ -83,7 +83,7 @@ public class OrderItemDaoImpl extends BaseDao implements OrderItemDao {
         ResultData result = new ResultData();
         DataTablePage<OrderItemSum> page = new DataTablePage<>(param);
         condition = handle(condition);
-        if (!StringUtils.isEmpty(param.getsSearch())) {
+        if (!StringUtils.isEmpty(param.getsSearch()) && !StringUtils.isEmpty(param.getsSearch().trim())) {
             String search = param.getsSearch().replaceAll("/", "-");
             condition.put("search", "%" + search + "%");
         }
