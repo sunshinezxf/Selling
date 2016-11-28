@@ -52,7 +52,7 @@
 					</tr>
 					</thead>
 					<tbody>
-					#foreach($item in ${direct})
+					#foreach($item in ${self})
 					<tr>
 						<td>${item.orderPool.goods.name}</td>
 						<td>${item.orderPool.agent.name}</td>
@@ -72,7 +72,7 @@
 					<p>返现来源：直接代理</p>
 				</div>
 				<div class="ui blue segment">
-					<p>返现金额：${cashback.self}元</p>
+					<p>返现金额：${cashback.direct}元</p>
 				</div>
 				<div class="ui red segment">
 					<table class="ui celled table">
@@ -106,7 +106,7 @@
 					<p>返现来源：间接代理</p>
 				</div>
 				<div class="ui green segment">
-					<p>返现金额：${cashback.self}元</p>
+					<p>返现金额：${cashback.indirect}元</p>
 				</div>
 				<div class="ui yellow segment">
 					<table class="ui celled table">
