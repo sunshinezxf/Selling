@@ -20,6 +20,35 @@
                 table.$('tr.selected').removeClass('selected');
                 $(this).addClass('selected');
             }
+            if (table.rows('.selected').data().length == 1) {
+                var current = table.rows('.selected').data()['0'];
+                var order_status = '';
+                switch (current.status) {
+                    case "NOT_PAYED":
+                        order_status = "未付款";
+                        break;
+                    case "PAYED":
+                        order_status = "已付款";
+                        break;
+                    case "SHIPPED":
+                        order_status = "已发货";
+                        break;
+                    case "RECEIVED":
+                        order_status = "已签收";
+                        break;
+                    case "EXCHANGED":
+                        order_status = "换货";
+                        break;
+                    case "REFUNDING":
+                        order_status = "退款中";
+                        break;
+                    case "REFUNDED":
+                        order_status = "已退款";
+                        break;
+                }
+                fill(current.orderId, current.customerName, current.agent.name, current.goods.name + " x " + current.goodsQuantity, (new Date(current.createAt)).format("yyyy-MM-dd"), order_status);
+                $("#order_item_modal").modal('show');
+            }
         })
 
         var table = $("#order_overview_table").DataTable({
@@ -70,7 +99,11 @@
                     }
                 }
                 },
-                {title: "商品名", "mData": "goods.name"},
+                {
+                    title: "商品", "mRender": function (data, type, full) {
+                    return full.goods.name + " x " + full.goodsQuantity;
+                }
+                },
                 {
                     title: "时间", "mRender": function (data, type, full) {
                     return ((new Date(full.createAt)).format("yyyy/MM/dd hh:mm"));
