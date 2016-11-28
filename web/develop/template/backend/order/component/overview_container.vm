@@ -1,4 +1,4 @@
-<div class="ui stackable padded grid" id="">
+<div class="ui stackable padded grid" name="order_list">
     <div class="row">
         <h1 class="ui header">
             <i class="home icon"></i>
@@ -11,7 +11,7 @@
 
                         <div class="divider">/</div>
 
-                        <a class="active section">订单概览</a>
+                        <a class="active section">订单列表</a>
                     </div>
                 </div>
             </div>

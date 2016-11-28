@@ -46,7 +46,7 @@
             $("#monthly_sales").html("暂无数据");
         }
     });
-    $.get(monthly_url, function (result) {
+    $.get(daily_url, function (result) {
         if (result.responseCode == 'RESPONSE_OK') {
             $("#daily_sales").html(result.data + "元");
         } else {

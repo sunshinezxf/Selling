@@ -4,7 +4,7 @@
 <head>
     #parse("/backend/initialization/init.vm")
     #parse("/backend/initialization/init_agent_overview.vm")
-    <title>代理审核</title>
+    <title>代理概览</title>
 </head>
 <body id="dashboard" class="started pushable" ontouchstart>
     #parse("/backend/common/mobile_sidebar.vm")

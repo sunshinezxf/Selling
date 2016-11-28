@@ -1,28 +1,26 @@
-<div class="ui stackable padded grid">
+<div class="ui stackable padded grid" name="agent_check">
     <div class="row">
         <h1 class="ui header">
             <i class="home icon"></i>
+
             <div class="content">
-            代理审核
+                代理审核
                 <div class="sub header">
-                        <div class="ui breadcrumb">
-                            <a class="section">代理管理</a>
+                    <div class="ui breadcrumb">
+                        <a class="section">代理管理</a>
 
-                            <div class="divider">/</div>
-
-                            <a class="active section">代理审核</a>
-                        </div>
-                 </div>
+                        <div class="divider">/</div>
+                        <a class="active section">代理审核</a>
+                    </div>
+                </div>
             </div>
         </h1>
     </div>
     <div class="row">
-        
-            <table id="check_agent_table" class="ui striped table" cellspacing="0" width="100%">
-            </table>
-        
+        <div class="column">
+            <table id="check_agent_table" class="ui tablet stackable table"></table>
+        </div>
     </div>
-
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
@@ -83,10 +81,10 @@
                     $("#" + full.agentId).on('click', function () {
                         window.location.href = "${path.concat('/agent/check/')}" + full.agentId;
                     })
-                    #*
-                    var limit_button = "<div class = 'btn-group'><button type='button' class='btn btn-warning btn-group-sm'>禁用</button>&nbsp;&nbsp;</div>"
-                    operation += limit_button;
-                    *#
+                #*
+                var limit_button = "<div class = 'btn-group'><button type='button' class='btn btn-warning btn-group-sm'>禁用</button>&nbsp;&nbsp;</div>"
+                operation += limit_button;
+                *#
                     return operation;
                 }
                 }
@@ -108,7 +106,5 @@
                 }
             }
         });
-
-
     });
 </script>
