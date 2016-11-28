@@ -3,7 +3,7 @@
 <head>
     #parse("/backend/initialization/init.vm")
     #parse("/backend/common/datatable.lib.vm")
-    <title>提现申请</title>
+    <title>本月返现详情</title>
 </head>
 <body id="dashboard" class="started pushable" ontouchstart>
     #parse("/backend/common/mobile_sidebar.vm")
@@ -15,7 +15,7 @@
             #parse("/backend/common/sidebar.vm")
         </div>
         <div class="ui main container">
-            #parse("/backend/withdraw/component/withdraw_check_table.vm")
+            #parse("/backend/cashback/component/cashback_month_detail_table.vm")
         </div>
     </div>
 </div>

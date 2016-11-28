@@ -1,29 +1,43 @@
 package selling.sunshine.controller;
 
+import common.sunshine.model.selling.admin.Admin;
 import common.sunshine.model.selling.agent.Agent;
+import common.sunshine.model.selling.goods.Goods4Customer;
+import common.sunshine.model.selling.user.User;
 import common.sunshine.pagination.DataTablePage;
 import common.sunshine.pagination.DataTableParam;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
+
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import selling.sunshine.form.RefundConfigForm;
+import selling.sunshine.model.BackOperationLog;
 import selling.sunshine.model.RefundConfig;
 import selling.sunshine.model.cashback.CashBackRecord;
 import selling.sunshine.model.cashback.support.CashBackLevel;
 import selling.sunshine.service.AgentService;
 import selling.sunshine.service.CashBackService;
+import selling.sunshine.service.CommodityService;
+import selling.sunshine.service.LogService;
 import selling.sunshine.service.RefundService;
+import selling.sunshine.service.ToolService;
 import selling.sunshine.utils.ZipCompressor;
 import selling.sunshine.vo.cashback.CashBack4Agent;
 import selling.sunshine.vo.cashback.CashBack4AgentPerMonth;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+
 import java.io.*;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
@@ -45,6 +59,15 @@ public class CashBackController {
 
     @Autowired
     private RefundService refundService;
+    
+	@Autowired
+	private LogService logService;
+	
+	@Autowired
+	private CommodityService commodityService;
+	
+	@Autowired
+	private ToolService toolService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/month")
     public ModelAndView monthly() {
@@ -59,7 +82,7 @@ public class CashBackController {
             }
             view.addObject("total", total);
         }
-        view.setViewName("/backend/refund/refund_record_month");
+        view.setViewName("/backend/cashback/cashback_monthly_record");
         return view;
     }
 
@@ -134,16 +157,9 @@ public class CashBackController {
             List<CashBackRecord> indirect = (List<CashBackRecord>) response.getData();
             view.addObject("indirect", indirect);
         }
-        view.setViewName("/backend/refund/cashback_month_detail");
+        view.setViewName("/backend/cashback/cashback_month_detail");
         return view;
     }
-
-//    @RequestMapping(method = RequestMethod.GET, value = "/overview")
-//    public ModelAndView overview() {
-//        ModelAndView view = new ModelAndView();
-//        view.setViewName("/backend/refund/refund_record");
-//        return view;
-//    }
     
     @RequestMapping(method = RequestMethod.GET, value = "/overview")
     public ModelAndView overview() {
@@ -151,10 +167,17 @@ public class CashBackController {
         view.setViewName("/backend/cashback/overview");
         return view;
     }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/record")
+    public ModelAndView record() {
+        ModelAndView view = new ModelAndView();
+        view.setViewName("/backend/cashback/cashback_record");
+        return view;
+    }
 
     @ResponseBody
-    @RequestMapping(method = RequestMethod.POST, value = "/overview")
-    public DataTablePage<CashBack4Agent> overview(DataTableParam param) {
+    @RequestMapping(method = RequestMethod.POST, value = "/record")
+    public DataTablePage<CashBack4Agent> record(DataTableParam param) {
         DataTablePage<CashBack4Agent> result = new DataTablePage<>(param);
         if (StringUtils.isEmpty(param)) {
             return result;
@@ -247,7 +270,7 @@ public class CashBackController {
 	public ModelAndView configList(@PathVariable("goodsId") String goodsId) {
 		ModelAndView view = new ModelAndView();
 		view.addObject("goodsId", goodsId);
-		view.setViewName("/backend/cashback_config_list");
+		view.setViewName("/backend/cashback/cashback_config_list");
 		return view;
 	}
 	
@@ -267,4 +290,125 @@ public class CashBackController {
 		}
 		return result;
 	}
+	
+	@ResponseBody
+	@RequestMapping(method = RequestMethod.GET, value = "/config/goods/{refundConfigId}")
+	public ResultData goodsConfig(@PathVariable("refundConfigId") String refundConfigId) {
+		ResultData result = new ResultData();
+		Map<String, Object> condition = new HashMap<>();
+		condition.put("refundConfigId", refundConfigId);
+		condition.put("blockFlag", false);
+		ResultData fetchResponse = refundService.fetchRefundConfig(condition);
+		result.setResponseCode(fetchResponse.getResponseCode());
+		if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+			result.setData(((List<RefundConfig>) fetchResponse.getData()).get(0));
+		}
+		return result;
+	}
+	
+	@RequestMapping(method = RequestMethod.POST, value = "/config/goods/{configId}/{goodsId}")
+	public ModelAndView config(@PathVariable("configId") String configId, @PathVariable("goodsId") String goodsId,
+			@Valid RefundConfigForm form, BindingResult result, HttpServletRequest request) {
+		ModelAndView view = new ModelAndView();
+		if (result.hasErrors()) {
+			view.setViewName("redirect:/cashback/config/list/goods/" + goodsId);
+			return view;
+		}
+		Goods4Customer goods = new Goods4Customer();
+		Map<String, Object> condition = new HashMap<>();
+		condition.put("goodsId", goodsId);
+		goods = ((List<Goods4Customer>) commodityService.fetchGoods4Customer(condition).getData()).get(0);
+		RefundConfig config = new RefundConfig(goods, Integer.parseInt(form.getAmountTrigger()),
+				Double.parseDouble(form.getLevel1Percent()), Double.parseDouble(form.getLevel2Percent()),
+				Double.parseDouble(form.getLevel3Percent()), Integer.parseInt(form.getMonthConfig()));
+		config.setRefundConfigId(configId);
+		if (form.getApplyMonths() != ""&&!form.getApplyMonths().equals("普遍适用")) {
+			config.setUniversal(false);
+			config.setUniversalMonth(Integer.parseInt(form.getApplyMonths()));
+		} else {
+			config.setUniversal(true);
+			config.setUniversalMonth(1);
+		}
+		ResultData createResponse = refundService.createRefundConfig(config);
+		if (createResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+			Subject subject = SecurityUtils.getSubject();
+			User user = (User) subject.getPrincipal();
+			if (user == null) {
+				view.setViewName("redirect:/cashback/config/list/goods/" + goodsId);
+				return view;
+			}
+			Admin admin = user.getAdmin();
+			BackOperationLog backOperationLog = new BackOperationLog(admin.getUsername(), toolService.getIP(request),
+					"管理员" + admin.getUsername() + "修改了商品名称为" + goods.getName() + "的返现配置");
+			logService.createbackOperationLog(backOperationLog);
+
+			view.setViewName("redirect:/cashback/config/list/goods/" + goodsId);
+			return view;
+		}
+		view.setViewName("redirect:/cashback/config/list/goods/" + goodsId);
+		return view;
+	}
+	
+	@RequestMapping(method = RequestMethod.POST, value = "/config/create/{goodsId}")
+	public ModelAndView createConfig(@PathVariable("goodsId") String goodsId, @Valid RefundConfigForm form,
+			BindingResult result, HttpServletRequest request) {
+		ModelAndView view = new ModelAndView();
+		if (result.hasErrors()) {
+			view.setViewName("redirect:/cashback/config/list/goods/" + goodsId);
+			return view;
+		}
+		Goods4Customer goods = new Goods4Customer();
+		Map<String, Object> condition = new HashMap<>();
+		condition.put("goodsId", goodsId);
+		condition.put("blockFlag", false);
+		if (form.getApplyMonths() != "") {
+			condition.put("universal", false);
+		} else {
+			condition.put("universal", true);
+		}
+		if (refundService.fetchRefundConfig(condition).getResponseCode() != ResponseCode.RESPONSE_NULL) {
+			view.setViewName("redirect:/cashback/config/list/goods/" + goodsId);
+			return view;
+		}
+		condition.clear();
+		condition.put("goodsId", goodsId);
+		goods = ((List<Goods4Customer>) commodityService.fetchGoods4Customer(condition).getData()).get(0);
+		RefundConfig config = new RefundConfig(goods, Integer.parseInt(form.getAmountTrigger()),
+				Double.parseDouble(form.getLevel1Percent()), Double.parseDouble(form.getLevel2Percent()),
+				Double.parseDouble(form.getLevel3Percent()), Integer.parseInt(form.getMonthConfig()));
+		config.setRefundConfigId("null");
+		if (form.getApplyMonths() != "") {
+			config.setUniversal(false);
+			config.setUniversalMonth(Integer.parseInt(form.getApplyMonths()));
+		} else {
+			config.setUniversal(true);
+			config.setUniversalMonth(1);
+		}
+		ResultData createResponse = refundService.createRefundConfig(config);
+		if (createResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+			Subject subject = SecurityUtils.getSubject();
+			User user = (User) subject.getPrincipal();
+			if (user == null) {
+				view.setViewName("redirect:/cashback/config/list/goods/" + goodsId);
+				return view;
+			}
+			Admin admin = user.getAdmin();
+			BackOperationLog backOperationLog = new BackOperationLog(admin.getUsername(), toolService.getIP(request),
+					"管理员" + admin.getUsername() + "添加了商品名称为" + goods.getName() + "的返现配置");
+			logService.createbackOperationLog(backOperationLog);
+
+			view.setViewName("redirect:/cashback/config/list/goods/" + goodsId);
+			return view;
+		}
+		view.setViewName("redirect:/cashback/config/list/goods/" + goodsId);
+		return view;
+	}
+	
+//  @RequestMapping(method = RequestMethod.GET, value = "/overview")
+//  public ModelAndView overview() {
+//      ModelAndView view = new ModelAndView();
+//      view.setViewName("/backend/refund/refund_record");
+//      return view;
+//  }
+
 }
