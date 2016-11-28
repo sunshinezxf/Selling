@@ -137,14 +137,14 @@
     <bean id="customerAddressUpdateTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="customerAddressUpdateDetail"></property>
         <property name="cronExpression">
-            <value>0 52 15 * * ?</value>
+            <value>0 0 1 * * ?</value>
         </property>
     </bean>
     
     <bean id="agentKPIUpdateTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="agentKPIUpdateDetail"></property>
         <property name="cronExpression">
-            <value>0 48 14 * * ?</value>
+            <value>0 20 1 * * ?</value>
         </property>
     </bean>
 
