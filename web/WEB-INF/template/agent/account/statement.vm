@@ -60,7 +60,8 @@ $(function(){
 				switch($.trim($(vval).find(".weui_cell_bd").text())){
 					case "自销" : window.location = "${path.concat('/agent/statementdetail/')}" + "0/" + day;break;
 					case "直接代理" : window.location = "${path.concat('/agent/statementdetail/')}" + "1/" + day;break;
-					case "间接代理" : window.location = "${path.concat('/agent/statementdetail/')}" + "2/" + day;break;
+					//case "间接代理" : window.location = "${path.concat('/agent/statementdetail/')}" + "2/" + day;break;
+					//间接代理不给看
 					default:
 				}
 			});

@@ -6,35 +6,64 @@
 <title>我的客户</title>
 </head>
 <body ontouchstart>
-<div class="container">  
-  <div id="order_list_payed" class="weui_cells weui_cells_access clear-margin-top">
-  	#foreach($orderItemSum in $orderItemSums)
-  	<a class="weui_cell" id="${orderItemSum.orderId}"> 
-		<div class="weui_cell_hd">
-			<i class="icon icon_article"></i> 
-		</div>
-		<div class="weui_cell_bd weui_cell_primary">
-			<p class="time" style="display:none">${orderItemSum.createAt}</p>
-		</div>
-		<div class="weui_cell_ft">${orderItemSum.goodsQuantity}瓶</div> 
-	</a>
-  	#end
-  	<div class="weui_btn_area" style="text-align:center">
-        <button type="button" class="weui_btn weui_btn_primary" id="return_btn">返回客户列表</button>
-    </div> 
-  </div>
-   #parse("/agent/component/navigate.vm")
+<div class="container"> 
+	<div class="tabbar">
+        <div class="weui_tab_bd">
+        	<div class="hd">
+	            <h1 class="page_title">客户订单</h1>
+	            <p class="page_desc">$!{customerName}:$!{customerPhone}</p>
+	        </div>
+	        <div class="bd">
+            <div id="order_list_payed" class="weui_cells weui_cells_access clear-margin-top">
+			  	#foreach($orderItemSum in $orderItemSums)
+			  	<a class="weui_cell" id="${orderItemSum.orderId}"> 
+					<div class="weui_cell_hd">
+						<i class="icon icon_article"></i> 
+					</div>
+					<div class="weui_cell_bd weui_cell_primary">
+						<p class="time" style="display:none">${orderItemSum.createAt}</p>
+						<p class="type" style="display:none">${orderItemSum.orderType}</p>
+					</div>
+					<div class="weui_cell_ft">${orderItemSum.goodsQuantity}瓶</div> 
+				</a>
+			  	#end
+			  </div>
+			  <div class="weui_btn_area" style="text-align:center">
+			        <button type="button" class="weui_btn weui_btn_primary" id="return_btn">返回客户列表</button>
+			  </div> 
+			  </div>
+        </div>
+        #parse("/agent/component/navigate.vm")
+    </div>
  </div>
  </body>
  </html>
   <script>
   	$(function(){
   		$.each($(".time"), function(i, val){
+  			var typeString = "";
+    		switch($(val).next().text()){
+    			case "ORDINARY":
+    				break;
+    			case "GIFT":
+    				typeString = "(赠送)";
+    				break;
+    			case "CUSTOMER":
+    				typeString = "(分享)";
+    				break;
+    			default:
+    		}
+  		
   			var	timeString = (new Date($(val).text())).format("yyyy MM dd");
     		var time = timeString.split(" ");
-    		$(val).html(time[0] + "年" + parseInt(time[1]) + "月" + time[2] + "日");
+    		$(val).html(time[0] + "年" + parseInt(time[1]) + "月" + time[2] + "日<span style='color:#888;'>" + typeString + "</span>");
+    		
   		});
   		$(".time").show();
+  	});
+  	
+  	$("#order_list_payed").on("click", "a", function(){
+  		window.location =  "${path.concat('/agent/orderitem/detail/" + $(this).prop("id") + "')}";
   	});
   	
   	$("#return_btn").click(function(){

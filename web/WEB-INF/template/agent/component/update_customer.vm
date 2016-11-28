@@ -141,6 +141,19 @@
         var url = "${path.concat('/customer/info/" + customerId + "')}";
         $.get(url, function (result) {
             if(result.responseCode != "RESPONSE_OK"){
+            	var html = 
+	    			"<a class='weui_cell'>" + 
+					"<div class='weui_cell_bd weui_cell_primary'>" +
+					"<p style='text-decoration:none;color:#000000;'>无购买记录<span style='color:#888;'></span></p>" +
+					"</div>" + 
+					"</a>";
+				$("#last_order").append(html);
+				var html = 
+	            	"<div class='weui_cell'> \
+			    		<div class='weui_cell_bd weui_cell_primary'>无购买记录</div> \
+			    		<div class='weui_cell_ft'></div> \
+			    	</div>";
+			    $("#sales_info").append(html);
             	return;
             }
             var lastOrder = result.data.lastOrder;
