@@ -2,7 +2,7 @@
 <html lang="zh_CN">
 <head>
     #parse("/agent/component/init.vm")
-    <title>订单概览</title>
+    <title>订单管理</title>
 </head>
 <body ontouchstart>
 <div class="container">
