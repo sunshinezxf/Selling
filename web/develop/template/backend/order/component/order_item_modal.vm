@@ -37,7 +37,7 @@
                 </div>
                 <div class="ui segment">
                     <div class="inline field">
-                        <label>订单状态</label>
+                        <label>订单状态:</label>
                         <text id="order_status"></text>
                     </div>
                 </div>

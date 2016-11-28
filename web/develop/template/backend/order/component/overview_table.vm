@@ -46,7 +46,13 @@
                         order_status = "已退款";
                         break;
                 }
-                fill(current.orderId, current.customerName, current.agent.name, current.goods.name + " x " + current.goodsQuantity, (new Date(current.createAt)).format("yyyy-MM-dd"), order_status);
+                var agent_name = '';
+                if (current.agent != null && current.agent != "") {
+                    agent_name = current.agent.name;
+                } else {
+                    agent_name = "无";
+                }
+                fill(current.orderId, current.customerName, agent_name, current.goods.name + " x " + current.goodsQuantity, (new Date(current.createAt)).format("yyyy-MM-dd"), order_status);
                 $("#order_item_modal").modal('show');
             }
         })

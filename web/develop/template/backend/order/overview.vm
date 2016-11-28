@@ -6,7 +6,7 @@
     #parse("/backend/common/datatable.lib.vm")
     <link rel="stylesheet" href="${path.concat('/material/css/backend/info-box.css')}">
     <link rel="stylesheet" href="${path.concat('/material/css/backend/order.css')}">
-    <title>首页</title>
+    <title>订单列表</title>
 </head>
 <body id="dashboard" class="started pushable" ontouchstart>
     #parse("/backend/common/mobile_sidebar.vm")
