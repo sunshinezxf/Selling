@@ -6,6 +6,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+
 import common.sunshine.dao.BaseDao;
 import selling.sunshine.dao.WithdrawDao;
 import selling.sunshine.model.WithdrawRecord;
@@ -85,6 +90,29 @@ public class WithdrawDaoImpl extends BaseDao implements WithdrawDao {
         ResultData result = new ResultData();
         DataTablePage<WithdrawRecord> page = new DataTablePage<>(param);
         condition = handle(condition);
+        if (!StringUtils.isEmpty(param.getsSearch())) { 
+            String searchParam=param.getsSearch().replace("/", "-");
+        	condition.put("search", "%"+searchParam+"%");
+        }
+        if (!StringUtils.isEmpty(param.getParams())) {
+            JSONObject json = JSON.parseObject(param.getParams());
+            if (json.containsKey("status")) {
+            	List<Integer> status = new ArrayList<>();
+                switch (json.getString("status")) {
+                    case "APPLICATION":
+                         status.add(0);
+                         condition.put("status", status);
+                         condition.put("blockFlag", true);
+                        break;
+                    case "CHECK":                   	
+                        status.add(0);
+                        status.add(1);
+                        condition.put("status", status);
+                        condition.put("blockFlag", false);
+                        break;
+                }
+            }
+        }
         ResultData total = queryWithdraw(condition);
         if (total.getResponseCode() != ResponseCode.RESPONSE_OK) {
             result.setResponseCode(ResponseCode.RESPONSE_ERROR);

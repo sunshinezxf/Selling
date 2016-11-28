@@ -2090,7 +2090,7 @@ public class AgentController {
             condition.put("agentId", upperAgentId);
             fetchResponse=agentKPIService.fetchAgentKPI(condition);
             if (fetchResponse.getResponseCode()==ResponseCode.RESPONSE_OK) {
-            	 AgentKPI agentKPI=((List<AgentKPI>)fetchResponse).get(0);
+            	 AgentKPI agentKPI=((List<AgentKPI>)fetchResponse.getData()).get(0);
             	 agentKPI.setDirectAgentQuantity(agentKPI.getDirectAgentQuantity()+1);
             	 agentKPIService.updateAgentKPI(agentKPI);
     		}
@@ -2645,7 +2645,7 @@ public class AgentController {
     @RequestMapping(method = RequestMethod.GET, value = "/vitality")
     public ModelAndView agentVitalityView() {
         ModelAndView view = new ModelAndView();
-        view.setViewName("/backend/agent/vitalityconfig");
+        view.setViewName("/backend/cashback/vitality_config");
         return view;
     }
 

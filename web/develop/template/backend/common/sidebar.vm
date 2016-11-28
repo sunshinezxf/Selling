@@ -35,7 +35,7 @@
     <div class="item">
         <a class="title"><i class="teal payment icon left"></i><i class="dropdown icon"></i>返现管理</a>
         <div class="content menu">
-            <a class="item">当月返现</a>
+            <a class="item" href="${path.concat('/cashback/overview')}">返现概览</a>                        
         </div>
     </div>
     #end
@@ -43,7 +43,7 @@
     <div class="item">
         <a class="title"><i class="teal money icon left"></i><i class="dropdown icon"></i>提现管理</a>
         <div class="content menu">
-            <a class="item">提现申请</a>
+            <a class="item" href="${path.concat('/withdraw/overview')}">提现概览</a>                        
         </div>
     </div>
     #end

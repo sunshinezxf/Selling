@@ -2,8 +2,8 @@
 <html lang="zh_CN">
 <head>
     #parse("/backend/initialization/init.vm")
-    #parse("/backend/common/datatable.lib.vm")
-    <title>代理审核</title>
+    <link rel="stylesheet" href="${path.concat('/material/css/backend/info-box.css')}">
+    <title>代理授权</title>
 </head>
 <body id="dashboard" class="started pushable" ontouchstart>
     #parse("/backend/common/mobile_sidebar.vm")
@@ -15,7 +15,7 @@
             #parse("/backend/common/sidebar.vm")
         </div>
         <div class="ui main container">
-            #parse("/backend/agent/component/agent_check_table.vm")
+            #parse("/backend/agent/component/agent_grant_form.vm")
         </div>
     </div>
 </div>

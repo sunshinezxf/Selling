@@ -57,9 +57,27 @@ public class WithdrawController {
 
     @Autowired
     private LogService logService;
-
-    @RequestMapping(method = RequestMethod.GET, value = "/check")
-    public ModelAndView check() {
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/money/{status}")
+    public ResultData money(@PathVariable("status") String status) {
+    	ResultData resultData=new ResultData();
+        Map<String, Object> condition = new HashMap<>();
+        if (status.equals("pay")) {
+        	condition.put("pay", true);
+		}else if (status.equals("check")) {
+			condition.put("check", true);
+		}        
+        ResultData moneyResponse = withdrawService.fetchSumMoney(condition);
+        if (moneyResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+        	resultData.setData(moneyResponse.getData());
+        	return resultData;
+        }
+        resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
+        return resultData;
+    }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/overview")
+    public ModelAndView overview() {
         ModelAndView view = new ModelAndView();
         Map<String, Object> condition = new HashMap<>();
         condition.put("check", true);
@@ -67,22 +85,18 @@ public class WithdrawController {
         if (moneyResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             view.addObject("money", moneyResponse.getData());
         }
-        view.setViewName("/backend/withdraw/check");
+        view.setViewName("/backend/withdraw/overview");
         return view;
     }
-
+    
     @ResponseBody
-    @RequestMapping(method = RequestMethod.POST, value = "/check")
-    public DataTablePage<WithdrawRecord> check(DataTableParam param) {
+    @RequestMapping(method = RequestMethod.POST, value = "/overview")
+    public DataTablePage<WithdrawRecord> overview(DataTableParam param) {
         DataTablePage<WithdrawRecord> result = new DataTablePage<WithdrawRecord>(param);
         if (StringUtils.isEmpty(param)) {
             return result;
         }
         Map<String, Object> condition = new HashMap<>();
-        List<Integer> status = new ArrayList<>();
-        status.add(0);
-        condition.put("status", status);
-        condition.put("blockFlag", true);
         ResultData fetchResponse = withdrawService.fetchWithdrawRecord(condition, param);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             result = (DataTablePage<WithdrawRecord>) fetchResponse.getData();
@@ -164,39 +178,6 @@ public class WithdrawController {
             e.printStackTrace();
         }
         return "";
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value = "/overview")
-    public ModelAndView overview() {
-        ModelAndView view = new ModelAndView();
-        Map<String, Object> condition = new HashMap<>();
-        condition.put("pay", true);
-        ResultData moneyResponse = withdrawService.fetchSumMoney(condition);
-        if (moneyResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            view.addObject("money", moneyResponse.getData());
-        }
-        view.setViewName("/backend/withdraw/overview");
-        return view;
-    }
-
-    @ResponseBody
-    @RequestMapping(method = RequestMethod.POST, value = "/overview")
-    public DataTablePage<WithdrawRecord> overview(DataTableParam param) {
-        DataTablePage<WithdrawRecord> result = new DataTablePage<WithdrawRecord>(param);
-        if (StringUtils.isEmpty(param)) {
-            return result;
-        }
-        Map<String, Object> condition = new HashMap<>();
-        List<Integer> status = new ArrayList<>();
-        status.add(0);
-        status.add(1);
-        condition.put("status", status);
-        condition.put("blockFlag", false);
-        ResultData fetchResponse = withdrawService.fetchWithdrawRecord(condition, param);
-        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            result = (DataTablePage<WithdrawRecord>) fetchResponse.getData();
-        }
-        return result;
     }
 
     /**
@@ -345,7 +326,7 @@ public class WithdrawController {
         condition.put("withdrawId", withdrawId);
         ResultData fetchResponse = withdrawService.fetchWithdrawRecord(condition);
         if (fetchResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
-            view.setViewName("redirect:/withdraw/check");
+            view.setViewName("redirect:/withdraw/overview");
             return view;
         }
         WithdrawRecord record = ((List<WithdrawRecord>) fetchResponse.getData()).get(0);
@@ -356,18 +337,18 @@ public class WithdrawController {
                 Subject subject = SecurityUtils.getSubject();
                 User user = (User) subject.getPrincipal();
                 if (user == null) {
-                    view.setViewName("redirect:/withdraw/check");
+                    view.setViewName("redirect:/withdraw/overview");
                     return view;
                 }
                 Admin admin = user.getAdmin();
                 BackOperationLog backOperationLog = new BackOperationLog(
                         admin.getUsername(), toolService.getIP(request), "管理员" + admin.getUsername() + "确认了提现申请: 提现代理商为" + record.getAgent().getName() + ", 提现金额为" + record.getAmount());
                 logService.createbackOperationLog(backOperationLog);
-                view.setViewName("redirect:/withdraw/check");
+                view.setViewName("redirect:/withdraw/overview");
                 return view;
             }
         }
-        view.setViewName("redirect:/withdraw/check");
+        view.setViewName("redirect:/withdraw/overview");
         return view;
     }
 }

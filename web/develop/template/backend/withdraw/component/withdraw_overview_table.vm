@@ -1,0 +1,201 @@
+<div class="ui stackable padded grid">
+    <div class="row">
+        <h1 class="ui header">
+            <i class="home icon"></i>
+            <div class="content">
+            提现概览
+                <div class="sub header">
+                        <div class="ui breadcrumb">
+                            <a class="section">提现管理</a>
+
+                            <div class="divider">/</div>
+
+                            <a class="active section">提现概览</a>
+                        </div>
+                 </div>
+            </div>
+          </h1>
+    </div>
+    <div class="row">
+        <button class="ui button primary withdraw_status" target-value="APPLICATION">提现申请</button>
+        <button class="ui button withdraw_status" target-value="CHECK">提现审核</button>
+    </div>
+    <div class="row" id="money">
+       #if(${money})
+           <span>当前总申请提现金额为：${money}元&nbsp;
+           #if(${money} - 0 > 1)
+              <a type="button" class="ui positive basic button" href="${path.concat('/withdraw/check/download')}">提现申请下载</a>
+           #end
+           </span>
+           <br>
+        #end
+     </div>
+     <div class="row">
+         <table id="overview_withdraw_table" class="ui striped table" cellspacing="0" width="100%">
+         </table>
+      </div>
+
+</div>
+<div class="ui modal" id="dialog_modal">
+  <i class="close icon"></i>
+  <div class="header">
+    提示
+  </div>
+  <div class="image content">
+    <div class="description">
+         请确保该笔提现金额已经打到相应渠道的商户账户后再点击确认！！！
+    </div>
+  </div>
+  <div class="actions">
+    <div class="ui button" id="cancer">取消</div>
+    <div class="ui button" id="confirm">确认</div>
+  </div>
+</div>
+<script>
+    var value = "APPLICATION";
+    $(document).ready(function () {
+        $(".withdraw_status").on('click', function () {
+        	var url="${path.concat('/withdraw/money/check')}";
+            value = $(this).attr("target-value");
+            $(".withdraw_status").each(function () {
+                if ($(this).attr("target-value") == value) {
+                    $(this).attr("class", "ui primary button withdraw_status");
+                    if(value=="APPLICATION"){
+                    	url="${path.concat('/withdraw/money/check')}";
+                        $.get(url, function (result) {
+                            var responseCode = result.responseCode;
+                            var money=result.data;
+                            if (responseCode == "RESPONSE_ERROR") {
+                            } else {
+                            	$("#money").children().remove();
+                            	if(money-0>1){
+                                	$("#money").append("<span>当前总申请提现金额为："+money+"元&nbsp;<a type='button' class='ui positive basic button' href='${path.concat('/withdraw/check/download')}'>提现申请下载</a></span>");
+                            	}else{
+                                	$("#money").append("<span>当前总申请提现金额为："+money+"元&nbsp;</span>");
+                            	}
+                            }
+                        });
+                    }else{
+                    	url="${path.concat('/withdraw/money/pay')}";
+                        $.get(url, function (result) {
+                            var responseCode = result.responseCode;
+                            var money=result.data;
+                            if (responseCode == "RESPONSE_ERROR") {
+                            } else {
+                            	$("#money").children().remove();
+                                $("#money").append("<h3><span>当前已申请提现但还未处理的金额总数为："+money+"元 </span></h3><br>");
+                            }
+                        });
+                    }
+                    
+                } else {
+                    $(this).attr("class", "ui button withdraw_status");
+                }
+            });
+            reload();
+        });
+    
+        var table = $("#overview_withdraw_table").DataTable({
+            searching: true,
+            paging: true,
+            aaSorting: [[1, "asc"]],
+            "sPaginationType": "full_numbers",
+            "bPaginate": false,
+            "bLengthChange": true,
+            "bSort": false,
+            "bDeferRender": true,
+            "bProcessing": true,
+            "bServerSide": true,
+            "bInfoFiltered": false,
+            "sAjaxSource": '${path.concat('/withdraw/overview')}',
+            "infoFiltered": false,
+            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                $(nRow).removeClass('dataTable');
+                $(nRow).css("text-align", "left");
+            },
+            "fnInitComplete": function () {
+                $("#overview_withdraw_table").removeClass('no-footer');
+            },
+            "fnServerParams": function (aoData) {
+                var param = {};
+                param["status"] = value;
+                aoData.push({"name": "params", "value": JSON.stringify(param)});
+            },
+            "fnServerData": function (sSource, aoData, fnCallback) {
+                $.ajax({
+                    "dataType": "json",
+                    "type": "POST",
+                    "url": sSource,
+                    "data": aoData,
+                    "success": fnCallback
+                })
+            },
+            columns: [
+                {
+                    title: "申请时间", "mRender": function (data, type, full) {
+                    return ((new Date(full.createAt)).format("yyyy/MM/dd hh:mm"));
+                }
+                },
+                {title: "代理商姓名", "mData": "agent.name"},
+                {title: "申请时账户余额", "mData": "wealth"},
+                {title: "申请提现金额", "mData": "amount"},
+                {
+                    title: "状态", "mRender": function (data, type, full) {
+                    var operation = "";
+                    if(full.blockFlag==true){
+                    	var pay_button = "<button id='" + full.withdrawId + "' class='ui positive basic button' onclick=dialog(this)>确认金额</button>";
+                        operation += pay_button;
+                    }else{
+                        if (full.status == "APPLY") {
+                        	operation = "未处理";
+                        } else {
+                        	operation = "已处理";
+                        }
+                    }
+                    return operation;
+                }
+                }
+            ],
+            "language": {
+                "processing": "正在加载中",
+                "lengthMenu": "每页显示 _MENU_ 条记录",
+                "zeroRecords": "抱歉， 没有找到",
+                "info": "从 _START_ 到 _END_, 共 _TOTAL_ 条数据",
+                "infoEmpty": "暂无数据",
+                "infoFiltered": "数据表中共 _MAX_ 条记录)",
+                "zeroRecords": "当前没有提现记录",
+                "search": "搜索:",
+                "paginate": {
+                    "first": "首页",
+                    "previous": "上一页",
+                    "next": "下一页",
+                    "last": "尾页"
+                }
+            }
+        });
+    
+       
+        function reload() {
+            table.ajax.reload();
+        }
+        
+
+    });
+    $('#dialog_modal').modal('hide');
+    var id;       
+    function dialog(obj){
+    	id=obj.id;
+    	$('#dialog_modal').modal('show');
+    }
+    
+	   $("#cancer").on('click', function() {
+	   $('#dialog_modal').modal('hide');
+   });
+	   
+   $("#confirm").on('click', function() {
+	   $('#dialog_modal').modal('hide');
+	   var url = "${path.concat('/withdraw/')}" + id + '/send';
+	   window.location.href = url;
+   });
+    
+</script>

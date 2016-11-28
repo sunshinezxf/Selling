@@ -3,7 +3,7 @@
 <head>
     #parse("/backend/initialization/init.vm")
     #parse("/backend/common/datatable.lib.vm")
-    <title>代理审核</title>
+    <title>返现配置列表</title>
 </head>
 <body id="dashboard" class="started pushable" ontouchstart>
     #parse("/backend/common/mobile_sidebar.vm")
@@ -15,7 +15,7 @@
             #parse("/backend/common/sidebar.vm")
         </div>
         <div class="ui main container">
-            #parse("/backend/agent/component/agent_check_table.vm")
+            #parse("/backend/cashback/component/cashback_config_list_table.vm")
         </div>
     </div>
 </div>

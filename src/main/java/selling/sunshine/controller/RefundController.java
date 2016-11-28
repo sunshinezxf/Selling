@@ -70,22 +70,22 @@ public class RefundController {
 		return view;
 	}
 
-	@ResponseBody
-	@RequestMapping(method = RequestMethod.POST, value = "/overview/{goodsId}")
-	public DataTablePage<RefundConfig> overview(@PathVariable("goodsId") String goodsId, DataTableParam param) {
-		DataTablePage<RefundConfig> result = new DataTablePage<>(param);
-		if (StringUtils.isEmpty(param)) {
-			return result;
-		}
-		Map<String, Object> condition = new HashMap<>();
-		condition.put("goodsId", goodsId);
-		condition.put("blockFlag", false);
-		ResultData response = refundService.fetchRefundConfig(condition, param);
-		if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
-			result = (DataTablePage<RefundConfig>) response.getData();
-		}
-		return result;
-	}
+//	@ResponseBody
+//	@RequestMapping(method = RequestMethod.POST, value = "/overview/{goodsId}")
+//	public DataTablePage<RefundConfig> overview(@PathVariable("goodsId") String goodsId, DataTableParam param) {
+//		DataTablePage<RefundConfig> result = new DataTablePage<>(param);
+//		if (StringUtils.isEmpty(param)) {
+//			return result;
+//		}
+//		Map<String, Object> condition = new HashMap<>();
+//		condition.put("goodsId", goodsId);
+//		condition.put("blockFlag", false);
+//		ResultData response = refundService.fetchRefundConfig(condition, param);
+//		if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+//			result = (DataTablePage<RefundConfig>) response.getData();
+//		}
+//		return result;
+//	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/config/goods/{configId}/{goodsId}")
 	public ModelAndView config(@PathVariable("configId") String configId, @PathVariable("goodsId") String goodsId,

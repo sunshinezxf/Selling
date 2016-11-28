@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import selling.sunshine.model.RefundConfig;
 import selling.sunshine.model.cashback.CashBackRecord;
 import selling.sunshine.model.cashback.support.CashBackLevel;
 import selling.sunshine.service.AgentService;
@@ -136,10 +138,17 @@ public class CashBackController {
         return view;
     }
 
+//    @RequestMapping(method = RequestMethod.GET, value = "/overview")
+//    public ModelAndView overview() {
+//        ModelAndView view = new ModelAndView();
+//        view.setViewName("/backend/refund/refund_record");
+//        return view;
+//    }
+    
     @RequestMapping(method = RequestMethod.GET, value = "/overview")
     public ModelAndView overview() {
         ModelAndView view = new ModelAndView();
-        view.setViewName("/backend/refund/refund_record");
+        view.setViewName("/backend/cashback/overview");
         return view;
     }
 
@@ -226,4 +235,36 @@ public class CashBackController {
         }
         return "";
     }
+    
+	@RequestMapping(method = RequestMethod.GET, value = "/config")
+	public ModelAndView config() {
+		ModelAndView view = new ModelAndView();
+		view.setViewName("/backend/cashback/cashback_config");
+		return view;
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/config/list/goods/{goodsId}")
+	public ModelAndView configList(@PathVariable("goodsId") String goodsId) {
+		ModelAndView view = new ModelAndView();
+		view.addObject("goodsId", goodsId);
+		view.setViewName("/backend/cashback_config_list");
+		return view;
+	}
+	
+	@ResponseBody
+	@RequestMapping(method = RequestMethod.POST, value = "/config/overview/{goodsId}")
+	public DataTablePage<RefundConfig> configOverview(@PathVariable("goodsId") String goodsId, DataTableParam param) {
+		DataTablePage<RefundConfig> result = new DataTablePage<>(param);
+		if (StringUtils.isEmpty(param)) {
+			return result;
+		}
+		Map<String, Object> condition = new HashMap<>();
+		condition.put("goodsId", goodsId);
+		condition.put("blockFlag", false);
+		ResultData response = refundService.fetchRefundConfig(condition, param);
+		if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+			result = (DataTablePage<RefundConfig>) response.getData();
+		}
+		return result;
+	}
 }

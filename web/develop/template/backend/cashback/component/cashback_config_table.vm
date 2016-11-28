@@ -3,30 +3,27 @@
         <h1 class="ui header">
             <i class="home icon"></i>
             <div class="content">
-            代理审核
+            返现配置
                 <div class="sub header">
                         <div class="ui breadcrumb">
-                            <a class="section">代理管理</a>
+                            <a class="section">返现管理</a>
 
                             <div class="divider">/</div>
 
-                            <a class="active section">代理审核</a>
+                            <a class="active section">返现配置</a>
                         </div>
                  </div>
             </div>
-        </h1>
+          </h1>
     </div>
     <div class="row">
-        
-            <table id="check_agent_table" class="ui striped table" cellspacing="0" width="100%">
+            <table id="config_overview_table" class="ui striped table" cellspacing="0" width="100%">
             </table>
-        
     </div>
-
 </div>
-<script type="text/javascript">
+<script>
     $(document).ready(function () {
-        $("#check_agent_table").DataTable({
+        $("#config_overview_table").DataTable({
             searching: false,
             ordering: false,
             paging: true,
@@ -39,14 +36,15 @@
             "bProcessing": true,
             "bServerSide": true,
             "bInfoFiltered": false,
-            "sAjaxSource": '${path.concat('/agent/check')}',
+            "sAjaxSource": '${path.concat('/commodity/overview')}',
             "infoFiltered": false,
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                 $(nRow).removeClass('dataTable');
                 $(nRow).css("text-align", "left");
+                return nRow;
             },
             "fnInitComplete": function () {
-                $("#check_agent_table").removeClass('no-footer');
+                $("#config_overview_table").removeClass('no-footer');
             },
             "fnServerData": function (sSource, aoData, fnCallback) {
                 $.ajax({
@@ -58,35 +56,22 @@
                 })
             },
             columns: [
+                {title: "商品名称", "mData": "name"},
+                {title: "代理价格", "mData": "agentPrice"},
                 {
-                    title: "申请时间", "mRender": function (data, type, full) {
-                    return ((new Date(full.createAt)).format("yyyy/MM/dd"));
-                }
+                    title: "描述", "mData": "description"
                 },
-                {title: "姓名", "mData": "name"},
-                {title: "手机", "mData": "phone"},
-                {
-                    title: "上级代理", "mRender": function (data, type, full) {
-                    if (full.upperAgent == null) {
-                        return "(无)";
-                    }
-                    return full.upperAgent.name;
-                }
-                },
+     
                 {
                     title: "操作", "mRender": function (data, type, full) {
                     var operation = "";
-                    if (!full.granted) {
-                        var verification_button = "<button id='" + full.agentId + "' class='ui primary basic button' >审核</button>"
-                        operation += verification_button;
-                    }
-                    $("#" + full.agentId).on('click', function () {
-                        window.location.href = "${path.concat('/agent/check/')}" + full.agentId;
-                    })
-                    #*
-                    var limit_button = "<div class = 'btn-group'><button type='button' class='btn btn-warning btn-group-sm'>禁用</button>&nbsp;&nbsp;</div>"
-                    operation += limit_button;
-                    *#
+                    var url = "${path.concat('/cashback/config/list/goods/')}" + full.goodsId;
+                    var button = "<button  class='ui positive basic button' id='" + full.goodsId + "'>返现配置列表</button>&nbsp;"
+                    operation += button;
+                    $("#" + full.goodsId).on('click', function () {
+                        window.location.href=url;
+                    });
+
                     return operation;
                 }
                 }
@@ -98,7 +83,7 @@
                 "info": "从 _START_ 到 _END_, 共 _TOTAL_ 条数据",
                 "infoEmpty": "暂无数据",
                 "infoFiltered": "数据表中共 _MAX_ 条记录)",
-                "zeroRecords": "当前没有需要审核的代理",
+                "zeroRecords": "没有商品可供配置",
                 "search": "搜索:",
                 "paginate": {
                     "first": "首页",
