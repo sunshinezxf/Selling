@@ -86,6 +86,10 @@
             AND (date_format(create_time, '%Y-%m-%d') &gt;= #{start} AND date_format(create_time, '%Y-%m-%d') &lt;=
             #{end})
         </if>
+        <if test="search !=null and search != ''">
+           AND (create_time LIKE BINARY #{search} OR current_coffer LIKE BINARY #{search} OR withdraw_amount LIKE BINARY
+            #{search} OR agent_id IN (select agent_id from agent where agent_name LIKE BINARY #{search}))
+        </if> 
         <if test="rule != null">
             ORDER BY ${rule}
         </if>
