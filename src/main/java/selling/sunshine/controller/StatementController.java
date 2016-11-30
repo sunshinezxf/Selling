@@ -1,10 +1,12 @@
 package selling.sunshine.controller;
 
 import java.io.IOException;
+
 import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
+
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -142,4 +144,5 @@ public class StatementController {
         os.close();
         return null;
 	}
+
 }
