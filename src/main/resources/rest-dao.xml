@@ -109,4 +109,8 @@
     <bean id="contributionFactorDao" class="selling.sunshine.dao.impl.ContributionFactorDaoImpl">
         <property name="sqlSession" ref="sqlSession"></property>
     </bean>
+    
+    <bean id="statementDao" class="selling.sunshine.dao.impl.StatementDaoImpl">
+        <property name="sqlSession" ref="sqlSession"></property>
+    </bean>
 </beans>

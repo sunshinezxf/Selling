@@ -56,4 +56,7 @@
     <bean id="agentKPIService" class="selling.sunshine.service.impl.AgentKPIServiceImpl"></bean>
     
     <bean id="contributionFactorService" class="selling.sunshine.service.impl.ContributionFactorServiceImpl"></bean>
+    
+    <bean id="statementService" class="selling.sunshine.service.impl.StatementServiceImpl"></bean>
+    
 </beans>
