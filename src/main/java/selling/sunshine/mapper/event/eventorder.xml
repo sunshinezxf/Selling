@@ -60,6 +60,9 @@
         <if test="orderId != null and orderId != ''">
             AND event_order_id = #{orderId}
         </if>
+        <if test="applicationId != null and applicationId != ''">
+            AND application_id = #{applicationId}
+        </if>
         <if test="doneeName != null and doneeName != ''">
         	AND donee_name = #{doneeName}
         </if>

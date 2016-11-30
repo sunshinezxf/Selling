@@ -78,6 +78,12 @@
         <if test="status != null">
         	AND status = #{status}
         </if>
+        <if test="statusList != null and statusList != ''">
+            AND order_item_status IN
+            <foreach collection="statusList" item="mode" index="index" open="(" close=")" separator=",">
+                #{mode}
+            </foreach>
+        </if>
         <if test="search !=null and search != ''">
             AND (application_id LIKE #{search}  OR donee_name LIKE
             #{search} OR donee_address LIKE #{search} OR donee_phone LIKE #{search}
