@@ -54,8 +54,8 @@
     			default:
     		}
   		
-  			var	timeString = (new Date($(val).text())).format("yyyy MM dd");
-    		var time = timeString.split(" ");
+  			var	timeString = $(val).text().split(" ");
+    		var time = timeString[0].split("-");
     		$(val).html(time[0] + "年" + parseInt(time[1]) + "月" + time[2] + "日<span style='color:#888;'>" + typeString + "</span>");
     		
   		});

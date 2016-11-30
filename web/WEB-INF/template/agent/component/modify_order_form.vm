@@ -298,7 +298,7 @@
         $("#delete_dialog").fadeIn();
     });
     $("#return_order_btn").click(function () {
-    	location.href=history.go(-1);
+    	history.go(-1);
     });
     $("#delete_dialog").find(".weui_btn_dialog.default").click(function () {
         $("#delete_dialog").hide();
