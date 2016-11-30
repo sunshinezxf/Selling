@@ -1,6 +1,8 @@
 package selling.sunshine.controller;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,6 +26,8 @@ public class StatementController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/downloadGiftExcel")
     public String downloadGiftExcel(HttpServletRequest request, HttpServletResponse response) throws IOException, RowsExceededException, WriteException {
+    	Map<String, Object> condition = new HashMap<String, Object>();
+    	
     	return null;
     }
 }
