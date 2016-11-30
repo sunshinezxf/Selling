@@ -26,4 +26,9 @@ public class StatementController {
     public String downloadGiftExcel(HttpServletRequest request, HttpServletResponse response) throws IOException, RowsExceededException, WriteException {
     	return null;
     }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/downloadEventExcel")
+    public String downloadEventExcel(HttpServletRequest request, HttpServletResponse response) throws IOException, RowsExceededException, WriteException {
+    	return null;
+    }
 }
