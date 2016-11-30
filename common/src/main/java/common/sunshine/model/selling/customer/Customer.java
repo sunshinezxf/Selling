@@ -73,5 +73,24 @@ public class Customer extends Entity {
         this.address = address;
     }
 
+	@Override
+	public int hashCode() {
+		return customerId.hashCode();
+	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if(this == obj){
+			return true;
+		}
+		if(obj == null){
+			return false;
+		}
+		if(obj instanceof Customer){
+			return this.customerId.equals(((Customer)obj).getCustomerId());
+		}
+		return false;
+	}
+
+    
 }

@@ -6,6 +6,7 @@ import common.sunshine.model.selling.customer.CustomerPhone;
 import common.sunshine.model.selling.order.CustomerOrder;
 import common.sunshine.model.selling.order.Order;
 import common.sunshine.model.selling.order.OrderItem;
+import common.sunshine.model.selling.order.support.OrderType;
 import common.sunshine.model.selling.user.User;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -309,14 +310,16 @@ public class CustomerController {
     	if(fetchOrderItemResponse.getResponseCode() == ResponseCode.RESPONSE_OK){
     		//分商品统计购买数量
     		for(OrderItem orderItem : (List<OrderItem>)fetchOrderItemResponse.getData()){
-    			if(goodsMap.containsKey(orderItem.getGoods().getGoodsId())){
-    				Object[] goodsInfo = goodsMap.get(orderItem.getGoods().getGoodsId());
-    				goodsInfo[1] = (Integer)goodsInfo[1] + orderItem.getGoodsQuantity();
-    			} else {
-    				Object[] goodsInfo = new Object[2];
-    				goodsInfo[0] = orderItem.getGoods().getName();
-    				goodsInfo[1] = orderItem.getGoodsQuantity();
-    				goodsMap.put(orderItem.getGoods().getGoodsId(), goodsInfo);
+    			if(orderItem.getOrder().getType() != OrderType.GIFT){
+	    			if(goodsMap.containsKey(orderItem.getGoods().getGoodsId())){
+	    				Object[] goodsInfo = goodsMap.get(orderItem.getGoods().getGoodsId());
+	    				goodsInfo[1] = (Integer)goodsInfo[1] + orderItem.getGoodsQuantity();
+	    			} else {
+	    				Object[] goodsInfo = new Object[2];
+	    				goodsInfo[0] = orderItem.getGoods().getName();
+	    				goodsInfo[1] = orderItem.getGoodsQuantity();
+	    				goodsMap.put(orderItem.getGoods().getGoodsId(), goodsInfo);
+	    			}
     			}
     		}
     		
