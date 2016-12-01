@@ -49,7 +49,6 @@ import selling.sunshine.model.ShipConfig;
 import selling.sunshine.model.cashback.CashBackRecord;
 import selling.sunshine.model.gift.GiftApply;
 import selling.sunshine.model.gift.GiftConfig;
-import selling.sunshine.model.sum.TotalQuantityAll;
 import selling.sunshine.model.sum.Volume;
 import selling.sunshine.model.sum.VolumeTotal;
 import selling.sunshine.service.*;
@@ -125,7 +124,7 @@ public class AgentController {
 
     @Autowired
     private AgentVitalityService agentVitalityService;
-    
+
     @Autowired
     private AgentKPIService agentKPIService;
 
@@ -699,18 +698,18 @@ public class AgentController {
         } else {
             view.addObject("giftConfigs", (List<GiftConfig>) fetchGiftConfigResponse.getData());
         }
-        
+
         condition.clear();
         condition.put("agentId", user.getAgent().getAgentId());
         List<SortRule> orderBy = new ArrayList<>();
         orderBy.add(new SortRule("create_time", "desc"));
         condition.put("sort", orderBy);
         ResultData fetchApplyResponse = agentService.fetchGiftApply(condition);
-        if(fetchApplyResponse.getResponseCode() == ResponseCode.RESPONSE_OK){
-        	GiftApply apply = ((List<GiftApply>)fetchApplyResponse.getData()).get(0);
-        	view.addObject("lastApply", apply);
+        if (fetchApplyResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            GiftApply apply = ((List<GiftApply>) fetchApplyResponse.getData()).get(0);
+            view.addObject("lastApply", apply);
         }
-        
+
         view.setViewName("/agent/etc/gift");
         return view;
     }
@@ -820,7 +819,7 @@ public class AgentController {
                 WechatConfig.oauthWechat(view, "/agent/prompt");
                 view.setViewName("/agent/prompt");
                 //构建agentKPI信息
-                AgentKPI agentKPI=new AgentKPI("", agent.getAgentId(),agent.getName(), 0, 0, 0);
+                AgentKPI agentKPI = new AgentKPI("", agent.getAgentId(), agent.getName(), 0, 0, 0);
                 agentKPI.setBlockFlag(true);
                 agentKPIService.createAgentKPI(agentKPI);
                 return view;
@@ -1242,7 +1241,7 @@ public class AgentController {
             view.setViewName("/agent/login");
             return view;
         }
-        
+
         //以下是新版本代理商的信息
         Map<String, Object> condition = new HashMap<String, Object>();
         condition.put("agentId", user.getAgent().getAgentId());
@@ -1255,8 +1254,8 @@ public class AgentController {
         status.add(6);
         condition.put("statusList", status);
         ResultData fetchOrderItemSumResponse = orderService.fetchOrderItemSum(condition);
-        if(fetchOrderItemSumResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR){
-        	Prompt prompt = new Prompt(PromptCode.WARNING, "提示信息", "未找到详细信息", "/agent/manage/2");
+        if (fetchOrderItemSumResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
+            Prompt prompt = new Prompt(PromptCode.WARNING, "提示信息", "未找到详细信息", "/agent/manage/2");
             view.addObject("prompt", prompt);
             WechatConfig.oauthWechat(view, "/agent/prompt");
             view.setViewName("/agent/prompt");
@@ -1272,86 +1271,86 @@ public class AgentController {
         List<OrderSumOverview> dayList = new ArrayList<OrderSumOverview>();
         List<OrderSumOverview> monthList = new ArrayList<OrderSumOverview>();
         List<OrderSumOverview> waitList = new ArrayList<OrderSumOverview>();
-        for(OrderItemSum orderItemSum : orderItemSumList){
-        	boolean find = false;
-        	if(orderItemSum.getOrderType() != OrderType.GIFT){
-        		//统计累计销售
-        		for(OrderSumOverview orderSumOverview : buyList){
-        			if(orderSumOverview.getGoods().getGoodsId().equals(orderItemSum.getGoods().getGoodsId())){
-        				find = true;
-        				orderSumOverview.setQuantity(orderSumOverview.getQuantity() + orderItemSum.getGoodsQuantity());
-        				orderSumOverview.setTotalPrice(orderSumOverview.getTotalPrice() + orderItemSum.getOrderItemPrice());
-        				break;
-        			}
-        		}
-        		if(!find){
-        			OrderSumOverview orderSumOverview = new OrderSumOverview();
-        			orderSumOverview.setGoods(orderItemSum.getGoods());
-        			orderSumOverview.setQuantity(orderItemSum.getGoodsQuantity());
-        			orderSumOverview.setTotalPrice(orderItemSum.getOrderItemPrice());
-        			buyList.add(orderSumOverview);
-        		}
-        		//统计本月销售
-        		find = false;
-        		String orderTime = orderItemSum.getCreateAt().toString();
-        		if(orderTime.startsWith(month)){
-        			for(OrderSumOverview orderSumOverview : monthList){
-            			if(orderSumOverview.getGoods().getGoodsId().equals(orderItemSum.getGoods().getGoodsId())){
-            				find = true;
-            				orderSumOverview.setQuantity(orderSumOverview.getQuantity() + orderItemSum.getGoodsQuantity());
-            				orderSumOverview.setTotalPrice(orderSumOverview.getTotalPrice() + orderItemSum.getOrderItemPrice());
-            				break;
-            			}
-            		}
-            		if(!find){
-            			OrderSumOverview orderSumOverview = new OrderSumOverview();
-            			orderSumOverview.setGoods(orderItemSum.getGoods());
-            			orderSumOverview.setQuantity(orderItemSum.getGoodsQuantity());
-            			orderSumOverview.setTotalPrice(orderItemSum.getOrderItemPrice());
-            			monthList.add(orderSumOverview);
-            		}
-        		}
-        		//统计今日销售
-        		find = false;
-        		if(orderTime.startsWith(day)){
-        			for(OrderSumOverview orderSumOverview : dayList){
-            			if(orderSumOverview.getGoods().getGoodsId().equals(orderItemSum.getGoods().getGoodsId())){
-            				find = true;
-            				orderSumOverview.setQuantity(orderSumOverview.getQuantity() + orderItemSum.getGoodsQuantity());
-            				orderSumOverview.setTotalPrice(orderSumOverview.getTotalPrice() + orderItemSum.getOrderItemPrice());
-            				break;
-            			}
-            		}
-            		if(!find){
-            			OrderSumOverview orderSumOverview = new OrderSumOverview();
-            			orderSumOverview.setGoods(orderItemSum.getGoods());
-            			orderSumOverview.setQuantity(orderItemSum.getGoodsQuantity());
-            			orderSumOverview.setTotalPrice(orderItemSum.getOrderItemPrice());
-            			dayList.add(orderSumOverview);
-            		}
-        		}
-        	}
-        	//统计等待发货
-        	find = false;
-        	if(orderItemSum.getStatus() == OrderItemStatus.PAYED){
-        		for(OrderSumOverview orderSumOverview : waitList){
-        			if(orderSumOverview.getGoods().getGoodsId().equals(orderItemSum.getGoods().getGoodsId())){
-        				find = true;
-        				orderSumOverview.setQuantity(orderSumOverview.getQuantity() + orderItemSum.getGoodsQuantity());
-        				orderSumOverview.setTotalPrice(orderSumOverview.getTotalPrice() + orderItemSum.getOrderItemPrice());
-        				break;
-        			}
-        		}
-        		if(!find){
-        			OrderSumOverview orderSumOverview = new OrderSumOverview();
-        			orderSumOverview.setGoods(orderItemSum.getGoods());
-        			orderSumOverview.setQuantity(orderItemSum.getGoodsQuantity());
-        			orderSumOverview.setTotalPrice(orderItemSum.getOrderItemPrice());
-        			waitList.add(orderSumOverview);
-        		}
-        	}
+        for (OrderItemSum orderItemSum : orderItemSumList) {
+            boolean find = false;
+            if (orderItemSum.getOrderType() != OrderType.GIFT) {
+                //统计累计销售
+                for (OrderSumOverview orderSumOverview : buyList) {
+                    if (orderSumOverview.getGoods().getGoodsId().equals(orderItemSum.getGoods().getGoodsId())) {
+                        find = true;
+                        orderSumOverview.setQuantity(orderSumOverview.getQuantity() + orderItemSum.getGoodsQuantity());
+                        orderSumOverview.setTotalPrice(orderSumOverview.getTotalPrice() + orderItemSum.getOrderItemPrice());
+                        break;
+                    }
+                }
+                if (!find) {
+                    OrderSumOverview orderSumOverview = new OrderSumOverview();
+                    orderSumOverview.setGoods(orderItemSum.getGoods());
+                    orderSumOverview.setQuantity(orderItemSum.getGoodsQuantity());
+                    orderSumOverview.setTotalPrice(orderItemSum.getOrderItemPrice());
+                    buyList.add(orderSumOverview);
+                }
+                //统计本月销售
+                find = false;
+                String orderTime = orderItemSum.getCreateAt().toString();
+                if (orderTime.startsWith(month)) {
+                    for (OrderSumOverview orderSumOverview : monthList) {
+                        if (orderSumOverview.getGoods().getGoodsId().equals(orderItemSum.getGoods().getGoodsId())) {
+                            find = true;
+                            orderSumOverview.setQuantity(orderSumOverview.getQuantity() + orderItemSum.getGoodsQuantity());
+                            orderSumOverview.setTotalPrice(orderSumOverview.getTotalPrice() + orderItemSum.getOrderItemPrice());
+                            break;
+                        }
+                    }
+                    if (!find) {
+                        OrderSumOverview orderSumOverview = new OrderSumOverview();
+                        orderSumOverview.setGoods(orderItemSum.getGoods());
+                        orderSumOverview.setQuantity(orderItemSum.getGoodsQuantity());
+                        orderSumOverview.setTotalPrice(orderItemSum.getOrderItemPrice());
+                        monthList.add(orderSumOverview);
+                    }
+                }
+                //统计今日销售
+                find = false;
+                if (orderTime.startsWith(day)) {
+                    for (OrderSumOverview orderSumOverview : dayList) {
+                        if (orderSumOverview.getGoods().getGoodsId().equals(orderItemSum.getGoods().getGoodsId())) {
+                            find = true;
+                            orderSumOverview.setQuantity(orderSumOverview.getQuantity() + orderItemSum.getGoodsQuantity());
+                            orderSumOverview.setTotalPrice(orderSumOverview.getTotalPrice() + orderItemSum.getOrderItemPrice());
+                            break;
+                        }
+                    }
+                    if (!find) {
+                        OrderSumOverview orderSumOverview = new OrderSumOverview();
+                        orderSumOverview.setGoods(orderItemSum.getGoods());
+                        orderSumOverview.setQuantity(orderItemSum.getGoodsQuantity());
+                        orderSumOverview.setTotalPrice(orderItemSum.getOrderItemPrice());
+                        dayList.add(orderSumOverview);
+                    }
+                }
+            }
+            //统计等待发货
+            find = false;
+            if (orderItemSum.getStatus() == OrderItemStatus.PAYED) {
+                for (OrderSumOverview orderSumOverview : waitList) {
+                    if (orderSumOverview.getGoods().getGoodsId().equals(orderItemSum.getGoods().getGoodsId())) {
+                        find = true;
+                        orderSumOverview.setQuantity(orderSumOverview.getQuantity() + orderItemSum.getGoodsQuantity());
+                        orderSumOverview.setTotalPrice(orderSumOverview.getTotalPrice() + orderItemSum.getOrderItemPrice());
+                        break;
+                    }
+                }
+                if (!find) {
+                    OrderSumOverview orderSumOverview = new OrderSumOverview();
+                    orderSumOverview.setGoods(orderItemSum.getGoods());
+                    orderSumOverview.setQuantity(orderItemSum.getGoodsQuantity());
+                    orderSumOverview.setTotalPrice(orderItemSum.getOrderItemPrice());
+                    waitList.add(orderSumOverview);
+                }
+            }
         }
-        
+
         view.addObject("dayList", dayList);
         view.addObject("monthList", monthList);
         view.addObject("buyList", buyList);
@@ -1384,47 +1383,47 @@ public class AgentController {
         view.setViewName("/agent/order/overview");
         return view;
     }
-    
+
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/order/listnotpay/{type}")
-    public ResultData viewOrderListNotPay(@PathVariable("type") String type){
-    	 Subject subject = SecurityUtils.getSubject();
-         User user = (User) subject.getPrincipal();
-         ResultData result = new ResultData();
-         if (user == null) {
-             result.setResponseCode(ResponseCode.RESPONSE_ERROR);
-             result.setDescription("您需要重新登录");
-             return result;
-         }
-         List<Integer> status = new ArrayList<>();
-         switch (Integer.parseInt(type)) {
-             case 0:
-                 status.add(0);
-                 break;
-             case 1:
-                 status.add(1);
-                 break;
-             default:
-            	 status.add(0);
-         }
-         List<SortRule> orderBy = new ArrayList<>();
-         orderBy.add(new SortRule("create_time", "desc"));
-         Map<String, Object> condition = new HashMap<>();
-         condition.put("agentId", user.getAgent().getAgentId());
-         condition.put("status", status);
-         condition.put("sort", orderBy);
-         condition.put("blockFlag", false);
-         ResultData fetchResponse = orderService.fetchOrder(condition);
-         List<Order> orderList = (List<Order>) fetchResponse.getData();
-         if (fetchResponse.getResponseCode() != ResponseCode.RESPONSE_ERROR) {
-             result.setData(orderList);
-         } else {
-             result.setResponseCode(fetchResponse.getResponseCode());
-             result.setDescription(fetchResponse.getDescription());
-         }
-         return result;
+    public ResultData viewOrderListNotPay(@PathVariable("type") String type) {
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        ResultData result = new ResultData();
+        if (user == null) {
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription("您需要重新登录");
+            return result;
+        }
+        List<Integer> status = new ArrayList<>();
+        switch (Integer.parseInt(type)) {
+            case 0:
+                status.add(0);
+                break;
+            case 1:
+                status.add(1);
+                break;
+            default:
+                status.add(0);
+        }
+        List<SortRule> orderBy = new ArrayList<>();
+        orderBy.add(new SortRule("create_time", "desc"));
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("agentId", user.getAgent().getAgentId());
+        condition.put("status", status);
+        condition.put("sort", orderBy);
+        condition.put("blockFlag", false);
+        ResultData fetchResponse = orderService.fetchOrder(condition);
+        List<Order> orderList = (List<Order>) fetchResponse.getData();
+        if (fetchResponse.getResponseCode() != ResponseCode.RESPONSE_ERROR) {
+            result.setData(orderList);
+        } else {
+            result.setResponseCode(fetchResponse.getResponseCode());
+            result.setDescription(fetchResponse.getDescription());
+        }
+        return result;
     }
-    
+
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/order/listpayed/{type}/{offset}/{limit}")
     public ResultData viewOrderListPayed(@PathVariable("type") String type, @PathVariable("offset") int offset, @PathVariable("limit") int limit) {
@@ -1445,13 +1444,13 @@ public class AgentController {
                 status.add(2);
                 break;
             case 4:
-            	status.add(3);
-            	status.add(4);
-            	status.add(5);
-            	status.add(6);
-            	break;
+                status.add(3);
+                status.add(4);
+                status.add(5);
+                status.add(6);
+                break;
             default:
-            	status.add(1);
+                status.add(1);
         }
         List<SortRule> orderBy = new ArrayList<>();
         orderBy.add(new SortRule("create_time", "desc"));
@@ -1475,6 +1474,7 @@ public class AgentController {
 
     /**
      * 代理商查看Order的方法，现用于查看未处理的订单
+     *
      * @param orderId
      * @return
      */
@@ -1533,9 +1533,10 @@ public class AgentController {
         view.setViewName("/agent/order/modify");
         return view;
     }
-    
+
     /**
      * 代理商查看OrderItem和CustomerOrder的方法，现用于查看已经付款的订单
+     *
      * @param orderId
      * @return
      */
@@ -1552,7 +1553,7 @@ public class AgentController {
         Map<String, Object> condition = new HashMap<>();
         Order order = null;
         if (orderId.startsWith("ORI")) {
-        	condition.put("orderItemId", orderId);
+            condition.put("orderItemId", orderId);
             ResultData fetchOrderItemResponse = orderService.fetchOrderItem(condition);
             if (fetchOrderItemResponse.getResponseCode() != ResponseCode.RESPONSE_OK || ((List<OrderItem>) fetchOrderItemResponse.getData()).isEmpty()) {
                 Prompt prompt = new Prompt(PromptCode.WARNING, "提示信息", "未找到该订单", "/agent/manage/2");
@@ -1562,18 +1563,18 @@ public class AgentController {
                 return view;
             }
             List<OrderItem> orderItemList = ((List<OrderItem>) fetchOrderItemResponse.getData());
-            OrderItem orderItem  = orderItemList.get(0);
+            OrderItem orderItem = orderItemList.get(0);
             condition.clear();
             condition.put("customerId", orderItem.getCustomer().getCustomerId());
             ResultData fetchCustomerResponse = customerService.fetchCustomer(condition);
-            if(fetchCustomerResponse.getResponseCode() == ResponseCode.RESPONSE_OK){
-            	orderItem.setCustomer(((List<Customer>)fetchCustomerResponse.getData()).get(0));
-            } else{
-            	Customer customer = new Customer();
-            	CustomerPhone customerPhone = new CustomerPhone();
-            	customerPhone.setPhone("未知");
-            	customer.setPhone(customerPhone);
-            	orderItem.setCustomer(customer);
+            if (fetchCustomerResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                orderItem.setCustomer(((List<Customer>) fetchCustomerResponse.getData()).get(0));
+            } else {
+                Customer customer = new Customer();
+                CustomerPhone customerPhone = new CustomerPhone();
+                customerPhone.setPhone("未知");
+                customer.setPhone(customerPhone);
+                orderItem.setCustomer(customer);
             }
             order = new Order();
             order.setAgent(user.getAgent());
@@ -1996,12 +1997,12 @@ public class AgentController {
             //授权的同时更改agentKPI表的内容
             condition.clear();
             condition.put("agentId", agentId);
-            fetchResponse=agentKPIService.fetchAgentKPI(condition);
+            fetchResponse = agentKPIService.fetchAgentKPI(condition);
             if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-				AgentKPI agentKPI=((List<AgentKPI>)fetchResponse.getData()).get(0);
-				agentKPI.setBlockFlag(false);
-				agentKPIService.updateAgentKPI(agentKPI);
-			}
+                AgentKPI agentKPI = ((List<AgentKPI>) fetchResponse.getData()).get(0);
+                agentKPI.setBlockFlag(false);
+                agentKPIService.updateAgentKPI(agentKPI);
+            }
             Subject subject = SecurityUtils.getSubject();
             User user = (User) subject.getPrincipal();
             if (user == null) {
@@ -2040,12 +2041,12 @@ public class AgentController {
             //授权不通过的同时更改agentKPI表的内容
             condition.clear();
             condition.put("agentId", agentId);
-            fetchResponse=agentKPIService.fetchAgentKPI(condition);
+            fetchResponse = agentKPIService.fetchAgentKPI(condition);
             if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-				AgentKPI agentKPI=((List<AgentKPI>)fetchResponse.getData()).get(0);
-				agentKPI.setBlockFlag(true);
-				agentKPIService.updateAgentKPI(agentKPI);
-			}
+                AgentKPI agentKPI = ((List<AgentKPI>) fetchResponse.getData()).get(0);
+                agentKPI.setBlockFlag(true);
+                agentKPIService.updateAgentKPI(agentKPI);
+            }
             Subject subject = SecurityUtils.getSubject();
             User user = (User) subject.getPrincipal();
             if (user == null) {
@@ -2088,12 +2089,12 @@ public class AgentController {
             //配置上下级代理商时对应的代理商的agentKPI表进行修改
             condition.clear();
             condition.put("agentId", upperAgentId);
-            fetchResponse=agentKPIService.fetchAgentKPI(condition);
-            if (fetchResponse.getResponseCode()==ResponseCode.RESPONSE_OK) {
-            	 AgentKPI agentKPI=((List<AgentKPI>)fetchResponse.getData()).get(0);
-            	 agentKPI.setDirectAgentQuantity(agentKPI.getDirectAgentQuantity()+1);
-            	 agentKPIService.updateAgentKPI(agentKPI);
-    		}
+            fetchResponse = agentKPIService.fetchAgentKPI(condition);
+            if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                AgentKPI agentKPI = ((List<AgentKPI>) fetchResponse.getData()).get(0);
+                agentKPI.setDirectAgentQuantity(agentKPI.getDirectAgentQuantity() + 1);
+                agentKPIService.updateAgentKPI(agentKPI);
+            }
             Subject subject = SecurityUtils.getSubject();
             User user = (User) subject.getPrincipal();
             if (user == null) {
@@ -2161,15 +2162,15 @@ public class AgentController {
             Agent agent = ((List<Agent>) agentService.fetchAgent(condition).getData()).get(0);
             //避免重复配置相同的上级代理商
             if (agent.getUpperAgent().getAgentId().equals(upperAgentId)) {
-            	 return resultData;
-			}
+                return resultData;
+            }
             condition.put("agentId", upperAgentId);
 
             fetchResponse = agentService.fetchAgent(condition);
             if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
                 Agent upperAgent = ((List<Agent>) agentService.fetchAgent(condition).getData()).get(0);
                 while (upperAgent.getUpperAgent() != null) {
-                	//上下级关系不能出现闭环
+                    //上下级关系不能出现闭环
                     if (upperAgent.getUpperAgent().getAgentId().equals(agentId)) {
                         resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
                         resultData.setDescription("recursion");
@@ -2195,12 +2196,12 @@ public class AgentController {
             //配置新的上下级代理关系要对对应的代理商的agentKPI表进行修改
             condition.clear();
             condition.put("agentId", upperAgentId);
-            fetchResponse=agentKPIService.fetchAgentKPI(condition);
-            if (fetchResponse.getResponseCode()==ResponseCode.RESPONSE_OK) {
-            	 AgentKPI agentKPI=((List<AgentKPI>)fetchResponse).get(0);
-            	 agentKPI.setDirectAgentQuantity(agentKPI.getDirectAgentQuantity()+1);
-            	 agentKPIService.updateAgentKPI(agentKPI);
-    		}
+            fetchResponse = agentKPIService.fetchAgentKPI(condition);
+            if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                AgentKPI agentKPI = ((List<AgentKPI>) fetchResponse).get(0);
+                agentKPI.setDirectAgentQuantity(agentKPI.getDirectAgentQuantity() + 1);
+                agentKPIService.updateAgentKPI(agentKPI);
+            }
             Subject subject = SecurityUtils.getSubject();
             User user = (User) subject.getPrincipal();
             if (user == null) {
@@ -2233,9 +2234,9 @@ public class AgentController {
         condition.put("agentId", agentId);
         condition.put("granted", true);
         condition.put("blockFlag", false);
-        ResultData fetchResponse=agentService.fetchAgent(condition);
+        ResultData fetchResponse = agentService.fetchAgent(condition);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-        	agent = ((List<Agent>) agentService.fetchAgent(condition).getData()).get(0);
+            agent = ((List<Agent>) agentService.fetchAgent(condition).getData()).get(0);
             agent.setAgentId(agentId);
             agent.setGranted(true);
             agent.setBlockFlag(true);
@@ -2247,14 +2248,14 @@ public class AgentController {
             //禁止的同时更改agentKPI表的内容
             condition.clear();
             condition.put("agentId", agentId);
-            fetchResponse=agentKPIService.fetchAgentKPI(condition);
+            fetchResponse = agentKPIService.fetchAgentKPI(condition);
             if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-    			AgentKPI agentKPI=((List<AgentKPI>)fetchResponse.getData()).get(0);
-    			agentKPI.setBlockFlag(true);
-    			agentKPIService.updateAgentKPI(agentKPI);
-    		}
-		}
-            
+                AgentKPI agentKPI = ((List<AgentKPI>) fetchResponse.getData()).get(0);
+                agentKPI.setBlockFlag(true);
+                agentKPIService.updateAgentKPI(agentKPI);
+            }
+        }
+
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         if (user == null) {
@@ -2692,11 +2693,11 @@ public class AgentController {
         view.setViewName("redirect:/agent/vitality");
         return view;
     }
-    
+
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/kpi")
-    public DataTablePage<AgentKPI> agentKPI(DataTableParam param){
-    	DataTablePage<AgentKPI> result = new DataTablePage<>(param);
+    public DataTablePage<AgentKPI> agentKPI(DataTableParam param) {
+        DataTablePage<AgentKPI> result = new DataTablePage<>(param);
         if (StringUtils.isEmpty(param)) {
             return result;
         }
@@ -2708,13 +2709,72 @@ public class AgentController {
         }
         return result;
     }
-    
+
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/kpi")
-    public ModelAndView agentKPI(){
-    	ModelAndView view=new ModelAndView();
-    	view.setViewName("/backend/agent/kpi");
-    	return view;
+    public ModelAndView agentKPI() {
+        ModelAndView view = new ModelAndView();
+        view.setViewName("/backend/agent/kpi");
+        return view;
+    }
+
+    /**
+     * 获取代理商的概览信息，包括当前未审核代理商人数，新注册代理商人数，本月已购买代理商人数，当前代理商总人数四项数据
+     *
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.GET, value = "/summary")
+    public ResultData summary() {
+        ResultData result = new ResultData();
+        JSONObject data = new JSONObject();
+        Map<String, Object> condition = new HashMap<>();
+        //获取当前为审核的代理商的人数
+        condition.put("granted", false);
+        condition.put("blockFlag", false);
+        ResultData response = agentService.fetchAgent(condition);
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            List<Agent> list = (List<Agent>) response.getData();
+            data.put("unchecked", list.size());
+        } else {
+            data.put("unchecked", 0);
+        }
+        //获取当月注册的代理商的人数
+        condition.clear();
+        condition.put("granted", true);
+        condition.put("monthly", true);
+        condition.put("blockFlag", false);
+        response = agentService.fetchAgent(condition);
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            List<Agent> list = (List<Agent>) response.getData();
+            data.put("newreg", list.size());
+        } else {
+            data.put("newreg", 0);
+        }
+        //获取本月已购买的代理商的人数
+        condition.clear();
+        condition.put("monthly", true);
+        condition.put("purchase", true);
+        response = agentService.fetchAgent(condition);
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            List<Agent> list = (List<Agent>) response.getData();
+            data.put("purchase", list.size());
+        } else {
+            data.put("purchase", 0);
+        }
+        //获取当前审核通过的代理商总人数
+        condition.clear();
+        condition.put("granted", true);
+        condition.put("blockFlag", false);
+        response = agentService.fetchAgent(condition);
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            List<Agent> list = (List<Agent>) response.getData();
+            data.put("granted", list.size());
+        } else {
+            data.put("granted", 0);
+        }
+        result.setData(data);
+        return result;
     }
 
 }

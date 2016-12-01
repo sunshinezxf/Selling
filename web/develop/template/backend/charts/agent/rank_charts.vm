@@ -1,4 +1,4 @@
-<div id="agent_rank_charts" class="row" style="height: 400px;"></div>
+<div id="agent_rank_charts" class="row"></div>
 <script>
     var agent_rank_url = "${path.concat('/statistic/agent/rank')}";
 
@@ -6,11 +6,10 @@
         if (result.responseCode != "RESPONSE_ERROR") {
             var data = result.data;
 
-            var n_column = "four";
+            var n_column = "eight";
             if (data.length == 1) {
                 n_column = "sixteen";
-            }
-            if (data.length == 2) {
+            } else {
                 n_column = "eight";
             }
 

@@ -2,10 +2,12 @@
     <div class="row">
         <h1 class="ui header">
             <i class="home icon"></i>
+
             <div class="content">代理概览
                 <div class="sub header">
                     <div class="ui breadcrumb">
                         <a class="section">代理管理</a>
+
                         <div class="divider">/</div>
                         <a class="active section">代理概览</a>
                     </div>
@@ -19,6 +21,7 @@
                 <h3 class="ui header">
                     当前未审核代理商
                 </h3>
+
                 <div class="ui huge horizontal statistic">
                     <div class="value">10</div>
                     <div class="label">人</div>
@@ -30,6 +33,7 @@
                 <h3 class="ui header">
                     本月新注册代理商
                 </h3>
+
                 <div class="ui huge horizontal statistic">
                     <div class="value">5</div>
                     <div class="label">人</div>
@@ -41,6 +45,7 @@
                 <h3 class="ui header">
                     本月已购买代理商
                 </h3>
+
                 <div class="ui huge horizontal statistic">
                     <div class="value">20</div>
                     <div class="label">人</div>
@@ -52,11 +57,17 @@
                 <h3 class="ui header">
                     当前代理商总人数
                 </h3>
+
                 <div class="ui huge horizontal statistic">
                     <div class="value">100</div>
                     <div class="label">人</div>
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="column">
+            #parse("/backend/agent/component/agent_overview_table.vm")
         </div>
     </div>
 </div>

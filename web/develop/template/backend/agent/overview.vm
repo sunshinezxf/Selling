@@ -4,6 +4,7 @@
 <head>
     #parse("/backend/initialization/init.vm")
     #parse("/backend/initialization/init_agent_overview.vm")
+    #parse("/backend/common/datatable.lib.vm")
     <title>代理概览</title>
 </head>
 <body id="dashboard" class="started pushable" ontouchstart>
