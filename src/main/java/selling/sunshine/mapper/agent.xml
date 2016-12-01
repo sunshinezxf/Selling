@@ -87,7 +87,7 @@
             AND agent_phone = #{phone}
         </if>
         <if test="card != null and card != ''">
-        	AND agent_card = #{card}
+            AND agent_card = #{card}
         </if>
         <if test="agentRefund != null">
             AND agent_refund = #{agentRefund}
@@ -100,6 +100,14 @@
         </if>
         <if test="blockFlag != null">
             AND block_flag = #{blockFlag}
+        </if>
+        <if test="monthly != null">
+            AND date_format(create_time,'%Y-%m')=date_format(now(),'%Y-%m'))
+        </if>
+        <if test="purchase != null">
+            AND agent_id IN (
+            SELECT agent_id FROM order_item_sum WHERE order_type IN (0, 2) AND
+            date_format(create_time,'%Y-%m')=date_format(now(),'%Y-%m') AND agent_id IS NOT NULL)
         </if>
         <if test="search !=null and search != ''">
             AND (agent_name LIKE BINARY #{search} OR create_time LIKE BINARY #{search} OR agent_phone LIKE BINARY
