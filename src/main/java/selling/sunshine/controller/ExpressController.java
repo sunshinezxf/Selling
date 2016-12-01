@@ -176,8 +176,21 @@ public class ExpressController {
                         fetchResponse = orderService.fetchOrder(condition);
                         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
                             Order order = ((List<Order>) fetchResponse.getData()).get(0);
-                            order.setStatus(OrderStatus.FULLY_SHIPMENT);
-                            orderService.modifyOrder(order);
+                            List<OrderItem> orderItems=order.getOrderItems();
+                            boolean flag=true;
+                            for (OrderItem item:orderItems) {
+								if (item.getStatus()!=OrderItemStatus.SHIPPED) {
+									flag=false;
+									break;
+								}
+							}
+                            if (flag) {							
+                               order.setStatus(OrderStatus.FULLY_SHIPMENT);
+                               orderService.modifyOrder(order);
+                            } else {
+                                order.setStatus(OrderStatus.PATIAL_SHIPMENT);
+                                orderService.modifyOrder(order);
+                            }
                         }
                     }
 
