@@ -4,6 +4,7 @@
     #parse("/backend/initialization/init.vm")
     #parse("/backend/common/echarts.lib.vm")
     <link rel="stylesheet" href="${path.concat('/material/css/backend/info-box.css')}">
+    <link rel="stylesheet" href="${path.concat('/material/css/backend/charts.css')}">
     <title>首页</title>
 </head>
 <body id="dashboard" class="started pushable" ontouchstart>
