@@ -1,4 +1,7 @@
-<table id="agent_overview_table" class="ui tablet stackable table"></table>
+<div class="ui segment">
+    <label class="ui header">代理排行</label>
+    <table id="agent_overview_table" class="ui tablet stackable table"></table>
+</div>
 <script>
     $(document).ready(function () {
         $("#agent_overview_table").DataTable({
