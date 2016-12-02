@@ -314,8 +314,6 @@ public class StatisticController {
         statusList.add(2);
         statusList.add(3);
         statusList.add(4);
-        statusList.add(5);
-        statusList.add(6);
         condition.put("statusList", statusList);
         List<SortRule> orderBy = new ArrayList<>();
         orderBy.add(new SortRule("goods_id", "desc"));
@@ -339,9 +337,9 @@ public class StatisticController {
             OrderItemSum item = orderItemSumList.get(i);
             if (!goods.getGoodsId().equals(item.getGoods().getGoodsId())) {
                 goodsQuantityMap.put(goods, total_quantity);
-                goods = item.getGoods();
+                //goods = item.getGoods();
                 List<AgentPurchase> agentPurchaseList = new ArrayList<>();
-                goodsMap.put(goods, agentPurchaseList);
+                goodsMap.put(item.getGoods(), agentPurchaseList);
                 total_quantity = 0;
             }
             if (item.getAgent() != null && (!agent.getAgentId().equals(item.getAgent().getAgentId())
@@ -350,6 +348,9 @@ public class StatisticController {
                 goodsMap.get(goods).add(agentPurchase);
                 agent = item.getAgent();
                 quantity = 0;
+                if(!goods.getGoodsId().equals(item.getGoods().getGoodsId())){
+                	goods = item.getGoods();
+                }
             }
             if (item.getAgent() != null) {
                 quantity += item.getGoodsQuantity();
