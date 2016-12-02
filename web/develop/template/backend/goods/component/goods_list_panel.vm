@@ -1,0 +1,19 @@
+<div class="ui stackable padded grid" name="goods_list">
+    <div class="row">
+        <h1 class="ui header">
+            <i class="home icon"></i>
+
+            <div class="content">商品列表
+                <div class="sub header">
+                    <div class="ui breadcrumb">
+                        <a class="section">商品管理</a>
+
+                        <div class="divider">/</div>
+                        <a class="active section">商品列表</a>
+                    </div>
+                </div>
+            </div>
+        </h1>
+    </div>
+    <div class="row"></div>
+</div>

@@ -59,15 +59,15 @@
 				<text>未授权</text>
 			</p>
 		</div>
-		#if(${credit}!="")
+		#if(${credit})
 		<div class="four wide column">
 		    <div class="ui small image">
-              <img src=${path.concat( '')}${credit.frontPath}">
+              <img src="${path}${credit.frontPath}">
             </div>
 		</div>
 		<div class="four wide column">
 		     <div class="ui small image">
-                 <img src=${path.concat( '')}${credit.backPath}>
+                 <img src="${path}${credit.backPath}">
              </div>
 		</div>
 		#else
@@ -145,8 +145,17 @@
 		
 		$("#set_confirm").on('click',function() {
 			$('#set_upperAgent_modal').modal('hide');
-			var url = "${path.concat('/agent/setUpperAgent/')}${agent.agentId}/"+ upperAgentId;
-			window.location.href = url;
+			var url = "${path.concat('/agent/modifyUpperAgent/')}${agent.agentId}/"+ upperAgentId;
+	        $.post(url, function (result) {
+	            if (result.responseCode == "RESPONSE_OK") {
+	            	url="${path.concat('/agent/check/')}${agent.agentId}";
+	    			window.location.href = url;
+	            } else if (result.description == "recursion") {
+	               
+	            } else {
+
+	            }
+	        });
 		});
 		$("#set_cancer").on('click', function() {
 			   $('#set_upperAgent_modal').modal('hide');

@@ -2062,87 +2062,87 @@ public class AgentController {
         return view;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/setUpperAgent/{agentId}/{upperAgentId}")
-    public ModelAndView setUpperAgent(@PathVariable("agentId") String agentId, @PathVariable("upperAgentId") String upperAgentId, HttpServletRequest request) {
-        ModelAndView view = new ModelAndView();
-        if (StringUtils.isEmpty(agentId)) {
-            view.setViewName("redirect:/agent/overview");
-            return view;
-        }
-        if (StringUtils.isEmpty(upperAgentId)) {
-            view.setViewName("redirect:/agent/check/" + agentId);
-            return view;
-        }
-        Map<String, Object> condition = new HashMap<>();
-        condition.put("agentId", agentId);
-        ResultData fetchResponse = agentService.fetchAgent(condition);
-        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            Agent agent = ((List<Agent>) agentService.fetchAgent(condition).getData()).get(0);
-            common.sunshine.model.selling.agent.lite.Agent upperAgent = new common.sunshine.model.selling.agent.lite.Agent();
-            upperAgent.setAgentId(upperAgentId);
-            agent.setUpperAgent(upperAgent);
-            ResultData updateResponse = agentService.updateAgent(agent);
-            if (updateResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
-                view.setViewName("redirect:/agent/check/" + agentId);
-                return view;
-            }
-            //配置上下级代理商时对应的代理商的agentKPI表进行修改
-            condition.clear();
-            condition.put("agentId", upperAgentId);
-            fetchResponse = agentKPIService.fetchAgentKPI(condition);
-            if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-                AgentKPI agentKPI = ((List<AgentKPI>) fetchResponse.getData()).get(0);
-                agentKPI.setDirectAgentQuantity(agentKPI.getDirectAgentQuantity() + 1);
-                agentKPIService.updateAgentKPI(agentKPI);
-            }
-            Subject subject = SecurityUtils.getSubject();
-            User user = (User) subject.getPrincipal();
-            if (user == null) {
-                view.setViewName("redirect:/agent/check/" + agentId);
-                return view;
-            }
-            condition.put("agentId", upperAgentId);
-            fetchResponse = agentService.fetchAgent(condition);
-            Admin admin = user.getAdmin();
-            if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-                Agent agent2 = ((List<Agent>) agentService.fetchAgent(condition).getData()).get(0);
-                BackOperationLog backOperationLog = new BackOperationLog(
-                        admin.getUsername(), toolService.getIP(request), "管理员" + admin.getUsername() + "设置了代理商" + agent.getName() + ",手机：" + agent.getPhone() + "的上级代理商为" + agent2.getName());
-                logService.createbackOperationLog(backOperationLog);
-            }
+//    @RequestMapping(method = RequestMethod.GET, value = "/setUpperAgent/{agentId}/{upperAgentId}")
+//    public ModelAndView setUpperAgent(@PathVariable("agentId") String agentId, @PathVariable("upperAgentId") String upperAgentId, HttpServletRequest request) {
+//        ModelAndView view = new ModelAndView();
+//        if (StringUtils.isEmpty(agentId)) {
+//            view.setViewName("redirect:/agent/overview");
+//            return view;
+//        }
+//        if (StringUtils.isEmpty(upperAgentId)) {
+//            view.setViewName("redirect:/agent/check/" + agentId);
+//            return view;
+//        }
+//        Map<String, Object> condition = new HashMap<>();
+//        condition.put("agentId", agentId);
+//        ResultData fetchResponse = agentService.fetchAgent(condition);
+//        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+//            Agent agent = ((List<Agent>) agentService.fetchAgent(condition).getData()).get(0);
+//            common.sunshine.model.selling.agent.lite.Agent upperAgent = new common.sunshine.model.selling.agent.lite.Agent();
+//            upperAgent.setAgentId(upperAgentId);
+//            agent.setUpperAgent(upperAgent);
+//            ResultData updateResponse = agentService.updateAgent(agent);
+//            if (updateResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+//                view.setViewName("redirect:/agent/check/" + agentId);
+//                return view;
+//            }
+//            //配置上下级代理商时对应的代理商的agentKPI表进行修改
+//            condition.clear();
+//            condition.put("agentId", upperAgentId);
+//            fetchResponse = agentKPIService.fetchAgentKPI(condition);
+//            if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+//                AgentKPI agentKPI = ((List<AgentKPI>) fetchResponse.getData()).get(0);
+//                agentKPI.setDirectAgentQuantity(agentKPI.getDirectAgentQuantity() + 1);
+//                agentKPIService.updateAgentKPI(agentKPI);
+//            }
+//            Subject subject = SecurityUtils.getSubject();
+//            User user = (User) subject.getPrincipal();
+//            if (user == null) {
+//                view.setViewName("redirect:/agent/check/" + agentId);
+//                return view;
+//            }
+//            condition.put("agentId", upperAgentId);
+//            fetchResponse = agentService.fetchAgent(condition);
+//            Admin admin = user.getAdmin();
+//            if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+//                Agent agent2 = ((List<Agent>) agentService.fetchAgent(condition).getData()).get(0);
+//                BackOperationLog backOperationLog = new BackOperationLog(
+//                        admin.getUsername(), toolService.getIP(request), "管理员" + admin.getUsername() + "设置了代理商" + agent.getName() + ",手机：" + agent.getPhone() + "的上级代理商为" + agent2.getName());
+//                logService.createbackOperationLog(backOperationLog);
+//            }
+//
+//        }
+//        view.setViewName("redirect:/agent/check/" + agentId);
+//        return view;
+//    }
 
-        }
-        view.setViewName("redirect:/agent/check/" + agentId);
-        return view;
-    }
-
-    @RequestMapping(method = RequestMethod.POST, value = "/list/{agentId}")
-    public ResultData list(@PathVariable("agentId") String agentId) {
-        ResultData resultData = new ResultData();
-        if (StringUtils.isEmpty(agentId)) {
-            resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
-            return resultData;
-        }
-        Map<String, Object> condition = new HashMap<>();
-        condition.put("agentId", agentId);
-        if (agentService.fetchAgent(condition).getResponseCode() != ResponseCode.RESPONSE_OK) {
-            resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
-            return resultData;
-        }
-        Agent agent = ((List<Agent>) agentService.fetchAgent(condition).getData()).get(0);
-        condition.clear();
-        condition.put("granted", true);
-        condition.put("blockFlag", false);
-        List<Agent> agentList = (List<Agent>) agentService.fetchAgent(condition).getData();
-        Iterator<Agent> iter = agentList.iterator();
-        while (iter.hasNext()) {
-            if (iter.next().getAgentId().equals(agent.getAgentId())) {
-                iter.remove();
-            }
-        }
-        resultData.setData(agentList);
-        return resultData;
-    }
+//    @RequestMapping(method = RequestMethod.POST, value = "/list/{agentId}")
+//    public ResultData list(@PathVariable("agentId") String agentId) {
+//        ResultData resultData = new ResultData();
+//        if (StringUtils.isEmpty(agentId)) {
+//            resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
+//            return resultData;
+//        }
+//        Map<String, Object> condition = new HashMap<>();
+//        condition.put("agentId", agentId);
+//        if (agentService.fetchAgent(condition).getResponseCode() != ResponseCode.RESPONSE_OK) {
+//            resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
+//            return resultData;
+//        }
+//        Agent agent = ((List<Agent>) agentService.fetchAgent(condition).getData()).get(0);
+//        condition.clear();
+//        condition.put("granted", true);
+//        condition.put("blockFlag", false);
+//        List<Agent> agentList = (List<Agent>) agentService.fetchAgent(condition).getData();
+//        Iterator<Agent> iter = agentList.iterator();
+//        while (iter.hasNext()) {
+//            if (iter.next().getAgentId().equals(agent.getAgentId())) {
+//                iter.remove();
+//            }
+//        }
+//        resultData.setData(agentList);
+//        return resultData;
+//    }
 
     @RequestMapping(method = RequestMethod.POST, value = "/modifyUpperAgent/{agentId}/{upperAgentId}")
     public ResultData modifyUpperAgent(@PathVariable("agentId") String agentId, @PathVariable("upperAgentId") String upperAgentId, HttpServletRequest request) {
@@ -2159,16 +2159,20 @@ public class AgentController {
         condition.put("agentId", agentId);
         ResultData fetchResponse = agentService.fetchAgent(condition);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            Agent agent = ((List<Agent>) agentService.fetchAgent(condition).getData()).get(0);
-            //避免重复配置相同的上级代理商
-            if (agent.getUpperAgent().getAgentId().equals(upperAgentId)) {
-                return resultData;
-            }
+            Agent agent = ((List<Agent>) fetchResponse.getData()).get(0);
+            boolean flag=false;
+            if (agent.getUpperAgent()==null) {
+            	flag=true;	
+			}else {
+	            //避免重复配置相同的上级代理商
+	            if (agent.getUpperAgent().getAgentId().equals(upperAgentId)) {
+	                return resultData;
+	            }
+			}
             condition.put("agentId", upperAgentId);
-
             fetchResponse = agentService.fetchAgent(condition);
             if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-                Agent upperAgent = ((List<Agent>) agentService.fetchAgent(condition).getData()).get(0);
+                Agent upperAgent = ((List<Agent>) fetchResponse.getData()).get(0);
                 while (upperAgent.getUpperAgent() != null) {
                     //上下级关系不能出现闭环
                     if (upperAgent.getUpperAgent().getAgentId().equals(agentId)) {
@@ -2179,7 +2183,7 @@ public class AgentController {
                         condition.put("agentId", upperAgent.getUpperAgent().getAgentId());
                         fetchResponse = agentService.fetchAgent(condition);
                         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-                            upperAgent = ((List<Agent>) agentService.fetchAgent(condition).getData()).get(0);
+                            upperAgent = ((List<Agent>) fetchResponse.getData()).get(0);
                         }
                     }
 
@@ -2193,15 +2197,17 @@ public class AgentController {
                 resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
                 return resultData;
             }
-            //配置新的上下级代理关系要对对应的代理商的agentKPI表进行修改
-            condition.clear();
-            condition.put("agentId", upperAgentId);
-            fetchResponse = agentKPIService.fetchAgentKPI(condition);
-            if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-                AgentKPI agentKPI = ((List<AgentKPI>) fetchResponse).get(0);
-                agentKPI.setDirectAgentQuantity(agentKPI.getDirectAgentQuantity() + 1);
-                agentKPIService.updateAgentKPI(agentKPI);
-            }
+            if (flag) {
+                //配置新的上下级代理关系要对对应的代理商的agentKPI表进行修改
+                condition.clear();
+                condition.put("agentId", upperAgentId);
+                fetchResponse = agentKPIService.fetchAgentKPI(condition);
+                if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                    AgentKPI agentKPI = ((List<AgentKPI>) fetchResponse.getData()).get(0);
+                    agentKPI.setDirectAgentQuantity(agentKPI.getDirectAgentQuantity() + 1);
+                    agentKPIService.updateAgentKPI(agentKPI);
+                }
+			}
             Subject subject = SecurityUtils.getSubject();
             User user = (User) subject.getPrincipal();
             if (user == null) {
@@ -2211,13 +2217,12 @@ public class AgentController {
             condition.put("agentId", upperAgentId);
             fetchResponse = agentService.fetchAgent(condition);
             if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-                Agent agent2 = ((List<Agent>) agentService.fetchAgent(condition).getData()).get(0);
+                Agent agent2 = ((List<Agent>) fetchResponse.getData()).get(0);
                 Admin admin = user.getAdmin();
                 BackOperationLog backOperationLog = new BackOperationLog(
                         admin.getUsername(), toolService.getIP(request), "管理员" + admin.getUsername() + "修改了代理商" + agent.getName() + ",手机：" + agent.getPhone() + "的上级代理商为" + agent2.getName());
                 logService.createbackOperationLog(backOperationLog);
             }
-
         }
         return resultData;
     }
@@ -2389,8 +2394,27 @@ public class AgentController {
             Agent agent = ((List<Agent>) queryData.getData()).get(0);
             view.addObject("agent", agent);
         }
-
+        
+        //代理商列表（除该代理商之外的其他已授权的代理商列表，用来配置该代理商的上级代理商）
+        condition.clear();
+        condition.put("granted", true);
+        condition.put("blockFlag", false);
+        condition.put("sortByName", true);
+        queryData =agentService.fetchAgent(condition);
+        if (queryData.getResponseCode() == ResponseCode.RESPONSE_OK) {
+        	List<Agent> agentList = (List<Agent>) queryData.getData();
+            Iterator<Agent> iter = agentList.iterator();
+            while (iter.hasNext()) {
+                if (iter.next().getAgentId().equals(agentId)) {
+                    iter.remove();
+                }
+            }
+            view.addObject("agentList", agentList);
+		}
+        
         //顾客人数
+        condition.clear();
+        condition.put("agentId", agentId);
         condition.put("blockFlag", false);
         queryData = customerService.fetchCustomer(condition);
         if (queryData.getResponseCode() == ResponseCode.RESPONSE_OK) {
@@ -2514,9 +2538,14 @@ public class AgentController {
         ModelAndView view = new ModelAndView();
         Map<String, Object> condition = new HashMap<>();
         condition.put("agentId", agentId);
-        Agent agent = ((List<Agent>) agentService.fetchAgent(condition).getData()).get(0);
-        view.addObject("agentId", agentId);
-        view.addObject("agentName", agent.getName());
+        ResultData fetchData=agentService.fetchAgent(condition);
+        if (fetchData.getResponseCode()==ResponseCode.RESPONSE_OK) {
+        	 Agent agent = ((List<Agent>) fetchData.getData()).get(0);
+             view.addObject("agentId", agentId);
+             view.addObject("agentName", agent.getName());
+             view.setViewName("/backend/agent/giftconfig");
+             return view;
+		}
         view.setViewName("/backend/agent/giftconfig");
         return view;
     }

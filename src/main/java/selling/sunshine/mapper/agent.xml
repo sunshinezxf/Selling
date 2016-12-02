@@ -102,7 +102,7 @@
             AND block_flag = #{blockFlag}
         </if>
         <if test="monthly != null">
-            AND date_format(create_time,'%Y-%m')=date_format(now(),'%Y-%m'))
+            AND date_format(create_time,'%Y-%m')=date_format(now(),'%Y-%m')
         </if>
         <if test="purchase != null">
             AND agent_id IN (
@@ -116,6 +116,10 @@
         <if test="rule != null and rule != ''">
             ORDER BY ${rule}
         </if>
+        <if test="sortByName !=null and sortByName != ''">
+                ORDER BY convert(agent_name using gbk)
+        </if> 
+        
 
     </select>
 

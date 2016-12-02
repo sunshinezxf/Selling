@@ -74,7 +74,7 @@ public class TencentMapAPI {
 					}
 					if (data.contains("district")) {
 						data=data.trim();	
-						if (data.length()>12) {
+						if (data.length()>16) {
 						   String district=data.substring(13, data.length()-3);
 						   map.put("district", district);
 						}

@@ -1,7 +1,25 @@
-<table id="agent_overview_table" class="ui tablet stackable table"></table>
+<div class="ui segment">
+    <label class="ui header">代理排行</label>
+    <table id="agent_overview_table" class="ui tablet stackable table"></table>
+</div>
 <script>
     $(document).ready(function () {
-        $("#agent_overview_table").DataTable({
+    	
+    	  $("#agent_overview_table").on('click', 'tr', function () {
+              if ($(this).hasClass('selected')) {
+                  $(this).removeClass('selected');
+              } else {
+                  table.$('tr.selected').removeClass('selected');
+                  $(this).addClass('selected');
+              }
+              if (table.rows('.selected').data().length == 1) {
+                  var current = table.rows('.selected').data()['0'];
+                  var url="${path.concat('/agent/detail/')}"+current.agentId;
+                  window.location.href = url;
+              }
+          })
+          
+         var table = $("#agent_overview_table").DataTable({
             searching: true,
             paging: true,
             aaSorting: [[0, "asc"]],
@@ -59,7 +77,10 @@
                     "next": "下一页",
                     "last": "尾页"
                 }
-            }
+            },
+            "pagingType": "simple_numbers"
         });
+    
+              
     });
 </script>
