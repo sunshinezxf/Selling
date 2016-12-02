@@ -1,0 +1,27 @@
+<div class="ui stackable padded grid" name="order_list">
+    <div class="row">
+        <h1 class="ui header">
+            <i class="home icon"></i>
+
+            <div class="content">
+                订单管理
+                <div class="sub header">
+                    <div class="ui breadcrumb">
+                        <a class="section">订单管理</a>
+
+                        <div class="divider">/</div>
+
+                        <div class="section">订单列表</div>
+
+                        <div class="divider">/</div>
+
+                        <a class="active section">订单详情</a>
+                    </div>
+                </div>
+            </div>
+        </h1>
+    </div>
+</div>
+<script>
+
+</script>

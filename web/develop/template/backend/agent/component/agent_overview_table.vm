@@ -62,7 +62,8 @@
                     "next": "下一页",
                     "last": "尾页"
                 }
-            }
+            },
+            "pagingType": "simple_numbers"
         });
     });
 </script>

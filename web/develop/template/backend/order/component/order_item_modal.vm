@@ -45,6 +45,7 @@
         </div>
     </div>
     <div class="actions">
+        <div class="ui green button" id="item_view">查看</div>
         <div class="ui button" id="item_close">关闭</div>
     </div>
 </div>
