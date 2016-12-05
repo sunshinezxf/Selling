@@ -1,17 +1,24 @@
-<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id-target="withdraw-management">
+<div class="ui stackable padded grid">
     <div class="row">
-        <div class="col-md-12 col-lg-12">
-            <h1><i class="fa fa-home"></i> 提现申请 </h1>
-            <ol class="breadcrumb">
-                <li><a href="${path.concat('/dashboard')}">首页</a></li>
-                <li><a data-toggle="collapse" data-parent="#accordion" href="#withdraw-management">提现管理</a></li>
-                <li class="active">提现审核</li>
-            </ol>
-        </div>
+        <h1 class="ui header">
+            <i class="home icon"></i>
+            <div class="content">
+            提现申请
+                <div class="sub header">
+                        <div class="ui breadcrumb">
+                            <a class="section">提现管理</a>
+
+                            <div class="divider">/</div>
+
+                            <a class="active section">提现申请</a>
+                        </div>
+                 </div>
+            </div>
+          </h1>
     </div>
     <div class="row">
         #if(${money})
-            <div class="col-md-12 col-lg-12">
+            <div class="row">
                 <span>当前总申请提现金额为：${money}元&nbsp;
                 #if(${money} - 0 > 1)
                     <a type="button" class="btn btn-primary btn-success" href="${path.concat('/withdraw/check/download')}">提现申请下载</a></span>
@@ -19,8 +26,8 @@
                 <br>
             </div>
         #end
-        <div class="col-md-12 col-lg-12">
-            <table id="check_withdraw_table" class="table table-striped table-bordered" cellspacing="0" width="100%">
+        <div class="row">
+            <table id="check_withdraw_table" class="ui striped table" cellspacing="0" width="100%">
             </table>
         </div>
     </div>

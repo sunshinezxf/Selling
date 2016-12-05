@@ -37,6 +37,8 @@ public interface OrderService {
     ResultData poolOrder();
 
     ResultData cancel(Order order);
+    
+    ResultData received(Order order);
 
     ResultData fetchOrderItem(Map<String, Object> condition);
 

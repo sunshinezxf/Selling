@@ -1,0 +1,12 @@
+<div id="month_distribution" class="ui segment" style="height: 400px;"></div>
+<script>
+    var month_distribution_url = "${path.concat('/')}";
+
+    $.get(month_distribution_url, function (result) {
+        if (result.responseCode == "RESPONSE_OK") {
+            
+        } else {
+            $("#month_distribution").hide();
+        }
+    });
+</script>

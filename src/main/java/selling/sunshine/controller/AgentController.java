@@ -2533,22 +2533,22 @@ public class AgentController {
         return resultData;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/gift/{agentId}")
-    public ModelAndView giftConfig(@PathVariable("agentId") String agentId) {
-        ModelAndView view = new ModelAndView();
-        Map<String, Object> condition = new HashMap<>();
-        condition.put("agentId", agentId);
-        ResultData fetchData=agentService.fetchAgent(condition);
-        if (fetchData.getResponseCode()==ResponseCode.RESPONSE_OK) {
-        	 Agent agent = ((List<Agent>) fetchData.getData()).get(0);
-             view.addObject("agentId", agentId);
-             view.addObject("agentName", agent.getName());
-             view.setViewName("/backend/agent/giftconfig");
-             return view;
-		}
-        view.setViewName("/backend/agent/giftconfig");
-        return view;
-    }
+//    @RequestMapping(method = RequestMethod.GET, value = "/gift/config/{agentId}")
+//    public ModelAndView giftConfig(@PathVariable("agentId") String agentId) {
+//        ModelAndView view = new ModelAndView();
+//        Map<String, Object> condition = new HashMap<>();
+//        condition.put("agentId", agentId);
+//        ResultData fetchData=agentService.fetchAgent(condition);
+//        if (fetchData.getResponseCode()==ResponseCode.RESPONSE_OK) {
+//        	 Agent agent = ((List<Agent>) fetchData.getData()).get(0);
+//             view.addObject("agentId", agentId);
+//             view.addObject("agentName", agent.getName());
+//             view.setViewName("/backend/agent/gift/config");
+//             return view;
+//		}
+//        view.setViewName("/backend/agent/gift/config");
+//        return view;
+//    }
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/{goodsId}/volume")
