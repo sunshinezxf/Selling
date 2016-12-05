@@ -1,0 +1,142 @@
+<div class="ui stackable padded grid">
+	<div class="row">
+		<h1 class="ui header">
+			<i class="home icon"></i>
+			<div class="content">
+				本月返现详情
+				<div class="sub header">
+					<div class="ui breadcrumb">
+						<a class="section">返现管理</a>
+
+						<div class="divider">/</div>
+
+						<a class="active section">本月返现详情</a>
+					</div>
+				</div>
+			</div>
+		</h1>
+	</div>
+	<div class="row">
+		<h4>代理商：${agent.name}</h4>
+	</div>
+
+	<div class="row">
+		<h4>返现月份：${month}</h4>
+	</div>
+
+	<div class="row">
+		<h4>返现总额：${cashback.amount}元</h4>
+	</div>
+	<div class="sixteen wide column">
+		<div class="ui segments">
+			<div class="ui red segment">
+				<p>三级返现明细：</p>
+			</div>
+			#if(${self})
+			<div class="ui segments">
+				<div class="ui blue segment">
+					<p>返现来源：自销</p>
+				</div>
+				<div class="ui green segment">
+					<p>返现金额：${cashback.self}元</p>
+				</div>
+				<div class="ui yellow segment">
+					<table class="ui celled table">
+					<thead>
+					<tr>
+						<th>商品名</th>
+						<th>代理商</th>
+						<th>销量(盒)</th>
+						<th>返现比例(元/盒)</th>
+						<th>返现金额(元)</th>
+					</tr>
+					</thead>
+					<tbody>
+					#foreach($item in ${self})
+					<tr>
+						<td>${item.orderPool.goods.name}</td>
+						<td>${item.orderPool.agent.name}</td>
+						<td>${item.orderPool.quantity}</td>
+						<td>${item.percent}</td>
+						<td>${item.amount}</td>
+					</tr>
+					#end
+					</tbody>
+				</table>
+				</div>
+			</div>
+			#end
+			#if(${direct})
+			<div class="ui segments">
+				<div class="ui green segment">
+					<p>返现来源：直接代理</p>
+				</div>
+				<div class="ui blue segment">
+					<p>返现金额：${cashback.direct}元</p>
+				</div>
+				<div class="ui red segment">
+					<table class="ui celled table">
+					<thead>
+					<tr>
+						<th>商品名</th>
+						<th>代理商</th>
+						<th>销量(盒)</th>
+						<th>返现比例(元/盒)</th>
+						<th>返现金额(元)</th>
+					</tr>
+					</thead>
+					<tbody>
+					#foreach($item in ${direct})
+					<tr>
+						<td>${item.orderPool.goods.name}</td>
+						<td>${item.orderPool.agent.name}</td>
+						<td>${item.orderPool.quantity}</td>
+						<td>${item.percent}</td>
+						<td>${item.amount}</td>
+					</tr>
+					#end
+					</tbody>
+				</table>
+				</div>
+			</div>
+			#end
+			#if(${indirect})
+			<div class="ui segments">
+				<div class="ui blue segment">
+					<p>返现来源：间接代理</p>
+				</div>
+				<div class="ui green segment">
+					<p>返现金额：${cashback.indirect}元</p>
+				</div>
+				<div class="ui yellow segment">
+					<table class="ui celled table">
+					<thead>
+					<tr>
+						<th>商品名</th>
+						<th>代理商</th>
+						<th>销量(盒)</th>
+						<th>返现比例(元/盒)</th>
+						<th>返现金额(元)</th>
+					</tr>
+					</thead>
+					<tbody>
+					#foreach($item in ${indirect})
+					<tr>
+						<td>${item.orderPool.goods.name}</td>
+						<td>${item.orderPool.agent.name}</td>
+						<td>${item.orderPool.quantity}</td>
+						<td>${item.percent}</td>
+						<td>${item.amount}</td>
+					</tr>
+					#end
+					</tbody>
+				</table>
+				</div>
+			</div>
+			#end
+		</div>
+	</div>
+</div>
+<script>
+	
+</script>

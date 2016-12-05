@@ -1,0 +1,62 @@
+<div class="ui stackable padded grid">
+	<div class="row">
+		<h1 class="ui header">
+			<i class="home icon"></i>
+			<div class="content">
+				返现概览
+				<div class="sub header">
+					<div class="ui breadcrumb">
+						<a class="section">返现管理</a>
+
+						<div class="divider">/</div>
+
+						<a class="active section">返现概览</a>
+					</div>
+				</div>
+			</div>
+		</h1>
+	</div>
+	<div class="row">
+		<div class="four wide column">
+			<button class="ui right labeled icon button" id="vitality_config">
+				<i class="right arrow icon"></i> 代理商活跃度配置
+			</button>
+		</div>
+		<div class="four wide column">
+			<button class="ui right labeled icon button" id="cashback_config">
+				<i class="right arrow icon"></i> 返现配置
+			</button>
+		</div>
+		<div class="four wide column">
+			<button class="ui right labeled icon button" id="monthly_record">
+				<i class="right arrow icon"></i> 当月预期返现
+			</button>
+		</div>
+		<div class="four wide column">
+			<button class="ui right labeled icon button" id="cashback_record">
+				<i class="right arrow icon"></i> 返现记录
+			</button>
+		</div>
+	</div>
+</div>
+<script>
+	$("#vitality_config").on('click', function() {
+		var url = "${path.concat('/agent/vitality')}";
+		window.location.href = url;
+	});
+
+	$("#cashback_config").on('click', function() {
+		var url = "${path.concat('/cashback/config')}";
+		window.location.href = url;
+	});
+
+	$("#monthly_record").on('click', function() {
+		var url = "${path.concat('/cashback/month')}";
+		window.location.href = url;
+	});
+
+	$("#cashback_record").on('click', function() {
+		var url = "${path.concat('/cashback/record')}";
+		window.location.href = url;
+	});
+</script>

@@ -1,0 +1,90 @@
+<div class="ui stackable padded grid" name="agent_overview">
+    <div class="row">
+        <h1 class="ui header">
+            <i class="home icon"></i>
+
+            <div class="content">代理概览
+                <div class="sub header">
+                    <div class="ui breadcrumb">
+                        <a class="section">代理管理</a>
+
+                        <div class="divider">/</div>
+                        <a class="active section">代理概览</a>
+                    </div>
+                </div>
+            </div>
+        </h1>
+    </div>
+    <div class="row">
+        <div class="four wide column">
+            <div class="ui inverted tertiary teal center aligned segment">
+                <h3 class="ui header">
+                    当前未审核代理商
+                </h3>
+
+                <div class="ui huge horizontal statistic">
+                    <div id="unchecked" class="value"></div>
+                    <div class="label">人</div>
+                </div>
+            </div>
+        </div>
+        <div class="four wide column">
+            <div class="ui inverted secondary teal center aligned segment">
+                <h3 class="ui header">
+                    本月新注册代理商
+                </h3>
+
+                <div class="ui huge horizontal statistic">
+                    <div id="newreg" class="value"></div>
+                    <div class="label">人</div>
+                </div>
+            </div>
+        </div>
+        <div class="four wide column">
+            <div class="ui inverted teal center aligned segment">
+                <h3 class="ui header">
+                    本月已购买代理商
+                </h3>
+
+                <div class="ui huge horizontal statistic">
+                    <div id="purchase" class="value"></div>
+                    <div class="label">人</div>
+                </div>
+            </div>
+        </div>
+        <div class="four wide column">
+            <div id="agent_list" class="ui teal inverted center aligned segment">
+                <h3 class="ui header">
+                    当前代理商总人数
+                </h3>
+
+                <div class="ui huge horizontal statistic">
+                    <div id="granted" class="value"></div>
+                    <div class="label">人</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="column">
+            #parse("/backend/agent/component/agent_overview_table.vm")
+        </div>
+    </div>
+</div>
+<script>
+    var data_url = "${path.concat('/agent/summary')}";
+    $.get(data_url, function (result) {
+        if (result.responseCode == 'RESPONSE_OK') {
+            $("#unchecked").html(result.data.unchecked);
+            $("#newreg").html(result.data.newreg);
+            $("#purchase").html(result.data.purchase);
+            $("#granted").html(result.data.granted);
+        } else {
+            $("#unchecked").html("暂无数据");
+            $("#newreg").html("暂无数据");
+            $("#purchase").html("暂无数据");
+            $("#granted").html("暂无数据");
+            $(".ui.statistic > .label").hide();
+        }
+    });
+</script>

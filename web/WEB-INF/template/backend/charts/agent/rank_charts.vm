@@ -1,0 +1,83 @@
+<div id="agent_rank_charts" class="row"></div>
+<script>
+    var agent_rank_url = "${path.concat('/statistic/agent/rank')}";
+
+    $.get(agent_rank_url, function (result) {
+        if (result.responseCode != "RESPONSE_ERROR") {
+            var data = result.data;
+
+            var n_column = "eight";
+            if (data.length == 1) {
+                n_column = "sixteen";
+            } else {
+                n_column = "eight";
+            }
+
+            for (var i = 0; i < data.length; i++) {
+                var rank_charts_outer_div = $("<div></div>");
+                var id = "rank_charts_" + data[i].goods_id;
+                rank_charts_outer_div.addClass(n_column + ' wide column');
+
+                var rank_charts_inner_div = $("<div></div>");
+                rank_charts_inner_div.attr('id', id);
+                rank_charts_inner_div.attr('style', "height: 350px;");
+                rank_charts_inner_div.addClass('ui segment');
+                rank_charts_outer_div.append(rank_charts_inner_div);
+                $("#agent_rank_charts").append(rank_charts_outer_div);
+                var rank_chart = echarts.init(document.getElementById(id), 'macarons');
+
+                var name = data[i].name;
+
+                var agents = data[i].agent_info;
+                var total = data[i].total_quantity;
+                var agent_list = [];
+                var chart_data = [];
+                var sum = 0;
+                for (var j = 0; j < agents.length; j++) {
+                    agent_list.push(agents[j].agent_name);
+                    chart_data.push({name: agents[j].agent_name, value: agents[j].quantity});
+                    sum += agents[j].quantity;
+                }
+                agent_list.push("其他");
+                chart_data.push({name: "其他", value: total - sum});
+
+                option = {
+                    title: {
+                        text: "代理商销售排名",
+                        subtext: name,
+                        x: 'center'
+                    },
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: "{a} <br/>{b} : {c} ({d}%)"
+                    },
+                    legend: {
+                        orient: 'vertical',
+                        left: 'left',
+                        data: agent_list
+                    },
+                    series: [
+                        {
+                            name: name + '销售数量',
+                            type: 'pie',
+                            radius: '55%',
+                            center: ['50%', '60%'],
+                            data: chart_data,
+                            itemStyle: {
+                                emphasis: {
+                                    shadowBlur: 10,
+                                    shadowOffsetX: 0,
+                                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                }
+                            }
+                        }
+                    ]
+                }
+
+                rank_chart.setOption(option);
+            }
+        } else if (result.responseCode == "RESPONSE_ERROR") {
+            console.error(result.description);
+        }
+    });
+</script>

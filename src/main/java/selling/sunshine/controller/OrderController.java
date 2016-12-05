@@ -1420,6 +1420,13 @@ public class OrderController {
         view.setViewName("/backend/order/detail");
         return view;
     }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/summary")
+    public ModelAndView summary() {
+        ModelAndView view = new ModelAndView();
+        view.setViewName("/backend/order/summary");
+        return view;
+    }
 }
 
 
