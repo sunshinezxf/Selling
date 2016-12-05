@@ -1285,7 +1285,317 @@ public class OrderController {
         result.setData(payData.getData());
         return result;
     }
-
+    
+    /**
+     * 确认签收
+     * @param request
+     * @param orderId
+     * @return
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "/received/{orderId}")
+    public ResultData received(HttpServletRequest request, @PathVariable("orderId") String orderId){
+    	ResultData result = new ResultData();
+    	Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        if (user == null) {
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription("未登录");
+            return result;
+        }
+    	Map<String, Object> condition = new HashMap<String, Object>();
+    	if(orderId.startsWith("ORI")){
+	        condition.put("orderItemId", orderId);
+	        ResultData fetchOrderItemResponse = orderService.fetchOrderItem(condition);
+	        if(fetchOrderItemResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
+	        	result.setResponseCode(fetchOrderItemResponse.getResponseCode());
+	        	result.setDescription(fetchOrderItemResponse.getDescription());
+	        	return result;
+	        }
+	        OrderItem orderItem = ((List<OrderItem>)fetchOrderItemResponse.getData()).get(0);
+	        orderItem.setStatus(OrderItemStatus.RECEIVED);
+	        ResultData updateOrderItemResponse = orderService.updateOrderItem(orderItem);
+	        if(updateOrderItemResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
+	        	result.setResponseCode(updateOrderItemResponse.getResponseCode());
+	        	result.setDescription(updateOrderItemResponse.getDescription());
+	        	return result;
+	        }
+	        condition.clear();
+	        condition.put("orderId", orderItem.getOrder().getOrderId());
+	        ResultData fetchOrderResponse = orderService.fetchOrder(condition);
+	        if(fetchOrderResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
+	        	result.setResponseCode(fetchOrderResponse.getResponseCode());
+	        	result.setDescription(fetchOrderResponse.getDescription());
+	        	return result;
+	        }
+	        Order order = ((List<Order>)fetchOrderResponse.getData()).get(0);
+	        boolean allReceived = true;
+	        for(OrderItem item : order.getOrderItems()){
+	        	if(item.getStatus() == OrderItemStatus.NOT_PAYED || item.getStatus() == OrderItemStatus.PAYED || item.getStatus() == OrderItemStatus.SHIPPED){
+	        		allReceived = false;
+	        		break;
+	        	}
+	        }
+	        if(allReceived){
+	        	order.setStatus(OrderStatus.FINISHIED);
+	        	ResultData updateOrderResponse = orderService.received(order);
+	        	if(updateOrderResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
+	            	result.setResponseCode(updateOrderResponse.getResponseCode());
+	            	result.setDescription(updateOrderResponse.getDescription());
+	            	return result;
+	            }
+	        }
+    	} else if(orderId.startsWith("CUO")){
+    		condition.put("orderId", orderId);
+    		ResultData fetchCustomerOrderResponse = orderService.fetchCustomerOrder(condition);
+    		if(fetchCustomerOrderResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
+	        	result.setResponseCode(fetchCustomerOrderResponse.getResponseCode());
+	        	result.setDescription(fetchCustomerOrderResponse.getDescription());
+	        	return result;
+	        }
+    		CustomerOrder customerOrder = ((List<CustomerOrder>)fetchCustomerOrderResponse.getData()).get(0);
+    		customerOrder.setStatus(OrderItemStatus.RECEIVED);
+    		ResultData updateCustomerOrderResponse = orderService.updateCustomerOrder(customerOrder);
+    		if(updateCustomerOrderResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
+            	result.setResponseCode(updateCustomerOrderResponse.getResponseCode());
+            	result.setDescription(updateCustomerOrderResponse.getDescription());
+            	return result;
+            }
+    	} else if(orderId.startsWith("EOI")){
+    		condition.put("orderId", orderId);
+    		ResultData fetchEventOrderResponse = eventService.fetchEventOrder(condition);
+    		if(fetchEventOrderResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
+	        	result.setResponseCode(fetchEventOrderResponse.getResponseCode());
+	        	result.setDescription(fetchEventOrderResponse.getDescription());
+	        	return result;
+	        }
+    		EventOrder eventOrder = ((List<EventOrder>)fetchEventOrderResponse.getData()).get(0);
+    		eventOrder.setOrderStatus(OrderItemStatus.RECEIVED);
+    		ResultData updateEventOrderResponse = eventService.updateEventOrder(eventOrder);
+    		if(updateEventOrderResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
+            	result.setResponseCode(updateEventOrderResponse.getResponseCode());
+            	result.setDescription(updateEventOrderResponse.getDescription());
+            	return result;
+            }
+    	}
+        // 记录确认签收的日志
+        if(user.getAdmin() != null){
+        	Admin admin = user.getAdmin();
+        	BackOperationLog backOperationLog = new BackOperationLog(
+                admin.getUsername(), toolService.getIP(request), "管理员" + admin.getUsername() + "将订单:"
+                + orderId + "设置为已签收");
+	        ResultData createLogData = logService
+	                .createbackOperationLog(backOperationLog);
+	        if (createLogData.getResponseCode() != ResponseCode.RESPONSE_OK) {
+	            result.setResponseCode(createLogData.getResponseCode());
+	            result.setDescription("记录操作日志失败");
+	            return result;
+	        }
+        } else if(user.getAgent() != null){
+        	common.sunshine.model.selling.agent.lite.Agent agent = user.getAgent();
+        	BackOperationLog backOperationLog = new BackOperationLog(
+                agent.getName(), toolService.getIP(request), "代理商" + agent.getName()+ "将订单:"
+                + orderId + "设置为已付款");
+	        ResultData createLogData = logService
+	                .createbackOperationLog(backOperationLog);
+	        if (createLogData.getResponseCode() != ResponseCode.RESPONSE_OK) {
+	            result.setResponseCode(createLogData.getResponseCode());
+	            result.setDescription("记录操作日志失败");
+	            return result;
+	        }
+        }
+        return result;
+    }
+    
+    /**
+     * 开始退货
+     * @param request
+     * @param orderId
+     * @return
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "/refunding/{orderId}")
+    public ResultData refunding(HttpServletRequest request, @PathVariable("orderId") String orderId){
+    	ResultData result = new ResultData();
+    	Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        if (user == null) {
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription("未登录");
+            return result;
+        }
+    	Map<String, Object> condition = new HashMap<String, Object>();
+    	if(orderId.startsWith("ORI")){
+	        condition.put("orderItemId", orderId);
+	        ResultData fetchOrderItemResponse = orderService.fetchOrderItem(condition);
+	        if(fetchOrderItemResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
+	        	result.setResponseCode(fetchOrderItemResponse.getResponseCode());
+	        	result.setDescription(fetchOrderItemResponse.getDescription());
+	        	return result;
+	        }
+	        OrderItem orderItem = ((List<OrderItem>)fetchOrderItemResponse.getData()).get(0);
+	        orderItem.setStatus(OrderItemStatus.REFUNDING);
+	        ResultData updateOrderItemResponse = orderService.updateOrderItem(orderItem);
+	        if(updateOrderItemResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
+	        	result.setResponseCode(updateOrderItemResponse.getResponseCode());
+	        	result.setDescription(updateOrderItemResponse.getDescription());
+	        	return result;
+	        }
+    	} else if(orderId.startsWith("CUO")){
+    		condition.put("orderId", orderId);
+    		ResultData fetchCustomerOrderResponse = orderService.fetchCustomerOrder(condition);
+    		if(fetchCustomerOrderResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
+	        	result.setResponseCode(fetchCustomerOrderResponse.getResponseCode());
+	        	result.setDescription(fetchCustomerOrderResponse.getDescription());
+	        	return result;
+	        }
+    		CustomerOrder customerOrder = ((List<CustomerOrder>)fetchCustomerOrderResponse.getData()).get(0);
+    		customerOrder.setStatus(OrderItemStatus.REFUNDING);
+    		ResultData updateCustomerOrderResponse = orderService.updateCustomerOrder(customerOrder);
+    		if(updateCustomerOrderResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
+            	result.setResponseCode(updateCustomerOrderResponse.getResponseCode());
+            	result.setDescription(updateCustomerOrderResponse.getDescription());
+            	return result;
+            }
+    	} else if(orderId.startsWith("EOI")){
+    		condition.put("orderId", orderId);
+    		ResultData fetchEventOrderResponse = eventService.fetchEventOrder(condition);
+    		if(fetchEventOrderResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
+	        	result.setResponseCode(fetchEventOrderResponse.getResponseCode());
+	        	result.setDescription(fetchEventOrderResponse.getDescription());
+	        	return result;
+	        }
+    		EventOrder eventOrder = ((List<EventOrder>)fetchEventOrderResponse.getData()).get(0);
+    		eventOrder.setOrderStatus(OrderItemStatus.REFUNDING);
+    		ResultData updateEventOrderResponse = eventService.updateEventOrder(eventOrder);
+    		if(updateEventOrderResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
+            	result.setResponseCode(updateEventOrderResponse.getResponseCode());
+            	result.setDescription(updateEventOrderResponse.getDescription());
+            	return result;
+            }
+    	}
+        // 记录确认退货的日志
+        if(user.getAdmin() != null){
+        	Admin admin = user.getAdmin();
+        	BackOperationLog backOperationLog = new BackOperationLog(
+                admin.getUsername(), toolService.getIP(request), "管理员" + admin.getUsername() + "将订单:"
+                + orderId + "设置为退货中");
+	        ResultData createLogData = logService
+	                .createbackOperationLog(backOperationLog);
+	        if (createLogData.getResponseCode() != ResponseCode.RESPONSE_OK) {
+	            result.setResponseCode(createLogData.getResponseCode());
+	            result.setDescription("记录操作日志失败");
+	            return result;
+	        }
+        } else if(user.getAgent() != null){
+        	common.sunshine.model.selling.agent.lite.Agent agent = user.getAgent();
+        	BackOperationLog backOperationLog = new BackOperationLog(
+                agent.getName(), toolService.getIP(request), "代理商" + agent.getName()+ "将订单:"
+                + orderId + "设置为退货中");
+	        ResultData createLogData = logService
+	                .createbackOperationLog(backOperationLog);
+	        if (createLogData.getResponseCode() != ResponseCode.RESPONSE_OK) {
+	            result.setResponseCode(createLogData.getResponseCode());
+	            result.setDescription("记录操作日志失败");
+	            return result;
+	        }
+        }
+        return result;
+    }
+    
+    /**
+     * 退货完成
+     * @param request
+     * @param orderId
+     * @return
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "/refunded/{orderId}")
+    public ResultData refunded(HttpServletRequest request, @PathVariable("orderId") String orderId){
+    	ResultData result = new ResultData();
+    	Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        if (user == null) {
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription("未登录");
+            return result;
+        }
+    	Map<String, Object> condition = new HashMap<String, Object>();
+    	if(orderId.startsWith("ORI")){
+	        condition.put("orderItemId", orderId);
+	        ResultData fetchOrderItemResponse = orderService.fetchOrderItem(condition);
+	        if(fetchOrderItemResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
+	        	result.setResponseCode(fetchOrderItemResponse.getResponseCode());
+	        	result.setDescription(fetchOrderItemResponse.getDescription());
+	        	return result;
+	        }
+	        OrderItem orderItem = ((List<OrderItem>)fetchOrderItemResponse.getData()).get(0);
+	        orderItem.setStatus(OrderItemStatus.REFUNDED);
+	        ResultData updateOrderItemResponse = orderService.updateOrderItem(orderItem);
+	        if(updateOrderItemResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
+	        	result.setResponseCode(updateOrderItemResponse.getResponseCode());
+	        	result.setDescription(updateOrderItemResponse.getDescription());
+	        	return result;
+	        }
+    	} else if(orderId.startsWith("CUO")){
+    		condition.put("orderId", orderId);
+    		ResultData fetchCustomerOrderResponse = orderService.fetchCustomerOrder(condition);
+    		if(fetchCustomerOrderResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
+	        	result.setResponseCode(fetchCustomerOrderResponse.getResponseCode());
+	        	result.setDescription(fetchCustomerOrderResponse.getDescription());
+	        	return result;
+	        }
+    		CustomerOrder customerOrder = ((List<CustomerOrder>)fetchCustomerOrderResponse.getData()).get(0);
+    		customerOrder.setStatus(OrderItemStatus.REFUNDED);
+    		ResultData updateCustomerOrderResponse = orderService.updateCustomerOrder(customerOrder);
+    		if(updateCustomerOrderResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
+            	result.setResponseCode(updateCustomerOrderResponse.getResponseCode());
+            	result.setDescription(updateCustomerOrderResponse.getDescription());
+            	return result;
+            }
+    	} else if(orderId.startsWith("EOI")){
+    		condition.put("orderId", orderId);
+    		ResultData fetchEventOrderResponse = eventService.fetchEventOrder(condition);
+    		if(fetchEventOrderResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
+	        	result.setResponseCode(fetchEventOrderResponse.getResponseCode());
+	        	result.setDescription(fetchEventOrderResponse.getDescription());
+	        	return result;
+	        }
+    		EventOrder eventOrder = ((List<EventOrder>)fetchEventOrderResponse.getData()).get(0);
+    		eventOrder.setOrderStatus(OrderItemStatus.REFUNDED);
+    		ResultData updateEventOrderResponse = eventService.updateEventOrder(eventOrder);
+    		if(updateEventOrderResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
+            	result.setResponseCode(updateEventOrderResponse.getResponseCode());
+            	result.setDescription(updateEventOrderResponse.getDescription());
+            	return result;
+            }
+    	}
+        // 记录退货 完成的日志
+        if(user.getAdmin() != null){
+        	Admin admin = user.getAdmin();
+        	BackOperationLog backOperationLog = new BackOperationLog(
+                admin.getUsername(), toolService.getIP(request), "管理员" + admin.getUsername() + "将订单:"
+                + orderId + "设置为已退货");
+	        ResultData createLogData = logService
+	                .createbackOperationLog(backOperationLog);
+	        if (createLogData.getResponseCode() != ResponseCode.RESPONSE_OK) {
+	            result.setResponseCode(createLogData.getResponseCode());
+	            result.setDescription("记录操作日志失败");
+	            return result;
+	        }
+        } else if(user.getAgent() != null){
+        	common.sunshine.model.selling.agent.lite.Agent agent = user.getAgent();
+        	BackOperationLog backOperationLog = new BackOperationLog(
+                agent.getName(), toolService.getIP(request), "代理商" + agent.getName()+ "将订单:"
+                + orderId + "设置为已退货");
+	        ResultData createLogData = logService
+	                .createbackOperationLog(backOperationLog);
+	        if (createLogData.getResponseCode() != ResponseCode.RESPONSE_OK) {
+	            result.setResponseCode(createLogData.getResponseCode());
+	            result.setDescription("记录操作日志失败");
+	            return result;
+	        }
+        }
+        return result;
+    }
+    
     @RequestMapping(method = RequestMethod.GET, value = "/indent")
     public ModelAndView indent() {
         ModelAndView view = new ModelAndView();

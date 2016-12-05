@@ -338,4 +338,17 @@ public class OrderServiceImpl implements OrderService {
         return orderPoolDao.checkOrderPool(condition);
     }
 
+	@Override
+	public ResultData received(Order order) {
+		ResultData result = new ResultData();
+        ResultData receivedResponse = orderDao.updateOrderLite(order);
+        result.setResponseCode(receivedResponse.getResponseCode());
+        if (receivedResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(receivedResponse.getData());
+        } else {
+            result.setDescription(receivedResponse.getDescription());
+        }
+        return result;
+	}
+
 }
