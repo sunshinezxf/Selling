@@ -50,6 +50,11 @@
                 #end
             </div>
         #end
+        <div class="item">
+            <i class="calendar icon"></i>
+            创建时间:
+            ${order.createAt}
+        </div>
     </div>
 </div>
 <div class="ui segment">
@@ -93,7 +98,6 @@
         </div>
         <div class="#if(${order.status} == 'NOT_PAYED' || ${order.status} == 'REFUNDING' || ${order.status} ==
             'REFUNDED' || ${order.status} == 'PAYED') disabled #end step">
-
             <i class="truck icon"></i>
 
             <div class="content">
@@ -124,21 +128,66 @@
         </div>
     </div>
     #if(${order.status} == 'SHIPPED' || ${order.status} == 'RECEIVED')
-        <div class="ui attached segment">
+        <div id="deliver_detail" class="ui attached segment" style="display:none;">
 
         </div>
     #end
 </div>
+#if(${order.status} != 'REFUNDED')
 <div class="ui segment">
     <div class="ui header">
         订单操作
     </div>
+    <div class="column">
+        #if(${order.status} == 'NOT_PAYED')
+            <button class="ui green button">确认付款</button>
+        #end
+        #if(${order.status} == 'PAYED' && ${order.orderId})
+            <button class="ui green button">取消订单</button>
+        #end
+        #if(${order.status} == 'PAYED' || ${order.status} == 'SHIPPED')
+            <button class="ui green button">确认签收</button>
+        #end
+        #if(${order.status} == 'RECEIVED')
+            <button class="ui green button">退换订单</button>
+        #end
+        #if(${order.status} == 'REFUNDING')
+            <button class="ui green button">退款完成</button>
+        #end
+    </div>
 </div>
+#end
 <script>
     $(document).ready(function () {
         var order = eval(${order});
         if (order.status == 'RECEIVED' || order.status == 'SHIPPED') {
-            
+            var order_id = '';
+            if (order.orderId != null && order.orderId != '') {
+                order_id = order.orderId;
+            } else if (order.orderItemId != null && order.orderItemId != '') {
+                order_id = order.orderItemId;
+            }
+            if (order_id == '') return;
+            var url = "${path.concat('/express/')}" + order_id + "/query";
+            $.get(url, function (result) {
+                if (result.responseCode != "RESPONSE_OK") {
+                    $("#deliver_detail").hide();
+                } else {
+                    var content = eval('(' + result.data + ')');
+                    var traces = content.data[0].traces;
+                    var list = $("<ol class='ui list'></ol>");
+                    var item = "<li value='*'>物流单号: " + result.description + "</li>";
+                    list.append(item);
+                    for (var i = 0; i < traces.length; i++) {
+                        var item = traces[i];
+                        var item_component = "<li value='*'>[" + item.scanDate + "] " + item.desc + "</li>";
+                        var list_item = $(item_component);
+                        list.append(list_item);
+                    }
+                    $("#deliver_detail").append(list);
+                    $("#deliver_detail").show();
+                }
+            });
         }
     });
 </script>
