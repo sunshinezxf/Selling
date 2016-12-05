@@ -21,6 +21,9 @@
             <a class="title"><i class="teal file text icon left"></i><i class="dropdown icon"></i>订单管理</a>
 
             <div class="content menu">
+                #if($role == "admin" || $role == "express")
+                    <a id="order_summary" class="item" href="${path.concat('/order/summary')}">订单概览</a>
+                #end
                 <a id="order_list" class="item" href="${path.concat('/order/overview')}">订单列表</a>
             </div>
         </div>
