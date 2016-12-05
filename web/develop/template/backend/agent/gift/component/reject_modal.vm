@@ -1,0 +1,42 @@
+<div class="ui modal" id="reject_modal">
+  <i class="close icon"></i>
+  <div class="header">
+    回绝申请
+  </div>
+  <div class="image content">
+    <div class="description">
+        是否确认回绝该申请？
+        <p id="apply_id"></p>
+    </div>
+  </div>
+  <div class="actions">
+    <div class="ui button" id="reject_cancer">否，不回绝</div>
+    <div class="ui button" id="reject_confirm">是，回绝</div>
+  </div>
+</div>
+<script>
+    $('#reject_modal').modal('hide');
+    $("#apply_id").hide();
+    $("#reject_confirm").click(function(){
+    	 $('#reject_modal').modal('hide');
+        //传给后台applyId
+        var applyId=$("#apply_id").text();
+        if(applyId){
+            var url="${path.concat('/gift/apply/decline')}";
+            var param={applyId:applyId};
+            $.post(url,param,function(result){
+               if(result.responseCode=="RESPONSE_OK"){
+                   //alert(JSON.stringify(result));
+                   window.location.reload();
+               }else{
+                   alert(result.description);
+               }
+            });
+        }else{
+            alert("id不存在");
+        }
+    });
+	$("#reject_cancer").on('click', function() {
+		$('#reject_modal').modal('hide');
+	});
+</script>

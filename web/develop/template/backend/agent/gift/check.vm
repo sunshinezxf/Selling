@@ -1,0 +1,24 @@
+#parse("/common/util.vm")
+<html lang="zh_CN">
+<head>
+    #parse("/backend/initialization/init.vm")
+    #parse("/backend/common/datatable.lib.vm")
+    <title>赠送申请列表</title>
+</head>
+<body id="dashboard" class="started pushable" ontouchstart>
+    #parse("/backend/common/mobile_sidebar.vm")
+    #parse("/backend/common/mobile_navigate_with_login.vm")
+<div class="pusher">
+    <div class="full height">
+        <div class="constant">
+            #parse("/backend/common/navigate_with_login.vm")
+            #parse("/backend/common/sidebar.vm")
+        </div>
+        <div class="ui main container">
+             #parse("/backend/agent/gift/component/gift_check_table.vm")
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="${path.concat('/material/js/backend/structure.js')}"></script>
+</html>
