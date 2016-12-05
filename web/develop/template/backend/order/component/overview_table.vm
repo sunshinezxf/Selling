@@ -113,7 +113,7 @@
                 },
                 {
                     title: "时间", "mRender": function (data, type, full) {
-                    return ((new Date(full.createAt)).format("yyyy/MM/dd hh:mm"));
+                    return ((new Date(full.createAt)).format("yyyy-MM-dd"));
                 }
                 }
             ],
