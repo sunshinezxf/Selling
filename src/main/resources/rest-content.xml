@@ -156,6 +156,7 @@
                 /order/customerOrder/overview = roles["admin, express"]
                 /order/customerpay = anon
                 /order/viewexpress/** = anon
+                /order/view/* = roles["admin, express"]
 
                 /reimburse/inform = anon
                 /reimburse/apply = roles["admin, express"]

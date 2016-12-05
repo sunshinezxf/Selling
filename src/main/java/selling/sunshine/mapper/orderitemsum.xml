@@ -54,7 +54,7 @@
                 #{mode}
             </foreach>
         </if>
-        <if test="status != null and status != ''">
+        <if test="status != null">
             AND order_item_status = #{status}
         </if>
         <if test="statusList != null and statusList != ''">
