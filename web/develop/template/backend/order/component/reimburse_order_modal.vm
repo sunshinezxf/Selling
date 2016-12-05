@@ -1,0 +1,115 @@
+<div class="ui modal" id="reimburse_modal" style="display: none;">
+    <i class="close icon"></i>
+
+    <div class="header">订单取消</div>
+    <div class="image content">
+        <div class="description">
+            <div class="ui icon message" id="reimburse_info" style="display: none;">
+                <i class="inbox icon"></i>
+
+                <div class="content">
+                    <div class="header">
+                        订单取消
+                    </div>
+                    <p>当前仅支持取消客户订单，操作成功后，订单金额将自动发起退款。</p>
+                </div>
+            </div>
+            <div class="ui icon message" id="reimburse_process" style="display: none;">
+                <i class="notched circle loading icon"></i>
+
+                <div class="content">
+                    <div class="header">
+                        订单取消中
+                    </div>
+                    <p>系统正在取消该订单</p>
+                </div>
+            </div>
+            <div class="ui icon message" id="reimburse_success" style="display: none;">
+                <i class="checkmark icon"></i>
+
+                <div class="content">
+                    <div class="header">
+                        操作成功
+                    </div>
+                    <p>该订单已成功取消，退款处理中</p>
+                </div>
+            </div>
+            <div class="ui icon message" id="reimburse_failure" style="display: none;">
+                <i class="remove icon"></i>
+
+                <div class="content">
+                    <div class="header">
+                        操作失败
+                    </div>
+                    <p>该订单未成功取消，请重新尝试</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="actions">
+        <div class="ui green button" id="reimburse_confirm" style="display: none;">确认</div>
+        <div class="ui button" id="reimburse_cancel" style="display: none;">关闭</div>
+        <div class="ui green button" id="reimburse_complete" style="display: none;">完成</div>
+    </div>
+</div>
+<script>
+    $("#reimburse_modal").modal('hide');
+
+    $("#reimburse_cancel").on('click', function () {
+        $("#reimburse_modal").modal('hide');
+        $("#reimburse_info").hide();
+        $("#reimburse_process").hide();
+        $("#reimburse_success").hide();
+        $("#reimburse_failure").hide();
+    })
+
+    $("#reimburse_confirm").on('click', function () {
+        process();
+        reimburse();
+    });
+
+    function reimburse() {
+        var reimburse_url = "${path.concat('/order/reimburse')}";
+        $.post(reimburse_url, {'orderId': order_id}, function (result) {
+            $("#reimburse_process").hide();
+            if (result.responseCode == "RESPONSE_OK") {
+                success();
+            } else {
+                console.debug(result.description);
+                failure();
+            }
+        });
+    }
+
+    function inform() {
+        $("#reimburse_info").show();
+        $("#reimburse_process").hide();
+        $("#reimburse_success").hide();
+        $("#reimburse_failure").hide();
+        $("#reimburse_confirm").show();
+        $("#reimburse_cancel").show();
+    }
+
+    function process() {
+        $("#reimburse_info").hide();
+        $("#reimburse_process").show();
+        $("#reimburse_confirm").hide();
+        $("#reimburse_cancel").hide();
+    }
+
+    function success() {
+        $("#reimburse_process").hide();
+        $("#reimburse_success").show();
+        $("#reimburse_complete").show();
+    }
+
+    function failure() {
+        $("#reimburse_process").hide();
+        $("#reimburse_failure").show();
+        $("#reimburse_cancel").show();
+    }
+
+    $("#reimburse_complete").on('click', function () {
+        window.location.reload();
+    });
+</script>

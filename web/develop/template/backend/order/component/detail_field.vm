@@ -143,7 +143,7 @@
             <button class="ui green button">确认付款</button>
         #end
         #if(${order.status} == 'PAYED' && ${order.orderId})
-            <button class="ui green button">取消订单</button>
+            <button class="ui green button" id="cancel_btn">取消订单</button>
         #end
         #if(${order.status} == 'PAYED' || ${order.status} == 'SHIPPED')
             <button class="ui green button">确认签收</button>
@@ -157,16 +157,18 @@
     </div>
 </div>
 #end
+#parse("/backend/order/component/reimburse_order_modal.vm")
 <script>
+    var order = eval(${order});
+    var order_id = '';
+    if (order.orderId != null && order.orderId != '') {
+        order_id = order.orderId;
+    } else if (order.orderItemId != null && order.orderItemId != '') {
+        order_id = order.orderItemId;
+    }
+
     $(document).ready(function () {
-        var order = eval(${order});
         if (order.status == 'RECEIVED' || order.status == 'SHIPPED') {
-            var order_id = '';
-            if (order.orderId != null && order.orderId != '') {
-                order_id = order.orderId;
-            } else if (order.orderItemId != null && order.orderItemId != '') {
-                order_id = order.orderItemId;
-            }
             if (order_id == '') return;
             var url = "${path.concat('/express/')}" + order_id + "/query";
             $.get(url, function (result) {
@@ -190,4 +192,10 @@
             });
         }
     });
+
+    $("#cancel_btn").on('click', function () {
+        inform();
+        $("#reimburse_modal").modal('show');
+    })
+
 </script>
