@@ -74,4 +74,10 @@
         $("#order_item_modal").modal('hide');
         clear();
     })
+
+    $("#item_view").on('click', function () {
+        if (order_id != null && order_id != '') {
+            window.location.href = "${path.concat('/order/view/')}" + order_id;
+        }
+    });
 </script>

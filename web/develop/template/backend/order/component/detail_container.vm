@@ -4,14 +4,14 @@
             <i class="home icon"></i>
 
             <div class="content">
-                订单管理
+                订单详情
                 <div class="sub header">
                     <div class="ui breadcrumb">
                         <a class="section">订单管理</a>
 
                         <div class="divider">/</div>
 
-                        <div class="section">订单列表</div>
+                        <a class="section">订单列表</a>
 
                         <div class="divider">/</div>
 
@@ -20,6 +20,11 @@
                 </div>
             </div>
         </h1>
+    </div>
+    <div class="row">
+        <div class="column">
+            #parse("/backend/order/component/detail_field.vm")
+        </div>
     </div>
 </div>
 <script>
