@@ -300,7 +300,7 @@ public class ExpressController {
 		}
 		Express express = ((List<Express>) fetchExpressResponse.getData()).get(0);
 		ResultData traceResponse = expressService.traceExpress(express.getExpressNumber(), "TRACES");
-		result.setData(traceResponse);
+		result.setData(traceResponse.getData());
 		return result;
     }
 
