@@ -32,8 +32,8 @@
     </resultMap>
 
     <insert id="insert" parameterType="selling.sunshine.model.gift.GiftApply" useGeneratedKeys="false">
-        INSERT INTO gift_apply(gift_apply_id, goods_id, agent_id, potential, apply_line, apply_status, block_flag, create_time)
-        VALUES (#{applyId}, #{goods.goodsId}, #{agent.agentId}, #{potential}, #{line}, #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler}, #{blockFlag}, #{createAt})
+        INSERT INTO gift_apply(gift_apply_id, goods_id, agent_id, potential, apply_line, apply_status, block_flag, create_time,last_quantity,total_quantity)
+        VALUES (#{applyId}, #{goods.goodsId}, #{agent.agentId}, #{potential}, #{line}, #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler}, #{blockFlag}, #{createAt},#{last},#{total})
     </insert>
 
     <select id="query" parameterType="java.util.Map" resultMap="giftApplyVo">

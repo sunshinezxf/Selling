@@ -1,9 +1,10 @@
 #parse("/common/util.vm")
+<!DOCTYPE html>
 <html lang="zh_CN">
 <head>
     #parse("/backend/initialization/init.vm")
     #parse("/backend/common/datatable.lib.vm")
-    <title>提现申请</title>
+    <title>商品列表</title>
 </head>
 <body id="dashboard" class="started pushable" ontouchstart>
     #parse("/backend/common/mobile_sidebar.vm")
@@ -15,7 +16,7 @@
             #parse("/backend/common/sidebar.vm")
         </div>
         <div class="ui main container">
-            #parse("/backend/withdraw/component/withdraw_check_table.vm")
+            #parse("/backend/goods/component/goods_list_panel.vm")
         </div>
     </div>
 </div>

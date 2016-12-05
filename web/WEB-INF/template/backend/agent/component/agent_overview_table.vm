@@ -1,6 +1,6 @@
 <div class="ui segment">
     <label class="ui header">代理排行</label>
-    <table id="agent_overview_table" class="ui tablet stackable table"></table>
+    <table id="agent_overview_table" class="ui tablet stackable table" cellspacing="0" width="100%"></table>
 </div>
 <script>
     $(document).ready(function () {

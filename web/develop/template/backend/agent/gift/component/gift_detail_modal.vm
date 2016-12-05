@@ -37,7 +37,7 @@
 	</div>
 	<div class="actions">
 	    <form id="gift_quantity_form" class="form-horizontal">
-					<input type="hidden" id="apply_gift_id" name="applyId"></input>
+			<input type="hidden" id="apply_gift_id" name="applyId"></input>
 					<div class="form-group">
 						<label for="gift_quantity"
 							class="ui label"

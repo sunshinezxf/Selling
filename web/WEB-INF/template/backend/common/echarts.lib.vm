@@ -1,0 +1,2 @@
+<script type="text/javascript" src="${path.concat('/plugins/echarts/js/echarts.min.js')}"></script>
+<script type="text/javascript" src="${path.concat('/plugins/echarts/theme/macarons.js')}"></script>

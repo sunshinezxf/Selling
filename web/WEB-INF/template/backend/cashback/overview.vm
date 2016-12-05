@@ -2,8 +2,7 @@
 <html lang="zh_CN">
 <head>
     #parse("/backend/initialization/init.vm")
-    #parse("/backend/common/datatable.lib.vm")
-    <title>提现申请</title>
+    <title>返现概览</title>
 </head>
 <body id="dashboard" class="started pushable" ontouchstart>
     #parse("/backend/common/mobile_sidebar.vm")
@@ -15,7 +14,7 @@
             #parse("/backend/common/sidebar.vm")
         </div>
         <div class="ui main container">
-            #parse("/backend/withdraw/component/withdraw_check_table.vm")
+            #parse("/backend/cashback/component/cashback_overview_table.vm")
         </div>
     </div>
 </div>

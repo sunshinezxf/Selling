@@ -1,0 +1,144 @@
+<div class="ui segment">
+    <div class="ui header">
+        订单详情
+    </div>
+    <div class="ui list">
+        <div class="item">
+            <i class="browser icon"></i>
+            订单编号:
+            #if(${order} && ${order.orderId})
+                ${order.orderId}
+            #else
+                ${order.orderItemId}
+            #end
+        </div>
+        <div class="item">
+            <i class="user icon"></i>
+            顾客姓名:
+            #if(${order} && ${order.receiverName})
+                ${order.receiverName}
+            #else
+                ${order.customer.name}
+            #end
+        </div>
+        <div class="item">
+            <i class="location arrow icon"></i>
+            收货地址:
+            #if(${order} && ${order.receiverName})
+                ${order.receiverAddress}
+            #else
+                ${order.receiveAddress}
+            #end
+        </div>
+        <div class="item">
+            <i class="in cart icon"></i>
+            商品信息:
+            #if(${order} && ${order.quantity})
+                ${order.goods.name} x ${order.quantity}
+            #else
+                ${order.goods.name} x ${order.goodsQuantity}
+            #end
+        </div>
+        #if(${order.agent} || ${order.order.agent})
+            <div class="item">
+                <i class="spy icon"></i>
+                代理商:
+                #if(${order.agent})
+                    ${order.agent.name}
+                #else
+                    ${order.order.agent.name}
+                #end
+            </div>
+        #end
+    </div>
+</div>
+<div class="ui segment">
+    <div class="ui header">
+        订单状态:
+        #if(${order.status} == 'NOT_PAYED')
+            未付款
+        #elseif(${order.status} == 'PAYED')
+            已付款
+        #elseif(${order.status} == 'SHIPPED')
+            已发货
+        #elseif(${order.status} == 'RECEIVED')
+            已签收
+        #elseif(${order.status} == 'EXCHANGED')
+            已换货
+        #elseif(${order.status} == 'REFUNDING')
+            退款中
+        #elseif(${order.status} == 'REFUNDED')
+            已退款
+        #end
+    </div>
+    <div class="ui three top attached steps">
+        <div class="#if(${order.status} == 'NOT_PAYED' || ${order.status} == 'REFUNDING' || ${order.status} ==
+            'REFUNDED') disabled #end step">
+            <i class="payment icon"></i>
+
+            <div class="content">
+                <div class="title">付款状态</div>
+                <div class="description">
+                    #if(${order.status} == 'NOT_PAYED')
+                        未付款
+                    #elseif(${order.status} == 'REFUNDING')
+                        退款处理中
+                    #elseif(${order.status} == 'REFUNDED')
+                        已退款
+                    #else
+                        已付款
+                    #end
+                </div>
+            </div>
+        </div>
+        <div class="#if(${order.status} == 'NOT_PAYED' || ${order.status} == 'REFUNDING' || ${order.status} ==
+            'REFUNDED' || ${order.status} == 'PAYED') disabled #end step">
+
+            <i class="truck icon"></i>
+
+            <div class="content">
+                <div class="title">物流状态</div>
+                <div class="description">
+                    #if(${order.status} == 'NOT_PAYED' || ${order.status} == 'REFUNDING' || ${order.status} ==
+                        'REFUNDED' || ${order.status} == 'PAYED')
+                        无物流信息
+                    #else
+                        快递单详情
+                    #end
+                </div>
+            </div>
+        </div>
+        <div class="#if(${order.status} != 'RECEIVED') disabled #end step">
+            <i class="write icon"></i>
+
+            <div class="content">
+                <div class="title">签收状态</div>
+                <div class="description">
+                    #if(${order.status} == 'RECEIVED')
+                        订单已签收
+                    #else
+                        订单尚未签收
+                    #end
+                </div>
+            </div>
+        </div>
+    </div>
+    #if(${order.status} == 'SHIPPED' || ${order.status} == 'RECEIVED')
+        <div class="ui attached segment">
+
+        </div>
+    #end
+</div>
+<div class="ui segment">
+    <div class="ui header">
+        订单操作
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        var order = eval(${order});
+        if (order.status == 'RECEIVED' || order.status == 'SHIPPED') {
+            
+        }
+    });
+</script>

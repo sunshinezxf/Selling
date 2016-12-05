@@ -67,7 +67,7 @@
                 },
                 {
                     title: "申请时间", "mRender": function (data, type, full) {
-                        return ((new Date(full.createAt)).format("yyyy/MM/dd"));
+                        return ((new Date(full.createAt)).format("yyyy-MM-dd"));
                     }
                 },
                 {

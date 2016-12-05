@@ -2,8 +2,11 @@
 <html lang="zh_CN">
 <head>
     #parse("/backend/initialization/init.vm")
+    #parse("/backend/common/echarts.lib.vm")
     #parse("/backend/common/datatable.lib.vm")
-    <title>提现申请</title>
+    <link rel="stylesheet" href="${path.concat('/material/css/backend/info-box.css')}">
+    <link rel="stylesheet" href="${path.concat('/material/css/backend/order.css')}">
+    <title>订单详情</title>
 </head>
 <body id="dashboard" class="started pushable" ontouchstart>
     #parse("/backend/common/mobile_sidebar.vm")
@@ -15,10 +18,12 @@
             #parse("/backend/common/sidebar.vm")
         </div>
         <div class="ui main container">
-            #parse("/backend/withdraw/component/withdraw_check_table.vm")
+            #parse("/backend/order/component/detail_container.vm")
         </div>
     </div>
 </div>
 </body>
 <script type="text/javascript" src="${path.concat('/material/js/backend/structure.js')}"></script>
+<script type="text/javascript">
+</script>
 </html>
