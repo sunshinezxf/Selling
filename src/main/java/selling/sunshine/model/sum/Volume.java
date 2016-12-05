@@ -10,24 +10,22 @@ public class Volume {
     private double price;
 
     public Volume() {
-
+        super();
     }
 
     public Volume(String agentId, String goodsId, int quantity) {
+        this();
         this.agentId = agentId;
         this.goodsId = goodsId;
         this.quantity = quantity;
     }
 
     public Volume(String agentId, String goodsId, int quantity, double price) {
-		super();
-		this.agentId = agentId;
-		this.goodsId = goodsId;
-		this.quantity = quantity;
-		this.price = price;
-	}
+        this(agentId, goodsId, quantity);
+        this.price = price;
+    }
 
-	public String getAgentId() {
+    public String getAgentId() {
         return agentId;
     }
 
@@ -51,13 +49,13 @@ public class Volume {
         this.quantity = quantity;
     }
 
-	public double getPrice() {
-		return price;
-	}
+    public double getPrice() {
+        return price;
+    }
 
-	public void setPrice(double price) {
-		this.price = price;
-	}
-    
-    
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+
 }

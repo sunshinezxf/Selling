@@ -1382,7 +1382,44 @@ public class OrderController {
         return "";
     }
 
-
+    @RequestMapping(method = RequestMethod.GET, value = "/view/{orderId}")
+    public ModelAndView view(@PathVariable("orderId") String orderId) {
+        ModelAndView view = new ModelAndView();
+        Map<String, Object> condition = new HashMap<>();
+        if (StringUtils.isEmpty(orderId)) {
+            view.setViewName("redirect:/order/overview");
+            return view;
+        }
+        if (orderId.startsWith("CUO")) {
+            condition.put("orderId", orderId);
+            ResultData response = orderService.fetchCustomerOrder(condition);
+            if (response.getResponseCode() != ResponseCode.RESPONSE_OK) {
+                view.setViewName("redirect:/order/overview");
+                return view;
+            }
+            view.addObject("order", ((List<CustomerOrder>) response.getData()).get(0));
+        } else {
+            condition.put("orderItemId", orderId);
+            ResultData response = orderService.fetchOrderItem(condition);
+            if (response.getResponseCode() != ResponseCode.RESPONSE_OK) {
+                view.setViewName("redirect:/order/overview");
+                return view;
+            }
+            OrderItem item = ((List<OrderItem>) response.getData()).get(0);
+            condition.clear();
+            condition.put("orderId", item.getOrder().getOrderId());
+            response = orderService.fetchOrder(condition);
+            if (response.getResponseCode() != ResponseCode.RESPONSE_OK) {
+                view.setViewName("redirect:/order/overview");
+                return view;
+            }
+            Order order = ((List<Order>) response.getData()).get(0);
+            item.setOrder(order);
+            view.addObject("order", item);
+        }
+        view.setViewName("/backend/order/detail");
+        return view;
+    }
 }
 
 
