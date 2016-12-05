@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import common.sunshine.dao.BaseDao;
 import common.sunshine.model.selling.order.OrderItem;
+import common.sunshine.model.selling.order.support.OrderItemStatus;
 import common.sunshine.pagination.DataTablePage;
 import common.sunshine.pagination.DataTableParam;
 import common.sunshine.utils.IDGenerator;
@@ -92,22 +93,22 @@ public class OrderItemDaoImpl extends BaseDao implements OrderItemDao {
             if (json.containsKey("status")) {
                 switch (json.getString("status")) {
                     case "PAYED":
-                        condition.put("status", 1);
+                        condition.put("status", OrderItemStatus.PAYED.getCode());
                         break;
                     case "NOT_PAYED":
-                        condition.put("status", 0);
+                        condition.put("status", OrderItemStatus.NOT_PAYED.getCode());
                         break;
                     case "SENT":
-                        condition.put("status", 2);
+                        condition.put("status", OrderItemStatus.SHIPPED.getCode());
                         break;
                     case "RECEIVED":
-                        condition.put("status", 3);
+                        condition.put("status", OrderItemStatus.RECEIVED.getCode());
                         break;
                     case "REFUNDING":
-                        condition.put("status", 5);
+                        condition.put("status", OrderItemStatus.REFUNDING.getCode());
                         break;
                     case "REFUNDED":
-                        condition.put("status", 6);
+                        condition.put("status", OrderItemStatus.REFUNDED.getCode());
                         break;
                 }
             }
