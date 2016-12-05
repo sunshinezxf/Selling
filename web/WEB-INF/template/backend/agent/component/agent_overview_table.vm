@@ -1,94 +1,28 @@
-<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id-target="agent-management">
-    <div class="row">
-        <div class="col-md-12 col-lg-12">
-            <h1><i class="fa fa-home"></i> 代理概览 </h1>
-            <ol class="breadcrumb">
-                <li><a href="${path.concat('/dashboard')}">首页</a></li>
-                <li><a data-toggle="collapse" data-parent="#accordion" href="#agent-management">代理管理</a></li>
-                <li class="active">代理概览</li>
-            </ol>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12 col-lg-12" style="margin-bottom:2em;">
-            <a href="${path.concat('/message/send')}" class="btn btn-primary">短信推送</a>&nbsp;
-            <a href="${path.concat('/agent/downloadAgentExcel')}" class="btn btn-primary">代理信息下载</a>
-            <a href="${path.concat('/agent/kpi')}" class="btn btn-primary">agentKPI</a>
-        </div>
-        <div class="col-md-12 col-lg-12">
-            <table id="overview_agent_table" class="table table-striped table-bordered" cellspacing="0" width="100%">
-            </table>
-        </div>
-    </div>
+<div class="ui segment">
+    <label class="ui header">代理排行</label>
+    <table id="agent_overview_table" class="ui tablet stackable table"></table>
 </div>
-<div class="modal fade" id="modify_modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">x</button>
-                <h4 class="modal-title">提示</h4>
-            </div>
-            <div class="modal-body">
-                <div class="btn-group" id="main">
-                    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
-                        选择上级代理商 <span class="caret"></span>
-                    </button>
-                    <ul id="select" class="dropdown-menu" role="menu" style="height:200px;overflow:scroll">
-
-                    </ul>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="dialog_modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">x</button>
-                <h4 class="modal-title">提示</h4>
-            </div>
-            <div class="modal-body">
-                <p class="form-group">
-                    禁用该代理商后，该代理商的信息将会被注销掉，该代理商的手机号码可以被重新注册！！！
-                </p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal" id="dialog_confirm">确认</button>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="waring_modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">x</button>
-                <h4 class="modal-title">警告</h4>
-            </div>
-            <div class="modal-body">
-                <p class="form-group">
-                    一个代理商的上级代理商的上级代理商(或上上级代理商。。。)不能是他自己！！！
-                </p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">确认</button>
-            </div>
-        </div>
-    </div>
-</div>
-#parse("/backend/agent/component/agent_detail_modal.vm")
-#parse("/backend/order/component/order_item_modal.vm")
 <script>
     $(document).ready(function () {
-        $("#overview_agent_table").DataTable({
+    	
+    	  $("#agent_overview_table").on('click', 'tr', function () {
+              if ($(this).hasClass('selected')) {
+                  $(this).removeClass('selected');
+              } else {
+                  table.$('tr.selected').removeClass('selected');
+                  $(this).addClass('selected');
+              }
+              if (table.rows('.selected').data().length == 1) {
+                  var current = table.rows('.selected').data()['0'];
+                  var url="${path.concat('/agent/detail/')}"+current.agentId;
+                  window.location.href = url;
+              }
+          })
+          
+         var table = $("#agent_overview_table").DataTable({
             searching: true,
             paging: true,
-            aaSorting: [[1, "desc"]],
+            aaSorting: [[0, "asc"]],
             "sPaginationType": "full_numbers",
             "bPaginate": true,
             "bLengthChange": true,
@@ -98,7 +32,7 @@
             "bProcessing": true,
             "bServerSide": true,
             "bInfoFiltered": false,
-            "sAjaxSource": '${path.concat('/agent/overview')}',
+            "sAjaxSource": '${path.concat('/agent/kpi')}',
             "infoFiltered": false,
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                 $(nRow).removeClass('dataTable');
@@ -120,40 +54,13 @@
                 {
                     title: "姓名", "mRender": function (data, type, full) {
                     var url = "${path.concat('/agent/detail/')}" + full.agentId;
-                    var operation = "<a id='" + full.agentId + "' href='" + url + "'>" + full.name + "</a>";
+                    var operation = "<a id='" + full.agentId + "' href='" + url + "'>" + full.agentName + "</a>";
                     return operation;
                 }
                 },
-                {title: "手机", "mData": "phone"},
-                {
-                    title: "注册时间", "mRender": function (data, type, full) {
-                    return ((new Date(full.createAt)).format("yyyy/MM/dd hh:mm"));
-                }
-                },
-                {
-                    title: "审核状态", "mRender": function (data, type, full) {
-                    var operation = "";
-                    if (full.granted == true) {
-                        operation += "已审核通过";
-                    } else {
-                        operation += "审核未通过";
-                    }
-                    return operation;
-                }
-                },
-                {
-                    title: "操作", "mRender": function (data, type, full) {
-                    var operation = "";
-                    var giftCofigUrl = "${path.concat('/agent/gift/')}" + full.agentId;
-                    var giftCofig_button = "<button type='button' class='btn btn-success btn-group-sm' onclick=\"javascript:location.href='" + giftCofigUrl + "'\">赠送</button>&nbsp;"
-                    operation += giftCofig_button;
-                    var limit_button = "<button type='button' class='btn btn-warning btn-group-sm' id='" + full.agentId + "' onclick=setId(this) data-toggle='modal' data-target='#dialog_modal'>禁用</button>&nbsp;"
-                    operation += limit_button;
-                    var update_button = "<button type='button' class='btn btn-info btn-group-sm' id='" + full.agentId + "' onclick=modifyUpperAgent(this) data-toggle='modal' data-target='#modify_modal'>修改上级代理商</button>"
-                    operation += update_button;
-                    return operation;
-                }
-                }
+                {title: "客户数", "mData": "customerQuantity"},
+                {title: "下级代理商数", "mData": "directAgentQuantity"},
+                {title: "贡献度", "mData": "agentContribution"}
             ],
             "language": {
                 "processing": "正在加载中",
@@ -170,262 +77,10 @@
                     "next": "下一页",
                     "last": "尾页"
                 }
-            }
+            },
+            "pagingType": "simple_numbers"
         });
+    
+              
     });
-
-    function detail(obj) {
-        $.post("${path.concat('/agent/detail/')}" + obj.id, function (result) {
-            document.getElementById("agentAddress").innerHTML = "居住地： " + result.data.agent.address;
-            if (result.data.agent.wechat == null) {
-                document.getElementById("agentWechat").innerHTML = "微信号： 尚未绑定";
-            } else {
-                document.getElementById("agentWechat").innerHTML = "微信号： " + result.data.agent.wechat;
-            }
-            if (result.data.agent.upperAgent == null) {
-                document.getElementById("upperAgent").innerHTML = "上级代理商： 无";
-            } else {
-                document.getElementById("upperAgent").innerHTML = "上级代理商： " + result.data.agent.upperAgent.name;
-            }
-            document.getElementById("agentclaimScale").innerHTML = "群规模： " + result.data.agent.claimScale + "人";
-            document.getElementById("agentCoffer").innerHTML = "账户余额： " + result.data.agent.coffer + "元";
-            document.getElementById("agentRefund").innerHTML = "累计返现金额： " + result.data.agent.agentRefund + "元";
-            if ((result.data.orderList == null) || (result.data.orderList == "")) {
-                document.getElementById("orderList").innerHTML = "最近三个月无订单";
-            } else {
-                var f = document.getElementById("orderList");
-                var childs = f.childNodes;
-                for (var i = childs.length - 1; i >= 0; i--) {
-                    f.removeChild(childs[i]);
-                }
-                var node1 = "<table class='table table-striped'><tr><th>订单号</th><th>状态</th><th>日期</th><th>操作</th></tr>";
-                for (var i = 0; i < result.data.orderList.length; i++) {
-                    var order = result.data.orderList[i];
-                    if (order.status == "PAYED") {
-                        var status = "已付款未发货";
-                    } else if (order.status == "PATIAL_SHIPMENT") {
-                        var status = "部分发货";
-                    } else if (order.status == "FULLY_SHIPMENT") {
-                        var status = "完全发货";
-                    } else if (order.status == "SAVED") {
-                        var status = "已保存未支付";
-                    } else if (order.status == "SUBMITTED") {
-                        var status = "已提交未支付";
-                    } else {
-                        var status = "已结束";
-                    }
-                    var date = (new Date(order.createAt)).format("yyyy/MM/dd");
-                    var node2 = "<tr><td>" + order.orderId + "</td><td>" + status + "</td><td>" + date + "</td><td><button type='button' class='btn btn-success' id='" + order.orderId + "'  onclick=orderItemDetail(this) data-toggle='modal' data-target='#order_item_modal'>详情</button></td></tr>";
-                    node1 += node2;
-                }
-                node1 += "</table>";
-                $("#orderList").append(node1);
-            }
-            if (result.data.refundRecordList == "") {
-                document.getElementById("refundRecordList").innerHTML = "当前无返现记录";
-                document.getElementById("refundRecordContainer").style.display = "none";
-            } else {
-                var amount = 0;
-                var amount2 = 0;
-                for (var i = 0; i < result.data.refundRecordList.length; i++) {
-                    var refundRecord = result.data.refundRecordList[i];
-                    amount += refundRecord.amount;
-                    if (!refundRecord.blockFlag) {
-                        amount2 += refundRecord.amount;
-                    }
-                }
-
-                document.getElementById("refundRecordList").innerHTML = "累计返现金额：" + amount + "元<br>本月预计返现金额：" + amount2 + "元";
-                document.getElementById("refundRecordContainer").style.display = "block";
-                $.post("${path.concat('/refund/statistic/')}" + result.data.agent.agentId, function (result) {
-                    $('#refundRecordContainer').highcharts({
-                        title: {
-                            text: '返现详细记录（过去一年内）',
-                            x: -20 //center
-                        },
-                        subtitle: {
-                            text: '过去一年内总计返现' + result.totalAmount + '元',
-                            x: -20
-                        },
-                        xAxis: {
-                            categories: result.categories
-                        },
-                        yAxis: {
-                            title: {
-                                text: '金额 (元)'
-                            },
-                            plotLines: [{
-                                value: 0,
-                                width: 1,
-                                color: '#808080'
-                            }]
-                        },
-                        tooltip: {
-                            valueSuffix: '元'
-                        },
-                        legend: {
-                            layout: 'vertical',
-                            align: 'right',
-                            verticalAlign: 'middle',
-                            borderWidth: 0
-                        },
-                        series: [{
-                            name: '返现金额',
-                            data: result.data
-                        }]
-                    });
-                });
-            }
-            if (result.data.withdrawRecordList == "") {
-                document.getElementById("withdrawRecordList").innerHTML = "当前无提现记录";
-                document.getElementById("withdrawRecordContainer").style.display = "none";
-            } else {
-                var amount = 0;
-                for (var i = 0; i < result.data.withdrawRecordList.length; i++) {
-                    var withdrawRecord = result.data.withdrawRecordList[i];
-                    amount += withdrawRecord.amount;
-                }
-                document.getElementById("withdrawRecordList").innerHTML = "总提现金额：" + amount + "元";
-                document.getElementById("withdrawRecordContainer").style.display = "block";
-                $.post("${path.concat('/withdraw/statistic/')}" + result.data.agent.agentId, function (result) {
-                    $('#withdrawRecordContainer').highcharts({
-                        title: {
-                            text: '提现详细记录（过去一年内）',
-                            x: -20 //center
-                        },
-                        subtitle: {
-                            text: '过去一年内总计提现' + result.totalAmount + '元',
-                            x: -20
-                        },
-                        xAxis: {
-                            categories: result.categories
-                        },
-                        yAxis: {
-                            title: {
-                                text: '金额 (元)'
-                            },
-                            plotLines: [{
-                                value: 0,
-                                width: 1,
-                                color: '#808080'
-                            }]
-                        },
-                        tooltip: {
-                            valueSuffix: '元'
-                        },
-                        legend: {
-                            layout: 'vertical',
-                            align: 'right',
-                            verticalAlign: 'middle',
-                            borderWidth: 0
-                        },
-                        series: [{
-                            name: '提现金额',
-                            data: result.data
-                        }]
-                    });
-                });
-            }
-        });
-    }
-
-    function orderItemDetail(obj) {
-        $.post("${path.concat('/order/orderItem/')}" + obj.id, function (result) {
-
-
-            document.getElementById("model_p").innerHTML = "代理商：" + result.data.order.agent.name;
-
-            var f = document.getElementById("model_table");
-            var childs = f.childNodes;
-            for (var i = childs.length - 1; i >= 0; i--) {
-                f.removeChild(childs[i]);
-            }
-
-            var node = "<tr><th>客户</th><th>产品</th><th>数量</th><th>价格</th></tr>";
-            for (var i = 0; i < result.data.order.orderItems.length; i++) {
-                var orderItem = result.data.order.orderItems[i];
-                node += "<tr><td>" + orderItem.customer.name + "</td><td>" + orderItem.goods.name + "</td><td>" + orderItem.goodsQuantity + "</td><td>" + orderItem.orderItemPrice + "</td>";
-            }
-            $("#model_table").append(node);
-            document.getElementById("model_total").innerHTML = "总计:&nbsp;" + result.data.totalPrices + "元";
-            var node1 = "";
-            for (var key in result.data.goods_quantity_Map) {
-                node1 += "商品:&nbsp;" + key + "&nbsp;&nbsp;&nbsp;&nbsp;总共:&nbsp;" + result.data.goods_quantity_Map[key] + "件<br>"
-            }
-            document.getElementById("model_quantity").innerHTML = node1;
-        });
-    }
-
-    var id;
-    function setId(obj) {
-        id = obj.id;
-    }
-
-
-    function modifyUpperAgent(obj) {
-        id = obj.id;
-        var url = "${path.concat('/agent/list/')}" + obj.id;
-        $.post(url, function (result) {
-            if (result.responseCode == "RESPONSE_OK") {
-                var agentList = result.data;
-                var f = document.getElementById("select");
-                var childs = f.childNodes;
-                for (var i = childs.length - 1; i >= 0; i--) {
-                    f.removeChild(childs[i]);
-                }
-                for (var i = 0; i < agentList.length; i++) {
-                    var agent = agentList[i];
-                    var node = "<li><a id='" + agent.agentId + "' onclick=select(this) href='#'>" + agent.name + "</a></li>";
-                    $("#select").append(node);
-                }
-
-            }
-        });
-    }
-
-    function select(obj) {
-        var url = "${path.concat('/agent/modifyUpperAgent/')}" + id + "/" + obj.id;
-        $.post(url, function (result) {
-            if (result.responseCode == "RESPONSE_OK") {
-                $("#modify_modal").modal('hide');
-            } else if (result.description == "recursion") {
-                $("#waring_modal").modal('show');
-            } else {
-
-            }
-        });
-    }
-
-    $("#dialog_modal").modal({
-        show: false,
-        keyboard: true
-    });
-
-    $("#modify_modal").modal({
-        show: false,
-        keyboard: true
-    });
-
-    $("#waring_modal").modal({
-        show: false,
-        keyboard: true
-    });
-
-    $("#dialog_confirm").on('click', function () {
-        var url = "${path.concat('/agent/forbid/')}" + id;
-        window.location.href = url;
-    });
-
 </script>
-<style>
-    #agent_detail_modal .modal-body {
-        height: 600px;
-        overflow: auto;
-    }
-
-    #agent_detail_modal .modal-body #orderList {
-        height: 300px;
-        overflow: auto;
-    }
-
-</style>

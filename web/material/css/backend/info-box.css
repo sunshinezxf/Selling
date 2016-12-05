@@ -1,39 +1,43 @@
 div .info-box {
   display: block;
-  min-height: 90px;
+  min-height: 100px;
   background: #fff;
   width: 100%;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
   border-radius: 2px;
-  margin-bottom: 15px; }
+  margin-bottom: 25px; }
+
+div div .info-box:last-child {
+  margin-bottom: 0; }
 
 div .info-box-icon {
   border-radius: 2px 0;
   display: block;
   float: left;
-  height: 90px;
-  width: 90px;
+  height: 100px;
+  width: 100px;
   text-align: center;
-  font-size: 45px;
-  line-height: 90px;
+  font-size: 50px;
+  line-height: 100px;
   background: rgba(0, 0, 0, 0.2); }
 
 div .info-box-content {
-  padding: 5px 10px;
-  margin-left: 90px; }
+  padding: 15px 10px;
+  margin-left: 100px; }
 
 div .info-box-text {
   display: block;
-  font-size: 14px;
+  font-size: 16px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  text-transform: uppercase; }
+  text-transform: uppercase;
+  margin-bottom: 12px; }
 
 div .info-box-number {
   display: block;
   font-weight: bold;
-  font-size: 18px; }
+  font-size: 20px; }
 
 div .alert {
   padding: 0; }
@@ -41,7 +45,7 @@ div .alert {
 div span .icon-item {
   text-align: center;
   box-sizing: border-box;
-  line-height: 90px; }
+  line-height: 100px; }
 
 div .bg-green {
   background-color: #00a65a !important; }

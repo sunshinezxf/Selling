@@ -1,46 +1,77 @@
-<div class="modal fade" id="order_item_modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">x</button>
-                <h4 class="modal-title">订单详情</h4>
-            </div>
-            <div class="modal-body">
-                <p class="text-info" id="model_p"></p>
-                <table class="table table-striped" id="model_table">
-                      
-                </table>
-                <p class="text-info" id="model_total" ></p>
-                <p class="text-info" id="model_quantity"></p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal">确认</button>
+<div class="ui modal" id="order_item_modal" style="display:none;">
+    <i class="close icon"></i>
+
+    <div class="header">订单详情</div>
+    <div class="image content">
+        <div class="description">
+            <div class="ui segments">
+                <div class="ui segment">
+                    <div class="inline field">
+                        <label>订单编号: </label>
+                        <text id="order_no"></text>
+                    </div>
+                </div>
+                <div class="ui segment">
+                    <div class="inline field">
+                        <label>顾客姓名: </label>
+                        <text id="customer_name"></text>
+                    </div>
+                </div>
+                <div class="ui segment">
+                    <div class="inline field">
+                        <label>代理商: </label>
+                        <text id="agent_name"></text>
+                    </div>
+                </div>
+                <div class="ui segment">
+                    <div class="inline field">
+                        <label>购买商品: </label>
+                        <text id="goods"></text>
+                    </div>
+                </div>
+                <div class="ui segment">
+                    <div class="inline field">
+                        <label>创建时间:</label>
+                        <text id="order_time"></text>
+                    </div>
+                </div>
+                <div class="ui segment">
+                    <div class="inline field">
+                        <label>订单状态:</label>
+                        <text id="order_status"></text>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+    <div class="actions">
+        <div class="ui green button" id="item_view">查看</div>
+        <div class="ui button" id="item_close">关闭</div>
+    </div>
 </div>
 <script>
-    $(function () {
-        $("#order_item_modal").modal({
-            show: false,
-            keyboard: true
-        });
-    });
-    
-    function expressDetail(obj){
-         $.post("${path.concat('/express/detail/')}"+obj.id, function (result) {
-            document.getElementById("expressNumber").innerHTML=result.data.express.expressNumber;
-            document.getElementById("createAt").innerHTML=(new Date(result.data.express.createAt)).format("yyyy/MM/dd");
-            document.getElementById("senderName").innerHTML=result.data.express.senderName;
-            document.getElementById("senderPhone").innerHTML=result.data.express.senderPhone;
-            document.getElementById("senderAddress").innerHTML=result.data.express.senderAddress;
-            document.getElementById("receiverName").innerHTML=result.data.express.receiverName;
-            document.getElementById("receiverPhone").innerHTML=result.data.express.receiverPhone;
-             document.getElementById("receiverAddress").innerHTML=result.data.express.receiverAddress;
-              document.getElementById("goodsName").innerHTML=result.data.express.goodsName;
-            $("#express_detail_modal").modal('show');   
-         
-         });
+    $("#order_item_modal").modal('hide');
+
+    function clear() {
+        $("#order_no").text("");
+        $("#customer_name").text("");
+        $("#agent_name").text("");
+        $("#goods").text("");
+        $("#order_time").text("");
+        $("#order_status").text("");
     }
- 
+
+    function fill(order_no, customer_name, agent_name, goods_info, order_time, order_status) {
+        $("#order_no").text(order_no);
+        $("#customer_name").text(customer_name);
+        $("#agent_name").text(agent_name);
+        $("#goods").text(goods_info);
+        $("#order_time").text(order_time);
+        $("#order_status").text(order_status);
+    }
+
+    $("#item_close").on('click', function () {
+        $("#order_item_modal").modal('hide');
+        clear();
+    })
 </script>

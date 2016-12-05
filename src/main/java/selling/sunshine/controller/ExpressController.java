@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import selling.sunshine.model.*;
+import common.sunshine.model.selling.express.Express;
 import common.sunshine.model.selling.express.Express4Agent;
 import common.sunshine.model.selling.express.Express4Application;
 import common.sunshine.model.selling.express.Express4Customer;
@@ -258,6 +259,49 @@ public class ExpressController {
             result.setResponseCode(ResponseCode.RESPONSE_ERROR);
         }
         return result;
+    }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/{orderId}/query")
+    public ResultData queryExpressByOrderId(@PathVariable("orderId") String orderId){
+    	ResultData result = new ResultData();
+    	Map<String, Object> condition = new HashMap<String, Object>();
+    	ResultData fetchExpressResponse = null;
+    	if(orderId.startsWith("ORI")){
+    		condition.clear();
+			condition.put("orderItemId", orderId);
+			condition.put("blockFlag", false);
+			fetchExpressResponse = expressService.fetchExpress4Agent(condition);
+    	} else if(orderId.startsWith("CUO")){
+    		condition.clear();
+			condition.put("orderId", orderId);
+			condition.put("blockFlag", false);
+			fetchExpressResponse = expressService.fetchExpress4Customer(condition);
+    	} else if(orderId.startsWith("EOI")){
+    		condition.clear();
+			condition.put("orderId", orderId);
+			condition.put("blockFlag", false);
+			fetchExpressResponse = expressService.fetchExpress4Application(condition);
+    	}
+    	if(fetchExpressResponse == null){
+    		result.setResponseCode(ResponseCode.RESPONSE_NULL);
+			result.setDescription("订单号不正确");
+			return result;	
+    	}
+    	if(((List<Express>)fetchExpressResponse.getData()).isEmpty()){
+			result.setResponseCode(ResponseCode.RESPONSE_NULL);
+			result.setDescription("该订单无快递信息");
+			return result;
+		}
+		if(fetchExpressResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR){
+			result.setResponseCode(fetchExpressResponse.getResponseCode());
+			result.setDescription(fetchExpressResponse.getDescription());
+			logger.error(fetchExpressResponse.getDescription());
+			return result;
+		}
+		Express express = ((List<Express>) fetchExpressResponse.getData()).get(0);
+		ResultData traceResponse = expressService.traceExpress(express.getExpressNumber(), "TRACES");
+		result.setData(traceResponse);
+		return result;
     }
 
 }
