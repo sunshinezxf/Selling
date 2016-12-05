@@ -4,7 +4,8 @@
     <resultMap id="volumeVo" type="selling.sunshine.model.sum.Volume">
         <result property="agentId" column="agent_id"></result>
         <result property="goodsId" column="goods_id"></result>
-        <result property="quantity" column="quantity"></result>
+        <result property="quantity" column="total_quantity"></result>
+        <result property="price" column="total_price"></result>
     </resultMap>
 
     <resultMap id="agentGoodsVo" type="selling.sunshine.model.sum.VolumeTotal">
@@ -28,7 +29,7 @@
     </resultMap>
 
     <select id="query" parameterType="java.util.Map" resultMap="volumeVo">
-        select agent_id, goods_id, ifnull(sum(quantity), 0) AS quantity
+        SELECT agent_id, goods_id, ifnull(sum(quantity), 0) AS total_quantity,ifnull(sum(price), 0.0) AS total_price
         FROM volume_item
         WHERE 1 = 1 AND order_type='0'
         <if test="agentId != null">
