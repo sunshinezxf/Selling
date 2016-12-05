@@ -22,6 +22,7 @@
             }
             if (table.rows('.selected').data().length == 1) {
                 var current = table.rows('.selected').data()['0'];
+                order_id = current.orderId;
                 var order_status = '';
                 switch (current.status) {
                     case "NOT_PAYED":

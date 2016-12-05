@@ -37,4 +37,5 @@
 #parse("/backend/order/component/order_item_modal.vm")
 <script>
     var value = "PAYED";
+    var order_id = '';
 </script>
