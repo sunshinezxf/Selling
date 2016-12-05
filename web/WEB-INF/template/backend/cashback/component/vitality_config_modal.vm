@@ -1,0 +1,45 @@
+<div class="ui modal" id="vitality_config_modal">
+	<i class="close icon"></i>
+	<div class="header">活跃度配置修改</div>
+	<div class="image content">
+		<div class="description">
+			<form class="form-horizontal" id="config_form">
+				<input type="hidden" id="agentVitalityId" />
+
+				<p class="form-group">
+					<label class="ui label">月达标数量为:</label>&nbsp;&nbsp;
+					<input type="number" id="vitality_quantity" name="vitalityQuantity"
+						value="0" autocomplete="off" />&nbsp;<span>件</span>
+				</p>
+				<p class="form-group">
+					<label class="ui label">月达标金额为:</label>&nbsp;&nbsp;
+					<input type="number" id="vitality_qrice" name="vitalityPrice"
+						value="0" autocomplete="off" />&nbsp;<span>元</span>
+				</p>
+				<p class="form-group">
+					<label class="ui label">*只有当代理每月自身的销售数据达到规定的数量和金额才能获取下级代理商的返现</label>
+				</p>
+			</form>
+		</div>
+	</div>
+	<div class="actions">
+		<div class="ui button" id="cancer">取消</div>
+		<div class="ui button" id="confirm">确认</div>
+	</div>
+</div>
+<script>
+	$('#vitality_config_modal').modal('hide');
+
+	$("#confirm").on('click',function() {
+				$('#vitality_config_modal').modal('hide');
+				var url = "${path.concat('/agent/vitality/config/')}"
+						+ $("#agentVitalityId").val();
+				$("#config_form").attr("action", url);
+				$("#config_form").attr("method", "post");
+				$("#config_form").submit();
+			});
+
+	$("#cancer").on('click', function() {
+		$('#vitality_config_modal').modal('hide');
+	});
+</script>

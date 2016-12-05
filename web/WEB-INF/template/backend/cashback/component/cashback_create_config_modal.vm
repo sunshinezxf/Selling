@@ -1,0 +1,104 @@
+<div class="ui modal" id="create_config_modal">
+	<i class="close icon"></i>
+	<div class="header">新建返现配置</div>
+	<div class="image content">
+		<div class="description">
+			<form class="form-horizontal" role="form" id="create_config_form">
+				<div class="form-group">
+					<label class="row">适用情况:</label>
+					<div class="row">
+						<label class="radio-inline" style="padding-top: 0;"> <input
+							type="radio" name="apply_radio" id="partial_apply_radio" />部分适用
+						</label> <label class="radio-inline" style="padding-top: 0;"> <input
+							type="radio" name="apply_radio" id="apply_radio" />普遍适用
+						</label>
+					</div>
+					<div id="set_month" class="row" style="padding-top: 10px;">
+						<span>前</span> <select id="apply_months" name="applyMonths">
+							<option value="" selected="selected"></option>
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+							<option value="4">4</option>
+							<option value="5">5</option>
+							<option value="6">6</option>
+							<option value="7">7</option>
+							<option value="8">8</option>
+							<option value="9">9</option>
+							<option value="10">10</option>
+							<option value="11">11</option>
+						</select> <span>个月适用</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="ui label">返现标准数量为:</label>&nbsp;&nbsp;
+					<input type="number" id="config_trigger" name="amountTrigger"
+						value="0" autocomplete="off" />&nbsp;<span>件</span>
+				</div>
+				<div class="form-group">
+					<label class="ui label">自己返现:</label>&nbsp;&nbsp;
+					<input type="number" name="level1Percent" value="0"
+						autocomplete="off" />&nbsp;<span>元/件</span>
+				</div>
+				<div class="form-group">
+					<label class="ui label">直接关联返现:</label>&nbsp;&nbsp;
+					<input type="number" name="level2Percent" value="0"
+						autocomplete="off" />&nbsp;<span>元/件</span>
+				</div>
+				<div class="form-group">
+					<label class="ui label">间接关联返现:</label>&nbsp;&nbsp;
+					<input type="number" name="level3Percent" value="0"
+						autocomplete="off" />&nbsp;<span>元/件</span>
+				</div>
+				<div class="form-group">
+					<label class="ui label">月份配置:</label>&nbsp;&nbsp;
+					<input type="number" name="monthConfig" value="1"
+						autocomplete="off" />&nbsp;<span>个月</span>
+				</div>
+
+				<div class="form-group">
+					<label class="ui label">*已经存在某类型的适用情况的返现配置了，则不允许添加同类型的适用情况的返现配置，只能修改</label>
+				</div>
+			</form>
+		</div>
+	</div>
+	<div class="actions">
+		<div class="ui button" id="create_cancer">取消</div>
+		<div class="ui button" id="create_confirm">确认</div>
+	</div>
+</div>
+<script>
+	
+	$("#create_config_modal").modal('hide');
+	$("#set_month").hide();
+	$("#apply_months").val("");
+
+	$("#partial_apply_radio").click(function() {
+		$("#set_month").show();
+	});
+
+	$("#apply_radio").click(function() {
+		$("#set_month").hide();
+		$("#apply_months").val("");
+	});
+
+	$("#create_confirm").on('click', function() {
+		$("#create_config_modal").modal('hide');
+		var url = "${path.concat('/cashback/config/create/')}${goodsId}";
+		$("#create_config_form").attr("action", url);
+		$("#create_config_form").attr("method", "post");
+		if (!$("#set_month").is(":hidden")) {
+			if ($("#apply_months").val() == "") {
+
+			} else {
+				$("#create_config_form").submit();
+			}
+		} else {
+			$("#create_config_form").submit();
+		}
+	});
+	
+	$("#create_cancer").on('click', function() {
+		$("#create_config_modal").modal('hide');
+	});
+</script>

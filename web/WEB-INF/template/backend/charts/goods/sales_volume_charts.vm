@@ -1,0 +1,89 @@
+<div id="goods_sales_volume" class="ui segment" style="height: 350px;"></div>
+<script>
+    var goods_sales_volume = "${path.concat('/commodity/volume')}";
+
+    $(document).ready(function () {
+        $.get(goods_sales_volume, function (result) {
+            if (result.responseCode != "RESPONSE_ERROR") {
+                var data = result.data;
+                var volume_chart = echarts.init(document.getElementById('goods_sales_volume'), 'macarons');
+                var goods_list = [];
+                var goods_sale_monthly = [];
+                var goods_sale_overall = [];
+                var length = data.length;
+                for (var i = 0; i < length; i++) {
+                    goods_list.push(data[i].goodsName);
+                    goods_sale_monthly.push(data[i].monthQuantity);
+                    goods_sale_overall.push(data[i].overallQuantity);
+                }
+                option = {
+                    title: {
+                        text: '商品销售统计'
+                    },
+                    tooltip: {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                        data: ["当月销量", "累计销量"]
+                    },
+                    calculable: true,
+                    xAxis: [
+                        {
+                            type: 'value',
+                            boundaryGap: [0, 0.1]
+                        }
+                    ],
+                    yAxis: [
+                        {
+                            type: 'category',
+                            data: goods_list,
+                            axisLabel: {
+                                interval: 0,
+                                formatter: function (params) {
+                                    var newParamsName = "";
+                                    var paramsNameNumber = params.length;
+                                    var provideNumber = 4;
+                                    var rowNumber = Math.ceil(paramsNameNumber / provideNumber);
+                                    if (paramsNameNumber > provideNumber) {
+                                        for (var p = 0; p < rowNumber; p++) {
+                                            var tempStr = "";
+                                            var start = p * provideNumber;
+                                            var end = start + provideNumber;
+                                            if (p == rowNumber - 1) {
+                                                tempStr = params.substring(start, paramsNameNumber);
+                                            } else {
+                                                tempStr = params.substring(start, end) + "\n";
+                                            }
+                                            newParamsName += tempStr;
+                                        }
+                                    } else {
+                                        newParamsName = params;
+                                    }
+                                    return newParamsName
+                                }
+                            }
+                        }
+                    ],
+                    series: [
+                        {
+                            name: '当月销量',
+                            type: 'bar',
+                            data: goods_sale_monthly
+                        },
+                        {
+                            name: '累计销量',
+                            type: 'bar',
+                            data: goods_sale_overall
+                        }
+                    ]
+                };
+                volume_chart.setOption(option);
+                window.addEventListener('resize', function () {
+                    volume_chart.resize();
+                });
+            } else if (result.responseCode == "RESPONSE_ERROR") {
+                console.error(result.description);
+            }
+        });
+    });
+</script>

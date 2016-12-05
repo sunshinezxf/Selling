@@ -1,32 +1,24 @@
-<div class="modal fade" id="reject_modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">x</button>
-                <h4 class="modal-title">回绝申请</h4>
-                <p id="apply_id"></p>
-            </div>
-            <div class="modal-body">
-                <h4>是否确认回绝该申请？</h4>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">否，不回绝</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal" id="confirm">是，回绝</button>
-            </div>
-        </div>
+<div class="ui modal" id="reject_modal">
+  <i class="close icon"></i>
+  <div class="header">
+    回绝申请
+  </div>
+  <div class="image content">
+    <div class="description">
+        是否确认回绝该申请？
+        <p id="apply_id"></p>
     </div>
+  </div>
+  <div class="actions">
+    <div class="ui button" id="reject_cancer">否，不回绝</div>
+    <div class="ui button" id="reject_confirm">是，回绝</div>
+  </div>
 </div>
 <script>
-    $(function () {
-        $("#reject_modal").modal({
-            show: false,
-            keyboard: true
-        });
-        
-        $("#apply_id").hide();
-    });
-    
-    $("#confirm").click(function(){
+    $('#reject_modal').modal('hide');
+    $("#apply_id").hide();
+    $("#reject_confirm").click(function(){
+    	 $('#reject_modal').modal('hide');
         //传给后台applyId
         var applyId=$("#apply_id").text();
         if(applyId){
@@ -44,4 +36,7 @@
             alert("id不存在");
         }
     });
+	$("#reject_cancer").on('click', function() {
+		$('#reject_modal').modal('hide');
+	});
 </script>

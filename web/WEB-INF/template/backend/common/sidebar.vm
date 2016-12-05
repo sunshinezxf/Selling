@@ -1,0 +1,89 @@
+#set($role = $session.getAttribute("role"))
+<div id="sidebar" class="ui large left fixed vertical accordion menu">
+    #if($role == "admin" || $role == "express" || $role == "auditor" || $role == "finance")
+        <a href="${path.concat('/dashboard')}" class="item">
+            <i class=" teal dashboard icon left"></i>
+            首页
+        </a>
+    #end
+    #if($role == "admin" || $role == "auditor")
+        <div class="item">
+            <a class="title"><i class="teal user icon left"></i><i class="dropdown icon"></i>代理管理</a>
+
+            <div class="content menu">
+                <a id="agent_overview" class="item" href="${path.concat('/agent/overview')}">代理概览</a>
+                <a id="agent_check" class="item" href="${path.concat('/agent/check')}">代理审核</a>
+                <a id="agent_gift" class="item" href="${path.concat('/gift/check')}">赠送申请</a>
+            </div>
+        </div>
+    #end
+    #if($role == "admin" || $role == "express")
+        <div class="item">
+            <a class="title"><i class="teal file text icon left"></i><i class="dropdown icon"></i>订单管理</a>
+
+            <div class="content menu">
+                <a id="order_list" class="item" href="${path.concat('/order/overview')}">订单列表</a>
+            </div>
+        </div>
+    #end
+    #if($role == "admin")
+        <div class="item">
+            <a class="title"><i class="teal gift icon left"></i><i class="dropdown icon"></i>商品管理</a>
+
+            <div class="content menu">
+                <a id="goods_sales" class="item" href="${path.concat('/commodity/')}">商品销售</a>
+                <a id="goods_list" class="item" href="${path.concat('/commodity/')}">商品列表</a>
+            </div>
+        </div>
+    #end
+    #if($role == "admin")
+        <div class="item">
+            <a class="title"><i class="teal payment icon left"></i><i class="dropdown icon"></i>返现管理</a>
+
+            <div class="content menu">
+                <a class="item" href="${path.concat('/cashback/overview')}">返现概览</a>
+            </div>
+        </div>
+    #end
+    #if($role == "admin")
+        <div class="item">
+            <a class="title"><i class="teal money icon left"></i><i class="dropdown icon"></i>提现管理</a>
+
+            <div class="content menu">
+                <a id="withdraw_list" class="item" href="${path.concat('/withdraw/overview')}">提现列表</a>
+            </div>
+        </div>
+    #end
+    #if($role == "admin" || $role == "express")
+        <div class="item">
+            <a class="title"><i class="teal calendar icon left"></i><i class="dropdown icon"></i>活动管理</a>
+
+            <div class="content menu">
+                <a class="item">添加活动</a>
+            </div>
+        </div>
+    #end
+    #if($role == "admin"|| $role == "finance")
+        <div class="item">
+            <a class="title"><i class="teal line chart icon left"></i><i class="dropdown icon"></i>报表专区</a>
+
+            <div class="content menu">
+                <a class="item">报表下载</a>
+            </div>
+        </div>
+    #end
+    #if($role == "admin")
+        <div class="item">
+            <a class="title"><i class="teal setting icon left"></i><i class="dropdown icon"></i>账号管理</a>
+
+            <div class="content menu">
+                <a class="item">添加账号</a>
+            </div>
+        </div>
+    #end
+    #if($role == "admin")
+        <a class="item">
+            <i class="teal history icon left"></i>日志查询
+        </a>
+    #end
+</div>

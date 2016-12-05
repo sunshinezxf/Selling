@@ -1,164 +1,122 @@
-<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id-target="agent-management">
-    <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <h1><i class="fa fa-home"></i> 代理商个人详情 </h1>
-            <ol class="breadcrumb">
-                <li><a href="${path.concat('/dashboard')}">首页</a></li>
-                <li><a data-toggle="collapse" data-parent="#accordion" href="#agent-management">代理管理</a></li>
-                <li class="active">代理商个人详情</li>
-            </ol>
-        </div>
+<div class="ui stackable padded grid">
+	<div class="row">
+		<h1 class="ui header">
+			<i class="home icon"></i>
+			<div class="content">
+				代理商个人详情
+				<div class="sub header">
+					<div class="ui breadcrumb">
+						<a class="section">代理管理</a>
+
+						<div class="divider">/</div>
+
+						<a class="active section">代理商个人详情</a>
+					</div>
+				</div>
+			</div>
+		</h1>
+	</div>
+	<div class="row">
+	       <a type="button" class="ui primary basic button" href="${path.concat('/agent/overview')}">返回</a>
+	       <button type="button" class="ui negative basic button" id="fobid">禁用</button>
+	       <a type="button" class="ui positive basic button" href="${path.concat('/gift/config/')}${agent.agentId}">赠送配置</a>
+	       <a type="button" class="ui blue basic button" href="${path.concat('/agent/gift/')}${agent.agentId}">赠送申请</a>
+	       <select class="ui dropdown" id="select">
+				   <option value="">修改上级代理商</option>
+				   #foreach( $elem in ${agentList})
+				      <option value="$elem.agentId">$elem.name</option>
+				   #end
+           </select>	
     </div>
-    <div class="row">
-        <a type="button" class="btn btn-primary" href="${path.concat('/agent/overview')}">返回</a>
-        <div class="rank">
-            <canvas id="rank" width="93px" height="93px"></canvas>
-        </div>
+	<div class="row">
+	</div>
+</div>
+<div class="ui modal" id="set_upperAgent_modal">
+  <i class="close icon"></i>
+  <div class="header">
+    提示
+  </div>
+  <div class="image content">
+    <div class="description">
+        确定将该代理商设置为代理商${agent.name}的上级代理商？
     </div>
-    <div class="row personal_info">
-        <div class="table-responsive">
-            <table class="table table-bordered">
-                <tr>
-                    <td class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                        <div class="table-responsive">
-                            <table class="table basic_info">
-                                <tr>
-                                    <td class="col-xs-3 col-sm-3 col-md-3 col-lg-3">姓名：${agent.name}</td>
-                                    #if(${agent.gender}=="M")
-                                    <td class="col-xs-3 col-sm-3 col-md-3 col-lg-3">性别：男</td>
-                                    #else
-                                    <td class="col-xs-3 col-sm-3 col-md-3 col-lg-3">性别：女</td>
-                                    #end
-                                </tr>
-                                <tr>
-                                    <td>手机号：${agent.phone}</td>
-                                    <td>微信号：<span id="wechat"></span></td>
-                                </tr>
-                                <tr>
-                                    #if(${agent.claimScale})
-                                    <td>群规模：${agent.claimScale}</td>
-                                    #else
-                                    <td>群规模：0</td>
-                                    #end
-                                    #if(${agent.upperAgent})
-                                    <td>上级代理：${agent.upperAgent.name}</td>
-                                    #else
-                                    <td>上级代理：无</td>
-                                    #end
-                                </tr>
-                                <tr>
-                                    <td colspan="2">地址：${agent.address}</td>
-                                </tr>
-                                <tr>
-                                    #if(${customerNum}==0)
-                                    <td colspan="2">顾客人数：0</td>
-                                    #else
-                                    <td colspan="2">顾客人数：<a href="${path.concat('/customer/overview/')}${agent.agentId}">${customerNum}</a></td>
-                                    #end
-                                </tr>
-                            </table>
-                        </div>
-                    </td>
-                    <td class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                        <p>身份证照片：</p>
-                        #if(${credit})
-                        <img src="${credit.frontPath}" class="col-xs-6 col-sm-6 col-md-6 col-lg-6"/>
-                        <img src="${credit.backPath}" class="col-xs-6 col-sm-6 col-md-6 col-lg-6"/>
-                        #else
-                                                                        无身份证照片
-                        #end
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h4>拓展信息</h4>
-                        <div id="tree"></div>
-                    </td>
-                    <td>
-                        <h4>销售情况</h4>
-                        #if(${volumeTotalList})
-                        <div class="table-responsive">
-                            <table class="table table-bordered">
-                                <tr>
-                                    <th>商品名</th>
-                                    <th>月销量</th>
-                                    <th>年销量</th>
-                                    <th>累计销量</th>
-                                </tr>
-                                #foreach($sales in ${volumeTotalList})
-                                <tr>
-                                    <td>${sales.goods.name}</td>
-                                    <td>${sales.monthQuantity}</td>
-                                    <td>${sales.yearQuantity}</td>
-                                    <td>${sales.totalQuantity}</td>
-                                </tr>
-                                #end
-                            </table>
-                        </div>
-                        #else
-                                                                        暂无销售记录
-                        #end
-                        #if(${agent.agentRefund}!=0)
-                        <div>
-                                                                                    累积返现：${agent.agentRefund}&nbsp;
-                            ##<a href="${path.concat('/')}">明细</a>
-                        </div>
-                        #else
-                        <div>
-                                                                                    累积返现：0
-                        </div>
-                        #end
-                    </td>
-                </tr>
-            </table>
-        </div>
+  </div>
+  <div class="actions">
+    <div class="ui button" id="set_cancer">取消</div>
+    <div class="ui button" id="set_confirm">确认</div>
+  </div>
+</div>
+<div class="ui modal" id="waring_modal">
+  <i class="close icon"></i>
+  <div class="header">
+    警告
+  </div>
+  <div class="image content">
+    <div class="description">
+        一个代理商的上级代理商的上级代理商(或上上级代理商。。。)不能是他自己！！！
     </div>
+  </div>
+  <div class="actions">
+    <div class="ui button" id="waring_confirm">确认</div>
+  </div>
+</div>
+<div class="ui modal" id="fobid_modal">
+  <i class="close icon"></i>
+  <div class="header">
+    警告
+  </div>
+  <div class="image content">
+    <div class="description">
+         禁用该代理商后，该代理商的信息将会被注销掉，该代理商的手机号码可以被重新注册！！！
+    </div>
+  </div>
+  <div class="actions">
+    <div class="ui button" id="fobid_cancer">取消</div>
+    <div class="ui button" id="fobid_confirm">确认</div>
+  </div>
 </div>
 <script>
-    $(document).ready(function(){
-        var rank=document.getElementById("rank");
-        var context=rank.getContext("2d");
-        var ranking="${ranking}";
-        var total="${totalNum}";
-        var topRate=parseInt((ranking/total)*100);
-        if(topRate>50){
-            $('.rank').hide();
-        }else{ 
-            if((topRate%5==0)&&(topRate!=0)){
-                topRate=(parseInt(topRate/5))*5;
-            }else{
-                topRate=(parseInt(topRate/5)+1)*5;
-            }
-        }
-    
-        var width=rank.width/2;
-        var height=rank.height/2;
-        context.lineWidth=3;
-        context.strokeStyle="#FFCC66";
-        context.beginPath();
-        context.arc(width,height,37,0,Math.PI * 2);
-        context.stroke();
-    
-        context.font="17px Arial";
-        context.textBaseLine="middle";
-        context.textAlign="center";
-        context.lineWidth=1;
-        context.strokeStyle="#FFCC66";
-        context.strokeText("Top:"+topRate+"%",width,height+4);
-    
-        var wechat="${agent.wechat}";
-        if(wechat&&wechat.slice(-1)!="}"){
-            var new_wechat=wechat.replace(wechat.slice(7,-8),"***");
-            $("#wechat").text(new_wechat);
-        }else{
-            $("#wechat").text("无");
-        }
-           
-        var url="${path.concat('/agent/subordinate/')}"+"${agent.agentId}";
-        $("#tree").tree({
-            dataUrl: url,
-            selectable: false,
-        });
+    $('#set_upperAgent_modal').modal('hide');
+    $('#waring_modal').modal('hide');
+    $('#fobid_modal').modal('hide');
+    var upperAgentId;
+    $("#select").change(function(){
+	   upperAgentId = $("#select").val();
+       if(upperAgentId!=""){
+		   $('#set_upperAgent_modal').modal('show');
+       }
     });
+	$("#set_confirm").on('click',function() {
+		$('#set_upperAgent_modal').modal('hide');
+		var url = "${path.concat('/agent/modifyUpperAgent/')}${agent.agentId}/"+ upperAgentId;
+        $.post(url, function (result) {
+            if (result.responseCode == "RESPONSE_OK") {
+            	url="${path.concat('/agent/detail/')}${agent.agentId}";
+    			window.location.href = url;
+            } else if (result.description == "recursion") {
+                $("#waring_modal").modal('show');
+            } else {
 
+            }
+        });
+	});
+	$("#set_cancer").on('click', function() {
+		   $('#set_upperAgent_modal').modal('hide');
+	});
+	$("#waring_confirm").on('click', function() {
+		   $('#waring_modal').modal('hide');
+		   url="${path.concat('/agent/detail/')}${agent.agentId}";
+		   window.location.href = url;
+	});
+	$("#fobid").on('click', function() {
+		   $('#fobid_modal').modal('show');
+	});
+	$("#fobid_confirm").on('click', function() {
+		   $('#fobid_modal').modal('hide');
+		   var url = "${path.concat('/agent/forbid/')}${agent.agentId}";
+	        window.location.href = url;
+	});
+	$("#fobid_cancer").on('click', function() {
+		   $('#fobid_modal').modal('hide');
+	});
 </script>

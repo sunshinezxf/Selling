@@ -1,23 +1,28 @@
-<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id-target="agent-management">
+<div class="ui stackable padded grid" name="agent_check">
     <div class="row">
-        <div class="col-md-12 col-lg-12">
-            <h1><i class="fa fa-home"></i> 代理审核 </h1>
-            <ol class="breadcrumb">
-                <li><a href="${path.concat('/dashboard')}">首页</a></li>
-                <li><a data-toggle="collapse" data-parent="#accordion" href="#agent-management">代理管理</a></li>
-                <li class="active">代理审核</li>
-            </ol>
-        </div>
+        <h1 class="ui header">
+            <i class="home icon"></i>
+
+            <div class="content">
+                代理审核
+                <div class="sub header">
+                    <div class="ui breadcrumb">
+                        <a class="section">代理管理</a>
+
+                        <div class="divider">/</div>
+                        <a class="active section">代理审核</a>
+                    </div>
+                </div>
+            </div>
+        </h1>
     </div>
     <div class="row">
-        <div class="col-md-12 col-lg-12">
-            <table id="check_agent_table" class="table table-striped table-bordered" cellspacing="0" width="100%">
-            </table>
-
+        <div class="column">
+            <table id="check_agent_table" class="ui tablet stackable table"></table>
         </div>
     </div>
 </div>
-<script>
+<script type="text/javascript">
     $(document).ready(function () {
         $("#check_agent_table").DataTable({
             searching: false,
@@ -70,16 +75,16 @@
                     title: "操作", "mRender": function (data, type, full) {
                     var operation = "";
                     if (!full.granted) {
-                        var verification_button = "<div class = 'btn-group'><button type='button' id='" + full.agentId + "' class='btn btn-info btn-group-sm grant' >审核</button>&nbsp;&nbsp;</div>"
+                        var verification_button = "<button id='" + full.agentId + "' class='ui primary basic button' >审核</button>"
                         operation += verification_button;
                     }
                     $("#" + full.agentId).on('click', function () {
                         window.location.href = "${path.concat('/agent/check/')}" + full.agentId;
                     })
-                    #*
-                    var limit_button = "<div class = 'btn-group'><button type='button' class='btn btn-warning btn-group-sm'>禁用</button>&nbsp;&nbsp;</div>"
-                    operation += limit_button;
-                    *#
+                #*
+                var limit_button = "<div class = 'btn-group'><button type='button' class='btn btn-warning btn-group-sm'>禁用</button>&nbsp;&nbsp;</div>"
+                operation += limit_button;
+                *#
                     return operation;
                 }
                 }
@@ -101,7 +106,5 @@
                 }
             }
         });
-
-
     });
 </script>

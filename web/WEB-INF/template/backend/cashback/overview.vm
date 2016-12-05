@@ -1,0 +1,23 @@
+#parse("/common/util.vm")
+<html lang="zh_CN">
+<head>
+    #parse("/backend/initialization/init.vm")
+    <title>返现概览</title>
+</head>
+<body id="dashboard" class="started pushable" ontouchstart>
+    #parse("/backend/common/mobile_sidebar.vm")
+    #parse("/backend/common/mobile_navigate_with_login.vm")
+<div class="pusher">
+    <div class="full height">
+        <div class="constant">
+            #parse("/backend/common/navigate_with_login.vm")
+            #parse("/backend/common/sidebar.vm")
+        </div>
+        <div class="ui main container">
+            #parse("/backend/cashback/component/cashback_overview_table.vm")
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="${path.concat('/material/js/backend/structure.js')}"></script>
+</html>

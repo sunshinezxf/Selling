@@ -1,16 +1,80 @@
 #parse("/common/util.vm")
 <html lang="zh_CN">
 <head>
-    #parse("/backend/component/init.vm")
-    <link rel="stylesheet" href="${path.concat('/material/css/backend/signin.css')}"/>
+    #parse("/backend/initialization/init_login.vm")
     <title>登录</title>
 </head>
 <body>
-    #parse("/backend/component/navigate_without_login.vm")
-<div class="container">
-    #parse("/backend/component/login_form.vm")
+<div class="ui middle aligned center aligned grid">
+    <div class="column">
+        <h2 class="ui teal image header">
+            <img src="${path.concat('/material/images/login_logo.png')}" class="image">
+            <div class="content">
+                登录
+            </div>
+        </h2>
+        <form id="login_form" class="ui large form">
+            <div class="ui stacked segment">
+                <div class="field">
+                    <div class="ui left icon input">
+                        <i class="user icon"></i>
+                        <input id="name" type="text" name="username" placeholder="请输入用户名" required="" autocomplete="off">
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="ui left icon input">
+                        <i class="lock icon"></i>
+                        <input id="password" type="password" name="password" placeholder="请输入密码" required="" autocomplete="off">
+                    </div>
+                </div>
+                <button type="submit" id="login_btn" class="ui fluid large teal submit disabled button word" disabled="disabled">登录</button>
+            </div>
+        </form>
+    </div>
 </div>
-
-    #parse("/backend/component/footer.vm")
 </body>
+<script>
+    $(document).ready(function () {
+        $("#name").bind("input propertychange", function () {
+            if (login_validate()) {
+                $("#login_btn").removeClass("disabled");
+                $("#login_btn").removeAttr("disabled");
+            } else {
+                $("#login_btn").addClass("disabled");
+                $("#login_btn").attr("disabled", "disabled");
+            }
+        });
+        $("#password").bind("input propertychange", function () {
+            if (login_validate()) {
+                $("#login_btn").removeClass("disabled");
+                $("#login_btn").removeAttr("disabled");
+            } else {
+                $("#login_btn").addClass("disabled");
+                $("#login_btn").attr("disabled", "disabled");
+            }
+        });
+    });
+
+    $("#login_btn").click(function () {
+        $("#login_form").attr("action", "${path.concat('/login')}");
+        $("#login_form").attr("method", "post");
+        $("#login_form").submit();
+    });
+
+    function login_validate() {
+        var username = $("#name").val();
+        var password = $("#password").val();
+        if (not_null(username) && not_null(password)) {
+            return true;
+        }
+        return false;
+    }
+
+    function not_null(item) {
+        if (item == null || item == "" || item.length <= 0) {
+            return false;
+        }
+        return true;
+    }
+</script>
 </html>
