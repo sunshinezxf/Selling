@@ -9,7 +9,7 @@ import java.util.Map;
 
 public interface OrderItemDao {
     ResultData insertOrderItems(List<OrderItem> orderItems);
-
+    
     ResultData queryOrderItem(Map<String, Object> condition);
     
     ResultData queryOrderItemSum(Map<String, Object> condition);

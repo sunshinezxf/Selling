@@ -39,6 +39,9 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private CustomerDao customerDao;
 
+    /**
+     * 下单主方法
+     */
     @Override
     public ResultData placeOrder(Order order) {
         ResultData result = new ResultData();
@@ -51,7 +54,24 @@ public class OrderServiceImpl implements OrderService {
         }
         return result;
     }
+    
+    /**
+     * 仅仅生成一个Order,不生成Order里的OrderItem
+     */
+    @Override
+	public ResultData createOrder(Order order) {
+    	ResultData result = new ResultData();
+    	ResultData insertResponse = orderDao.insertOrderLite(order);
+    	result.setResponseCode(insertResponse.getResponseCode());
+        if (insertResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(insertResponse.getData());
+        } else {
+            result.setDescription(insertResponse.getDescription());
+        }
+        return result;
+	}
 
+    
     @Override
     public ResultData placeOrder(CustomerOrder customerOrder) {
         ResultData result = new ResultData();
@@ -293,6 +313,19 @@ public class OrderServiceImpl implements OrderService {
     public ResultData updateCustomerOrder(CustomerOrder customerOrder) {
         ResultData result = new ResultData();
         ResultData updateResponse = customerOrderDao.updateOrder(customerOrder);
+        result.setResponseCode(updateResponse.getResponseCode());
+        if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(updateResponse.getData());
+        } else {
+            result.setDescription(updateResponse.getDescription());
+        }
+        return result;
+    }
+    
+    @Override
+    public ResultData updateOrderLite(Order order) {
+        ResultData result = new ResultData();
+        ResultData updateResponse = orderDao.updateOrderLite(order);
         result.setResponseCode(updateResponse.getResponseCode());
         if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             result.setData(updateResponse.getData());

@@ -130,7 +130,10 @@
                 create_time = #{createAt},
             </if>
             <if test="blockFlag != null and blockFlag != ''">
-                block_flag = #{blockFlag}
+                block_flag = #{blockFlag},
+            </if>
+            <if test="price != null" >
+            	order_price = #{price}
             </if>
         </set>
         WHERE order_id = #{orderId}
