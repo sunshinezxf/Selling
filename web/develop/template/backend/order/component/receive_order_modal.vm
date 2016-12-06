@@ -1,22 +1,20 @@
 <div class="ui modal" id="receive_modal" style="display:none;">
     <i class="close icon"></i>
-    
+
     <div class="header">订单签收</div>
     <div class="image content">
         <div class="description">
             <div class="ui icon message" id="receive_info" style="display:none;">
                 <i class="inbox icon"></i>
-                
+
                 <div class="content">
-                    <div class="header>
-                         订单签收
-                    </div>
+                    <div class="header">订单签收</div>
                     <p>点击确认后，该订单将变为已签收订单。</p>
                 </div>
             </div>
             <div class="ui icon message" id="receive_process" style="display:none;">
                 <i class="notched circle loading icon"></i>
-                
+
                 <div class="content">
                     <div class="header">
                         订单处理中
@@ -26,7 +24,7 @@
             </div>
             <div class="ui icon message" id="receive_success" style="display:none;">
                 <i class="checkmark icon"></i>
-                
+
                 <div class="content">
                     <div class="header">
                         操作成功
@@ -36,7 +34,7 @@
             </div>
             <div class="ui icon message" id="receive_failure" style="display:none;">
                 <i class="remove icon"></i>
-                
+
                 <div class="content">
                     <div class="header">
                         操作失败
@@ -54,32 +52,32 @@
 </div>
 <script>
     $("#receive_modal").modal('hide');
-    
-    $("#receive_cancel").on('click', function() {
+
+    $("#receive_cancel").on('click', function () {
         $("#receive_modal").modal('hide');
         $("#receive_info").hide();
         $("#receive_process").hide();
         $("#receive_success").hide();
         $("#receive_failure").hide();
     });
-    
-    $("#reimburse_confirm").on('click', function() {
+
+    $("#reimburse_confirm").on('click', function () {
         process();
         receive();
     });
-    
+
     function receive() {
         var receive_url = "${path.concat('/order/receive')}";
-        $.post(receive_url, {'orderId': order_id}, function(result) {
+        $.post(receive_url, {'orderId': order_id}, function (result) {
             $("#receive_process").hide();
-            if(result.responseCode == "RESPONSE_OK") {
+            if (result.responseCode == "RESPONSE_OK") {
                 success();
             } else {
                 failure();
             }
         });
     }
-    
+
     function inform() {
         $("receive_info").show();
         $("receive_process").hide();
@@ -87,17 +85,27 @@
         $("receive_confrim").show();
         $("receive_cancel").show();
     }
-    
+
     function process() {
         $("#receive_info").hide();
         $("#receive_process").show();
         $("#receive_confirm").hide();
         $("#receive_cancel").hide();
     }
-    
+
     function success() {
         $("#receive_process").hide();
         $("#receive_success").hide();
         $("#receive_complete").show();
     }
+
+    function failure() {
+        $("#reimburse_process").hide();
+        $("#reimburse_failure").show();
+        $("#reimburse_cancel").show();
+    }
+
+    $("#receive_complete").on('click', function () {
+        window.location.reload();
+    })
 </script>
