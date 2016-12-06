@@ -1247,6 +1247,11 @@ public class OrderController {
             result.setDescription("管理员未登录");
             return result;
         }
+        if(orderItemId.equals("")){
+        	result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription("获取订单错误");
+            return result;
+        }
         Admin admin = user.getAdmin();
         Map<String, Object> condition = new HashMap<String, Object>();
         condition.put("orderItemId", orderItemId);
