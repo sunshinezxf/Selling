@@ -210,31 +210,11 @@ public class StatisticDaoImpl extends BaseDao implements StatisticDao {
     }
 
     @Override
-    public ResultData orderByYear() {
+    public ResultData orderLastYear() {
         ResultData result = new ResultData();
         try {
-            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy");
-            String date = dateFormat.format(timestamp);
-            int start = 2016;
-            int end = Integer.parseInt(date);
-            Map<String, Object> condition = new HashMap<>();
-            List<OrderSeries> list = new ArrayList<>();
-            while ((end - start) >= 0) {
-                String year = String.valueOf(end);
-                condition.put("year", year);
-                List<Map<String, Object>> query = sqlSession.selectList("selling.statistic.orderByYear", condition);
-                if (query.size() != 0) {
-                    int[] data = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-                    for (int i = 0; i < query.size(); i++) {
-                        data[Integer.parseInt(query.get(i).get("date").toString().split("-")[1]) - 1] = Integer.parseInt(query.get(i).get("amount").toString());
-                    }
-                    OrderSeries orderSeries = new OrderSeries(year, data);
-                    list.add(orderSeries);
-                }
-                end--;
-            }
-            result.setData(list);
+            List<Map<String, Object>> query = sqlSession.selectList("selling.statistic.orderLastYear");
+            result.setData(query);
         } catch (Exception e) {
             logger.error(e.getMessage());
             result.setResponseCode(ResponseCode.RESPONSE_ERROR);

@@ -64,7 +64,7 @@
     })
 
     $("#reimburse_confirm").on('click', function () {
-        process();
+        reimburse_process();
         reimburse();
     });
 
@@ -73,15 +73,15 @@
         $.post(reimburse_url, {'orderId': order_id}, function (result) {
             $("#reimburse_process").hide();
             if (result.responseCode == "RESPONSE_OK") {
-                success();
+                reimburse_success();
             } else {
                 console.debug(result.description);
-                failure();
+                reimburse_failure();
             }
         });
     }
 
-    function inform() {
+    function reimburse_inform() {
         $("#reimburse_info").show();
         $("#reimburse_process").hide();
         $("#reimburse_success").hide();
@@ -90,20 +90,20 @@
         $("#reimburse_cancel").show();
     }
 
-    function process() {
+    function reimburse_process() {
         $("#reimburse_info").hide();
         $("#reimburse_process").show();
         $("#reimburse_confirm").hide();
         $("#reimburse_cancel").hide();
     }
 
-    function success() {
+    function reimburse_success() {
         $("#reimburse_process").hide();
         $("#reimburse_success").show();
         $("#reimburse_complete").show();
     }
 
-    function failure() {
+    function reimburse_failure() {
         $("#reimburse_process").hide();
         $("#reimburse_failure").show();
         $("#reimburse_cancel").show();

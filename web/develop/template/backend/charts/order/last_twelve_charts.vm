@@ -4,7 +4,58 @@
 
     $.get(month_distribution_url, function (result) {
         if (result.responseCode == "RESPONSE_OK") {
-            
+            var data = result.data;
+            var month_distribution_chart = echarts.init(document.getElementById('month_distribution'), 'macarons');
+
+            var month_list = [];
+
+            var volume_list = [];
+
+            option = {
+                title: {
+                    text: '最近12月订单笔数分析(含购买和赠送订单)'
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                legend: {
+                    data: ['订单笔数']
+                },
+                calculable: true,
+                xAxis: [
+                    {
+                        type: 'category',
+                        boundaryGap: false,
+                        data: month_list
+                    }
+                ],
+                yAxis: [
+                    {
+                        type: 'value',
+                        axisLabel: {
+                            formatter: '{value}'
+                        }
+                    }
+                ],
+                series: [
+                    {
+                        name: '订单笔数',
+                        type: 'line',
+                        data: volume_list,
+                        markPoint: {
+                            data: [
+                                {type: 'max', name: '最大订单笔数'},
+                                {type: 'min', name: '最小订单笔数'}
+                            ]
+                        },
+                        markLine: {
+                            data: [
+                                {type: 'average', name: '平均值'}
+                            ]
+                        }
+                    }
+                ]
+            };
         } else {
             $("#month_distribution").hide();
         }

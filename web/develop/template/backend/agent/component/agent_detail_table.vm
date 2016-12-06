@@ -20,46 +20,205 @@
 	       <a type="button" class="ui primary basic button" href="${path.concat('/agent/overview')}">返回</a>
 	       <button type="button" class="ui negative basic button" id="fobid">禁用</button>
 	       <a type="button" class="ui positive basic button" href="${path.concat('/gift/config/')}${agent.agentId}">赠送配置</a>
-	       <a type="button" class="ui blue basic button" href="${path.concat('/agent/gift/')}${agent.agentId}">赠送申请</a>
-	       <select class="ui dropdown" id="select">
-				   <option value="">修改上级代理商</option>
-				   #foreach( $elem in ${agentList})
-				      <option value="$elem.agentId">$elem.name</option>
-				   #end
-           </select>	
+	       <a type="button" class="ui blue basic button" href="${path.concat('/gift/check/')}${agent.agentId}">个人赠送申请列表</a>
+##	       <select class="ui dropdown" id="select">
+##				   <option value="">修改上级代理商</option>
+##				   #foreach( $elem in ${agentList})
+##				      <option value="$elem.agentId">$elem.name</option>
+##				   #end
+##           </select>
     </div>
 	<div class="row">
+        <div class="column">
+            <div class="ui segment">
+                <div class="ui divided items">
+                    <div id="personal_info" class="item">
+                        <div class="ui medium images">
+                            #if(${credit.frontPath})
+                                <img class="ui rounded image" src="${credit.frontPath}">
+                            #else
+                                <img class="ui rounded image" src="${path.concat('/material/images/no_credit.png')}">
+                            #end
+                            #if(${credit.frontPath})
+                                <img class="ui rounded image" src="${credit.backPath}">
+                            #else
+                                <img class="ui rounded image" src="${path.concat('/material/images/no_credit.png')}">
+                            #end
+                        </div>
+                        <div class="content">
+                            <div class="floated_div">
+                                <div class="ui left floated header">
+                                    #if(${agent.gender}=="M")
+                                        <i class="blue male icon"></i>
+                                    #else
+                                        <i class="pink female icon"></i>
+                                    #end
+                                    <div class="content">${agent.name}
+                                        <a  id="upper_agent_div" class="ui blue tag label">
+                                            上级代理
+                                            #if(${agent.upperAgent})
+                                                <div id="upper_agent" class="detail">${agent.upperAgent.name}</div>
+                                            #else
+                                                <div id="upper_agent" class="detail">无</div>
+                                            #end
+                                    </div></a>
+                                </div>
+                                <div class="ui right floated header">
+                                    <div class="ui positive toggle checkbox">
+                                        #if(${agent.blockFlag}==0&&${agent.granted}==0)
+                                            <input type="checkbox" readonly="readonly">
+                                        #else
+                                            <input type="checkbox" readonly="readonly" checked="checked">
+                                        #end
+                                        <label>授权</label>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="ui horizontal divided list">
+                                <div class="item">
+                                    <i class="blue mobile icon"></i>${agent.phone}
+                                </div>
+                                <div class="item">
+                                    <i class="green wechat icon"></i><span id="wechat"></span>
+                                </div>
+                                <div class="item">
+                                    <i class="brown home icon"></i>${agent.address}
+                                </div>
+                            </div>
+                            <div class="description">
+                                <div class="ui three column stackable grid">
+                                    <div class="column">
+                                        <div id="customers_list" class="ui center aligned segment">
+                                            <h4 class="ui header">顾客数</h4>
+                                            <div class="ui small horizontal statistic">
+                                                #if(${customerNum}==0)
+                                                    <div class="value">0</div>
+                                                #else
+                                                    <div class="value">${customerNum}</div>
+                                                #end
+                                                <div class="label">人</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="column">
+                                        <div id="cashback_list" class="ui center aligned segment">
+                                            <h4 class="ui header">累计返现</h4>
+                                            <div class="ui small horizontal statistic">
+                                                #if(${agent.agentRefund}!=0)
+                                                    <div class="value">0</div>
+                                                #else
+                                                    <div class="value">${agent.agentRefund}</div>
+                                                #end
+                                                <div class="label">元</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="content">
+                            <div id="sales_area" class="ui large teal ribbon label">销售情况
+                                <div class="detail">前<span id="rank"></span></div>
+                            </div>
+                            <div class="description">
+                                <table class="ui tablet stackable table">
+                                    <thead>
+                                    <tr>
+                                        <th>商品名</th>
+                                        <th>月销量</th>
+                                        <th>年销量</th>
+                                        <th>累计销量</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    #foreach($sales in ${volumeTotalList})
+                                        <tr>
+                                            <td>${sales.goods.name}</td>
+                                            <td>${sales.monthQuantity}</td>
+                                            <td>${sales.yearQuantity}</td>
+                                            <td>${sales.totalQuantity}</td>
+                                        </tr>
+                                    #end
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="content">
+                            <div class="ui large teal ribbon label">拓展信息</div>
+                            <div class="description">
+                                <div class="ui center aligned basic segment">
+                                    <div id="tree"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
 	</div>
 </div>
 <div class="ui modal" id="set_upperAgent_modal">
-  <i class="close icon"></i>
-  <div class="header">
-    提示
-  </div>
-  <div class="image content">
-    <div class="description">
-        确定将该代理商设置为代理商${agent.name}的上级代理商？
+    <i class="close icon"></i>
+    <div class="header">代理配置</div>
+    <div class="content">
+        <div class="ui form">
+            <div class="inline field">
+                <label>当前上级代理商为</label>
+                <div class="ui transparent input">
+                    <input input  id="now_upper" type="text" readonly="readonly">
+                </div>
+            </div>
+            <div class="inline field">
+                <label>将上级代理商改为</label>
+                <select id="modified_upper" class="ui search dropdown">
+                    <option value="">请输入代理商姓名</option>
+                    #foreach( $elem in ${agentList})
+                        <option value="$elem.agentId">$elem.name</option>
+				    #end
+                </select>
+            </div>
+        </div>
     </div>
-  </div>
-  <div class="actions">
-    <div class="ui button" id="set_cancer">取消</div>
-    <div class="ui button" id="set_confirm">确认</div>
-  </div>
-</div>
-<div class="ui modal" id="waring_modal">
-  <i class="close icon"></i>
-  <div class="header">
-    警告
-  </div>
-  <div class="image content">
-    <div class="description">
-        一个代理商的上级代理商的上级代理商(或上上级代理商。。。)不能是他自己！！！
+    <div class="actions">
+        <div class="ui cancel button">取消</div>
+        <div id="modify_btn" class="ui approve positive disabled button" disabled="disabled">确定</div>
     </div>
-  </div>
-  <div class="actions">
-    <div class="ui button" id="waring_confirm">确认</div>
-  </div>
 </div>
+##<div class="ui modal" id="set_upperAgent_modal">
+##  <i class="close icon"></i>
+##  <div class="header">
+##    提示
+##  </div>
+##  <div class="image content">
+##    <div class="description">
+##        确定将该代理商设置为代理商${agent.name}的上级代理商？
+##    </div>
+##  </div>
+##  <div class="actions">
+##    <div class="ui button" id="set_cancer">取消</div>
+##    <div class="ui button" id="set_confirm">确认</div>
+##  </div>
+##</div>
+##<div class="ui modal" id="waring_modal">
+##  <i class="close icon"></i>
+##  <div class="header">
+##    警告
+##  </div>
+##  <div class="image content">
+##    <div class="description">
+##        一个代理商的上级代理商的上级代理商(或上上级代理商。。。)不能是他自己！！！
+##    </div>
+##  </div>
+##  <div class="actions">
+##    <div class="ui button" id="waring_confirm">确认</div>
+##  </div>
+##</div>
 <div class="ui modal" id="fobid_modal">
   <i class="close icon"></i>
   <div class="header">
@@ -76,33 +235,82 @@
   </div>
 </div>
 <script>
-    $('#set_upperAgent_modal').modal('hide');
+    $(document).ready(function(){
+        var img_width=$(".ui.images img").width();
+        $(".ui.images img").css("height",img_width*2/3);
+
+        var wechat="${agent.wechat}";
+        if(wechat&&wechat.slice(-1)!="}"){
+            var new_wechat=wechat.replace(wechat.slice(7,-8),"***");
+            $("#wechat").text(new_wechat);
+        }else{
+            $("#wechat").text("无");
+        }
+
+        var ranking="${ranking}";
+        var total="${totalNum}";
+        var topRate=parseInt((ranking/total)*100);
+        if(topRate>50){
+            $('#sales_area > .detail').hide();
+        }else{
+            if((topRate%5==0)&&(topRate!=0)){
+                topRate=(parseInt(topRate/5))*5;
+            }else{
+                topRate=(parseInt(topRate/5)+1)*5;
+            }
+            $("#rank").html(topRate);
+        }
+
+        var url="${path.concat('/agent/subordinate/')}"+"${agent.agentId}";
+        $("#tree").tree({
+            dataUrl: url,
+            selectable: false,
+        });
+
+        $("#modified_upper").change(function () {
+            if (information_validate()) {
+                first_active();
+            } else {
+                first_inactive();
+            }
+        });
+
+        $("#upper_agent_div").click(function(){
+            $("#now_upper").val($("#upper_agent").html());
+            $("#set_upperAgent_modal").modal("show");
+        });
+
+        $("#customer_list").click(function(){
+            window.location.href="${path.concat('/customer/overview/')}"+"${agent.agentId}";
+        });
+    });
+//    $('#set_upperAgent_modal').modal('hide');
     $('#waring_modal').modal('hide');
     $('#fobid_modal').modal('hide');
     var upperAgentId;
-    $("#select").change(function(){
-	   upperAgentId = $("#select").val();
-       if(upperAgentId!=""){
-		   $('#set_upperAgent_modal').modal('show');
-       }
-    });
-	$("#set_confirm").on('click',function() {
-		$('#set_upperAgent_modal').modal('hide');
-		var url = "${path.concat('/agent/modifyUpperAgent/')}${agent.agentId}/"+ upperAgentId;
-        $.post(url, function (result) {
-            if (result.responseCode == "RESPONSE_OK") {
-            	url="${path.concat('/agent/detail/')}${agent.agentId}";
-    			window.location.href = url;
-            } else if (result.description == "recursion") {
-                $("#waring_modal").modal('show');
-            } else {
-
-            }
-        });
-	});
-	$("#set_cancer").on('click', function() {
-		   $('#set_upperAgent_modal').modal('hide');
-	});
+//    $("#select").change(function(){
+//	   upperAgentId = $("#select").val();
+//       if(upperAgentId!=""){
+//		   $('#set_upperAgent_modal').modal('show');
+//       }
+//    });
+##	$("#set_confirm").on('click',function() {
+##		$('#set_upperAgent_modal').modal('hide');
+##		var url = "${path.concat('/agent/modifyUpperAgent/')}${agent.agentId}/"+ upperAgentId;
+##        $.post(url, function (result) {
+##            if (result.responseCode == "RESPONSE_OK") {
+##            	url="${path.concat('/agent/detail/')}${agent.agentId}";
+##    			window.location.href = url;
+##            } else if (result.description == "recursion") {
+##                $("#waring_modal").modal('show');
+##            } else {
+##
+##            }
+##        });
+##	});
+##	$("#set_cancer").on('click', function() {
+##		   $('#set_upperAgent_modal').modal('hide');
+##	});
 	$("#waring_confirm").on('click', function() {
 		   $('#waring_modal').modal('hide');
 		   url="${path.concat('/agent/detail/')}${agent.agentId}";
@@ -119,4 +327,29 @@
 	$("#fobid_cancer").on('click', function() {
 		   $('#fobid_modal').modal('hide');
 	});
+
+    function active() {
+        $("#modify_btn").removeAttr("disabled");
+        $("#modify_btn").removeClass("disabled");
+    }
+
+    function inactive() {
+        $("#disabled").attr("disabled", "disabled");
+        $("#consult_btn").addClass("disabled");
+    }
+
+    function information_validate() {
+        var upper_agent = $("#modified_upper").val();
+        if (not_null(upper_agent)) {
+            return true;
+        }
+        return false;
+    }
+
+    function not_null(item) {
+        if (item == null || item == "" || item.length <= 0) {
+            return false;
+        }
+        return true;
+    }
 </script>
