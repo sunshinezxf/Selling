@@ -9,6 +9,8 @@ import java.util.Map;
 
 public interface OrderDao {
     ResultData insertOrder(Order order);
+    
+    ResultData insertOrderLite(Order order);
 
     ResultData queryOrder(Map<String, Object> condition);
 

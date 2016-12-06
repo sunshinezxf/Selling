@@ -64,6 +64,27 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
             }
         }
     }
+    
+    /**
+     * 仅仅添加一条order，不考虑orderItem
+     */
+    @Override
+	public ResultData insertOrderLite(Order order) {
+    	ResultData result = new ResultData();
+    	order.setOrderId(IDGenerator.generate("ODR"));
+    	synchronized (lock) {
+            try {
+                sqlSession.insert("selling.order.insert", order);
+                result.setData(order);
+            } catch (Exception e) {
+                logger.error(e.getMessage());
+                result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+                result.setDescription(e.getMessage());
+            } finally {
+                return result;
+            }
+        }
+	}
 
     /**
      * 查询符合查询条件的订单列表
@@ -368,5 +389,6 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
         }
 
     }
+
 
 }

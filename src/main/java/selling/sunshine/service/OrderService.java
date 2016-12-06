@@ -13,6 +13,8 @@ public interface OrderService {
     ResultData placeOrder(Order order);
 
     ResultData placeOrder(CustomerOrder customerOrder);
+    
+    ResultData createOrder(Order order);
 
     ResultData payOrder(Order order);
 
@@ -46,6 +48,8 @@ public interface OrderService {
 
     ResultData fetchOrderItemSum(Map<String, Object> condition, DataTableParam param);
 
+    ResultData updateOrderLite(Order order);
+    
     ResultData updateOrderItem(OrderItem orderItem);
 
     ResultData updateCustomerOrder(CustomerOrder customerOrder);
@@ -53,4 +57,6 @@ public interface OrderService {
     ResultData check();
 
     ResultData checkOrderPool(Map<String, Object> condition);
+
+	
 }
