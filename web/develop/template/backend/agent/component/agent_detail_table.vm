@@ -269,9 +269,9 @@
 
         $("#modified_upper").change(function () {
             if (information_validate()) {
-                first_active();
+                active();
             } else {
-                first_inactive();
+                inactive();
             }
         });
 
