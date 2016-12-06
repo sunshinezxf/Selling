@@ -1,15 +1,13 @@
 package selling.sunshine.controller;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
+import com.alibaba.fastjson.JSONObject;
+import com.pingplusplus.model.Event;
+import com.pingplusplus.model.Webhooks;
+import common.sunshine.model.selling.bill.CustomerOrderBill;
+import common.sunshine.model.selling.order.CustomerOrder;
+import common.sunshine.model.selling.order.support.OrderItemStatus;
+import common.sunshine.utils.ResponseCode;
+import common.sunshine.utils.ResultData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,25 +16,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import selling.sunshine.service.*;
 
-import com.alibaba.fastjson.JSONObject;
-import com.pingplusplus.model.Event;
-import com.pingplusplus.model.Webhooks;
-
-import common.sunshine.model.selling.admin.Admin;
-import selling.sunshine.model.BackOperationLog;
-import common.sunshine.model.selling.charge.Charge;
-import common.sunshine.model.selling.order.CustomerOrder;
-import common.sunshine.model.selling.bill.CustomerOrderBill;
-import common.sunshine.model.selling.order.support.OrderItemStatus;
-import common.sunshine.model.selling.user.User;
-import selling.sunshine.service.BillService;
-import selling.sunshine.service.ChargeService;
-import selling.sunshine.service.LogService;
-import selling.sunshine.service.OrderService;
-import selling.sunshine.service.ToolService;
-import common.sunshine.utils.ResponseCode;
-import common.sunshine.utils.ResultData;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by sunshine on 8/3/16.
@@ -90,52 +77,6 @@ public class ReimburseController {
                     orderService.updateCustomerOrder(order);
                 }
             }
-        }
-        return result;
-    }
-
-    @RequestMapping(method = RequestMethod.POST, value = "/apply")
-    public ResultData reimburse(HttpServletRequest request, String orderId) {
-        ResultData result = new ResultData();
-        Subject subject = SecurityUtils.getSubject();
-        User user = (User) subject.getPrincipal();
-        Admin admin = user.getAdmin();
-        BackOperationLog backOperationLog = new BackOperationLog(
-                admin.getUsername(), toolService.getIP(request), "管理员" + admin.getUsername() + "发起对客户订单:" + orderId + "退款处理");
-        logService.createbackOperationLog(backOperationLog);
-
-        Map<String, Object> condition = new HashMap<>();
-        condition.put("orderId", orderId);
-        condition.put("status", 1);
-        ResultData response = billService.fetchCustomerOrderBill(condition);
-        if (response.getResponseCode() != ResponseCode.RESPONSE_OK) {
-            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
-            result.setDescription(response.getDescription());
-            return result;
-        }
-        CustomerOrderBill bill = ((List<CustomerOrderBill>) response.getData()).get(0);
-        condition.clear();
-        condition.put("orderNo", bill.getBillId());
-        response = chargeService.fectchCharge(condition);
-        if (response.getResponseCode() != ResponseCode.RESPONSE_OK) {
-            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
-            result.setDescription(response.getDescription());
-            return result;
-        }
-        Charge charge = ((List<Charge>) response.getData()).get(0);
-        response = chargeService.reimburse(charge);
-        if (response.getResponseCode() != ResponseCode.RESPONSE_OK) {
-            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
-            result.setDescription(response.getDescription());
-            return result;
-        }
-        condition.clear();
-        condition.put("orderId", orderId);
-        response = orderService.fetchCustomerOrder(condition);
-        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            CustomerOrder current = ((List<CustomerOrder>) response.getData()).get(0);
-            current.setStatus(OrderItemStatus.REFUNDING);
-            orderService.updateCustomerOrder(current);
         }
         return result;
     }
