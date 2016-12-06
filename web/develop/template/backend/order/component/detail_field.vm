@@ -146,7 +146,7 @@
             <button class="ui green button" id="cancel_btn">取消订单</button>
         #end
         #if(${order.status} == 'PAYED' || ${order.status} == 'SHIPPED')
-            <button class="ui green button">确认签收</button>
+            <button class="ui green button" id="receive_btn">确认签收</button>
         #end
         #if(${order.status} == 'RECEIVED')
             <button class="ui green button">退换订单</button>
@@ -158,6 +158,7 @@
 </div>
 #end
 #parse("/backend/order/component/reimburse_order_modal.vm")
+#parse("/backend/order/component/receive_order_modal.vm")
 <script>
     var order = eval(${order});
     var order_id = '';
@@ -176,6 +177,10 @@
                     $("#deliver_detail").hide();
                 } else {
                     var content = eval('(' + result.data + ')');
+                    if (content.data == null || content.data[0] == null || content.data[0].traces == null) {
+                        $("#deliver_detail").hide();
+                        return;
+                    }
                     var traces = content.data[0].traces;
                     var list = $("<ol class='ui list'></ol>");
                     var item = "<li value='*'>物流单号: " + result.description + "</li>";
@@ -194,8 +199,13 @@
     });
 
     $("#cancel_btn").on('click', function () {
-        inform();
+        reimburse_inform();
         $("#reimburse_modal").modal('show');
-    })
+    });
+
+    $("#receive_btn").on('click', function () {
+        receive_inform();
+        $("#receive_modal").modal('show');
+    });
 
 </script>

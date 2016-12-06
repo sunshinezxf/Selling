@@ -61,8 +61,8 @@
         $("#receive_failure").hide();
     });
 
-    $("#reimburse_confirm").on('click', function () {
-        process();
+    $("#receive_confirm").on('click', function () {
+        receive_process();
         receive();
     });
 
@@ -71,38 +71,39 @@
         $.post(receive_url, {'orderId': order_id}, function (result) {
             $("#receive_process").hide();
             if (result.responseCode == "RESPONSE_OK") {
-                success();
+                receive_success();
             } else {
-                failure();
+                console.debug(result.description);
+                receive_failure();
             }
         });
     }
 
-    function inform() {
-        $("receive_info").show();
-        $("receive_process").hide();
-        $("receive_success").hide();
-        $("receive_confrim").show();
-        $("receive_cancel").show();
+    function receive_inform() {
+        $("#receive_info").show();
+        $("#receive_process").hide();
+        $("#receive_success").hide();
+        $("#receive_confirm").show();
+        $("#receive_cancel").show();
     }
 
-    function process() {
+    function receive_process() {
         $("#receive_info").hide();
         $("#receive_process").show();
         $("#receive_confirm").hide();
         $("#receive_cancel").hide();
     }
 
-    function success() {
+    function receive_success() {
         $("#receive_process").hide();
-        $("#receive_success").hide();
+        $("#receive_success").show();
         $("#receive_complete").show();
     }
 
-    function failure() {
-        $("#reimburse_process").hide();
-        $("#reimburse_failure").show();
-        $("#reimburse_cancel").show();
+    function receive_failure() {
+        $("#receive_process").hide();
+        $("#receive_failure").show();
+        $("#receive_cancel").show();
     }
 
     $("#receive_complete").on('click', function () {

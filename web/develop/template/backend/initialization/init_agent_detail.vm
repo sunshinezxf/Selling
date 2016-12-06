@@ -1,0 +1,3 @@
+<link href="//cdn.bootcss.com/jqtree/1.3.4/jqtree.min.css" rel="stylesheet">
+<link rel="stylesheet" href="${path.concat('/material/css/backend/agent-detail.css')}">
+<script src="//cdn.bootcss.com/jqtree/1.3.4/tree.jquery.min.js"></script>

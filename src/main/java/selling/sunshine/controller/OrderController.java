@@ -1262,8 +1262,8 @@ public class OrderController {
             return result;
         }
         OrderItem orderItem = ((List<OrderItem>) fetchOrderItemData.getData()).get(0);
-        if(orderItem.getStatus() != OrderItemStatus.NOT_PAYED){
-        	result.setResponseCode(fetchOrderItemData.getResponseCode());
+        if (orderItem.getStatus() != OrderItemStatus.NOT_PAYED) {
+            result.setResponseCode(fetchOrderItemData.getResponseCode());
             result.setDescription("订单已付款");
             return result;
         }
@@ -1276,9 +1276,9 @@ public class OrderController {
             return result;
         }
         Order order = ((List<Order>) fetchOrderData.getData()).get(0);
-        if(order.getOrderItems().size() == 1){
-        	// 将Order和OrderItem变成已付款
-        	order.setStatus(OrderStatus.PAYED);
+        if (order.getOrderItems().size() == 1) {
+            // 将Order和OrderItem变成已付款
+            order.setStatus(OrderStatus.PAYED);
             order.setCreateAt(new Timestamp(System.currentTimeMillis()));
             orderItem = order.getOrderItems().get(0);
             orderItem.setStatus(OrderItemStatus.PAYED);
@@ -1290,32 +1290,32 @@ public class OrderController {
                 return result;
             }
         } else {
-        	order.setPrice(order.getPrice() - orderItem.getOrderItemPrice());
-        	ResultData updateOrderResponse = orderService.updateOrderLite(order);
-        	if(updateOrderResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
-        		result.setResponseCode(updateOrderResponse.getResponseCode());
-        		result.setDescription("拆订单失败");
-        		return result;
-        	}
-        	order.setPrice(orderItem.getOrderItemPrice());
-        	order.setStatus(OrderStatus.PAYED);
-        	ResultData insertOrderResponse = orderService.createOrder(order);
-        	if(updateOrderResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
-        		result.setResponseCode(updateOrderResponse.getResponseCode());
-        		result.setDescription("新建新订单失败");
-        		return result;
-        	}
-        	order = (Order) insertOrderResponse.getData();
-        	orderItem.setOrder(order);
-        	orderItem.setStatus(OrderItemStatus.PAYED);
-        	ResultData updateOrderItemResponse = orderService.updateOrderItem(orderItem);
-        	if(updateOrderItemResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
-        		result.setResponseCode(updateOrderItemResponse.getResponseCode());
-        		result.setDescription("订单项重置ID失败");
-        		return result;
-        	}
+            order.setPrice(order.getPrice() - orderItem.getOrderItemPrice());
+            ResultData updateOrderResponse = orderService.updateOrderLite(order);
+            if (updateOrderResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+                result.setResponseCode(updateOrderResponse.getResponseCode());
+                result.setDescription("拆订单失败");
+                return result;
+            }
+            order.setPrice(orderItem.getOrderItemPrice());
+            order.setStatus(OrderStatus.PAYED);
+            ResultData insertOrderResponse = orderService.createOrder(order);
+            if (updateOrderResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+                result.setResponseCode(updateOrderResponse.getResponseCode());
+                result.setDescription("新建新订单失败");
+                return result;
+            }
+            order = (Order) insertOrderResponse.getData();
+            orderItem.setOrder(order);
+            orderItem.setStatus(OrderItemStatus.PAYED);
+            ResultData updateOrderItemResponse = orderService.updateOrderItem(orderItem);
+            if (updateOrderItemResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+                result.setResponseCode(updateOrderItemResponse.getResponseCode());
+                result.setDescription("订单项重置ID失败");
+                return result;
+            }
         }
-        
+
         // 记录下单的admin
         BackOperationLog backOperationLog = new BackOperationLog(
                 admin.getUsername(), toolService.getIP(request), "管理员" + admin.getUsername() + "将订单:"
@@ -1337,7 +1337,7 @@ public class OrderController {
      * @param orderId
      * @return
      */
-    @RequestMapping(method = RequestMethod.POST, value = "/received")
+    @RequestMapping(method = RequestMethod.POST, value = "/receive")
     public ResultData received(HttpServletRequest request, String orderId) {
         ResultData result = new ResultData();
         Subject subject = SecurityUtils.getSubject();
@@ -1357,8 +1357,8 @@ public class OrderController {
                 return result;
             }
             OrderItem orderItem = ((List<OrderItem>) fetchOrderItemResponse.getData()).get(0);
-            if(orderItem.getStatus() != OrderItemStatus.PAYED && orderItem.getStatus() != OrderItemStatus.SHIPPED){
-            	result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            if (orderItem.getStatus() != OrderItemStatus.PAYED && orderItem.getStatus() != OrderItemStatus.SHIPPED) {
+                result.setResponseCode(ResponseCode.RESPONSE_ERROR);
                 result.setDescription("该状态订单无权签收");
                 return result;
             }
@@ -1403,8 +1403,8 @@ public class OrderController {
                 return result;
             }
             CustomerOrder customerOrder = ((List<CustomerOrder>) fetchCustomerOrderResponse.getData()).get(0);
-            if(customerOrder.getStatus() != OrderItemStatus.PAYED && customerOrder.getStatus() != OrderItemStatus.SHIPPED){
-            	result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            if (customerOrder.getStatus() != OrderItemStatus.PAYED && customerOrder.getStatus() != OrderItemStatus.SHIPPED) {
+                result.setResponseCode(ResponseCode.RESPONSE_ERROR);
                 result.setDescription("该状态订单无权签收");
                 return result;
             }
@@ -1584,11 +1584,8 @@ public class OrderController {
         // 记录退货 完成的日志
         if (user.getAdmin() != null) {
             Admin admin = user.getAdmin();
-            BackOperationLog backOperationLog = new BackOperationLog(
-                    admin.getUsername(), toolService.getIP(request), "管理员" + admin.getUsername() + "将订单:"
-                    + orderId + "设置为已退货");
-            ResultData createLogData = logService
-                    .createbackOperationLog(backOperationLog);
+            BackOperationLog backOperationLog = new BackOperationLog(admin.getUsername(), toolService.getIP(request), "管理员" + admin.getUsername() + "将订单:" + orderId + "设置为已退货");
+            ResultData createLogData = logService.createbackOperationLog(backOperationLog);
             if (createLogData.getResponseCode() != ResponseCode.RESPONSE_OK) {
                 result.setResponseCode(createLogData.getResponseCode());
                 result.setDescription("记录操作日志失败");
@@ -1596,11 +1593,8 @@ public class OrderController {
             }
         } else if (user.getAgent() != null) {
             common.sunshine.model.selling.agent.lite.Agent agent = user.getAgent();
-            BackOperationLog backOperationLog = new BackOperationLog(
-                    agent.getName(), toolService.getIP(request), "代理商" + agent.getName() + "将订单:"
-                    + orderId + "设置为已退货");
-            ResultData createLogData = logService
-                    .createbackOperationLog(backOperationLog);
+            BackOperationLog backOperationLog = new BackOperationLog(agent.getName(), toolService.getIP(request), "代理商" + agent.getName() + "将订单:" + orderId + "设置为已退货");
+            ResultData createLogData = logService.createbackOperationLog(backOperationLog);
             if (createLogData.getResponseCode() != ResponseCode.RESPONSE_OK) {
                 result.setResponseCode(createLogData.getResponseCode());
                 result.setDescription("记录操作日志失败");
