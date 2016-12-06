@@ -177,6 +177,10 @@
                     $("#deliver_detail").hide();
                 } else {
                     var content = eval('(' + result.data + ')');
+                    if (content.data == null || content.data[0] == null || content.data[0].traces == null) {
+                        $("#deliver_detail").hide();
+                        return;
+                    }
                     var traces = content.data[0].traces;
                     var list = $("<ol class='ui list'></ol>");
                     var item = "<li value='*'>物流单号: " + result.description + "</li>";
