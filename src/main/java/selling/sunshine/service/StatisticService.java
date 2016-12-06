@@ -19,7 +19,7 @@ public interface StatisticService {
 
     ResultData orderMonth();
 
-    ResultData orderByYear();
+    ResultData orderLastYear();
 
     ResultData topThreeAgent();
 

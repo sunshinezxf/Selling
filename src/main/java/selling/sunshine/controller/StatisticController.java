@@ -209,21 +209,17 @@ public class StatisticController {
     }
 
     @ResponseBody
-    @RequestMapping(method = RequestMethod.POST, value = "/orderByYear")
-    public JSONObject orderByYear() {
+    @RequestMapping(method = RequestMethod.GET, value = "/orderLastYear")
+    public JSONObject orderLastYear() {
         JSONObject result = new JSONObject();
-        ResultData resultData = statisticService.orderByYear();
+        ResultData resultData = statisticService.orderLastYear();
         if (resultData.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            List<OrderSeries> list = (List<OrderSeries>) resultData.getData();
+            List<Map<String, Object>> list = (List<Map<String, Object>>) resultData.getData();
             JSONArray series = new JSONArray();
             for (int i = 0; i < list.size(); i++) {
-                JSONArray data = new JSONArray();
-                for (int j = 0; j < list.get(i).getData().length; j++) {
-                    data.add(list.get(i).getData()[j]);
-                }
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put("name", list.get(i).getName());
-                jsonObject.put("data", data);
+                jsonObject.put("time", list.get(i).get("date"));
+                jsonObject.put("quantity", list.get(i).get("amount"));
                 series.add(jsonObject);
             }
             result.put("series", series);
@@ -395,7 +391,7 @@ public class StatisticController {
         resultData.setData(goodsArray);
         return resultData;
     }
-
+    
     /**
      * @param type, type的取值daily, monthly, overall
      * @return
