@@ -25,7 +25,7 @@ public interface StatisticDao {
 
     ResultData orderMonth();
 
-    ResultData orderByYear();
+    ResultData orderLastYear();
 
     ResultData topThreeAgent();
 
