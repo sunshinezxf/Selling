@@ -1,0 +1,18 @@
+.ui.medium.images{
+  > .image{
+    width: 18rem;
+  }
+  > .image:first-child{
+    margin-right: 1rem;
+  }
+}
+
+#personal_info{
+  > .content{
+    padding-left: 2.5em;
+  }
+}
+
+#upper_agent_div{
+  margin-left: 2em;
+}
