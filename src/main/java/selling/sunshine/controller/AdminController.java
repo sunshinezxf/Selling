@@ -17,11 +17,13 @@ import org.springframework.web.servlet.ModelAndView;
 import selling.sunshine.form.AdminLoginForm;
 import common.sunshine.model.selling.admin.Admin;
 import selling.sunshine.model.BackOperationLog;
+import common.sunshine.model.selling.user.Role;
 import common.sunshine.model.selling.user.User;
 import common.sunshine.pagination.DataTablePage;
 import common.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.AdminService;
 import selling.sunshine.service.LogService;
+import selling.sunshine.service.RoleService;
 import selling.sunshine.service.ToolService;
 import selling.sunshine.service.UserService;
 import common.sunshine.utils.ResponseCode;
@@ -53,10 +55,20 @@ public class AdminController {
     
     @Autowired
     private LogService logService;
+    
+    @Autowired
+    private RoleService roleService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/overview")
     public ModelAndView overview() {
         ModelAndView view = new ModelAndView();
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("blockFlag", false);
+        ResultData fetchResponse = roleService.queryRole(condition);
+        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            List<Role> list = (List<Role>) fetchResponse.getData();
+            view.addObject("roles", list);
+        }
         view.setViewName("/backend/admin/admin_management");
         return view;
     }
@@ -75,6 +87,20 @@ public class AdminController {
             result = (DataTablePage<User>) fetchResponse.getData();
         }
         return result;
+    }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/detail/{userId}")
+    public ModelAndView detail(@PathVariable("userId") String userId) {
+        ModelAndView view = new ModelAndView();
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("userId", userId);
+        ResultData fetchResponse = userService.fetchUser(condition);
+        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+        	User user = ((List<User>) fetchResponse.getData()).get(0);
+        	view.addObject("user", user);
+        }
+        view.setViewName("/backend/admin/admin_detail");
+        return view;
     }
     
     @ResponseBody

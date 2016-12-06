@@ -113,19 +113,19 @@ public class PlatformController {
         return view;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/register")
-    public ModelAndView register() {
-        ModelAndView view = new ModelAndView();
-        Map<String, Object> condition = new HashMap<>();
-        condition.put("blockFlag", false);
-        ResultData fetchResponse = roleService.queryRole(condition);
-        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            List<Role> list = (List<Role>) fetchResponse.getData();
-            view.addObject("roles", list);
-        }
-        view.setViewName("/backend/admin/admin_register");
-        return view;
-    }
+//    @RequestMapping(method = RequestMethod.GET, value = "/register")
+//    public ModelAndView register() {
+//        ModelAndView view = new ModelAndView();
+//        Map<String, Object> condition = new HashMap<>();
+//        condition.put("blockFlag", false);
+//        ResultData fetchResponse = roleService.queryRole(condition);
+//        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+//            List<Role> list = (List<Role>) fetchResponse.getData();
+//            view.addObject("roles", list);
+//        }
+//        view.setViewName("/backend/admin/admin_register");
+//        return view;
+//    }
 
     @RequestMapping(method = RequestMethod.POST, value = "/register")
     public ModelAndView register(@Valid AdminForm form, BindingResult result,HttpServletRequest request) {

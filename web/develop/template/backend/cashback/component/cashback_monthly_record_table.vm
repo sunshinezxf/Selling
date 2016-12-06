@@ -19,7 +19,7 @@
     #if(${total})
     <div class="row">
          本月预期返现总额：${total}元&nbsp;
-         <a type="button" id="produce" class="btn btn-primary btn-success" href="${path.concat('/cashback/produce')}">本月返现报表下载</a>
+         <a type="button" id="produce" class="ui positive basic button" href="${path.concat('/cashback/produce')}">本月返现报表下载</a>
     </div>
     <br>
     #end
@@ -77,7 +77,7 @@
                 {
                     title: "操作", "mRender": function (data, type, full) {
                     var operation = "";
-                    var url = "${path.concat('/cashback')}" + "/" + full.agent.agentId + "/month"
+                    var url = "${path.concat('/cashback/')}" + full.agent.agentId + "/month";
                     var detail_btn = "<a type='button' class='btn btn-primary btn-success' href='" + url + "'>详情</a>&nbsp;"
                     operation += detail_btn;
                     return operation;

@@ -80,7 +80,7 @@
             <a class="title"><i class="teal setting icon left"></i><i class="dropdown icon"></i>账号管理</a>
 
             <div class="content menu">
-                <a class="item">添加账号</a>
+               <a id="admin_list" class="item" href="${path.concat('/admin/overview')}">账号列表</a>
             </div>
         </div>
     #end
