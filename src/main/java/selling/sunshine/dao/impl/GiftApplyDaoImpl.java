@@ -5,6 +5,8 @@ import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
+
 import common.sunshine.dao.BaseDao;
 import selling.sunshine.dao.GiftApplyDao;
 import common.sunshine.model.selling.agent.Agent;
@@ -83,6 +85,9 @@ public class GiftApplyDaoImpl extends BaseDao implements GiftApplyDao {
         ResultData result = new ResultData();
         DataTablePage<GiftApply> page = new DataTablePage<>(param);
         condition = handle(condition);
+        if (!StringUtils.isEmpty(param.getsSearch())) {  
+        	condition.put("search", "%"+param.getsSearch()+"%");
+ 		}
         ResultData total = queryGiftApply(condition);
         if (total.getResponseCode() != ResponseCode.RESPONSE_OK) {
             result.setResponseCode(ResponseCode.RESPONSE_ERROR);

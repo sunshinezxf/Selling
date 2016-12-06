@@ -59,6 +59,14 @@
         <if test="blockFlag != null">
             AND block_flag = #{blockFlag}
         </if>
+        <if test="search !=null and search != ''">
+            AND (agent_id in (select agent_id from agent where agent_name LIKE BINARY #{search}) 
+                 OR goods_id in(select goods_id from goods where goods_name LIKE BINARY #{search})
+                 OR create_time LIKE BINARY #{search} 
+                 OR potential LIKE BINARY #{search}
+                 OR apply_line LIKE BINARY #{search}
+                )
+        </if>
         <if test="rule != null and rule != ''">
             ORDER BY ${rule}
         </if>

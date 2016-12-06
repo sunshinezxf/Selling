@@ -29,6 +29,8 @@ public class GiftApply extends Entity {
         this.agent = agent;
         this.goods = goods;
         this.status = GiftApplyStatus.APPLYED;
+        this.last=last;
+        this.total=total;
     }
 
     public GiftApply(int potential, int line, Agent agent, Goods4Agent goods, int last, int total, GiftApplyStatus status) {

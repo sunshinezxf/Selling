@@ -194,10 +194,15 @@ public class GiftController {
         return view;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/check")
-    public ModelAndView check() {
+    @RequestMapping(method = RequestMethod.GET, value = "/check/{type}")
+    public ModelAndView check(@PathVariable("type") String type) {
         ModelAndView view = new ModelAndView();
         view.setViewName("/backend/agent/gift/check");
+        if (type.equals("total")) {
+			view.addObject("type", "total");
+		}else {
+			view.addObject("type", type);
+		}
         return view;
     }
 
@@ -264,18 +269,18 @@ public class GiftController {
         return result;
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/apply/handle")
-    public ModelAndView handleApply(@Valid ApplyConfigForm form, BindingResult result) {
+    @RequestMapping(method = RequestMethod.POST, value = "/apply/handle/{type}")
+    public ModelAndView handleApply(@Valid ApplyConfigForm form,@PathVariable("type") String type, BindingResult result) {
         ModelAndView view = new ModelAndView();
         if (result.hasErrors()) {
-            view.setViewName("redirect:/gift/check");
+            view.setViewName("redirect:/gift/check/"+type);
             return view;
         }
         Map<String, Object> condition = new HashMap<>();
         condition.put("applyId", form.getApplyId());
         ResultData response = agentService.fetchGiftApply(condition);
         if (response.getResponseCode() != ResponseCode.RESPONSE_OK) {
-            view.setViewName("redirect:/gift/check");
+            view.setViewName("redirect:/gift/check/"+type);
             return view;
         }
         GiftApply apply = ((List<GiftApply>) response.getData()).get(0);
@@ -297,7 +302,7 @@ public class GiftController {
         }
         apply.setStatus(GiftApplyStatus.PROCESSED);
         agentService.updateGiftApply(apply);
-        view.setViewName("redirect:/gift/check");
+        view.setViewName("redirect:/gift/check/"+type);
         return view;
     }
 }

@@ -13,6 +13,7 @@
             <div class="content menu">
                 <a id="agent_overview" class="item" href="${path.concat('/agent/overview')}">代理概览</a>
                 <a id="agent_check" class="item" href="${path.concat('/agent/check')}">代理审核</a>
+                <a id="agent_gift" class="item" href="${path.concat('/gift/check/total')}">赠送申请</a>
             </div>
         </div>
     #end

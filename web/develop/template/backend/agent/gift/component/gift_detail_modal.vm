@@ -35,18 +35,11 @@
 			</table>
 		</div>
 	</div>
-	<div class="actions">
-	    <form id="gift_quantity_form" class="form-horizontal">
+	<div class="actions">	
+	    <form id="gift_quantity_form">
 			<input type="hidden" id="apply_gift_id" name="applyId"></input>
-					<div class="form-group">
-						<label for="gift_quantity"
-							class="ui label"
-							style="text-align: left;">配置赠送盒数</label>
-						<div class="row>
-							<input type="tel" class="form-control" id="gift_quantity"
-								name="amount" placeholder="请输入赠送盒数" autocomplete="off">
-						</div>
-					</div>
+			<label for="gift_quantity" class="ui label">配置赠送盒数</label>
+			<input type="tel"  id="gift_quantity" name="amount" placeholder="请输入赠送盒数" autocomplete="off">
 		</form>
 		<button class="ui negative basic button" id="cancer_btn">取消</button>
 		<button class="ui disabled button" id="present_btn" disabled="disabled">赠送</button>
@@ -68,7 +61,7 @@
 	$("#present_btn").click(
 			function() {
 				$("#gift_quantity_form").attr("action",
-						"${path.concat('/gift/apply/handle')}");
+						"${path.concat('/gift/apply/handle/')}${type}");
 				$("#gift_quantity_form").attr("method", "post");
 				$("#gift_quantity_form").submit();
 			});
