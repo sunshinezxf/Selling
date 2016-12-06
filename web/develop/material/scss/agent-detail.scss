@@ -16,3 +16,24 @@
 #upper_agent_div{
   margin-left: 2em;
 }
+
+#customers_list,#cashback_list{
+  cursor:pointer;
+}
+
+#customers_list:hover,#cashback_list:hover{
+  background-color: #00B5AD !important;
+}
+
+.floated_div{
+  position:relative;
+  zoom:1;
+}
+
+.floated_div:after{
+  content: ".";
+  display: block;
+  clear: both;
+  visibility: hidden;
+  height: 0;
+}

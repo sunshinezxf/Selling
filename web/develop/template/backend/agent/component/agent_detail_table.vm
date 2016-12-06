@@ -66,9 +66,9 @@
                                 <div class="ui right floated header">
                                     <div class="ui positive toggle checkbox">
                                         #if(${agent.blockFlag}==0&&${agent.granted}==0)
-                                            <input type="checkbox" readonly="readonly">
+                                            <input type="checkbox" readonly="readonly" disabled="disabled">
                                         #else
-                                            <input type="checkbox" readonly="readonly" checked="checked">
+                                            <input type="checkbox" readonly="readonly" checked="checked" disabled="disabled">
                                         #end
                                         <label>授权</label>
                                     </div>
@@ -121,7 +121,7 @@
                     <div class="item">
                         <div class="content">
                             <div id="sales_area" class="ui large teal ribbon label">销售情况
-                                <div class="detail">前<span id="rank"></span></div>
+                                <div class="detail">前<span id="rank"></span>%</div>
                             </div>
                             <div class="description">
                                 <table class="ui tablet stackable table">
@@ -334,8 +334,8 @@
     }
 
     function inactive() {
-        $("#disabled").attr("disabled", "disabled");
-        $("#consult_btn").addClass("disabled");
+        $("#modify_btn").attr("disabled", "disabled");
+        $("#modify_btn").addClass("disabled");
     }
 
     function information_validate() {
