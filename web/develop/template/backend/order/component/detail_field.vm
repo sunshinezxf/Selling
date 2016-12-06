@@ -139,7 +139,7 @@
         订单操作
     </div>
     <div class="column">
-        #if(${order.status} == 'NOT_PAYED')
+        #if(${order.status} == 'NOT_PAYED' && ${order.orderItemId})
             <button class="ui green button">确认付款</button>
         #end
         #if(${order.status} == 'PAYED' && ${order.orderId})
