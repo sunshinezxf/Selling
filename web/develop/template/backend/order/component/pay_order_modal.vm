@@ -1,0 +1,115 @@
+<div class="ui modal" id="pay_modal" style="display:none;">
+    <i class="close icon"></i>
+
+    <div class="header">付款确认</div>
+    <div class="image content">
+        <div class="description">
+            <div class="ui icon message" id="pay_info" style="display: none;">
+                <i class="inbox icon"></i>
+
+                <div class="content">
+                    <div class="header">
+                        确认付款
+                    </div>
+                    <p>当前仅支持对代理商订单的未付款订单，通过线下付款后进行确认。</p>
+                </div>
+            </div>
+            <div class="ui icon message" id="pay_process" style="display: none;">
+                <i class="notched circle loading icon"></i>
+
+                <div class="content">
+                    <div class="header">
+                        付款确认中
+                    </div>
+                    <p>系统正在更新订单状态为已付款</p>
+                </div>
+            </div>
+            <div class="ui icon message" id="pay_success" style="display: none;">
+                <i class="checkmark icon"></i>
+
+                <div class="content">
+                    <div class="header">
+                        操作成功
+                    </div>
+                    <p>该订单已成功更改为已付款</p>
+                </div>
+            </div>
+            <div class="ui icon message" id="pay_failure" style="display: none;">
+                <i class="remove icon"></i>
+
+                <div class="content">
+                    <div class="header">
+                        操作失败
+                    </div>
+                    <p>订单状态更新失败，请重新尝试</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="actions">
+        <div class="ui green button" id="pay_confirm" style="display: none;">确认</div>
+        <div class="ui button" id="pay_cancel" style="display: none;">关闭</div>
+        <div class="ui green button" id="pay_complete" style="display: none;">完成</div>
+    </div>
+</div>
+<script>
+    $("#pay_modal").modal('hide');
+
+    $("#pay_cancel").on('click', function () {
+        $("#pay_modal").modal('hide');
+        $("#pay_info").hide();
+        $("#pay_process").hide();
+        $("#pay_success").hide();
+        $("#pay_failure").hide();
+    });
+
+    $("#pay_confirm").on('click', function () {
+        pay_process();
+        pay();
+    })
+
+    function pay() {
+        var pay_url = "${path.concat('/order/adminpay')}";
+        $.post(pay_url, {'orderItemId': order_id}, function (result) {
+            $("#pay_process").hide();
+            if (result.responseCode == "RESPONSE_OK") {
+                pay_success();
+            } else {
+                console.debug(result.description);
+                pay_failure();
+            }
+        });
+    }
+
+    function pay_inform() {
+        $("#pay_info").show();
+        $("#pay_process").hide();
+        $("#pay_success").hide();
+        $("#pay_failure").hide();
+        $("#pay_confirm").show();
+        $("#pay_cancel").show();
+    }
+
+    function pay_process() {
+        $("#pay_info").hide();
+        $("#pay_process").show();
+        $("#pay_confirm").hide();
+        $("#pay_cancel").hide();
+    }
+
+    function pay_success() {
+        $("#pay_process").hide();
+        $("#pay_success").show();
+        $("#pay_complete").show();
+    }
+
+    function pay_failure() {
+        $("#pay_process").hide();
+        $("#pay_failure").show();
+        $("#pay_cancel").show();
+    }
+
+    $("#pay_complete").on('click', function () {
+        window.location.reload();
+    });
+</script>
