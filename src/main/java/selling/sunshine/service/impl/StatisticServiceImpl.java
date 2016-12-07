@@ -93,7 +93,6 @@ public class StatisticServiceImpl implements StatisticService {
         } else {
             result.setResponseCode(ResponseCode.RESPONSE_NULL);
         }
-        logger.debug("sssss: " + JSON.toJSONString(result));
         return result;
     }
 
