@@ -140,7 +140,7 @@
     </div>
     <div class="column">
         #if(${order.status} == 'NOT_PAYED' && ${order.orderItemId})
-            <button class="ui green button">确认付款</button>
+            <button class="ui green button" id="pay_btn">确认付款</button>
         #end
         #if(${order.status} == 'PAYED' && ${order.orderId})
             <button class="ui green button" id="cancel_btn">取消订单</button>
@@ -159,6 +159,7 @@
 #end
 #parse("/backend/order/component/reimburse_order_modal.vm")
 #parse("/backend/order/component/receive_order_modal.vm")
+#parse("/backend/order/component/pay_order_modal.vm")
 <script>
     var order = eval(${order});
     var order_id = '';
@@ -206,6 +207,11 @@
     $("#receive_btn").on('click', function () {
         receive_inform();
         $("#receive_modal").modal('show');
+    });
+
+    $("#pay_btn").on('click', function () {
+        pay_inform();
+        $("#pay_modal").modal('show');
     });
 
 </script>

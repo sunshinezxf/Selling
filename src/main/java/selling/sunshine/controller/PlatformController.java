@@ -127,49 +127,48 @@ public class PlatformController {
 //        return view;
 //    }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/register")
-    public ModelAndView register(@Valid AdminForm form, BindingResult result,HttpServletRequest request) {
-        ModelAndView view = new ModelAndView();
-
-        if (result.hasErrors()) {
-            view.setViewName("redirect:/register");
-            return view;
-        }
-        try {
-            Map<String, Object> condition = new HashMap<>();
-            condition.put("username", form.getUsername());
-            ResultData queryResult = adminService.fetchAdmin(condition);
-            if (((List<Admin>) queryResult.getData()).size() != 0) {
-                view.setViewName("redirect:/register");
-                return view;
-            }
-            Role role = new Role();
-            role.setRoleId(form.getRole());
-            Admin admin = new Admin(form.getUsername(), form.getPassword());
-            ResultData resultData = adminService.createAdmin(admin, role);
-            if (resultData.getResponseCode() == ResponseCode.RESPONSE_OK) {
-                Subject subject = SecurityUtils.getSubject();
-                User user = (User) subject.getPrincipal();
-                if (user == null) {
-                	view.setViewName("redirect:/commodity/create");
-                    return view;
-                }
-                Admin targetAdmin = user.getAdmin();
-                BackOperationLog backOperationLog = new BackOperationLog(
-                		targetAdmin.getUsername(), toolService.getIP(request) ,"管理员" + targetAdmin.getUsername() + "新授权了一个管理员账号："+form.getUsername());
-                logService.createbackOperationLog(backOperationLog);
-                view.setViewName("redirect:/admin/overview");
-                return view;
-            } else {
-                view.setViewName("redirect:/register");
-                return view;
-            }
-        } catch (Exception e) {
-            view.setViewName("redirect:/register");
-            return view;
-        }
-
-    }
+//    @RequestMapping(method = RequestMethod.POST, value = "/register")
+//    public ModelAndView register(@Valid AdminForm form, BindingResult result,HttpServletRequest request) {
+//        ModelAndView view = new ModelAndView();
+//
+//        if (result.hasErrors()) {
+//            view.setViewName("redirect:/register");
+//            return view;
+//        }
+//        try {
+//            Map<String, Object> condition = new HashMap<>();
+//            condition.put("username", form.getUsername());
+//            ResultData queryResult = adminService.fetchAdmin(condition);
+//            if (((List<Admin>) queryResult.getData()).size() != 0) {
+//                view.setViewName("redirect:/register");
+//                return view;
+//            }
+//            Role role = new Role();
+//            role.setRoleId(form.getRole());
+//            Admin admin = new Admin(form.getUsername(), form.getPassword());
+//            ResultData resultData = adminService.createAdmin(admin, role);
+//            if (resultData.getResponseCode() == ResponseCode.RESPONSE_OK) {
+//                Subject subject = SecurityUtils.getSubject();
+//                User user = (User) subject.getPrincipal();
+//                if (user == null) {
+//                	view.setViewName("redirect:/register");
+//                    return view;
+//                }
+//                Admin targetAdmin = user.getAdmin();
+//                BackOperationLog backOperationLog = new BackOperationLog(
+//                		targetAdmin.getUsername(), toolService.getIP(request) ,"管理员" + targetAdmin.getUsername() + "新授权了一个管理员账号："+form.getUsername());
+//                logService.createbackOperationLog(backOperationLog);
+//                view.setViewName("redirect:/admin/overview");
+//                return view;
+//            } else {
+//                view.setViewName("redirect:/register");
+//                return view;
+//            }
+//        } catch (Exception e) {
+//            view.setViewName("redirect:/register");
+//            return view;
+//        }
+//    }
 
     @RequestMapping(method = RequestMethod.GET, value = "/dashboard")
     public ModelAndView dashboard() {

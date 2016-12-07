@@ -68,6 +68,9 @@
         <if test="userId != null and userId != ''">
             AND user_id = #{userId}
         </if>
+        <if test="managerId != null and managerId != ''">
+            AND manager_id = #{managerId}
+        </if>
         <if test="roleId != null and roleId != ''">
             AND role_id = #{roleId}
         </if>

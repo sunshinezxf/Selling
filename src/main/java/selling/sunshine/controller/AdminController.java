@@ -1,6 +1,7 @@
 package selling.sunshine.controller;
 
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.crypto.hash.format.HexFormat;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import selling.sunshine.form.AdminForm;
 import selling.sunshine.form.AdminLoginForm;
 import common.sunshine.model.selling.admin.Admin;
 import selling.sunshine.model.BackOperationLog;
@@ -89,6 +91,48 @@ public class AdminController {
         return result;
     }
     
+    @RequestMapping(method = RequestMethod.POST, value = "/register")
+    public ModelAndView register(@Valid AdminForm form, BindingResult result,HttpServletRequest request) {
+        ModelAndView view = new ModelAndView();
+        if (result.hasErrors()) {
+            view.setViewName("redirect:/admin/overview");
+            return view;
+        }
+        try {
+            Map<String, Object> condition = new HashMap<>();
+            condition.put("username", form.getUsername());
+            ResultData queryResult = adminService.fetchAdmin(condition);
+            if (((List<Admin>) queryResult.getData()).size() != 0) {
+                view.setViewName("redirect:/admin/overview");
+                return view;
+            }
+            Role role = new Role();
+            role.setRoleId(form.getRole());
+            Admin admin = new Admin(form.getUsername(), form.getPassword());
+            ResultData resultData = adminService.createAdmin(admin, role);
+            if (resultData.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                Subject subject = SecurityUtils.getSubject();
+                User user = (User) subject.getPrincipal();
+                if (user == null) {
+                	view.setViewName("redirect:/admin/overview");
+                    return view;
+                }
+                Admin targetAdmin = user.getAdmin();
+                BackOperationLog backOperationLog = new BackOperationLog(
+                		targetAdmin.getUsername(), toolService.getIP(request) ,"管理员" + targetAdmin.getUsername() + "新授权了一个管理员账号："+form.getUsername());
+                logService.createbackOperationLog(backOperationLog);
+                view.setViewName("redirect:/admin/overview");
+                return view;
+            } else {
+                view.setViewName("redirect:/admin/overview");
+                return view;
+            }
+        } catch (Exception e) {
+            view.setViewName("redirect:/admin/overview");
+            return view;
+        }
+    }
+    
     @RequestMapping(method = RequestMethod.GET, value = "/detail/{userId}")
     public ModelAndView detail(@PathVariable("userId") String userId) {
         ModelAndView view = new ModelAndView();
@@ -96,7 +140,7 @@ public class AdminController {
         condition.put("userId", userId);
         ResultData fetchResponse = userService.fetchUser(condition);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-        	User user = ((List<User>) fetchResponse.getData()).get(0);
+        	User user = (User)fetchResponse.getData();
         	view.addObject("user", user);
         }
         view.setViewName("/backend/admin/admin_detail");
@@ -148,29 +192,38 @@ public class AdminController {
     public ModelAndView updateAdmin(@PathVariable("adminId") String adminId, @Valid AdminLoginForm adminLoginForm, BindingResult result,HttpServletRequest request) {
         ResultData response = new ResultData();
         ModelAndView view = new ModelAndView();
+        
         if (result.hasErrors()) {
             view.setViewName("redirect:/admin/overview");
             return view;
         }
-        Admin admin = new Admin(adminLoginForm.getUsername(), adminLoginForm.getPassword());
-        admin.setAdminId(adminId);
-        response = adminService.updateAdmin(admin);
-        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            Subject subject = SecurityUtils.getSubject();
-            User user = (User) subject.getPrincipal();
-            if (user == null) {
-            	view.setViewName("redirect:/admin/overview");
+        Map<String, Object> condition=new HashMap<>();
+        condition.put("managerId", adminId);
+        response=userService.fetchUser(condition);       
+        if (response.getResponseCode()==ResponseCode.RESPONSE_OK) {
+        	String userId=((User)response.getData()).getUserId();
+        	Admin admin = new Admin(adminLoginForm.getUsername(), adminLoginForm.getPassword());
+            admin.setAdminId(adminId);
+            response = adminService.updateAdmin(admin);
+            if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                Subject subject = SecurityUtils.getSubject();
+                User user = (User) subject.getPrincipal();
+                if (user == null) {
+                	view.setViewName("redirect:/admin/detail/"+userId);
+                    return view;
+                }
+                Admin targetAdmin = user.getAdmin();
+                BackOperationLog backOperationLog = new BackOperationLog(
+                		targetAdmin.getUsername(), toolService.getIP(request) ,"管理员" + targetAdmin.getUsername() + "修改了管理员："+adminLoginForm.getUsername()+"的密码");
+                logService.createbackOperationLog(backOperationLog);
+            	view.setViewName("redirect:/admin/detail/"+userId);
+                return view;
+            } else {
+            	view.setViewName("redirect:/admin/detail/"+userId);
                 return view;
             }
-            Admin targetAdmin = user.getAdmin();
-            BackOperationLog backOperationLog = new BackOperationLog(
-            		targetAdmin.getUsername(), toolService.getIP(request) ,"管理员" + targetAdmin.getUsername() + "修改了管理员："+adminLoginForm.getUsername()+"的密码");
-            logService.createbackOperationLog(backOperationLog);
-        	view.setViewName("redirect:/admin/overview");
-            return view;
-        } else {
-        	view.setViewName("redirect:/admin/overview");
-            return view;
-        }
+		}
+        view.setViewName("redirect:/admin/overview");
+        return view;
     }
 }
