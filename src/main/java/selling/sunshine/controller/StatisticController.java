@@ -206,14 +206,14 @@ public class StatisticController {
     }
 
     @ResponseBody
-    @RequestMapping(method = RequestMethod.GET, value = "/order/summary/{orderType}")
-    public ResultData orderLastYear(@PathVariable("orderType") int orderType) {
+    @RequestMapping(method = RequestMethod.GET, value = "/order/summary")
+    public ResultData orderLastYear() {
         ResultData result = new ResultData();
+        JSONObject dataObject = new JSONObject();
         Map<String, Object> condition = new HashMap<String, Object>();
-        condition.put("orderType", orderType);
-        ResultData response = statisticService.orderLastYear(condition);
-        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            List<Map<String, Object>> list = (List<Map<String, Object>>) response.getData();
+        ResultData responseAll = statisticService.orderLastYear(condition);
+        if (responseAll.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            List<Map<String, Object>> list = (List<Map<String, Object>>) responseAll.getData();
             JSONArray series = new JSONArray();
             for (int i = 0; i < list.size(); i++) {
                 JSONObject jsonObject = new JSONObject();
@@ -221,11 +221,37 @@ public class StatisticController {
                 jsonObject.put("quantity", list.get(i).get("amount"));
                 series.add(jsonObject);
             }
-            result.setData(series);
-        } else {
-            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
-            result.setDescription("未获取到相关的订单数据");
+            dataObject.put("ALL", series);
+        } 
+        condition.clear();
+        condition.put("orderType", 0);
+        ResultData responseOrdinary = statisticService.orderLastYear(condition);
+        if (responseOrdinary.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            List<Map<String, Object>> list = (List<Map<String, Object>>) responseOrdinary.getData();
+            JSONArray series = new JSONArray();
+            for (int i = 0; i < list.size(); i++) {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("time", list.get(i).get("date"));
+                jsonObject.put("quantity", list.get(i).get("amount"));
+                series.add(jsonObject);
+            }
+            dataObject.put("ORDINARY", series);
         }
+        condition.clear();
+        condition.put("orderType", 1);
+        ResultData responseGift = statisticService.orderLastYear(condition);
+        if (responseGift.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            List<Map<String, Object>> list = (List<Map<String, Object>>) responseGift.getData();
+            JSONArray series = new JSONArray();
+            for (int i = 0; i < list.size(); i++) {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("time", list.get(i).get("date"));
+                jsonObject.put("quantity", list.get(i).get("amount"));
+                series.add(jsonObject);
+            }
+            dataObject.put("GIFT", series);
+        }
+        result.setData(dataObject);
         return result;
     }
 
