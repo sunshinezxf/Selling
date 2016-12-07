@@ -1478,7 +1478,7 @@ public class OrderController {
             Admin admin = user.getAdmin();
             BackOperationLog backOperationLog = new BackOperationLog(
                     admin.getUsername(), toolService.getIP(request), "管理员" + admin.getUsername() + "将订单:"
-                    + orderId + "设置为已签收");
+                    + orderId + "设置为已发货");
             ResultData createLogData = logService
                     .createbackOperationLog(backOperationLog);
             if (createLogData.getResponseCode() != ResponseCode.RESPONSE_OK) {
