@@ -1473,12 +1473,12 @@ public class OrderController {
                 return result;
             }
         }
-        // 记录确认签收的日志
+        // 记录确认发货的日志
         if (user.getAdmin() != null) {
             Admin admin = user.getAdmin();
             BackOperationLog backOperationLog = new BackOperationLog(
                     admin.getUsername(), toolService.getIP(request), "管理员" + admin.getUsername() + "将订单:"
-                    + orderId + "设置为已签收");
+                    + orderId + "设置为已发货");
             ResultData createLogData = logService
                     .createbackOperationLog(backOperationLog);
             if (createLogData.getResponseCode() != ResponseCode.RESPONSE_OK) {
