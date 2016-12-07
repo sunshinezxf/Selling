@@ -1,0 +1,55 @@
+<div class="ui stackable padded grid" name="agent_overview">
+    <div class="row">
+        <h1 class="ui header">
+            <i class="home icon"></i>
+
+            <div class="content">
+                代理返现详情
+                <div class="sub header">
+                    <div class="ui breadcrumb">
+                       <a class="section">代理管理</a>
+					    <div class="divider">/</div>
+						<a class="section">代理概览</a>
+						<div class="divider">/</div>
+						<a class="section">代理商个人详情</a>
+                        <div class="divider">/</div>
+                        <a class="active section">代理返现详情</a>
+                    </div>
+                </div>
+            </div>
+        </h1>
+    </div>
+    <div class="row">
+		<h4>代理商：${agent.name}</h4>
+	</div>
+	<div class="row">
+		<h4>累计返现：${agent.agentRefund}</h4>
+	</div>
+    <div class="row">
+       <div class="sixteen wide column">
+           <div class="ui green segments">
+           #foreach($cashBackMonth in ${cashBacks.entrySet()})
+               <div class="ui red segments">
+                   <div class="ui green segment">
+                      ${cashBackMonth.key}
+                   </div>
+                   <div class="ui blue segments">
+                   #foreach($cashBack in $cashBackMonth.value)
+                   <div class="ui black segment">
+                      <p>#if(${cashBack.level} == 0)
+        			       自销获得${cashBack.amount}元
+        			     #elseif(${cashBack.level} == 1)
+        			       从直接代理获得${cashBack.amount}元
+        			     #else
+        			       从间接代理获得${cashBack.amount}元
+        			     #end
+        			   </p>
+                   </div>
+                   #end
+                   </div>
+               </div>
+           #end
+           </div>
+        </div>
+    </div>
+</div>

@@ -57,7 +57,13 @@
                 })
             },
             columns: [
-                {title: "姓名", "mData": "agent.name"},
+                {
+                    title: "姓名", "mRender": function (data, type, full) {
+                    var url = "${path.concat('/agent/detail/')}" + full.agent.agentId;
+                    var operation = "<a id='" + full.agentId + "' href='" + url + "'>" + full.agent.name + "</a>";
+                    return operation;
+                }
+                },
                 {title: "赠送商品", "mData": "goods.name"},
                 {
                     title: "意向人数/申请盒数", "mRender": function (data, type, full) {

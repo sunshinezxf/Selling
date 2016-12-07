@@ -1,4 +1,4 @@
-<div class="ui stackable padded grid">
+<div class="ui stackable padded grid" name="agent_check">
 	<div class="row">
 		<h1 class="ui header">
 			<i class="home icon"></i>
@@ -7,9 +7,9 @@
 				<div class="sub header">
 					<div class="ui breadcrumb">
 						<a class="section">代理管理</a>
-
+                        <div class="divider">/</div>
+                        <a class="section">代理审核</a>
 						<div class="divider">/</div>
-
 						<a class="active section">代理授权</a>
 					</div>
 				</div>

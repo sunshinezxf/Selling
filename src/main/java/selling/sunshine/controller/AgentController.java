@@ -2805,5 +2805,43 @@ public class AgentController {
         result.setData(data);
         return result;
     }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/cashback/detail/{agentId}")
+	public ModelAndView statement(@PathVariable("agentId") String agentId) {
+		ModelAndView view = new ModelAndView();
+		Map<String, Object> condition = new HashMap<>();
+		condition.put("agentId", agentId);
+		ResultData fetchAgentResponse = agentService.fetchAgent(condition);
+		if (fetchAgentResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+			view.setViewName("/agent/detail/"+agentId);
+			return view;
+		}
+		Agent agent = ((List<Agent>) fetchAgentResponse.getData()).get(0);
+		view.addObject("agent", agent);
+		ResultData fetchCashBackData = cashBackService.fetchCashBackALL(condition);
+		if (fetchCashBackData.getResponseCode() != ResponseCode.RESPONSE_OK) {
+			view.setViewName("/agent/detail/"+agentId);
+			return view;
+		}
+		List<CashBack> cashBackData = (List<CashBack>) fetchCashBackData.getData();
+		Map<String, List<CashBack>> cashBacks = new TreeMap<String, List<CashBack>>(new Comparator<String>() {
+			@Override
+			public int compare(String o1, String o2) {
+				return o2.compareTo(o1);
+			}
+		});
+		for (CashBack cashBack : cashBackData) {
+			if (cashBacks.containsKey(cashBack.getMonth())) {
+				cashBacks.get(cashBack.getMonth()).add(cashBack);
+			} else {
+				List<CashBack> cashBackMonthly = new ArrayList<CashBack>();
+				cashBackMonthly.add(cashBack);
+				cashBacks.put(cashBack.getMonth(), cashBackMonthly);
+			}
+		}
+		view.addObject("cashBacks", cashBacks);
+		view.setViewName("/backend/agent/cashback");
+		return view;
+	}
 
 }
