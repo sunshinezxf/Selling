@@ -84,6 +84,9 @@ public class OrderController {
 
     @Autowired
     private CommodityService commodityService;
+    
+    @Autowired
+    private CustomerService customerService;
 
     @Autowired
     private AgentService agentService;
@@ -1331,6 +1334,162 @@ public class OrderController {
         return result;
     }
 
+    /**
+     * 确认签收
+     *
+     * @param request
+     * @param orderId
+     * @return
+     */
+    @RequestMapping(method = RequestMethod.POST, value = "/shipped")
+    public ResultData shipped(HttpServletRequest request, String orderId, String expressNo) {
+        ResultData result = new ResultData();
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        if (user == null) {
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription("未登录");
+            return result;
+        }
+        Map<String, Object> condition = new HashMap<String, Object>();
+        if (orderId.startsWith("ORI")) {
+            condition.put("orderItemId", orderId);
+            ResultData fetchOrderItemResponse = orderService.fetchOrderItem(condition);
+            if (fetchOrderItemResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+                result.setResponseCode(fetchOrderItemResponse.getResponseCode());
+                result.setDescription(fetchOrderItemResponse.getDescription());
+                return result;
+            }
+            OrderItem orderItem = ((List<OrderItem>) fetchOrderItemResponse.getData()).get(0);
+            if (orderItem.getStatus() != OrderItemStatus.PAYED) {
+                result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+                result.setDescription("该状态订单无权发货");
+                return result;
+            }
+            condition.clear();
+            condition.put("customerId", orderItem.getCustomer().getCustomerId());
+            ResultData fetchCustomerResponse = customerService.fetchCustomer(condition);
+            if(fetchCustomerResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
+            	result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+                result.setDescription("发货客户信息获取失败");
+                return result;
+            }
+            Customer customer = ((List<Customer>)fetchCustomerResponse.getData()).get(0);
+            Express4Agent express = new Express4Agent(expressNo, PlatformConfig.getValue("sender_name"),
+                    PlatformConfig.getValue("sender_phone"),
+                    PlatformConfig.getValue("sender_address"), customer.getName(), customer.getPhone().getPhone(), orderItem.getReceiveAddress(), orderItem.getGoods().getName());
+            orderItem.setStatus(OrderItemStatus.SHIPPED);
+            express.setItem(orderItem);
+            ResultData createExpressResponse = expressService.createExpress(express);
+            if(createExpressResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
+            	result.setResponseCode(createExpressResponse.getResponseCode());
+                result.setDescription("创建快递单失败");
+                return result;
+            }
+            ResultData updateOrderItemResponse = orderService.updateOrderItem(orderItem);
+            if (updateOrderItemResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+                result.setResponseCode(updateOrderItemResponse.getResponseCode());
+                result.setDescription(updateOrderItemResponse.getDescription());
+                return result;
+            }
+            condition.clear();
+            condition.put("orderId", orderItem.getOrder().getOrderId());
+            ResultData fetchOrderResponse = orderService.fetchOrder(condition);
+            if (fetchOrderResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+                result.setResponseCode(fetchOrderResponse.getResponseCode());
+                result.setDescription(fetchOrderResponse.getDescription());
+                return result;
+            }
+            Order order = ((List<Order>) fetchOrderResponse.getData()).get(0);
+            boolean allShipped = true;
+            for (OrderItem item : order.getOrderItems()) {
+                if (item.getStatus() == OrderItemStatus.NOT_PAYED || item.getStatus() == OrderItemStatus.PAYED) {
+                    allShipped = false;
+                    break;
+                }
+            }
+            if (allShipped) {
+                order.setStatus(OrderStatus.FULLY_SHIPMENT);
+                ResultData updateOrderResponse = orderService.received(order);
+                if (updateOrderResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+                    result.setResponseCode(updateOrderResponse.getResponseCode());
+                    result.setDescription(updateOrderResponse.getDescription());
+                    return result;
+                }
+            } else {
+            	order.setStatus(OrderStatus.PATIAL_SHIPMENT);
+                ResultData updateOrderResponse = orderService.received(order);
+                if (updateOrderResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+                    result.setResponseCode(updateOrderResponse.getResponseCode());
+                    result.setDescription(updateOrderResponse.getDescription());
+                    return result;
+                }
+            }
+        } else if (orderId.startsWith("CUO")) {
+            condition.put("orderId", orderId);
+            ResultData fetchCustomerOrderResponse = orderService.fetchCustomerOrder(condition);
+            if (fetchCustomerOrderResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+                result.setResponseCode(fetchCustomerOrderResponse.getResponseCode());
+                result.setDescription(fetchCustomerOrderResponse.getDescription());
+                return result;
+            }
+            CustomerOrder customerOrder = ((List<CustomerOrder>) fetchCustomerOrderResponse.getData()).get(0);
+            if (customerOrder.getStatus() != OrderItemStatus.PAYED) {
+                result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+                result.setDescription("该状态订单无权发货");
+                return result;
+            }
+            Express4Customer express = new Express4Customer(expressNo, PlatformConfig.getValue("sender_name"),
+                    PlatformConfig.getValue("sender_phone"),
+                    PlatformConfig.getValue("sender_address"), customerOrder.getReceiverName(), customerOrder.getReceiverPhone(), customerOrder.getReceiverAddress(), customerOrder.getGoods().getName());
+            customerOrder.setStatus(OrderItemStatus.SHIPPED);
+            express.setOrder(customerOrder);
+            ResultData createExpressResponse = expressService.createExpress(express);
+            if(createExpressResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
+            	result.setResponseCode(createExpressResponse.getResponseCode());
+                result.setDescription("创建快递单失败");
+                return result;
+            }
+            ResultData updateCustomerOrderResponse = orderService.updateCustomerOrder(customerOrder);
+            if (updateCustomerOrderResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+                result.setResponseCode(updateCustomerOrderResponse.getResponseCode());
+                result.setDescription(updateCustomerOrderResponse.getDescription());
+                return result;
+            }
+        } else if (orderId.startsWith("EOI")) {
+            condition.put("orderId", orderId);
+            ResultData fetchEventOrderResponse = eventService.fetchEventOrder(condition);
+            if (fetchEventOrderResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+                result.setResponseCode(fetchEventOrderResponse.getResponseCode());
+                result.setDescription(fetchEventOrderResponse.getDescription());
+                return result;
+            }
+            EventOrder eventOrder = ((List<EventOrder>) fetchEventOrderResponse.getData()).get(0);
+            eventOrder.setOrderStatus(OrderItemStatus.SHIPPED);
+            ResultData updateEventOrderResponse = eventService.updateEventOrder(eventOrder);
+            if (updateEventOrderResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+                result.setResponseCode(updateEventOrderResponse.getResponseCode());
+                result.setDescription(updateEventOrderResponse.getDescription());
+                return result;
+            }
+        }
+        // 记录确认签收的日志
+        if (user.getAdmin() != null) {
+            Admin admin = user.getAdmin();
+            BackOperationLog backOperationLog = new BackOperationLog(
+                    admin.getUsername(), toolService.getIP(request), "管理员" + admin.getUsername() + "将订单:"
+                    + orderId + "设置为已签收");
+            ResultData createLogData = logService
+                    .createbackOperationLog(backOperationLog);
+            if (createLogData.getResponseCode() != ResponseCode.RESPONSE_OK) {
+                result.setResponseCode(createLogData.getResponseCode());
+                result.setDescription("记录操作日志失败");
+                return result;
+            }
+        } 
+        return result;
+    }
+    
     /**
      * 确认签收
      *
