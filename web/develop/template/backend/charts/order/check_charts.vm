@@ -1,0 +1,16 @@
+<div id="check_order" class="ui segment" style="display: 450px;"></div>
+<script>
+    var order_check_url = "${path.concat('/statistic/order/check')}";
+
+    $.get(order_check_url, function (result) {
+        if (result.responseCode == "RESPONSE_OK") {
+            var data = eval(result.data);
+
+            var check_order_chart = echarts.init(document.getElementById('check_order'), 'macarons');
+
+            var
+        } else {
+            console.debug(result.description);
+        }
+    });
+</script>

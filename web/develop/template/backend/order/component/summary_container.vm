@@ -18,6 +18,19 @@
     </div>
     <div class="row">
         <div class="column">
+            <div class="ui labeled button" tabindex="0">
+                <a class="ui green button" href="${path.concat('/express/upload')}">
+                    <i class="cloud upload icon"></i> 上传快递单
+                </a>
+                <a class="ui basic green left pointing label" href="${path.concat('/order/check')}">
+                    待审核订单
+                    <div class="detail">5</div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="column">
             #parse("/backend/charts/order/last_twelve_charts.vm")
         </div>
     </div>

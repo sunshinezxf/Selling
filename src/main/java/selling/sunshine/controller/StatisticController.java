@@ -152,14 +152,19 @@ public class StatisticController {
     }
 
     @ResponseBody
-    @RequestMapping(method = RequestMethod.POST, value = "/order/sum")
-    public JSONObject orderSum() {
-        JSONObject result = new JSONObject();
-        ResultData queryResponse = statisticService.query4OrderSum();
-        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            result = (JSONObject) queryResponse.getData();
+    @RequestMapping(method = RequestMethod.POST, value = "/order/check")
+    public ResultData checkOrder() {
+        ResultData result = new ResultData();
+        ResultData response = statisticService.query4OrderSum();
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(response.getData());
+        } else if (response.getResponseCode() == ResponseCode.RESPONSE_NULL) {
+            result.setResponseCode(ResponseCode.RESPONSE_NULL);
+            result.setDescription("当前暂无订单中的商品汇总信息");
+        } else {
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription("获取订单中的商品汇总信息错误");
         }
-        logger.debug("data sum: " + result);
         return result;
     }
 
