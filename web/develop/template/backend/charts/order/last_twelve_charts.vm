@@ -1,19 +1,23 @@
 <div id="month_distribution" class="ui segment" style="height: 400px;"></div>
 <script>
-    var month_distribution_url = "${path.concat('/')}";
+    var month_distribution_url = "${path.concat('/statistic/order/summary')}";
 
     $.get(month_distribution_url, function (result) {
         if (result.responseCode == "RESPONSE_OK") {
-            var data = result.data;
+            var data = eval(result.data);
             var month_distribution_chart = echarts.init(document.getElementById('month_distribution'), 'macarons');
 
             var month_list = [];
-
             var volume_list = [];
+
+            for (var i = 0; i < data.length; i++) {
+                month_list.push(data[i].time);
+                volume_list.push(data[i].quantity);
+            }
 
             option = {
                 title: {
-                    text: '最近12月订单笔数分析(含购买和赠送订单)'
+                    text: '近一年订单笔数分析(含购买和赠送订单)'
                 },
                 tooltip: {
                     trigger: 'axis'
@@ -59,5 +63,7 @@
         } else {
             $("#month_distribution").hide();
         }
+
+        month_distribution_chart.setOption(option);
     });
 </script>

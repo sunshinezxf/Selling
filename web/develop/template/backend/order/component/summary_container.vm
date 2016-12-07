@@ -17,6 +17,8 @@
         </h1>
     </div>
     <div class="row">
-        
+        <div class="column">
+            #parse("/backend/charts/order/last_twelve_charts.vm")
+        </div>
     </div>
 </div>

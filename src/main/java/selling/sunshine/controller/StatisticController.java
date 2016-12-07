@@ -15,19 +15,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import selling.sunshine.model.sum.AgentGoods;
-import selling.sunshine.model.sum.OrderSeries;
 import selling.sunshine.model.sum.OrderStatistics;
 import selling.sunshine.model.sum.Vendition;
 import selling.sunshine.service.AgentService;
 import selling.sunshine.service.CustomerService;
 import selling.sunshine.service.OrderService;
 import selling.sunshine.service.StatisticService;
-import selling.sunshine.utils.BaiduMapUtils;
 import selling.sunshine.vo.agent.AgentPurchase;
 import selling.sunshine.vo.order.OrderItemSum;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -209,12 +206,12 @@ public class StatisticController {
     }
 
     @ResponseBody
-    @RequestMapping(method = RequestMethod.GET, value = "/orderLastYear")
-    public JSONObject orderLastYear() {
-        JSONObject result = new JSONObject();
-        ResultData resultData = statisticService.orderLastYear();
-        if (resultData.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            List<Map<String, Object>> list = (List<Map<String, Object>>) resultData.getData();
+    @RequestMapping(method = RequestMethod.GET, value = "/order/summary")
+    public ResultData orderLastYear() {
+        ResultData result = new ResultData();
+        ResultData response = statisticService.orderLastYear();
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            List<Map<String, Object>> list = (List<Map<String, Object>>) response.getData();
             JSONArray series = new JSONArray();
             for (int i = 0; i < list.size(); i++) {
                 JSONObject jsonObject = new JSONObject();
@@ -222,7 +219,10 @@ public class StatisticController {
                 jsonObject.put("quantity", list.get(i).get("amount"));
                 series.add(jsonObject);
             }
-            result.put("series", series);
+            result.setData(series);
+        } else {
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription("未获取到相关的订单数据");
         }
         return result;
     }
@@ -262,39 +262,39 @@ public class StatisticController {
         result = (JSONObject) resultData.getData();
         return result;
     }
-    
-	@ResponseBody
-	@RequestMapping(method = RequestMethod.GET, value = "/sales/area")
-	public ResultData salesArea() throws IOException {
-		ResultData resultData = new ResultData();
-		Map<String, Object> condition = new HashMap<>();
-		condition.put("blockFlag", false);
-		ResultData queryData = customerService.fetchCustomer(condition);
-		if (queryData.getResponseCode() == ResponseCode.RESPONSE_OK) {
-			List<Customer> customers = (List<Customer>) queryData.getData();
-			Map<String, Integer> map = new HashMap<>();
-			for (Customer customer : customers) {
-				String province=customer.getAddress().getProvince();
-				if (province != null) {			
-					if (map.containsKey(province)) {
-						map.put(province, map.get(province) + 1);
-					} else {
-						map.put(province, 1);
-					}
-				}
-			}
-			JSONArray array=new JSONArray();
-			for (String key : map.keySet()) {
-				JSONObject object=new JSONObject();
-				object.put("name", key);
-				object.put("value", map.get(key));
-				array.add(object);
-			}
-			resultData.setData(array);
-			return resultData;
-		}
-		return resultData;
-	}
+
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.GET, value = "/sales/area")
+    public ResultData salesArea() throws IOException {
+        ResultData resultData = new ResultData();
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("blockFlag", false);
+        ResultData queryData = customerService.fetchCustomer(condition);
+        if (queryData.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            List<Customer> customers = (List<Customer>) queryData.getData();
+            Map<String, Integer> map = new HashMap<>();
+            for (Customer customer : customers) {
+                String province = customer.getAddress().getProvince();
+                if (province != null) {
+                    if (map.containsKey(province)) {
+                        map.put(province, map.get(province) + 1);
+                    } else {
+                        map.put(province, 1);
+                    }
+                }
+            }
+            JSONArray array = new JSONArray();
+            for (String key : map.keySet()) {
+                JSONObject object = new JSONObject();
+                object.put("name", key);
+                object.put("value", map.get(key));
+                array.add(object);
+            }
+            resultData.setData(array);
+            return resultData;
+        }
+        return resultData;
+    }
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/agent/rank")
@@ -344,8 +344,8 @@ public class StatisticController {
                 goodsMap.get(goods).add(agentPurchase);
                 agent = item.getAgent();
                 quantity = 0;
-                if(!goods.getGoodsId().equals(item.getGoods().getGoodsId())){
-                	goods = item.getGoods();
+                if (!goods.getGoodsId().equals(item.getGoods().getGoodsId())) {
+                    goods = item.getGoods();
                 }
             }
             if (item.getAgent() != null) {
@@ -391,7 +391,7 @@ public class StatisticController {
         resultData.setData(goodsArray);
         return resultData;
     }
-    
+
     /**
      * @param type, type的取值daily, monthly, overall
      * @return
