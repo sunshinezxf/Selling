@@ -3,6 +3,7 @@
 <html lang="zh_CN">
 <head>
     #parse("/backend/initialization/init.vm")
+    #parse("/backend/common/echarts.lib.vm")
     <title>商品销售</title>
 </head>
 <body id="dashboard" class="started pushable" ontouchstart>
