@@ -248,19 +248,19 @@ select count(*) as giftMonth from order_item
 	   and `order`.order_type=1) t11;
 </select>
 
-<select id="orderLastYear" resultMap="statisticVo">
+<select id="orderLastYear" parameterType="java.util.Map" resultMap="statisticVo">
 select orderDate, sum(num) as num from(
 select *from(
 select DATE_FORMAT(`order`.create_time,'%Y-%m') as orderDate,count(*) as num from `order`,order_item where `order`.order_id=order_item.order_id 
 	   and date_format(`order`.create_time,'%Y-%m') >= date_format(date_sub(now(), INTERVAL 11 MONTH), '%Y-%m')
-	   and `order`.order_status in (2,3,4,5)
+	   and `order`.order_status in (2,3,4,5) and `order`.order_type = #{orderType}
        GROUP BY DATE_FORMAT(`order`.create_time,'%Y-%m') 
        ORDER BY  DATE_FORMAT(`order`.create_time,'%Y-%m')) t1
 union all
 select * from(
 select DATE_FORMAT(create_time,'%Y-%m') as orderDate,count(*) as num from customer_order
 	   where date_format(create_time,'%Y-%m') >= date_format(date_sub(now(), INTERVAL 11 MONTH), '%Y-%m')
-	   and order_status in (1,2,3)
+	   and order_status in (1,2,3) and #{orderType} = 0
        GROUP BY DATE_FORMAT(create_time,'%Y-%m') 
        ORDER BY  DATE_FORMAT(create_time,'%Y-%m')) t2) t3 group by orderDate;
 </select>
