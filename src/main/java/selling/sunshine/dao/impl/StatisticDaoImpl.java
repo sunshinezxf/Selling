@@ -210,10 +210,10 @@ public class StatisticDaoImpl extends BaseDao implements StatisticDao {
     }
 
     @Override
-    public ResultData orderLastYear() {
+    public ResultData orderLastYear(Map<String, Object> condition) {
         ResultData result = new ResultData();
         try {
-            List<Map<String, Object>> query = sqlSession.selectList("selling.statistic.orderLastYear");
+            List<Map<String, Object>> query = sqlSession.selectList("selling.statistic.orderLastYear", condition);
             result.setData(query);
         } catch (Exception e) {
             logger.error(e.getMessage());

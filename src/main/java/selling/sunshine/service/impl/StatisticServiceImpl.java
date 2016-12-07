@@ -153,9 +153,9 @@ public class StatisticServiceImpl implements StatisticService {
     }
 
     @Override
-    public ResultData orderLastYear() {
+    public ResultData orderLastYear(Map<String, Object> condition) {
         ResultData result = new ResultData();
-        ResultData response = statisticDao.orderLastYear();
+        ResultData response = statisticDao.orderLastYear(condition);
         result.setResponseCode(response.getResponseCode());
         if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
             if (((List) response.getData()).size() == 0) {

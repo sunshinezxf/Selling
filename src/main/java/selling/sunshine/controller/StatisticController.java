@@ -211,10 +211,12 @@ public class StatisticController {
     }
 
     @ResponseBody
-    @RequestMapping(method = RequestMethod.GET, value = "/order/summary")
-    public ResultData orderLastYear() {
+    @RequestMapping(method = RequestMethod.GET, value = "/order/summary/{orderType}")
+    public ResultData orderLastYear(@PathVariable("orderType") int orderType) {
         ResultData result = new ResultData();
-        ResultData response = statisticService.orderLastYear();
+        Map<String, Object> condition = new HashMap<String, Object>();
+        condition.put("orderType", orderType);
+        ResultData response = statisticService.orderLastYear(condition);
         if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
             List<Map<String, Object>> list = (List<Map<String, Object>>) response.getData();
             JSONArray series = new JSONArray();
