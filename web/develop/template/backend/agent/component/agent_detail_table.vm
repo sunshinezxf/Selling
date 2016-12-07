@@ -27,19 +27,23 @@
             <div class="ui segment">
                 <div class="ui divided items">
                     <div id="personal_info" class="item">
-                        <div class="ui medium images">
-                            #if(${credit.frontPath})
-                                <img class="ui rounded image" src="${credit.frontPath}">
-                            #else
-                                <img class="ui rounded image" src="${path.concat('/material/images/no_credit.png')}">
-                            #end
-                            #if(${credit.frontPath})
-                                <img class="ui rounded image" src="${credit.backPath}">
-                            #else
-                                <img class="ui rounded image" src="${path.concat('/material/images/no_credit.png')}">
-                            #end
-                        </div>
-                        <div class="content">
+                        <div class="ui stackable grid">
+                            <div class="six wide column">
+                                <div class="ui two column stackable grid">
+                                    #if(${credit.frontPath})
+                                       <img class="ui column image credit" src="${credit.frontPath}">
+                                    #else
+                                       <img class="ui column image credit" src="${path.concat('/material/images/no_credit.png')}">
+                                    #end
+                                    #if(${credit.frontPath})
+                                       <img class="ui column image credit" src="${credit.backPath}">
+                                    #else
+                                       <img class="uicolumn image credit" src="${path.concat('/material/images/no_credit.png')}">
+                                    #end
+                                </div>
+                            </div>
+                            <div class="ten wide column">
+                                 <div class="content">
                             <div class="floated_div">
                                 <div class="ui left floated header">
                                     #if(${agent.gender}=="M")
@@ -82,7 +86,7 @@
                                 </div>
                             </div>
                             <div class="description">
-                                <div class="ui three column stackable grid">
+                                <div class="ui two column stackable grid">
                                     <div class="column">
                                         <div id="customers_list" class="ui center aligned segment">
                                             <h4 class="ui header">顾客数</h4>
@@ -106,6 +110,8 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
                             </div>
                         </div>
                     </div>
