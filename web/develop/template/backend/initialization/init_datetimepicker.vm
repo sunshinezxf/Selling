@@ -1,0 +1,4 @@
+<link href="${path.concat('/plugins/flatpickr/dist/flatpickr.min.css')}" rel="stylesheet" media="screen"/>
+<link rel="stylesheet" href="${path.concat('/material/css/backend/datetimepicker.css')}">
+<script type="text/javascript" src="${path.concat('/plugins/flatpickr/dist/flatpickr.min.js')}" charset="UTF-8"></script>
+<script type="text/javascript" src="${path.concat('/plugins/flatpickr/dist/l10n/zh.js')}" charset="UTF-8"></script>
