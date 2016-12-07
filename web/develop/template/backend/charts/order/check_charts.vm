@@ -1,4 +1,4 @@
-<div id="check_order" class="ui segment" style="display: 450px;"></div>
+<div id="check_order" class="ui segment" style="height: 450px;"></div>
 <script>
     var order_check_url = "${path.concat('/statistic/order/check')}";
 
@@ -8,7 +8,40 @@
 
             var check_order_chart = echarts.init(document.getElementById('check_order'), 'macarons');
 
-            var
+            var category = data.category;
+            var series = data.series;
+
+            var legend = [];
+            for (var i = 0; i < series.length; i++) {
+                series[i]['type'] = 'bar';
+                legend.push(series[i].name);
+            }
+
+            option = {
+                title: {
+                    text: '待审核订单商品信息'
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                legend: {
+                    data: legend
+                },
+                calculable: true,
+                xAxis: [
+                    {
+                        type: 'category',
+                        data: category
+                    }
+                ],
+                yAxis: [
+                    {
+                        type: 'value'
+                    }
+                ],
+                series: series
+            };
+            check_order_chart.setOption(option);
         } else {
             console.debug(result.description);
         }

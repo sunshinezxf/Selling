@@ -22,6 +22,15 @@
         </h1>
     </div>
     <div class="row">
-        <div class="column"></div>
+        <div class="column">
+            <a class="ui green button">一键发货</a>
+            <a class="ui green button">上传快递单</a>
+            <a class="ui green button" href="${path.concat('/order/overview')}">订单列表</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="column">
+            #parse("/backend/charts/order/check_charts.vm")
+        </div>
     </div>
 </div>

@@ -152,7 +152,7 @@ public class StatisticController {
     }
 
     @ResponseBody
-    @RequestMapping(method = RequestMethod.POST, value = "/order/check")
+    @RequestMapping(method = RequestMethod.GET, value = "/order/check")
     public ResultData checkOrder() {
         ResultData result = new ResultData();
         ResultData response = statisticService.query4OrderSum();
