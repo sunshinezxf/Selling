@@ -15,5 +15,14 @@
             </div>
         </h1>
     </div>
-    <div class="row"></div>
+    <div class="row">
+        <div class="column">
+            #parse("/backend/charts/goods/purchase_everyday_charts.vm")
+        </div>
+    </div>
+    <div class="row">
+        <div class="column">
+            #parse("/backend/charts/goods/purchase_monthly_charts.vm")
+        </div>
+    </div>
 </div>
