@@ -1,15 +1,8 @@
-.ui.medium.images{
-  > .image{
-    width: 18em;
-  }
-  > .image:first-child{
-    margin-right: 1em;
-  }
-}
-
 #personal_info{
-  > .content{
-    padding-left: 2.5em;
+  > .ui.grid{
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
   }
 }
 
