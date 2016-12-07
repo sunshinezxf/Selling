@@ -4,13 +4,18 @@
             <i class="home icon"></i>
 
             <div class="content">
-                订单概览
+                订单审核
                 <div class="sub header">
                     <div class="ui breadcrumb">
                         <a class="section">订单管理</a>
 
                         <div class="divider">/</div>
-                        <a class="active section">订单概览</a>
+
+                        <a class="section">订单概览</a>
+
+                        <div class="divider">/</div>
+
+                        <a class="active section">订单审核</a>
                     </div>
                 </div>
             </div>
@@ -18,20 +23,14 @@
     </div>
     <div class="row">
         <div class="column">
-            <div class="ui labeled button" tabindex="0">
-                <a class="ui green button" href="${path.concat('/express/upload')}">
-                    <i class="cloud upload icon"></i> 上传快递单
-                </a>
-                <a class="ui basic green left pointing label" href="${path.concat('/order/check')}">
-                    待审核订单
-                    <div class="detail">5</div>
-                </a>
-            </div>
+            <a class="ui green button">一键发货</a>
+            <a class="ui green button">上传快递单</a>
+            <a class="ui green button" href="${path.concat('/order/overview')}">订单列表</a>
         </div>
     </div>
     <div class="row">
         <div class="column">
-            #parse("/backend/charts/order/last_twelve_charts.vm")
+            #parse("/backend/charts/order/check_charts.vm")
         </div>
     </div>
 </div>

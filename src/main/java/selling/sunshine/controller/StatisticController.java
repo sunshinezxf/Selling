@@ -152,14 +152,19 @@ public class StatisticController {
     }
 
     @ResponseBody
-    @RequestMapping(method = RequestMethod.POST, value = "/order/sum")
-    public JSONObject orderSum() {
-        JSONObject result = new JSONObject();
-        ResultData queryResponse = statisticService.query4OrderSum();
-        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            result = (JSONObject) queryResponse.getData();
+    @RequestMapping(method = RequestMethod.GET, value = "/order/check")
+    public ResultData checkOrder() {
+        ResultData result = new ResultData();
+        ResultData response = statisticService.query4OrderSum();
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(response.getData());
+        } else if (response.getResponseCode() == ResponseCode.RESPONSE_NULL) {
+            result.setResponseCode(ResponseCode.RESPONSE_NULL);
+            result.setDescription("当前暂无订单中的商品汇总信息");
+        } else {
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription("获取订单中的商品汇总信息错误");
         }
-        logger.debug("data sum: " + result);
         return result;
     }
 
@@ -209,9 +214,11 @@ public class StatisticController {
     @RequestMapping(method = RequestMethod.GET, value = "/order/summary")
     public ResultData orderLastYear() {
         ResultData result = new ResultData();
-        ResultData response = statisticService.orderLastYear();
-        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            List<Map<String, Object>> list = (List<Map<String, Object>>) response.getData();
+        JSONObject dataObject = new JSONObject();
+        Map<String, Object> condition = new HashMap<String, Object>();
+        ResultData responseAll = statisticService.orderLastYear(condition);
+        if (responseAll.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            List<Map<String, Object>> list = (List<Map<String, Object>>) responseAll.getData();
             JSONArray series = new JSONArray();
             for (int i = 0; i < list.size(); i++) {
                 JSONObject jsonObject = new JSONObject();
@@ -219,11 +226,37 @@ public class StatisticController {
                 jsonObject.put("quantity", list.get(i).get("amount"));
                 series.add(jsonObject);
             }
-            result.setData(series);
-        } else {
-            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
-            result.setDescription("未获取到相关的订单数据");
+            dataObject.put("ALL", series);
+        } 
+        condition.clear();
+        condition.put("orderType", 0);
+        ResultData responseOrdinary = statisticService.orderLastYear(condition);
+        if (responseOrdinary.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            List<Map<String, Object>> list = (List<Map<String, Object>>) responseOrdinary.getData();
+            JSONArray series = new JSONArray();
+            for (int i = 0; i < list.size(); i++) {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("time", list.get(i).get("date"));
+                jsonObject.put("quantity", list.get(i).get("amount"));
+                series.add(jsonObject);
+            }
+            dataObject.put("ORDINARY", series);
         }
+        condition.clear();
+        condition.put("orderType", 1);
+        ResultData responseGift = statisticService.orderLastYear(condition);
+        if (responseGift.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            List<Map<String, Object>> list = (List<Map<String, Object>>) responseGift.getData();
+            JSONArray series = new JSONArray();
+            for (int i = 0; i < list.size(); i++) {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("time", list.get(i).get("date"));
+                jsonObject.put("quantity", list.get(i).get("amount"));
+                series.add(jsonObject);
+            }
+            dataObject.put("GIFT", series);
+        }
+        result.setData(dataObject);
         return result;
     }
 

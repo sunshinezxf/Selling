@@ -1,4 +1,4 @@
-<div id="month_distribution" class="ui segment" style="height: 400px;"></div>
+<div id="month_distribution" class="ui segment" style="height: 450px;"></div>
 <script>
     var month_distribution_url = "${path.concat('/statistic/order/summary')}";
 

@@ -1,0 +1,29 @@
+<div class="ui stackable padded grid" name="statement_area">
+    <div class="row">
+        <h1 class="ui header">
+            <i class="home icon"></i>
+            <div class="content">报表专区</div>
+        </h1>
+    </div>
+    <div class="row">
+        <div class="column">
+            <div class="ui teal pointing secondary menu">
+                <a class="active item">订货单</a>
+                <a class="item">发货单</a>
+                <a class="item">收款单</a>
+                <a class="item">提现单</a>
+            </div>
+            <div class="ui segment">
+                #parse("/backend/common/datetimepicker.vm")
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(".ui.pointing.secondary.menu > a").each(function(){
+        $(this).click(function(){
+            $(this).addClass("active");
+            $(this).siblings().removeClass("active");
+        });
+    });
+</script>

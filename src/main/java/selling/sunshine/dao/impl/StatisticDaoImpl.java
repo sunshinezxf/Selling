@@ -16,6 +16,8 @@ import selling.sunshine.model.sum.*;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -210,10 +212,38 @@ public class StatisticDaoImpl extends BaseDao implements StatisticDao {
     }
 
     @Override
-    public ResultData orderLastYear() {
+    public ResultData orderLastYear(Map<String, Object> condition) {
         ResultData result = new ResultData();
         try {
-            List<Map<String, Object>> query = sqlSession.selectList("selling.statistic.orderLastYear");
+            List<Map<String, Object>> query = sqlSession.selectList("selling.statistic.orderLastYear", condition);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
+            Calendar cl = Calendar.getInstance();
+            Calendar current = Calendar.getInstance();
+            current.setTime(new Date(System.currentTimeMillis()));
+            if(!query.isEmpty()){
+            	String startDate = (String) query.get(0).get("date");
+            	Date date = sdf.parse(startDate);
+            	cl.setTime(date);
+            }
+            for(int i = 0; i < query.size(); i++){
+            	String dateString = (String) query.get(i).get("date");
+            	int month = Integer.valueOf((dateString.split("-"))[1]) - 1;
+            	int b = cl.get(Calendar.MONTH);
+            	if(month != cl.get(Calendar.MONTH)){
+            		Map<String, Object> tmp = new HashMap<String, Object>();
+            		tmp.put("date", sdf.format(cl.getTime()));
+            		tmp.put("amount", 0);
+            		query.add(i, tmp);
+            	}
+            	cl.add(Calendar.MONTH, 1);
+            }
+            while((cl.get(Calendar.MONTH) <= current.get(Calendar.MONTH) && cl.get(Calendar.YEAR) <= current.get(Calendar.YEAR)) && query.size() < 12){
+            	Map<String, Object> tmp = new HashMap<String, Object>();
+        		tmp.put("date", sdf.format(cl.getTime()));
+        		tmp.put("amount", 0);
+        		query.add(tmp);
+        		cl.add(Calendar.MONTH, 1);
+            }
             result.setData(query);
         } catch (Exception e) {
             logger.error(e.getMessage());

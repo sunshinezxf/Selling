@@ -67,13 +67,9 @@
         </div>
     #end
     #if($role == "admin"|| $role == "finance")
-        <div class="item">
-            <a class="title"><i class="teal line chart icon left"></i><i class="dropdown icon"></i>报表专区</a>
-
-            <div class="content menu">
-                <a class="item">报表下载</a>
-            </div>
-        </div>
+        <a id="statement_area" class="item" href="${path.concat('/')}">
+            <i class="teal line chart icon left"></i>报表专区
+        </a>
     #end
     #if($role == "admin")
         <div class="item">
