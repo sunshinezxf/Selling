@@ -22,7 +22,7 @@
          var table = $("#agent_overview_table").DataTable({
             searching: true,
             paging: true,
-            aaSorting: [[0, "asc"]],
+            aaSorting: [[3, "desc"]],
             "sPaginationType": "full_numbers",
             "bPaginate": true,
             "bLengthChange": true,

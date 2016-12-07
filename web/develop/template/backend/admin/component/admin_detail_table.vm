@@ -7,9 +7,9 @@
                 <div class="sub header">
                         <div class="ui breadcrumb">
                             <a class="section">账号管理</a>
-
                             <div class="divider">/</div>
-
+                            <a class="section">账号列表</a>
+                            <div class="divider">/</div>
                             <a class="active section">账号详情</a>
                         </div>
                  </div>

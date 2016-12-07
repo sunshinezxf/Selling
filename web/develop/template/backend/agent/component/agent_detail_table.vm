@@ -1,4 +1,4 @@
-<div class="ui stackable padded grid">
+<div class="ui stackable padded grid" name="agent_overview">
 	<div class="row">
 		<h1 class="ui header">
 			<i class="home icon"></i>
@@ -6,10 +6,10 @@
 				代理商个人详情
 				<div class="sub header">
 					<div class="ui breadcrumb">
-						<a class="section">代理管理</a>
-
+					    <a class="section">代理管理</a>
+					    <div class="divider">/</div>
+						<a class="section">代理概览</a>
 						<div class="divider">/</div>
-
 						<a class="active section">代理商个人详情</a>
 					</div>
 				</div>
@@ -99,12 +99,8 @@
                                     <div class="column">
                                         <div id="cashback_list" class="ui center aligned segment">
                                             <h4 class="ui header">累计返现</h4>
-                                            <div class="ui small horizontal statistic">
-                                                #if(${agent.agentRefund}!=0)
-                                                    <div class="value">0</div>
-                                                #else
-                                                    <div class="value">${agent.agentRefund}</div>
-                                                #end
+                                            <div id="refund_list" class="ui small horizontal statistic">
+                                                <div class="value">${agent.agentRefund}</div>
                                                 <div class="label">元</div>
                                             </div>
                                         </div>
@@ -236,6 +232,9 @@
             dataUrl: url,
             selectable: false,
         });
+        
+        $(".ui.dropdown").dropdown();
+        
         $("#modified_upper").change(function () {
             if (information_validate()) {
                 active();
@@ -287,7 +286,7 @@
 	$("#fobid_confirm").on('click', function() {
 		   $('#fobid_modal').modal('hide');
 		   var url = "${path.concat('/agent/forbid/')}${agent.agentId}";
-	        window.location.href = url;
+	       window.location.href = url;
 	});
 	$("#fobid_cancer").on('click', function() {
 		   $('#fobid_modal').modal('hide');
@@ -317,4 +316,14 @@
         }
         return true;
     }
+    
+	$("#customers_list").on('click', function() {
+		var url = "${path.concat('/customer/overview/')}${agent.agentId}";
+	    window.location.href = url;
+	});
+	
+	$("#refund_list").on('click', function() {
+		var url = "${path.concat('/agent/cashback/detail/')}${agent.agentId}";
+	    window.location.href = url;
+	});
 </script>
