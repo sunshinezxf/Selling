@@ -38,7 +38,7 @@
                                     #if(${credit.frontPath})
                                        <img class="ui column image credit" src="${credit.backPath}">
                                     #else
-                                       <img class="uicolumn image credit" src="${path.concat('/material/images/no_credit.png')}">
+                                       <img class="ui column image credit" src="${path.concat('/material/images/no_credit.png')}">
                                     #end
                                 </div>
                             </div>
@@ -323,13 +323,14 @@
         return true;
     }
     
+	
 	$("#customers_list").on('click', function() {
 		var url = "${path.concat('/customer/overview/')}${agent.agentId}";
-	    window.location.href = url;
+		window.location.href = url;
 	});
-	
+
 	$("#refund_list").on('click', function() {
 		var url = "${path.concat('/agent/cashback/detail/')}${agent.agentId}";
-	    window.location.href = url;
+		window.location.href = url;
 	});
 </script>

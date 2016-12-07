@@ -29,7 +29,7 @@
        <div class="sixteen wide column">
            <div class="ui green segments">
            #foreach($cashBackMonth in ${cashBacks.entrySet()})
-               <div class="ui red segments">
+               <div class="ui red segments month" id="${cashBackMonth.key}">
                    <div class="ui green segment">
                       ${cashBackMonth.key}
                    </div>
@@ -53,3 +53,8 @@
         </div>
     </div>
 </div>
+<script>
+$(".month").on('click', function() {
+	alert($(this).attr("id"));
+});
+</script>
