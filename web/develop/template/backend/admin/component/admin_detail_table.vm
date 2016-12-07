@@ -1,0 +1,43 @@
+<div class="ui stackable padded grid" name="admin_list">
+    <div class="row">
+        <h1 class="ui header">
+            <i class="home icon"></i>
+            <div class="content">
+            账号详情
+                <div class="sub header">
+                        <div class="ui breadcrumb">
+                            <a class="section">账号管理</a>
+
+                            <div class="divider">/</div>
+
+                            <a class="active section">账号详情</a>
+                        </div>
+                 </div>
+            </div>
+          </h1>
+    </div>
+    <div class="row">
+        <button type="button" id="update" class="ui positive basic button">修改密码</button>
+        <button type="button" id="delete" class="ui negative basic button">删除账号</button>
+    </div>
+    <div class="row">
+          ${user.username}
+          ${user.admin.adminId}
+    </div>
+    
+</div>
+#parse("/backend/admin/component/admin_delete_modal.vm")
+#parse("/backend/admin/component/admin_update_modal.vm")
+<script>
+    
+$("#update").on('click', function() {
+	 $('#admin_update_modal').modal('show');
+	 $('#admin_password').val("");
+});
+
+$("#delete").on('click', function() {
+    $('#admin_delete_modal').modal('show');
+	
+})
+
+</script>

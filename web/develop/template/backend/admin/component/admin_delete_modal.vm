@@ -1,0 +1,37 @@
+<div class="ui modal" id="admin_delete_modal">
+	<i class="close icon"></i>
+	<div class="header">删除新账号</div>
+	<div class="image content">
+		<div class="description">
+			确定删除此账号吗？
+			<div class="ui left pointing red basic label"  id="delete_error">
+                      当前系统中只有一个管理员账号，不能删除!
+            </div>
+		</div>
+	</div>
+	<div class="actions">
+       <div class="ui button" id="delete_cancer">取消</div>
+       <div class="ui button" id="delete_confirm">确认</div>
+   </div>
+</div>
+<script>
+    $('#admin_delete_modal').modal('hide'); 
+    $('#delete_error').hide(); 
+    $("#delete_cancer").on('click', function() {
+    	 $('#admin_delete_modal').modal('hide'); 
+    	 $('#delete_error').hide(); 
+	});
+    $("#delete_confirm").on('click', function() {
+    	var url = "${path.concat('/admin/delete/')}${user.userId}";
+        $.post(url, function (result) {
+            var responseCode = result.responseCode;
+            if (responseCode == "RESPONSE_NULL") {
+            	$('#delete_error').show(); 
+            } else {
+            	$('#admin_delete_modal').modal('hide'); 
+            	$('#delete_error').hide(); 
+                window.location.href = "${path.concat('/admin/overview')}";
+            }
+        });  	    
+	});
+</script>

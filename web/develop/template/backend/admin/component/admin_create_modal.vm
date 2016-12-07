@@ -1,0 +1,99 @@
+<div class="ui modal" id="admin_create_modal">
+	<i class="close icon"></i>
+	<div class="header">创建新账号</div>
+	<div class="image content">
+		<div class="description">
+			<form class="ui form" id="register_admin_form">
+				<div class="inline field">
+					<label>账号用户名</label> 
+					<input type="text" name="username" id="admin_username"  placeholder="用户名" required="" autocomplete="off">
+					<div class="ui left pointing red basic label"  id="username_error">
+                       用户名不能为空
+                    </div>
+				</div>
+				<div class="inline field">
+					<label style="margin-right: 1.86em">账号密码</label> 
+					<input type="password" name="password" id="admin_password" placeholder="密码" required="" autocomplete="off">
+					<div class="ui left pointing red basic label"  id="password_error">
+                       账号密码不能为空
+                    </div>
+				</div>
+				<div class="inline fields">
+					<label>人员角色</label> 
+					#foreach($item in ${roles}) #if(${item.name} !="agent")
+                    <div class="field">
+					<div class="ui radio checkbox">
+						<input type="radio" name="role" tabindex="0" class="hidden roletype"
+							id="${item.roleId}" value="${item.roleId}"> <label>${item.description}</label>
+					</div>
+                    </div>
+					#end #end
+					<div class="ui left pointing red basic label"  id="type_error">
+                       请选择一个角色
+                    </div>
+				</div>				
+			</form>
+		</div>
+	</div>
+	<div class="actions">
+       <div class="ui button" id="cancer">取消</div>
+       <div class="ui button" id="confirm">确认</div>
+   </div>
+</div>
+
+<script>
+	   
+	$('#admin_create_modal').modal('hide'); 
+	$('#username_error').hide(); 
+	$('#password_error').hide();  
+	$('#type_error').hide();  
+	$("#confirm").on('click', function() {
+		 var name = $("#admin_username").val();
+	     var password = $("#admin_password").val();
+	     var type=$(".ui.radio.checkbox > input").is(":checked");
+	     var flag=1;
+	     if(typeof name == "undefined" || name == ""){
+	    	 $('#username_error').show();  
+	    	 flag=0;
+	     }else{
+	    	 $('#username_error').hide(); 
+	     }
+	     if(typeof password == "undefined" || password == ""){
+	    	 $('#password_error').show();  
+	    	 flag=0;
+	     }else{
+	    	 $('#password_error').hide();  
+	     }
+	     if(typeof type == "undefined" || type == false){
+	    	 $('#type_error').show();  
+	    	 flag=0;
+	     }else{
+	    	 $('#type_error').hide();  
+	     }
+	     if(flag==1){
+	    	 $('#admin_create_modal').modal('hide');
+	    	 $("#register_admin_form").attr("action", "${path.concat('/admin/register')}");
+	         $("#register_admin_form").attr("method", "post");
+	         $("#register_admin_form").submit();
+	     }
+	});
+	$("#cancer").on('click', function() {
+		$('#admin_create_modal').modal('hide');
+		$('#username_error').hide(); 
+		$('#password_error').hide();  
+		$('#type_error').hide(); 
+		$('#admin_username').val("");
+	    $('#admin_password').val("");
+	});
+	$('.ui.radio.checkbox').checkbox();
+	$("#admin_password").on("input propertychange",function(){
+		   $('#password_error').hide(); 
+	});
+	$("#admin_username").on("input propertychange",function(){
+		   $('#username_error').hide(); 
+	});
+	$(".hidden.roletype").change(function(){
+		   $('#type_error').hide(); 
+	});
+	
+</script>
