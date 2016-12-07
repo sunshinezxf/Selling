@@ -1473,7 +1473,7 @@ public class OrderController {
                 return result;
             }
         }
-        // 记录确认签收的日志
+        // 记录确认发货的日志
         if (user.getAdmin() != null) {
             Admin admin = user.getAdmin();
             BackOperationLog backOperationLog = new BackOperationLog(
