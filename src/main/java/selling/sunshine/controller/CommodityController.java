@@ -70,12 +70,12 @@ public class CommodityController {
     @Autowired
     private StatisticService statisticService;
 
-    @RequestMapping(method = RequestMethod.GET, value = "/create")
-    public ModelAndView create() {
-        ModelAndView view = new ModelAndView();
-        view.setViewName("/backend/goods/create");
-        return view;
-    }
+//    @RequestMapping(method = RequestMethod.GET, value = "/create")
+//    public ModelAndView create() {
+//        ModelAndView view = new ModelAndView();
+//        view.setViewName("/backend/goods/create");
+//        return view;
+//    }
 
     @RequestMapping(method = RequestMethod.POST, value = "/create")
     public ModelAndView create(@Valid GoodsForm form, BindingResult result, HttpServletRequest request) {
@@ -426,26 +426,24 @@ public class CommodityController {
         return view;
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/detail/{goodsId}")
-    public ResultData detail(@PathVariable("goodsId") String goodsId) {
-        ResultData resultData = new ResultData();
-        Map<String, Object> dataMap = new HashMap<>();
-
+    @RequestMapping(method = RequestMethod.GET, value = "/detail/{goodsId}")
+    public ModelAndView detail(@PathVariable("goodsId") String goodsId) {
+    	ModelAndView view = new ModelAndView();
         Map<String, Object> condition = new HashMap<>();
         condition.put("goodsId", goodsId);
         ResultData queryData = commodityService.fetchGoods4Customer(condition);
         if (queryData.getData() != null) {
             Goods4Customer goods = ((List<Goods4Customer>) queryData.getData()).get(0);
-            dataMap.put("goods", goods);
+            view.addObject("goods", goods);
             List<Thumbnail> thumbnails = (List<Thumbnail>) commodityService.fetchThumbnail(condition).getData();
             if (thumbnails.size() != 0) {
-                dataMap.put("thumbnails", thumbnails);
+                view.addObject("thumbnails", thumbnails);
             } else {
-                dataMap.put("thumbnails", 0);
+            	view.addObject("thumbnails", 0);
             }
         }
-        resultData.setData(dataMap);
-        return resultData;
+        view.setViewName("/backend/goods/detail");
+        return view;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/forbid/{goodsId}")
@@ -455,7 +453,7 @@ public class CommodityController {
         condition.put("goodsId", goodsId);
         ResultData resultData = commodityService.fetchGoods4Customer(condition);
         if (resultData.getResponseCode() != ResponseCode.RESPONSE_OK) {
-            view.setViewName("redirect:/commodity/overview");
+            view.setViewName("redirect:/commodity/detail/"+goodsId);
             return view;
         }
         Goods4Customer target = ((List<Goods4Customer>) resultData.getData()).get(0);
@@ -465,16 +463,16 @@ public class CommodityController {
             Subject subject = SecurityUtils.getSubject();
             User user = (User) subject.getPrincipal();
             if (user == null) {
-                view.setViewName("redirect:/commodity/overview");
+                view.setViewName("redirect:/commodity/detail/"+goodsId);
                 return view;
             }
             Admin admin = user.getAdmin();
             BackOperationLog backOperationLog = new BackOperationLog(admin.getUsername(), toolService.getIP(request),
                     "管理员" + admin.getUsername() + "将商品" + target.getName() + "下架");
             logService.createbackOperationLog(backOperationLog);
-            view.setViewName("redirect:/commodity/overview");
+            view.setViewName("redirect:/commodity/detail/"+goodsId);
         } else {
-            view.setViewName("redirect:/commodity/overview");
+            view.setViewName("redirect:/commodity/detail/"+goodsId);
         }
         return view;
     }
@@ -486,7 +484,7 @@ public class CommodityController {
         condition.put("goodsId", goodsId);
         ResultData resultData = commodityService.fetchGoods4Customer(condition);
         if (resultData.getResponseCode() != ResponseCode.RESPONSE_OK) {
-            view.setViewName("redirect:/commodity/overview");
+            view.setViewName("redirect:/commodity/detail/"+goodsId);
             return view;
         }
         Goods4Customer target = ((List<Goods4Customer>) resultData.getData()).get(0);
@@ -496,16 +494,16 @@ public class CommodityController {
             Subject subject = SecurityUtils.getSubject();
             User user = (User) subject.getPrincipal();
             if (user == null) {
-                view.setViewName("redirect:/commodity/overview");
+                view.setViewName("redirect:/commodity/detail/"+goodsId);
                 return view;
             }
             Admin admin = user.getAdmin();
             BackOperationLog backOperationLog = new BackOperationLog(admin.getUsername(), toolService.getIP(request),
                     "管理员" + admin.getUsername() + "将商品" + target.getName() + "上架");
             logService.createbackOperationLog(backOperationLog);
-            view.setViewName("redirect:/commodity/overview");
+            view.setViewName("redirect:/commodity/detail/"+goodsId);
         } else {
-            view.setViewName("redirect:/commodity/overview");
+            view.setViewName("redirect:/commodity/detail/"+goodsId);
         }
         return view;
     }
