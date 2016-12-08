@@ -53,8 +53,62 @@
         </div>
     </div>
 </div>
+<div class="ui modal" id="admin_cashback_detail_modal">
+	<i class="close icon"></i>
+	<div class="header" id="title"></div>
+	<div class="image content">
+		<div class="description" id="content" style="height:400px;overflow:auto">
+			
+		</div>
+	</div>
+	<div class="actions">
+       <div class="ui button" id="confirm">确认</div>
+   </div>
+</div>
 <script>
+$('#admin_cashback_detail_modal').modal('hide'); 
+$("#confirm").on('click', function() {
+	$('#admin_cashback_detail_modal').modal('hide'); 
+});
 $(".month").on('click', function() {
-	alert($(this).attr("id"));
+	var id=$(this).attr("id");
+	var year=id.substring(0,id.indexOf('年'));
+	var month=id.substring(id.indexOf('年')+1,id.indexOf('月'));
+ 	var data_url = "${path.concat('/agent/cashback/detail/')}${agent.agentId}/"+year+"/"+month;
+    $.get(data_url, function (result) {
+        if (result.responseCode == 'RESPONSE_OK') {
+           $('#title').html(id+"详情");
+           $('#content').empty();
+           var map=result.data; 
+           var self=map.self;
+           var direct=map.direct;
+           var indirect=map.indirect;
+           var node1="<p>返现来源：自销</p><table class='ui celled table'><thead><tr><th>商品名</th><th>代理商</th><th>销量(盒)</th><th>返现比例(元/盒)</th><th>返现金额(元)</th></tr></thead><tbody>";
+           for(var i=0;i<self.length;i++){
+        	   var item=self[i];
+        	   node1+="<tr><td>"+item.orderPool.goods.name+"</td><td>"+item.orderPool.agent.name+"</td><td>"+item.orderPool.quantity+"</td><td>"+item.percent+"</td><td>"+item.amount+"</td></tr>";		
+           }
+           $('#content').append(node1);
+           if(typeof direct != "undefined"){
+               var node2="<p>返现来源：直接代理</p><table class='ui celled table'><thead><tr><th>商品名</th><th>代理商</th><th>销量(盒)</th><th>返现比例(元/盒)</th><th>返现金额(元)</th></tr></thead><tbody>";
+        	   for(var i=0;i<direct.length;i++){
+        		   var item=direct[i];
+            	   node2+="<tr><td>"+item.orderPool.goods.name+"</td><td>"+item.orderPool.agent.name+"</td><td>"+item.orderPool.quantity+"</td><td>"+item.percent+"</td><td>"+item.amount+"</td></tr>";		
+               }
+           }
+           $('#content').append(node2);
+           if(typeof indirect != "undefined"){
+               var node3="<p>返现来源：间接代理</p><table class='ui celled table'><thead><tr><th>商品名</th><th>代理商</th><th>销量(盒)</th><th>返现比例(元/盒)</th><th>返现金额(元)</th></tr></thead><tbody>";
+        	   for(var i=0;i<indirect.length;i++){
+        		   var item=indirect[i];
+            	   node3+="<tr><td>"+item.orderPool.goods.name+"</td><td>"+item.orderPool.agent.name+"</td><td>"+item.orderPool.quantity+"</td><td>"+item.percent+"</td><td>"+item.amount+"</td></tr>";		
+               }
+           }  
+           $('#content').append(node3);
+           $('#admin_cashback_detail_modal').modal('show'); 
+        } else {
+           alert("error");
+        }
+    }); 
 });
 </script>

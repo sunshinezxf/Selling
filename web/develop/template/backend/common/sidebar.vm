@@ -44,7 +44,7 @@
             <a class="title"><i class="teal payment icon left"></i><i class="dropdown icon"></i>返现管理</a>
 
             <div class="content menu">
-                <a class="item" href="${path.concat('/cashback/overview')}">返现概览</a>
+                <a id="cashback_overview" class="item" href="${path.concat('/cashback/overview')}">返现概览</a>
             </div>
         </div>
     #end
