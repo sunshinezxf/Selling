@@ -28,8 +28,9 @@
     </div>
     <div class="row">
         <div class="column">
-            <a class="ui green button">一键发货</a>
-            <a class="ui green button">上传快递单</a>
+            <a class="ui green button" href="${path.concat('/order/download/PAYED')}">一键发货</a>
+
+            <div class="ui green button" id="upload_btn">上传快递单</div>
             <a class="ui green button" href="${path.concat('/order/overview')}">订单列表</a>
         </div>
     </div>
@@ -42,6 +43,11 @@
     </div>
 </div>
 #parse("/backend/order/component/order_item_modal.vm")
+#parse("/backend/order/component/upload_express_modal.vm")
 <script>
     var value = "PAYED";
+
+    $("#upload_btn").on('click', function () {
+        $("#upload_express_modal").modal('show');
+    });
 </script>

@@ -24,7 +24,7 @@
                 </div>
                 <a class="ui basic green left pointing label" href="${path.concat('/order/check')}">
                     待审核订单
-                    <div class="detail">5</div>
+                    <div class="detail" id="to_check_num"></div>
                 </a>
             </div>
         </div>
@@ -37,7 +37,21 @@
 </div>
 #parse("/backend/order/component/upload_express_modal.vm")
 <script>
+    var status = 'PAYED';
+
     $("#upload_express").on('click', function () {
         $("#upload_express_modal").modal('show');
+    });
+
+    $(document).ready(function () {
+        var url = "${path.concat('/order/count')}";
+        $.post(url, {status: status}, function (result) {
+            if (result.responseCode == 'RESPONSE_OK') {
+                var data = result.data;
+                $("#to_check_num").text(data + "单");
+            } else {
+                $("#to_check_num").text("0" + "单");
+            }
+        })
     });
 </script>
