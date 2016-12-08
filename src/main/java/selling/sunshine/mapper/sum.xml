@@ -334,25 +334,32 @@ group by goods_id, goods_name, order_type order by goods_quantity desc;
         
 </select>
 
-<resultMap id="purchaseRecordEverydayVo" type="java.util.Map">
+<resultMap id="purchaseRecordVo" type="java.util.Map">
         <result property="date" column="date"></result>
+        <result property="goodsId" column="goods_id"></result>
         <result property="goodsName" column="goods_name"></result>
         <result property="quantity" column="quantity"></result>
         <result property="price" column="price"></result>
 </resultMap>
     
-<select id="purchaseRecordEveryday" parameterType="java.util.Map" resultMap="purchaseRecordEverydayVo">
-select substr(create_time,1,10) as date,goods_name,sum(goods_quantity) as quantity,sum(record_price) as price 
+<select id="purchaseRecordEveryday" parameterType="java.util.Map" resultMap="purchaseRecordVo">
+select substr(create_time,1,10) as date,goods_id,goods_name,sum(goods_quantity) as quantity,sum(record_price) as price 
 from purchase_record_view 
 where date_format(create_time,'%Y-%m')=date_format(now(),'%Y-%m') and order_type='0'
-group by substr(create_time,1,10),goods_name order by substr(create_time,1,10);
+<if test="goodsId != null and goodsId != ''">
+       AND goods_id = #{goodsId}
+</if>
+group by substr(create_time,1,10),goods_id,goods_name order by substr(create_time,1,10);
 </select>
 
-<select id="purchaseRecordEveryMonth" parameterType="java.util.Map" resultMap="purchaseRecordEverydayVo">
-select date_format(create_time,'%Y-%m') as date,goods_name,sum(goods_quantity) as quantity,sum(record_price) as price 
+<select id="purchaseRecordEveryMonth" parameterType="java.util.Map" resultMap="purchaseRecordVo">
+select date_format(create_time,'%Y-%m') as date,goods_id,goods_name,sum(goods_quantity) as quantity,sum(record_price) as price 
 from purchase_record_view 
-where date_format(create_time,'%Y')=date_format(now(),'%Y') and order_type='0'
-group by date_format(create_time,'%Y-%m'),goods_name
+where date_format(create_time,'%Y-%m') >= date_format(date_sub(now(), INTERVAL 11 MONTH), '%Y-%m') and order_type='0'
+<if test="goodsId != null and goodsId != ''">
+       AND goods_id = #{goodsId}
+</if>
+group by date_format(create_time,'%Y-%m'),goods_id,goods_name
 order by date_format(create_time,'%Y-%m');
 </select>
 

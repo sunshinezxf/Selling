@@ -1,6 +1,7 @@
 package selling.sunshine.dao.impl;
 
 import common.sunshine.dao.BaseDao;
+import common.sunshine.model.selling.goods.Goods4Agent;
 import common.sunshine.pagination.DataTablePage;
 import common.sunshine.pagination.DataTableParam;
 import common.sunshine.utils.ResponseCode;
@@ -228,7 +229,6 @@ public class StatisticDaoImpl extends BaseDao implements StatisticDao {
             for(int i = 0; i < query.size(); i++){
             	String dateString = (String) query.get(i).get("date");
             	int month = Integer.valueOf((dateString.split("-"))[1]) - 1;
-            	int b = cl.get(Calendar.MONTH);
             	if(month != cl.get(Calendar.MONTH)){
             		Map<String, Object> tmp = new HashMap<String, Object>();
             		tmp.put("date", sdf.format(cl.getTime()));
@@ -358,11 +358,46 @@ public class StatisticDaoImpl extends BaseDao implements StatisticDao {
     }
 
     @Override
-    public ResultData purchaseRecordEveryday() {
+    public ResultData purchaseRecordEveryday(Map<String, Object> condition) {
         ResultData result = new ResultData();
         try {
-            List<Map<String, Object>> list = sqlSession.selectList("selling.statistic.purchaseRecordEveryday");
-            result.setData(list);
+            List<Map<String, Object>> query = sqlSession.selectList("selling.statistic.purchaseRecordEveryday",condition);
+            List<Goods4Agent> list = sqlSession.selectList("selling.goods.query4Agent", condition);
+            if (!list.isEmpty()) {
+            	Goods4Agent goods=list.get(0);
+            	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                Calendar cl = Calendar.getInstance();
+                Calendar current = Calendar.getInstance();
+                current.setTime(new Date(System.currentTimeMillis()));
+			    cl.set(Calendar.DAY_OF_MONTH,1);
+                for(int i = 0; i < query.size(); i++){
+                	String dateString = (String) query.get(i).get("date");
+                	int day = Integer.valueOf((dateString.split("-"))[2]);
+                	if(day != cl.get(Calendar.DAY_OF_MONTH)){
+                		Map<String, Object> tmp = new HashMap<String, Object>();
+                		tmp.put("date", sdf.format(cl.getTime()));
+                		tmp.put("goodsId", query.get(i).get("goodsId"));
+                		tmp.put("goodsName", query.get(i).get("goodsName"));
+                		tmp.put("quantity", 0);
+                		tmp.put("price", 0.0);
+                		query.add(i, tmp);
+                	}
+                	cl.add(Calendar.DAY_OF_MONTH, 1);
+                }
+                while((cl.get(Calendar.MONTH) <= current.get(Calendar.MONTH) && cl.get(Calendar.DAY_OF_MONTH) <= current.get(Calendar.DAY_OF_MONTH))){
+                	Map<String, Object> tmp = new HashMap<String, Object>();
+            		tmp.put("date", sdf.format(cl.getTime()));
+            		tmp.put("goodsId", goods.getGoodsId());
+            		tmp.put("goodsName", goods.getGoodsId());
+            		tmp.put("quantity", 0);
+            		tmp.put("price", 0.0);
+            		query.add(tmp);
+            		cl.add(Calendar.DAY_OF_MONTH, 1);
+                }
+                result.setData(query);
+            }else {
+				 result.setResponseCode(ResponseCode.RESPONSE_NULL);
+			}   
         } catch (Exception e) {
             logger.error(e.getMessage());
             result.setResponseCode(ResponseCode.RESPONSE_ERROR);
@@ -372,11 +407,50 @@ public class StatisticDaoImpl extends BaseDao implements StatisticDao {
     }
 
     @Override
-    public ResultData purchaseRecordEveryMonth() {
+    public ResultData purchaseRecordEveryMonth(Map<String, Object> condition) {
         ResultData result = new ResultData();
         try {
-            List<Map<String, Object>> list = sqlSession.selectList("selling.statistic.purchaseRecordEveryMonth");
-            result.setData(list);
+            List<Map<String, Object>> query = sqlSession.selectList("selling.statistic.purchaseRecordEveryMonth",condition);
+            List<Goods4Agent> list = sqlSession.selectList("selling.goods.query4Agent", condition);
+            if (!list.isEmpty()) {
+            	 Goods4Agent goods=list.get(0);
+            	 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
+                 Calendar cl = Calendar.getInstance();
+                 Calendar current = Calendar.getInstance();
+                 current.setTime(new Date(System.currentTimeMillis()));
+                 if(!query.isEmpty()){
+                 	String startDate = (String) query.get(0).get("date");
+                 	Date date = sdf.parse(startDate);
+                 	cl.setTime(date);
+                 }
+                 for(int i = 0; i < query.size(); i++){
+                 	String dateString = (String) query.get(i).get("date");
+                 	int month = Integer.valueOf((dateString.split("-"))[1]) - 1;
+                 	if(month != cl.get(Calendar.MONTH)){
+                 		Map<String, Object> tmp = new HashMap<String, Object>();
+                 		tmp.put("date", sdf.format(cl.getTime()));
+                 		tmp.put("goodsId", query.get(i).get("goodsId"));
+                 		tmp.put("goodsName", query.get(i).get("goodsName"));
+                 		tmp.put("quantity", 0);
+                 		tmp.put("price", 0.0);
+                 		query.add(i, tmp);
+                 	}
+                 	cl.add(Calendar.MONTH, 1);
+                 }
+                 while((cl.get(Calendar.MONTH) <= current.get(Calendar.MONTH) && cl.get(Calendar.YEAR) <= current.get(Calendar.YEAR)) && query.size() < 12){
+                 	Map<String, Object> tmp = new HashMap<String, Object>();
+             		tmp.put("date", sdf.format(cl.getTime()));
+             		tmp.put("goodsId", goods.getGoodsId());
+             		tmp.put("goodsName", goods.getName());
+             		tmp.put("quantity", 0);
+             		tmp.put("price", 0.0);
+             		query.add(tmp);
+             		cl.add(Calendar.MONTH, 1);
+                 }
+                 result.setData(query);
+			}else {
+				 result.setResponseCode(ResponseCode.RESPONSE_NULL);
+			}          
         } catch (Exception e) {
             logger.error(e.getMessage());
             result.setResponseCode(ResponseCode.RESPONSE_ERROR);

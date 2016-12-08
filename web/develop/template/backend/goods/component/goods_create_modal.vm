@@ -1,0 +1,22 @@
+<div class="ui modal" id="goods_create_modal">
+	<i class="close icon"></i>
+	<div class="header">添加商品</div>
+	<div class="image content">
+		<div class="description">
+			
+		</div>
+	</div>
+	<div class="actions">
+       <div class="ui button" id="cancer">取消</div>
+       <div class="ui button" id="confirm">确认</div>
+   </div>
+</div>
+<script>
+    $('#goods_create_modal').modal('hide');
+    $("#cancer").on('click', function() {
+        $('#goods_create_modal').modal('hide');
+    });
+    $("#confirm").on('click', function() {
+        $('#goods_create_modal').modal('hide');
+    });
+</script>

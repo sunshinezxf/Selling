@@ -1,0 +1,29 @@
+<div class="ui stackable padded grid" name="goods_list">
+    <div class="row">
+        <h1 class="ui header">
+            <i class="home icon"></i>
+
+            <div class="content">商品详情
+                <div class="sub header">
+                    <div class="ui breadcrumb">
+                        <a class="section">商品管理</a>
+                        <div class="divider">/</div>
+                        <a class="section">商品列表</a>
+                        <div class="divider">/</div>
+                        <a class="active section">商品详情</a>
+                    </div>
+                </div>
+            </div>
+        </h1>
+    </div>
+    <div class="row">
+        #if(${goods.blockFlag})
+        <a type="button" class="ui positive basic button" href="${path.concat('/commodity/enable/')}${goods.goodsId}">上架</a>
+        #else
+        <a type="button" class="ui negative basic button" href="${path.concat('/commodity/forbid/')}${goods.goodsId}">下架</a>
+        #end
+        <button type="button" class="ui blue basic button" id="update">修改</button>
+    </div>
+    <div class="row">
+    </div>
+</div>

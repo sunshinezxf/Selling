@@ -260,41 +260,45 @@ public class StatisticController {
         return result;
     }
 
-    @ResponseBody
-    @RequestMapping(method = RequestMethod.POST, value = "/purchaseRecordEveryday")
-    public JSONObject purchaseRecordEveryday() {
-        JSONObject result = new JSONObject();
-        ResultData resultData = statisticService.purchaseRecordEveryday();
-        result = (JSONObject) resultData.getData();
-        return result;
-    }
+//    @ResponseBody
+//    @RequestMapping(method = RequestMethod.POST, value = "/purchaseRecordEveryday")
+//    public JSONObject purchaseRecordEveryday() {
+//        JSONObject result = new JSONObject();
+//        Map<String, Object> condition=new HashMap<>();
+//        ResultData resultData = statisticService.purchaseRecordEveryday(condition);
+//        result = (JSONObject) resultData.getData();
+//        return result;
+//    }
 
-    @ResponseBody
-    @RequestMapping(method = RequestMethod.POST, value = "/purchaseRecordEveryMonth")
-    public JSONObject purchaseRecordEveryMonth() {
-        JSONObject result = new JSONObject();
-        ResultData resultData = statisticService.purchaseRecordEveryMonth();
-        result = (JSONObject) resultData.getData();
-        return result;
-    }
+//    @ResponseBody
+//    @RequestMapping(method = RequestMethod.POST, value = "/purchaseRecordEveryMonth")
+//    public JSONObject purchaseRecordEveryMonth() {
+//        JSONObject result = new JSONObject();
+//        Map<String, Object> condition=new HashMap<>();
+//        ResultData resultData = statisticService.purchaseRecordEveryMonth(condition);
+//        result = (JSONObject) resultData.getData();
+//        return result;
+//    }
 
-    @ResponseBody
-    @RequestMapping(method = RequestMethod.POST, value = "/purchaseRecordEveryday2")
-    public JSONObject purchaseRecordEveryday2() {
-        JSONObject result = new JSONObject();
-        ResultData resultData = statisticService.purchaseRecordEveryday2();
-        result = (JSONObject) resultData.getData();
-        return result;
-    }
-
-    @ResponseBody
-    @RequestMapping(method = RequestMethod.POST, value = "/purchaseRecordEveryMonth2")
-    public JSONObject purchaseRecordEveryMonth2() {
-        JSONObject result = new JSONObject();
-        ResultData resultData = statisticService.purchaseRecordEveryMonth2();
-        result = (JSONObject) resultData.getData();
-        return result;
-    }
+//    @ResponseBody
+//    @RequestMapping(method = RequestMethod.POST, value = "/purchaseRecordEveryday2")
+//    public JSONObject purchaseRecordEveryday2() {
+//        JSONObject result = new JSONObject();
+//        Map<String, Object> condition=new HashMap<>();
+//        ResultData resultData = statisticService.purchaseRecordEveryday2(condition);
+//        result = (JSONObject) resultData.getData();
+//        return result;
+//    }
+//
+//    @ResponseBody
+//    @RequestMapping(method = RequestMethod.POST, value = "/purchaseRecordEveryMonth2")
+//    public JSONObject purchaseRecordEveryMonth2() {
+//        JSONObject result = new JSONObject();
+//        Map<String, Object> condition=new HashMap<>();
+//        ResultData resultData = statisticService.purchaseRecordEveryMonth2(condition);
+//        result = (JSONObject) resultData.getData();
+//        return result;
+//    }
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/sales/area")
@@ -456,4 +460,27 @@ public class StatisticController {
         result.setResponseCode(ResponseCode.RESPONSE_NULL);
         return result;
     }
+    
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.GET, value = "/goods/purchaseRecord/month/{goodsId}")
+    public JSONObject perGoodsPurchaseRecordMonth(@PathVariable("goodsId") String goodsId) {
+        JSONObject result = new JSONObject();
+        Map<String, Object> condition=new HashMap<>();
+        condition.put("goodsId", goodsId);
+        ResultData resultData = statisticService.perGoodsPurchaseRecordMonth(condition);
+        result = (JSONObject) resultData.getData();
+        return result;
+    }
+    
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.GET, value = "/goods/purchaseRecord/day/{goodsId}")
+    public JSONObject perGoodsPurchaseRecordDay(@PathVariable("goodsId") String goodsId) {
+      JSONObject result = new JSONObject();
+      Map<String, Object> condition=new HashMap<>();
+      condition.put("goodsId", goodsId);
+      ResultData resultData = statisticService.perGoodsPurchaseRecordDay(condition);
+      result = (JSONObject) resultData.getData();
+      return result;
+    }
+    
 }

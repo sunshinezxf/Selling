@@ -37,8 +37,8 @@ public interface StatisticDao {
     
     ResultData agentRanking(Map<String, Object> condition);
     
-    ResultData purchaseRecordEveryday();
+    ResultData purchaseRecordEveryday(Map<String, Object> condition);
     
-    ResultData purchaseRecordEveryMonth();
+    ResultData purchaseRecordEveryMonth(Map<String, Object> condition);
 
 }

@@ -31,12 +31,16 @@ public interface StatisticService {
     
     ResultData agentRanking(Map<String, Object> condition);
     
-    ResultData purchaseRecordEveryday();
+//    ResultData purchaseRecordEveryday(Map<String, Object> condition);
+//    
+//    ResultData purchaseRecordEveryMonth(Map<String, Object> condition);
+//    
+//    ResultData purchaseRecordEveryday2(Map<String, Object> condition);
+//    
+//    ResultData purchaseRecordEveryMonth2(Map<String, Object> condition);
     
-    ResultData purchaseRecordEveryMonth();
+    ResultData perGoodsPurchaseRecordMonth(Map<String, Object> condition);
     
-    ResultData purchaseRecordEveryday2();
-    
-    ResultData purchaseRecordEveryMonth2();
+    ResultData perGoodsPurchaseRecordDay(Map<String, Object> condition);
 
 }
