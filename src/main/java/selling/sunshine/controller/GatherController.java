@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.alibaba.fastjson.JSONObject;
+
 import selling.sunshine.form.TimeRangeForm;
 import common.sunshine.model.selling.bill.CustomerOrderBill;
 import common.sunshine.model.selling.bill.DepositBill;
@@ -46,10 +49,9 @@ public class GatherController {
     private GatherService gatherService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/overview")
-    public ModelAndView gather() {
-        ModelAndView view = new ModelAndView();
-        view.setViewName("/backend/finance/gather");
-        return view;
+    public ResultData gather() {
+    	ResultData result = new ResultData();
+        return result;
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/overview")

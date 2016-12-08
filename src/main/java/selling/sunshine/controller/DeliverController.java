@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.alibaba.fastjson.JSONObject;
+
 import common.sunshine.utils.SortRule;
 import selling.sunshine.form.TimeRangeForm;
 import common.sunshine.model.selling.express.Express;
@@ -51,8 +54,8 @@ public class DeliverController {
     private ExpressService expressService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/overview")
-    public ModelAndView deliver() {
-        ModelAndView view = new ModelAndView();
+    public ResultData deliver() {
+        ResultData result = new ResultData();
         Map<String, Object> condition = new HashMap<>();
         List<SortRule> rule = new ArrayList<>();
         rule.add(new SortRule("create_time", "asc"));
@@ -62,10 +65,11 @@ public class DeliverController {
             Express express = ((List<Express>) queryResponse.getData()).get(0);
             Timestamp createAt = express.getCreateAt();
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-            view.addObject("start", format.format(createAt));
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("start", format.format(createAt));
+            result.setData(jsonObject);
         }
-        view.setViewName("/backend/finance/deliver");
-        return view;
+        return result;
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/overview")

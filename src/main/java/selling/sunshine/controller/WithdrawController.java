@@ -184,8 +184,8 @@ public class WithdrawController {
      * 提现单报表
      */
     @RequestMapping(method = RequestMethod.GET, value = "/overviewreport")
-    public ModelAndView withdraw() {
-        ModelAndView view = new ModelAndView();
+    public ResultData withdraw() {
+        ResultData result = new ResultData();
         Map<String, Object> condition = new HashMap<>();
         condition.put("blockFlag", false);
         List<Integer> status = new ArrayList<>();
@@ -200,10 +200,11 @@ public class WithdrawController {
             WithdrawRecord record = ((List<WithdrawRecord>) queryResponse.getData()).get(0);
             createAt = record.getCreateAt();
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-            view.addObject("start", format.format(createAt));
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("start", format.format(createAt));
+            result.setData(jsonObject);
         }
-        view.setViewName("/backend/finance/withdraw");
-        return view;
+        return result;
     }
 
     /**
