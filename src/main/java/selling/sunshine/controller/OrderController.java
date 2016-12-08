@@ -1906,6 +1906,52 @@ public class OrderController {
         return view;
     }
     
+    /**
+     * 查询订单交易笔数,item粒度
+     */
+    @RequestMapping(method = RequestMethod.POST, value = "/account")
+    public ResultData orderItemSumAccount(HttpServletRequest request, String status){
+    	ResultData result = new ResultData();
+    	Subject subject = SecurityUtils.getSubject();
+     	User user = (User) subject.getPrincipal();
+        if (user == null) {
+             result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+             result.setDescription("未登录");
+             return result;
+        }
+    	Map<String, Object> condition = new HashMap<String, Object>();
+    	if(user.getAgent() != null){
+    		condition.put("agentId", user.getAgent().getAgentId());
+    	}
+    	if(!StringUtils.isEmpty(status)){
+    		switch(status){
+    		case "NOT_PAYED":
+    			condition.put("status",0);break;
+    		case "PAYED":
+    			condition.put("status",1);break;
+    		case "SHIPPED":
+    			condition.put("status",2);break;
+    		case "RECEIVED":
+    			condition.put("status",3);break;
+    		case "EXCHANGED":
+    			condition.put("status",4);break;
+    		case "REFUNDING":
+    			condition.put("status",5);break;
+    		case "REFUNDED":
+    			condition.put("status",6);break;
+    		default:break;
+    		}
+    	}
+    	ResultData fetchOrderItemSumResponse = orderService.fetchOrderItemSum(condition);
+    	if(fetchOrderItemSumResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
+    		result.setResponseCode(fetchOrderItemSumResponse.getResponseCode());
+    		result.setDescription("获取订单数据失败");
+    		return result;
+    	}
+    	List<OrderItemSum> orderItemSums = (List<OrderItemSum>) fetchOrderItemSumResponse.getData();
+    	result.setData(orderItemSums.size());
+    	return result;
+    }
 }
 
 
