@@ -479,5 +479,19 @@ public class EventController {
 		}
 		return resultData;
 	}
+	
+	@RequestMapping(method = RequestMethod.GET, value = "/all")
+	public ResultData all(){
+		ResultData resultData=new ResultData();
+		Map<String, Object> condition = new HashMap<>();
+		ResultData fetchResponse = eventService.fetchGiftEvent(condition);
+		if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+			List<Event> events=(List<Event>)fetchResponse.getData();
+			resultData.setData(events);
+			return resultData;
+		}
+		resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
+		return resultData;
+	}
 
 }
