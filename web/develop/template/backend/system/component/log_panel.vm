@@ -49,10 +49,6 @@
 </div>
 <script>
     $(document).ready(function () {
-        $(".flatpickr").flatpickr({
-            enableTime: true
-        });
-
         var length=$('.cls').width()-$('.date').width();
         $('.intro').css('width',length-1);
     });

@@ -4,7 +4,7 @@
 <head>
     #parse("/backend/initialization/init.vm")
     #parse("/backend/initialization/init_datetimepicker.vm")
-    <title>报表专区</title>
+    <title>日志查询</title>
 </head>
 <body id="dashboard" class="started pushable" ontouchstart>
     #parse("/backend/common/mobile_sidebar.vm")

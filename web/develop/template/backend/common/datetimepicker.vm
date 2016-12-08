@@ -1,7 +1,7 @@
 <div class="ui form">
     <div class="inline fields">
         <div class="seven wide field datetime_field">
-            <label>开始时间</label>
+            <label class="dateLabel">开始时间</label>
             <div class="ui action input flatpickr" data-time_24hr=true data-wrap="true">
                 <input id="start_time" type="text" name="start" placeholder="请选择开始时间" autocomplete="false" required="required" data-input>
                 <button class="ui basic button" data-toggle><i class="calendar outline icon"></i></button>
@@ -9,7 +9,7 @@
             </div>
         </div>
         <div class="seven wide field datetime_field">
-            <label>结束时间</label>
+            <label class="dateLabel">结束时间</label>
             <div class="ui action input flatpickr" data-time_24hr=true data-wrap="true">
                 <input id="end_time" type="text" name="end" placeholder="请选择结束时间" autocomplete="false" required="required" data-input>
                 <button class="ui basic button" data-toggle><i class="calendar outline icon"></i></button>
