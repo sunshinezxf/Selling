@@ -8,22 +8,147 @@
     <div class="row">
         <div class="column">
             <div class="ui teal pointing secondary menu">
-                <a class="active item">订货单</a>
-                <a class="item">发货单</a>
-                <a class="item">收款单</a>
-                <a class="item">提现单</a>
+                <a id="indent" class="active item">订货单</a>
+                <a id="deliver" class="item">发货单</a>
+                <a id="gather" class="item">收款单</a>
+                <a id="withdraw" class="item">提现单</a>
+                <a id="agent" class="item">代理商信息表</a>
+                <a id="gift" class="item">日常赠送</a>
+                <a id="allEvent" class="item">活动赠送</a>
             </div>
-            <div class="ui segment">
+            <div id="datetime_segment" class="ui segment">
                 #parse("/backend/common/datetimepicker.vm")
+            </div>
+            <div id="events_segment" class="ui basic segment">
             </div>
         </div>
     </div>
 </div>
 <script>
+    var indent={"name":"indent","url":"${path.concat("/indent/overview")}"};
+    var deliver={"name":"deliver","url":"${path.concat("/deliver/overview")}"};
+    var gather={"name":"gather","url":"${path.concat("/gather/overview")}"};
+    var withdraw={"name":"withdraw","url":"${path.concat("/withdraw/overviewreport")}"};
+    var agent="${path.concat('/agent/downloadAgentExcel')}";
+    var gift="${path.concat('/statement/downloadGiftExcel')}";
+    var allEvent="${path.concat('/event/all')}";
+    var urls=new Array();
+    urls.push(indent,deliver,gather,withdraw);
+    var starttime="2016-01-01";
+    var endtime=new Date();
+    $(document).ready(function(){
+        $("#datetime_segment").show();
+        $("#events_segment").hide();
+        $.get(indent.url,function (result) {
+            if (result.responseCode == "RESPONSE_OK") {
+                if(typeof result.data.start!="undefined"&&result.data.start!=null){
+                    starttime=result.data.start;
+                }
+            } else {
+                alert("数据传输有误！");
+            }
+        })
+
+        var start_flatpickr=$("#start_flatpickr").flatpickr({
+            minDate:starttime,
+            maxDate:endtime,
+            onChange:function(selectedDates, dateStr, instance) {
+                end_flatpickr.set("minDate",dateStr);
+            },
+        });
+
+        var end_flatpickr=$("#end_flatpickr").flatpickr({
+            minDate:starttime,
+            maxDate:endtime,
+            onChange:function(selectedDates, dateStr, instance) {
+                start_flatpickr.set("maxDate",dateStr);
+            },
+        });
+
+    });
     $(".ui.pointing.secondary.menu > a").each(function(){
         $(this).click(function(){
             $(this).addClass("active");
             $(this).siblings().removeClass("active");
+            var itemid=$(this).attr("id");
+            if(itemid!="allEvent"){
+                $("#datetime_segment").show();
+                $("#events_segment").hide();
+                $.each(urls,function (index,obj) {
+                    if(obj.name==itemid){
+                        $.get(obj.url,function (result) {
+                            if (result.responseCode == "RESPONSE_OK") {
+                                if(typeof result.data.start!="undefined"&&result.data.start!=null){
+                                    starttime=result.data.start;
+                                }
+                            } else {
+                                alert("数据传输有误！");
+                            }
+                        })
+                    }
+                });
+            }else{
+                $("#datetime_segment").hide();
+                $("#events_segment").show();
+                $.get(allEvent,function (result) {
+                    if (result.responseCode == "RESPONSE_OK") {
+                        var events=result.data;
+                        var rows;
+                        if(events.length%4==0){
+                            rows=events.length/4;
+                        }else{
+                            rows=parseInt(events.length/4)+1;
+                        }
+                        for(var i=0;i<rows;i++){
+                             var grid=$("<div></div>");
+                             grid.addClass("ui four column stackable grid");
+                             if(i!=rows-1){
+                                for(var j=4*i;j<4*(i+1);j++){
+                                     var column=$("<div></div>");
+                                     column.addClass("column");
+                                     var segment=$("<div></div>");
+                                     segment.addClass("ui center aligned segment");
+                                     segment.attr("id",events[j].eventId);
+                                     var header=$("<div></div>");
+                                     header.addClass("ui header");
+                                     header.text(events[j].title.substr(0,4));
+                                     var subHeader=$("<div></div>");
+                                     subHeader.addClass("sub header");
+                                     subHeader.html(new Date(events[j].start).format("yyyy年MM月dd日")+"至"+new Date(events[j].end).format("yyyy年MM月dd日"));
+                                     header.append(subHeader);
+                                     segment.append(header);
+                                     column.append(segment);
+                                     grid.append(column);
+                                }
+                             }else{
+                                for(var p=4*i;p<events.length;p++){
+                                    var column=$("<div></div>");
+                                     column.addClass("column");
+                                     var segment=$("<div></div>");
+                                     segment.addClass("ui center aligned segment");
+                                     segment.attr("id",events[p].eventId);
+                                     var header=$("<div></div>");
+                                     header.addClass("ui header");
+                                     header.text(events[p].title.substr(0,4));
+                                     var subHeader=$("<div></div>");
+                                     subHeader.addClass("sub header");
+                                     subHeader.html(new Date(events[p].start).format("yyyy年MM月dd日")+"至"+new Date(events[p].end).format("yyyy年MM月dd日"));
+                                     header.append(subHeader);
+                                     segment.append(header);
+                                     column.append(segment);
+                                     grid.append(column);
+                                }
+                             }
+                             $("#events_segment").append(grid);
+                        }
+                    } else {
+                        //无活动
+                        $("#events_segment").removeClass("basic");
+                        $("#events_segment").addClass("center aligned");
+                        $("#events_segment").html("当前暂无活动");
+                    }
+                })
+            }
         });
     });
 </script>

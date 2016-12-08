@@ -1,0 +1,43 @@
+<div class="ui modal" id="upload_express_modal" style="display:none;">
+    <i class="close icon"></i>
+
+    <div class="header">快递单上传</div>
+    <div class="image content">
+        <div class="description">
+            <div class="ui icon message center aligned">
+                <div class="content">
+                    <form class="ui form" id="express_upload_form">
+                        <input type="file" name="excelFile" id="filer_input">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="actions">
+        <div class="ui green button" id="upload_confirm">上传</div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+
+        $('#filer_input').filer({
+            showThumbs: true,
+            addMore: false,
+            allowDuplicates: false,
+            limit: 1,
+            extensions: ['csv']
+        });
+
+    });
+
+    $("#upload_confirm").on('click', function () {
+        if ($("#filer_input").val() != null && $("#filer_input").val() != '') {
+            $("#express_upload_form").attr('method', 'post');
+            $("#express_upload_form").attr('enctype', 'multipart/form-data');
+            $("#express_upload_form").attr('action', '${path.concat('/express/upload')}');
+            $("#express_upload_form").submit();
+        } else {
+            return;
+        }
+    });
+</script>
