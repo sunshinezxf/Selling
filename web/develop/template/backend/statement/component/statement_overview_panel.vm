@@ -29,11 +29,11 @@
     var deliver={"name":"deliver","url":"${path.concat("/deliver/overview")}"};
     var gather={"name":"gather","url":"${path.concat("/gather/overview")}"};
     var withdraw={"name":"withdraw","url":"${path.concat("/withdraw/overviewreport")}"};
-    var agent={"name":"agent","url":"${path.concat('/agent/downloadAgentExcel')}"};
-    var gift={"name":"gift","url":"${path.concat('/statement/downloadGiftExcel')}"};
+    var agent="${path.concat('/agent/downloadAgentExcel')}";
+    var gift="${path.concat('/statement/downloadGiftExcel')}";
     var allEvent="${path.concat('/event/all')}";
     var urls=new Array();
-    urls.push(indent,deliver,gather,withdraw,agent,gift);
+    urls.push(indent,deliver,gather,withdraw);
     var starttime="2016-01-01";
     var endtime=new Date();
     $(document).ready(function(){
@@ -41,9 +41,8 @@
         $("#events_segment").hide();
         $.get(indent.url,function (result) {
             if (result.responseCode == "RESPONSE_OK") {
-                var start=result.data.start;
-                if(start!=undefined&&start!=null){
-                    starttime=start;
+                if(typeof result.data.start!="undefined"&&result.data.start!=null){
+                    starttime=result.data.start;
                 }
             } else {
                 alert("数据传输有误！");
@@ -79,9 +78,8 @@
                     if(obj.name==itemid){
                         $.get(obj.url,function (result) {
                             if (result.responseCode == "RESPONSE_OK") {
-                                var start=result.data.start;
-                                if(start!=undefined&&start!=null){
-                                    starttime=start;
+                                if(typeof result.data.start!="undefined"&&result.data.start!=null){
+                                    starttime=result.data.start;
                                 }
                             } else {
                                 alert("数据传输有误！");
@@ -94,7 +92,7 @@
                 $("#events_segment").show();
                 $.get(allEvent,function (result) {
                     if (result.responseCode == "RESPONSE_OK") {
-                        var events=result.data.events;
+                        var events=result.data;
                         var rows;
                         if(events.length%4==0){
                             rows=events.length/4;
