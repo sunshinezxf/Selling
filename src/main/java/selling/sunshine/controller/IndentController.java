@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.alibaba.fastjson.JSONObject;
+
 import common.sunshine.utils.SortRule;
 import selling.sunshine.form.TimeRangeForm;
 import common.sunshine.model.selling.order.CustomerOrder;
@@ -51,8 +54,8 @@ public class IndentController {
 
 
     @RequestMapping(method = RequestMethod.GET, value = "/overview")
-    public ModelAndView indent() {
-        ModelAndView view = new ModelAndView();
+    public ResultData indent() {
+        ResultData result = new ResultData();
         Map<String, Object> condition = new HashMap<>();
         List<Integer> status = new ArrayList<>(Arrays.asList(1, 2, 3, 4));
         condition.put("statusList", status);
@@ -76,9 +79,10 @@ public class IndentController {
             }
         }
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        view.addObject("start", format.format(createAt));
-        view.setViewName("/backend/finance/indent");
-        return view;
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("start", format.format(createAt));
+        result.setData(jsonObject);
+        return result;
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/overview")

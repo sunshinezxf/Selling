@@ -226,10 +226,12 @@ public class StatementController {
         return null;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/downloadGiftExcel")
-    public String downloadGiftExcel(HttpServletRequest request, HttpServletResponse response) throws IOException, RowsExceededException, WriteException {
+    @RequestMapping(method = RequestMethod.POST, value = "/downloadGiftExcel")
+    public String downloadGiftExcel(HttpServletRequest request, HttpServletResponse response, String start, String end) throws IOException, RowsExceededException, WriteException {
         Map<String, Object> condition = new HashMap<String, Object>();
         condition.put("blockFlag", false);
+        condition.put("start", start);
+        condition.put("end", end);
         condition.put("type", 1);
         ResultData fetchOrderResponse = orderService.fetchOrder(condition);
         List<Order> orders = (List<Order>) fetchOrderResponse.getData();
