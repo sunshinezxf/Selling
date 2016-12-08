@@ -21,6 +21,7 @@ import jxl.write.biff.RowsExceededException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -65,8 +66,8 @@ public class StatementController {
         return view;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/downloadEventExcel")
-    public String downloadEventExcel(HttpServletRequest request, HttpServletResponse response)
+    @RequestMapping(method = RequestMethod.GET, value = "/downloadEventExcel/{eventId}")
+    public String downloadEventExcel(HttpServletRequest request, HttpServletResponse response,@PathVariable("eventId") String eventId)
             throws IOException, RowsExceededException, WriteException {
 
         response.reset();
@@ -83,6 +84,7 @@ public class StatementController {
 
         // 1.查询所有的event
         Map<String, Object> condition = new HashMap<>();
+        condition.put("eventId", eventId);
         ResultData queryData = new ResultData();
         queryData = eventService.fetchGiftEvent(condition);
         if (queryData.getResponseCode() == ResponseCode.RESPONSE_OK) {
