@@ -116,7 +116,7 @@ public class ExpressController {
     @RequestMapping(method = RequestMethod.GET, value = "/upload")
     public ModelAndView overview() {
         ModelAndView view = new ModelAndView();
-        view.setViewName("/backend/express/express_upload");
+        view.setViewName("/backend/express/upload");
         return view;
     }
 
