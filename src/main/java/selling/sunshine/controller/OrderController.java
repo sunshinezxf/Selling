@@ -54,10 +54,7 @@ import selling.sunshine.form.PayForm;
 import selling.sunshine.form.TimeRangeForm;
 import selling.sunshine.model.BackOperationLog;
 import selling.sunshine.service.*;
-import selling.sunshine.utils.PlatformConfig;
-import selling.sunshine.utils.Prompt;
-import selling.sunshine.utils.PromptCode;
-import selling.sunshine.utils.WechatConfig;
+import selling.sunshine.utils.*;
 import selling.sunshine.vo.order.OrderItemSum;
 
 import javax.servlet.http.HttpServletRequest;
@@ -84,7 +81,7 @@ public class OrderController {
 
     @Autowired
     private CommodityService commodityService;
-    
+
     @Autowired
     private CustomerService customerService;
 
@@ -301,37 +298,6 @@ public class OrderController {
         return result;
     }
 
-    //	@ResponseBody
-//	@RequestMapping(method = RequestMethod.POST, value = "/customerOrder/overview")
-//	public MobilePage<CustomerOrder> customerOrderOverview(MobilePageParam param) {
-//		MobilePage<CustomerOrder> result = new MobilePage<>();
-//		if (StringUtils.isEmpty(param)) {
-//			return result;
-//		}
-//		Map<String, Object> condition = new HashMap<>();
-//		List<Integer> status = new ArrayList<>();
-//		switch (Integer.parseInt((String) param.getParams().get("status"))) {
-//		case 0:
-//			status.add(0);
-//			break;
-//		case 1:
-//			status.add(1);
-//			break;
-//		case 2:
-//			status.add(2);
-//			break;
-//		case 3:
-//			status.add(3);
-//			break;
-//		}
-//		condition.put("status", status);
-//		ResultData fetchResponse = orderService.fetchCustomerOrder(condition,
-//				param);
-//		if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-//			result = (MobilePage<CustomerOrder>) fetchResponse.getData();
-//		}
-//		return result;
-//	}
     @RequestMapping(method = RequestMethod.GET, value = "/viewexpress/{type}/{orderId}")
     public ModelAndView viewExpress(@PathVariable("type") String type, @PathVariable("orderId") String orderId) {
         ModelAndView view = new ModelAndView();
@@ -608,21 +574,132 @@ public class OrderController {
 
     }
 
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.GET, value = "/download/{status}")
+    public String download(HttpServletResponse response, @PathVariable("status") String status) throws IOException {
+        if (StringUtils.isEmpty(status)) {
+            return null;
+        }
+        Workbook workbook = WorkBookUtil.getExpressTemplate();
+        if (StringUtils.isEmpty(workbook)) {
+            logger.error("快递单模板文件不存在");
+            return "";
+        }
+        List<Express> expresses = new ArrayList<>();
+        Map<String, Object> condition = new HashMap<>();
+        //查询代理商的该状态的所有有效订单信息
+        switch (status) {
+            case "PAYED":
+                List<Integer> statusList = new ArrayList<>(Arrays.asList(OrderStatus.PAYED.getCode(), OrderStatus.PATIAL_SHIPMENT.getCode()));
+                condition.put("status", statusList);
+                break;
+        }
+        ResultData fetchResponse = orderService.fetchOrder(condition);
+        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            List<Order> list = (List<Order>) fetchResponse.getData();
+            for (Order order : list) {
+                order.getOrderItems().forEach(item -> {
+                    if (item.getStatus() == OrderItemStatus.PAYED) {
+                        Customer customer = item.getCustomer();
+                        Goods4Agent goods = item.getGoods();
+                        Express4Agent express = new Express4Agent(PlatformConfig.getValue("sender_name"), PlatformConfig.getValue("sender_phone"), PlatformConfig.getValue("sender_address"), customer.getName(), customer.getPhone().getPhone(), customer.getAddress().getAddress(), goods.getName());
+                        express.setLinkId(item.getOrderItemId());
+                        express.setGoodsQuantity(item.getGoodsQuantity());
+                        express.setItem(item);
+                        expresses.add(express);
+                    }
+                });
+            }
+        } else if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_NULL) {
+            logger.debug("当前暂无代理商该状态下的订单信息");
+        } else {
+            logger.debug("获取代理商该状态的订单数据异常");
+        }
+        //查询顾客订单中该状态的所有有效订单信息
+        condition.clear();
+        switch (status) {
+            case "PAYED":
+                List<Integer> statusList = new ArrayList<>(Arrays.asList(OrderItemStatus.PAYED.getCode()));
+                condition.put("status", statusList);
+                condition.put("blockFlag", false);
+                break;
+        }
+        fetchResponse = orderService.fetchCustomerOrder(condition);
+        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            List<CustomerOrder> list = (List<CustomerOrder>) fetchResponse.getData();
+            for (CustomerOrder item : list) {
+                Goods4Customer goods = item.getGoods();
+                Express4Customer express = new Express4Customer(PlatformConfig.getValue("sender_name"), PlatformConfig.getValue("sender_phone"), PlatformConfig.getValue("sender_address"), item.getReceiverName(), item.getReceiverPhone(), item.getReceiverAddress(), goods.getName());
+                express.setLinkId(item.getOrderId());
+                express.setOrder(item);
+                express.setGoodsQuantity(item.getQuantity());
+            }
+        } else if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_NULL) {
+            logger.debug("当前暂无顾客该状态下的订单信息");
+        } else {
+            logger.debug("获取顾客该状态的订单数据异常");
+        }
+        response.setContentType("application/x-download;charset=utf-8");
+        try {
+            response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode("快递单.xls", "utf-8"));
+        } catch (UnsupportedEncodingException e) {
+            logger.error(e.getMessage());
+        }
+        OutputStream os = response.getOutputStream();
+        for (int row = 3, i = 0; i < expresses.size(); i++, row++) {
+            Express express = expresses.get(i);
+            Sheet sheet = workbook.getSheetAt(0);
+            Row current = sheet.createRow(row);
+            Cell senderName = current.createCell(2);
+            senderName.setCellValue(PlatformConfig.getValue("sender_name"));
+            Cell senderPhone = current.createCell(3);
+            senderPhone.setCellValue(PlatformConfig.getValue("sender_phone"));
+            Cell senderAddress = current.createCell(7);
+            senderAddress.setCellValue(PlatformConfig.getValue("sender_address"));
+            Cell receiverName = current.createCell(8);
+            receiverName.setCellValue(expresses.get(i).getReceiverName());
+            Cell receiverPhone = current.createCell(9);
+            receiverPhone.setCellValue(express.getReceiverPhone());
+            Cell receiverAddress = current.createCell(13);
+            receiverAddress.setCellValue(express.getReceiverAddress());
+            Cell goods = current.createCell(14);
+            goods.setCellValue(express.getGoodsName());
+            Cell description = current.createCell(22);
+            StringBuffer descriptionContent = new StringBuffer();
+            descriptionContent.append(express.getGoodsQuantity()).append("盒");
+            if (!StringUtils.isEmpty(express.getDescription())) {
+                descriptionContent.append(", ").append(express.getDescription());
+            }
+            description.setCellValue(descriptionContent.toString());
+            Cell orderNo = current.createCell(37);
+            if (expresses.get(i).getLinkId().startsWith("ORI")) {
+                Express4Agent ea = (Express4Agent) express;
+                orderNo.setCellValue(ea.getItem().getOrderItemId());
+            } else {
+                Express4Customer ec = (Express4Customer) express;
+                orderNo.setCellValue(ec.getOrder().getOrderId());
+            }
+
+        }
+        workbook.write(os);
+        os.flush();
+        os.close();
+        return "";
+    }
+
     @RequestMapping(method = RequestMethod.GET, value = "/downloadOrderExcel")
     public String downloadOrderExcel(HttpServletRequest request, HttpServletResponse response) throws IOException, RowsExceededException, WriteException {
         Map<String, Object> condition = new HashMap<>();
         List<Integer> status = new ArrayList<>();
         status.add(2);
         condition.put("status", status);
-        List<Order> orderList = (List<Order>) orderService
-                .fetchOrder(condition).getData();
+        List<Order> orderList = (List<Order>) orderService.fetchOrder(condition).getData();
 
         condition.clear();
         status.clear();
         status.add(1);
         condition.put("status", status);
-        List<CustomerOrder> customerOrderList = (List<CustomerOrder>) orderService
-                .fetchCustomerOrder(condition).getData();
+        List<CustomerOrder> customerOrderList = (List<CustomerOrder>) orderService.fetchCustomerOrder(condition).getData();
         response.reset();
         response.setContentType("application/vnd.ms-excel");
         response.setCharacterEncoding("utf-8");
@@ -1369,20 +1446,20 @@ public class OrderController {
             condition.clear();
             condition.put("customerId", orderItem.getCustomer().getCustomerId());
             ResultData fetchCustomerResponse = customerService.fetchCustomer(condition);
-            if(fetchCustomerResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
-            	result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            if (fetchCustomerResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+                result.setResponseCode(ResponseCode.RESPONSE_ERROR);
                 result.setDescription("发货客户信息获取失败");
                 return result;
             }
-            Customer customer = ((List<Customer>)fetchCustomerResponse.getData()).get(0);
+            Customer customer = ((List<Customer>) fetchCustomerResponse.getData()).get(0);
             Express4Agent express = new Express4Agent(expressNo, PlatformConfig.getValue("sender_name"),
                     PlatformConfig.getValue("sender_phone"),
                     PlatformConfig.getValue("sender_address"), customer.getName(), customer.getPhone().getPhone(), orderItem.getReceiveAddress(), orderItem.getGoods().getName());
             orderItem.setStatus(OrderItemStatus.SHIPPED);
             express.setItem(orderItem);
             ResultData createExpressResponse = expressService.createExpress(express);
-            if(createExpressResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
-            	result.setResponseCode(createExpressResponse.getResponseCode());
+            if (createExpressResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+                result.setResponseCode(createExpressResponse.getResponseCode());
                 result.setDescription("创建快递单失败");
                 return result;
             }
@@ -1417,7 +1494,7 @@ public class OrderController {
                     return result;
                 }
             } else {
-            	order.setStatus(OrderStatus.PATIAL_SHIPMENT);
+                order.setStatus(OrderStatus.PATIAL_SHIPMENT);
                 ResultData updateOrderResponse = orderService.received(order);
                 if (updateOrderResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
                     result.setResponseCode(updateOrderResponse.getResponseCode());
@@ -1445,8 +1522,8 @@ public class OrderController {
             customerOrder.setStatus(OrderItemStatus.SHIPPED);
             express.setOrder(customerOrder);
             ResultData createExpressResponse = expressService.createExpress(express);
-            if(createExpressResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
-            	result.setResponseCode(createExpressResponse.getResponseCode());
+            if (createExpressResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+                result.setResponseCode(createExpressResponse.getResponseCode());
                 result.setDescription("创建快递单失败");
                 return result;
             }
@@ -1486,10 +1563,10 @@ public class OrderController {
                 result.setDescription("记录操作日志失败");
                 return result;
             }
-        } 
+        }
         return result;
     }
-    
+
     /**
      * 确认签收
      *
@@ -1905,52 +1982,60 @@ public class OrderController {
         view.setViewName("/backend/order/summary");
         return view;
     }
-    
+
     /**
      * 查询订单交易笔数,item粒度
      */
-    @RequestMapping(method = RequestMethod.POST, value = "/account")
-    public ResultData orderItemSumAccount(HttpServletRequest request, String status){
-    	ResultData result = new ResultData();
-    	Subject subject = SecurityUtils.getSubject();
-     	User user = (User) subject.getPrincipal();
+    @RequestMapping(method = RequestMethod.POST, value = "/count")
+    public ResultData orderItemSumCount(String status) {
+        ResultData result = new ResultData();
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
         if (user == null) {
-             result.setResponseCode(ResponseCode.RESPONSE_ERROR);
-             result.setDescription("未登录");
-             return result;
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription("未登录");
+            return result;
         }
-    	Map<String, Object> condition = new HashMap<String, Object>();
-    	if(user.getAgent() != null){
-    		condition.put("agentId", user.getAgent().getAgentId());
-    	}
-    	if(!StringUtils.isEmpty(status)){
-    		switch(status){
-    		case "NOT_PAYED":
-    			condition.put("status",0);break;
-    		case "PAYED":
-    			condition.put("status",1);break;
-    		case "SHIPPED":
-    			condition.put("status",2);break;
-    		case "RECEIVED":
-    			condition.put("status",3);break;
-    		case "EXCHANGED":
-    			condition.put("status",4);break;
-    		case "REFUNDING":
-    			condition.put("status",5);break;
-    		case "REFUNDED":
-    			condition.put("status",6);break;
-    		default:break;
-    		}
-    	}
-    	ResultData fetchOrderItemSumResponse = orderService.fetchOrderItemSum(condition);
-    	if(fetchOrderItemSumResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
-    		result.setResponseCode(fetchOrderItemSumResponse.getResponseCode());
-    		result.setDescription("获取订单数据失败");
-    		return result;
-    	}
-    	List<OrderItemSum> orderItemSums = (List<OrderItemSum>) fetchOrderItemSumResponse.getData();
-    	result.setData(orderItemSums.size());
-    	return result;
+        Map<String, Object> condition = new HashMap<>();
+        if (user.getAgent() != null) {
+            condition.put("agentId", user.getAgent().getAgentId());
+        }
+        if (!StringUtils.isEmpty(status)) {
+            switch (status) {
+                case "NOT_PAYED":
+                    condition.put("status", OrderItemStatus.NOT_PAYED.getCode());
+                    break;
+                case "PAYED":
+                    condition.put("status", OrderItemStatus.PAYED.getCode());
+                    break;
+                case "SHIPPED":
+                    condition.put("status", OrderItemStatus.SHIPPED.getCode());
+                    break;
+                case "RECEIVED":
+                    condition.put("status", OrderItemStatus.RECEIVED.getCode());
+                    break;
+                case "EXCHANGED":
+                    condition.put("status", OrderItemStatus.EXCHANGED.getCode());
+                    break;
+                case "REFUNDING":
+                    condition.put("status", OrderItemStatus.REFUNDING.getCode());
+                    break;
+                case "REFUNDED":
+                    condition.put("status", OrderItemStatus.REFUNDED.getCode());
+                    break;
+                default:
+                    break;
+            }
+        }
+        ResultData fetchOrderItemSumResponse = orderService.fetchOrderItemSum(condition);
+        if (fetchOrderItemSumResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            result.setResponseCode(fetchOrderItemSumResponse.getResponseCode());
+            result.setDescription("获取订单数据失败");
+            return result;
+        }
+        List<OrderItemSum> orderItemSums = (List<OrderItemSum>) fetchOrderItemSumResponse.getData();
+        result.setData(orderItemSums.size());
+        return result;
     }
 }
 

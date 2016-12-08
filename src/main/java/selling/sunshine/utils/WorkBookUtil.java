@@ -1,6 +1,8 @@
 package selling.sunshine.utils;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.opc.OPCPackage;
+import org.apache.poi.poifs.filesystem.NPOIFSFileSystem;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -46,6 +48,25 @@ public class WorkBookUtil {
         try {
             OPCPackage pkg = OPCPackage.open(file);
             workbook = new XSSFWorkbook(pkg);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        return workbook;
+    }
+
+    public static Workbook getExpressTemplate() {
+        Workbook workbook = null;
+        String path = WorkBookUtil.class.getResource("/").getPath();
+        int index = path.lastIndexOf("/WEB-INF/classes/");
+        String parent = path.substring(0, index);
+        File file = new File(parent + PlatformConfig.getValue("express_template"));
+        if (!file.exists()) {
+            logger.error("发货单模板文件不存在");
+            return null;
+        }
+        try {
+            NPOIFSFileSystem fs = new NPOIFSFileSystem(file);
+            workbook = new HSSFWorkbook(fs.getRoot(), true);
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
