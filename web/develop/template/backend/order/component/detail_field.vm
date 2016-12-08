@@ -142,11 +142,20 @@
         #if(${order.status} == 'NOT_PAYED' && ${order.orderItemId})
             <button class="ui green button" id="pay_btn">确认付款</button>
         #end
+        #if(${order.status} == 'PAYED')
+            <button class="ui green button" id="express_btn">设置单号</button>
+        #end
         #if(${order.status} == 'PAYED' && ${order.orderId})
             <button class="ui green button" id="cancel_btn">取消订单</button>
         #end
         #if(${order.status} == 'PAYED' || ${order.status} == 'SHIPPED')
-            <button class="ui green button" id="receive_btn">确认签收</button>
+            <button class="ui green button" id="receive_btn">
+                #if(${order.status} == 'PAYED')
+                    用户自提
+                #else
+                    确认签收
+                #end
+            </button>
         #end
         #if(${order.status} == 'RECEIVED')
             <button class="ui green button">退换订单</button>
@@ -165,6 +174,17 @@
     $("#cancel_btn").on('click', function () {
         reimburse_inform();
         $("#reimburse_modal").modal('show');
+    });
+</script>
+#end
+#if(${order.status} == 'PAYED')
+    #parse("/backend/order/component/express_order_modal.vm")
+#end
+#if(${order.status} == 'PAYED')
+<script>
+    $("#express_btn").on('click', function () {
+        express_inform();
+        $("#express_modal").modal('show');
     });
 </script>
 #end
@@ -208,14 +228,21 @@
                     $("#deliver_detail").hide();
                 } else {
                     var content = eval('(' + result.data + ')');
+                    var list = $("<ol class='ui list'></ol>");
+                    if (result.description != null && result.description != '') {
+                        var item = "<li value='*'>物流单号: " + result.description + "</li>";
+                        list.append(item);
+                    }
                     if (content.data == null || content.data[0] == null || content.data[0].traces == null) {
-                        $("#deliver_detail").hide();
+                        if (list.length <= 0) {
+                            $("#deliver_detail").hide();
+                        } else {
+                            $("#deliver_detail").append(list);
+                            $("#deliver_detail").show();
+                        }
                         return;
                     }
                     var traces = content.data[0].traces;
-                    var list = $("<ol class='ui list'></ol>");
-                    var item = "<li value='*'>物流单号: " + result.description + "</li>";
-                    list.append(item);
                     for (var i = 0; i < traces.length; i++) {
                         var item = traces[i];
                         var item_component = "<li value='*'>[" + item.scanDate + "] " + item.desc + "</li>";
@@ -228,22 +255,4 @@
             });
         }
     });
-
-
-    $("#cancel_btn").on('click', function () {
-        reimburse_inform();
-        $("#reimburse_modal").modal('show');
-    });
-
-    $("#receive_btn").on('click', function () {
-        receive_inform();
-        $("#receive_modal").modal('show');
-    });
-
-    $("#pay_btn").on('click', function () {
-        pay_inform();
-        $("#pay_modal").modal('show');
-    });
-
-
 </script>

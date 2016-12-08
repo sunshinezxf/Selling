@@ -246,7 +246,7 @@ public class CommodityController {
     @RequestMapping(method = RequestMethod.GET, value = "/overview")
     public ModelAndView overview() {
         ModelAndView view = new ModelAndView();
-        view.setViewName("/backend/goods/overview");
+        view.setViewName("/backend/goods/list");
         return view;
     }
 
@@ -657,6 +657,13 @@ public class CommodityController {
 
         resultData.setResponseCode(ResponseCode.RESPONSE_NULL);
         return resultData;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/summary")
+    public ModelAndView summary() {
+        ModelAndView view = new ModelAndView();
+        view.setViewName("/backend/goods/sales");
+        return view;
     }
 
 }

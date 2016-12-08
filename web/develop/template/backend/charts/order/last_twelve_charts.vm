@@ -10,20 +10,33 @@
             var month_list = [];
             var volume_list = [];
 
-            for (var i = 0; i < data.length; i++) {
-                month_list.push(data[i].time);
-                volume_list.push(data[i].quantity);
+            var all = data.ALL;
+            for (var i = 0; i < all.length; i++) {
+                month_list.push(all[i].time);
+                volume_list.push(all[i].quantity);
+            }
+
+            var ordinary_volume_list = [];
+            var ordinary = data.ORDINARY;
+            for (var i = 0; i < ordinary.length; i++) {
+                ordinary_volume_list.push(ordinary[i].quantity);
+            }
+
+            var gift_volume_list = [];
+            var gift = data.GIFT;
+            for (var i = 0; i < gift.length; i++) {
+                gift_volume_list.push(gift[i].quantity);
             }
 
             option = {
                 title: {
-                    text: '近一年订单笔数分析(含购买和赠送订单)'
+                    text: '近一年订单笔数分析'
                 },
                 tooltip: {
                     trigger: 'axis'
                 },
                 legend: {
-                    data: ['订单笔数']
+                    data: ['订单笔数', '购买笔数', '赠送笔数']
                 },
                 calculable: true,
                 xAxis: [
@@ -45,18 +58,17 @@
                     {
                         name: '订单笔数',
                         type: 'line',
-                        data: volume_list,
-                        markPoint: {
-                            data: [
-                                {type: 'max', name: '最大订单笔数'},
-                                {type: 'min', name: '最小订单笔数'}
-                            ]
-                        },
-                        markLine: {
-                            data: [
-                                {type: 'average', name: '平均值'}
-                            ]
-                        }
+                        data: volume_list
+                    },
+                    {
+                        name: '购买笔数',
+                        type: 'line',
+                        data: ordinary_volume_list
+                    },
+                    {
+                        name: '赠送笔数',
+                        type: 'line',
+                        data: gift_volume_list
                     }
                 ]
             };

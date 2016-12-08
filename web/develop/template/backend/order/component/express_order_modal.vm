@@ -1,0 +1,109 @@
+<div class="ui modal" id="express_modal" style="display: none;">
+    <i class="close icon"></i>
+
+    <div class="header">设置单号</div>
+    <div class="image content">
+        <div class="ui form" id="express_info" style="display: none; width: 100%;">
+            <div class="field">
+                <input type="text" placeholder="请输入该订单的快递单号" id="express_no">
+            </div>
+        </div>
+        <div class="ui icon message" id="express_process" style="display: none;">
+            <i class="notched circle loading icon"></i>
+
+            <div class="content">
+                <div class="header">
+                    快递单号设置中
+                </div>
+                <p>系统正在为订单设置快递单号</p>
+            </div>
+        </div>
+        <div class="ui icon message" id="express_success" style="display:none;">
+            <i class="checkmark icon"></i>
+
+            <div class="content">
+                <div class="header">
+                    操作成功
+                </div>
+                <p>快递单号设置成功，该订单状态更新为已发货</p>
+            </div>
+        </div>
+        <div class="ui icon message" id="express_failure" style="display: none;">
+            <i class="remove icon"></i>
+
+            <div class="content">
+                <div class="header">
+                    操作失败
+                </div>
+                <p>快递单号设置失败，请重新尝试</p>
+            </div>
+        </div>
+    </div>
+    <div class="actions">
+        <div class="ui green button" id="express_confirm" style="display: none;">确认</div>
+        <div class="ui button" id="express_cancel" style="display: none;">关闭</div>
+        <div class="ui green button" id="express_complete" style="display: none;">完成</div>
+    </div>
+</div>
+<script>
+    $("#express_modal").modal('hide');
+
+    $("#express_cancel").on('click', function () {
+        $("#express_modal").modal('hide');
+        $("#express_info").hide();
+        $("#express_process").hide();
+        $("#express_success").hide();
+        $("#express_failure").hide();
+    });
+
+    $("#express_confirm").on('click', function () {
+        express_process();
+        express();
+    });
+
+    function express() {
+        var express_url = "${path.concat('/order/shipment')}";
+        var expressNo = $("#express_no").val();
+        $.post(express_url, {'orderId': order_id, 'expressNo': expressNo}, function (result) {
+            $("#express_process").hide();
+            if (result.responseCode == "RESPONSE_OK") {
+                express_success();
+            } else {
+                console.debug(result.description);
+                express_failure();
+            }
+        });
+    }
+
+    function express_inform() {
+        $("#express_info").show();
+        $("#express_process").hide();
+        $("#express_success").hide();
+        $("#express_failure").hide();
+        $("#express_confirm").show();
+        $("#express_cancel").show();
+    }
+
+    function express_process() {
+        $("#express_info").hide();
+        $("#express_process").show();
+        $("#express_confirm").hide();
+        $("#express_cancel").hide();
+    }
+
+    function express_success() {
+        $("#express_process").hide();
+        $("#express_success").show();
+        $("#express_complete").show();
+    }
+
+    function express_failure() {
+        $("#express_process").hide();
+        $("#express_failure").show();
+        $("#express_cancel").show();
+    }
+
+    $("#express_complete").on('click', function () {
+        window.location.reload();
+    })
+</script>

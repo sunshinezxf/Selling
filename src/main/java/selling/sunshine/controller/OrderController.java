@@ -1341,7 +1341,7 @@ public class OrderController {
      * @param orderId
      * @return
      */
-    @RequestMapping(method = RequestMethod.POST, value = "/shipped")
+    @RequestMapping(method = RequestMethod.POST, value = "/shipment")
     public ResultData shipped(HttpServletRequest request, String orderId, String expressNo) {
         ResultData result = new ResultData();
         Subject subject = SecurityUtils.getSubject();
