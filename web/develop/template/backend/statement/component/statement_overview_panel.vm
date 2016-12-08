@@ -41,7 +41,7 @@
         $("#events_segment").hide();
         $.get(indent.url,function (result) {
             if (result.responseCode == "RESPONSE_OK") {
-                if(typeof result.data.start!="undefined"&&result.data.start!=null){
+                if(result.data!=null){
                     starttime=result.data.start;
                 }
             } else {
@@ -78,7 +78,7 @@
                     if(obj.name==itemid){
                         $.get(obj.url,function (result) {
                             if (result.responseCode == "RESPONSE_OK") {
-                                if(typeof result.data.start!="undefined"&&result.data.start!=null){
+                                if(result.data!=null){
                                     starttime=result.data.start;
                                 }
                             } else {

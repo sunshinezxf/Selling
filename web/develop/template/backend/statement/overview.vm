@@ -5,6 +5,7 @@
     #parse("/backend/initialization/init.vm")
     #parse("/backend/initialization/init_datetimepicker.vm")
     <link rel="stylesheet" href="${path.concat('/material/css/backend/statement.css')}">
+    <script src="${path.concat('/material/js/backend/date.js')}"></script>
     <title>报表专区</title>
 </head>
 <body id="dashboard" class="started pushable" ontouchstart>
