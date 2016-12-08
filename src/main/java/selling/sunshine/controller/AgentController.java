@@ -47,6 +47,7 @@ import selling.sunshine.model.BackOperationLog;
 import selling.sunshine.model.OrderPool;
 import selling.sunshine.model.ShipConfig;
 import selling.sunshine.model.cashback.CashBackRecord;
+import selling.sunshine.model.cashback.support.CashBackLevel;
 import selling.sunshine.model.gift.GiftApply;
 import selling.sunshine.model.gift.GiftConfig;
 import selling.sunshine.model.sum.Volume;
@@ -54,6 +55,7 @@ import selling.sunshine.model.sum.VolumeTotal;
 import selling.sunshine.service.*;
 import selling.sunshine.utils.*;
 import selling.sunshine.vo.cashback.CashBack;
+import selling.sunshine.vo.cashback.CashBack4AgentPerMonth;
 import selling.sunshine.vo.order.OrderItemSum;
 import selling.sunshine.vo.order.OrderSumOverview;
 
@@ -2831,6 +2833,8 @@ public class AgentController {
 			}
 		});
 		for (CashBack cashBack : cashBackData) {
+			String[] values=cashBack.getMonth().split("-");
+			cashBack.setMonth(values[0]+"年"+values[1]+"月返现");
 			if (cashBacks.containsKey(cashBack.getMonth())) {
 				cashBacks.get(cashBack.getMonth()).add(cashBack);
 			} else {
@@ -2843,5 +2847,53 @@ public class AgentController {
 		view.setViewName("/backend/agent/cashback");
 		return view;
 	}
+    
+	@RequestMapping(method = RequestMethod.GET, value = "/cashback/detail/{agentId}/{year}/{month}")
+	public ResultData cashback(@PathVariable("agentId") String agentId,@PathVariable("year") String year,@PathVariable("month") String month) {
+		ResultData result=new ResultData();
+		Map<String, List<CashBackRecord>> map=new HashMap<>();
+		Map<String, Object> condition = new HashMap<>();
+		int mon=Integer.parseInt(month)+1;
+		if (mon<10) {
+			month="0"+mon;
+		}else {
+			month=String.valueOf(mon);
+		}
+		condition.clear();
+		// 获取自销的返现记录详情
+		condition.put("agentId", agentId);
+		condition.put("createAt", year+"-"+month+"-" + "%");
+		condition.put("level", CashBackLevel.SELF.getCode());
+		ResultData response = refundService.fetchRefundRecord(condition);
+		if (response.getResponseCode() != ResponseCode.RESPONSE_OK) {
+			result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+			return result;
+		}
+		List<CashBackRecord> self = ((List<CashBackRecord>) response.getData());
+		map.put("self", self);
+		condition.clear();
+		// 获取所有的直接拓展代理的返现详情
+		condition.put("agentId", agentId);
+		condition.put("createAt", year+"-"+month+"-" + "%");
+		condition.put("level", CashBackLevel.DIRECT.getCode());
+		response = refundService.fetchRefundRecord(condition);
+		if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+			List<CashBackRecord> direct = (List<CashBackRecord>) response.getData();
+			map.put("direct", direct);
+		}
+		condition.clear();
+		// 获取所有的间接拓展代理的返现详情
+		condition.put("agentId", agentId);
+		condition.put("createAt", year+"-"+month+"-" + "%");
+		condition.put("level", CashBackLevel.INDIRECT.getCode());
+		response = refundService.fetchRefundRecord(condition);
+		if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+			List<CashBackRecord> indirect = (List<CashBackRecord>) response.getData();
+			map.put("indirect", indirect);
+		}
+		result.setData(map);
+		return result;
+	}
+
 
 }
