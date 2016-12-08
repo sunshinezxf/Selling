@@ -24,8 +24,8 @@
     <div class="item">
         <a class="title"><i class="dropdown icon"></i>商品管理</a>
         <div class="content menu">
-            <a class="item" href="${path.concat('/commodity/')}" >商品销售</a>
-            <a class="item" href="${path.concat('/commodity/')}" >商品列表</a>
+            <a class="item" href="${path.concat('/commodity/summary')}" >商品销售</a>
+            <a class="item" href="${path.concat('/commodity/overview')}" >商品列表</a>
         </div>
     </div>
     #end
@@ -54,7 +54,7 @@
     </div>
     #end
     #if($role == "admin"|| $role == "finance")
-    <a class="item" href="${path.concat('/')}">报表专区</a>
+    <a class="item" href="${path.concat('/statement/download')}">报表专区</a>
     #end
     #if($role == "admin")
     <div class="item">
@@ -65,6 +65,6 @@
     </div>
     #end
     #if($role == "admin")
-    <a class="item">日志查询</a>
+    <a class="item" href="${path.concat('/log/overview')}">日志查询</a>
     #end
 </div>

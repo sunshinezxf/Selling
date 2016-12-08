@@ -1,0 +1,69 @@
+<div class="ui stackable padded grid" name="log_area">
+    <div class="row">
+        <h1 class="ui header">
+            <i class="home icon"></i>
+            <div class="content">日志查询</div>
+        </h1>
+    </div>
+    <div class="row">
+        <div class="column">
+            <div class="ui segment">
+                #parse("/backend/common/datetimepicker.vm")
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="column">
+            <div class="wrapper">
+                <hr class="line-left">
+                <hr class="line-right">
+                <div class="main-container">
+                    <div class="main-content">
+                        <h1 class="title">系统日志</h1>
+                        <div class="year">
+                            <h2><a href="#">2016年<i></i></a></h2>
+                            <div class="list">
+                                <ul>
+                                    #foreach( $log in ${logs} )
+                                        <li class="cls">
+                                            <p class="date">$!date.format('MM-dd HH:mm:ss ',$!{log.createAt})</p>
+                                            <div class="intro">
+                                                <p class="event">${log.operationEvent}</p>
+                                                <div class="more">
+                                                    <p class="account">账号：  ${log.adminInfo}</p>
+                                                    #if(${log.ip})
+                                                        <p class="ipInfo">ip地址：${log.ip}</p>
+                                                    #end
+                                                </div>
+                                            </div>
+                                        </li>
+                                    #end
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $(".flatpickr").flatpickr({
+            enableTime: true
+        });
+
+        var length=$('.cls').width()-$('.date').width();
+        $('.intro').css('width',length-1);
+    });
+
+    $(".main .year .list").each(function (e, target) {
+        var $target=  $(target);
+        var $ul = $target.find("ul");
+        $target.height($ul.outerHeight()), $ul.css("position", "absolute");
+    });
+    $(".main .year>h2>a").click(function (e) {
+        e.preventDefault();
+        $(this).parents(".year").toggleClass("log_close");
+    });
+</script>

@@ -1,0 +1,15 @@
+<div class="ui stackable padded grid" name="log_area">
+    <div class="row">
+        <h1 class="ui header">
+            <i class="home icon"></i>
+            <div class="content">日志查询</div>
+        </h1>
+    </div>
+    <div class="row">
+        <div class="column">
+            <div class="ui center aligned segment">
+                <h3>暂无日志</h3>
+            </div>
+        </div>
+    </div>
+</div>

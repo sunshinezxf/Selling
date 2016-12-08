@@ -34,8 +34,8 @@
             <a class="title"><i class="teal gift icon left"></i><i class="dropdown icon"></i>商品管理</a>
 
             <div class="content menu">
-                <a id="goods_sales" class="item" href="${path.concat('/commodity/')}">商品销售</a>
-                <a id="goods_list" class="item" href="${path.concat('/commodity/')}">商品列表</a>
+                <a id="goods_sales" class="item" href="${path.concat('/commodity/summary')}">商品销售</a>
+                <a id="goods_list" class="item" href="${path.concat('/commodity/overview')}">商品列表</a>
             </div>
         </div>
     #end
@@ -67,7 +67,7 @@
         </div>
     #end
     #if($role == "admin"|| $role == "finance")
-        <a id="statement_area" class="item" href="${path.concat('/')}">
+        <a id="statement_area" class="item" href="${path.concat('/statement/download')}">
             <i class="teal line chart icon left"></i>报表专区
         </a>
     #end
@@ -81,7 +81,7 @@
         </div>
     #end
     #if($role == "admin")
-        <a class="item">
+        <a id="log_area" class="item" href="${path.concat('/log/overview')}">
             <i class="teal history icon left"></i>日志查询
         </a>
     #end
