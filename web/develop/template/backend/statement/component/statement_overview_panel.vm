@@ -272,16 +272,9 @@
                     if(obj.name==itemid){
                         var start=$("#start_time").val();
                         var end=$("#end_time").val();
-                        var param = {
-                            start: start,
-                            end: end
-                        };
-                        $.post(obj.url,param,function (result) {
-                            //直接下载
-                        })
+                        window.location.href=obj.url+ "?start=" + start+"&end="+end;
                         start_flatpickr.clear();
                         end_flatpickr.clear();
-//                        window.location.reload();
                     }
                 });
             }
