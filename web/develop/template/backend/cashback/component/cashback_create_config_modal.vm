@@ -19,7 +19,8 @@
                                                                                         </div>
 					</div>
 				</div>
-				<div class="field" id="set_month" style="margin-left:8em">
+				<div class="inline field" id="set_month">
+					<label>适用月数选择:</label>
 					<span>前</span> <select id="apply_months" class="ui search dropdown" name="applyMonths">
 						<option value="">请选择月数</option>
 						<option value="1">1</option>
