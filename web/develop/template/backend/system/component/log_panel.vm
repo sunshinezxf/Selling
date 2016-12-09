@@ -91,9 +91,9 @@
                     }
                     pageStart+=pageLength;
                     if(pageStart<total){
-                        node+="<div class='row'><div class='column'><button class='ui right labeled icon button' id='load'><i class='right arrow icon'></i>加载更多</button></div></div>";
+                        node+="<button class='ui right labeled icon button' id='load'><i class='right arrow icon'></i>加载更多</button>";
                     }
-                    $('.ui.stackable.grid').append(node);
+                    $('.main-container').append(node);
                     $("#load").on('click',load);
                 }
             }
