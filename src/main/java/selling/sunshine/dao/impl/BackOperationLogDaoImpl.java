@@ -27,7 +27,7 @@ public class BackOperationLogDaoImpl extends BaseDao implements BackOperationLog
         backOperationLog.setLogId(IDGenerator.generate("BOL"));
         synchronized (lock) {
             try {
-                sqlSession.insert("selling.backoprationlog.insert", backOperationLog);
+                sqlSession.insert("selling.backoperationlog.insert", backOperationLog);
                 result.setData(backOperationLog);
             } catch (Exception e) {
                 logger.error(e.getMessage());
@@ -44,7 +44,7 @@ public class BackOperationLogDaoImpl extends BaseDao implements BackOperationLog
         ResultData result = new ResultData();
         condition = handle(condition);
         try {
-            List<BackOperationLog> list = sqlSession.selectList("selling.backoprationlog.query", condition);
+            List<BackOperationLog> list = sqlSession.selectList("selling.backoperationlog.query", condition);
             result.setData(list);
         } catch (Exception e) {
             logger.error(e.getMessage());

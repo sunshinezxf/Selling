@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="selling.backoprationlog">
+<mapper namespace="selling.backoperationlog">
     <resultMap id="backOperationLogVo" type="selling.sunshine.model.BackOperationLog">
         <result property="logId" column="log_id"></result>
         <result property="adminInfo" column="admin_info"></result>
