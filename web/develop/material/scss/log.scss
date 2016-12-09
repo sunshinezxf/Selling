@@ -1,0 +1,224 @@
+p, ul, li, dl, dt, dd, .title, table, h2 {
+    padding: 0;
+    margin: 0;
+}
+
+li {
+    list-style-type: none;
+}
+
+ol, ul {
+    list-style: none;
+}
+
+.l {
+    float: left;
+}
+
+.r {
+    float: right;
+}
+
+.c {
+    clear: both;
+}
+
+.o {
+    overflow: hidden;
+}
+
+.left {
+    float: left;
+}
+
+.right {
+    float: right;
+}
+
+.clearfix {
+    *zoom: 1;
+    &:before{
+        display: table;
+        content: "";
+    }
+    &:after{
+        display: table;
+        content: "";
+        clear: both;
+    }
+}
+
+ul, li {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+    &:hover{
+        text-decoration: none;
+        cursor: point;
+    }
+}
+
+hr {
+    height: 0;
+    border-left: none;
+    border-right: 0;
+    border-top: 0.0625em dashed #2d2f34;
+    border-bottom: 0.0625em dashed #474954;
+}
+
+.content {
+    width: 100%;
+}
+
+.main-content{
+    position:relative;
+    width: 100%;
+}
+
+
+.content {
+    .wrapper{
+        position:relative;
+        width: 100%;
+        &:first-child{
+            .main-container{
+                .year.log_close{
+                    h2{
+                        i{
+                            transform: rotate(-90deg);
+                            -webkit-transform: rotate(-90deg);
+                            -moz-transform: rotate(-90deg);
+                            -ms-transform: rotate(-90deg);
+                            -o-transform: rotate(-90deg)
+                        }
+                    }
+                    .list {
+                        opacity: 0;
+                        height: 0 !important;
+                    }
+                }
+            }
+        }
+    }
+    .line-left{
+        position:absolute;
+        top:0;
+        left:0;
+        width: 3%;
+    }
+    .line-right {
+        position:absolute;
+        top:0;
+        right:0;
+        width: 5%;
+    }
+    .main-container {
+        display: block;
+        position:absolute;
+        top:0;
+        left:4%;
+        width: 90%;
+        background: url("../../images/log/line-bg.png") repeat-y 7.7em;
+        .title {
+            position: absolute;
+            line-height: 2.2em;
+            padding-left: 1.9em;
+            left:4.8em;
+            top: 0;
+            color: #495678;
+            font-size: 1.4em;
+            background: url("../../images/log/clock.png") no-repeat left top;
+            background-size:1.5em 1.5em;
+        }
+        .year {
+            position: relative;
+            width: 100%;
+            h2 {
+                font-size: 1.4em;
+                line-height: 2.2em;
+                text-align: left;
+                a{
+                    color: #495678;
+                }
+                i{
+                    display: block;
+                    position: relative;
+                    height: 0;
+                    width: 0;
+                    left: 3.5em;
+                    top: -1.2em;
+                    border-width: 0.375em;
+                    border-style: solid;
+                    border-color: #495678 transparent transparent transparent;
+                    -webkit-transition: .5s;
+                    -moz-transition: .5s;
+                    -ms-transition: .5s;
+                    -o-transition: .5s;
+                    transition: .5s;
+                    -webkit-transform-origin: 0.375em 0.1875em;
+                    -moz-transform-origin: 0.375em 0.1875em;
+                    -ms-transform-origin: 0.375em 0.1875em;
+                    -o-transform-origin: 0.375em 0.1875em;
+                    transform-origin: 0.375em 0.1875em;
+                }
+            }
+            .list{
+                margin: 0.625em 0;
+                position: relative;
+                overflow: hidden;
+                -webkit-transition: height 1s cubic-bezier(0.025, 0.025, 0.000, 1.115), opacity 1s;
+                -moz-transition: height 1s cubic-bezier(0.025, 0.025, 0.000, 1.115), opacity 1s;
+                -ms-transition: height 1s cubic-bezier(0.025, 0.025, 0.000, 1.115), opacity 1s;
+                -o-transition: height 1s cubic-bezier(0.025, 0.025, 0.000, 1.115), opacity 1s;
+                transition: height 1s cubic-bezier(0.025, 0.025, 0.000, 1.115), opacity 1s;
+                ul{
+                    top: 0;
+                    width:100%;
+                    li{
+                        background: url("../../images/log/circle.png") no-repeat 7.1em 2em;
+                        background-size:1.3em 1.3em;
+                        padding: 1.7em 0;
+                        color: #a1a4b8;
+                        .date{
+                            font-size: 1.1em;
+                            line-height: 1.8em;
+                            color: #0080c0;
+                            float:left;
+                            width:5.5em;
+                            text-align:right;
+                            vertical-align:top;
+                        }
+                        .intro{
+                            float:left;
+                            padding-left:3.2em;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.cls {
+    zoom: 1;
+    &:after{
+         content: ".";
+         display: block;
+         height: 0;
+         clear: both;
+         visibility: hidden;
+    }
+}
+
+.event{
+    font-size: 1.1em;
+    line-height: 1.8em;
+    vertical-align:top;
+    color: #0080c0;
+}
+
+.more {
+    line-height: 2em;
+}

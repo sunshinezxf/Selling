@@ -4,6 +4,7 @@
 <head>
     #parse("/backend/initialization/init.vm")
     #parse("/backend/initialization/init_datetimepicker.vm")
+    <link rel="stylesheet" href="${path.concat('/material/css/backend/log.css')}"/>
     <title>日志查询</title>
 </head>
 <body id="dashboard" class="started pushable" ontouchstart>

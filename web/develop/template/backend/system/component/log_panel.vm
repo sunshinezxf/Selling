@@ -14,31 +14,33 @@
     </div>
     <div class="row">
         <div class="column">
-            <div class="wrapper">
-                <hr class="line-left">
-                <hr class="line-right">
-                <div class="main-container">
-                    <div class="main-content">
-                        <h1 class="title">系统日志</h1>
-                        <div class="year">
-                            <h2><a href="#">2016年<i></i></a></h2>
-                            <div class="list">
-                                <ul>
-                                    #foreach( $log in ${logs} )
-                                        <li class="cls">
-                                            <p class="date">$!date.format('MM-dd HH:mm:ss ',$!{log.createAt})</p>
-                                            <div class="intro">
-                                                <p class="event">${log.operationEvent}</p>
-                                                <div class="more">
-                                                    <p class="account">账号：  ${log.adminInfo}</p>
-                                                    #if(${log.ip})
-                                                        <p class="ipInfo">ip地址：${log.ip}</p>
-                                                    #end
+            <div class="content">
+                <div class="wrapper">
+                    <hr class="line-left">
+                    <hr class="line-right">
+                    <div class="main-container">
+                        <div class="main-content">
+                            <h1 class="title">系统日志</h1>
+                            <div class="year">
+                                <h2><a href="#">2016年<i></i></a></h2>
+                                <div class="list">
+                                    <ul>
+                                        #foreach( $log in ${logs} )
+                                            <li class="cls">
+                                                <p class="date">$!date.format('MM-dd HH:mm:ss ',$!{log.createAt})</p>
+                                                <div class="intro">
+                                                    <p class="event">${log.operationEvent}</p>
+                                                    <div class="more">
+                                                        <p class="account">账号：  ${log.adminInfo}</p>
+                                                        #if(${log.ip})
+                                                            <p class="ipInfo">ip地址：${log.ip}</p>
+                                                        #end
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </li>
-                                    #end
-                                </ul>
+                                            </li>
+                                        #end
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
