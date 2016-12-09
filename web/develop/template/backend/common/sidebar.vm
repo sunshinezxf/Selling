@@ -57,15 +57,15 @@
             </div>
         </div>
     #end
-    #if($role == "admin" || $role == "express")
-        <div class="item">
-            <a class="title"><i class="teal calendar icon left"></i><i class="dropdown icon"></i>活动管理</a>
-
-            <div class="content menu">
-                <a class="item">添加活动</a>
-            </div>
-        </div>
-    #end
+##    #if($role == "admin" || $role == "express")
+##        <div class="item">
+##            <a class="title"><i class="teal calendar icon left"></i><i class="dropdown icon"></i>活动管理</a>
+##
+##            <div class="content menu">
+##                <a class="item">添加活动</a>
+##            </div>
+##        </div>
+##    #end
     #if($role == "admin"|| $role == "finance")
         <a id="statement_area" class="item" href="${path.concat('/statement/download')}">
             <i class="teal line chart icon left"></i>报表专区

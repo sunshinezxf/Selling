@@ -1,70 +1,78 @@
 #set($role = $session.getAttribute("role"))
 <div id="mobileSidebar" class="ui thin left inverted sidebar vertical accordion menu">
     #if($role == "admin" || $role == "express" || $role == "auditor" || $role == "finance")
-    <a href="${path.concat('/dashboard')}" class="item">首页</a>
+        <a href="${path.concat('/dashboard')}" class="item">首页</a>
     #end
     #if($role == "admin" || $role == "auditor")
-    <div class="item">
-        <a class="title"><i class="dropdown icon"></i>代理管理</a>
-        <div class="content menu">
-            <a class="item" href="${path.concat('/agent/check')}">代理审核</a>
-            <a class="item" href="${path.concat('/agent/overview')}">代理概览</a>
+        <div class="item">
+            <a class="title"><i class="dropdown icon"></i>代理管理</a>
+
+            <div class="content menu">
+                <a class="item" href="${path.concat('/agent/overview')}">代理概览</a>
+                <a class="item" href="${path.concat('/agent/check')}">代理审核</a>
+                <a class="item" href="${path.concat('/gift/check/total')}">赠送申请</a>
+            </div>
         </div>
-    </div>
     #end
     #if($role == "admin" || $role == "express")
-    <div class="item">
-        <a class="title"><i class="dropdown icon"></i>订单管理</a>
-        <div class="content menu">
-            <a class="item">代理商订单</a>
+        <div class="item">
+            <a class="title"><i class="dropdown icon"></i>订单管理</a>
+
+            <div class="content menu">
+                <a class="item" href="${path.concat('/order/summary')}">订单概览</a>
+                <a class="item" href="${path.concat('/order/overview')}">订单列表</a>
+            </div>
         </div>
-    </div>
     #end
     #if($role == "admin")
-    <div class="item">
-        <a class="title"><i class="dropdown icon"></i>商品管理</a>
-        <div class="content menu">
-            <a class="item" href="${path.concat('/commodity/summary')}" >商品销售</a>
-            <a class="item" href="${path.concat('/commodity/overview')}" >商品列表</a>
+        <div class="item">
+            <a class="title"><i class="dropdown icon"></i>商品管理</a>
+
+            <div class="content menu">
+                <a class="item" href="${path.concat('/commodity/summary')}">商品销售</a>
+                <a class="item" href="${path.concat('/commodity/overview')}">商品列表</a>
+            </div>
         </div>
-    </div>
     #end
     #if($role == "admin")
-    <div class="item">
-        <a class="title"><i class="dropdown icon"></i>返现管理</a>
-        <div class="content menu">
-            <a class="item" href="${path.concat('/cashback/overview')}">返现概览</a>
+        <div class="item">
+            <a class="title"><i class="dropdown icon"></i>返现管理</a>
+
+            <div class="content menu">
+                <a class="item" href="${path.concat('/cashback/overview')}">返现概览</a>
+            </div>
         </div>
-    </div>
     #end
     #if($role == "admin")
-    <div class="item">
-        <a class="title"><i class="dropdown icon"></i>提现管理</a>
-        <div class="content menu">
-             <a class="item" href="${path.concat('/withdraw/overview')}">提现概览</a>
+        <div class="item">
+            <a class="title"><i class="dropdown icon"></i>提现管理</a>
+
+            <div class="content menu">
+                <a class="item" href="${path.concat('/withdraw/overview')}">提现列表</a>
+            </div>
         </div>
-    </div>
     #end
-    #if($role == "admin" || $role == "express")
-    <div class="item">
-        <a class="title"><i class="dropdown icon"></i>活动管理</a>
-        <div class="content menu">
-            <a class="item">添加活动</a>
-        </div>
-    </div>
-    #end
+##    #if($role == "admin" || $role == "express")
+##    <div class="item">
+##        <a class="title"><i class="dropdown icon"></i>活动管理</a>
+##        <div class="content menu">
+##            <a class="item">添加活动</a>
+##        </div>
+##    </div>
+##    #end
     #if($role == "admin"|| $role == "finance")
-    <a class="item" href="${path.concat('/statement/download')}">报表专区</a>
+        <a class="item" href="${path.concat('/statement/download')}">报表专区</a>
     #end
     #if($role == "admin")
-    <div class="item">
-        <a class="title"><i class="dropdown icon"></i>账号管理</a>
-        <div class="content menu">
-            <a class="item">添加账号</a>
+        <div class="item">
+            <a class="title"><i class="dropdown icon"></i>账号管理</a>
+
+            <div class="content menu">
+                <a class="item" href="${path.concat('/admin/overview')}">账号列表</a>
+            </div>
         </div>
-    </div>
     #end
     #if($role == "admin")
-    <a class="item" href="${path.concat('/log/overview')}">日志查询</a>
+        <a class="item" href="${path.concat('/log/overview')}">日志查询</a>
     #end
 </div>
