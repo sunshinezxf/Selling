@@ -51,16 +51,18 @@ public class LoggerController {
             return result;
         }
         Map<String, Object> condition = new HashMap<String, Object>();
-        JSONObject params = JSON.parseObject(param.getParams());
-        String start = (String) params.get("start");
-        String end = (String) params.get("end");
-        String adminId = (String) params.get("adminId");
-        if(!StringUtils.isEmpty(start) && !StringUtils.isEmpty(end)){
-        	condition.put("start", start);
-        	condition.put("end", end);
-        }
-        if(!StringUtils.isEmpty(adminId)){
-        	condition.put("adminId", adminId);
+        if(param.getParams() != null){
+	        JSONObject params = JSON.parseObject(param.getParams());
+	        String start = (String) params.get("start");
+	        String end = (String) params.get("end");
+	        String adminId = (String) params.get("adminId");
+	        if(!StringUtils.isEmpty(start) && !StringUtils.isEmpty(end)){
+	        	condition.put("start", start);
+	        	condition.put("end", end);
+	        }
+	        if(!StringUtils.isEmpty(adminId)){
+	        	condition.put("adminId", adminId);
+	        }
         }
         ResultData fetchLogResponse = logService.fetchBackOperationLog(condition, param);
         if(fetchLogResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
