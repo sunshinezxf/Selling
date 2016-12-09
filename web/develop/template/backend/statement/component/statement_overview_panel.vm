@@ -52,10 +52,10 @@
     </div>
 </div>
 <script>
-    var indent={"name":"indent","url":"${path.concat("/indent/overview")}"};
-    var deliver={"name":"deliver","url":"${path.concat("/deliver/overview")}"};
-    var gather={"name":"gather","url":"${path.concat("/gather/overview")}"};
-    var withdraw={"name":"withdraw","url":"${path.concat("/withdraw/overviewreport")}"};
+    var indent={"name":"indent","url":"${path.concat('/indent/overview')}"};
+    var deliver={"name":"deliver","url":"${path.concat('/deliver/overview')}"};
+    var gather={"name":"gather","url":"${path.concat('/gather/overview')}"};
+    var withdraw={"name":"withdraw","url":"${path.concat('/withdraw/overviewreport')}"};
     var indentDownload={"name":"indent","url":"${path.concat('/indent/download/')}"};
     var deliverDownload={"name":"deliver","url":"${path.concat('/deliver/download/')}"};
     var gatherDownload={"name":"gather","url":"${path.concat('/gather/download/')}"};
@@ -264,8 +264,8 @@
                 $.each(downloadurls,function (index,obj) {
                     if(obj.name==itemid){
                         window.location.href=obj.url+ fileName + "/" + tempFileName;
-                        $("#start_time").val("");
-                        $("#end_time").val("");
+                        start_flatpickr.clear();
+                        end_flatpickr.clear();
                     }
                 });
                 $.each(directlyurls,function (index,obj) {
@@ -279,8 +279,8 @@
                         $.post(obj.url,param,function (result) {
                             //直接下载
                         })
-                        $("#start_time").val("");
-                        $("#end_time").val("");
+                        start_flatpickr.clear();
+                        end_flatpickr.clear();
 //                        window.location.reload();
                     }
                 });
@@ -290,8 +290,8 @@
 
     $("#download_directly_btn").click(function(){
         window.location.href=allEventDownload+eventId;
-        $("#start_time").val("");
-        $("#end_time").val("");
+        start_flatpickr.clear();
+        end_flatpickr.clear();
     });
 
     $("#download_cancel").click(function(){
