@@ -124,7 +124,7 @@ public class IndentController {
             indentService.produce(list);
         }
         if (empty) {
-            data.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            data.setResponseCode(ResponseCode.RESPONSE_NULL);
             return data;
         }
         //indent generate summary indent xlsx

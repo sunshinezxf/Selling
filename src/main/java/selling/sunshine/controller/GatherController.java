@@ -90,7 +90,7 @@ public class GatherController {
         }
 
         if (empty) {
-            data.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            data.setResponseCode(ResponseCode.RESPONSE_NULL);
             return data;
         }
 

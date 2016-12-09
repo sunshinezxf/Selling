@@ -84,13 +84,13 @@ public class DeliverController {
         condition.put("end", form.getEnd());
         ResultData queryResponse = expressService.fetchExpress(condition);
         if (queryResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
-            data.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            data.setResponseCode(queryResponse.getResponseCode());
             return data;
         }
         List<Express> list = (List<Express>) queryResponse.getData();
         ResultData produceResponse = deliverService.produce(list);
         if (produceResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
-            data.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            data.setResponseCode(produceResponse.getResponseCode());
             return data;
         }
 
