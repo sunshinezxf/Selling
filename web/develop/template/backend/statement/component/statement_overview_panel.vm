@@ -24,8 +24,8 @@
         </div>
     </div>
 </div>
-<div class="ui page dimmer transition hidden">
-    <div class="ui loader"></div>
+<div class="ui page inverted dimmer transition hidden">
+    <div class="ui large loader"></div>
 </div>
 <div class="ui modal" id="consult_modal">
     <i class="close icon"></i>
@@ -264,6 +264,8 @@
                 $.each(downloadurls,function (index,obj) {
                     if(obj.name==itemid){
                         window.location.href=obj.url+ fileName + "/" + tempFileName;
+                        $("#start_time").val("");
+                        $("#end_time").val("");
                     }
                 });
                 $.each(directlyurls,function (index,obj) {
@@ -277,6 +279,8 @@
                         $.post(obj.url,param,function (result) {
                             //直接下载
                         })
+                        $("#start_time").val("");
+                        $("#end_time").val("");
 //                        window.location.reload();
                     }
                 });
@@ -286,6 +290,8 @@
 
     $("#download_directly_btn").click(function(){
         window.location.href=allEventDownload+eventId;
+        $("#start_time").val("");
+        $("#end_time").val("");
     });
 
     $("#download_cancel").click(function(){
