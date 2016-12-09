@@ -15,14 +15,10 @@
             </div>
         </h1>
     </div>
-    <div class="row">
-        <div class="column">
-            #parse("/backend/charts/goods/purchase_everyday_charts.vm")
-        </div>
-    </div>
-    <div class="row">
-        <div class="column">
-            #parse("/backend/charts/goods/purchase_monthly_charts.vm")
-        </div>
-    </div>
+
+    <h2 class="ui header">当月每天各商品销售情况：</h2>
+    #parse("/backend/charts/goods/purchase_everyday_charts.vm")
+    <h2 class="ui header">最近一年内各商品销售情况：</h2>
+    #parse("/backend/charts/goods/purchase_monthly_charts.vm")
+
 </div>

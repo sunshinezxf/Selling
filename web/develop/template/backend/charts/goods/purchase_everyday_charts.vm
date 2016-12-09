@@ -1,4 +1,96 @@
-<div id="purchase_record_everyday" class="ui segment" style="height:400px"></div>
+<div id="purchase_record_everyday" class="row"></div>
 <script>
+	var goods_purchaseRecord_everyday_url = "${path.concat('/statistic/goods/purchaseRecord/day')}";
+	$.get(goods_purchaseRecord_everyday_url, function(result) {
+		if (result.responseCode != "RESPONSE_ERROR") {
+			var data = result.data;
 
+			var n_column = "eight";
+			if (data.length == 1) {
+				n_column = "sixteen";
+			} else {
+				n_column = "eight";
+			}
+			for (var i = 0; i < data.length; i++) {
+				var outer_div = $("<div></div>");
+				var id = "purchaseRecord_everyday_charts_" + data[i].id;
+				outer_div.addClass(n_column + ' wide column');
+
+				var inner_div = $("<div></div>");
+				inner_div.attr('id', id);
+				inner_div.attr('style', "height: 350px;");
+				inner_div.addClass('ui segment');
+				outer_div.append(inner_div);
+				$("#purchase_record_everyday").append(outer_div);
+				var chart = echarts.init(document.getElementById(id),
+						'macarons');
+
+				var name = data[i].name;
+				var categories = data[i].categories;
+				var quantitySeriesData = data[i].quantitySeriesData;
+				var priceSeriesData = data[i].priceSeriesData;
+
+				option = {
+				    title: {
+				        text: name
+				    },
+					tooltip : {
+						trigger : 'axis'
+					},
+					toolbox : {
+						feature : {
+							dataView : {
+								show : true,
+								readOnly : false
+							},
+							magicType : {
+								show : true,
+								type : [ 'line', 'bar' ]
+							},
+							restore : {
+								show : true
+							},
+							saveAsImage : {
+								show : true
+							}
+						}
+					},
+					legend : {
+						data : [ '数量', '金额' ]
+					},
+					xAxis : [ {
+						type : 'category',
+						data : categories
+					} ],
+					yAxis : [ {
+						type : 'value',
+						name : '数量',
+						axisLabel : {
+							formatter : '{value} 盒'
+						}
+					}, {
+						type : 'value',
+						name : '金额',
+						axisLabel : {
+							formatter : '{value} 元'
+						}
+					} ],
+					series : [ {
+						name : '数量',
+						type : 'bar',
+						data : quantitySeriesData
+					}, {
+						name : '金额',
+						type : 'line',
+						yAxisIndex : 1,
+						data : priceSeriesData
+					} ]
+				};
+
+				chart.setOption(option);
+			}
+		} else if (result.responseCode == "RESPONSE_ERROR") {
+			console.error(result.description);
+		}
+	});
 </script>

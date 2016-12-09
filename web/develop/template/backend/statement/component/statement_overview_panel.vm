@@ -109,14 +109,12 @@
             },
         });
 
-        $('.ui.center.aligned.segment').popup({
-            boundary: '.column'
-        });
-
-        $(".ui.page.dimmer").dimmer({
-            closable:false
-        });
     });
+
+    $(".ui.page.dimmer").dimmer({
+        closable:false
+    });
+    
     $(".ui.pointing.secondary.menu > a").each(function(){
         $(this).click(function(){
             $(this).addClass("active");
@@ -124,6 +122,7 @@
             var itemid=$(this).attr("id");
             if(itemid!="allEvent"){
                 $("#datetime_segment").show();
+                $("#events_segment").empty();
                 $("#events_segment").hide();
                 $.each(urls,function (index,obj) {
                     if(obj.name==itemid){
@@ -160,7 +159,7 @@
                                      var segment=$("<div></div>");
                                      segment.addClass("ui center aligned segment");
                                      segment.attr("id",events[j].eventId);
-                                     segment.attr("data-content","下载该活动报表");
+                                     segment.attr("data-tooltip","下载该活动报表");
                                      var header=$("<div></div>");
                                      header.addClass("ui header");
                                      header.text(events[j].title.substr(0,4));
@@ -179,7 +178,7 @@
                                      var segment=$("<div></div>");
                                      segment.addClass("ui center aligned segment");
                                      segment.attr("id",events[p].eventId);
-                                     segment.attr("data-content","下载该活动报表");
+                                     segment.attr("data-tooltip","下载该活动报表");
                                      var header=$("<div></div>");
                                      header.addClass("ui header");
                                      header.text(events[p].title.substr(0,4));
@@ -193,6 +192,11 @@
                                 }
                              }
                              $("#events_segment").append(grid);
+                             $("#events_segment .ui.center.aligned.segment").on("click",function(){
+                             	 eventId=$(this).attr("id");
+                                 $("#consult_modal").modal("hide");
+                                 $("#download_modal").modal("show");
+                             });
                         }
                     } else {
                         //无活动
@@ -247,14 +251,6 @@
                     }
                 });
             }
-        });
-    });
-
-    $("#events_segment .ui.center.aligned.segment").each(function(){
-        $(this).click(function(){
-            eventId=$(this).attr("id");
-            $("#consult_modal").modal("hide");
-            $("#download_modal").modal("show");
         });
     });
 

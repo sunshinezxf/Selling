@@ -284,7 +284,6 @@ public class StatementController {
 
             condition.clear();
             condition.put("customerId", customer.getCustomerId());
-            condition.put("blockFlag", false);
             ResultData fetchCustomerResponse = customerService.fetchCustomer(condition);
             Customer customerDetail = ((List<Customer>) fetchCustomerResponse.getData()).get(0);
             //以下是查找该客户最近一次的购买订单，顺便统计该客户的各商品购买盒数

@@ -440,6 +440,7 @@ public class StatisticServiceImpl implements StatisticService {
 		ResultData result = new ResultData();
         ResultData response = statisticDao.purchaseRecordEveryMonth(condition);
         if (response.getResponseCode() != ResponseCode.RESPONSE_OK) {
+        	result.setResponseCode(ResponseCode.RESPONSE_ERROR);
             return result;
         }
         List<Map<String, Object>> list = (List<Map<String, Object>>) response.getData();
@@ -467,6 +468,7 @@ public class StatisticServiceImpl implements StatisticService {
 		ResultData result = new ResultData();
         ResultData response = statisticDao.purchaseRecordEveryday(condition);
         if (response.getResponseCode() != ResponseCode.RESPONSE_OK) {
+        	result.setResponseCode(ResponseCode.RESPONSE_ERROR);
             return result;
         }
         List<Map<String, Object>> list = (List<Map<String, Object>>) response.getData();

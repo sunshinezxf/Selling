@@ -18,6 +18,7 @@ import selling.sunshine.model.sum.AgentGoods;
 import selling.sunshine.model.sum.OrderStatistics;
 import selling.sunshine.model.sum.Vendition;
 import selling.sunshine.service.AgentService;
+import selling.sunshine.service.CommodityService;
 import selling.sunshine.service.CustomerService;
 import selling.sunshine.service.OrderService;
 import selling.sunshine.service.StatisticService;
@@ -46,6 +47,9 @@ public class StatisticController {
 
     @Autowired
     private CustomerService customerService;
+    
+    @Autowired
+    private CommodityService commodityService;
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/order")
@@ -462,24 +466,54 @@ public class StatisticController {
     }
     
     @ResponseBody
-    @RequestMapping(method = RequestMethod.GET, value = "/goods/purchaseRecord/month/{goodsId}")
-    public JSONObject perGoodsPurchaseRecordMonth(@PathVariable("goodsId") String goodsId) {
-        JSONObject result = new JSONObject();
+    @RequestMapping(method = RequestMethod.GET, value = "/goods/purchaseRecord/month")
+    public ResultData perGoodsPurchaseRecordMonth() {
+    	ResultData result = new ResultData();
         Map<String, Object> condition=new HashMap<>();
-        condition.put("goodsId", goodsId);
-        ResultData resultData = statisticService.perGoodsPurchaseRecordMonth(condition);
-        result = (JSONObject) resultData.getData();
+        ResultData fetchResponse=commodityService.fetchGoods4Agent(condition);
+        if (fetchResponse.getResponseCode()==ResponseCode.RESPONSE_OK) {
+			List<Goods4Agent> goods=(List<Goods4Agent>)fetchResponse.getData();
+			JSONArray goodsArray = new JSONArray();
+			for (Goods4Agent goods4Agent:goods) {
+				condition.put("goodsId", goods4Agent.getGoodsId());
+				fetchResponse=statisticService.perGoodsPurchaseRecordMonth(condition);
+				if (fetchResponse.getResponseCode()==ResponseCode.RESPONSE_OK) {
+					JSONObject record = (JSONObject)fetchResponse.getData();
+					record.put("name", goods4Agent.getName());
+					record.put("id", goods4Agent.getGoodsId());
+					goodsArray.add(record);
+				}
+			}
+			result.setData(goodsArray);
+			return result;
+		}
+        result.setResponseCode(ResponseCode.RESPONSE_ERROR);
         return result;
     }
     
     @ResponseBody
-    @RequestMapping(method = RequestMethod.GET, value = "/goods/purchaseRecord/day/{goodsId}")
-    public JSONObject perGoodsPurchaseRecordDay(@PathVariable("goodsId") String goodsId) {
-      JSONObject result = new JSONObject();
+    @RequestMapping(method = RequestMethod.GET, value = "/goods/purchaseRecord/day")
+    public ResultData perGoodsPurchaseRecordDay() {
+      ResultData result = new ResultData();
       Map<String, Object> condition=new HashMap<>();
-      condition.put("goodsId", goodsId);
-      ResultData resultData = statisticService.perGoodsPurchaseRecordDay(condition);
-      result = (JSONObject) resultData.getData();
+      ResultData fetchResponse=commodityService.fetchGoods4Agent(condition);
+      if (fetchResponse.getResponseCode()==ResponseCode.RESPONSE_OK) {
+			List<Goods4Agent> goods=(List<Goods4Agent>)fetchResponse.getData();
+			JSONArray goodsArray = new JSONArray();
+			for (Goods4Agent goods4Agent:goods) {
+				condition.put("goodsId", goods4Agent.getGoodsId());
+				fetchResponse=statisticService.perGoodsPurchaseRecordDay(condition);
+				if (fetchResponse.getResponseCode()==ResponseCode.RESPONSE_OK) {
+					JSONObject record = (JSONObject)fetchResponse.getData();
+					record.put("name", goods4Agent.getName());
+					record.put("id", goods4Agent.getGoodsId());
+					goodsArray.add(record);
+				}
+			}
+			result.setData(goodsArray);
+			return result;
+		}
+      result.setResponseCode(ResponseCode.RESPONSE_ERROR);
       return result;
     }
     
