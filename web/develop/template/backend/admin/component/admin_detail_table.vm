@@ -20,14 +20,19 @@
 		<button type="button" id="update" class="ui positive basic button">修改密码</button>
 		<button type="button" id="delete" class="ui negative basic button">删除账号</button>
 	</div>
-	<div class="row">${user.username} ${user.admin.adminId}</div>
+	<div class="row">${user.username} ${user.admin.adminId} ${user.admin.username}</div>
+	<div class="row">
+	   <div class="ui relaxed divided list" id="logList">
+	   </div>
+	</div>
 
 </div>
 #parse("/backend/admin/component/admin_delete_modal.vm")
 #parse("/backend/admin/component/admin_update_modal.vm")
 <script>
     var pageStart=0;
-    var pageLength=10;
+    var pageLength=5;
+    var pageParams="{'adminInfo':'${user.admin.username}'}";
 	$(document).ready(function() {
 		$.ajax({
 			type : 'POST',
@@ -35,14 +40,26 @@
 			data : {
 				start : pageStart,
 				length : pageLength,
-				params: "{'adminId':'${user.admin.adminId}'}"
+				params: pageParams
 			},
 			dataType : 'json',
 			success : function(result) {
 				var total = result.total;
 				var data=result.data;
-				alert(total);
-				alert(JSON.stringify(data));
+				var node="";
+				if(data==null){
+					node+="<div class='item'>当前管理员暂无操作日志</div>";
+					$('#logList').append(node);
+				}else{
+					for(var i=0;i<data.length;i++){
+						var item=data[i];
+						var adminInfo=item.adminInfo;
+						var createAt=(new Date(item.createAt)).format("yyyy/MM/dd hh:mm:ss");
+						var operationEvent=item.operationEvent;
+						node+="<div class='item'><i class='mail icon'></i><div class='content'><a class='header'>"+createAt+"/"+adminInfo+"</a><div class='description'>"+operationEvent+"</div></div></div>"
+					}
+					$('#logList').append(node);
+				}			
 			}
 		})
 	});

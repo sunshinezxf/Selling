@@ -108,20 +108,13 @@ $(document).ready(function () {
                                 $("#config_percent_2").val(config.level2Percent);
                                 $("#config_percent_3").val(config.level3Percent);
                                 $("#month_config").val(config.monthConfig);
-                                if(config.universal){
-                                    if($("#set_month2").length&&$("#set_month2").length>0){
-                                    	$("#set_month2").remove();
-                                    	var node = "<input type='text' id='apply_months2' name='applyMonths' value='普遍适用' autocomplete='off' readonly/>&nbsp;";
-                                        $("#config").append(node);
-                                    }
+                                if(config.universal){                          
+                                     $("#config").empty();
+                                     var node = "<label style='margin-right:3.86em'>适用情况:</label><input type='text' id='apply_months2' name='applyMonths' value='普遍适用' autocomplete='off' readonly/>&nbsp;";
+                                     $("#config").append(node);
                                 }else{
-                                    if($("#set_month2").length&&$("#set_month2").length>0){
-                                    	$("#set_month2").remove();
-                                    }
-                                    if($("#apply_months2").length&&$("#apply_months2").length>0){
-                                    	$("#apply_months2").remove();
-                                    }
-                                    var node="<div id='set_month2' class='row'><span>前</span><select id='apply_months2' name='applyMonths'><option value='1' id='1'>1</option><option value='2' id='2'>2</option><option value='3' id='3'>3</option>" + 
+                                	$("#config").empty();
+                                    var node="<label style='margin-right:3.86em'>适用情况:</label><select id='apply_months2' name='applyMonths' class='ui search dropdown'><option value='1' id='1'>1</option><option value='2' id='2'>2</option><option value='3' id='3'>3</option>" + 
                                     "<option value='4' id='4'>4</option><option value='5' id='5'>5</option><option value='6' id='6'>6</option><option value='7' id='7'>7</option>"+
                                     "<option value='8' id='8'>8</option><option value='9' id='9'>9</option>"+
                                     "<option value='10' id='10'>10</option><option value='11' id='11'>11</option><option value='12' id='12'>12</option>"+
