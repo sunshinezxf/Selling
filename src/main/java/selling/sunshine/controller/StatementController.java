@@ -281,7 +281,6 @@ public class StatementController {
         int k = 1;
         for (Customer customer : giftInfo.keySet()) {
             Map<Goods4Agent, Integer> perGoodsInfo = giftInfo.get(customer);
-
             condition.clear();
             condition.put("customerId", customer.getCustomerId());
             ResultData fetchCustomerResponse = customerService.fetchCustomer(condition);
