@@ -17,24 +17,18 @@
 		</h1>
 	</div>
 	<div class="row">
-		<div class="four wide column">
-			<button class="ui right labeled icon button" id="vitality_config">
-				<i class="right arrow icon"></i> 代理商活跃度配置
+		<div class="column">
+			<button class="ui teal basic button" id="vitality_config">
+				<i class="setting icon"></i> 代理商活跃度配置
 			</button>
-		</div>
-		<div class="four wide column">
-			<button class="ui right labeled icon button" id="cashback_config">
-				<i class="right arrow icon"></i> 返现配置
+			<button class="ui teal basic button" id="cashback_config">
+				<i class="setting icon"></i> 返现配置
 			</button>
-		</div>
-		<div class="four wide column">
-			<button class="ui right labeled icon button" id="monthly_record">
-				<i class="right arrow icon"></i> 当月预期返现
+			<button class="ui teal basic button" id="monthly_record">
+				<i class="list icon"></i> 当月预期返现
 			</button>
-		</div>
-		<div class="four wide column">
-			<button class="ui right labeled icon button" id="cashback_record">
-				<i class="right arrow icon"></i> 返现记录
+			<button class="ui teal basic button" id="cashback_record">
+				<i class="list icon"></i> 返现记录
 			</button>
 		</div>
 	</div>
