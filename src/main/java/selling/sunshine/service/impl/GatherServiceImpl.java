@@ -323,6 +323,8 @@ public class GatherServiceImpl implements GatherService {
                 ResultData queryResponse = orderDao.queryOrder(condition);
                 if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK && !((List<Order>) queryResponse.getData()).isEmpty()) {
                     order = ((List<Order>) queryResponse.getData()).get(0);
+                } else {
+                	continue;
                 }
                 Row current = sheet.createRow(row);
                 Cell noCell = current.createCell(0);
@@ -397,6 +399,8 @@ public class GatherServiceImpl implements GatherService {
                 ResultData queryResponse = customerOrderDao.queryOrder(condition);
                 if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK && !((List<CustomerOrderBill>) queryResponse.getData()).isEmpty()) {
                     order = ((List<CustomerOrder>) queryResponse.getData()).get(0);
+                } else {
+                	continue;
                 }
                 Row current = sheet.createRow(row);
                 Cell noCell = current.createCell(0);
