@@ -8,7 +8,7 @@ import java.util.Map;
 public class MobilePageParam {
     private int start;
     private int length;
-    private Map params;
+    private String params;
 
     public int getStart() {
         return start;
@@ -26,11 +26,11 @@ public class MobilePageParam {
         this.length = length;
     }
 
-    public Map getParams() {
+    public String getParams() {
         return params;
     }
 
-    public void setParams(Map params) {
+    public void setParams(String params) {
         this.params = params;
     }
 
