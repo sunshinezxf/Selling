@@ -111,6 +111,10 @@
         $('.ui.center.aligned.segment').popup({
             boundary: '.column'
         });
+
+        $(".ui.page.dimmer").dimmer({
+            closable:false
+        });
     });
     $(".ui.pointing.secondary.menu > a").each(function(){
         $(this).click(function(){
