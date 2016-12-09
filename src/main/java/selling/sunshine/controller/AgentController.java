@@ -2584,7 +2584,7 @@ public class AgentController {
         return result;
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/downloadAgentExcel")
+    @RequestMapping(method = RequestMethod.GET, value = "/downloadAgentExcel")
     public String downloadOrderExcel(HttpServletRequest request, HttpServletResponse response, String start, String end) throws IOException, RowsExceededException, WriteException {
         Map<String, Object> condition = new HashMap<>();
         condition.put("blockFlag", false);

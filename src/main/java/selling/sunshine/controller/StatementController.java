@@ -21,6 +21,7 @@ import jxl.write.biff.RowsExceededException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -66,7 +67,7 @@ public class StatementController {
         return view;
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/downloadEventExcel/{eventId}")
+    @RequestMapping(method = RequestMethod.GET, value = "/downloadEventExcel/{eventId}")
     public String downloadEventExcel(HttpServletRequest request, HttpServletResponse response,@PathVariable("eventId") String eventId)
             throws IOException, RowsExceededException, WriteException {
 
@@ -228,12 +229,14 @@ public class StatementController {
         return null;
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/downloadGiftExcel")
+    @RequestMapping(method = RequestMethod.GET, value = "/downloadGiftExcel")
     public String downloadGiftExcel(HttpServletRequest request, HttpServletResponse response, String start, String end) throws IOException, RowsExceededException, WriteException {
         Map<String, Object> condition = new HashMap<String, Object>();
         condition.put("blockFlag", false);
-        condition.put("start", start);
-        condition.put("end", end);
+        if(!StringUtils.isEmpty(start) && !StringUtils.isEmpty(end)){
+        	condition.put("start", start);
+        	condition.put("end", end);
+        }
         condition.put("type", 1);
         ResultData fetchOrderResponse = orderService.fetchOrder(condition);
         List<Order> orders = (List<Order>) fetchOrderResponse.getData();
