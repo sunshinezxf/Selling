@@ -3,28 +3,28 @@
 	<div class="header">活跃度配置修改</div>
 	<div class="image content">
 		<div class="description">
-			<form class="form-horizontal" id="config_form">
+			<form class="ui form" id="config_form">
 				<input type="hidden" id="agentVitalityId" />
 
-				<p class="form-group">
-					<label class="ui label">月达标数量为:</label>&nbsp;&nbsp;
+				<p class="inline field">
+					<label>月达标数量为:</label>
 					<input type="number" id="vitality_quantity" name="vitalityQuantity"
 						value="0" autocomplete="off" />&nbsp;<span>件</span>
 				</p>
-				<p class="form-group">
-					<label class="ui label">月达标金额为:</label>&nbsp;&nbsp;
+				<p class="inline field">
+					<label>月达标金额为:</label>
 					<input type="number" id="vitality_qrice" name="vitalityPrice"
 						value="0" autocomplete="off" />&nbsp;<span>元</span>
 				</p>
-				<p class="form-group">
-					<label class="ui label">*只有当代理每月自身的销售数据达到规定的数量和金额才能获取下级代理商的返现</label>
+				<p class="field">
+					<label>*只有当代理每月自身的销售数据达到规定的数量和金额才能获取下级代理商的返现</label>
 				</p>
 			</form>
 		</div>
 	</div>
 	<div class="actions">
-		<div class="ui button" id="cancer">取消</div>
-		<div class="ui button" id="confirm">确认</div>
+		<div class="ui cancel button" id="cancel">取消</div>
+		<div class="ui positive button" id="confirm">确认</div>
 	</div>
 </div>
 <script>
@@ -39,7 +39,7 @@
 				$("#config_form").submit();
 			});
 
-	$("#cancer").on('click', function() {
+	$("#cancel").on('click', function() {
 		$('#vitality_config_modal').modal('hide');
 	});
 </script>
