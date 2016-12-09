@@ -1,6 +1,6 @@
 <div class="ui stackable padded grid" name="agent_overview">
-    <div class="row">
-        <h1 class="ui header">
+	<div class="row">
+		<h1 class="ui header">
 			<i class="home icon"></i>
 			<div class="content">
 				代理商赠送配置
@@ -15,42 +15,42 @@
 				</div>
 			</div>
 		</h1>
-    </div>
-    <div class="row">
-          <table id="gift_config_table" class="ui tablet stackable table" cellspacing="0" width="100%">
-          </table>
-    </div>
+	</div>
+	<div class="row">
+		<table id="gift_config_table" class="ui tablet stackable table"
+			cellspacing="0" width="100%">
+		</table>
+	</div>
 </div>
 <div class="ui modal" id="gift_config_modal">
-  <i class="close icon"></i>
-  <div class="header">
-    商品赠送数量修改
-  </div>
-  <div class="image content">
-    <div class="description">
-        <form class="form-horizontal" id="config_form">
-                    <input type="hidden" id="goods_id"/>
-                    <p class="form-group">
-                        <label class="ui label">代理商:</label>&nbsp;&nbsp;
-                        <text id="agent_name"></text>
-                    </p>
-                    <p class="form-group">
-                        <label class="ui label">选择的商品:</label>&nbsp;&nbsp;
-                        <text id="goods_name"></text>
-                    </p>
-                    <p class="form-group">
-                        <label class="ui label">当前可赠送数量:</label>&nbsp;&nbsp;
-                        <input type="number" id="config_number" name="amount" value="0" autocomplete="off"/>&nbsp;<span>件</span>
-                    </p>
-                    <input type="hidden" id="config_agent_id" name="agentId"/>
-                    <input type="hidden" id="config_goods_id" name="goodsId"/>
-          </form>
-    </div>
-  </div>
-  <div class="actions">
-    <div class="ui button" id="cancer">取消</div>
-    <div class="ui button" id="confirm">确认</div>
-  </div>
+	<i class="close icon"></i>
+	<div class="header">商品赠送数量修改</div>
+	<div class="image content">
+		<div class="description">
+			<form class="ui form" id="config_form">
+				<input type="hidden" id="goods_id" />
+				<p class="inline field">
+					<label>代理商:</label>
+					<text id="agent_name"></text>
+				</p>
+				<p class="inline field">
+					<label>选择的商品:</label>
+					<text id="goods_name"></text>
+				</p>
+				<p class="inline field">
+					<label>当前可赠送数量:</label>
+					 <input type="number" id="config_number" name="amount" value="0"
+						autocomplete="off" />&nbsp;<span>件</span>
+				</p>
+				<input type="hidden" id="config_agent_id" name="agentId" /> <input
+					type="hidden" id="config_goods_id" name="goodsId" />
+			</form>
+		</div>
+	</div>
+	<div class="actions">
+		<div class="ui button" id="cancer">取消</div>
+		<div class="ui button" id="confirm">确认</div>
+	</div>
 </div>
 <script>
     $(document).ready(function () {
