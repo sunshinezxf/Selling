@@ -264,8 +264,6 @@
                 $.each(downloadurls,function (index,obj) {
                     if(obj.name==itemid){
                         window.location.href=obj.url+ fileName + "/" + tempFileName;
-                        start_flatpickr.clear();
-                        end_flatpickr.clear();
                     }
                 });
                 $.each(directlyurls,function (index,obj) {
@@ -273,29 +271,35 @@
                         var start=$("#start_time").val();
                         var end=$("#end_time").val();
                         window.location.href=obj.url+ "?start=" + start+"&end="+end;
-                        start_flatpickr.clear();
-                        end_flatpickr.clear();
                     }
                 });
             }
         });
-    });
-
-    $("#download_directly_btn").click(function(){
-        window.location.href=allEventDownload+eventId;
         start_flatpickr.clear();
         end_flatpickr.clear();
     });
 
+    $("#download_directly_btn").click(function(){
+        start_flatpickr.clear();
+        end_flatpickr.clear();
+        window.location.href=allEventDownload+eventId;
+    });
+
     $("#download_cancel").click(function(){
         $("#consult_modal").modal("hide");
+        start_flatpickr.clear();
+        end_flatpickr.clear();
     });
 
     $("#consult_failed_btn").click(function(){
         $("#consult_modal").modal("hide");
+        start_flatpickr.clear();
+        end_flatpickr.clear();
     });
 
     $("#download_directly_cancel").click(function(){
         $("#download_modal").modal("hide");
+        start_flatpickr.clear();
+        end_flatpickr.clear();
     });
 </script>
