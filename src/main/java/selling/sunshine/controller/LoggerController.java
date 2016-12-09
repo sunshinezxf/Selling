@@ -55,13 +55,13 @@ public class LoggerController {
 	        JSONObject params = JSON.parseObject(param.getParams());
 	        String start = (String) params.get("start");
 	        String end = (String) params.get("end");
-	        String adminId = (String) params.get("adminId");
+	        String adminInfo = (String) params.get("adminInfo");
 	        if(!StringUtils.isEmpty(start) && !StringUtils.isEmpty(end)){
 	        	condition.put("start", start);
 	        	condition.put("end", end);
 	        }
-	        if(!StringUtils.isEmpty(adminId)){
-	        	condition.put("adminId", adminId);
+	        if(!StringUtils.isEmpty(adminInfo)){
+	        	condition.put("adminInfo", adminInfo);
 	        }
         }
         ResultData fetchLogResponse = logService.fetchBackOperationLog(condition, param);
