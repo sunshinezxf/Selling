@@ -148,8 +148,8 @@
 			var url = "${path.concat('/agent/modifyUpperAgent/')}${agent.agentId}/"+ upperAgentId;
 	        $.post(url, function (result) {
 	            if (result.responseCode == "RESPONSE_OK") {
-	            	url="${path.concat('/agent/check/')}${agent.agentId}";
-	    			window.location.href = url;
+	            	/* url="${path.concat('/agent/check/')}${agent.agentId}";
+	    			window.location.href = url; */
 	            } else if (result.description == "recursion") {
 	               
 	            } else {
