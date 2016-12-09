@@ -17,11 +17,7 @@
             #parse("/backend/common/sidebar.vm")
         </div>
         <div class="ui main container">
-            #if(${logs})
                 #parse("/backend/system/component/log_panel.vm")
-            #else
-                #parse("/backend/system/component/no_log.vm")
-            #end
         </div>
     </div>
 </div>
