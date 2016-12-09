@@ -234,7 +234,7 @@ public class WithdrawController {
             withdrawService.produceApply(list);
         }
         if (empty) {
-            data.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            data.setResponseCode(ResponseCode.RESPONSE_NULL);
             return data;
         }
 
