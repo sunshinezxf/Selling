@@ -3,72 +3,78 @@
 	<div class="header">新建返现配置</div>
 	<div class="image content">
 		<div class="description">
-			<form class="form-horizontal" role="form" id="create_config_form">
-				<div class="form-group">
-					<label class="row">适用情况:</label>
-					<div class="row">
-						<label class="radio-inline" style="padding-top: 0;"> <input
-							type="radio" name="apply_radio" id="partial_apply_radio" />部分适用
-						</label> <label class="radio-inline" style="padding-top: 0;"> <input
-							type="radio" name="apply_radio" id="apply_radio" />普遍适用
-						</label>
+			<form class="ui form" role="form" id="create_config_form">
+				<div class="inline fields">
+					<label for="apply_radio">适用情况:</label>
+					<div class="field">
+						<div class="ui radio checkbox">
+                                                                                                       <input type="radio" name="apply_radio" id="partial_apply_radio">
+                                                                                                       <label>部分适用</label>
+                                                                                        </div>
 					</div>
-					<div id="set_month" class="row" style="padding-top: 10px;">
-						<span>前</span> <select id="apply_months" name="applyMonths">
-							<option value="" selected="selected"></option>
-							<option value="1">1</option>
-							<option value="2">2</option>
-							<option value="3">3</option>
-							<option value="4">4</option>
-							<option value="5">5</option>
-							<option value="6">6</option>
-							<option value="7">7</option>
-							<option value="8">8</option>
-							<option value="9">9</option>
-							<option value="10">10</option>
-							<option value="11">11</option>
-						</select> <span>个月适用</span>
+					<div class="field">
+						<div class="ui radio checkbox">
+                                                                                                       <input type="radio" name="apply_radio" id="apply_radio">
+                                                                                                       <label>普遍适用</label>
+                                                                                        </div>
 					</div>
 				</div>
-				<div class="form-group">
-					<label class="ui label">返现标准数量为:</label>&nbsp;&nbsp;
+				<div class="field" id="set_month">
+					<span>前</span> <select id="apply_months" class="ui search dropdown" name="applyMonths">
+						<option value="">请选择月数</option>
+						<option value="1">1</option>
+						<option value="2">2</option>
+						<option value="3">3</option>
+						<option value="4">4</option>
+						<option value="5">5</option>
+						<option value="6">6</option>
+						<option value="7">7</option>
+						<option value="8">8</option>
+						<option value="9">9</option>
+						<option value="10">10</option>
+						<option value="11">11</option>
+					</select> <span>个月适用</span>
+				</div>
+				<div class="inline field">
+					<label>返现标准数量为:</label>
 					<input type="number" id="config_trigger" name="amountTrigger"
 						value="0" autocomplete="off" />&nbsp;<span>件</span>
 				</div>
-				<div class="form-group">
-					<label class="ui label">自己返现:</label>&nbsp;&nbsp;
+				<div class="inline field">
+					<label>自己返现:</label>
 					<input type="number" name="level1Percent" value="0"
 						autocomplete="off" />&nbsp;<span>元/件</span>
 				</div>
-				<div class="form-group">
-					<label class="ui label">直接关联返现:</label>&nbsp;&nbsp;
+				<div class="inline field">
+					<label>直接关联返现:</label>
 					<input type="number" name="level2Percent" value="0"
 						autocomplete="off" />&nbsp;<span>元/件</span>
 				</div>
-				<div class="form-group">
-					<label class="ui label">间接关联返现:</label>&nbsp;&nbsp;
+				<div class="inline field">
+					<label>间接关联返现:</label>
 					<input type="number" name="level3Percent" value="0"
 						autocomplete="off" />&nbsp;<span>元/件</span>
 				</div>
-				<div class="form-group">
-					<label class="ui label">月份配置:</label>&nbsp;&nbsp;
+				<div class="inline field">
+					<label>月份配置:</label>
 					<input type="number" name="monthConfig" value="1"
 						autocomplete="off" />&nbsp;<span>个月</span>
 				</div>
 
-				<div class="form-group">
-					<label class="ui label">*已经存在某类型的适用情况的返现配置了，则不允许添加同类型的适用情况的返现配置，只能修改</label>
+				<div class="field">
+					<label>*已经存在某类型的适用情况的返现配置了，则不允许添加同类型的适用情况的返现配置，只能修改</label>
 				</div>
 			</form>
 		</div>
 	</div>
 	<div class="actions">
-		<div class="ui button" id="create_cancer">取消</div>
-		<div class="ui button" id="create_confirm">确认</div>
+		<div class="ui cancel button" id="create_cancel">取消</div>
+		<div class="ui positive button" id="create_confirm">确认</div>
 	</div>
 </div>
 <script>
-	
+	$(".ui.dropdown").dropdown();
+	$('.ui.radio.checkbox').checkbox();
 	$("#create_config_modal").modal('hide');
 	$("#set_month").hide();
 	$("#apply_months").val("");
@@ -98,7 +104,7 @@
 		}
 	});
 	
-	$("#create_cancer").on('click', function() {
+	$("#create_cancel").on('click', function() {
 		$("#create_config_modal").modal('hide');
 	});
 </script>

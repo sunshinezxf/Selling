@@ -3,27 +3,27 @@
 	<div class="header">返现配置修改</div>
 	<div class="image content">
 		<div class="description">
-			 <form class="form-horizontal" id="config_form">
+			 <form class="ui form" id="config_form">
                     <input type="hidden" id="config_id"/>
                     <input type="hidden" id="goods_id"/>
 
-                    <div class="form-group">
-                        <label class="ui label">选择的商品名称为:</label>&nbsp;&nbsp;
+                    <div class="inline field">
+                        <label>选择的商品名称为:</label>
                         <text id="goods_name"></text>
                     </div>
-                    <div class="form-group">
-                        <label class="ui label">选择的商品单价为:</label>&nbsp;&nbsp;
+                    <div class="inline field">
+                        <label>选择的商品单价为:</label>
                         <text id="goods_price"></text>
                     </div>
-                    <div class="form-group">
-                        <label class="ui label">返现标准数量为:</label>&nbsp;&nbsp;
+                    <div class="inline field">
+                        <label>返现的标准数量为:</label>
                         <input type="number" id="config_trigger" name="amountTrigger" value="0" autocomplete="off"/>&nbsp;<span>件</span>
                     </div>
-                    <div class="form-group" id="config">
-                        <label class="ui label">适用情况:</label>&nbsp;&nbsp;
-                        <div id="set_month2" class="row">
+                    <div class="inline field" id="config">
+                        <label>适用情况:</label>
+                        <div id="set_month2">
                             <span>前</span>
-                            <select id="apply_months2" name="applyMonths">
+                            <select id="apply_months2" class="ui search dropdown" name="applyMonths">
                                 <option value="1">1</option>
                                 <option value="2">2</option>
                                 <option value="3">3</option>
@@ -40,40 +40,42 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label class="ui label">自己返现:</label>&nbsp;&nbsp;
+                    <div class="inline field">
+                        <label class="ui label">自己返现:</label>
                         <input type="number" id="config_percent_1" name="level1Percent" value="0"
                                autocomplete="off"/>&nbsp;<span>元/件</span>
                     </div>
-                    <div class="form-group">
-                        <label class="ui label">直接关联返现:</label>&nbsp;&nbsp;
+                    <div class="inline field">
+                        <label class="ui label">直接关联返现:</label>
                         <input type="number" id="config_percent_2" name="level2Percent" value="0"
                                autocomplete="off"/>&nbsp;<span>元/件</span>
                     </div>
-                     <div class="form-group">
-                        <label class="ui label">间接关联返现:</label>&nbsp;&nbsp;
+                     <div class="inline field">
+                        <label class="ui label">间接关联返现:</label>
                         <input type="number" id="config_percent_3" name="level3Percent" value="0"
                                autocomplete="off"/>&nbsp;<span>元/件</span>
                     </div>
-                    <div class="form-group">
-                        <label class="ui label">月份配置:</label>&nbsp;&nbsp;
+                    <div class="inline field">
+                        <label class="ui label">月份配置:</label>
                         <input type="number" id="month_config" name="monthConfig" value="1"
                                autocomplete="off"/>&nbsp;<span>个月</span>
                     </div>
-
-                    <div class="form-group">
-                        <label class="ui label">*只有当代理每批次达到返现标准数量时,才有资格获得返现机会</label>
-                        <label class="ui label">*并且只有当代理按照月份配置的月数，连续每个月达到返现标准,才有资格获得返现机会</label>
+                    <div class="field">
+                        <label>*只有当代理每批次达到返现标准数量时,才有资格获得返现机会</label>
+                    </div>
+                    <div class="field">
+                        <label>*并且只有当代理按照月份配置的月数，连续每个月达到返现标准,才有资格获得返现机会</label>
                     </div>
                 </form>
 		</div>
 	</div>
 	<div class="actions">
-		<div class="ui button" id="config_cancer">取消</div>
-		<div class="ui button" id="config_confirm">确认</div>
+		<div class="ui cancel button" id="config_cancel">取消</div>
+		<div class="ui positive button" id="config_confirm">确认</div>
 	</div>
 </div>
 <script>
+    $(".ui.dropdown").dropdown();
 
     $("#config_modal").modal('hide');
     $("#config_confirm").on('click', function () {
@@ -87,7 +89,7 @@
         $("#config_form").submit();
     });
     
-	$("#config_cancer").on('click', function() {
+	$("#config_cancel").on('click', function() {
 		$("#config_modal").modal('hide');
 	});
 </script>
