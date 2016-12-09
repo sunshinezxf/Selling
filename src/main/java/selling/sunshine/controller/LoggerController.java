@@ -30,13 +30,10 @@ public class LoggerController {
     @RequestMapping(method = RequestMethod.GET, value = "/overview")
     public ModelAndView overview() {
         ModelAndView view = new ModelAndView();
-        Map<String, Object> condition = new HashMap<>();
-        ResultData response = logService.fetchBackOperationLog(condition);
-        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            List<BackOperationLog> list = (List<BackOperationLog>) response.getData();
-            view.addObject("logs", list);
-        }
         view.setViewName("/backend/system/log");
         return view;
     }
+//    
+//    @RequestMapping(method = RequestMethod.GET, value="/fetch")
+//    public ResultData fetchLog()
 }
