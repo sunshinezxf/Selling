@@ -66,7 +66,7 @@ public class StatementController {
         return view;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/downloadEventExcel/{eventId}")
+    @RequestMapping(method = RequestMethod.POST, value = "/downloadEventExcel/{eventId}")
     public String downloadEventExcel(HttpServletRequest request, HttpServletResponse response,@PathVariable("eventId") String eventId)
             throws IOException, RowsExceededException, WriteException {
 
