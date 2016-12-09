@@ -60,8 +60,8 @@
     var deliverDownload={"name":"deliver","url":"${path.concat('/deliver/download/')}"};
     var gatherDownload={"name":"gather","url":"${path.concat('/gather/download/')}"};
     var withdrawDownload={"name":"withdraw","url":"${path.concat('/withdraw/download/')}"};
-    var agentDownload={"name"："agent","${path.concat('/agent/downloadAgentExcel')}"};
-    var giftDownload={"name"："gift","${path.concat('/statement/downloadGiftExcel')}"};
+    var agentDownload={"name":"agent","url":"${path.concat('/agent/downloadAgentExcel')}"};
+    var giftDownload={"name":"gift","url":"${path.concat('/statement/downloadGiftExcel')}"};
     var allEvent="${path.concat('/event/all')}";
     var allEventDownload="${path.concat('/statement/downloadEventExcel/')}"
     var urls=new Array();
