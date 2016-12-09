@@ -73,21 +73,22 @@
 	</div>
 </div>
 <script>
-	
+	$(".ui.dropdown").dropdown();
 	$('.ui.radio.checkbox').checkbox();
+	$("#partial_apply_radio").checkbox({
+		onChecked:function(){
+			$("#set_month").show();
+		}
+	});
+	$("#apply_radio").checkbox({
+		onChecked:function(){
+			$("#set_month").hide();
+			$("#apply_months").val("");
+		}
+	});
 	$("#create_config_modal").modal('hide');
 	$("#set_month").hide();
 	$("#apply_months").val("");
-
-	$("#partial_apply_radio").on("click",function() {
-		$("#set_month").show();
-		$(".ui.dropdown").dropdown();
-	});
-
-	$("#apply_radio").on("click",function() {
-		$("#set_month").hide();
-		$("#apply_months").val("");
-	});
 
 	$("#create_confirm").on('click', function() {
 		$("#create_config_modal").modal('hide');
