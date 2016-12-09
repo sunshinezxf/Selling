@@ -75,9 +75,10 @@
                             var year_section=$("<div></div>");
                             year_section.addClass("year");
                             years.push(year);
-                            var new_year="<h2><a href='#'>"+year+"年<i></i></a></h2>";
-                            var list="<div class='list'></div>";
-                            var ul="<ul></ul>";
+                            var new_year=$("<h2><a><i></i></a></h2>");
+                            new_year.text(year+"年");
+                            var list=$("<div class='list'></div>");
+                            var ul= $("<ul></ul>");
                             ul.append(li);
                             list.append(ul);
                             year_section.append(new_year);
@@ -141,12 +142,13 @@
                             var li="<li class='cls'><p class='date'>"+createAt+"</p><div class='intro'><p class='event'>"+operationEvent+"</p><div class='more'><p class='account'>账号："+adminInfo+"</p><p class='ipInfo'>ip地址：无</p></div></div></li>";
                         }
                         if($.inArray(year,years)==-1){
-                            var year_section=$("<div></div>");
+                           var year_section=$("<div></div>");
                             year_section.addClass("year");
                             years.push(year);
-                            var new_year="<h2><a href='#'>"+year+"年<i></i></a></h2>";
-                            var list="<div class='list'></div>";
-                            var ul="<ul></ul>";
+                            var new_year=$("<h2><a><i></i></a></h2>");
+                            new_year.text(year+"年");
+                            var list=$("<div class='list'></div>");
+                            var ul= $("<ul></ul>");
                             ul.append(li);
                             list.append(ul);
                             year_section.append(new_year);
