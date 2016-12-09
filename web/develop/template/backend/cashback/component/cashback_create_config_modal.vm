@@ -79,12 +79,12 @@
 	$("#set_month").hide();
 	$("#apply_months").val("");
 
-	$("#partial_apply_radio").click(function() {
+	$("#partial_apply_radio").on("click",function() {
 		$("#set_month").show();
 		$(".ui.dropdown").dropdown();
 	});
 
-	$("#apply_radio").click(function() {
+	$("#apply_radio").on("click",function() {
 		$("#set_month").hide();
 		$("#apply_months").val("");
 	});
