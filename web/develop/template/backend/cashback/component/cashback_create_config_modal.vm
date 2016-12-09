@@ -5,7 +5,7 @@
 		<div class="description">
 			<form class="ui form" role="form" id="create_config_form">
 				<div class="inline fields">
-					<label for="apply_radio">适用情况:</label>
+					<label for="apply_radio" style="margin-right:2.86em">适用情况:</label>
 					<div class="field">
 						<div class="ui radio checkbox">
                                                                                                        <input type="radio" name="apply_radio" id="partial_apply_radio">
@@ -19,7 +19,7 @@
                                                                                         </div>
 					</div>
 				</div>
-				<div class="field" id="set_month">
+				<div class="field" id="set_month" style="margin-left:8em">
 					<span>前</span> <select id="apply_months" class="ui search dropdown" name="applyMonths">
 						<option value="">请选择月数</option>
 						<option value="1">1</option>
@@ -36,12 +36,12 @@
 					</select> <span>个月适用</span>
 				</div>
 				<div class="inline field">
-					<label>返现标准数量为:</label>
+					<label>返现标准数量:</label>
 					<input type="number" id="config_trigger" name="amountTrigger"
 						value="0" autocomplete="off" />&nbsp;<span>件</span>
 				</div>
 				<div class="inline field">
-					<label>自己返现:</label>
+					<label style="margin-right:2.86em">自己返现:</label>
 					<input type="number" name="level1Percent" value="0"
 						autocomplete="off" />&nbsp;<span>元/件</span>
 				</div>
@@ -56,7 +56,7 @@
 						autocomplete="off" />&nbsp;<span>元/件</span>
 				</div>
 				<div class="inline field">
-					<label>月份配置:</label>
+					<label style="margin-right:2.86em">月份配置:</label>
 					<input type="number" name="monthConfig" value="1"
 						autocomplete="off" />&nbsp;<span>个月</span>
 				</div>
@@ -73,7 +73,7 @@
 	</div>
 </div>
 <script>
-	$(".ui.dropdown").dropdown();
+	
 	$('.ui.radio.checkbox').checkbox();
 	$("#create_config_modal").modal('hide');
 	$("#set_month").hide();
@@ -81,6 +81,7 @@
 
 	$("#partial_apply_radio").click(function() {
 		$("#set_month").show();
+		$(".ui.dropdown").dropdown();
 	});
 
 	$("#apply_radio").click(function() {
