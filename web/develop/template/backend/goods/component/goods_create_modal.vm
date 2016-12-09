@@ -1,22 +1,406 @@
 <div class="ui modal" id="goods_create_modal">
-	<i class="close icon"></i>
-	<div class="header">添加商品</div>
-	<div class="image content">
-		<div class="description">
-			
-		</div>
-	</div>
-	<div class="actions">
-       <div class="ui button" id="cancer">取消</div>
-       <div class="ui button" id="confirm">确认</div>
-   </div>
+    <i class="close icon"></i>
+
+    <div class="header">添加商品</div>
+    <div class="image content">
+        <div class="description">
+            <form class="ui form" id="goods_create_form">
+                <div class="two fields">
+                    <div class="field">
+                        <label for="goods_name">商品名称</label>
+                        <input type="text" class="goods_create" placeholder="商品名称(全名)" autocomplete="off"
+                               id="goods_name" name="name" required>
+                    </div>
+                    <div class="field">
+                        <label for="goods_nickname">商品别名</label>
+                        <input type="text" class="goods_create" placeholder="商品别名(缩略名)" autocomplete="off"
+                               id="goods_nickname" required>
+                    </div>
+                </div>
+                <div class="two fields">
+                    <div class="field">
+                        <label for="prime_price">商品原价</label>
+                        <input type="number" class="goods_create" placeholder="商品原价/顾客直接购买价格" autocomplete="off"
+                               id="prime_price" name="price" required>
+                    </div>
+                    <div class="field">
+                        <label for="agent_price">代理价格</label>
+                        <input type="number" class="goods_create" placeholder="代理商购买/分享价格" autocomplete="off"
+                               id="agent_price" name="agentPrice" required>
+                    </div>
+                </div>
+                <div class="two fields">
+                    <div class="field">
+                        <label for="goods_standard">商品规格</label>
+                        <input type="text" class="goods_create" placeholder="商品规格,如:180g" autocomplete="off"
+                               id="goods_standard" name="standard" required>
+                    </div>
+                    <div class="field">
+                        <label for="goods_measure">计量单位</label>
+                        <input type="text" class="goods_create" placeholder="商品计量单位,如:瓶,盒" autocomplete="off"
+                               id="goods_measure" name="measure" required>
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="goods_description">商品描述</label>
+                    <input type="text" class="goods_create" placeholder="商品描述" autocomplete="off" id="goods_description"
+                           name="description" required>
+                </div>
+                <div class="two fields">
+                    <div class="field">
+                        <label for="goods_number">生产批号</label>
+                        <input type="text" class="goods_create" placeholder="生产批号" autocomplete="off" id="goods_number"
+                               name="produceNo" required>
+                    </div>
+                    <div class="field">
+                        <label for="goods_date">生产日期</label>
+                        <input type="text" class="goods_create" placeholder="生产日期" autocomplete="off" id="goods_date"
+                               name="produceDate" required>
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="goods_picture">商品封面(请尽量上传正方形图片,图片不大于100k)</label>
+                    <input type="file" id="goods_cover" name="picture" accept="image/*" name="picture">
+                </div>
+                <div class="field">
+                    <label for="goods_thumbnail">商品图片(图片不大于200k)</label>
+                    <input type="file" id="goods_pics" multiple name="thumbnail">
+                </div>
+                <div class="field">
+                    <input type="hidden" name="block" id="block" value="0"/>
+
+                    <div class="ui positive toggle checkbox">
+                        <input type="checkbox" checked="checked" id="immediate">
+                        <label>即时上架</label>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="actions">
+        <div class="ui green button" id="confirm">添加</div>
+        <div class="ui button" id="cancel">关闭</div>
+    </div>
 </div>
+<script src="${path.concat('/material/js/backend/util.js')}"></script>
 <script>
     $('#goods_create_modal').modal('hide');
-    $("#cancer").on('click', function() {
+
+    $("#cancel").on('click', function () {
         $('#goods_create_modal').modal('hide');
     });
-    $("#confirm").on('click', function() {
-        $('#goods_create_modal').modal('hide');
+
+    $("#confirm").on('click', function () {
+        if ($("#immediate").attr("checked") == "checked") {
+            $("#block").val(0);
+        } else {
+            $("#block").val(1);
+        }
+        $("#goods_create_form").attr("method", "post");
+        $("#goods_create_form").attr("action", "${path.concat('/commodity/create')}");
+        $("#goods_create_form").attr("enctype", "multipart/form-data");
+        $("#goods_create_form").submit();
+    });
+
+    $("checkbox").checkbox();
+
+    $(document).ready(function () {
+
+        $('#goods_cover').filer({
+            limit: 1,
+            maxSize: null,
+            extensions: null,
+            changeInput: '<div class="jFiler-input-dragDrop"><div class="jFiler-input-inner"><div class="jFiler-input-icon"><i class="icon-jfi-cloud-up-o"></i></div><div class="jFiler-input-text"><h3>拖拽图片到这里</h3> <span style="display:inline-block; margin: 15px 0">或</span></div><a class="jFiler-input-choose-btn blue">选择图片</a></div></div>',
+            showThumbs: true,
+            theme: "dragdropbox",
+            templates: {
+                box: '<ul class="jFiler-items-list jFiler-items-grid"></ul>',
+                item: '<li class="jFiler-item">\
+						<div class="jFiler-item-container">\
+							<div class="jFiler-item-inner">\
+								<div class="jFiler-item-thumb">\
+									<div class="jFiler-item-status"></div>\
+									<div class="jFiler-item-thumb-overlay">\
+										<div class="jFiler-item-info">\
+											<div style="display:table-cell;vertical-align: middle;">\
+												<span class="jFiler-item-title"><b title="{{fi-name}}">{{fi-name}}</b></span>\
+												<span class="jFiler-item-others">{{fi-size2}}</span>\
+											</div>\
+										</div>\
+									</div>\
+									{{fi-image}}\
+								</div>\
+								<div class="jFiler-item-assets jFiler-row">\
+									<ul class="list-inline pull-left">\
+										<li>{{fi-progressBar}}</li>\
+									</ul>\
+									<ul class="list-inline pull-right">\
+										<li><a class="icon-jfi-trash jFiler-item-trash-action"></a></li>\
+									</ul>\
+								</div>\
+							</div>\
+						</div>\
+					</li>',
+                itemAppend: '<li class="jFiler-item">\
+							<div class="jFiler-item-container">\
+								<div class="jFiler-item-inner">\
+									<div class="jFiler-item-thumb">\
+										<div class="jFiler-item-status"></div>\
+										<div class="jFiler-item-thumb-overlay">\
+											<div class="jFiler-item-info">\
+												<div style="display:table-cell;vertical-align: middle;">\
+													<span class="jFiler-item-title"><b title="{{fi-name}}">{{fi-name}}</b></span>\
+													<span class="jFiler-item-others">{{fi-size2}}</span>\
+												</div>\
+											</div>\
+										</div>\
+										{{fi-image}}\
+									</div>\
+									<div class="jFiler-item-assets jFiler-row">\
+										<ul class="list-inline pull-left">\
+											<li><span class="jFiler-item-others">{{fi-icon}}</span></li>\
+										</ul>\
+										<ul class="list-inline pull-right">\
+											<li><a class="icon-jfi-trash jFiler-item-trash-action"></a></li>\
+										</ul>\
+									</div>\
+								</div>\
+							</div>\
+						</li>',
+                progressBar: '<div class="bar"></div>',
+                itemAppendToEnd: false,
+                canvasImage: true,
+                removeConfirmation: true,
+                _selectors: {
+                    list: '.jFiler-items-list',
+                    item: '.jFiler-item',
+                    progressBar: '.bar',
+                    remove: '.jFiler-item-trash-action'
+                }
+            },
+            dragDrop: {
+                dragEnter: null,
+                dragLeave: null,
+                drop: null,
+                dragContainer: null,
+            },
+            uploadFile: {
+                url: "${path.concat("/commodity/cover/upload")}",
+                data: null,
+                type: 'POST',
+                enctype: 'multipart/form-data',
+                synchron: true,
+                beforeSend: function () {
+                },
+                success: function (data, itemEl, listEl, boxEl, newInputEl, inputEl, id) {
+                    var parent = itemEl.find(".jFiler-jProgressBar").parent(),
+                            new_file_name = data.data,
+                            filerKit = inputEl.prop("jFiler");
+
+                    filerKit.files_list[id].name = new_file_name;
+
+                    itemEl.find(".jFiler-jProgressBar").fadeOut("slow", function () {
+                        $("<div class=\"jFiler-item-others text-success\"><i class=\"icon-jfi-check-circle\"></i> Success</div>").hide().appendTo(parent).fadeIn("slow");
+                    });
+                },
+                error: function (el) {
+                    var parent = el.find(".jFiler-jProgressBar").parent();
+                    el.find(".jFiler-jProgressBar").fadeOut("slow", function () {
+                        $("<div class=\"jFiler-item-others text-error\"><i class=\"icon-jfi-minus-circle\"></i> Error</div>").hide().appendTo(parent).fadeIn("slow");
+                    });
+                },
+                statusCode: null,
+                onProgress: null,
+                onComplete: null
+            },
+            files: null,
+            addMore: false,
+            allowDuplicates: true,
+            clipBoardPaste: true,
+            excludeName: null,
+            beforeRender: null,
+            afterRender: null,
+            beforeShow: null,
+            beforeSelect: null,
+            onSelect: null,
+            afterShow: null,
+            onRemove: function (itemEl, file, id, listEl, boxEl, newInputEl, inputEl) {
+                var filerKit = inputEl.prop("jFiler"),
+                        file_name = filerKit.files_list[id].name;
+
+                $.post('${path.concat('/commodity/delete/thumbnail/')}' + file_name);
+            },
+            onEmpty: null,
+            options: null,
+            dialogs: {
+                alert: function (text) {
+                    return alert(text);
+                },
+                confirm: function (text, callback) {
+                    confirm(text) ? callback() : null;
+                }
+            },
+            captions: {
+                button: "选择图片",
+                feedback: "选择图片上传",
+                feedback2: "个图片已选择",
+                drop: "将图片拖拽到该区域上传",
+                removeConfirmation: "确认删除该图片吗?",
+                errors: {
+                    filesLimit: "只能上传{{fi-limit}}个文件.",
+                    filesType: "只能上传图片.",
+                    filesSize: "{{fi-name}} 超过限制,不能超过 {{fi-maxSize}} MB.",
+                    filesSizeAll: "请选择大小不超过 {{fi-maxSize}} MB的文件."
+                }
+            }
+        });
+
+        $('#goods_pics').filer({
+            maxSize: null,
+            extensions: null,
+            changeInput: '<div class="jFiler-input-dragDrop"><div class="jFiler-input-inner"><div class="jFiler-input-icon"><i class="icon-jfi-cloud-up-o"></i></div><div class="jFiler-input-text"><h3>拖拽图片到这里</h3> <span style="display:inline-block; margin: 15px 0">或</span></div><a class="jFiler-input-choose-btn blue">选择图片</a></div></div>',
+            showThumbs: true,
+            theme: "dragdropbox",
+            templates: {
+                box: '<ul class="jFiler-items-list jFiler-items-grid"></ul>',
+                item: '<li class="jFiler-item">\
+						<div class="jFiler-item-container">\
+							<div class="jFiler-item-inner">\
+								<div class="jFiler-item-thumb">\
+									<div class="jFiler-item-status"></div>\
+									<div class="jFiler-item-thumb-overlay">\
+										<div class="jFiler-item-info">\
+											<div style="display:table-cell;vertical-align: middle;">\
+												<span class="jFiler-item-title"><b title="{{fi-name}}">{{fi-name}}</b></span>\
+												<span class="jFiler-item-others">{{fi-size2}}</span>\
+											</div>\
+										</div>\
+									</div>\
+									{{fi-image}}\
+								</div>\
+								<div class="jFiler-item-assets jFiler-row">\
+									<ul class="list-inline pull-left">\
+										<li>{{fi-progressBar}}</li>\
+									</ul>\
+									<ul class="list-inline pull-right">\
+										<li><a class="icon-jfi-trash jFiler-item-trash-action"></a></li>\
+									</ul>\
+								</div>\
+							</div>\
+						</div>\
+					</li>',
+                itemAppend: '<li class="jFiler-item">\
+							<div class="jFiler-item-container">\
+								<div class="jFiler-item-inner">\
+									<div class="jFiler-item-thumb">\
+										<div class="jFiler-item-status"></div>\
+										<div class="jFiler-item-thumb-overlay">\
+											<div class="jFiler-item-info">\
+												<div style="display:table-cell;vertical-align: middle;">\
+													<span class="jFiler-item-title"><b title="{{fi-name}}">{{fi-name}}</b></span>\
+													<span class="jFiler-item-others">{{fi-size2}}</span>\
+												</div>\
+											</div>\
+										</div>\
+										{{fi-image}}\
+									</div>\
+									<div class="jFiler-item-assets jFiler-row">\
+										<ul class="list-inline pull-left">\
+											<li><span class="jFiler-item-others">{{fi-icon}}</span></li>\
+										</ul>\
+										<ul class="list-inline pull-right">\
+											<li><a class="icon-jfi-trash jFiler-item-trash-action"></a></li>\
+										</ul>\
+									</div>\
+								</div>\
+							</div>\
+						</li>',
+                progressBar: '<div class="bar"></div>',
+                itemAppendToEnd: false,
+                canvasImage: true,
+                removeConfirmation: true,
+                _selectors: {
+                    list: '.jFiler-items-list',
+                    item: '.jFiler-item',
+                    progressBar: '.bar',
+                    remove: '.jFiler-item-trash-action'
+                }
+            },
+            dragDrop: {
+                dragEnter: null,
+                dragLeave: null,
+                drop: null,
+                dragContainer: null,
+            },
+            uploadFile: {
+                url: "${path.concat('/commodity/thumbnail/upload')}",
+                data: null,
+                type: 'POST',
+                enctype: 'multipart/form-data',
+                synchron: true,
+                beforeSend: function () {
+                },
+                success: function (data, itemEl, listEl, boxEl, newInputEl, inputEl, id) {
+                    var parent = itemEl.find(".jFiler-jProgressBar").parent(),
+                            new_file_name = data.data,
+                            filerKit = inputEl.prop("jFiler");
+
+                    filerKit.files_list[id].name = new_file_name;
+
+                    itemEl.find(".jFiler-jProgressBar").fadeOut("slow", function () {
+                        $("<div class=\"jFiler-item-others text-success\"><i class=\"icon-jfi-check-circle\"></i> Success</div>").hide().appendTo(parent).fadeIn("slow");
+                    });
+                },
+                error: function (el) {
+                    var parent = el.find(".jFiler-jProgressBar").parent();
+                    el.find(".jFiler-jProgressBar").fadeOut("slow", function () {
+                        $("<div class=\"jFiler-item-others text-error\"><i class=\"icon-jfi-minus-circle\"></i> Error</div>").hide().appendTo(parent).fadeIn("slow");
+                    });
+                },
+                statusCode: null,
+                onProgress: null,
+                onComplete: null
+            },
+            files: null,
+            addMore: false,
+            allowDuplicates: true,
+            clipBoardPaste: true,
+            excludeName: null,
+            beforeRender: null,
+            afterRender: null,
+            beforeShow: null,
+            beforeSelect: null,
+            onSelect: null,
+            afterShow: null,
+            onRemove: function (itemEl, file, id, listEl, boxEl, newInputEl, inputEl) {
+                var filerKit = inputEl.prop("jFiler"),
+                        file_name = filerKit.files_list[id].name;
+
+                $.post('${path.concat('/commodity/delete/thumbnail/')}' + file_name);
+            },
+            onEmpty: null,
+            options: null,
+            dialogs: {
+                alert: function (text) {
+                    return alert(text);
+                },
+                confirm: function (text, callback) {
+                    confirm(text) ? callback() : null;
+                }
+            },
+            captions: {
+                button: "选择图片",
+                feedback: "选择图片上传",
+                feedback2: "个图片已选择",
+                drop: "将图片拖拽到该区域上传",
+                removeConfirmation: "确认删除该图片吗?",
+                errors: {
+                    filesLimit: "只能上传{{fi-limit}}个文件.",
+                    filesType: "只能上传图片.",
+                    filesSize: "{{fi-name}} 超过限制,不能超过 {{fi-maxSize}} MB.",
+                    filesSizeAll: "请选择大小不超过 {{fi-maxSize}} MB的文件."
+                }
+            }
+        });
     });
 </script>

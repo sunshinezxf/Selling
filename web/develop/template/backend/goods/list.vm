@@ -4,6 +4,8 @@
 <head>
     #parse("/backend/initialization/init.vm")
     #parse("/backend/common/datatable.lib.vm")
+    #parse("/backend/common/jquery.filer.lib.vm")
+    <link rel="stylesheet" href="${path.concat('/plugins/filer/css/themes/jquery.filer-dragdropbox-theme.css')}">
     <title>商品列表</title>
 </head>
 <body id="dashboard" class="started pushable" ontouchstart>

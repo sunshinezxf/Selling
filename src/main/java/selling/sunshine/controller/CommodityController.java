@@ -70,13 +70,6 @@ public class CommodityController {
     @Autowired
     private StatisticService statisticService;
 
-//    @RequestMapping(method = RequestMethod.GET, value = "/create")
-//    public ModelAndView create() {
-//        ModelAndView view = new ModelAndView();
-//        view.setViewName("/backend/goods/create");
-//        return view;
-//    }
-
     @RequestMapping(method = RequestMethod.POST, value = "/create")
     public ModelAndView create(@Valid GoodsForm form, BindingResult result, HttpServletRequest request) {
         ModelAndView view = new ModelAndView();
@@ -152,12 +145,7 @@ public class CommodityController {
         }
         for (Thumbnail thumbnail : thumbnails) {
             JSONObject initialPreviewConfigObject = new JSONObject();
-            // initialPreviewArray.add("/selling" + thumbnail.getPath());
             initialPreviewArray.add(thumbnail.getPath());
-            // initialPreviewConfigObject.put(
-            // "url",
-            // "/selling/commodity/delete/Thumbnail/"
-            // + thumbnail.getThumbnailId());
             initialPreviewConfigObject.put("url", "/commodity/delete/Thumbnail/" + thumbnail.getThumbnailId());
             initialPreviewConfigObject.put("key", thumbnail.getThumbnailId());
             initialPreviewConfigArray.add(initialPreviewConfigObject);
@@ -189,12 +177,7 @@ public class CommodityController {
         }
         for (Thumbnail thumbnail : thumbnails) {
             JSONObject initialPreviewConfigObject = new JSONObject();
-            // initialPreviewArray.add("/selling" + thumbnail.getPath());
             initialPreviewArray.add(thumbnail.getPath());
-            // initialPreviewConfigObject.put(
-            // "url",
-            // "/selling/commodity/delete/Thumbnail/"
-            // + thumbnail.getThumbnailId());
             initialPreviewConfigObject.put("url", "/commodity/delete/Thumbnail/" + thumbnail.getThumbnailId());
             initialPreviewConfigObject.put("key", thumbnail.getThumbnailId());
             initialPreviewConfigArray.add(initialPreviewConfigObject);
@@ -428,7 +411,7 @@ public class CommodityController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/detail/{goodsId}")
     public ModelAndView detail(@PathVariable("goodsId") String goodsId) {
-    	ModelAndView view = new ModelAndView();
+        ModelAndView view = new ModelAndView();
         Map<String, Object> condition = new HashMap<>();
         condition.put("goodsId", goodsId);
         ResultData queryData = commodityService.fetchGoods4Customer(condition);
@@ -439,7 +422,7 @@ public class CommodityController {
             if (thumbnails.size() != 0) {
                 view.addObject("thumbnails", thumbnails);
             } else {
-            	view.addObject("thumbnails", 0);
+                view.addObject("thumbnails", 0);
             }
         }
         view.setViewName("/backend/goods/detail");
@@ -453,7 +436,7 @@ public class CommodityController {
         condition.put("goodsId", goodsId);
         ResultData resultData = commodityService.fetchGoods4Customer(condition);
         if (resultData.getResponseCode() != ResponseCode.RESPONSE_OK) {
-            view.setViewName("redirect:/commodity/detail/"+goodsId);
+            view.setViewName("redirect:/commodity/detail/" + goodsId);
             return view;
         }
         Goods4Customer target = ((List<Goods4Customer>) resultData.getData()).get(0);
@@ -463,16 +446,16 @@ public class CommodityController {
             Subject subject = SecurityUtils.getSubject();
             User user = (User) subject.getPrincipal();
             if (user == null) {
-                view.setViewName("redirect:/commodity/detail/"+goodsId);
+                view.setViewName("redirect:/commodity/detail/" + goodsId);
                 return view;
             }
             Admin admin = user.getAdmin();
             BackOperationLog backOperationLog = new BackOperationLog(admin.getUsername(), toolService.getIP(request),
                     "管理员" + admin.getUsername() + "将商品" + target.getName() + "下架");
             logService.createbackOperationLog(backOperationLog);
-            view.setViewName("redirect:/commodity/detail/"+goodsId);
+            view.setViewName("redirect:/commodity/detail/" + goodsId);
         } else {
-            view.setViewName("redirect:/commodity/detail/"+goodsId);
+            view.setViewName("redirect:/commodity/detail/" + goodsId);
         }
         return view;
     }
@@ -484,7 +467,7 @@ public class CommodityController {
         condition.put("goodsId", goodsId);
         ResultData resultData = commodityService.fetchGoods4Customer(condition);
         if (resultData.getResponseCode() != ResponseCode.RESPONSE_OK) {
-            view.setViewName("redirect:/commodity/detail/"+goodsId);
+            view.setViewName("redirect:/commodity/detail/" + goodsId);
             return view;
         }
         Goods4Customer target = ((List<Goods4Customer>) resultData.getData()).get(0);
@@ -494,96 +477,95 @@ public class CommodityController {
             Subject subject = SecurityUtils.getSubject();
             User user = (User) subject.getPrincipal();
             if (user == null) {
-                view.setViewName("redirect:/commodity/detail/"+goodsId);
+                view.setViewName("redirect:/commodity/detail/" + goodsId);
                 return view;
             }
             Admin admin = user.getAdmin();
             BackOperationLog backOperationLog = new BackOperationLog(admin.getUsername(), toolService.getIP(request),
                     "管理员" + admin.getUsername() + "将商品" + target.getName() + "上架");
             logService.createbackOperationLog(backOperationLog);
-            view.setViewName("redirect:/commodity/detail/"+goodsId);
+            view.setViewName("redirect:/commodity/detail/" + goodsId);
         } else {
-            view.setViewName("redirect:/commodity/detail/"+goodsId);
+            view.setViewName("redirect:/commodity/detail/" + goodsId);
         }
         return view;
     }
 
     @ResponseBody
-    @RequestMapping(method = RequestMethod.POST, value = "/upload")
-    public String upload(MultipartHttpServletRequest request) {
+    @RequestMapping(method = RequestMethod.POST, value = "/thumbnail/upload")
+    public ResultData uploadThumbnail(MultipartHttpServletRequest request) {
+        ResultData result = new ResultData();
         String context = request.getSession().getServletContext().getRealPath("/");
         JSONObject resultObject = new JSONObject();
         try {
-            String filename = "thumbnail";
-            MultipartFile file = request.getFile(filename);
+            MultipartFile file = request.getFile("thumbnail");
             if (file != null) {
                 ResultData response = uploadService.upload(file, context);
                 if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
                     Thumbnail thumbnail = new Thumbnail((String) response.getData(), "slide");
-                    String thumbnailId = ((Thumbnail) commodityService.createThumbnail(thumbnail).getData())
-                            .getThumbnailId();
-                    JSONArray initialPreviewArray = new JSONArray();
-                    JSONArray initialPreviewConfigArray = new JSONArray();
-                    JSONObject initialPreviewConfigObject = new JSONObject();
-                    // initialPreviewArray.add("/selling" +
-                    // response.getData().toString());
-                    initialPreviewArray.add(response.getData().toString());
-                    // initialPreviewConfigObject.put("url",
-                    // "/selling/commodity/delete/Thumbnail/"+thumbnailId);
-                    initialPreviewConfigObject.put("url", "/commodity/delete/Thumbnail/" + thumbnailId);
-                    initialPreviewConfigObject.put("key", thumbnailId);
-                    initialPreviewConfigArray.add(initialPreviewConfigObject);
-                    resultObject.put("initialPreview", initialPreviewArray);
-                    resultObject.put("initialPreviewConfig", initialPreviewConfigArray);
-                    return resultObject.toJSONString();
+                    response = commodityService.createThumbnail(thumbnail);
+                    if (response.getResponseCode() != ResponseCode.RESPONSE_OK) {
+                        result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+                        result.setDescription("图片记录存储失败");
+                        return result;
+                    }
+                    String thumbnailId = ((Thumbnail) commodityService.createThumbnail(thumbnail).getData()).getThumbnailId();
+                    result.setData(thumbnailId);
+                    return result;
+                } else {
+                    result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+                    result.setDescription("图片上传失败");
+                    return result;
                 }
+            } else {
+
             }
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
         resultObject.put("error", "上传此图片发生错误，请重试！");
-        return resultObject.toJSONString();
+        return result;
     }
 
     @ResponseBody
-    @RequestMapping(method = RequestMethod.POST, value = "/uploadthumbnail")
-    public String uploadThumbnail(MultipartHttpServletRequest request) {
+    @RequestMapping(method = RequestMethod.POST, value = "/cover/upload")
+    public ResultData uploadCover(MultipartHttpServletRequest request) {
+        ResultData result = new ResultData();
         String context = request.getSession().getServletContext().getRealPath("/");
-        JSONObject resultObject = new JSONObject();
         try {
-            String filename = "picture";
-            MultipartFile file = request.getFile(filename);
+            MultipartFile file = request.getFile("picture");
             if (file != null) {
                 ResultData response = uploadService.upload(file, context);
                 if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
                     Thumbnail thumbnail = new Thumbnail((String) response.getData(), "cover");
-                    String thumbnailId = ((Thumbnail) commodityService.createThumbnail(thumbnail).getData())
-                            .getThumbnailId();
-                    JSONArray initialPreviewArray = new JSONArray();
-                    JSONArray initialPreviewConfigArray = new JSONArray();
-                    JSONObject initialPreviewConfigObject = new JSONObject();
-                    // initialPreviewArray.add("/selling" +
-                    // response.getData().toString());
-                    initialPreviewArray.add(response.getData().toString());
-                    // initialPreviewConfigObject.put("url",
-                    // "/selling/commodity/delete/Thumbnail/"+thumbnailId);
-                    initialPreviewConfigObject.put("url", "/commodity/delete/Thumbnail/" + thumbnailId);
-                    initialPreviewConfigObject.put("key", thumbnailId);
-                    initialPreviewConfigArray.add(initialPreviewConfigObject);
-                    resultObject.put("initialPreview", initialPreviewArray);
-                    resultObject.put("initialPreviewConfig", initialPreviewConfigArray);
-                    return resultObject.toJSONString();
+                    response = commodityService.createThumbnail(thumbnail);
+                    if (response.getResponseCode() != ResponseCode.RESPONSE_OK) {
+                        result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+                        result.setDescription("图片记录存储失败");
+                        return result;
+                    }
+                    String thumbnailId = ((Thumbnail) commodityService.createThumbnail(thumbnail).getData()).getThumbnailId();
+                    result.setData(thumbnailId);
+                    return result;
+                } else {
+                    result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+                    result.setDescription("图片上传失败");
+                    return result;
                 }
             }
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription("未获取到图片");
+            return result;
         } catch (Exception e) {
             logger.error(e.getMessage());
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription(e.getMessage());
         }
-        resultObject.put("error", "上传此图片发生错误，请重试！");
-        return resultObject.toJSONString();
+        return result;
     }
 
     @ResponseBody
-    @RequestMapping(method = RequestMethod.POST, value = "/delete/Thumbnail/{thumbnailId}")
+    @RequestMapping(method = RequestMethod.POST, value = "/delete/thumbnail/{thumbnailId}")
     public String deleteThumbnail(@PathVariable("thumbnailId") String thumbnailId) {
 
         commodityService.deleteGoodsThumbnail(thumbnailId);
