@@ -75,6 +75,24 @@
     var eventId;
     var starttime="2016-01-01";
     var endtime=new Date();
+    var start_flatpickr=$("#start_flatpickr").flatpickr({
+            "locale": "zh",
+            minDate:starttime,
+            maxDate:endtime,
+            onChange:function(selectedDates, dateStr, instance) {
+                end_flatpickr.set("minDate",dateStr);
+            },
+    });
+
+    var end_flatpickr=$("#end_flatpickr").flatpickr({
+            "locale": "zh",
+            minDate:starttime,
+            maxDate:endtime,
+            onChange:function(selectedDates, dateStr, instance) {
+                start_flatpickr.set("maxDate",dateStr);
+            },
+    });
+    
     $(document).ready(function(){
         $("#datetime_segment").show();
         $("#events_segment").hide();
@@ -89,24 +107,6 @@
                 alert("数据传输有误！");
             }
         })
-
-        var start_flatpickr=$("#start_flatpickr").flatpickr({
-            "locale": "zh",
-            minDate:starttime,
-            maxDate:endtime,
-            onChange:function(selectedDates, dateStr, instance) {
-                end_flatpickr.set("minDate",dateStr);
-            },
-        });
-
-        var end_flatpickr=$("#end_flatpickr").flatpickr({
-            "locale": "zh",
-            minDate:starttime,
-            maxDate:endtime,
-            onChange:function(selectedDates, dateStr, instance) {
-                start_flatpickr.set("maxDate",dateStr);
-            },
-        });
 
         $('.ui.center.aligned.segment').popup({
             boundary: '.column'
