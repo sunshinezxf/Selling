@@ -32,11 +32,13 @@
     <div class="header"></div>
     <div class="content">
         <h3 class="consult_success">报表已成功生成，是否立即下载？</h3>
+        <h3 class="consult_null">当前时间段内暂无报表！</h3>
         <h3 class="consult_failed">报表生成失败！</h3>
     </div>
     <div class="actions">
         <div id="download_cancel" class="ui cancel button consult_success">取消</div>
         <div id="download_btn" class="ui positive button consult_success">下载</div>
+        <div id="consult_null_btn" class="ui positive button consult_null">确定</div>
         <div id="consult_failed_btn" class="ui positive button consult_failed">确定</div>
     </div>
 </div>
@@ -223,18 +225,28 @@
                 $.each(urls,function (index,obj) {
                     if(obj.name==itemid){
                         $.post(obj.url,param,function (result) {
-                            if (result.responseCode != "RESPONSE_OK") {
+                            if (result.responseCode == "RESPONSE_ERROR") {
                                 $(".ui.page.dimmer").dimmer("hide");
                                 //failed modal
                                 $(".consult_failed").show();
                                 $(".consult_success").hide();
-                            } else {
-                                $(".ui.page.dimmer").dimmer("hide");
-                                tempFileName = result.data;
-                                fileName = start + "_" + end;
-                                //success modal
-                                $(".consult_success").show();
-                                $(".consult_failed").hide();
+                                $(".consult_null").hide();
+                            } else{
+                                if(result.responseCode == "RESPONSE_OK"){
+                                    $(".ui.page.dimmer").dimmer("hide");
+                                    tempFileName = result.data;
+                                    fileName = start + "_" + end;
+                                    //success modal
+                                    $(".consult_success").show();
+                                    $(".consult_failed").hide();
+                                    $(".consult_null").hide();
+                                }else{
+                                    $(".ui.page.dimmer").dimmer("hide");
+                                    //null modal
+                                    $(".consult_null").show();
+                                    $(".consult_failed").hide();
+                                    $(".consult_success").hide();
+                                }
                             }
                             $("#consult_modal").modal("show");
                             $("#download_modal").modal("hide");
@@ -247,6 +259,7 @@
                         $("#download_modal").modal("hide");
                         $(".consult_success").show();
                         $(".consult_failed").hide();
+                        $(".consult_null").hide();
                         $("#consult_modal").modal("show");
                     }
                 });
@@ -272,31 +285,25 @@
                 });
             }
         });
-        start_flatpickr.clear();
-        end_flatpickr.clear();
     });
 
     $("#download_directly_btn").click(function(){
-        start_flatpickr.clear();
-        end_flatpickr.clear();
         window.location.href=allEventDownload+eventId;
     });
 
     $("#download_cancel").click(function(){
         $("#consult_modal").modal("hide");
-        start_flatpickr.clear();
-        end_flatpickr.clear();
+    });
+
+    $("#consult_null_btn").click(function(){
+        $("#consult_modal").modal("hide");
     });
 
     $("#consult_failed_btn").click(function(){
         $("#consult_modal").modal("hide");
-        start_flatpickr.clear();
-        end_flatpickr.clear();
     });
 
     $("#download_directly_cancel").click(function(){
         $("#download_modal").modal("hide");
-        start_flatpickr.clear();
-        end_flatpickr.clear();
     });
 </script>
