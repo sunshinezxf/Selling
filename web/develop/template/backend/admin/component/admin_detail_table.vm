@@ -20,7 +20,8 @@
 		<button type="button" id="update" class="ui positive basic button">修改密码</button>
 		<button type="button" id="delete" class="ui negative basic button">删除账号</button>
 	</div>
-	<div class="row">${user.username} ${user.admin.adminId} ${user.admin.username}</div>
+	<!-- <div class="row">${user.username} ${user.admin.adminId} ${user.admin.username}</div> -->
+	<h3 class="ui header">日志操作</h3>
 	<div class="row">
 	   <div class="ui relaxed divided list" id="logList">
 	   </div>
@@ -58,7 +59,13 @@
 						var operationEvent=item.operationEvent;
 						node+="<div class='item'><i class='mail icon'></i><div class='content'><a class='header'>"+createAt+"/"+adminInfo+"</a><div class='description'>"+operationEvent+"</div></div></div>"
 					}
+					pageStart+=pageLength;
+					if(pageStart<total){
+						node+="<button class='ui right labeled icon button' id='load'><i class='right arrow icon'></i>加载更多</button>";
+					}
 					$('#logList').append(node);
+					$("#load").on('click',load);
+					
 				}			
 			}
 		})
@@ -72,5 +79,44 @@
 	$("#delete").on('click', function() {
 		$('#admin_delete_modal').modal('show');
 
-	})
+	});
+	
+	function load(){
+		$.ajax({
+			type : 'POST',
+			url : "${path.concat('/log/fetch')}",
+			data : {
+				start : pageStart,
+				length : pageLength,
+				params: pageParams
+			},
+			dataType : 'json',
+			success : function(result) {
+				$("#load").remove();
+				var total = result.total;
+				var data=result.data;
+				var node="";
+				if(data==null){
+					node+="<div class='item'>当前管理员无更多操作日志</div>";
+					$('#logList').append(node);
+				}else{
+					for(var i=0;i<data.length;i++){
+						var item=data[i];
+						var adminInfo=item.adminInfo;
+						var createAt=(new Date(item.createAt)).format("yyyy/MM/dd hh:mm:ss");
+						var operationEvent=item.operationEvent;
+						node+="<div class='item'><i class='mail icon'></i><div class='content'><a class='header'>"+createAt+"/"+adminInfo+"</a><div class='description'>"+operationEvent+"</div></div></div>"
+					}
+					pageStart+=pageLength;
+					if(pageStart<total){
+						node+="<button class='ui right labeled icon button' id='load'><i class='right arrow icon'></i>加载更多</button>";
+					}
+					$('#logList').append(node);
+					$("#load").on('click',load);
+				}			
+			}
+		})
+	}
+	
+	
 </script>
