@@ -84,6 +84,7 @@
                             year_section.append(new_year);
                             year_section.append(list);
                             main_content.append(year_section);
+                            $('#container').append(content);
                         }else{
                            $(".list>ul").append(li);
                         }
@@ -92,7 +93,6 @@
                     if(pageStart<total){
                         node+="<button class='ui right labeled icon button' id='load'><i class='right arrow icon'></i>加载更多</button>";
                     }
-                     $('#container').append(content);
                     $('#container').append(node);
                     $("#load").on('click',load);
                 }
