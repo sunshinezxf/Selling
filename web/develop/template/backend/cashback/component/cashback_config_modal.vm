@@ -21,8 +21,7 @@
                     </div>
                     <div class="inline field" id="config">
                         <label style="margin-right:3.86em">适用情况:</label>
-                        <div id="set_month2">
-                            <span>前</span>
+                            <span>前</span>&nbsp;
                             <select id="apply_months2" class="ui search dropdown" name="applyMonths">
                                 <option value="1">1</option>
                                 <option value="2">2</option>
@@ -35,9 +34,8 @@
                                 <option value="9">9</option>
                                 <option value="10">10</option>
                                 <option value="11">11</option>
-                            </select>
+                            </select>&nbsp;
                             <span>个月适用</span>
-                        </div>
                     </div>
 
                     <div class="inline field">

@@ -21,7 +21,7 @@
 				</div>
 				<div class="inline field" id="set_month">
 					<label>适用月数选择:</label>
-					<span>前</span> <select id="apply_months" class="ui search dropdown" name="applyMonths">
+					<span>前</span>&nbsp;<select id="apply_months" class="ui search dropdown" name="applyMonths">
 						<option value="">请选择月数</option>
 						<option value="1">1</option>
 						<option value="2">2</option>
@@ -34,7 +34,7 @@
 						<option value="9">9</option>
 						<option value="10">10</option>
 						<option value="11">11</option>
-					</select> <span>个月适用</span>
+					</select>&nbsp;<span>个月适用</span>
 				</div>
 				<div class="inline field">
 					<label>返现标准数量:</label>
