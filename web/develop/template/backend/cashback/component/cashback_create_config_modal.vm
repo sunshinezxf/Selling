@@ -7,14 +7,14 @@
 				<div class="inline fields">
 					<label for="apply_radio" style="margin-right:2.86em">适用情况:</label>
 					<div class="field">
-						<div class="ui radio checkbox">
-                                                                                                       <input type="radio" name="apply_radio" id="partial_apply_radio">
+						<div class="ui radio checkbox"  id="partial_apply_radio">
+                                                                                                       <input type="radio" name="apply_radio">
                                                                                                        <label>部分适用</label>
                                                                                         </div>
 					</div>
 					<div class="field">
-						<div class="ui radio checkbox">
-                                                                                                       <input type="radio" name="apply_radio" id="apply_radio">
+						<div class="ui radio checkbox" id="apply_radio">
+                                                                                                       <input type="radio" name="apply_radio">
                                                                                                        <label>普遍适用</label>
                                                                                         </div>
 					</div>
