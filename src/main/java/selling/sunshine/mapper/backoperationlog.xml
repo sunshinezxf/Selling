@@ -20,6 +20,10 @@
         <if test="adminInfo != null and adminInfo != ''">
             AND admin_info = #{adminInfo}
         </if>
+        <if test="start != null and end != null and start != '' and end != ''">
+            AND (date_format(create_time, '%Y-%m-%d') &gt;= #{start} AND date_format(create_time, '%Y-%m-%d') &lt;=
+            #{end})
+        </if>
         <if test="blockFlag != null">
             AND block_flag = #{blockFlag}
         </if>
