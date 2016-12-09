@@ -36,10 +36,12 @@
 		</div>
 	</div>
 	<div class="actions">	
-	    <form id="gift_quantity_form">
+	    <form class="ui form" id="gift_quantity_form">
+	    <p class="inline field">
 			<input type="hidden" id="apply_gift_id" name="applyId"></input>
-			<label for="gift_quantity" class="ui label">配置赠送盒数</label>
+			<label for="gift_quantity">配置赠送盒数:&nbsp;&nbsp;&nbsp;</label>
 			<input type="tel"  id="gift_quantity" name="amount" placeholder="请输入赠送盒数" autocomplete="off">
+	    </p>
 		</form>
 		<button class="ui negative basic button" id="cancer_btn">取消</button>
 		<button class="ui disabled button" id="present_btn" disabled="disabled">赠送</button>

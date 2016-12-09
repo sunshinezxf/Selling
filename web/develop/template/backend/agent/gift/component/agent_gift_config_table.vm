@@ -30,11 +30,11 @@
 			<form class="ui form" id="config_form">
 				<input type="hidden" id="goods_id" />
 				<p class="inline field">
-					<label>代理商:</label>
+					<label style="margin-right: 2.86em">代理商姓名:</label>
 					<text id="agent_name"></text>
 				</p>
 				<p class="inline field">
-					<label>选择的商品:</label>
+					<label style="margin-right: 2.86em">选择的商品:</label>
 					<text id="goods_name"></text>
 				</p>
 				<p class="inline field">
