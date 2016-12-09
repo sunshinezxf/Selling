@@ -186,8 +186,8 @@
         </div>
     </div>
     <div class="actions">
-        <div class="ui cancel button" id="modify_cancer">取消</div>
-        <div id="modify_btn" class="ui button" disabled="disabled">确定</div>
+        <div class="ui cancel button" id="modify_cancel">取消</div>
+        <div id="modify_btn" class="ui disabled button" disabled="disabled">确定</div>
     </div>
 </div>
 <div class="ui modal" id="fobid_modal">
@@ -201,7 +201,7 @@
     </div>
   </div>
   <div class="actions">
-    <div class="ui button" id="fobid_cancer">取消</div>
+    <div class="ui button" id="fobid_cancel">取消</div>
     <div class="ui button" id="fobid_confirm">确认</div>
   </div>
 </div>
@@ -276,7 +276,7 @@
             }
         });
 	});
-	$("#modify_cancer").on('click',function() {
+	$("#modify_cancel").on('click',function() {
 		$('#set_upperAgent_modal').modal('hide');
 		$('#set_upperAgent_error').hide();        
 	});
@@ -294,7 +294,7 @@
 		   var url = "${path.concat('/agent/forbid/')}${agent.agentId}";
 	       window.location.href = url;
 	});
-	$("#fobid_cancer").on('click', function() {
+	$("#fobid_cancel").on('click', function() {
 		   $('#fobid_modal').modal('hide');
 	});
 

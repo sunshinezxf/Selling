@@ -24,21 +24,62 @@
         </div>
     </div>
 </div>
+<div class="ui page inverted dimmer transition hidden">
+    <div class="ui large loader"></div>
+</div>
+<div class="ui modal" id="consult_modal">
+    <i class="close icon"></i>
+    <div class="header"></div>
+    <div class="content">
+        <h3 class="consult_success">报表已成功生成，是否立即下载？</h3>
+        <h3 class="consult_failed">报表生成失败！</h3>
+    </div>
+    <div class="actions">
+        <div id="download_cancel" class="ui cancel button consult_success">取消</div>
+        <div id="download_btn" class="ui positive button consult_success">下载</div>
+        <div id="consult_failed_btn" class="ui positive button consult_failed">确定</div>
+    </div>
+</div>
+<div class="ui modal" id="download_modal">
+    <i class="close icon"></i>
+    <div class="header"></div>
+    <div class="content">
+        <h3>是否立即下载该报表？</h3>
+    </div>
+    <div class="actions">
+        <div id="download_directly_cancel" class="ui cancel button">取消</div>
+        <div id="download_directly_btn" class="ui positive button">下载</div>
+    </div>
+</div>
 <script>
     var indent={"name":"indent","url":"${path.concat("/indent/overview")}"};
     var deliver={"name":"deliver","url":"${path.concat("/deliver/overview")}"};
     var gather={"name":"gather","url":"${path.concat("/gather/overview")}"};
     var withdraw={"name":"withdraw","url":"${path.concat("/withdraw/overviewreport")}"};
-    var agent="${path.concat('/agent/downloadAgentExcel')}";
-    var gift="${path.concat('/statement/downloadGiftExcel')}";
+    var indentDownload={"name":"indent","url":"${path.concat('/indent/download/')}"};
+    var deliverDownload={"name":"deliver","url":"${path.concat('/deliver/download/')}"};
+    var gatherDownload={"name":"gather","url":"${path.concat('/gather/download/')}"};
+    var withdrawDownload={"name":"withdraw","url":"${path.concat('/withdraw/download/')}"};
+    var agentDownload={"name":"agent","url":"${path.concat('/agent/downloadAgentExcel')}"};
+    var giftDownload={"name":"gift","url":"${path.concat('/statement/downloadGiftExcel')}"};
     var allEvent="${path.concat('/event/all')}";
+    var allEventDownload="${path.concat('/statement/downloadEventExcel/')}"
     var urls=new Array();
     urls.push(indent,deliver,gather,withdraw);
+    var directlyurls=new Array();
+    directlyurls.push(agentDownload,giftDownload);
+    var downloadurls=new Array();
+    downloadurls.push(indentDownload,deliverDownload,gatherDownload,withdrawDownload);
+    var tempFileName;
+    var fileName;
+    var eventId;
     var starttime="2016-01-01";
     var endtime=new Date();
     $(document).ready(function(){
         $("#datetime_segment").show();
         $("#events_segment").hide();
+        $("#consult_modal").modal("hide");
+        $("#download_modal").modal("hide");
         $.get(indent.url,function (result) {
             if (result.responseCode == "RESPONSE_OK") {
                 if(result.data!=null){
@@ -50,6 +91,7 @@
         })
 
         var start_flatpickr=$("#start_flatpickr").flatpickr({
+            "locale": "zh",
             minDate:starttime,
             maxDate:endtime,
             onChange:function(selectedDates, dateStr, instance) {
@@ -58,6 +100,7 @@
         });
 
         var end_flatpickr=$("#end_flatpickr").flatpickr({
+            "locale": "zh",
             minDate:starttime,
             maxDate:endtime,
             onChange:function(selectedDates, dateStr, instance) {
@@ -65,6 +108,13 @@
             },
         });
 
+        $('.ui.center.aligned.segment').popup({
+            boundary: '.column'
+        });
+
+        $(".ui.page.dimmer").dimmer({
+            closable:false
+        });
     });
     $(".ui.pointing.secondary.menu > a").each(function(){
         $(this).click(function(){
@@ -109,6 +159,7 @@
                                      var segment=$("<div></div>");
                                      segment.addClass("ui center aligned segment");
                                      segment.attr("id",events[j].eventId);
+                                     segment.attr("data-content","下载该活动报表");
                                      var header=$("<div></div>");
                                      header.addClass("ui header");
                                      header.text(events[j].title.substr(0,4));
@@ -127,6 +178,7 @@
                                      var segment=$("<div></div>");
                                      segment.addClass("ui center aligned segment");
                                      segment.attr("id",events[p].eventId);
+                                     segment.attr("data-content","下载该活动报表");
                                      var header=$("<div></div>");
                                      header.addClass("ui header");
                                      header.text(events[p].title.substr(0,4));
@@ -150,5 +202,107 @@
                 })
             }
         });
+    });
+
+    $("#datetime_btn").click(function(){
+        $(".ui.page.dimmer").dimmer("show");
+        var start=$("#start_time").val();
+        var end=$("#end_time").val();
+        $(".ui.pointing.secondary.menu > a").each(function(){
+            if($(this).hasClass("active")){
+                var itemid=$(this).attr("id");
+                var param = {
+                    start: start,
+                    end: end
+                };
+                $.each(urls,function (index,obj) {
+                    if(obj.name==itemid){
+                        $.post(obj.url,param,function (result) {
+                            if (result.responseCode != "RESPONSE_OK") {
+                                $(".ui.page.dimmer").dimmer("hide");
+                                //failed modal
+                                $(".consult_failed").show();
+                                $(".consult_success").hide();
+                            } else {
+                                $(".ui.page.dimmer").dimmer("hide");
+                                tempFileName = result.data;
+                                fileName = start + "_" + end;
+                                //success modal
+                                $(".consult_success").show();
+                                $(".consult_failed").hide();
+                            }
+                            $("#consult_modal").modal("show");
+                            $("#download_modal").modal("hide");
+                        })
+                    }
+                });
+                $.each(directlyurls,function (index,obj) {
+                    if(obj.name==itemid){
+                        $(".ui.page.dimmer").dimmer("hide");
+                        $("#download_modal").modal("hide");
+                        $(".consult_success").show();
+                        $(".consult_failed").hide();
+                        $("#consult_modal").modal("show");
+                    }
+                });
+            }
+        });
+    });
+
+    $("#events_segment .ui.center.aligned.segment").each(function(){
+        $(this).click(function(){
+            eventId=$(this).attr("id");
+            $("#consult_modal").modal("hide");
+            $("#download_modal").modal("show");
+        });
+    });
+
+    $("#download_btn").click(function(){
+        $(".ui.pointing.secondary.menu > a").each(function(){
+            if($(this).hasClass("active")){
+                var itemid=$(this).attr("id");
+                $.each(downloadurls,function (index,obj) {
+                    if(obj.name==itemid){
+                        window.location.href=obj.url+ fileName + "/" + tempFileName;
+                        $("#start_time").val("");
+                        $("#end_time").val("");
+                    }
+                });
+                $.each(directlyurls,function (index,obj) {
+                    if(obj.name==itemid){
+                        var start=$("#start_time").val();
+                        var end=$("#end_time").val();
+                        var param = {
+                            start: start,
+                            end: end
+                        };
+                        $.post(obj.url,param,function (result) {
+                            //直接下载
+                        })
+                        $("#start_time").val("");
+                        $("#end_time").val("");
+//                        window.location.reload();
+                    }
+                });
+            }
+        });
+    });
+
+    $("#download_directly_btn").click(function(){
+        window.location.href=allEventDownload+eventId;
+        $("#start_time").val("");
+        $("#end_time").val("");
+    });
+
+    $("#download_cancel").click(function(){
+        $("#consult_modal").modal("hide");
+    });
+
+    $("#consult_failed_btn").click(function(){
+        $("#consult_modal").modal("hide");
+    });
+
+    $("#download_directly_cancel").click(function(){
+        $("#download_modal").modal("hide");
     });
 </script>
