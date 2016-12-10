@@ -1,5 +1,8 @@
 package selling.sunshine.controller;
 
+import common.sunshine.model.selling.user.User;
+import common.sunshine.utils.ResponseCode;
+import common.sunshine.utils.ResultData;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
@@ -11,27 +14,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
-import selling.sunshine.form.AdminForm;
 import selling.sunshine.form.AdminLoginForm;
-import common.sunshine.model.selling.admin.Admin;
-import selling.sunshine.model.BackOperationLog;
-import common.sunshine.model.selling.user.Role;
-import common.sunshine.model.selling.user.User;
 import selling.sunshine.model.sum.OrderMonth;
 import selling.sunshine.model.sum.TopThreeAgent;
 import selling.sunshine.model.sum.Vendition;
-import selling.sunshine.service.AdminService;
-import selling.sunshine.service.LogService;
-import selling.sunshine.service.RoleService;
-import selling.sunshine.service.StatisticService;
-import selling.sunshine.service.ToolService;
-import common.sunshine.utils.ResponseCode;
-import common.sunshine.utils.ResultData;
+import selling.sunshine.service.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -51,13 +42,13 @@ public class PlatformController {
 
     @Autowired
     private RoleService roleService;
-    
+
     @Autowired
     private ToolService toolService;
-    
+
     @Autowired
     private LogService logService;
-    
+
     @Autowired
     private StatisticService statisticService;
 
@@ -91,20 +82,7 @@ public class PlatformController {
             User user = (User) subject.getPrincipal();
             HttpSession session = request.getSession();
             session.setAttribute("role", user.getRole().getName());
-            switch (user.getRole().getName()) {
-                case "admin":
-                    view.setViewName("redirect:/dashboard");
-                    return view;
-                case "auditor":
-                    view.setViewName("redirect:/agent/check");
-                    return view;
-                case "express":
-                    view.setViewName("redirect:/order/check");
-                    return view;
-                case "finance":
-                    view.setViewName("redirect:/withdraw/check");
-                    return view;
-            }
+            view.setViewName("redirect:/dashboard");
         } catch (Exception e) {
             view.setViewName("redirect:/login");
             return view;
@@ -175,59 +153,59 @@ public class PlatformController {
         ModelAndView view = new ModelAndView();
         Map<String, Object> condition = new HashMap<>();
         ResultData resultData = new ResultData();
-        
-        resultData=statisticService.orderMonth();
-        if (resultData.getResponseCode()==ResponseCode.RESPONSE_OK) {
-        	OrderMonth orderMonth=((List<OrderMonth>)resultData.getData()).get(0);
-        	orderMonth.setPrice(((int)(orderMonth.getPrice()*100)*1.0/100));
-        	orderMonth.setTotalPrice(((int)(orderMonth.getTotalPrice()*100)*1.0/100));
-        	view.addObject("orderMonth", orderMonth);
-		}else{
-			OrderMonth orderMonth=new OrderMonth();
-        	view.addObject("orderMonth", orderMonth);
-		}
-        
+
+        resultData = statisticService.orderMonth();
+        if (resultData.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            OrderMonth orderMonth = ((List<OrderMonth>) resultData.getData()).get(0);
+            orderMonth.setPrice(((int) (orderMonth.getPrice() * 100) * 1.0 / 100));
+            orderMonth.setTotalPrice(((int) (orderMonth.getTotalPrice() * 100) * 1.0 / 100));
+            view.addObject("orderMonth", orderMonth);
+        } else {
+            OrderMonth orderMonth = new OrderMonth();
+            view.addObject("orderMonth", orderMonth);
+        }
+
         condition.put("monthly", true);
         condition.put("type", 0);
-        resultData=statisticService.purchaseRecord(condition);
-        if (resultData.getResponseCode()==ResponseCode.RESPONSE_OK) {
-        	List<Vendition> monthlyGoods=(List<Vendition>)resultData.getData();
-        	for(int i=0;i<monthlyGoods.size();i++){
-        		monthlyGoods.get(i).setRecordPrice(((int)(monthlyGoods.get(i).getRecordPrice()*100)*1.0/100));
-        	}
-        	view.addObject("monthlyGoods", monthlyGoods);
-		}else{
-			//无记录
-		}
-        
+        resultData = statisticService.purchaseRecord(condition);
+        if (resultData.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            List<Vendition> monthlyGoods = (List<Vendition>) resultData.getData();
+            for (int i = 0; i < monthlyGoods.size(); i++) {
+                monthlyGoods.get(i).setRecordPrice(((int) (monthlyGoods.get(i).getRecordPrice() * 100) * 1.0 / 100));
+            }
+            view.addObject("monthlyGoods", monthlyGoods);
+        } else {
+            //无记录
+        }
+
         condition.clear();
         condition.put("type", 0);
-        resultData=statisticService.purchaseRecord(condition);
-        if (resultData.getResponseCode()==ResponseCode.RESPONSE_OK) {
-        	List<Vendition> totalGoods=(List<Vendition>)resultData.getData();
-        	for(int i=0;i<totalGoods.size();i++){
-        		totalGoods.get(i).setRecordPrice(((int)(totalGoods.get(i).getRecordPrice()*100)*1.0/100));
-        	}
-        	view.addObject("totalGoods", totalGoods);
-		}else{
-			//无记录
-		}
-        
+        resultData = statisticService.purchaseRecord(condition);
+        if (resultData.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            List<Vendition> totalGoods = (List<Vendition>) resultData.getData();
+            for (int i = 0; i < totalGoods.size(); i++) {
+                totalGoods.get(i).setRecordPrice(((int) (totalGoods.get(i).getRecordPrice() * 100) * 1.0 / 100));
+            }
+            view.addObject("totalGoods", totalGoods);
+        } else {
+            //无记录
+        }
+
         condition.clear();
         condition.put("monthly", true);
         condition.put("type", 0);
         List<Integer> status = new ArrayList<Integer>();
         status.add(1);
         condition.put("status", status);
-        resultData=statisticService.purchaseRecord(condition);
-        if (resultData.getResponseCode()==ResponseCode.RESPONSE_OK) {
-        	List<Vendition> payedRecord=(List<Vendition>)resultData.getData();
-        	view.addObject("payedRecord", payedRecord);
-		}else{
-			//无记录
-			logger.debug("lalalalallalalala");
-		}
-        
+        resultData = statisticService.purchaseRecord(condition);
+        if (resultData.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            List<Vendition> payedRecord = (List<Vendition>) resultData.getData();
+            view.addObject("payedRecord", payedRecord);
+        } else {
+            //无记录
+            logger.debug("lalalalallalalala");
+        }
+
         condition.clear();
         condition.put("monthly", true);
         condition.put("type", 0);
@@ -235,37 +213,37 @@ public class PlatformController {
         status.add(2);
         status.add(3);
         condition.put("status", status);
-        resultData=statisticService.purchaseRecord(condition);
-        if (resultData.getResponseCode()==ResponseCode.RESPONSE_OK) {
-        	List<Vendition> shippedRecord=(List<Vendition>)resultData.getData();
-        	view.addObject("shippedRecord", shippedRecord);
-		}else{
-			//无记录
-		}
-        
+        resultData = statisticService.purchaseRecord(condition);
+        if (resultData.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            List<Vendition> shippedRecord = (List<Vendition>) resultData.getData();
+            view.addObject("shippedRecord", shippedRecord);
+        } else {
+            //无记录
+        }
+
         condition.clear();
         condition.put("monthly", true);
         condition.put("type", 1);
-        resultData=statisticService.purchaseRecord(condition);
-        if (resultData.getResponseCode()==ResponseCode.RESPONSE_OK) {
-        	List<Vendition> giftRecord=(List<Vendition>)resultData.getData();
-        	view.addObject("giftRecord", giftRecord);
-		}else{
-			//无记录
-		}
-        
+        resultData = statisticService.purchaseRecord(condition);
+        if (resultData.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            List<Vendition> giftRecord = (List<Vendition>) resultData.getData();
+            view.addObject("giftRecord", giftRecord);
+        } else {
+            //无记录
+        }
+
         resultData = statisticService.topThreeAgent();
-        if (resultData.getResponseCode()==ResponseCode.RESPONSE_OK) {
-        	List<Object> list=(List<Object>)resultData.getData();
-        	List<TopThreeAgent> monthList=(List<TopThreeAgent>)list.get(0);
-        	List<TopThreeAgent> allList=(List<TopThreeAgent>)list.get(1);
-        	if (monthList.size()!=0) {
-        		view.addObject("monthList", monthList);
-			}
-        	if (allList.size()!=0) {
-        	  view.addObject("allList", allList);
-        	}
-		}
+        if (resultData.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            List<Object> list = (List<Object>) resultData.getData();
+            List<TopThreeAgent> monthList = (List<TopThreeAgent>) list.get(0);
+            List<TopThreeAgent> allList = (List<TopThreeAgent>) list.get(1);
+            if (monthList.size() != 0) {
+                view.addObject("monthList", monthList);
+            }
+            if (allList.size() != 0) {
+                view.addObject("allList", allList);
+            }
+        }
         view.setViewName("/backend/dashboard");
         return view;
     }
