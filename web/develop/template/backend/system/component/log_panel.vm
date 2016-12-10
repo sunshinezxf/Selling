@@ -91,7 +91,7 @@
                     }
                     pageStart+=pageLength;
                     if(pageStart<total){
-                        node+="<button class='ui right labeled icon button' id='load'><i class='right arrow icon'></i>加载更多</button>";
+                        node+="<div style='margin-top:2em;text-align:left'><button class='ui right labeled icon button' id='load'><i class='right arrow icon'></i>加载更多</button></div>";
                     }
                     $('.main-container').append(node);
                     $("#load").on('click',load);
