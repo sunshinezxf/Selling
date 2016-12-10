@@ -112,6 +112,17 @@
                 }
                 },
                 {
+                    title: "类型", "mRender": function (data, type, full) {
+                    if(full.orderType == 'ORDINARY') {
+                        return "购买订单";
+                    }else if(full.orderType == 'GIFT') {
+                        return "赠送订单";
+                    }else if(full.orderType == 'CUSTOMER') {
+                        return "顾客订单";
+                    }
+                }
+                },
+                {
                     title: "时间", "mRender": function (data, type, full) {
                     return ((new Date(full.createAt)).format("yyyy-MM-dd"));
                 }
