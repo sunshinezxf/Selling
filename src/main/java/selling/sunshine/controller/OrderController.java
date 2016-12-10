@@ -633,6 +633,7 @@ public class OrderController {
                 express.setLinkId(item.getOrderId());
                 express.setOrder(item);
                 express.setGoodsQuantity(item.getQuantity());
+                expresses.add(express);
             }
         } else if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_NULL) {
             logger.debug("当前暂无顾客该状态下的订单信息");
