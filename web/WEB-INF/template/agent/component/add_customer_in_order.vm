@@ -158,7 +158,7 @@
     		$("#add_customer_dialog").fadeIn();  
     		return;
         }
-        if(!(/^1[3|4|5|7|8]\d{9}$/.test(phone))){
+        if(!(/^1[3|4|5|7|8]\d{9}$/.test($.phoneFilter(phone)))){
         	$("#add_customer_dialog").find(".weui_dialog_bd").html("手机号码有误，请重填！");
     		$("#add_customer_dialog").fadeIn();
     		return;
@@ -175,7 +175,7 @@
         }
         $.post(url, {
             name: name,
-            phone: phone,
+            phone: $.phoneFilter(phone),
             address: address,
         }, function (result) {
             if (result.responseCode == "RESPONSE_OK") {
@@ -209,6 +209,11 @@
             }
         });
     });
+    
+    $.phoneFilter = function(phone){
+    	return phone.replace(/-/g,"");
+    }
+    
 
     $("#add_customer_cancel_btn").click(function () {
         $("#add_customer_form").hide();

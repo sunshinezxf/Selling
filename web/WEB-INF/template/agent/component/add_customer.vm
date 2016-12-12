@@ -176,13 +176,13 @@
     	}else if(typeof address == "undefined" || address == "") {
     		$("#dialog").find(".weui_dialog_bd").html("地址不能为空！");
     		$("#dialog").fadeIn();   
-    	}else if(!(/^1[3|4|5|7|8]\d{9}$/.test(phone))){ 
+    	}else if(!(/^1[3|4|5|7|8]\d{9}$/.test($.phoneFilter(phone)))){ 
             $("#dialog").find(".weui_dialog_bd").html("手机号码有误，请重填！");
     		$("#dialog").fadeIn();
         } else{
            $.post(url, {
                name: name,
-               phone: phone,
+               phone: $.phoneFilter(phone),
                address: address,
            }, function (result) {
               if (result.responseCode == "RESPONSE_OK") {
@@ -201,6 +201,10 @@
           });
         }       
     });
+    
+    $.phoneFilter = function(phone){
+    	return phone.replace(/-/g,"");
+    }
 
     $("#add_cancel_btn").click(function () {
         $("#add_customer_form").hide();

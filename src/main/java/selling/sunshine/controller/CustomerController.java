@@ -160,9 +160,9 @@ public class CustomerController {
         condition.put("phone", customerForm.getPhone());
         condition.put("blockFlag", false);
         condition.put("customerBlockFlag", false);
-        response = customerService.fetchCustomerPhone(condition);
-        if (((List<CustomerPhone>) response.getData()).size() != 0) {
-            CustomerPhone target = ((List<CustomerPhone>) response.getData()).get(0);
+        ResultData fetchCustomerPhoneResponse = customerService.fetchCustomerPhone(condition);
+        if (((List<CustomerPhone>) fetchCustomerPhoneResponse.getData()).size() != 0) {
+            CustomerPhone target = ((List<CustomerPhone>) fetchCustomerPhoneResponse.getData()).get(0);
             if (!target.getCustomer().getCustomerId().equals(customerId)) {
                 response.setResponseCode(ResponseCode.RESPONSE_ERROR);
                 return response;

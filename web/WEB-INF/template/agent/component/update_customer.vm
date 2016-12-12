@@ -80,15 +80,15 @@
     		$("#dialog").find(".weui_dialog_bd").html("地址不能为空！");
     		$("#dialog").fadeIn();
             $("#customer_address_new").val(customer.address.address);       
-    	}else if(!(/^1[3|4|5|7|8]\d{9}$/.test(phone))){ 
+    	}else if(!(/^1[3|4|5|7|8]\d{9}$/.test($.phoneFilter(phone)))){ 
             $("#dialog").find(".weui_dialog_bd").html("手机号码有误，请重填！");
     		$("#dialog").fadeIn();
     		$("#customer_phone_new").val(customer.phone.phone);     
         } else{
-            $.post(url, {customerId: customerId, name: name, phone: phone, address: address}, function (result) {
+            $.post(url, {customerId: customerId, name: name, phone: $.phoneFilter(phone), address: address}, function (result) {
                if (result.responseCode == "RESPONSE_OK") {
                   var newCustomer = result.data;
-                  var node = "<a class='weui_cell' onclick='updateCustomer(this)' id='" + newCustomer.customerId + "'><div class='weui_cell_bd weui_cell_primary'><p>" + name + "</p></div><div class='weui_cell_ft'>" + phone + "</div></a>";
+                  var node = "<a class='weui_cell' onclick='updateCustomer(this)' id='" + newCustomer.customerId + "'><div class='weui_cell_bd weui_cell_primary'><p>" + name + "</p></div><div class='weui_cell_ft'>" + $.phoneFilter(phone) + "</div></a>";
                   $("#customer_list").append(node);
                   $("#" + customerId).remove();    
                   $("#update_customer_form").hide();
@@ -97,6 +97,7 @@
                   $("#customer_phone_new").val("");
                   $("#customer_address_new").val("");
                }else{
+               	  alert(result.responseCode);
                   $("#dialog").find(".weui_dialog_bd").html("您新填入的手机号已经有其他人正在使用，请检查是否输入错误！");
     		      $("#dialog").fadeIn();
                }
@@ -107,6 +108,11 @@
        
        
     });
+    
+    $.phoneFilter = function(phone){
+    	return phone.replace(/-/g,"");
+    }
+    
 	
 	$("#update_delete_btn").click(function(){
     	$("#delete_dialog").fadeIn();
