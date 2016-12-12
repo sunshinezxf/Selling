@@ -207,9 +207,9 @@
 </div>
 <script>
     var upperAgentId;
-    $(document).ready(function(){   	
-        var img_width=$(".credit").width();
-        $(".credit").css("height",img_width*2/3);
+    $(document).ready(function(){
+        var img_width=$("#personal_info img").width();
+        $("#personal_info img").css("height",img_width*2/3);
 
         var wechat="${agent.wechat}";
         if(wechat&&wechat.slice(-1)!="}"){
