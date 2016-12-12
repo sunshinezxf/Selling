@@ -1,122 +1,125 @@
 <div class="ui stackable padded grid" name="admin_list">
-	<div class="row">
-		<h1 class="ui header">
-			<i class="home icon"></i>
-			<div class="content">
-				账号详情
-				<div class="sub header">
-					<div class="ui breadcrumb">
-						<a class="section">账号管理</a>
-						<div class="divider">/</div>
-						<a class="section">账号列表</a>
-						<div class="divider">/</div>
-						<a class="active section">账号详情</a>
-					</div>
-				</div>
-			</div>
-		</h1>
-	</div>
-	<div class="row">
-		<button type="button" id="update" class="ui positive basic button">修改密码</button>
-		<button type="button" id="delete" class="ui negative basic button">删除账号</button>
-	</div>
-	<!-- <div class="row">${user.username} ${user.admin.adminId} ${user.admin.username}</div> -->
-	<h3 class="ui header">日志操作</h3>
-	<div class="row">
-	   <div class="ui relaxed divided list" id="logList">
-	   </div>
-	</div>
+    <div class="row">
+        <h1 class="ui header">
+            <i class="home icon"></i>
 
+            <div class="content">
+                账号详情
+                <div class="sub header">
+                    <div class="ui breadcrumb">
+                        <a class="section">账号管理</a>
+
+                        <div class="divider">/</div>
+                        <a class="section">账号列表</a>
+
+                        <div class="divider">/</div>
+                        <a class="active section">账号详情</a>
+                    </div>
+                </div>
+            </div>
+        </h1>
+    </div>
+    <div class="row">
+        <button type="button" id="update" class="ui positive basic button">修改密码</button>
+        <button type="button" id="delete" class="ui negative basic button">删除账号</button>
+    </div>
+    <!-- <div class="row">${user.username} ${user.admin.adminId} ${user.admin.username}</div> -->
+    <h3 class="ui header">日志操作</h3>
+
+    <div class="row">
+        <div class="ui relaxed divided list" id="logList">
+        </div>
+    </div>
 </div>
 #parse("/backend/admin/component/admin_delete_modal.vm")
 #parse("/backend/admin/component/admin_update_modal.vm")
 <script>
-    var pageStart=0;
-    var pageLength=5;
-    var pageParams="{'adminInfo':'${user.admin.username}'}";
-	$(document).ready(function() {
-		$.ajax({
-			type : 'POST',
-			url : "${path.concat('/log/fetch')}",
-			data : {
-				start : pageStart,
-				length : pageLength,
-				params: pageParams
-			},
-			dataType : 'json',
-			success : function(result) {
-				var total = result.total;
-				var data=result.data;
-				var node="";
-				if(data==null){
-					node+="<div class='item'>当前管理员暂无操作日志</div>";
-					$('#logList').append(node);
-				}else{
-					for(var i=0;i<data.length;i++){
-						var item=data[i];
-						var adminInfo=item.adminInfo;
-						var createAt=(new Date(item.createAt)).format("yyyy/MM/dd hh:mm:ss");
-						var operationEvent=item.operationEvent;
-						node+="<div class='item'><i class='mail icon'></i><div class='content'><a class='header'>"+createAt+"/"+adminInfo+"</a><div class='description'>"+operationEvent+"</div></div></div>"
-					}
-					pageStart+=pageLength;
-					if(pageStart<total){
-						node+="<button class='ui right labeled icon button' id='load'><i class='right arrow icon'></i>加载更多</button>";
-					}
-					$('#logList').append(node);
-					$("#load").on('click',load);
-					
-				}			
-			}
-		})
-	});
+    var pageStart = 0;
+    var pageLength = 5;
+    var pageParams = "{'adminInfo':'${user.admin.username}'}";
+    $(document).ready(function () {
+        $.ajax({
+            type: 'POST',
+            url: "${path.concat('/log/fetch')}",
+            data: {
+                start: pageStart,
+                length: pageLength,
+                params: pageParams
+            },
+            dataType: 'json',
+            success: function (result) {
+                var total = result.total;
+                var data = result.data;
+                var node = "";
+                if (data == null) {
+                    node += "<div class='item'>当前管理员暂无操作日志</div>";
+                    $('#logList').append(node);
+                } else {
+                    for (var i = 0; i < data.length; i++) {
+                        var item = data[i];
+                        var adminInfo = item.adminInfo;
+                        var createAt = (new Date(item.createAt)).format("yyyy/MM/dd hh:mm:ss");
+                        var operationEvent = item.operationEvent;
+                        node += "<div class='item'><i class='mail icon'></i><div class='content'><a class='header'>" + createAt + "/" + adminInfo + "</a><div class='description'>" + operationEvent + "</div></div></div>"
+                    }
+                    pageStart += pageLength;
+                    if (pageStart < total) {
+                        node += "<button class='ui right labeled icon button' id='load'><i class='right arrow icon'></i>加载更多</button>";
+                    }
+                    $('#logList').append(node);
+                    $("#load").on('click', load);
 
-	$("#update").on('click', function() {
-		$('#admin_update_modal').modal('show');
-		$('#admin_password').val("");
-	});
+                }
+            }
+        })
+    });
 
-	$("#delete").on('click', function() {
-		$('#admin_delete_modal').modal('show');
+    $("#update").on('click', function () {
+        $('#admin_update_modal').modal('show');
+        $('#admin_password').val("");
+    });
 
-	});
-	
-	function load(){
-		$.ajax({
-			type : 'POST',
-			url : "${path.concat('/log/fetch')}",
-			data : {
-				start : pageStart,
-				length : pageLength,
-				params: pageParams
-			},
-			dataType : 'json',
-			success : function(result) {
-				$("#load").remove();
-				var total = result.total;
-				var data=result.data;
-				var node="";
-				if(data==null){
-					node+="<div class='item'>当前管理员无更多操作日志</div>";
-					$('#logList').append(node);
-				}else{
-					for(var i=0;i<data.length;i++){
-						var item=data[i];
-						var adminInfo=item.adminInfo;
-						var createAt=(new Date(item.createAt)).format("yyyy/MM/dd hh:mm:ss");
-						var operationEvent=item.operationEvent;
-						node+="<div class='item'><i class='mail icon'></i><div class='content'><a class='header'>"+createAt+"/"+adminInfo+"</a><div class='description'>"+operationEvent+"</div></div></div>"
-					}
-					pageStart+=pageLength;
-					if(pageStart<total){
-						node+="<button class='ui right labeled icon button' id='load'><i class='right arrow icon'></i>加载更多</button>";
-					}
-					$('#logList').append(node);
-					$("#load").on('click',load);
-				}			
-			}
-		})
-	}
-	
-	
+    $("#delete").on('click', function () {
+        $('#admin_delete_modal').modal('show');
+
+    });
+
+    function load() {
+        $.ajax({
+            type: 'POST',
+            url: "${path.concat('/log/fetch')}",
+            data: {
+                start: pageStart,
+                length: pageLength,
+                params: pageParams
+            },
+            dataType: 'json',
+            success: function (result) {
+                $("#load").remove();
+                var total = result.total;
+                var data = result.data;
+                var node = "";
+                if (data == null) {
+                    node += "<div class='item'>当前管理员无更多操作日志</div>";
+                    $('#logList').append(node);
+                } else {
+                    for (var i = 0; i < data.length; i++) {
+                        var item = data[i];
+                        var adminInfo = item.adminInfo;
+                        var createAt = (new Date(item.createAt)).format("yyyy/MM/dd hh:mm:ss");
+                        var operationEvent = item.operationEvent;
+                        node += "<div class='item'><i class='mail icon'></i><div class='content'><a class='header'>" + createAt + "/" + adminInfo + "</a><div class='description'>" + operationEvent + "</div></div></div>"
+                    }
+                    pageStart += pageLength;
+                    if (pageStart < total) {
+                        node += "<button class='ui right labeled icon button' id='load'><i class='right arrow icon'></i>加载更多</button>";
+                    }
+                    $('#logList').append(node);
+                    $("#load").on('click', load);
+                }
+            }
+        })
+    }
+
+
 </script>

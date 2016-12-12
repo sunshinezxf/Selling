@@ -2,31 +2,32 @@
     <div class="row">
         <h1 class="ui header">
             <i class="home icon"></i>
+
             <div class="content">
-            账号列表
+                账号列表
                 <div class="sub header">
-                        <div class="ui breadcrumb">
-                            <a class="section">账号管理</a>
+                    <div class="ui breadcrumb">
+                        <a class="section">账号管理</a>
 
-                            <div class="divider">/</div>
+                        <div class="divider">/</div>
 
-                            <a class="active section">账号列表</a>
-                        </div>
-                 </div>
+                        <a class="active section">账号列表</a>
+                    </div>
+                </div>
             </div>
-          </h1>
+        </h1>
     </div>
     <div class="row">
         <button type="button" id="create" class="ui positive basic button">创建新账号</button>
     </div>
     <div class="row">
-         <table id="admin_overview_table" class="ui striped table" cellspacing="0" width="100%">
-         </table>
+        <table id="admin_overview_table" class="ui striped table" cellspacing="0" width="100%">
+        </table>
     </div>
 </div>
 #parse("/backend/admin/component/admin_create_modal.vm")
 <script>
-    
+
     $(document).ready(function () {
         $("#admin_overview_table").DataTable({
             searching: false,
@@ -40,7 +41,7 @@
             "bProcessing": true,
             "bServerSide": true,
             "bInfoFiltered": false,
-            "sAjaxSource": '${path.concat('/admin/overview')}',
+            "sAjaxSource": "${path.concat('/admin/overview')}",
             "infoFiltered": false,
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                 $(nRow).removeClass('dataTable');
@@ -65,7 +66,7 @@
                     title: "操作", "mRender": function (data, type, full) {
                     var operation = "";
                     var url = "${path.concat('/admin/detail/')}" + full.userId;
-                    var detail_btn = "<a type='button' class='btn btn-primary btn-success' href='" + url + "'>详情</a>&nbsp;"
+                    var detail_btn = "<a class='ui green button' href='" + url + "'>详情</a>&nbsp;"
                     operation += detail_btn;
                     return operation;
                 }
@@ -90,10 +91,10 @@
         });
     });
 
-    $("#create").on('click', function() {
-		   $('#admin_create_modal').modal('show');
-		   $('#admin_username').val("");
-	       $('#admin_password').val("");
-	});
+    $("#create").on('click', function () {
+        $('#admin_create_modal').modal('show');
+        $('#admin_username').val("");
+        $('#admin_password').val("");
+    });
 
 </script>

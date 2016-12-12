@@ -1,49 +1,53 @@
 <div class="ui modal" id="admin_update_modal">
-	<i class="close icon"></i>
-	<div class="header">修改密码</div>
-	<div class="image content">
-		<div class="description">
-			<form class="ui form" id="update_admin_form">
-				<div class="inline field">
-					<label>账号用户名</label> 
-					<input type="text" name="username" value="${user.username}" required="" autocomplete="off" readonly="true">
-				</div>
-				<div class="inline field">
-					<label>账号新密码</label> 
-					<input type="password" name="password" id="admin_password" placeholder="密码" required="" autocomplete="off">
-					<div class="ui left pointing red basic label"  id="password_error">
-                       账号密码不能为空
+    <i class="close icon"></i>
+
+    <div class="header">修改密码</div>
+    <div class="image content">
+        <div class="description">
+            <form class="ui form" id="update_admin_form">
+                <div class="inline field">
+                    <label>账号用户名</label>
+                    <input type="text" name="username" value="${user.username}" required="" autocomplete="off"
+                           readonly="true">
+                </div>
+                <div class="inline field">
+                    <label>账号新密码</label>
+                    <input type="password" name="password" id="admin_password" placeholder="密码" required=""
+                           autocomplete="off">
+
+                    <div class="ui left pointing red basic label" id="password_error">
+                        账号密码不能为空
                     </div>
-				</div>	
-			</form>
-		</div>
-	</div>
-	<div class="actions">
-       <div class="ui button" id="update_cancer">取消</div>
-       <div class="ui button" id="update_confirm">确认</div>
-   </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="actions">
+        <div class="ui button" id="update_cancer">取消</div>
+        <div class="ui button" id="update_confirm">确认</div>
+    </div>
 </div>
 <script>
-   $('#admin_update_modal').modal('hide'); 
-   $('#password_error').hide();  
-   $("#update_cancer").on('click', function() {
-	   $('#admin_update_modal').modal('hide');
-	   $('#password_error').hide();  
-	   $('#admin_password').val("");
-   });
-   $("#update_confirm").on('click', function() {
-	   var password = $("#admin_password").val();
-	   if(typeof password == "undefined" || password == ""){
-	    	 $('#password_error').show();  
-	   }else{
-	    	 $('#admin_update_modal').modal('hide');
-	    	 var url = "${path.concat('/admin/modify/')}${user.admin.adminId}";
-	         $("#update_admin_form").attr("action", url);
-	         $("#update_admin_form").attr("method", "post");
-	         $("#update_admin_form").submit();
-	   }	   
-   });
-   $("#admin_password").on("input propertychange",function(){
-	   $('#password_error').hide(); 
-   });
+    $('#admin_update_modal').modal('hide');
+    $('#password_error').hide();
+    $("#update_cancer").on('click', function () {
+        $('#admin_update_modal').modal('hide');
+        $('#password_error').hide();
+        $('#admin_password').val("");
+    });
+    $("#update_confirm").on('click', function () {
+        var password = $("#admin_password").val();
+        if (typeof password == "undefined" || password == "") {
+            $('#password_error').show();
+        } else {
+            $('#admin_update_modal').modal('hide');
+            var url = "${path.concat('/admin/modify/')}${user.admin.adminId}";
+            $("#update_admin_form").attr("action", url);
+            $("#update_admin_form").attr("method", "post");
+            $("#update_admin_form").submit();
+        }
+    });
+    $("#admin_password").on("input propertychange", function () {
+        $('#password_error').hide();
+    });
 </script>

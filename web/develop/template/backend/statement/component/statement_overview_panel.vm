@@ -2,19 +2,34 @@
     <div class="row">
         <h1 class="ui header">
             <i class="home icon"></i>
+
             <div class="content">报表专区</div>
         </h1>
     </div>
     <div class="row">
         <div class="column">
             <div class="ui teal pointing secondary menu">
-                <a id="indent" class="active item">订货单</a>
-                <a id="deliver" class="item">发货单</a>
-                <a id="gather" class="item">收款单</a>
-                <a id="withdraw" class="item">提现单</a>
-                <a id="agent" class="item">代理商信息表</a>
-                <a id="gift" class="item">日常赠送</a>
-                <a id="allEvent" class="item">活动赠送</a>
+                #if($role == "admin" || $role == "express")
+                    <a id="indent" class="active item">订货单</a>
+                #end
+                #if($role == "admin" || $role == "express")
+                    <a id="deliver" class="item">发货单</a>
+                #end
+                #if($role == "admin" || $role == "finance")
+                    <a id="gather" class="item">收款单</a>
+                #end
+                #if($role == "admin" || $role == "finance")
+                    <a id="withdraw" class="item">提现单</a>
+                #end
+                #if($role == "admin" || $role == "auditor")
+                    <a id="agent" class="item">代理商信息表</a>
+                #end
+                #if($role == "admin")
+                    <a id="gift" class="item">日常赠送</a>
+                #end
+                #if($role == "admin")
+                    <a id="allEvent" class="item">活动赠送</a>
+                #end
             </div>
             <div id="datetime_segment" class="ui segment">
                 #parse("/backend/common/datetimepicker.vm")
@@ -29,10 +44,13 @@
 </div>
 <div class="ui modal" id="consult_modal">
     <i class="close icon"></i>
+
     <div class="header"></div>
     <div class="content">
         <h3 class="consult_success">报表已成功生成，是否立即下载？</h3>
+
         <h3 class="consult_null">当前时间段内暂无报表！</h3>
+
         <h3 class="consult_failed">报表生成失败！</h3>
     </div>
     <div class="actions">
@@ -44,6 +62,7 @@
 </div>
 <div class="ui modal" id="download_modal">
     <i class="close icon"></i>
+
     <div class="header"></div>
     <div class="content">
         <h3>是否立即下载该报表？</h3>
@@ -54,84 +73,95 @@
     </div>
 </div>
 <script>
-    var indent={"name":"indent","url":"${path.concat('/indent/overview')}"};
-    var deliver={"name":"deliver","url":"${path.concat('/deliver/overview')}"};
-    var gather={"name":"gather","url":"${path.concat('/gather/overview')}"};
-    var withdraw={"name":"withdraw","url":"${path.concat('/withdraw/overviewreport')}"};
-    var indentDownload={"name":"indent","url":"${path.concat('/indent/download/')}"};
-    var deliverDownload={"name":"deliver","url":"${path.concat('/deliver/download/')}"};
-    var gatherDownload={"name":"gather","url":"${path.concat('/gather/download/')}"};
-    var withdrawDownload={"name":"withdraw","url":"${path.concat('/withdraw/download/')}"};
-    var agentDownload={"name":"agent","url":"${path.concat('/agent/downloadAgentExcel')}"};
-    var giftDownload={"name":"gift","url":"${path.concat('/statement/downloadGiftExcel')}"};
-    var allEvent="${path.concat('/event/all')}";
-    var allEventDownload="${path.concat('/statement/downloadEventExcel/')}"
-    var urls=new Array();
-    urls.push(indent,deliver,gather,withdraw);
-    var directlyurls=new Array();
-    directlyurls.push(agentDownload,giftDownload);
-    var downloadurls=new Array();
-    downloadurls.push(indentDownload,deliverDownload,gatherDownload,withdrawDownload);
+    var indent = {"name": "indent", "url": "${path.concat('/indent/overview')}"};
+    var deliver = {"name": "deliver", "url": "${path.concat('/deliver/overview')}"};
+    var gather = {"name": "gather", "url": "${path.concat('/gather/overview')}"};
+    var withdraw = {"name": "withdraw", "url": "${path.concat('/withdraw/overviewreport')}"};
+    var indentDownload = {"name": "indent", "url": "${path.concat('/indent/download/')}"};
+    var deliverDownload = {"name": "deliver", "url": "${path.concat('/deliver/download/')}"};
+    var gatherDownload = {"name": "gather", "url": "${path.concat('/gather/download/')}"};
+    var withdrawDownload = {"name": "withdraw", "url": "${path.concat('/withdraw/download/')}"};
+    var agentDownload = {"name": "agent", "url": "${path.concat('/agent/downloadAgentExcel')}"};
+    var giftDownload = {"name": "gift", "url": "${path.concat('/statement/downloadGiftExcel')}"};
+    var allEvent = "${path.concat('/event/all')}";
+    var allEventDownload = "${path.concat('/statement/downloadEventExcel/')}"
+    var urls = new Array();
+    #if($role == "admin" || $role == "express")
+        urls.push(indent);
+    #end
+    #if($role == "admin" || $role == "express")
+        urls.push(deliver);
+    #end
+    #if($role == "admin" || $role == "finance")
+        urls.push(gather);
+    #end
+    #if($role == "admin" || $role == "finance")
+        urls.push(withdraw);
+    #end
+    var directlyurls = new Array();
+    directlyurls.push(agentDownload, giftDownload);
+    var downloadurls = new Array();
+    downloadurls.push(indentDownload, deliverDownload, gatherDownload, withdrawDownload);
     var tempFileName;
     var fileName;
     var eventId;
-    var starttime="2016-01-01";
-    var endtime=new Date();
-    var start_flatpickr,end_flatpickr;
-    $(document).ready(function(){
+    var starttime = "2016-01-01";
+    var endtime = new Date();
+    var start_flatpickr, end_flatpickr;
+    $(document).ready(function () {
         $("#datetime_segment").show();
         $("#events_segment").hide();
         $("#consult_modal").modal("hide");
         $("#download_modal").modal("hide");
-        $.get(indent.url,function (result) {
+        $.get(indent.url, function (result) {
             if (result.responseCode == "RESPONSE_OK") {
-                if(result.data!=null){
-                    starttime=result.data.start;
+                if (result.data != null) {
+                    starttime = result.data.start;
                 }
             } else {
                 alert("数据传输有误！");
             }
         })
 
-        start_flatpickr=$("#start_flatpickr").flatpickr({
+        start_flatpickr = $("#start_flatpickr").flatpickr({
             "locale": "zh",
-            minDate:starttime,
-            maxDate:endtime,
-            onChange:function(selectedDates, dateStr, instance) {
-                end_flatpickr.set("minDate",dateStr);
+            minDate: starttime,
+            maxDate: endtime,
+            onChange: function (selectedDates, dateStr, instance) {
+                end_flatpickr.set("minDate", dateStr);
             },
         });
 
-        end_flatpickr=$("#end_flatpickr").flatpickr({
+        end_flatpickr = $("#end_flatpickr").flatpickr({
             "locale": "zh",
-            minDate:starttime,
-            maxDate:endtime,
-            onChange:function(selectedDates, dateStr, instance) {
-                start_flatpickr.set("maxDate",dateStr);
+            minDate: starttime,
+            maxDate: endtime,
+            onChange: function (selectedDates, dateStr, instance) {
+                start_flatpickr.set("maxDate", dateStr);
             },
         });
 
     });
 
     $(".ui.page.dimmer").dimmer({
-        closable:false
+        closable: false
     });
-    
-    $(".ui.pointing.secondary.menu > a").each(function(){
-        $(this).click(function(){
+
+    $(".ui.pointing.secondary.menu > a").each(function () {
+        $(this).click(function () {
             $(this).addClass("active");
             $(this).siblings().removeClass("active");
-            var itemid=$(this).attr("id");
-            if(itemid!="allEvent"){
+            var itemid = $(this).attr("id");
+            if (itemid != "allEvent") {
                 $("#datetime_segment").show();
                 $("#events_segment").empty();
                 $("#events_segment").hide();
-                $.each(urls,function (index,obj) {
-                    if(obj.name==itemid){
-                        $.get(obj.url,function (result) {
+                $.each(urls, function (index, obj) {
+                    if (obj.name == itemid) {
+                        $.get(obj.url, function (result) {
                             if (result.responseCode == "RESPONSE_OK") {
-                                if(result.data!=null){
-                                    starttime=result.data.start;
+                                if (result.data != null) {
+                                    starttime = result.data.start;
                                 }
                             } else {
                                 alert("数据传输有误！");
@@ -139,66 +169,66 @@
                         })
                     }
                 });
-            }else{
+            } else {
                 $("#datetime_segment").hide();
                 $("#events_segment").show();
-                $.get(allEvent,function (result) {
+                $.get(allEvent, function (result) {
                     if (result.responseCode == "RESPONSE_OK") {
-                        var events=result.data;
+                        var events = result.data;
                         var rows;
-                        if(events.length%4==0){
-                            rows=events.length/4;
-                        }else{
-                            rows=parseInt(events.length/4)+1;
+                        if (events.length % 4 == 0) {
+                            rows = events.length / 4;
+                        } else {
+                            rows = parseInt(events.length / 4) + 1;
                         }
-                        for(var i=0;i<rows;i++){
-                             var grid=$("<div></div>");
-                             grid.addClass("ui four column stackable grid");
-                             if(i!=rows-1){
-                                for(var j=4*i;j<4*(i+1);j++){
-                                     var column=$("<div></div>");
-                                     column.addClass("column");
-                                     var segment=$("<div></div>");
-                                     segment.addClass("ui center aligned segment");
-                                     segment.attr("id",events[j].eventId);
-                                     segment.attr("data-tooltip","下载该活动报表");
-                                     var header=$("<div></div>");
-                                     header.addClass("ui header");
-                                     header.text(events[j].title.substr(0,4));
-                                     var subHeader=$("<div></div>");
-                                     subHeader.addClass("sub header");
-                                     subHeader.html(new Date(events[j].start).format("yyyy年MM月dd日")+"至"+new Date(events[j].end).format("yyyy年MM月dd日"));
-                                     header.append(subHeader);
-                                     segment.append(header);
-                                     column.append(segment);
-                                     grid.append(column);
+                        for (var i = 0; i < rows; i++) {
+                            var grid = $("<div></div>");
+                            grid.addClass("ui four column stackable grid");
+                            if (i != rows - 1) {
+                                for (var j = 4 * i; j < 4 * (i + 1); j++) {
+                                    var column = $("<div></div>");
+                                    column.addClass("column");
+                                    var segment = $("<div></div>");
+                                    segment.addClass("ui center aligned segment");
+                                    segment.attr("id", events[j].eventId);
+                                    segment.attr("data-tooltip", "下载该活动报表");
+                                    var header = $("<div></div>");
+                                    header.addClass("ui header");
+                                    header.text(events[j].title.substr(0, 4));
+                                    var subHeader = $("<div></div>");
+                                    subHeader.addClass("sub header");
+                                    subHeader.html(new Date(events[j].start).format("yyyy年MM月dd日") + "至" + new Date(events[j].end).format("yyyy年MM月dd日"));
+                                    header.append(subHeader);
+                                    segment.append(header);
+                                    column.append(segment);
+                                    grid.append(column);
                                 }
-                             }else{
-                                for(var p=4*i;p<events.length;p++){
-                                    var column=$("<div></div>");
-                                     column.addClass("column");
-                                     var segment=$("<div></div>");
-                                     segment.addClass("ui center aligned segment");
-                                     segment.attr("id",events[p].eventId);
-                                     segment.attr("data-tooltip","下载该活动报表");
-                                     var header=$("<div></div>");
-                                     header.addClass("ui header");
-                                     header.text(events[p].title.substr(0,4));
-                                     var subHeader=$("<div></div>");
-                                     subHeader.addClass("sub header");
-                                     subHeader.html(new Date(events[p].start).format("yyyy年MM月dd日")+"至"+new Date(events[p].end).format("yyyy年MM月dd日"));
-                                     header.append(subHeader);
-                                     segment.append(header);
-                                     column.append(segment);
-                                     grid.append(column);
+                            } else {
+                                for (var p = 4 * i; p < events.length; p++) {
+                                    var column = $("<div></div>");
+                                    column.addClass("column");
+                                    var segment = $("<div></div>");
+                                    segment.addClass("ui center aligned segment");
+                                    segment.attr("id", events[p].eventId);
+                                    segment.attr("data-tooltip", "下载该活动报表");
+                                    var header = $("<div></div>");
+                                    header.addClass("ui header");
+                                    header.text(events[p].title.substr(0, 4));
+                                    var subHeader = $("<div></div>");
+                                    subHeader.addClass("sub header");
+                                    subHeader.html(new Date(events[p].start).format("yyyy年MM月dd日") + "至" + new Date(events[p].end).format("yyyy年MM月dd日"));
+                                    header.append(subHeader);
+                                    segment.append(header);
+                                    column.append(segment);
+                                    grid.append(column);
                                 }
-                             }
-                             $("#events_segment").append(grid);
-                             $("#events_segment .ui.center.aligned.segment").on("click",function(){
-                             	 eventId=$(this).attr("id");
-                                 $("#consult_modal").modal("hide");
-                                 $("#download_modal").modal("show");
-                             });
+                            }
+                            $("#events_segment").append(grid);
+                            $("#events_segment .ui.center.aligned.segment").on("click", function () {
+                                eventId = $(this).attr("id");
+                                $("#consult_modal").modal("hide");
+                                $("#download_modal").modal("show");
+                            });
                         }
                     } else {
                         //无活动
@@ -211,28 +241,28 @@
         });
     });
 
-    $("#datetime_btn").click(function(){
+    $("#datetime_btn").click(function () {
         $(".ui.page.dimmer").dimmer("show");
-        var start=$("#start_time").val();
-        var end=$("#end_time").val();
-        $(".ui.pointing.secondary.menu > a").each(function(){
-            if($(this).hasClass("active")){
-                var itemid=$(this).attr("id");
+        var start = $("#start_time").val();
+        var end = $("#end_time").val();
+        $(".ui.pointing.secondary.menu > a").each(function () {
+            if ($(this).hasClass("active")) {
+                var itemid = $(this).attr("id");
                 var param = {
                     start: start,
                     end: end
                 };
-                $.each(urls,function (index,obj) {
-                    if(obj.name==itemid){
-                        $.post(obj.url,param,function (result) {
+                $.each(urls, function (index, obj) {
+                    if (obj.name == itemid) {
+                        $.post(obj.url, param, function (result) {
                             if (result.responseCode == "RESPONSE_ERROR") {
                                 $(".ui.page.dimmer").dimmer("hide");
                                 //failed modal
                                 $(".consult_failed").show();
                                 $(".consult_success").hide();
                                 $(".consult_null").hide();
-                            } else{
-                                if(result.responseCode == "RESPONSE_OK"){
+                            } else {
+                                if (result.responseCode == "RESPONSE_OK") {
                                     $(".ui.page.dimmer").dimmer("hide");
                                     tempFileName = result.data;
                                     fileName = start + "_" + end;
@@ -240,7 +270,7 @@
                                     $(".consult_success").show();
                                     $(".consult_failed").hide();
                                     $(".consult_null").hide();
-                                }else{
+                                } else {
                                     $(".ui.page.dimmer").dimmer("hide");
                                     //null modal
                                     $(".consult_null").show();
@@ -253,8 +283,8 @@
                         })
                     }
                 });
-                $.each(directlyurls,function (index,obj) {
-                    if(obj.name==itemid){
+                $.each(directlyurls, function (index, obj) {
+                    if (obj.name == itemid) {
                         $(".ui.page.dimmer").dimmer("hide");
                         $("#download_modal").modal("hide");
                         $(".consult_success").show();
@@ -267,43 +297,43 @@
         });
     });
 
-    $("#download_btn").click(function(){
-        $(".ui.pointing.secondary.menu > a").each(function(){
-            if($(this).hasClass("active")){
-                var itemid=$(this).attr("id");
-                $.each(downloadurls,function (index,obj) {
-                    if(obj.name==itemid){
-                        window.location.href=obj.url+ fileName + "/" + tempFileName;
+    $("#download_btn").click(function () {
+        $(".ui.pointing.secondary.menu > a").each(function () {
+            if ($(this).hasClass("active")) {
+                var itemid = $(this).attr("id");
+                $.each(downloadurls, function (index, obj) {
+                    if (obj.name == itemid) {
+                        window.location.href = obj.url + fileName + "/" + tempFileName;
                     }
                 });
-                $.each(directlyurls,function (index,obj) {
-                    if(obj.name==itemid){
-                        var start=$("#start_time").val();
-                        var end=$("#end_time").val();
-                        window.location.href=obj.url+ "?start=" + start+"&end="+end;
+                $.each(directlyurls, function (index, obj) {
+                    if (obj.name == itemid) {
+                        var start = $("#start_time").val();
+                        var end = $("#end_time").val();
+                        window.location.href = obj.url + "?start=" + start + "&end=" + end;
                     }
                 });
             }
         });
     });
 
-    $("#download_directly_btn").click(function(){
-        window.location.href=allEventDownload+eventId;
+    $("#download_directly_btn").click(function () {
+        window.location.href = allEventDownload + eventId;
     });
 
-    $("#download_cancel").click(function(){
+    $("#download_cancel").click(function () {
         $("#consult_modal").modal("hide");
     });
 
-    $("#consult_null_btn").click(function(){
+    $("#consult_null_btn").click(function () {
         $("#consult_modal").modal("hide");
     });
 
-    $("#consult_failed_btn").click(function(){
+    $("#consult_failed_btn").click(function () {
         $("#consult_modal").modal("hide");
     });
 
-    $("#download_directly_cancel").click(function(){
+    $("#download_directly_cancel").click(function () {
         $("#download_modal").modal("hide");
     });
 </script>
