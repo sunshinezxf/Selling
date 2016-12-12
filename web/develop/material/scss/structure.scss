@@ -141,3 +141,7 @@ body.pushable {
     display: none;
   }
 }
+
+.ui.pointing.label:before {
+    z-index: auto !important;
+}
