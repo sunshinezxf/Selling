@@ -1,18 +1,18 @@
 package selling.sunshine.dao.impl;
 
-import common.sunshine.utils.IDGenerator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import common.sunshine.dao.BaseDao;
-import selling.sunshine.dao.ExpressDao;
 import common.sunshine.model.selling.express.Express;
 import common.sunshine.model.selling.express.Express4Agent;
 import common.sunshine.model.selling.express.Express4Application;
 import common.sunshine.model.selling.express.Express4Customer;
+import common.sunshine.utils.IDGenerator;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+import selling.sunshine.dao.ExpressDao;
 
 import java.util.List;
 import java.util.Map;
@@ -77,6 +77,9 @@ public class ExpressDaoImpl extends BaseDao implements ExpressDao {
         ResultData result = new ResultData();
         try {
             List<Express> list = sqlSession.selectList("selling.express.query", condition);
+            if (list.isEmpty()) {
+                result.setResponseCode(ResponseCode.RESPONSE_NULL);
+            }
             result.setData(list);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -92,6 +95,9 @@ public class ExpressDaoImpl extends BaseDao implements ExpressDao {
         ResultData result = new ResultData();
         try {
             List<Express> list = sqlSession.selectList("selling.express.query4Agent", condition);
+            if (list.isEmpty()) {
+                result.setResponseCode(ResponseCode.RESPONSE_NULL);
+            }
             result.setData(list);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -107,6 +113,9 @@ public class ExpressDaoImpl extends BaseDao implements ExpressDao {
         ResultData result = new ResultData();
         try {
             List<Express4Agent> list = sqlSession.selectList("selling.express.query4Customer", condition);
+            if (list.isEmpty()) {
+                result.setResponseCode(ResponseCode.RESPONSE_NULL);
+            }
             result.setData(list);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -117,35 +126,38 @@ public class ExpressDaoImpl extends BaseDao implements ExpressDao {
         }
     }
 
-	@Override
-	public ResultData insertExpress4Application(Express4Application express) {
-		 ResultData result = new ResultData();
-	        synchronized (lock) {
-	            try {
-	                express.setExpressId(IDGenerator.generate("EPE"));
-	                sqlSession.insert("selling.express.insertExpress4Application", express);
-	                result.setData(express);
-	            } catch (Exception e) {
-	                logger.error(e.getMessage());
-	                result.setResponseCode(ResponseCode.RESPONSE_ERROR);
-	                result.setDescription(e.getMessage());
-	            }
-	        }
-	        return result;
-	}
+    @Override
+    public ResultData insertExpress4Application(Express4Application express) {
+        ResultData result = new ResultData();
+        synchronized (lock) {
+            try {
+                express.setExpressId(IDGenerator.generate("EPE"));
+                sqlSession.insert("selling.express.insertExpress4Application", express);
+                result.setData(express);
+            } catch (Exception e) {
+                logger.error(e.getMessage());
+                result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+                result.setDescription(e.getMessage());
+            }
+        }
+        return result;
+    }
 
-	@Override
-	public ResultData queryExpress4Application(Map<String, Object> condition) {
-		 ResultData result = new ResultData();
-	        try {
-	            List<Express4Application> list = sqlSession.selectList("selling.express.query4Application", condition);
-	            result.setData(list);
-	        } catch (Exception e) {
-	            logger.error(e.getMessage());
-	            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
-	            result.setDescription(e.getMessage());
-	        } finally {
-	            return result;
-	        }
-	}
+    @Override
+    public ResultData queryExpress4Application(Map<String, Object> condition) {
+        ResultData result = new ResultData();
+        try {
+            List<Express4Application> list = sqlSession.selectList("selling.express.query4Application", condition);
+            if (list.isEmpty()) {
+                result.setResponseCode(ResponseCode.RESPONSE_NULL);
+            }
+            result.setData(list);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription(e.getMessage());
+        } finally {
+            return result;
+        }
+    }
 }

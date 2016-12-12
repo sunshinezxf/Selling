@@ -1862,7 +1862,7 @@ public class OrderController {
         condition.put("start", form.getStart());
         condition.put("end", form.getEnd());
         condition.put("blockFlag", false);
-        List<Integer> status = new ArrayList<>(Arrays.asList(1, 2, 3, 4));
+        List<Integer> status = new ArrayList<>(Arrays.asList(OrderItemStatus.PAYED.getCode(), OrderItemStatus.SHIPPED.getCode(), OrderItemStatus.RECEIVED.getCode()));
         condition.put("statusList", status);
         ResultData queryResponse = orderService.fetchOrderItem(condition);
         if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {

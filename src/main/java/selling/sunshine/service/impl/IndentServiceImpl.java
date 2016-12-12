@@ -1,6 +1,10 @@
 package selling.sunshine.service.impl;
 
 import common.sunshine.model.selling.customer.Customer;
+import common.sunshine.model.selling.express.Express;
+import common.sunshine.model.selling.express.Express4Agent;
+import common.sunshine.model.selling.express.Express4Application;
+import common.sunshine.model.selling.express.Express4Customer;
 import common.sunshine.model.selling.order.CustomerOrder;
 import common.sunshine.model.selling.order.EventOrder;
 import common.sunshine.model.selling.order.Order;
@@ -8,6 +12,8 @@ import common.sunshine.model.selling.order.OrderItem;
 import common.sunshine.model.selling.order.support.OrderItemStatus;
 import common.sunshine.model.selling.order.support.OrderType;
 import common.sunshine.utils.IDGenerator;
+import common.sunshine.utils.ResponseCode;
+import common.sunshine.utils.ResultData;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.*;
 import org.slf4j.Logger;
@@ -17,13 +23,8 @@ import org.springframework.stereotype.Service;
 import selling.sunshine.dao.CustomerDao;
 import selling.sunshine.dao.ExpressDao;
 import selling.sunshine.dao.OrderDao;
-import common.sunshine.model.selling.express.Express4Agent;
-import common.sunshine.model.selling.express.Express4Application;
-import common.sunshine.model.selling.express.Express4Customer;
 import selling.sunshine.service.IndentService;
 import selling.sunshine.utils.PlatformConfig;
-import common.sunshine.utils.ResponseCode;
-import common.sunshine.utils.ResultData;
 import selling.sunshine.utils.WorkBookUtil;
 
 import java.io.File;
@@ -108,7 +109,7 @@ public class IndentServiceImpl implements IndentService {
                     result.setDescription(e.getMessage());
                 }
             } else if (item instanceof EventOrder) {
-            	EventOrder temp = (EventOrder) item;
+                EventOrder temp = (EventOrder) item;
                 String time = format.format(temp.getCreateAt());
                 StringBuffer sb = new StringBuffer(parent).append(directory).append("/").append(time);
                 File file = new File(sb.toString());
@@ -219,7 +220,7 @@ public class IndentServiceImpl implements IndentService {
         bookerAddr.setCellValue(item.getReceiverAddress());
         return template;
     }
-    
+
     private Workbook produce(Workbook template, EventOrder item) {
         Sheet sheet = template.getSheetAt(0);
         Row order = sheet.getRow(1);
@@ -275,14 +276,14 @@ public class IndentServiceImpl implements IndentService {
         HSSFSheet sheet2 = wb.createSheet();
         wb.setSheetName(1, "客户订单");
         HSSFRow row2 = sheet2.createRow((int) 0);
-        
+
         HSSFSheet sheet3 = wb.createSheet();
         wb.setSheetName(2, "活动订单");
         HSSFRow row3 = sheet3.createRow((int) 0);
 
         HSSFCell cell = row.createCell((short) 0);
         HSSFCell cell2 = row2.createCell((short) 0);
-        HSSFCell cell3 = row3.createCell((short)0);
+        HSSFCell cell3 = row3.createCell((short) 0);
         cell.setCellValue("订单编号");
         cell.setCellStyle(style);
         cell = row.createCell((short) 1);
@@ -356,7 +357,7 @@ public class IndentServiceImpl implements IndentService {
         cell2 = row2.createCell((short) 11);
         cell2.setCellValue("快递单号");
         cell2.setCellStyle(style);
-        
+
         cell3.setCellValue("订单编号");
         cell3.setCellStyle(style);
         cell3 = row3.createCell((short) 1);
@@ -544,7 +545,7 @@ public class IndentServiceImpl implements IndentService {
         }
         Workbook template = WorkBookUtil.getIndentSummaryTemplate();
         Sheet sheet = template.getSheetAt(0);
-        int row = 1;
+        int row = 2;
         for (Object item : list) {
             if (item instanceof OrderItem) {
                 OrderItem o = (OrderItem) item;
@@ -555,81 +556,147 @@ public class IndentServiceImpl implements IndentService {
                 if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
                     customer = ((List<Customer>) response.getData()).get(0);
                 }
+                //设置订单编号
                 Row current = sheet.createRow(row);
                 Cell noCell = current.createCell(0);
                 noCell.setCellValue(o.getOrderItemId());
+                //设置订货日期
                 Cell dateCell = current.createCell(1);
                 SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日");
                 dateCell.setCellValue(format.format(o.getCreateAt()));
-                Cell consumerNameCell = current.createCell(2);
-                consumerNameCell.setCellValue(o.getCustomer().getName());
-                Cell phoneCell = current.createCell(3);
-                phoneCell.setCellValue(customer.getPhone().getPhone());
-                Cell addressCell = current.createCell(4);
-                addressCell.setCellValue(customer.getAddress().getAddress());
+                //设置代理商姓名
                 condition.clear();
                 condition.put("orderId", o.getOrder().getOrderId());
                 response = orderDao.queryOrder(condition);
                 if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
-                    Cell agentCell = current.createCell(5);
+                    Cell agentCell = current.createCell(2);
                     Order order = ((List<Order>) response.getData()).get(0);
                     agentCell.setCellValue(order.getAgent().getName());
                 }
+                //设置顾客姓名
+                Cell consumerNameCell = current.createCell(3);
+                consumerNameCell.setCellValue(o.getCustomer().getName());
+                //设置顾客联系电话
+                Cell phoneCell = current.createCell(4);
+                phoneCell.setCellValue(customer.getPhone().getPhone());
+                //设置顾客收货地址
+                Cell addressCell = current.createCell(5);
+                addressCell.setCellValue(customer.getAddress().getAddress());
+                //设置购买商品名称
                 Cell productNameCell = current.createCell(6);
                 productNameCell.setCellValue(o.getGoods().getName());
-                Cell quantityCell = current.createCell(7);
+                //设置商品的单价
+                Cell priceCell = current.createCell(7);
+                priceCell.setCellValue(o.getGoods().getAgentPrice());
+                //设置商品的数量
+                Cell quantityCell = current.createCell(8);
                 quantityCell.setCellValue(o.getGoodsQuantity());
-                Cell priceCell = current.createCell(8);
-                priceCell.setCellValue(o.getOrderItemPrice());
-                Cell description = current.createCell(9);
+                //设置订单的价格
+                Cell payMoneyCell = current.createCell(9);
+                payMoneyCell.setCellValue(o.getOrderItemPrice());
+                //设置发货时间
+                condition.clear();
+                condition.put("linkId", o.getOrderItemId());
+                response = expressDao.queryExpress(condition);
+                if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                    Express express = ((List<Express>) response.getData()).get(0);
+                    Cell deliverDateCell = current.createCell(10);
+                    deliverDateCell.setCellValue(format.format(express.getCreateAt()));
+                }
+                //设置备注
+                Cell description = current.createCell(11);
                 description.setCellValue((o.getOrder().getType() == OrderType.GIFT) ? "赠品" : "");
                 row++;
             } else if (item instanceof CustomerOrder) {
                 CustomerOrder c = (CustomerOrder) item;
                 Row current = sheet.createRow(row);
+                //设置订单编号
                 Cell noCell = current.createCell(0);
                 noCell.setCellValue(c.getOrderId());
+                //设置订货日期
                 Cell dateCell = current.createCell(1);
                 SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日");
                 dateCell.setCellValue(format.format(c.getCreateAt()));
-                Cell consumerNameCell = current.createCell(2);
-                consumerNameCell.setCellValue(c.getReceiverName());
-                Cell phoneCell = current.createCell(3);
-                phoneCell.setCellValue(c.getReceiverPhone());
-                Cell addressCell = current.createCell(4);
+                //设置代理商姓名
                 if (c.getAgent() != null) {
-                    Cell agentCell = current.createCell(5);
+                    Cell agentCell = current.createCell(2);
                     agentCell.setCellValue(c.getAgent().getName());
                 }
+                //设置顾客姓名
+                Cell consumerNameCell = current.createCell(3);
+                consumerNameCell.setCellValue(c.getReceiverName());
+                //设置顾客联系电话
+                Cell phoneCell = current.createCell(4);
+                phoneCell.setCellValue(c.getReceiverPhone());
+                //设置顾客收货地址
+                Cell addressCell = current.createCell(5);
                 addressCell.setCellValue(c.getReceiverAddress());
+                //设置购买商品名称
                 Cell productNameCell = current.createCell(6);
                 productNameCell.setCellValue(c.getGoods().getName());
-                Cell quantityCell = current.createCell(7);
+                //设置商品的单价
+                Cell itemPrice = current.createCell(7);
+                itemPrice.setCellValue((c.getAgent() == null) ? c.getGoods().getCustomerPrice() : c.getGoods().getAgentPrice());
+                //设置商品的数量
+                Cell quantityCell = current.createCell(8);
                 quantityCell.setCellValue(c.getQuantity());
-                Cell priceCell = current.createCell(8);
+                //设置订单的价格
+                Cell priceCell = current.createCell(9);
                 priceCell.setCellValue(c.getTotalPrice());
+                //设置发货时间
+                Map<String, Object> condition = new HashMap<>();
+                condition.put("linkId", c.getOrderId());
+                ResultData response = expressDao.queryExpress(condition);
+                if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                    Express express = ((List<Express>) response.getData()).get(0);
+                    Cell deliverDateCell = current.createCell(10);
+                    deliverDateCell.setCellValue(format.format(express.getCreateAt()));
+                }
                 row++;
-            }else if (item instanceof EventOrder){
-            	EventOrder c = (EventOrder) item;
+            } else if (item instanceof EventOrder) {
+                EventOrder c = (EventOrder) item;
                 Row current = sheet.createRow(row);
+                //设置订单编号
                 Cell noCell = current.createCell(0);
                 noCell.setCellValue(c.getOrderId());
+                //设置订货日期
                 Cell dateCell = current.createCell(1);
                 SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日");
                 dateCell.setCellValue(format.format(c.getCreateAt()));
-                Cell consumerNameCell = current.createCell(2);
+                //设置代理商姓名
+
+                //设置顾客姓名
+                Cell consumerNameCell = current.createCell(3);
                 consumerNameCell.setCellValue(c.getDoneeName());
-                Cell phoneCell = current.createCell(3);
+                //设置顾客联系电话
+                Cell phoneCell = current.createCell(4);
                 phoneCell.setCellValue(c.getDoneePhone());
-                Cell addressCell = current.createCell(4);
+                //设置顾客收货地址
+                Cell addressCell = current.createCell(5);
                 addressCell.setCellValue(c.getDoneeAddress());
+                //设置购买商品名称
                 Cell productNameCell = current.createCell(6);
                 productNameCell.setCellValue(c.getGoods().getName());
-                Cell quantityCell = current.createCell(7);
+                //设置商品的单价
+                Cell itemPrice = current.createCell(7);
+                itemPrice.setCellValue(c.getGoods().getAgentPrice());
+                //设置商品的数量
+                Cell quantityCell = current.createCell(8);
                 quantityCell.setCellValue(c.getQuantity());
-                Cell priceCell = current.createCell(8);
-                priceCell.setCellValue(c.getQuantity() * c.getGoods().getAgentPrice());
-                Cell description = current.createCell(9);
+                //设置订单的价格
+                Cell priceCell = current.createCell(9);
+                priceCell.setCellValue(c.getQuantity() * c.getGoods().getCustomerPrice());
+                //设置发货时间
+                Map<String, Object> condition = new HashMap<>();
+                condition.put("applicationId", c.getOrderId());
+                ResultData response = expressDao.queryExpress(condition);
+                if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                    Express express = ((List<Express>) response.getData()).get(0);
+                    Cell deliverDateCell = current.createCell(10);
+                    deliverDateCell.setCellValue(format.format(express.getCreateAt()));
+                }
+                //设置备注
+                Cell description = current.createCell(11);
                 description.setCellValue("活动");
                 row++;
             }

@@ -20,7 +20,7 @@
     </div>
     <div class="row">
         <div class="column">
-            #parse("/backend/goods/component/goods_detail_panel.vm")
+            #parse("/backend/goods/component/goods_info_field.vm")
         </div>
     </div>
     <div class="row">
