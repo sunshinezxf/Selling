@@ -4,8 +4,8 @@
     </div>
     <div class="ui middle aligned list">
         <div class="item">
-            <div class="ui teal label">
-                <i class="browser icon"></i>订单编号:
+            <div class="ui label">
+                <i class="browser icon"></i>订单编号
             </div>
             #if(${order} && ${order.orderId})
                 ${order.orderId}
@@ -14,8 +14,9 @@
             #end
         </div>
         <div class="item">
-            <i class="user icon"></i>
-            顾客姓名:
+            <div class="ui label">
+                 <i class="user icon"></i>顾客姓名
+            </div>
             #if(${order} && ${order.receiverName})
                 ${order.receiverName}
             #else
@@ -23,8 +24,9 @@
             #end
         </div>
         <div class="item">
-            <i class="location arrow icon"></i>
-            收货地址:
+            <div class="ui label">
+                 <i class="location arrow icon"></i>收货地址
+            </div>
             #if(${order} && ${order.receiverName})
                 ${order.receiverAddress}
             #else
@@ -32,8 +34,9 @@
             #end
         </div>
         <div class="item">
-            <i class="in cart icon"></i>
-            商品信息:
+            <div class="ui label">
+                 <i class="in cart icon"></i>商品信息
+            </div>
             #if(${order} && ${order.quantity})
                 ${order.goods.name} x ${order.quantity}
             #else
@@ -42,8 +45,9 @@
         </div>
         #if(${order.agent} || ${order.order.agent})
             <div class="item">
-                <i class="spy icon"></i>
-                代理商:
+                <div class="ui label" style="margin-right:1em">
+                      <i class="spy icon"></i>代理商
+                </div>
                 #if(${order.agent})
                     ${order.agent.name}
                 #else
@@ -52,8 +56,9 @@
             </div>
         #end
         <div class="item">
-            <i class="calendar icon"></i>
-            创建时间:
+            <div class="ui label">
+                 <i class="calendar icon"></i>创建时间
+            </div>
             ${order.createAt}
         </div>
     </div>
