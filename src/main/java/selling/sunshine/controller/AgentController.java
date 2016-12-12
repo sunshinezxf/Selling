@@ -2283,9 +2283,17 @@ public class AgentController {
         view.setViewName("/backend/agent/overview");
         return view;
     }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/list/{param}")
+    public ModelAndView list(@PathVariable("param") String param) {
+        ModelAndView view = new ModelAndView();
+        view.setViewName("/backend/agent/list");
+        view.addObject("name", param);
+        return view;
+    }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/overview")
-    public DataTablePage<Agent> overview(DataTableParam param, HttpServletRequest request) {
+    @RequestMapping(method = RequestMethod.POST, value = "/list")
+    public DataTablePage<Agent> list(DataTableParam param, HttpServletRequest request) {
         DataTablePage<Agent> result = new DataTablePage<>(param);
         if (StringUtils.isEmpty(param)) {
             return result;
@@ -2899,6 +2907,14 @@ public class AgentController {
 		result.setData(map);
 		return result;
 	}
+	
+    @RequestMapping(method = RequestMethod.GET, value = "/contributionFactor")
+    public ModelAndView contributionFactorView() {
+        ModelAndView view = new ModelAndView();
+        view.setViewName("/backend/agent/contributionFactor");
+        return view;
+    }
+
 
 
 }
