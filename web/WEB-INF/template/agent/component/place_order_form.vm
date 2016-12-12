@@ -103,12 +103,15 @@
         //判断是否选择过商品，如果没有就给个默认的
         if (typeof goods_id == "undefined") {
             var goods_dom = $("#goods_option").children(".weui_cells").children(".goods").eq(0);
-            if (goods_dom != null) {
+            if (goods_dom.length >0 ) {
                 goods_id = goods_dom.attr("id");
                 goods_name = goods_dom.find(".weui_cell_bd").children("span").eq(0).html();
                 goods_price = goods_dom.find(".weui_cell_bd").children("span").eq(1).html();
                 $("#goods").find(".weui_cell_bd").html("<p>" + goods_name + "</p>");
                 $("#price").html("单价：" + goods_price + "元");
+            } else {
+            	$("#goods").find(".weui_cell_bd").html("<p>无可选商品 </p>");
+            	$("#price").html("单价：0元");
             }
         }
         $.init_add_order_item();

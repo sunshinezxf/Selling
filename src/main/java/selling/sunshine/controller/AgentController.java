@@ -1017,7 +1017,25 @@ public class AgentController {
         condition.put("blockFlag", false);
         ResultData fetchGoodsResponse = commodityService.fetchGoods4Agent(condition);
         if (fetchGoodsResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            view.addObject("goods", fetchGoodsResponse.getData());
+        	List<Goods4Agent> goodsList = (List<Goods4Agent>) fetchGoodsResponse.getData();
+        	List<GiftConfig> giftConfigList = (List<GiftConfig>) fetchGiftConfigResponse.getData();
+        	for(int i = 0; i < goodsList.size(); i++){
+        		boolean canBuy = false;
+        		for(GiftConfig giftConfig : giftConfigList){
+        			if(goodsList.get(i).getGoodsId().equals(giftConfig.getGoods().getGoodsId())){
+        				canBuy = true;
+        				if(giftConfig.getAmount() <= 0){
+        					canBuy = false;
+        				}
+        				break;
+        			}
+        		}
+        		if(!canBuy){
+        			goodsList.remove(i);
+        			i--;
+        		}
+        	}
+            view.addObject("goods", goodsList);
         }
 
         //根据代理商的ID查询代理商的详细信息
