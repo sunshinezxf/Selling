@@ -4,9 +4,7 @@
     </div>
     <div class="ui middle aligned list">
         <div class="item">
-            <div class="ui label">
-                <i class="browser icon"></i>订单编号
-            </div>
+            <i class="browser icon"></i>订单编号:
             #if(${order} && ${order.orderId})
                 ${order.orderId}
             #else
@@ -14,9 +12,7 @@
             #end
         </div>
         <div class="item">
-            <div class="ui label">
-                 <i class="user icon"></i>顾客姓名
-            </div>
+            <i class="user icon"></i>顾客姓名:
             #if(${order} && ${order.receiverName})
                 ${order.receiverName}
             #else
@@ -24,9 +20,7 @@
             #end
         </div>
         <div class="item">
-            <div class="ui label">
-                 <i class="location arrow icon"></i>收货地址
-            </div>
+            <i class="location arrow icon"></i>收货地址:
             #if(${order} && ${order.receiverName})
                 ${order.receiverAddress}
             #else
@@ -34,9 +28,7 @@
             #end
         </div>
         <div class="item">
-            <div class="ui label">
-                 <i class="in cart icon"></i>商品信息
-            </div>
+            <i class="in cart icon"></i>商品信息:
             #if(${order} && ${order.quantity})
                 ${order.goods.name} x ${order.quantity}
             #else
@@ -45,9 +37,7 @@
         </div>
         #if(${order.agent} || ${order.order.agent})
             <div class="item">
-                <div class="ui label" style="margin-right:1em">
-                      <i class="spy icon"></i>代理商
-                </div>
+                <i class="spy icon"></i>代理商:
                 #if(${order.agent})
                     ${order.agent.name}
                 #else
@@ -56,9 +46,7 @@
             </div>
         #end
         <div class="item">
-            <div class="ui label">
-                 <i class="calendar icon"></i>创建时间
-            </div>
+            <i class="calendar icon"></i>创建时间:
             ${order.createAt}
         </div>
     </div>
