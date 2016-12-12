@@ -113,7 +113,7 @@
         $("#events_segment").hide();
         $("#consult_modal").modal("hide");
         $("#download_modal").modal("hide");
-        $.get(indent.url, function (result) {
+        $.get(urls[0].url, function (result) {
             if (result.responseCode == "RESPONSE_OK") {
                 if (result.data != null) {
                     starttime = result.data.start;
