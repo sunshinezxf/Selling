@@ -16,7 +16,7 @@
         </h1>
     </div>
     <div class="row">
-        <div class="four wide column">
+        <div class="four wide column" id="check">
             <div class="ui inverted tertiary teal center aligned segment">
                 <h3 class="ui header">
                     当前未审核代理商
@@ -28,7 +28,7 @@
                 </div>
             </div>
         </div>
-        <div class="four wide column">
+        <div class="four wide column" id="month_register">
             <div class="ui inverted secondary teal center aligned segment">
                 <h3 class="ui header">
                     本月新注册代理商
@@ -40,7 +40,7 @@
                 </div>
             </div>
         </div>
-        <div class="four wide column">
+        <div class="four wide column" id="month_purchase">
             <div class="ui inverted teal center aligned segment">
                 <h3 class="ui header">
                     本月已购买代理商
@@ -52,7 +52,7 @@
                 </div>
             </div>
         </div>
-        <div class="four wide column">
+        <div class="four wide column" id="total">
             <div id="agent_list" class="ui teal inverted center aligned segment">
                 <h3 class="ui header">
                     当前代理商总人数
@@ -86,5 +86,25 @@
             $("#granted").html("暂无数据");
             $(".ui.statistic > .label").hide();
         }
+    });
+    
+    $('#check').on('click',function(){
+    	var url="${path.concat('/agent/check')}";
+        window.location.href = url;
+    });
+    
+    $('#month_register').on('click',function(){
+    	var url="${path.concat('/agent/list/month')}";
+        window.location.href = url;
+    });
+    
+    $('#month_purchase').on('click',function(){
+    	var url="${path.concat('/agent/list/purchase')}";
+        window.location.href = url;
+    });
+    
+    $('#total').on('click',function(){
+    	var url="${path.concat('/agent/list/total')}";
+        window.location.href = url;
     });
 </script>

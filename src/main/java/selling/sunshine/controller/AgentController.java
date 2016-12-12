@@ -44,6 +44,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import selling.sunshine.form.*;
 import selling.sunshine.model.AgentVitality;
 import selling.sunshine.model.BackOperationLog;
+import selling.sunshine.model.ContributionFactor;
 import selling.sunshine.model.OrderPool;
 import selling.sunshine.model.ShipConfig;
 import selling.sunshine.model.cashback.CashBackRecord;
@@ -129,6 +130,9 @@ public class AgentController {
 
     @Autowired
     private AgentKPIService agentKPIService;
+    
+    @Autowired
+    ContributionFactorService contributionFactorService;
 
     /**
      * 根据微信服务号的菜单入口传參,获取当前微信用户,并返回绑定账号页面
@@ -2254,13 +2258,35 @@ public class AgentController {
         if (StringUtils.isEmpty(param)) {
             return result;
         }
-        logger.debug(JSON.toJSONString(param));
         Map<String, Object> condition = new HashMap<>();
-        condition.put("granted", true);
-        condition.put("blockFlag", false);
         List<SortRule> rule = new ArrayList<>();
         rule.add(new SortRule("create_time", "desc"));
         condition.put("sort", rule);
+        if (!StringUtils.isEmpty(param.getParams())) {
+            JSONObject json = JSON.parseObject(param.getParams());
+            if (json.containsKey("status")) {
+                switch (json.getString("status")) {
+                    case "month":
+                    	 //获取当月注册的代理商的人数
+                    	 condition.put("granted", true);
+                         condition.put("monthly", true);
+                         condition.put("blockFlag", false);
+                        break;
+                    case "purchase":
+                    	//获取本月已购买的代理商的人数
+                        condition.clear();
+                        condition.put("monthly", true);
+                        condition.put("purchase", true);
+                        break;
+                    case "total":
+                    	//获取当前审核通过的代理商总人数
+                        condition.clear();
+                        condition.put("granted", true);
+                        condition.put("blockFlag", false);
+                        break;
+                }
+            }
+        }
         ResultData fetchResponse = agentService.fetchAgent(condition, param);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             result = (DataTablePage<Agent>) fetchResponse.getData();
@@ -2867,6 +2893,13 @@ public class AgentController {
     @RequestMapping(method = RequestMethod.GET, value = "/contributionFactor")
     public ModelAndView contributionFactorView() {
         ModelAndView view = new ModelAndView();
+        Map<String, Object> condition=new HashMap<>();
+        ResultData fetchResponse=new ResultData();
+        fetchResponse=contributionFactorService.fetchContributionFactor(condition);
+        if (fetchResponse.getResponseCode()==ResponseCode.RESPONSE_OK) {
+        	List<ContributionFactor> list=(List<ContributionFactor>)fetchResponse.getData();
+        	view.addObject("list", list);		
+		}
         view.setViewName("/backend/agent/contributionFactor");
         return view;
     }

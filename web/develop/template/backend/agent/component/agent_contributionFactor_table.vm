@@ -1,0 +1,27 @@
+<div class="ui stackable padded grid" name="agent_overview">
+	<div class="row">
+		<h1 class="ui header">
+			<i class="home icon"></i>
+
+			<div class="content">
+				贡献度因子配置
+				<div class="sub header">
+					<div class="ui breadcrumb">
+						<a class="section">代理管理</a>
+						<div class="divider">/</div>
+						<a class="section">代理概览</a>
+						<div class="divider">/</div>
+						<a class="active section"> 贡献度因子配置 </a>
+					</div>
+				</div>
+			</div>
+		</h1>
+	</div>
+	<div class="row">
+	    #foreach($contributionFactor in ${list})
+		<label>${contributionFactor.factorName}</label>  <i class="remove icon"></i>  <label>${contributionFactor.factorWeight}</label>
+		   <i class="plus icon"></i>
+		#end
+		   <label>贡献度</label>
+	</div>
+</div>
