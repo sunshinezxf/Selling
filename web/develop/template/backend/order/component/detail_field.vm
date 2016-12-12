@@ -2,10 +2,11 @@
     <div class="ui header">
         订单详情
     </div>
-    <div class="ui list">
+    <div class="ui middle aligned list">
         <div class="item">
-            <i class="browser icon"></i>
-            订单编号:
+            <div class="ui teal label">
+                <i class="browser icon"></i>订单编号:
+            </div>
             #if(${order} && ${order.orderId})
                 ${order.orderId}
             #else
