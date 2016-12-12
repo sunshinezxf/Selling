@@ -894,39 +894,7 @@ public class AgentController {
         if (fetchCustomerResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             view.addObject("customer", fetchCustomerResponse.getData());
         }
-        //查询平台当前配置的发货日期
-        condition.clear();
-        ResultData fetchShipmentResponse = shipmentService.fetchShipmentConfig(condition);
-        if (fetchShipmentResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            List<ShipConfig> shipmentList = (List<ShipConfig>) fetchShipmentResponse.getData();
-            if (shipmentList.isEmpty()) {
-                //如果没有配置shipment
-                view.addObject("hasConfig", false);
-            } else {
-                int currentDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
-                shipmentList.sort(new Comparator<ShipConfig>() {
-                    @Override
-                    public int compare(ShipConfig ship1, ShipConfig ship2) {
-                        return Integer.valueOf(ship1.getDate()).compareTo(Integer.valueOf(ship2.getDate()));
-                    }
-                });
-                int shipDay = 0;
-                boolean isNextMonth = false;
-                for (ShipConfig ship : shipmentList) {
-                    if (ship.getDate() > currentDay) {
-                        shipDay = ship.getDate();
-                        break;
-                    }
-                }
-                if (shipDay == 0) {
-                    shipDay = shipmentList.get(0).getDate();
-                    isNextMonth = true;
-                }
-                view.addObject("hasConfig", true);
-                view.addObject("shipDay", shipDay);
-                view.addObject("isNextMonth", isNextMonth);
-            }
-        }
+        
         view.addObject("operation", "PLACE");
         //根据代理商的ID查询代理商的详细信息
         condition.clear();
@@ -1024,53 +992,15 @@ public class AgentController {
         }
         //创建查询的删选条件集合
         Map<String, Object> condition = new HashMap<>();
-        //查询商品信息
-        condition.put("blockFlag", false);
-        ResultData fetchGoodsResponse = commodityService.fetchGoods4Agent(condition);
-        if (fetchGoodsResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            view.addObject("goods", fetchGoodsResponse.getData());
-        }
+       
         //查询代理商的客户列表
-        condition.clear();
         condition.put("agentId", user.getAgent().getAgentId());
         condition.put("blockFlag", false);
         ResultData fetchCustomerResponse = customerService.fetchCustomer(condition);
         if (fetchCustomerResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             view.addObject("customer", fetchCustomerResponse.getData());
         }
-        //查询平台当前配置的发货日期
-        condition.clear();
-        ResultData fetchShipmentResponse = shipmentService.fetchShipmentConfig(condition);
-        if (fetchShipmentResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            List<ShipConfig> shipmentList = (List<ShipConfig>) fetchShipmentResponse.getData();
-            if (shipmentList.isEmpty()) {
-                //如果没有配置shipment
-                view.addObject("hasConfig", false);
-            } else {
-                int currentDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
-                shipmentList.sort(new Comparator<ShipConfig>() {
-                    @Override
-                    public int compare(ShipConfig ship1, ShipConfig ship2) {
-                        return Integer.valueOf(ship1.getDate()).compareTo(Integer.valueOf(ship2.getDate()));
-                    }
-                });
-                int shipDay = 0;
-                boolean isNextMonth = false;
-                for (ShipConfig ship : shipmentList) {
-                    if (ship.getDate() > currentDay) {
-                        shipDay = ship.getDate();
-                        break;
-                    }
-                }
-                if (shipDay == 0) {
-                    shipDay = shipmentList.get(0).getDate();
-                    isNextMonth = true;
-                }
-                view.addObject("hasConfig", true);
-                view.addObject("shipDay", shipDay);
-                view.addObject("isNextMonth", isNextMonth);
-            }
-        }
+        
         view.addObject("operation", "GIFT");
         //查询代理商赠送额度
         condition.clear();
@@ -1080,6 +1010,14 @@ public class AgentController {
             view.addObject("giftConfigs", JSON.toJSON(new ArrayList<GiftConfig>()));
         } else {
             view.addObject("giftConfigs", JSON.toJSON((List<GiftConfig>) fetchGiftConfigResponse.getData()));
+        }
+        
+        //查询商品信息
+        condition.clear();
+        condition.put("blockFlag", false);
+        ResultData fetchGoodsResponse = commodityService.fetchGoods4Agent(condition);
+        if (fetchGoodsResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            view.addObject("goods", fetchGoodsResponse.getData());
         }
 
         //根据代理商的ID查询代理商的详细信息

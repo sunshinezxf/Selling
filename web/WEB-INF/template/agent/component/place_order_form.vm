@@ -8,19 +8,6 @@
                     #else
                         <h1 class="page_title">群员订单</h1>
                     #end
-                    #if(${hasConfig})
-                        #if(!${isNextMonth})
-                            #set($payDay = $shipDay - 1)
-                            <p class="page_desc">本月${payDay}号之前下单，将在${shipDay}号发货</p>
-                        #else
-                            #if($shipDay == 1)
-                                <p class="page_desc">月底前下单，将在下月1号发货</p>
-                            #else
-                                #set($payDay = $shipDay - 1)
-                                <p class="page_desc">下月${payDay}号之前下单,将在下月${shipDay}号发货</p>
-                            #end
-                        #end
-                    #end
                 </div>
                 <div class="bd">
                     <div class="bd spacing">
@@ -181,6 +168,7 @@
         $.check_gift = function () {
             var lessThan = false;
             var giftConfigs = eval('(' + '${giftConfigs}' + ')');
+            console.debug(giftConfigs);
             var order_info_list = new Object();
             var order_item_list = $("#order_item_list").children();
             $.each(order_item_list, function (i, val) {
