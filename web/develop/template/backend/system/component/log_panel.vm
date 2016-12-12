@@ -101,6 +101,7 @@
                     $(".log_more").css("top",$(".main-container").height());
                     $(".log_more").css("left","4%");
                     $(".log_more").css("paddingTop","2em");
+                    $(".log_more").css("paddingBottom","2em");
                     $("#load").on('click',load);
                 }
             }
