@@ -235,7 +235,7 @@ public class CustomerController {
         condition.put("agentId", user.getAgent().getAgentId());
         ResultData fetchResponse = agentKPIService.fetchAgentKPI(condition);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            AgentKPI agentKPI = ((List<AgentKPI>) fetchResponse).get(0);
+            AgentKPI agentKPI = ((List<AgentKPI>) fetchResponse.getData()).get(0);
             agentKPI.setCustomerQuantity(agentKPI.getCustomerQuantity() - 1);
             agentKPIService.updateAgentKPI(agentKPI);
         }
