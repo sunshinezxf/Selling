@@ -72,9 +72,6 @@
                             var li="<li class='cls'><p class='date'>"+createAt+"</p><div class='intro'><p class='event'>"+operationEvent+"</p><div class='more'><p class='account'>账号："+adminInfo+"</p><p class='ipInfo'>ip地址：无</p></div></div></li>";
                         }
 
-                        var length=$('.cls').width()-$('.date').width();
-                        $('.intro').css('width',length-1);
-
                         if($.inArray(year,years)==-1){
                             var year_section=$("<div></div>");
                             year_section.addClass("year");
@@ -95,10 +92,15 @@
                     }
                     pageStart+=pageLength;
                     if(pageStart<total){
-                        node+="<div class='log_more'><div><button class='ui blue basic button' id='load'><i class='arrow circle right icon'></i>加载更多</button></div></div>";
+                        node+="<div class='log_more'><button class='ui blue basic button' id='load'><i class='arrow circle right icon'></i>加载更多</button></div>";
                     }
-                    $(".log_more").css("marginTop",$(".main-container").height());
                     $('.wrapper').append(node);
+                    var length=$('.cls').width()-$('.date').width();
+                    $('.intro').css('width',length-1);
+                    $(".log_more").css("position","absolute");
+                    $(".log_more").css("top",$(".main-container").height());
+                    $(".log_more").css("left","4%");
+                    $(".log_more").css("paddingTop","2em");
                     $("#load").on('click',load);
                 }
             }
@@ -145,9 +147,6 @@
                             var li="<li class='cls'><p class='date'>"+createAt+"</p><div class='intro'><p class='event'>"+operationEvent+"</p><div class='more'><p class='account'>账号："+adminInfo+"</p><p class='ipInfo'>ip地址：无</p></div></div></li>";
                         }
 
-                        var length=$('.cls').width()-$('.date').width();
-                        $('.intro').css('width',length-1);
-
                         if($.inArray(year,years)==-1){
                            var year_section=$("<div></div>");
                             year_section.addClass("year");
@@ -165,7 +164,9 @@
                            $(".list>ul").append(li);
                         }
                     }
-                    $(".log_more").css("marginTop",$(".main-container").height());
+                    var length=$('.cls').width()-$('.date').width();
+                    $('.intro').css('width',length-1);
+                    $(".log_more").css("top",$(".main-container").height());
                     pageStart+=pageLength;
                     if(pageStart>=total){
                        $("#load").remove();
