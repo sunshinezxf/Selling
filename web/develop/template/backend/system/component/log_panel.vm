@@ -71,6 +71,10 @@
                         }else{
                             var li="<li class='cls'><p class='date'>"+createAt+"</p><div class='intro'><p class='event'>"+operationEvent+"</p><div class='more'><p class='account'>账号："+adminInfo+"</p><p class='ipInfo'>ip地址：无</p></div></div></li>";
                         }
+
+                        var length=$('.cls').width()-$('.date').width();
+                        $('.intro').css('width',length-1);
+
                         if($.inArray(year,years)==-1){
                             var year_section=$("<div></div>");
                             year_section.addClass("year");
@@ -91,15 +95,14 @@
                     }
                     pageStart+=pageLength;
                     if(pageStart<total){
-                        node+="<div style='margin-top:2em;text-align:left'><button class='ui right labeled icon button' id='load'><i class='right arrow icon'></i>加载更多</button></div>";
+                        node+="<div class='log_more'><div><button class='ui blue basic button' id='load'><i class='arrow circle right icon'></i>加载更多</button></div></div>";
                     }
-                    $('.main-container').append(node);
+                    $(".log_more").css("marginTop",$(".main-container").height());
+                    $('.wrapper').append(node);
                     $("#load").on('click',load);
                 }
             }
         });
-        var length=$('.cls').width()-$('.date').width();
-        $('.intro').css('width',length-1);
     });
 
     $(".main .year .list").each(function (e, target) {
@@ -141,6 +144,10 @@
                         }else{
                             var li="<li class='cls'><p class='date'>"+createAt+"</p><div class='intro'><p class='event'>"+operationEvent+"</p><div class='more'><p class='account'>账号："+adminInfo+"</p><p class='ipInfo'>ip地址：无</p></div></div></li>";
                         }
+
+                        var length=$('.cls').width()-$('.date').width();
+                        $('.intro').css('width',length-1);
+
                         if($.inArray(year,years)==-1){
                            var year_section=$("<div></div>");
                             year_section.addClass("year");
@@ -158,6 +165,7 @@
                            $(".list>ul").append(li);
                         }
                     }
+                    $(".log_more").css("marginTop",$(".main-container").height());
                     pageStart+=pageLength;
                     if(pageStart>=total){
                        $("#load").remove();
