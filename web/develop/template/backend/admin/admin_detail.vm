@@ -3,7 +3,7 @@
 <head>
     #parse("/backend/initialization/init.vm")
     #parse("/backend/common/datatable.lib.vm")
-    <title>账号列表</title>
+    <title>账号详情</title>
 </head>
 <body id="dashboard" class="started pushable" ontouchstart>
     #parse("/backend/common/mobile_sidebar.vm")
