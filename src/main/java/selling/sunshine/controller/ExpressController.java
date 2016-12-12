@@ -187,10 +187,10 @@ public class ExpressController {
 							}
                             if (flag) {							
                                order.setStatus(OrderStatus.FULLY_SHIPMENT);
-                               orderService.modifyOrder(order);
+                               orderService.updateOrderLite(order);
                             } else {
                                 order.setStatus(OrderStatus.PATIAL_SHIPMENT);
-                                orderService.modifyOrder(order);
+                                orderService.updateOrderLite(order);
                             }
                         }
                     }

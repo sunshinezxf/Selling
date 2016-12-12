@@ -157,7 +157,7 @@
             AND express_no = #{expressNumber}
         </if>
         <if test="linkId != null and linkId != ''">
-            AND customer_order_id = #{link_id}
+            AND customer_order_id = #{linkId}
         </if>
         <if test="start != null and end != null and start != '' and end != ''">
             AND (date_format(create_time, '%Y-%m-%d') &gt;= #{start} AND date_format(create_time, '%Y-%m-%d') &lt;=
@@ -176,7 +176,7 @@
             AND express_no = #{expressNumber}
         </if>
         <if test="linkId != null and linkId != ''">
-            AND event_order_id = #{link_id}
+            AND event_order_id = #{linkId}
         </if>
         <if test="start != null and end != null and start != '' and end != ''">
             AND (date_format(create_time, '%Y-%m-%d') &gt;= #{start} AND date_format(create_time, '%Y-%m-%d') &lt;=
