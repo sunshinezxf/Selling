@@ -498,7 +498,7 @@ public class CommodityController {
         String context = request.getSession().getServletContext().getRealPath("/");
         JSONObject resultObject = new JSONObject();
         try {
-            MultipartFile file = request.getFile("thumbnail");
+            MultipartFile file = request.getFile("thumbnail[]");
             if (file != null) {
                 ResultData response = uploadService.upload(file, context);
                 if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
@@ -517,13 +517,15 @@ public class CommodityController {
                     result.setDescription("图片上传失败");
                     return result;
                 }
-            } else {
-
             }
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription("未获取到图片");
+            return result;
         } catch (Exception e) {
             logger.error(e.getMessage());
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription(e.getMessage());
         }
-        resultObject.put("error", "上传此图片发生错误，请重试！");
         return result;
     }
 
