@@ -568,17 +568,19 @@ public class CommodityController {
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/delete/thumbnail/{thumbnailId}")
-    public String deleteThumbnail(@PathVariable("thumbnailId") String thumbnailId) {
-
-        commodityService.deleteGoodsThumbnail(thumbnailId);
-
-        JSONObject resultObject = new JSONObject();
-        JSONArray initialPreviewArray = new JSONArray();
-        JSONArray initialPreviewConfigArray = new JSONArray();
-        resultObject.put("initialPreview", initialPreviewArray);
-        resultObject.put("initialPreviewConfig", initialPreviewConfigArray);
-
-        return resultObject.toJSONString();
+    public ResultData deleteThumbnail(@PathVariable("thumbnailId") String thumbnailId) {
+        ResultData result = new ResultData();
+        ResultData response = commodityService.deleteGoodsThumbnail(thumbnailId);
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(response.getData());
+        } else if (response.getResponseCode() == ResponseCode.RESPONSE_NULL) {
+            result.setResponseCode(ResponseCode.RESPONSE_NULL);
+            result.setDescription("未找到该thumbnail图片");
+        } else {
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription(response.getDescription());
+        }
+        return result;
     }
 
     @ResponseBody
