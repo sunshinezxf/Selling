@@ -667,3 +667,9 @@ ADD COLUMN `goods_measure` VARCHAR(45) NOT NULL DEFAULT '瓶' AFTER `goods_descr
 ADD COLUMN `goods_produce_no` VARCHAR(45) NOT NULL DEFAULT '见瓶身' AFTER `goods_measure`,
 ADD COLUMN `goods_produce_date` VARCHAR(45) NOT NULL DEFAULT '见瓶身' AFTER `goods_produce_no`;
 
+
+## 2016年12月13日
+ALTER TABLE `selling`.`agent`
+ADD COLUMN `agent_type` INT(11) NOT NULL DEFAULT '0' AFTER `agent_granted`;
+
+ALTER TABLE `selling`.`agent` DROP COLUMN `customer_service` ;
