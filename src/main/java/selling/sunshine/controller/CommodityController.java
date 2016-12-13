@@ -509,7 +509,7 @@ public class CommodityController {
                         result.setDescription("图片记录存储失败");
                         return result;
                     }
-                    String thumbnailId = ((Thumbnail) commodityService.createThumbnail(thumbnail).getData()).getThumbnailId();
+                    String thumbnailId = ((Thumbnail) response.getData()).getThumbnailId();
                     result.setData(thumbnailId);
                     return result;
                 } else {
@@ -546,7 +546,7 @@ public class CommodityController {
                         result.setDescription("图片记录存储失败");
                         return result;
                     }
-                    String thumbnailId = ((Thumbnail) commodityService.createThumbnail(thumbnail).getData()).getThumbnailId();
+                    String thumbnailId = ((Thumbnail) response.getData()).getThumbnailId();
                     result.setData(thumbnailId);
                     return result;
                 } else {
