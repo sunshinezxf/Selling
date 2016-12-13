@@ -122,6 +122,7 @@
                 /express/queryExpress/* = anon
 
                 /commodity/create = roles[admin]
+                /commodity/detail/** = roles[admin]
                 /commodity/edit/** = roles[admin]
                 /commodity/overview = roles["admin, auditor"]
                 /commodity/** = anon

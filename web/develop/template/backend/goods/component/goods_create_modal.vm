@@ -60,7 +60,7 @@
                 </div>
                 <div class="field">
                     <label for="goods_picture">商品封面(请尽量上传正方形图片,图片不大于100k)</label>
-                    <input type="file" id="goods_cover" name="picture" accept="image/*" name="picture">
+                    <input type="file" id="goods_cover" name="picture" accept="image/*">
                 </div>
                 <div class="field">
                     <label for="goods_thumbnail">商品图片(图片不大于200k)</label>
@@ -170,7 +170,7 @@
                 progressBar: '<div class="bar"></div>',
                 itemAppendToEnd: false,
                 canvasImage: true,
-                removeConfirmation: true,
+                removeConfirmation: false,
                 _selectors: {
                     list: '.jFiler-items-list',
                     item: '.jFiler-item',
@@ -318,7 +318,7 @@
                 progressBar: '<div class="bar"></div>',
                 itemAppendToEnd: false,
                 canvasImage: true,
-                removeConfirmation: true,
+                removeConfirmation: false,
                 _selectors: {
                     list: '.jFiler-items-list',
                     item: '.jFiler-item',

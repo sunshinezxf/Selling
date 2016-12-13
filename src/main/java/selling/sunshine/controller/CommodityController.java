@@ -504,7 +504,7 @@ public class CommodityController {
         String context = request.getSession().getServletContext().getRealPath("/");
         JSONObject resultObject = new JSONObject();
         try {
-            MultipartFile file = request.getFile("thumbnail");
+            MultipartFile file = request.getFile("thumbnail[]");
             if (file != null) {
                 ResultData response = uploadService.upload(file, context);
                 if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
@@ -515,7 +515,7 @@ public class CommodityController {
                         result.setDescription("图片记录存储失败");
                         return result;
                     }
-                    String thumbnailId = ((Thumbnail) commodityService.createThumbnail(thumbnail).getData()).getThumbnailId();
+                    String thumbnailId = ((Thumbnail) response.getData()).getThumbnailId();
                     result.setData(thumbnailId);
                     return result;
                 } else {
@@ -523,13 +523,15 @@ public class CommodityController {
                     result.setDescription("图片上传失败");
                     return result;
                 }
-            } else {
-
             }
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription("未获取到图片");
+            return result;
         } catch (Exception e) {
             logger.error(e.getMessage());
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription(e.getMessage());
         }
-        resultObject.put("error", "上传此图片发生错误，请重试！");
         return result;
     }
 
@@ -550,7 +552,7 @@ public class CommodityController {
                         result.setDescription("图片记录存储失败");
                         return result;
                     }
-                    String thumbnailId = ((Thumbnail) commodityService.createThumbnail(thumbnail).getData()).getThumbnailId();
+                    String thumbnailId = ((Thumbnail) response.getData()).getThumbnailId();
                     result.setData(thumbnailId);
                     return result;
                 } else {
@@ -572,17 +574,19 @@ public class CommodityController {
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/delete/thumbnail/{thumbnailId}")
-    public String deleteThumbnail(@PathVariable("thumbnailId") String thumbnailId) {
-
-        commodityService.deleteGoodsThumbnail(thumbnailId);
-
-        JSONObject resultObject = new JSONObject();
-        JSONArray initialPreviewArray = new JSONArray();
-        JSONArray initialPreviewConfigArray = new JSONArray();
-        resultObject.put("initialPreview", initialPreviewArray);
-        resultObject.put("initialPreviewConfig", initialPreviewConfigArray);
-
-        return resultObject.toJSONString();
+    public ResultData deleteThumbnail(@PathVariable("thumbnailId") String thumbnailId) {
+        ResultData result = new ResultData();
+        ResultData response = commodityService.deleteGoodsThumbnail(thumbnailId);
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(response.getData());
+        } else if (response.getResponseCode() == ResponseCode.RESPONSE_NULL) {
+            result.setResponseCode(ResponseCode.RESPONSE_NULL);
+            result.setDescription("未找到该thumbnail图片");
+        } else {
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription(response.getDescription());
+        }
+        return result;
     }
 
     @ResponseBody
