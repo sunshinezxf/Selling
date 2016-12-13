@@ -47,16 +47,6 @@
                 <input type="text" value="$!{goods.produceDate}" placeholder="生产日期" autocomplete="off" required>
             </div>
         </div>
-        <div class="two fileds">
-            <div class="field">
-                <label>商品封面(请尽量上传正方形图片,图片不大于100k)</label>
-                <input type="file" id="goods_cover" name="picture" accept="image/*" required>
-            </div>
-            <div class="field">
-                <label>商品图片(图片不大于200k)</label>
-                <input type="file" id="goods_pics" name="thumbnail" multiple>
-            </div>
-        </div>
         <div class="field">
             <input type="hidden" name="block" value="0">
 
@@ -68,6 +58,18 @@
         <div class="ui green button">修改</div>
         <div class="ui button">关闭</div>
     </form>
+</div>
+<div class="ui segment">
+    <div class="field">
+        <label>商品封面(请尽量上传正方形图片,图片不大于100k)</label>
+        <input type="file" id="goods_cover" name="picture" accept="image/*" required>
+    </div>
+</div>
+<div class="ui segment">
+    <div class="field">
+        <label>商品图片(图片不大于200k)</label>
+        <input type="file" id="goods_pics" name="thumbnail" multiple>
+    </div>
 </div>
 <script src="${path.concat('/material/js/backend/util.js')}"></script>
 <script>
@@ -163,7 +165,7 @@
                 progressBar: '<div class="bar"></div>',
                 itemAppendToEnd: false,
                 canvasImage: true,
-                removeConfirmation: true,
+                removeConfirmation: false,
                 _selectors: {
                     list: '.jFiler-items-list',
                     item: '.jFiler-item',
@@ -314,7 +316,7 @@
                 progressBar: '<div class="bar"></div>',
                 itemAppendToEnd: false,
                 canvasImage: true,
-                removeConfirmation: true,
+                removeConfirmation: false,
                 _selectors: {
                     list: '.jFiler-items-list',
                     item: '.jFiler-item',
@@ -371,6 +373,9 @@
             onRemove: function (itemEl, file, id, listEl, boxEl, newInputEl, inputEl) {
                 var filerKit = inputEl.prop("jFiler"),
                         file_name = filerKit.files_list[id].name;
+                if (file_name == null) {
+                    file_name = filerKit.files_list[id].file.name;
+                }
 
                 $.post('${path.concat('/commodity/delete/thumbnail/')}' + file_name);
             },

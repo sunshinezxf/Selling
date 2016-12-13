@@ -170,7 +170,7 @@
                 progressBar: '<div class="bar"></div>',
                 itemAppendToEnd: false,
                 canvasImage: true,
-                removeConfirmation: true,
+                removeConfirmation: false,
                 _selectors: {
                     list: '.jFiler-items-list',
                     item: '.jFiler-item',
@@ -318,7 +318,7 @@
                 progressBar: '<div class="bar"></div>',
                 itemAppendToEnd: false,
                 canvasImage: true,
-                removeConfirmation: true,
+                removeConfirmation: false,
                 _selectors: {
                     list: '.jFiler-items-list',
                     item: '.jFiler-item',
