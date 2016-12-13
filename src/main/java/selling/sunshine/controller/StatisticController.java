@@ -137,6 +137,7 @@ public class StatisticController {
         Map<String, Object> condition = new HashMap<>();
         condition.put("granted", false);
         condition.put("blockFlag", false);
+        condition.put("agentType", 0);//只查询普通代理商
         int grantedNum = 0;
         int checkNum = 0;
         ResultData fetchResponse = agentService.fetchAgent(condition);

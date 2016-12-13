@@ -1918,6 +1918,7 @@ public class AgentController {
 		condition.clear();
 		condition.put("granted", true);
 		condition.put("blockFlag", false);
+		condition.put("agentType", 0);//只查询普通代理商
 		List<Agent> agentList = (List<Agent>) agentService.fetchAgent(condition).getData();
 		// Iterator<Agent> iter = agentList.iterator();
 		// while (iter.hasNext()) {
@@ -1953,6 +1954,7 @@ public class AgentController {
 		Map<String, Object> condition = new HashMap<String, Object>();
 		condition.put("granted", false);
 		condition.put("blockFlag", false);
+		condition.put("agentType", 0);//只查询普通代理商
 		ResultData fetchResponse = agentService.fetchAgent(condition, param);
 		if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
 			result = (DataTablePage<Agent>) fetchResponse.getData();
@@ -2312,6 +2314,7 @@ public class AgentController {
 		List<SortRule> rule = new ArrayList<>();
 		rule.add(new SortRule("create_time", "desc"));
 		condition.put("sort", rule);
+		condition.put("agentType", 0);//只查询普通代理商
 		if (!StringUtils.isEmpty(param.getParams())) {
 			JSONObject json = JSON.parseObject(param.getParams());
 			if (json.containsKey("status")) {
@@ -2441,6 +2444,7 @@ public class AgentController {
 		condition.put("granted", true);
 		condition.put("blockFlag", false);
 		condition.put("sortByName", true);
+		condition.put("agentType", 0);//只查询普通代理商
 		queryData = agentService.fetchAgent(condition);
 		if (queryData.getResponseCode() == ResponseCode.RESPONSE_OK) {
 			List<Agent> agentList = (List<Agent>) queryData.getData();
@@ -2483,6 +2487,7 @@ public class AgentController {
 		condition.clear();
 		condition.put("blockFlag", false);
 		condition.put("granted", true);
+		condition.put("agentType", 0);//只查询普通代理商
 		queryData = agentService.fetchAgent(condition);
 		if (queryData.getResponseCode() == ResponseCode.RESPONSE_OK) {
 			int totalNum = ((List<Agent>) queryData.getData()).size();
@@ -2805,9 +2810,10 @@ public class AgentController {
 		ResultData result = new ResultData();
 		JSONObject data = new JSONObject();
 		Map<String, Object> condition = new HashMap<>();
-		// 获取当前为审核的代理商的人数
+		// 获取当前未审核的代理商的人数
 		condition.put("granted", false);
 		condition.put("blockFlag", false);
+		condition.put("agentType", 0);//只查询普通代理商
 		ResultData response = agentService.fetchAgent(condition);
 		if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
 			List<Agent> list = (List<Agent>) response.getData();
@@ -2820,6 +2826,7 @@ public class AgentController {
 		condition.put("granted", true);
 		condition.put("monthly", true);
 		condition.put("blockFlag", false);
+		condition.put("agentType", 0);//只查询普通代理商
 		response = agentService.fetchAgent(condition);
 		if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
 			List<Agent> list = (List<Agent>) response.getData();
@@ -2831,6 +2838,7 @@ public class AgentController {
 		condition.clear();
 		condition.put("monthly", true);
 		condition.put("purchase", true);
+		condition.put("agentType", 0);//只查询普通代理商
 		response = agentService.fetchAgent(condition);
 		if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
 			List<Agent> list = (List<Agent>) response.getData();
@@ -2842,6 +2850,7 @@ public class AgentController {
 		condition.clear();
 		condition.put("granted", true);
 		condition.put("blockFlag", false);
+		condition.put("agentType", 0);//只查询普通代理商
 		response = agentService.fetchAgent(condition);
 		if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
 			List<Agent> list = (List<Agent>) response.getData();

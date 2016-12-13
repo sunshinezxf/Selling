@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import common.sunshine.dao.BaseDao;
 import common.sunshine.model.selling.agent.Agent;
+import common.sunshine.model.selling.agent.support.AgentType;
 import selling.sunshine.dao.OrderPoolDao;
 import selling.sunshine.model.AgentVitality;
 import selling.sunshine.model.OrderPool;
@@ -86,7 +87,7 @@ public class OrderPoolDaoImpl extends BaseDao implements OrderPoolDao {
                     String date = dateFormat.format(orderPool.getPoolDate());
                	    String time = new SimpleDateFormat("yyyy年MM月dd日").format(orderPool.getCreateAt());
                     if (flag1) {//flag1为true表示上级代理商不在返现记录表里，需要检查
-						if (!agent2.isCustomerService()) {//上级代理商非客服可以有机会得到返现
+						if (agent2.getAgentType()==AgentType.ORDINARY) {//上级代理商非客服可以有机会得到返现
 							condition.clear();
 							condition.put("blockFlag", false);
 							AgentVitality agentVitality=(AgentVitality)sqlSession.selectOne("selling.agent.vitality.query", condition);
@@ -110,7 +111,7 @@ public class OrderPoolDaoImpl extends BaseDao implements OrderPoolDao {
 	                   	        	flag=true;
 							     }
 						    }
-	                        if (flag&&!agent2.isCustomerService()) {//flag为true表示有遗漏，需要添加上去
+	                        if (flag&&agent2.getAgentType()==AgentType.ORDINARY) {//flag为true表示有遗漏，需要添加上去
 	                        	  CashBackRecord refundRecordLevel2 = new CashBackRecord();
                                   refundRecordLevel2.setRecordId(IDGenerator.generate("RFR"));
                                   if (agent3==null) {
@@ -141,7 +142,7 @@ public class OrderPoolDaoImpl extends BaseDao implements OrderPoolDao {
 						}
 					}
                     if (flag2) {//flag2为true表示上上级代理商存在且不在返现记录表里，需要检查
-						if (agent3!=null&&!agent3.isCustomerService()) {//上上级代理商非客服可以有机会得到返现
+						if (agent3!=null&&agent3.getAgentType()==AgentType.ORDINARY) {//上上级代理商非客服可以有机会得到返现
 							condition.clear();
 							condition.put("blockFlag", false);
 							AgentVitality agentVitality=(AgentVitality)sqlSession.selectOne("selling.agent.vitality.query", condition);
@@ -165,7 +166,7 @@ public class OrderPoolDaoImpl extends BaseDao implements OrderPoolDao {
 	                   	        	flag=true;
 							     }
 						    }
-	                        if (flag&&!agent3.isCustomerService()) {//flag为true表示有遗漏，需要添加上去
+	                        if (flag&&agent3.getAgentType()==AgentType.ORDINARY) {//flag为true表示有遗漏，需要添加上去
 	                        	 CashBackRecord refundRecordLevel3 = new CashBackRecord();
                                  refundRecordLevel3.setRecordId(IDGenerator.generate("RFR"));
                                  refundRecordLevel3.setAmount(

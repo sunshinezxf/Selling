@@ -1,6 +1,7 @@
 package common.sunshine.mybatis.handler.event;
 
 import common.sunshine.model.selling.event.support.ApplicationStatus;
+
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
 

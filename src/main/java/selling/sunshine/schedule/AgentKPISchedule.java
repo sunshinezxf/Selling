@@ -43,6 +43,7 @@ public class AgentKPISchedule {
 	
 	public void schedule() {
 		Map<String, Object> condition=new HashMap<>();
+		condition.put("agentType", 0);//只查询普通代理商
 		ResultData queryData=agentService.fetchAgent(condition);
 		if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
 			List<Agent> agents=(List<Agent>)queryData.getData();

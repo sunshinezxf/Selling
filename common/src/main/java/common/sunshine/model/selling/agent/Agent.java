@@ -1,6 +1,8 @@
 package common.sunshine.model.selling.agent;
 
 import common.sunshine.model.Entity;
+import common.sunshine.model.selling.agent.support.AgentType;
+
 import org.springframework.util.StringUtils;
 
 
@@ -20,7 +22,8 @@ public class Agent extends Entity {
     private double coffer;
     private double agentRefund;
     private int claimScale;
-    private boolean customerService;
+//    private boolean customerService;
+    private AgentType agentType;
     private common.sunshine.model.selling.agent.lite.Agent upperAgent;
 
     public Agent() {
@@ -57,7 +60,7 @@ public class Agent extends Entity {
     }
 
     public Agent(String agentId, String name, String gender, String phone, String address, String card, String password,
-			String wechat, boolean granted, double coffer, double agentRefund, int claimScale, boolean customerService,
+			String wechat, boolean granted, double coffer, double agentRefund, int claimScale, AgentType agentType,
 			common.sunshine.model.selling.agent.lite.Agent upperAgent) {
 		super();
 		this.agentId = agentId;
@@ -72,9 +75,29 @@ public class Agent extends Entity {
 		this.coffer = coffer;
 		this.agentRefund = agentRefund;
 		this.claimScale = claimScale;
-		this.customerService = customerService;
+		this.agentType = agentType;
 		this.upperAgent = upperAgent;
 	}
+    
+//    public Agent(String agentId, String name, String gender, String phone, String address, String card, String password,
+//			String wechat, boolean granted, double coffer, double agentRefund, int claimScale, boolean customerService,
+//			common.sunshine.model.selling.agent.lite.Agent upperAgent) {
+//		super();
+//		this.agentId = agentId;
+//		this.name = name;
+//		this.gender = gender;
+//		this.phone = phone;
+//		this.address = address;
+//		this.card = card;
+//		this.password = password;
+//		this.wechat = wechat;
+//		this.granted = granted;
+//		this.coffer = coffer;
+//		this.agentRefund = agentRefund;
+//		this.claimScale = claimScale;
+//		this.customerService = customerService;
+//		this.upperAgent = upperAgent;
+//	}
 
 	public String getAgentId() {
         return agentId;
@@ -180,13 +203,20 @@ public class Agent extends Entity {
         this.claimScale = claimScale;
     }
 
-	public boolean isCustomerService() {
-		return customerService;
+//	public boolean isCustomerService() {
+//		return customerService;
+//	}
+//
+//	public void setCustomerService(boolean customerService) {
+//		this.customerService = customerService;
+//	}
+
+	public AgentType getAgentType() {
+		return agentType;
 	}
 
-	public void setCustomerService(boolean customerService) {
-		this.customerService = customerService;
-	}
-    
+	public void setAgentType(AgentType agentType) {
+		this.agentType = agentType;
+	}    
     
 }

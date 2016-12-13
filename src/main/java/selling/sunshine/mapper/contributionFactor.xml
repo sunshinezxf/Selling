@@ -36,7 +36,7 @@
             <if test="factorName != null and factorName != ''">
                 factor_name = #{factorName},
             </if>
-            <if test="factorWeight != null and factorWeight != ''">
+            <if test="factorWeight != null">
                 factor_weight = #{factorWeight},
             </if>
             <if test="blockFlag != null">

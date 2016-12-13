@@ -1,6 +1,7 @@
 package selling.sunshine.dao.impl;
 
 import com.alibaba.fastjson.JSONObject;
+
 import common.sunshine.utils.IDGenerator;
 import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
@@ -10,6 +11,7 @@ import org.springframework.util.StringUtils;
 import common.sunshine.dao.BaseDao;
 import selling.sunshine.dao.RefundDao;
 import common.sunshine.model.selling.agent.Agent;
+import common.sunshine.model.selling.agent.support.AgentType;
 import selling.sunshine.model.AgentVitality;
 import selling.sunshine.model.OrderPool;
 import selling.sunshine.model.RefundConfig;
@@ -142,7 +144,7 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
                         Map<String, Object> con4=new HashMap<>();
                         con4.put("blockFlag", false);
                         AgentVitality agentVitality=(AgentVitality)sqlSession.selectOne("selling.agent.vitality.query", con4);
-                        if (!agent.isCustomerService()) {
+                        if (agent.getAgentType()==AgentType.ORDINARY) {
                         	 CashBackRecord refundRecord = new CashBackRecord();
                              refundRecord.setRecordId(IDGenerator.generate("RFR"));
                              if (agent.getUpperAgent() != null) {
@@ -212,7 +214,7 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
                                                          + refundRecordLevel3.getAmount() + "元");
                                                  refundRecordLevel3.setLevel(CashBackLevel.INDIRECT);
                                                  refundRecordLevel3.setBlockFlag(false);
-                                              	 if (!agent3.isCustomerService()) {
+                                              	 if (agent3.getAgentType()==AgentType.ORDINARY) {
                                                      sqlSession.insert("selling.refund.record.insert", refundRecordLevel3);
                                                  }
                                              }
@@ -254,7 +256,7 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
                                      refundRecordLevel2.setLevel(CashBackLevel.DIRECT);
                                      refundRecordLevel2.setBlockFlag(false);
                                      if (!blockFlag) {
-                                    	 if (!agent2.isCustomerService()) {
+                                    	 if (agent2.getAgentType()==AgentType.ORDINARY) {
                                              sqlSession.insert("selling.refund.record.insert", refundRecordLevel2);
                                          }
                                      }

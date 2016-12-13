@@ -16,7 +16,9 @@
         <result property="createAt" column="create_time"></result>
         <result property="agentRefund" column="agent_refund"></result>
         <result property="claimScale" column="scale"></result>
-        <result property="customerService" column="customer_service"></result>
+    <!--     <result property="customerService" column="customer_service"></result> -->
+        <result property="agentType" column="agent_type"
+                typeHandler="common.sunshine.mybatis.handler.agent.AgentTypeHandler"></result>
         <association property="upperAgent" column="agentId = upper_agent_id" select="agentLiteQuery"></association>
     </resultMap>
 
@@ -46,7 +48,8 @@
             block_flag = #{blockFlag},
             create_time = #{createAt},
             agent_coffer = #{coffer},
-            customer_service=#{customerService}
+<!--             customer_service=#{customerService}  --> 
+            agent_type = #{agentType}
         </set>
     </insert>
 
@@ -59,11 +62,14 @@
     <select id="query" parameterType="java.util.Map" resultMap="agentVo">
         SELECT agent_id, upper_agent_id,agent_coffer, agent_name, agent_gender, agent_phone, agent_address, agent_card,
         agent_password,
-        agent_wechat, agent_refund, agent_granted, block_flag, create_time, scale,customer_service
+        agent_wechat, agent_refund, agent_granted, block_flag, create_time, scale,agent_type
         FROM agent
         WHERE 1 = 1
         <if test="agentId != null and agentId != ''">
             AND agent_id = #{agentId}
+        </if>
+        <if test="agentType != null and agentType != ''">
+            AND agent_type = #{agentType}
         </if>
         <if test="upperAgent != null and upperAgent.agentId != null">
             AND upper_agent_id = #{upperAgent.agentId}
@@ -157,9 +163,9 @@
             <if test="agentRefund != null and agentRefund != ''">
                 agent_refund = #{agentRefund},
             </if>
-            <if test="customerService != null and customerService != ''">
+<!--             <if test="customerService != null and customerService != ''">
                 customer_service = #{customerService},
-            </if>
+            </if> -->
             <if test="claimScale != null and claimScale != ''">
                 scale = #{claimScale},
             </if>
@@ -168,6 +174,9 @@
             </if>
             <if test="upperAgent != null and upperAgent != ''">
                 upper_agent_id = #{upperAgent.agentId},
+            </if>
+            <if test="agentType != null and agentType != ''">
+                agent_type = #{agentType, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler},
             </if>
             agent_id = #{agentId}
         </set>

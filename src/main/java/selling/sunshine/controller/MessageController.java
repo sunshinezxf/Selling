@@ -42,6 +42,7 @@ public class MessageController {
         Map<String, Object> condition = new HashMap<>();
         condition.put("granted", true);
         condition.put("blockFlag", false);
+        condition.put("agentType", 0);//只查询普通代理商
         ResultData fetchResponse = agentService.fetchAgent(condition);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             List<Agent> list = (List<Agent>) fetchResponse.getData();
