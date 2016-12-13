@@ -251,32 +251,34 @@ public class CommodityController {
     @RequestMapping(method = RequestMethod.GET, value = "/viewlist")
     public ModelAndView viewList(HttpServletRequest request, String agentId, String code, String state) {
         ModelAndView view = new ModelAndView();
-        String openId = null;
-        if (StringUtils.isEmpty(code) || StringUtils.isEmpty(state)) {
-            HttpSession session = request.getSession();
-            if (session.getAttribute("openId") == null || session.getAttribute("openId").equals("")) {
+        if(request.getHeader("user-agent").toLowerCase().contains("micromessenger")){
+        	String openId = null;
+            if (StringUtils.isEmpty(code) || StringUtils.isEmpty(state)) {
+                HttpSession session = request.getSession();
+                if (session.getAttribute("openId") == null || session.getAttribute("openId").equals("")) {
+                    WechatConfig.oauthWechat(view, "/customer/component/goods_error_msg");
+                    view.setViewName("/customer/component/goods_error_msg");
+                    return view;
+                }
+            }
+            if (code != null && !code.equals("")) {
+                openId = WechatUtil.queryOauthOpenId(code);
+            }
+            if (openId == null || openId.equals("")) {
+                HttpSession session = request.getSession();
+                if (session.getAttribute("openId") != null && !session.getAttribute("openId").equals("")) {
+                    openId = (String) session.getAttribute("openId");
+                }
+            }
+            if (openId == null || openId.equals("")) {
                 WechatConfig.oauthWechat(view, "/customer/component/goods_error_msg");
                 view.setViewName("/customer/component/goods_error_msg");
                 return view;
             }
-        }
-        if (code != null && !code.equals("")) {
-            openId = WechatUtil.queryOauthOpenId(code);
-        }
-        if (openId == null || openId.equals("")) {
-            HttpSession session = request.getSession();
-            if (session.getAttribute("openId") != null && !session.getAttribute("openId").equals("")) {
-                openId = (String) session.getAttribute("openId");
+            if (!StringUtils.isEmpty(openId)) {
+                HttpSession session = request.getSession();
+                session.setAttribute("openId", openId);
             }
-        }
-        if (openId == null || openId.equals("")) {
-            WechatConfig.oauthWechat(view, "/customer/component/goods_error_msg");
-            view.setViewName("/customer/component/goods_error_msg");
-            return view;
-        }
-        if (!StringUtils.isEmpty(openId)) {
-            HttpSession session = request.getSession();
-            session.setAttribute("openId", openId);
         }
         Map<String, Object> condition = new HashMap<String, Object>();
         condition.put("blockFlag", false);
@@ -307,42 +309,46 @@ public class CommodityController {
                              String code, String state) {
         ModelAndView view = new ModelAndView();
         String openId = null;
-        if (StringUtils.isEmpty(code) || StringUtils.isEmpty(state)) {
-            HttpSession session = request.getSession();
-            if (session.getAttribute("openId") == null || session.getAttribute("openId").equals("")) {
-                WechatConfig.oauthWechat(view, "/customer/component/goods_error_msg");
-                view.setViewName("/customer/component/goods_error_msg");
-                return view;
-            }
-        }
-        if (code != null && !code.equals("")) {
-            openId = WechatUtil.queryOauthOpenId(code);
-        }
-        if (openId == null || openId.equals("")) {
-            HttpSession session = request.getSession();
-            if (session.getAttribute("openId") != null && !session.getAttribute("openId").equals("")) {
-                openId = (String) session.getAttribute("openId");
-            }
-        }
-        view.addObject("wechat", openId);
-        if (openId == null || openId.equals("")) {
-            WechatConfig.oauthWechat(view, "/customer/component/goods_error_msg");
-            view.setViewName("/customer/component/goods_error_msg");
-            return view;
-        }
-        if (!StringUtils.isEmpty(openId)) {
-            HttpSession session = request.getSession();
-            session.setAttribute("openId", openId);
+        if(request.getHeader("user-agent").toLowerCase().contains("micromessenger")){
+	        if (StringUtils.isEmpty(code) || StringUtils.isEmpty(state)) {
+	            HttpSession session = request.getSession();
+	            if (session.getAttribute("openId") == null || session.getAttribute("openId").equals("")) {
+	                WechatConfig.oauthWechat(view, "/customer/component/goods_error_msg");
+	                view.setViewName("/customer/component/goods_error_msg");
+	                return view;
+	            }
+	        }
+	        if (code != null && !code.equals("")) {
+	            openId = WechatUtil.queryOauthOpenId(code);
+	        }
+	        if (openId == null || openId.equals("")) {
+	            HttpSession session = request.getSession();
+	            if (session.getAttribute("openId") != null && !session.getAttribute("openId").equals("")) {
+	                openId = (String) session.getAttribute("openId");
+	            }
+	        }
+	        view.addObject("wechat", openId);
+	        if (openId == null || openId.equals("")) {
+	            WechatConfig.oauthWechat(view, "/customer/component/goods_error_msg");
+	            view.setViewName("/customer/component/goods_error_msg");
+	            return view;
+	        }
+	        if (!StringUtils.isEmpty(openId)) {
+	            HttpSession session = request.getSession();
+	            session.setAttribute("openId", openId);
+	        }
         }
         Map<String, Object> condition = new HashMap<>();
-        condition.put("wechat", openId);
-        List<SortRule> rules = new ArrayList<>();
-        rules.add(new SortRule("create_time", "desc"));
-        condition.put("sort", rules);
-        ResultData response = orderService.fetchCustomerOrder(condition);
-        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            List<CustomerOrder> list = (List<CustomerOrder>) response.getData();
-            view.addObject("history", list.get(0));
+        if(openId != null){
+	        condition.put("wechat", openId);
+	        List<SortRule> rules = new ArrayList<>();
+	        rules.add(new SortRule("create_time", "desc"));
+	        condition.put("sort", rules);
+	        ResultData response = orderService.fetchCustomerOrder(condition);
+	        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+	            List<CustomerOrder> list = (List<CustomerOrder>) response.getData();
+	            view.addObject("history", list.get(0));
+	        }
         }
         condition.clear();
         condition.put("goodsId", goodsId);

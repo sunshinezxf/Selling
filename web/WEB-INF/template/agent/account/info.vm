@@ -13,7 +13,10 @@
 	    <h1 style="font-weight:normal">￥${agent.coffer}</h1>
 	</div>
 	<div class="weui_btn_area">
+	<!--
 		<a href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx67fcdc4fa58f7578&redirect_uri=http%3a%2f%2fwww.yuncaogangmu.com%2faccount%2fdeposit&response_type=code&scope=snsapi_base&state=view#wechat_redirect" class="weui_btn weui_btn_primary operation">充值</a>
+	-->
+		<a href="${path.concat('/account/deposit')}" class="weui_btn weui_btn_primary operation">充值</a>
 	    <a href="${path.concat('/account/withdraw')}" class="weui_btn weui_btn_plain_primary operation">提现</a>
 	</div>
     <div class="weui_panel weui_panel_access">

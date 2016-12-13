@@ -461,7 +461,10 @@
     }
 
     function pay() {
-        var openId = '${wechat}';
+    	var openId = "";
+    	if(is_weixin()){
+        	openId = '${wechat}';
+        }
         var url = '${path.concat('/customer/place')}';
         var goodsId = "${goods.goodsId}";
         var agentId = "AGT" + $('#agent_id').val();
@@ -494,13 +497,20 @@
         $.post(url, param, function (result) {
             if (result.responseCode == "RESPONSE_OK") {
                 var data = result.data;
+                if(is_weixin()){
+                	channel = "wx_pub";
+                	open_id = "${wechat}";
+                } else {
+                	channel = "alipay_wap";
+                	open_id = ""
+                }
                 pingpp_one.init({
                     app_id: "app_K4evXLKq50O8CuL8",
                     amount: data.totalPrice,
-                    channel: ['wx_pub'],
+                    channel: [channel],
                     charge_url: "${path.concat('/order/customerpay')}",
                     charge_param: {order_id: data.orderId},
-                    open_id: '${wechat}',
+                    open_id: open_id,
                     debug: false
                 }, function (result) {
                     //debug 模式下获取 charge_url 的返回结果
@@ -551,5 +561,14 @@
             e.stopPropagation();
         }
     }, false);
+    
+    function is_weixin() {
+        var ua = navigator.userAgent.toLowerCase();
+        if (ua.match(/MicroMessenger/i) == "micromessenger") {
+            return true;
+        } else {
+            return false;
+        }
+    }
 </script>
 </html>
