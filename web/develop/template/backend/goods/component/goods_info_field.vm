@@ -1,50 +1,59 @@
 <div class="ui segment">
-    <form class="ui form">
+    <form class="ui form" id="goods_info_form">
         <h4 class="ui dividing header">商品信息</h4>
 
         <div class="two fields">
             <div class="field">
                 <label>商品名称</label>
-                <input type="text" value="$!{goods.name}" placeholder="商品名称(全名)" autocomplete="off" required>
+                <input type="text" name="name" value="$!{goods.name}" placeholder="商品名称(全名)" autocomplete="off"
+                       required>
             </div>
             <div class="field">
                 <label>商品别名</label>
-                <input type="text" value="$!{goods.nickname}" placeholder="商品别名(缩略名)" autocomplete="off" required>
+                <input type="text" name="nickname" value="$!{goods.nickname}" placeholder="商品别名(缩略名)" autocomplete="off"
+                       required>
             </div>
         </div>
         <div class="two fields">
             <div class="field">
                 <label>商品原价</label>
-                <input type="number" value="$!{goods.customerPrice}" placeholder="商品原价/顾客直接购买价格" autocomplete="off"
+                <input type="number" name="price" value="$!{goods.customerPrice}" placeholder="商品原价/顾客直接购买价格"
+                       autocomplete="off"
                        required>
             </div>
             <div class="field">
                 <label>代理价格</label>
-                <input type="number" value="$!{goods.agentPrice}" placeholder="代理商购买/分享价格" autocomplete="off" required>
+                <input type="number" name="agentPrice" value="$!{goods.agentPrice}" placeholder="代理商购买/分享价格"
+                       autocomplete="off" required>
             </div>
         </div>
         <div class="two fields">
             <div class="field">
                 <label>商品规格</label>
-                <input type="text" value="$!{goods.standard}" placeholder="商品规格,如180g" autocomplete="off" required>
+                <input type="text" name="standard" value="$!{goods.standard}" placeholder="商品规格,如180g"
+                       autocomplete="off" required>
             </div>
             <div class="field">
                 <label>计量单位</label>
-                <input type="text" value="$!{goods.measure}" placeholder="商品计量单位,如:瓶,盒" autocomplete="off" required>
+                <input type="text" name="measure" value="$!{goods.measure}" placeholder="商品计量单位,如:瓶,盒"
+                       autocomplete="off" required>
             </div>
         </div>
         <div class="field">
             <label>商品描述</label>
-            <input type="text" value="$!{goods.description}" placeholder="商品描述" autocomplete="off" required>
+            <input type="text" name="description" value="$!{goods.description}" placeholder="商品描述" autocomplete="off"
+                   required>
         </div>
         <div class="two fields">
             <div class="field">
                 <label>生产批号</label>
-                <input type="text" value="$!{goods.produceNo}" placeholder="生产批号" autocomplete="off" required>
+                <input type="text" name="produceNo" value="$!{goods.produceNo}" placeholder="生产批号" autocomplete="off"
+                       required>
             </div>
             <div class="field">
                 <label>生产日期</label>
-                <input type="text" value="$!{goods.produceDate}" placeholder="生产日期" autocomplete="off" required>
+                <input type="text" name="produceDate" value="$!{goods.produceDate}" placeholder="生产日期"
+                       autocomplete="off" required>
             </div>
         </div>
         <div class="field">
@@ -55,8 +64,7 @@
                 <label>即时上架</label>
             </div>
         </div>
-        <div class="ui green button">修改</div>
-        <div class="ui button">关闭</div>
+        <div class="ui green basic button" id="save_btn">保存</div>
     </form>
 </div>
 <div class="ui segment">
@@ -74,6 +82,12 @@
 <script src="${path.concat('/material/js/backend/util.js')}"></script>
 <script>
     $("checkbox").checkbox();
+
+    $("#save_btn").on('click', function () {
+        $("#goods_info_form").attr("method", "post");
+        $("#goods_info_form").attr("action", "${path.concat('/commodity/edit/')}${goods.goodsId}");
+        $("#goods_info_form").submit();
+    });
 
     $(document).ready(function () {
         var thumbnail = eval(${goods.thumbnails});
