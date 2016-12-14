@@ -4,6 +4,7 @@
     <resultMap id="goods4AgentVo" type="common.sunshine.model.selling.goods.Goods4Agent">
         <result property="goodsId" column="goods_id"></result>
         <result property="name" column="goods_name"></result>
+        <result property="nickname" column="goods_nickname"></result>
         <result property="standard" column="standard"></result>
         <result property="measure" column="goods_measure"></result>
         <result property="produceNo" column="goods_produce_no"></result>
@@ -17,6 +18,7 @@
     <resultMap id="goods4CustomerVo" type="common.sunshine.model.selling.goods.Goods4Customer">
         <result property="goodsId" column="goods_id"></result>
         <result property="name" column="goods_name"></result>
+        <result property="nickname" column="goods_nickname"></result>
         <result property="standard" column="standard"></result>
         <result property="measure" column="goods_measure"></result>
         <result property="produceNo" column="goods_produce_no"></result>
@@ -39,13 +41,14 @@
 
     <!-- insert record of goods -->
     <insert id="insert" parameterType="common.sunshine.model.selling.goods.Goods4Customer" useGeneratedKeys="false">
-        INSERT INTO goods(goods_id, goods_name, prime_price, agent_price, standard, goods_measure, goods_produce_no, goods_produce_date, goods_description, block_flag, create_time)
-        VALUE (#{goodsId}, #{name}, #{customerPrice}, #{agentPrice}, #{standard}, #{measure}, #{produceNo}, #{produceDate}, #{description}, #{blockFlag}, #{createAt})
+        INSERT INTO goods(goods_id, goods_name, goods_nickname, prime_price, agent_price, standard, goods_measure, goods_produce_no, goods_produce_date, goods_description, block_flag, create_time)
+        VALUE (#{goodsId}, #{name}, #{nickname}, #{customerPrice}, #{agentPrice}, #{standard}, #{measure}, #{produceNo}, #{produceDate}, #{description}, #{blockFlag}, #{createAt})
     </insert>
 
     <!-- fetch goods info for agent -->
     <select id="query4Agent" parameterType="java.util.Map" resultMap="goods4AgentVo">
-        SELECT goods_id, goods_name, goods_description, standard, agent_price, goods_measure, goods_produce_no, goods_produce_date, block_flag, create_time
+        SELECT goods_id, goods_name, goods_nickname, goods_description, standard, agent_price, goods_measure,
+        goods_produce_no, goods_produce_date, block_flag, create_time
         FROM goods
         WHERE 1 = 1
         <if test="goodsId != null and goodsId != ''">
@@ -67,7 +70,8 @@
 
     <!-- fetch goods info for customer or admin management -->
     <select id="query4Customer" parameterType="java.util.Map" resultMap="goods4CustomerVo">
-        SELECT goods_id, goods_name, goods_description, prime_price, agent_price, standard, goods_measure, goods_produce_no, goods_produce_date, block_flag, create_time
+        SELECT goods_id, goods_name, goods_nickname, goods_description, prime_price, agent_price, standard,
+        goods_measure, goods_produce_no, goods_produce_date, block_flag, create_time
         FROM goods
         WHERE 1 = 1
         <if test="goodsId != null and goodsId != ''">
@@ -100,6 +104,9 @@
             <if test="name != null">
                 goods_name = #{name},
             </if>
+            <if test="nickname != null">
+                goods_nickname = #{nickname},
+            </if>
             <if test="customerPrice != null">
                 prime_price = #{customerPrice},
             </if>
@@ -110,7 +117,7 @@
                 goods_description = #{description},
             </if>
             <if test="standard != null">
-            	standard = #{standard},
+                standard = #{standard},
             </if>
             <if test="measure != null">
                 goods_measure = #{measure},

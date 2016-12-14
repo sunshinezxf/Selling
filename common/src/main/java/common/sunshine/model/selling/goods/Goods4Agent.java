@@ -42,24 +42,24 @@ public class Goods4Agent extends AbstractGoods {
         this.agentPrice = agentPrice;
     }
 
-	@Override
-	public int hashCode() {
-		return this.getGoodsId().hashCode() ;
-	}
+    @Override
+    public int hashCode() {
+        return this.getGoodsId().hashCode();
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if(this == obj){
-			return true;
-		}
-		if(obj == null){
-			return false;
-		}
-		if(obj instanceof Goods4Agent){
-			return this.getGoodsId().equals(((Goods4Agent)obj).getGoodsId());
-		}
-		return false;
-	}
-    
-    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (obj instanceof Goods4Agent) {
+            return this.getGoodsId().equals(((Goods4Agent) obj).getGoodsId());
+        }
+        return false;
+    }
+
+
 }

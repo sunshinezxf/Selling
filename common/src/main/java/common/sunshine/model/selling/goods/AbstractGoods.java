@@ -8,6 +8,7 @@ import common.sunshine.model.Entity;
 public abstract class AbstractGoods extends Entity {
     private String goodsId;
     private String name;
+    private String nickname;
     private String description;
     private String standard;
     //商品的计量单位
@@ -31,6 +32,14 @@ public abstract class AbstractGoods extends Entity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public String getDescription() {

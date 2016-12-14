@@ -8,10 +8,15 @@ import javax.validation.constraints.NotNull;
 public class GoodsForm {
     @NotNull
     private String name;
+
+    private String nickname;
+
     @NotNull
     private String price;
+
     @NotNull
     private String agentPrice;
+
     @NotNull
     private String description;
 
@@ -33,6 +38,14 @@ public class GoodsForm {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public String getPrice() {

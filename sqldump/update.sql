@@ -657,19 +657,30 @@ CREATE TABLE IF NOT EXISTS `selling`.`contribution_factor` (
 )
   ENGINE = InnoDB;
 
- INSERT INTO `selling`.`contribution_factor` (factor_id,factor_name,create_time) VALUES('FAC00000001','购买商品总数量','2016-11-18');
- INSERT INTO `selling`.`contribution_factor` (factor_id,factor_name,create_time) VALUES('FAC00000002','购买商品总金额','2016-11-18');
- INSERT INTO `selling`.`contribution_factor` (factor_id,factor_name,create_time) VALUES('FAC00000003','下级代理商人数','2016-11-18');
+INSERT INTO `selling`.`contribution_factor` (factor_id, factor_name, create_time)
+VALUES ('FAC00000001', '购买商品总数量', '2016-11-18');
+INSERT INTO `selling`.`contribution_factor` (factor_id, factor_name, create_time)
+VALUES ('FAC00000002', '购买商品总金额', '2016-11-18');
+INSERT INTO `selling`.`contribution_factor` (factor_id, factor_name, create_time)
+VALUES ('FAC00000003', '下级代理商人数', '2016-11-18');
 
 
 ALTER TABLE `selling`.`goods`
-ADD COLUMN `goods_measure` VARCHAR(45) NOT NULL DEFAULT '瓶' AFTER `goods_description`,
-ADD COLUMN `goods_produce_no` VARCHAR(45) NOT NULL DEFAULT '见瓶身' AFTER `goods_measure`,
-ADD COLUMN `goods_produce_date` VARCHAR(45) NOT NULL DEFAULT '见瓶身' AFTER `goods_produce_no`;
+ADD COLUMN `goods_measure` VARCHAR(45) NOT NULL DEFAULT '瓶'
+AFTER `goods_description`,
+ADD COLUMN `goods_produce_no` VARCHAR(45) NOT NULL DEFAULT '见瓶身'
+AFTER `goods_measure`,
+ADD COLUMN `goods_produce_date` VARCHAR(45) NOT NULL DEFAULT '见瓶身'
+AFTER `goods_produce_no`;
 
 
 ## 2016年12月13日
 ALTER TABLE `selling`.`agent`
-ADD COLUMN `agent_type` INT(11) NOT NULL DEFAULT '0' AFTER `agent_granted`;
+ADD COLUMN `agent_type` INT(11) NOT NULL DEFAULT '0'
+AFTER `agent_granted`;
 
-ALTER TABLE `selling`.`agent` DROP COLUMN `customer_service` ;
+ALTER TABLE `selling`.`agent` DROP COLUMN `customer_service`;
+
+ALTER TABLE `selling`.`goods`
+ADD COLUMN `goods_nickname` VARCHAR(45) NULL
+AFTER `goods_name`;
