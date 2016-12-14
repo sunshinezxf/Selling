@@ -29,7 +29,7 @@
             </div>
         </div>
     #end
-    #if($role == "admin")
+    #if($role == "admin" || $role == "finance")
         <div class="item">
             <a class="title"><i class="teal gift icon left"></i><i class="dropdown icon"></i>商品管理</a>
 
@@ -39,7 +39,7 @@
             </div>
         </div>
     #end
-    #if($role == "admin")
+    #if($role == "admin" || $role == "finance")
         <div class="item">
             <a class="title"><i class="teal payment icon left"></i><i class="dropdown icon"></i>返现管理</a>
 
@@ -48,7 +48,7 @@
             </div>
         </div>
     #end
-    #if($role == "admin")
+    #if($role == "admin" || $role == "finance")
         <div class="item">
             <a class="title"><i class="teal money icon left"></i><i class="dropdown icon"></i>提现管理</a>
 
