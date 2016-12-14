@@ -117,14 +117,15 @@
 
                 /bill/inform = anon
 
-                /dashboard = roles["admin, express"]
+                /dashboard = roles["admin", "express", "finance"]
 
                 /express/queryExpress/* = anon
 
                 /commodity/create = roles[admin]
-                /commodity/detail/** = roles[admin]
+                /commodity/detail/** = roles["admin", "finance"]
                 /commodity/edit/** = roles[admin]
-                /commodity/overview = roles["admin, auditor"]
+                /commodity/overview = roles["admin", "finance"]
+                /commodity/volume = roles["admin", "finance", "express"]
                 /commodity/** = anon
 
                 /credit/upload = anon
@@ -166,6 +167,9 @@
                 /reimburse/inform = anon
                 /reimburse/apply = roles["admin, express"]
 
+                /statistic/agent/** = roles["admin", "express", "finance"]
+                /statistic/goods/** = roles["admin", "express", "finance"]
+                /statistic/sales/** = roles["admin", "express", "finance"]
                 /statistic/** = roles["admin, express"]
 
                 /wechat = anon
@@ -179,10 +183,9 @@
 
                 /payment/** = anon
 
-                /withdraw/check = roles["admin, finance"]
-                /withdraw/overview = roles["admin, finance"]
-
-                /withdraw/overviewreport = roles["admin, finance"]
+                /withdraw/check = roles["admin", "finance"]
+                /withdraw/overview = roles["admin", "finance"]
+                /withdraw/overviewreport = roles["admin", "finance"]
 
                 /withdraw/inform = anon
 
