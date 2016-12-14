@@ -52,14 +52,14 @@
             </div>
         </div>
     #end
-##    #if($role == "admin" || $role == "express")
-##    <div class="item">
-##        <a class="title"><i class="dropdown icon"></i>活动管理</a>
-##        <div class="content menu">
-##            <a class="item">添加活动</a>
-##        </div>
-##    </div>
-##    #end
+    #if($role == "admin" || $role == "express")
+    <div class="item">
+        <a class="title"><i class="dropdown icon"></i>活动管理</a>
+        <div class="content menu">
+            <a class="item" href="${path.concat('/event/overview')}">活动列表</a>
+        </div>
+    </div>
+    #end
     #if($role == "admin"|| $role == "finance")
         <a class="item" href="${path.concat('/statement/download')}">报表专区</a>
     #end
