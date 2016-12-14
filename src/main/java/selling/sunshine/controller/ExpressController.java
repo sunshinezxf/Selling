@@ -225,7 +225,7 @@ public class ExpressController {
                      ResultData fetchResponse = eventService.fetchEventOrder(condition);
                      if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
                     	 EventOrder temp = ((List<EventOrder>) fetchResponse.getData()).get(0);
-                         temp.setOrderStatus(OrderItemStatus.SHIPPED);
+                         temp.setStatus(OrderItemStatus.SHIPPED);
                          express.setEventOrder(temp);
                          expressService.createExpress(express);
                          eventService.updateEventOrder(temp);

@@ -1,0 +1,159 @@
+<div class="ui modal" id="application_detail_modal">
+	<i class="close icon"></i>
+
+	<div class="header">申请详情</div>
+	<div class="image content">
+		<div class="description">
+			<div class="ui segments">
+				<div class="ui segments">
+					<div class="ui segment">
+						<div class="inline field">
+							<label>申请人信息：</label>
+						</div>
+					</div>
+					<div class="ui segment">
+						<div class="inline field">
+							<label>姓名： </label>
+							<text id="donorName"></text>
+						</div>
+					</div>
+					<div class="ui segment">
+						<div class="inline field">
+							<label>电话： </label>
+							<text id="donorPhone"></text>
+						</div>
+					</div>
+				</div>
+				<div class="ui segments">
+					<div class="ui segment">
+						<div class="inline field">
+							<label>受赠人信息：</label>
+						</div>
+					</div>
+					<div class="ui segment">
+						<div class="inline field">
+							<label>姓名： </label>
+							<text id="doneeName"></text>
+						</div>
+					</div>
+					<div class="ui segment">
+						<div class="inline field">
+							<label>电话： </label>
+							<text id="doneePhone"></text>
+						</div>
+					</div>
+					<div class="ui segment">
+						<div class="inline field">
+							<label>性别： </label>
+							<text id="doneeGender"></text>
+						</div>
+					</div>
+					<div class="ui segment">
+						<div class="inline field">
+							<label>地址： </label>
+							<text id="doneeAddress"></text>
+						</div>
+					</div>
+					<div class="ui segment">
+						<div class="inline field">
+							<label>年龄： </label>
+							<text id="doneeAgeRange"></text>
+						</div>
+					</div>
+				</div>
+				<div class="ui segments">
+					<div class="ui segment">
+						<div class="inline field">
+							<label>关系： </label>
+							<text id="relation"></text>
+						</div>
+					</div>
+					<div class="ui segment">
+						<div class="inline field">
+							<label>寄语： </label>
+							<text id="wishes"></text>
+						</div>
+					</div>
+				</div>
+				<div class="ui segments" id="operation">
+					<div class="ui segment">
+						<div class="inline field">
+							<label>操作： </label>
+						</div>
+					</div>
+					<div class="ui segment">
+						<div class="inline field">
+						    <p id="applicationId" style="display:none"></p>
+							<button class="ui positive basic button" id="present">赠送</button>
+							&nbsp;&nbsp;
+							<button class="ui negative basic button" id="reject">拒绝</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="actions">
+		<div class="ui button" id="application_detail_confirm">确认</div>
+	</div>
+</div>
+<div class="ui modal" id="present_modal">
+    <i class="close icon"></i>
+
+    <div class="header">提示</div>
+    <div class="image content">
+        <div class="description">
+            点击赠送之后就会将申请人加入赠送名单中（无法修改），是否确定？
+        </div>
+    </div>
+    <div class="actions">
+        <div class="ui cancer button" id="present_cancel">取消</div>
+        <div class="ui button" id="present_confirm">确定</div>
+    </div>
+</div>
+<div class="ui modal" id="reject_modal">
+    <i class="close icon"></i>
+
+    <div class="header">提示</div>
+    <div class="image content">
+        <div class="description">
+            点击拒绝之后就会将申请人从申请名单中去掉（该申请人信息再也不可见），是否确定？
+        </div>
+    </div>
+    <div class="actions">
+        <div class="ui cancer button" id="reject_cancel">取消</div>
+        <div class="ui button" id="reject_confirm">确定</div>
+    </div>
+</div>
+<script>
+	$("#application_detail_modal").modal('hide');
+	$("#present_modal").modal('hide');
+	$("#reject_modal").modal('hide');
+	$("#application_detail_confirm").on('click', function() {
+		$("#application_detail_modal").modal('hide');
+	})
+	$("#present").on('click', function() {
+		$("#present_modal").modal('show');
+	})
+	$("#reject").on('click', function() {
+		$("#reject_modal").modal('show');
+	})
+	$("#present_cancel").on('click', function() {
+		$("#present_modal").modal('hide');
+	})
+	$("#present_confirm").on('click', function() {
+		$("#present_modal").modal('hide');
+    	$.post("${path.concat('/event/agree/')}"+$("#applicationId").html(),function(data){
+    		window.location.href="${path.concat('/event/application/')}${giftEvent.eventId}";
+    	});
+	})
+	$("#reject_cancel").on('click', function() {
+		$("#reject_modal").modal('hide');
+	})
+	$("#reject_confirm").on('click', function() {
+		$("#reject_modal").modal('hide');
+    	$.post("${path.concat('/event/reject/')}"+$("#applicationId").html(),function(data){
+    		window.location.href="${path.concat('/event/application/')}${giftEvent.eventId}";
+    	});
+	})
+</script>

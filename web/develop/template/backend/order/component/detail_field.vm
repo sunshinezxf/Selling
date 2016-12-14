@@ -15,6 +15,8 @@
             <i class="user icon"></i>顾客姓名:
             #if(${order} && ${order.receiverName})
                 ${order.receiverName}
+            #elseif(${order.doneeName})
+                ${order.doneeName}
             #else
                 ${order.customer.name}
             #end
@@ -23,6 +25,8 @@
             <i class="location arrow icon"></i>收货地址:
             #if(${order} && ${order.receiverName})
                 ${order.receiverAddress}
+            #elseif(${order.doneeAddress})
+                ${order.doneeAddress}
             #else
                 ${order.receiveAddress}
             #end

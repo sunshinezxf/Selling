@@ -7,7 +7,7 @@
         <result property="doneePhone" column="donee_phone"></result>
         <result property="doneeAddress" column="donee_address"></result>
         <result property="quantity" column="quantity"></result>
-        <result property="orderStatus" column="order_status"
+        <result property="status" column="order_status"
                 typeHandler="selling.sunshine.handler.mybatis.order.OrderItemStatusHandler"></result>
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
@@ -122,7 +122,7 @@
             donee_name = #{doneeName},
             donee_phone = #{doneePhone},
             donee_address = #{doneeAddress},
-            order_status = #{orderStatus,typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler},
+            order_status = #{status,typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler},
             block_flag = #{blockFlag},
             create_time = #{createAt}
         </set>
@@ -131,8 +131,8 @@
     <update id="update" parameterType="common.sunshine.model.selling.order.EventOrder" useGeneratedKeys="false">
         UPDATE event_order
         <set>
-            <if test="orderStatus != null">
-                order_status = #{orderStatus,typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler},
+            <if test="status != null">
+                order_status = #{status,typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler},
             </if>
             event_order_id = #{orderId}
         </set>

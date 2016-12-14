@@ -1,44 +1,30 @@
-<div class="ui stackable padded grid" name="cashback_overview">
+<div class="ui stackable padded grid" name="event_list">
     <div class="row">
         <h1 class="ui header">
             <i class="home icon"></i>
             <div class="content">
-            当月预期返现
+                活动列表
                 <div class="sub header">
-                        <div class="ui breadcrumb">
-                            <a class="section">返现管理</a>
-                            <div class="divider">/</div>
-						    <a class="section">返现概览</a>
-                            <div class="divider">/</div>
-                            <a class="active section">当月预期返现</a>
-                        </div>
-                 </div>
-            </div>
-          </h1>
-    </div>
-    #if(${total})
-    <div class="row">
-            <div class="column">
-            <div class="ui labeled button" tabindex="0">
-                <div class="ui green button">
-                       本月预期返现总额：${total}元
+                    <div class="ui breadcrumb">
+                        <a class="section">活动管理</a>
+                        <div class="divider">/</div>
+                        <a class="active section">活动列表</a>
+                    </div>
                 </div>
-                <a class="ui basic green left pointing label" href="${path.concat('/cashback/produce')}">本月返现报表下载</a>
             </div>
-            </div>        
+        </h1>
     </div>
-    <br>
-    #end
     <div class="row">
-            <table id="refund_record_month_table" class="ui striped table" cellspacing="0"
-                   width="100%">
+        <button type="button" class="ui positive basic button" id="create">发布活动</button> 
+    </div>
+    <div class="row">
+            <table id="event_overview_table" class="ui tablet stackable table" cellspacing="0" width="100%">
             </table>
     </div>
 </div>
-
 <script>
     $(document).ready(function () {
-        $("#refund_record_month_table").DataTable({
+        $("#event_overview_table").DataTable({
             searching: false,
             ordering: false,
             paging: true,
@@ -51,15 +37,14 @@
             "bProcessing": true,
             "bServerSide": true,
             "bInfoFiltered": false,
-            "sAjaxSource": '${path.concat('/cashback/month')}',
+            "sAjaxSource": '${path.concat('/event/overview')}',
             "infoFiltered": false,
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                 $(nRow).removeClass('dataTable');
                 $(nRow).css("text-align", "left");
-                return nRow;
             },
             "fnInitComplete": function () {
-                $("#config_overview_table").removeClass('no-footer');
+                $("#overview_agent_table").removeClass('no-footer');
             },
             "fnServerData": function (sSource, aoData, fnCallback) {
                 $.ajax({
@@ -71,20 +56,31 @@
                 })
             },
             columns: [
-                {title: "代理商", "mData": "agent.name"},
-                {title: "月份", "mData": "month"},
-                {title: "返现金额(元)", "mData": "amount"},
+                {title: "活动标题", "mData": "title"},
                 {
-                    title: "明细(自销/直接/间接)", "mRender": function (data, type, full) {
-                    var detail = full.self + "/" + full.direct + "/" + full.indirect;
-                    return detail;
+                    title: "开始时间", "mRender": function (data, type, full) {
+                    return ((new Date(full.start)).format("yyyy/MM/dd hh:mm"));
+                }
+                },
+                {
+                    title: "结束时间", "mRender": function (data, type, full) {
+                    return ((new Date(full.end)).format("yyyy/MM/dd hh:mm"));
+                }
+                },
+                {
+                    title: "活动状态", "mRender": function (data, type, full) {
+                       if(full.blockFlag){
+                    	  return "已结束";
+                       }else{
+                    	   return "正在进行";
+                       }
                 }
                 },
                 {
                     title: "操作", "mRender": function (data, type, full) {
                     var operation = "";
-                    var url = "${path.concat('/cashback/')}" + full.agent.agentId + "/month";
-                    var detail_btn = "<a type='button' class='btn btn-primary btn-success' href='" + url + "'>详情</a>&nbsp;"
+                    var url="${path.concat('/event/')}"+full.eventId;
+                    var detail_btn = "<a class='ui green button' href='" + url + "'>详情</a>&nbsp;"
                     operation += detail_btn;
                     return operation;
                 }
@@ -97,7 +93,7 @@
                 "info": "从 _START_ 到 _END_, 共 _TOTAL_ 条数据",
                 "infoEmpty": "暂无数据",
                 "infoFiltered": "数据表中共 _MAX_ 条记录)",
-                "zeroRecords": "暂无需要处理的预期返现",
+                "zeroRecords": "当前暂无发布的活动",
                 "search": "搜索:",
                 "paginate": {
                     "first": "首页",
@@ -109,4 +105,9 @@
         });
     });
     
-</script>
+    $("#create").on('click', function () {
+    	 var url="${path.concat('/event/create')}";
+    	 window.location.href = url;
+    });
+    
+ </script>

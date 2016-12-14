@@ -487,7 +487,7 @@ public class IndentServiceImpl implements IndentService {
                 row.createCell((short) 7).setCellValue(eventOrder.getQuantity() * eventOrder.getGoods().getAgentPrice());
                 cell = row.createCell((short) 8);
                 cell.setCellValue(new SimpleDateFormat("yyyy-MM-dd").format(eventOrder.getCreateAt()));
-                if (eventOrder.getOrderStatus() == OrderItemStatus.SHIPPED || eventOrder.getOrderStatus() == OrderItemStatus.RECEIVED || eventOrder.getOrderStatus() == OrderItemStatus.EXCHANGED) {
+                if (eventOrder.getStatus() == OrderItemStatus.SHIPPED || eventOrder.getStatus() == OrderItemStatus.RECEIVED || eventOrder.getStatus() == OrderItemStatus.EXCHANGED) {
                     row.createCell((short) 9).setCellValue("是");
                     Map<String, Object> condition = new HashMap<>();
                     condition.put("orderId", eventOrder.getOrderId());

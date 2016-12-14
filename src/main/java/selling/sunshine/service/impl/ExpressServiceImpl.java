@@ -320,7 +320,7 @@ public class ExpressServiceImpl implements ExpressService {
 				if(traces != null && !traces.isEmpty()) {
 					String scanType = traces.getString("scanType");
 					if(scanType.equals("签收")){
-						eventOrder.setOrderStatus(OrderItemStatus.RECEIVED);
+						eventOrder.setStatus(OrderItemStatus.RECEIVED);
 						eventDao.updateEventOrder(eventOrder);
 					}
 				}

@@ -6,6 +6,7 @@ import common.sunshine.model.selling.event.EventQuestion;
 import common.sunshine.model.selling.event.GiftEvent;
 import common.sunshine.model.selling.event.QuestionOption;
 import common.sunshine.model.selling.order.EventOrder;
+import common.sunshine.model.selling.order.support.OrderItemStatus;
 import common.sunshine.pagination.DataTablePage;
 import common.sunshine.pagination.DataTableParam;
 import common.sunshine.utils.IDGenerator;
@@ -16,6 +17,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 
 import selling.sunshine.dao.EventDao;
 
@@ -152,6 +156,22 @@ public class EventDaoImpl extends BaseDao implements EventDao {
             String searchParam = param.getsSearch().replace("/", "-");
             condition.put("search", "%" + searchParam + "%");
         }
+        if (!StringUtils.isEmpty(param.getParams())) {
+            JSONObject json = JSON.parseObject(param.getParams());
+            if (json.containsKey("status")) {
+                switch (json.getString("status")) {
+                    case "HANDLING":
+                    	condition.put("status", 0);
+                        break;
+                    case "AGREE":
+                    	condition.put("status", 2);
+                        break;
+                    case "REJECT":
+                    	condition.put("status", 1);
+                        break;
+                }
+            }
+        }
         ResultData total = queryEventApplication(condition);
         if (total.getResponseCode() != ResponseCode.RESPONSE_OK) {
             result.setResponseCode(ResponseCode.RESPONSE_ERROR);
@@ -252,6 +272,28 @@ public class EventDaoImpl extends BaseDao implements EventDao {
 	        if (!StringUtils.isEmpty(param.getsSearch())) {
 	            String searchParam = param.getsSearch().replace("/", "-");
 	            condition.put("search", "%" + searchParam + "%");
+	        }
+	        if (!StringUtils.isEmpty(param.getParams())) {
+	            JSONObject json = JSON.parseObject(param.getParams());
+	            if (json.containsKey("status")) {
+	            	List<Integer> statusList = new ArrayList<>();
+	                switch (json.getString("status")) {
+	                    case "PAYED":
+	                		statusList.add(1);
+	                		condition.put("status", statusList);
+	                        break;
+	                    case "SENT":
+	                    	statusList = new ArrayList<>();
+	                		statusList.add(2);
+	                		condition.put("status", statusList);
+	                        break;
+	                    case "RECEIVED":
+	                    	statusList = new ArrayList<>();
+	                		statusList.add(3);
+	                		condition.put("status", statusList);
+	                        break;
+	                }
+	            }
 	        }
 	        ResultData total = queryEventOrder(condition);
 	        if (total.getResponseCode() != ResponseCode.RESPONSE_OK) {

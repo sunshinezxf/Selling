@@ -1,0 +1,383 @@
+<div class="ui stackable padded grid" name="event_list">
+	<div class="row">
+        <h1 class="ui header">
+            <i class="home icon"></i>
+            <div class="content">
+                发布活动
+                <div class="sub header">
+                    <div class="ui breadcrumb">
+                        <a class="section">活动管理</a>
+                        <div class="divider">/</div>
+                        <a class="active">活动列表</a>
+                        <div class="divider">/</div>
+                        <a class="active section">发布活动</a>
+                    </div>
+                </div>
+            </div>
+        </h1>
+    </div>
+	<div class="row">
+		<div class="col-md-12 col-lg-12">
+			<hr>
+			<form id="create_goods_form" class="form-horizontal">
+				<div class="form-group">
+					<label class="col-sm-2 col-md-2 col-lg-2 control-label"
+						for="event_title"> 活动标题 </label>
+
+					<div class="col-sm-8 col-md-8 col-lg-8">
+						<input type="text" class="form-control" id="event_title"
+							name="title" placeholder="活动标题"  required="" autocomplete="off" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 col-md-2 col-lg-2 control-label"
+						for="event_nickname"> 活动链接 </label>
+
+					<div class="col-sm-8 col-md-8 col-lg-8">
+						<input type="text" class="form-control" id="event_nickname"
+							name="nickname" placeholder="活动链接"  value="zqhd" required="" autocomplete="off" readonly/>
+					</div>
+				</div>
+			</form>
+			<div id="date_form" class="form-horizontal" role="form">
+			    <div class="form-group">
+					<label for="dtp_start" class="col-sm-2 col-md-2 col-lg-2 control-label">开始时间</label>
+                    <div class="col-sm-8 col-md-8 col-lg-8">   
+					    <div id="date_start" class="input-group date form_date"
+						    data-date="" data-date-format="yyyy-mm-dd hh:ii"
+						    data-link-field="dtp_start" data-link-format="yyyy-mm-dd hh:ii">
+						    <input id="ds" class="form-control" size="20" type="text" value=""
+							    readonly> <span class="input-group-addon"><span
+							    class="glyphicon glyphicon-remove"></span></span> <span
+							    class="input-group-addon"><span
+							    class="glyphicon glyphicon-calendar"></span></span>
+					    </div>
+						<input type="hidden" id="dtp_start" name="start" value="" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="dtp_end" class="col-sm-2 col-md-2 col-lg-2 control-label">结束时间</label>
+                    <div class="col-sm-8 col-md-8 col-lg-8">
+						<div id="date_end" class="input-group date form_date" data-date=""
+							data-date-format="yyyy-mm-dd hh:ii" data-link-field="dtp_end"
+							data-link-format="yyyy-mm-dd hh:ii">
+							<input id="de" class="form-control" size="20" type="text" value=""
+								readonly> <span class="input-group-addon"><span
+							    class="glyphicon glyphicon-remove"></span></span> <span
+								class="input-group-addon"><span
+								class="glyphicon glyphicon-calendar"></span></span>
+						</div>
+						<input type="hidden" id="dtp_end" name="end" value="" />
+				    </div>
+				</div>
+				
+			</div>
+			<hr>
+			<div class="row" id="question-list"></div>
+			<div class="row" ><button type="button" id="add_question" class="col-sm-offset-2 col-md-offset-2 col-lg-offset-2 btn btn-primary">添加问题</button></div>			
+			<hr>
+			<div class="row" >
+			    <button type="button" id="confirm_create_event"
+					class="col-sm-offset-2 col-md-offset-2 col-lg-offset-2 btn btn-success">发布</button>
+			    <button type="button" id="clear_event_content"
+					class="btn btn-warning">清空</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal fade" id="question_dialog" tabindex="-1" role="dialog"
+	aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">&times;</button>
+				<h4 class="modal-title">添加问题</h4>
+			</div>
+			<div class="modal-body">
+				<form id="create_question_form" class="form-horizontal">
+					<div class="form-group">
+						<label class="col-sm-2 col-md-2 col-lg-2 control-label"
+							for="question_content"> 问题 </label>
+
+						<div class="col-sm-8 col-md-8 col-lg-8">
+							<input type="text" class="form-control" id="question_content"
+								name="content" placeholder="输入问题" required="" autocomplete="off" />
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 col-md-2 col-lg-2 control-label"
+							for="question_type"> 类型 </label>
+
+						<div class="col-sm-8 col-md-8 col-lg-8">
+							<label class="radio-inline"> <input type="radio"
+								name="block" id="radio" value="true"> 单选
+							</label> <label class="radio-inline"> <input type="radio"
+								name="block" id="checkbox" value="false" checked="checked">
+								多选
+							</label>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-2 col-md-2 col-lg-2 control-label"
+							for="question_answer"> 答案 </label>
+
+						<div class="col-sm-8 col-md-8 col-lg-8">
+							<button type="button" class="btn btn-primary" id="add_answser">添加答案</button>
+						</div>
+					</div>
+					<div class="form-group" id="answer_list">
+					</div>
+				</form>
+
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">
+					取消</button>
+				<button type="button" class="btn btn-primary" id="dialogConfirm">
+					添加</button>
+			</div>
+		</div>
+	</div>
+	</div>
+	<div class="modal fade" id="answer_dialog" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">&times;</button>
+					<h4 class="modal-title">添加答案</h4>
+				</div>
+				<div class="modal-body">
+				<form id="create_answer_form" class="form-horizontal">
+					<div class="form-group">
+						<label class="col-sm-2 col-md-2 col-lg-2 control-label"
+							for="answser_value"> 答案 </label>
+
+						<div class="col-sm-8 col-md-8 col-lg-8">
+							<input type="text" class="form-control" id="answser_value"
+								name="value" placeholder="输入答案" required="" autocomplete="off" />
+						</div>
+					</div>
+				</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" id="cancer">
+						取消</button>
+					<button type="button" class="btn btn-primary" id="confirm">
+						添加</button>
+				</div>
+			</div>
+		</div>
+		</div>
+		<div class="modal fade" id="dialog" tabindex="-1" role="dialog"
+			aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-hidden="true">&times;</button>
+						<h4 class="modal-title" id="myModalLabel">提示</h4>
+					</div>
+					<div class="modal-body"></div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary" id="dialog_confirm">
+							确定</button>
+					</div>
+				</div>
+			</div>
+			</div>
+
+<script>
+
+    var date = new Date();
+    var today = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + "-" + date.getHours() + "-" + date.getMinutes();
+    $('#date_start').datetimepicker({
+        language: 'zh-CN',
+        weekStart: 1,
+        todayBtn: 1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 2,
+        forceParse: 0,
+        startDate: today
+    }).on('show', function (e) {
+        if ($('#dtp_end').val()) {
+            $('#date_start').datetimepicker('setEndDate', $('#dtp_end').val());
+        }
+    });
+
+    $('#date_end').datetimepicker({
+        language: 'zh-CN',
+        weekStart: 1,
+        todayBtn: 1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 2,
+        forceParse: 0,
+    }).on('show', function (e) {
+        if ($('#dtp_start').val()) {
+            $('#date_end').datetimepicker('setStartDate', $('#dtp_start').val());
+        } else {
+            $('#date_end').datetimepicker('setStartDate', today);
+        }
+    });
+    
+    $("#add_question").click(function () {
+    	$("#question_content").val("");
+    	$("#answer_list").children().remove(); 
+    	$("#question_dialog").modal('show'); 
+    });
+    
+    var rank=0;
+    var eventQuestion;
+    var questionList = new Array();
+    $("#question_dialog").find("#dialogConfirm").click(function(){
+    	var question=$("#question_content").val();
+    	var answerLength=$("#answer_list").children().length;
+    
+    	if((typeof question == "undefined" || question == "") || (typeof answerLength == "undefined" || answerLength == 0)){
+    		$("#dialog").find(".modal-body").html("没有填写问题或答案！");
+    		$("#dialog").modal('show');    
+    	}else{
+    		rank++;
+    		$("#question_dialog").modal('hide');
+    		eventQuestion=new Object();
+    		eventQuestion.content=question;
+    		eventQuestion.rank=rank;
+    		if($('input:radio:checked').val()=='true'){
+    			eventQuestion.type=0;
+    		}else{
+    			eventQuestion.type=1;
+    		}
+    		var questionOptionList = new Array();
+    		$("#answer_list").children().each(function(i,n){
+    		     var obj = $(n);
+    		     questionOptionList.push(obj.html());
+    		});
+    		eventQuestion.questionOptionList=questionOptionList;
+    		questionList.push(eventQuestion);
+    		#*
+    		alert(JSON.stringify(questionList));
+            *#
+    		var node1="";
+    		for(var i=0;i<questionOptionList.length;i++){
+    			node1+=questionOptionList[i]+"  ";
+    		}
+    		var node="<div>第"+rank+"个问题： "+question+"    答案选项： "+node1+"</div><br>";
+    		$("#question-list").append(node);
+    	}    	  	
+    });
+    
+    $("#add_answser").click(function () {
+    	var question=$("#question_content").val();
+    	if(typeof question == "undefined" || question == ""){
+    		$("#dialog").find(".modal-body").html("没有填问题！");
+    		$("#dialog").modal('show');    
+    	}else{
+    		$("#answer_dialog").modal('show'); 
+    	}    	
+    });
+     
+    $("#answer_dialog").find("#confirm").click(function(){
+    	var answer=$("#answser_value").val();
+    	var question=$("#question_content").val();
+    	if(typeof answer == "undefined" || answer == ""){
+    		$("#dialog").find(".modal-body").html("没有填答案！");
+    		$("#dialog").modal('show');    
+    	}else{
+    		var node="<label class='col-sm-2 col-md-2 col-lg-2 control-label'>"+answer+"</label>";
+    		$("#answer_list").append(node);
+    		$("#answer_dialog").modal('hide');
+    		$("#answser_value").val("");
+    	}    	  	
+    });
+    
+    $("#answer_dialog").find("#cancer").click(function(){
+    	$("#answser_value").val("");
+    	$("#answer_dialog").modal('hide');
+    });
+    
+    $("#dialog").find("#dialog_confirm").click(function(){
+    	$("#dialog").modal('hide');
+    });
+    
+    $("#clear_event_content").click(function () {
+        $("#event_title").val("");
+        //$("#event_nickname").val("");
+        $("#ds").val("");
+        $("#de").val("");
+        $("#dtp_start").val("");
+        $("#dtp_end").val("");
+        questionList = new Array();
+        rank=0;
+        $("#question-list").children().remove(); 
+    });
+    
+    $("#confirm_create_event").click(function () {
+        var event_title=$("#event_title").val();
+        var event_nickname=$("#event_nickname").val();
+        var startTime = $('#dtp_start').val();
+        var endTime = $('#dtp_end').val();
+        
+        if((typeof event_title == "undefined" || event_title == "")||(typeof event_nickname == "undefined" || event_nickname == "")||(typeof startTime == "undefined" || startTime == "")||(typeof endTime == "undefined" || endTime == "")){
+            $("#dialog").find(".modal-body").html("活动标题、链接、开始时间和结束时间任何一项都不能为空！");
+    		$("#dialog").modal('show');    
+        }else if(startTime==endTime){
+        	$("#dialog").find(".modal-body").html("活动开始时间和结束时间不能一样！");
+    		$("#dialog").modal('show');    
+        }else{
+        	var data = {"giftEventTitle":event_title, "giftEventNickname": event_nickname,"startTime":startTime,"endTime":endTime,"questionList":questionList};
+        	$.ajax({
+                type: "POST",
+                url: "${path.concat('/event/create')}",
+                data: JSON.stringify(data),
+                processData: false,
+                contentType: "application/json",
+                success: function (data) {
+                	  if(data.responseCode=="RESPONSE_ERROR"){
+                		  $("#dialog").find(".modal-body").html("当前已有正在进行的活动，只有当前正在进行的活动结束之后才能创建新活动！");
+                  		  $("#dialog").modal('show');    
+                	  }else{
+                		  window.location.href="${path.concat('/event/overview')}";
+                	  }               
+                }
+                
+            });
+        	#*
+        	 var turnForm = document.createElement("form");
+             document.body.appendChild(turnForm);
+             turnForm.method = 'post';
+             turnForm.action = '${path.concat('/event/create')}';
+             var newElement = document.createElement("input");
+             newElement.setAttribute("name", "giftEventTitle");
+             newElement.setAttribute("type", "hidden");
+             newElement.setAttribute("value", event_title);
+             turnForm.appendChild(newElement);
+             newElement = document.createElement("input");
+             newElement.setAttribute("name", "giftEventNickname");
+             newElement.setAttribute("type", "hidden");
+             newElement.setAttribute("value", event_nickname);
+             turnForm.appendChild(newElement);
+             newElement = document.createElement("input");
+             newElement.setAttribute("name", "startTime");
+             newElement.setAttribute("type", "hidden");
+             newElement.setAttribute("value", startTime);
+             turnForm.appendChild(newElement);
+             newElement = document.createElement("input");
+             newElement.setAttribute("name", "endTime");
+             newElement.setAttribute("type", "hidden");
+             newElement.setAttribute("value", endTime);
+             turnForm.appendChild(newElement);
+             newElement = document.createElement("input");
+             newElement.setAttribute("name", "questionList");
+             newElement.setAttribute("type", "hidden");
+             newElement.setAttribute("value", questionList);
+             turnForm.appendChild(newElement);
+             turnForm.submit();
+             *#
+        }
+
+    });
+</script>

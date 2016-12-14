@@ -1,8 +1,12 @@
 <div class="ui segment">
     <div class="row">
-        <label class="ui header">代理排行</label>
-        <a class="ui positive basic button" href="${path.concat('/agent/contributionFactor')}">贡献度因子配置</a>
+       <div class="column">
+            <div class="ui labeled button" tabindex="0">
+                       <a class="ui positive basic button" href="${path.concat('/agent/contributionFactor')}">贡献度因子配置</a>
+            </div>
+       </div>
     </div>
+    <br>
     <div class="row">
             <table id="agent_overview_table" class="ui tablet stackable table" cellspacing="0" width="100%"></table>
     </div>

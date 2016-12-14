@@ -1543,7 +1543,7 @@ public class OrderController {
                 return result;
             }
             EventOrder eventOrder = ((List<EventOrder>) fetchEventOrderResponse.getData()).get(0);
-            eventOrder.setOrderStatus(OrderItemStatus.SHIPPED);
+            eventOrder.setStatus(OrderItemStatus.SHIPPED);
             ResultData updateEventOrderResponse = eventService.updateEventOrder(eventOrder);
             if (updateEventOrderResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
                 result.setResponseCode(updateEventOrderResponse.getResponseCode());
@@ -1662,7 +1662,7 @@ public class OrderController {
                 return result;
             }
             EventOrder eventOrder = ((List<EventOrder>) fetchEventOrderResponse.getData()).get(0);
-            eventOrder.setOrderStatus(OrderItemStatus.RECEIVED);
+            eventOrder.setStatus(OrderItemStatus.RECEIVED);
             ResultData updateEventOrderResponse = eventService.updateEventOrder(eventOrder);
             if (updateEventOrderResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
                 result.setResponseCode(updateEventOrderResponse.getResponseCode());
@@ -1811,7 +1811,7 @@ public class OrderController {
                 return result;
             }
             EventOrder eventOrder = ((List<EventOrder>) fetchEventOrderResponse.getData()).get(0);
-            eventOrder.setOrderStatus(OrderItemStatus.REFUNDED);
+            eventOrder.setStatus(OrderItemStatus.REFUNDED);
             ResultData updateEventOrderResponse = eventService.updateEventOrder(eventOrder);
             if (updateEventOrderResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
                 result.setResponseCode(updateEventOrderResponse.getResponseCode());
@@ -1954,7 +1954,7 @@ public class OrderController {
                 return view;
             }
             view.addObject("order", ((List<CustomerOrder>) response.getData()).get(0));
-        } else {
+        } else if (orderId.startsWith("ORI")){
             condition.put("orderItemId", orderId);
             ResultData response = orderService.fetchOrderItem(condition);
             if (response.getResponseCode() != ResponseCode.RESPONSE_OK) {
@@ -1972,7 +1972,15 @@ public class OrderController {
             Order order = ((List<Order>) response.getData()).get(0);
             item.setOrder(order);
             view.addObject("order", item);
-        }
+        }else {
+        	condition.put("orderId", orderId);
+        	ResultData response = eventService.fetchEventOrder(condition);
+        	if (response.getResponseCode() != ResponseCode.RESPONSE_OK) {
+                view.setViewName("redirect:/event/overview");
+                return view;
+            }
+        	view.addObject("order", ((List<EventOrder>) response.getData()).get(0));
+		}
         view.setViewName("/backend/order/detail");
         return view;
     }

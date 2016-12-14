@@ -179,15 +179,14 @@ public class EventController {
 		return view;
 	}
 
-	@RequestMapping(method = RequestMethod.POST, value = "/application/{eventId}/{status}")
-	public DataTablePage<EventApplication> application(@PathVariable("eventId") String eventId,@PathVariable("status") String status, DataTableParam param) {
+	@RequestMapping(method = RequestMethod.POST, value = "/application/{eventId}")
+	public DataTablePage<EventApplication> application(@PathVariable("eventId") String eventId,DataTableParam param) {
 		DataTablePage<EventApplication> result = new DataTablePage<>(param);
 		if (StringUtils.isEmpty(param)) {
 			return result;
 		}
 		Map<String, Object> condition = new HashMap<>();
 		condition.put("eventId", eventId);
-		condition.put("status", status);
 		ResultData fetchResponse = eventService.fetchEventApplicationByPage(condition, param);
 		if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
 			result = (DataTablePage<EventApplication>) fetchResponse.getData();
@@ -217,17 +216,14 @@ public class EventController {
 		return view;
 	}
 
-	@RequestMapping(method = RequestMethod.POST, value = "/present/{eventId}/{status}")
-	public DataTablePage<EventOrder> present(@PathVariable("eventId") String eventId,@PathVariable("status") String status, DataTableParam param) {
+	@RequestMapping(method = RequestMethod.POST, value = "/present/{eventId}")
+	public DataTablePage<EventOrder> present(@PathVariable("eventId") String eventId,DataTableParam param) {
 		DataTablePage<EventOrder> result = new DataTablePage<>(param);
 		if (StringUtils.isEmpty(param)) {
 			return result;
 		}
 		Map<String, Object> condition = new HashMap<>();
 		condition.put("eventId", eventId);
-		List<Integer> statusList = new ArrayList<>();
-		statusList.add(Integer.parseInt(status));
-		condition.put("status", statusList);
 		ResultData fetchResponse = eventService.fetchEventOrderByPage(condition, param);
 		if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
 			result = (DataTablePage<EventOrder>) fetchResponse.getData();
@@ -253,7 +249,7 @@ public class EventController {
 			eventOrder.setQuantity(1);
 			eventOrder.setApplication(eventApplication);
 			eventOrder.setEvent(eventApplication.getEvent());
-			eventOrder.setOrderStatus(OrderItemStatus.PAYED);
+			eventOrder.setStatus(OrderItemStatus.PAYED);
 			Goods4Customer goods = new Goods4Customer();
 			goods.setGoodsId("COMyfxwez26");
 			eventOrder.setGoods(goods);
@@ -281,7 +277,7 @@ public class EventController {
 				eventOrder.setQuantity(1);
 				eventOrder.setApplication(eventApplication);
 				eventOrder.setEvent(eventApplication.getEvent());
-				eventOrder.setOrderStatus(OrderItemStatus.PAYED);
+				eventOrder.setStatus(OrderItemStatus.PAYED);
 				Goods4Customer goods = new Goods4Customer();
 				goods.setGoodsId("COMyfxwez26");
 				eventOrder.setGoods(goods);
@@ -307,18 +303,18 @@ public class EventController {
 		return resultData;
 	}
 
-	@RequestMapping(method = RequestMethod.POST, value = "/application/detail/{applicationId}")
-	public ResultData detail(@PathVariable("applicationId") String applicationId) {
-		ResultData resultData = new ResultData();
-		Map<String, Object> condition = new HashMap<>();
-		condition.put("applicationId", applicationId);
-		resultData = eventService.fetchEventApplication(condition);
-		EventApplication eventApplication=((List<EventApplication>)resultData.getData()).get(0);
-		if (eventApplication.getStatus()==ApplicationStatus.APPROVED||eventApplication.getStatus()==ApplicationStatus.REJECTED) {
-			resultData.setDescription("done");;
-		}
-		return resultData;
-	}
+//	@RequestMapping(method = RequestMethod.POST, value = "/application/detail/{applicationId}")
+//	public ResultData detail(@PathVariable("applicationId") String applicationId) {
+//		ResultData resultData = new ResultData();
+//		Map<String, Object> condition = new HashMap<>();
+//		condition.put("applicationId", applicationId);
+//		resultData = eventService.fetchEventApplication(condition);
+//		EventApplication eventApplication=((List<EventApplication>)resultData.getData()).get(0);
+//		if (eventApplication.getStatus()==ApplicationStatus.APPROVED||eventApplication.getStatus()==ApplicationStatus.REJECTED) {
+//			resultData.setDescription("done");;
+//		}
+//		return resultData;
+//	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/order/expressAll")
 	public String expressAll(HttpServletRequest request, HttpServletResponse response) throws IOException {

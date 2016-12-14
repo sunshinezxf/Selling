@@ -100,7 +100,7 @@
         <result property="doneePhone" column="donee_phone"></result>
         <result property="doneeAddress" column="donee_address"></result>
         <result property="quantity" column="quantity"></result>
-        <result property="orderStatus" column="order_status"
+        <result property="status" column="order_status"
                 typeHandler="selling.sunshine.handler.mybatis.order.OrderItemStatusHandler"></result>
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>

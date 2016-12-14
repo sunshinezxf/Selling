@@ -123,9 +123,15 @@ public class GiftController {
         condition.clear();
         condition.put("agentId", form.getAgentId());
         common.sunshine.model.selling.agent.Agent agent = ((List<common.sunshine.model.selling.agent.Agent>) agentService.fetchAgent(condition).getData()).get(0);
-        BackOperationLog backOperationLog = new BackOperationLog(
-                admin.getUsername(), toolService.getIP(request), "管理员" + admin.getUsername() + "修改了代理商" + agent.getName() + "的赠送配置");
-        logService.createbackOperationLog(backOperationLog);
+        condition.clear();
+        condition.put("goodsId", form.getGoodsId());
+        response=commodityService.fetchGoods4Agent(condition);
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+        	Goods4Agent goods = ((List<Goods4Agent>)response.getData()).get(0);
+        	BackOperationLog backOperationLog = new BackOperationLog(
+                    admin.getUsername(), toolService.getIP(request), "管理员" + admin.getUsername() + "修改了代理商" + agent.getName() + "的赠送配置,将商品"+goods.getName()+"的赠送数量改为"+form.getAmount()+"盒");
+            logService.createbackOperationLog(backOperationLog);
+		}
         view.setViewName("redirect:/gift/config/"+form.getAgentId());
         return view;
     }
