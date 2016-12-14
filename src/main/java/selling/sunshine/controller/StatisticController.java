@@ -480,7 +480,11 @@ public class StatisticController {
 				fetchResponse=statisticService.perGoodsPurchaseRecordMonth(condition);
 				if (fetchResponse.getResponseCode()==ResponseCode.RESPONSE_OK) {
 					JSONObject record = (JSONObject)fetchResponse.getData();
-					record.put("name", goods4Agent.getName());
+					if (StringUtils.isEmpty(goods4Agent.getNickname())) {
+						record.put("name", goods4Agent.getName());
+					}else {
+						record.put("name", goods4Agent.getNickname());
+					}
 					record.put("id", goods4Agent.getGoodsId());
 					goodsArray.add(record);
 				}
@@ -506,7 +510,11 @@ public class StatisticController {
 				fetchResponse=statisticService.perGoodsPurchaseRecordDay(condition);
 				if (fetchResponse.getResponseCode()==ResponseCode.RESPONSE_OK) {
 					JSONObject record = (JSONObject)fetchResponse.getData();
-					record.put("name", goods4Agent.getName());
+					if (StringUtils.isEmpty(goods4Agent.getNickname())) {
+						record.put("name", goods4Agent.getName());
+					}else {
+						record.put("name", goods4Agent.getNickname());
+					}
 					record.put("id", goods4Agent.getGoodsId());
 					goodsArray.add(record);
 				}
