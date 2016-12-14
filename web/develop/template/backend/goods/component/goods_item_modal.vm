@@ -1,0 +1,57 @@
+<div class="ui modal" id="goods_item_modal" style="display:none;">
+    <i class="close icon"></i>
+
+    <div class="header">商品摘要</div>
+    <div class="image content">
+        <div class="description">
+            <div class="ui segments">
+                <div class="ui segment">
+                    <div class="inline field">
+                        <label>商品名称: </label>
+                        <text id="goods_item_name"></text>
+                    </div>
+                </div>
+                <div class="ui segment">
+                    <div class="inline field">
+                        <label>商品原价: </label>
+                        <text id="item_customer_price"></text>
+                    </div>
+                </div>
+                <div class="ui segment">
+                    <div class="inline field">
+                        <label>代理价格: </label>
+                        <text id="item_agent_price"></text>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="actions">
+        <div class="ui green button" id="item_view">查看</div>
+        <div class="ui button" id="item_close">关闭</div>
+    </div>
+</div>
+<script>
+    $("#item_close").on('click', function () {
+        $("#goods_item_modal").modal('hide');
+        clear();
+    })
+
+    $("#item_view").on('click', function () {
+        if (goods_id != null && goods_id != '') {
+            window.location.href = "${path.concat('/commodity/detail/')}" + goods_id;
+        }
+    });
+
+    function fill(goods_name, customer_price, agent_price) {
+        $("#goods_item_name").text(goods_name);
+        $("#item_customer_price").text(customer_price + "元");
+        $("#item_agent_price").text(agent_price + "元");
+    }
+
+    function clear() {
+        $("#goods_item_name").text("");
+        $("#item_customer_price").text("");
+        $("#item_agent_price").text("");
+    }
+</script>
