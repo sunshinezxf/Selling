@@ -42,5 +42,8 @@
         <mapper resource="selling/sunshine/mapper/agentvitality.xml"/>
         <mapper resource="selling/sunshine/mapper/agentkpi.xml"/>
         <mapper resource="selling/sunshine/mapper/contributionFactor.xml"/>
+        <mapper resource="selling/sunshine/mapper/bill/bill.xml"/>
+        <mapper resource="selling/sunshine/mapper/refundbill.xml"/>
+        
     </mappers>
 </configuration>
