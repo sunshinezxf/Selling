@@ -3,6 +3,7 @@ package selling.sunshine.dao;
 import common.sunshine.model.selling.express.Express4Agent;
 import common.sunshine.model.selling.express.Express4Application;
 import common.sunshine.model.selling.express.Express4Customer;
+import common.sunshine.pagination.DataTableParam;
 import common.sunshine.utils.ResultData;
 
 import java.util.Map;
@@ -21,5 +22,7 @@ public interface ExpressDao {
     ResultData queryExpress4Customer(Map<String, Object> condition);
     
     ResultData queryExpress4Application(Map<String, Object> condition);
+    
+    ResultData queryExpressByPage(Map<String, Object> condition,DataTableParam param);
 
 }

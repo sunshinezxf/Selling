@@ -4,18 +4,22 @@ import common.sunshine.utils.IDGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
+
 
 import com.alibaba.fastjson.JSONObject;
 
 import common.sunshine.utils.SortRule;
 import selling.sunshine.form.TimeRangeForm;
 import common.sunshine.model.selling.express.Express;
+import common.sunshine.pagination.DataTablePage;
+import common.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.DeliverService;
 import selling.sunshine.service.ExpressService;
 import selling.sunshine.service.OrderService;
@@ -32,6 +36,7 @@ import java.net.URLEncoder;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -169,6 +174,21 @@ public class DeliverController {
             e.printStackTrace();
         }
         return "";
+    }
+    
+    @ResponseBody
+	@RequestMapping(method = RequestMethod.POST, value = "/express")
+    public DataTablePage<Express> express(DataTableParam param) {
+    	DataTablePage<Express> result = new DataTablePage<>(param);
+		if (StringUtils.isEmpty(param)) {
+			return result;
+		}
+        Map<String, Object> condition = new HashMap<>();
+        ResultData queryResponse = expressService.fetchExpress(condition, param);
+        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+        	result = (DataTablePage<Express>) queryResponse.getData();           
+        }
+		return result;
     }
 
 }

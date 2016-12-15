@@ -1,6 +1,7 @@
 package selling.sunshine.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
+
 import com.alibaba.fastjson.JSONObject;
 
 import org.slf4j.Logger;
@@ -18,6 +19,7 @@ import common.sunshine.model.selling.order.Order;
 import common.sunshine.model.selling.order.OrderItem;
 import common.sunshine.model.selling.order.support.OrderItemStatus;
 import common.sunshine.model.selling.order.support.OrderStatus;
+import common.sunshine.pagination.DataTableParam;
 import common.sunshine.model.selling.express.Express;
 import common.sunshine.model.selling.express.Express4Agent;
 import common.sunshine.model.selling.express.Express4Application;
@@ -356,5 +358,18 @@ public class ExpressServiceImpl implements ExpressService {
 	            result.setDescription(queryResponse.getDescription());
 	        }
 	        return result;
+	}
+
+	@Override
+	public ResultData fetchExpress(Map<String, Object> condition, DataTableParam param) {
+        ResultData result = new ResultData();
+        ResultData queryResponse = expressDao.queryExpressByPage(condition,param);
+        result.setResponseCode(queryResponse.getResponseCode());
+        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(queryResponse.getData());
+        } else {
+            result.setDescription(queryResponse.getDescription());
+        }
+        return result;
 	}
 }

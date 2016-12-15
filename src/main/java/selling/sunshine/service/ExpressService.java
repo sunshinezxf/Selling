@@ -3,6 +3,7 @@ package selling.sunshine.service;
 import common.sunshine.model.selling.express.Express4Agent;
 import common.sunshine.model.selling.express.Express4Application;
 import common.sunshine.model.selling.express.Express4Customer;
+import common.sunshine.pagination.DataTableParam;
 import common.sunshine.utils.ResultData;
 
 import java.util.Map;
@@ -26,4 +27,7 @@ public interface ExpressService {
     ResultData traceExpress(String expressNo, String type);
     
     ResultData receiveCheck();
+    
+    ResultData fetchExpress(Map<String, Object> condition, DataTableParam param);
+
 }
