@@ -1,34 +1,27 @@
 package selling.sunshine.controller;
 
+import com.alibaba.fastjson.JSONObject;
+import common.sunshine.model.selling.order.CustomerOrder;
+import common.sunshine.model.selling.order.EventOrder;
+import common.sunshine.model.selling.order.OrderItem;
+import common.sunshine.model.selling.order.support.OrderItemStatus;
+import common.sunshine.pagination.DataTablePage;
+import common.sunshine.pagination.DataTableParam;
 import common.sunshine.utils.IDGenerator;
+import common.sunshine.utils.ResponseCode;
+import common.sunshine.utils.ResultData;
+import common.sunshine.utils.SortRule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
-
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-
-import common.sunshine.utils.SortRule;
+import org.springframework.web.bind.annotation.*;
 import selling.sunshine.form.TimeRangeForm;
-import common.sunshine.model.selling.order.CustomerOrder;
-import common.sunshine.model.selling.order.EventOrder;
-import common.sunshine.model.selling.order.OrderItem;
-import common.sunshine.pagination.DataTablePage;
-import common.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.EventService;
 import selling.sunshine.service.IndentService;
 import selling.sunshine.service.OrderService;
 import selling.sunshine.utils.DateUtils;
-import common.sunshine.utils.ResponseCode;
-import common.sunshine.utils.ResultData;
 import selling.sunshine.utils.ZipCompressor;
 import selling.sunshine.vo.order.OrderItemSum;
 
@@ -54,7 +47,7 @@ public class IndentController {
 
     @Autowired
     private OrderService orderService;
-    
+
     @Autowired
     private EventService eventService;
 
@@ -208,23 +201,23 @@ public class IndentController {
         }
         return "";
     }
-    
+
     @ResponseBody
-	@RequestMapping(method = RequestMethod.POST, value = "/orderItemSum")
-    public DataTablePage<OrderItemSum> orderItemSum(DataTableParam param) {
-    	DataTablePage<OrderItemSum> result = new DataTablePage<>(param);
-		if (StringUtils.isEmpty(param)) {
-			return result;
-		}
+    @RequestMapping(method = RequestMethod.POST, value = "/list")
+    public DataTablePage<OrderItemSum> list(DataTableParam param) {
+        DataTablePage<OrderItemSum> result = new DataTablePage<>(param);
+        if (StringUtils.isEmpty(param)) {
+            return result;
+        }
         Map<String, Object> condition = new HashMap<>();
         condition.put("blockFlag", false);
-        List<Integer> status = new ArrayList<>(Arrays.asList(1, 2, 3, 4));
+        List<Integer> status = new ArrayList<>(Arrays.asList(OrderItemStatus.PAYED.getCode(), OrderItemStatus.SHIPPED.getCode(), OrderItemStatus.RECEIVED.getCode(), OrderItemStatus.EXCHANGED.getCode()));
         condition.put("statusList", status);
         ResultData queryResponse = orderService.fetchOrderItemSum(condition, param);
         if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-        	result = (DataTablePage<OrderItemSum>) queryResponse.getData();           
+            result = (DataTablePage<OrderItemSum>) queryResponse.getData();
         }
-		return result;
+        return result;
     }
 
 
