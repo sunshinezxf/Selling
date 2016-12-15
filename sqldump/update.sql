@@ -684,3 +684,14 @@ ALTER TABLE `selling`.`agent` DROP COLUMN `customer_service`;
 ALTER TABLE `selling`.`goods`
 ADD COLUMN `goods_nickname` VARCHAR(45) NULL
 AFTER `goods_name`;
+
+##2016年12月15日
+CREATE TABLE IF NOT EXISTS `selling`.`refund_bill` (
+  `refund_bill_id` VARCHAR(20) NOT NULL,
+  `bill_id` VARCHAR(20) NOT NULL,
+  `bill_amount` DOUBLE NOT NULL,
+  `refund_amount` DOUBLE NOT NULL,
+  `block_flag` TINYINT(1) NOT NULL DEFAULT 0,
+  `create_time` DATETIME NOT NULL,
+  PRIMARY KEY (`refund_bill_id`))
+  ENGINE = InnoDB;

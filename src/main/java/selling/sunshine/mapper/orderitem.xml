@@ -24,6 +24,7 @@
         <result property="name" column="customer_name"></result>
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
+        <association property="phone" column="customerId = customer_id" select="phoneQuery"></association>
     </resultMap>
 
     <resultMap id="orderItemVo" type="common.sunshine.model.selling.order.OrderItem">
@@ -39,6 +40,13 @@
         <association property="customer" column="customerId = customer_id" select="customerQuery"></association>
         <association property="goods" column="goodsId = goods_id" select="goods4AgentQuery"></association>
         <association property="order" column="orderId = order_id" select="orderQuery"></association>
+    </resultMap>
+
+    <resultMap id="phoneVo" type="common.sunshine.model.selling.customer.CustomerPhone">
+        <result property="phoneId" column="customer_phone_id"></result>
+        <result property="phone" column="phone"></result>
+        <result property="blockFlag" column="block_flag"></result>
+        <result property="createAt" column="create_time"></result>
     </resultMap>
 
     <insert id="insertBatch" parameterType="java.util.List" useGeneratedKeys="false">
@@ -61,7 +69,8 @@
     </insert>
 
     <select id="query" parameterType="java.util.Map" resultMap="orderItemVo">
-        SELECT order_item_id, order_item_status, goods_quantity, order_item_price, receive_address, order_item_description, customer_id,
+        SELECT order_item_id, order_item_status, goods_quantity, order_item_price, receive_address,
+        order_item_description, customer_id,
         goods_id, order_id, block_flag, create_time
         FROM order_item
         WHERE 1 = 1
@@ -114,7 +123,7 @@
                 order_item_status = #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler},
             </if>
             <if test="order != null and order.orderId != null and order.orderId != ''">
-            	order_id = #{order.orderId},
+                order_id = #{order.orderId},
             </if>
             <if test="customer != null and customer.customerId != null and customer.customerId != ''">
                 customer_id = #{customer.customerId},
@@ -171,5 +180,12 @@
         SELECT customer_id, customer_name, agent_id, block_flag, create_time
         FROM customer
         WHERE customer_id = #{customerId}
+    </select>
+
+    <select id="phoneQuery" parameterType="java.util.Map" resultMap="phoneVo">
+        SELECT customer_phone_id, phone, block_flag, create_time
+        FROM customer_phone
+        WHERE customer_id = #{customerId}
+        AND block_flag = FALSE
     </select>
 </mapper>

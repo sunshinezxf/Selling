@@ -22,6 +22,16 @@
             #end
         </div>
         <div class="item">
+            <i class="mobile icon"></i>联系电话:
+            #if(${order} && ${order.customer} && ${order.customer.phone})
+                ${order.customer.phone.phone}
+            #elseif(${order} && ${order.receiverPhone})
+                ${order.receiverPhone}
+            #else
+                ${order.doneePhone}
+            #end
+        </div>
+        <div class="item">
             <i class="location arrow icon"></i>收货地址:
             #if(${order} && ${order.receiverName})
                 ${order.receiverAddress}
