@@ -210,8 +210,8 @@ public class IndentController {
     }
     
     @ResponseBody
-	@RequestMapping(method = RequestMethod.POST, value = "/overview")
-    public DataTablePage<OrderItemSum> overview(DataTableParam param) {
+	@RequestMapping(method = RequestMethod.POST, value = "/orderItemSum")
+    public DataTablePage<OrderItemSum> orderItemSum(DataTableParam param) {
     	DataTablePage<OrderItemSum> result = new DataTablePage<>(param);
 		if (StringUtils.isEmpty(param)) {
 			return result;
