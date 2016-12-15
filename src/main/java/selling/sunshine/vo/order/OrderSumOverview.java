@@ -1,6 +1,6 @@
 package selling.sunshine.vo.order;
 
-import common.sunshine.model.selling.agent.lite.Agent;
+
 import common.sunshine.model.selling.goods.Goods4Agent;
 
 public class OrderSumOverview {

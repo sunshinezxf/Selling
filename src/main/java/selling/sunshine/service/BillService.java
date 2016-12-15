@@ -1,8 +1,10 @@
 package selling.sunshine.service;
 
 import common.sunshine.model.selling.bill.CustomerOrderBill;
+
 import common.sunshine.model.selling.bill.DepositBill;
 import common.sunshine.model.selling.bill.OrderBill;
+import common.sunshine.model.selling.bill.RefundBill;
 import common.sunshine.utils.ResultData;
 
 import java.util.Map;
@@ -28,4 +30,10 @@ public interface BillService {
     ResultData fetchCustomerOrderBill(Map<String, Object> condition);
     
     ResultData updateCustomerOrderBill(CustomerOrderBill bill);
+    
+    ResultData createRefundBill(RefundBill bill);
+    
+    ResultData fetchRefundBill(Map<String, Object> condition);
+    
+    ResultData updateRefundBill(RefundBill bill);
 }

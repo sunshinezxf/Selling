@@ -49,6 +49,12 @@
         <if test="status != null">
             AND bill_status = #{status}
         </if>
+        <if test="statusList != null and statusList != ''">
+            AND bill_status IN
+            <foreach collection="statusList" item="mode" index="index" open="(" close=")" separator=",">
+                #{mode}
+            </foreach>
+        </if>
         <if test="start != null and end != null and start != '' and end != ''">
             AND (date_format(create_time, '%Y-%m-%d') &gt;= #{start} AND date_format(create_time, '%Y-%m-%d') &lt;=
             #{end})

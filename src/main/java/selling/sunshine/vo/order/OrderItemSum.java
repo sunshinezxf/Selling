@@ -1,6 +1,7 @@
 package selling.sunshine.vo.order;
 
 import common.sunshine.model.Entity;
+
 import common.sunshine.model.selling.agent.lite.Agent;
 import common.sunshine.model.selling.goods.Goods4Agent;
 import common.sunshine.model.selling.order.support.OrderItemStatus;

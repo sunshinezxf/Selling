@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="selling.bill.refund">
+    <resultMap id="refundBillVo" type="common.sunshine.model.selling.bill.RefundBill">
+        <result property="refundBillId" column="refund_bill_id"></result>
+        <result property="billId" column="bill_id"></result>
+        <result property="billAmount" column="bill_amount"></result>
+        <result property="refundAmount" column="refund_amount"></result>
+        <result property="blockFlag" column="block_flag"></result>
+        <result property="createAt" column="create_time"></result>
+    </resultMap>
+
+    <select id="query" parameterType="java.util.Map" resultMap="refundBillVo">
+        SELECT refund_bill_id,bill_id, bill_amount, refund_amount, block_flag, create_time
+        FROM refund_bill
+        WHERE 1 = 1
+       <if test="refundBillId != null and refundBillId != ''">
+            AND refund_bill_id = #{refundBillId}
+        </if>
+        <if test="billId != null and billId != ''">
+            AND bill_id = #{billId}
+        </if>
+        <if test="createAt != null and createAt != ''">
+            AND create_time = #{createAt}
+        </if>
+        <if test="blockFlag != null and blockFlag !=''">
+            AND block_flag = #{blockFlag}
+        </if>
+        <if test="start != null and end != null and start != '' and end != ''">
+            AND (date_format(create_time, '%Y-%m-%d') &gt;= #{start} AND date_format(create_time, '%Y-%m-%d') &lt;=
+            #{end})
+        </if>
+    </select>
+
+    <insert id="insert" parameterType="common.sunshine.model.selling.bill.RefundBill" useGeneratedKeys="false">
+        INSERT INTO refund_bill(refund_bill_id,bill_id, bill_amount, refund_amount, block_flag, create_time)
+        VALUES (#{refundBillId},#{billId}, #{billAmount}, #{refundAmount}, #{blockFlag}, #{createAt})
+    </insert>
+
+    <update id="update" parameterType="common.sunshine.model.selling.bill.RefundBill" useGeneratedKeys="false">
+        UPDATE refund_bill
+        <set>
+            <if test="billId != null and billId != ''">
+                bill_id = #{billId},
+            </if>
+            <if test="billAmount != null and billAmount != ''">
+                bill_amount = #{billAmount},
+            </if>
+            <if test="refundAmount != null and refundAmount != ''">
+                refund_amount = #{refundAmount}
+            </if>
+            refund_bill_id = #{refundBillId}
+        </set>
+        WHERE refund_bill_id = #{refundBillId}
+    </update>
+
+</mapper>

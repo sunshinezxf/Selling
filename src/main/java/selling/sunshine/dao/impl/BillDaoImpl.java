@@ -1,6 +1,7 @@
 package selling.sunshine.dao.impl;
 
 import common.sunshine.utils.IDGenerator;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -12,6 +13,7 @@ import common.sunshine.model.selling.bill.support.BillStatus;
 import common.sunshine.model.selling.bill.CustomerOrderBill;
 import common.sunshine.model.selling.bill.DepositBill;
 import common.sunshine.model.selling.bill.OrderBill;
+import common.sunshine.model.selling.bill.RefundBill;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
 
@@ -227,4 +229,57 @@ public class BillDaoImpl extends BaseDao implements BillDao {
             }
         }
     }
+
+	@Override
+	public ResultData insertRefundBill(RefundBill bill) {
+        ResultData result = new ResultData();
+        synchronized (lock) {
+            try {
+                bill.setRefundBillId(IDGenerator.generate("REB"));
+                sqlSession.insert("selling.bill.refund.insert", bill);
+                result.setData(bill);
+            } catch (Exception e) {
+                logger.error(e.getMessage());
+                result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+                result.setDescription(e.getMessage());
+            } finally {
+                return result;
+            }
+        }
+	}
+
+	@Override
+	public ResultData queryRefundBill(Map<String, Object> condition) {
+        ResultData result = new ResultData();
+        try {
+            List<RefundBill> list = sqlSession.selectList("selling.bill.refund.query", condition);
+            result.setData(list);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription(e.getMessage());
+        } finally {
+            return result;
+        }
+	}
+
+	@Override
+	public ResultData updateRefundBill(RefundBill bill) {
+		ResultData result = new ResultData();
+        synchronized (lock) {
+            try {
+                sqlSession.update("selling.bill.refund.update", bill);
+                Map<String, Object> condition = new HashMap<>();
+                condition.put("billId", bill.getBillId());
+                bill = sqlSession.selectOne("selling.bill.refund.query", condition);
+                result.setData(bill);
+            } catch (Exception e) {
+                logger.error(e.getMessage());
+                result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+                result.setDescription(e.getMessage());
+            } finally {
+                return result;
+            }
+        }
+	}
 }

@@ -1,6 +1,7 @@
 package selling.sunshine.service.impl;
 
 import com.alibaba.fastjson.JSON;
+
 import com.pingplusplus.Pingpp;
 import com.pingplusplus.model.Charge;
 import org.slf4j.Logger;
@@ -13,6 +14,7 @@ import selling.sunshine.dao.ChargeDao;
 import common.sunshine.model.selling.bill.CustomerOrderBill;
 import common.sunshine.model.selling.bill.DepositBill;
 import common.sunshine.model.selling.bill.OrderBill;
+import common.sunshine.model.selling.bill.RefundBill;
 import selling.sunshine.service.BillService;
 import selling.sunshine.utils.PlatformConfig;
 import common.sunshine.utils.ResponseCode;
@@ -265,6 +267,48 @@ public class BillServiceImpl implements BillService {
         }
         return result;
     }
+
+	@Override
+	public ResultData createRefundBill(RefundBill bill) {
+        ResultData result = new ResultData();
+        ResultData insertResponse = billDao.insertRefundBill(bill);
+        result.setResponseCode(insertResponse.getResponseCode());
+        if (insertResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(insertResponse.getData());
+        } else {
+            result.setDescription(insertResponse.getDescription());
+        }
+        return result;
+	}
+
+	@Override
+	public ResultData fetchRefundBill(Map<String, Object> condition) {
+        ResultData result = new ResultData();
+        ResultData queryResponse = billDao.queryRefundBill(condition);
+        result.setResponseCode(queryResponse.getResponseCode());
+        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            if (((List) queryResponse.getData()).isEmpty()) {
+                result.setResponseCode(ResponseCode.RESPONSE_NULL);
+            }
+            result.setData(queryResponse.getData());
+        } else if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
+            result.setDescription(queryResponse.getDescription());
+        }
+        return result;
+	}
+
+	@Override
+	public ResultData updateRefundBill(RefundBill bill) {
+        ResultData result = new ResultData();
+        ResultData updateResponse = billDao.updateRefundBill(bill);
+        result.setResponseCode(updateResponse.getResponseCode());
+        if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(updateResponse.getData());
+        } else if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
+            result.setDescription(updateResponse.getDescription());
+        }
+        return result;
+	}
 
 
 }

@@ -27,6 +27,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+
+import selling.sunshine.service.BillService;
 import selling.sunshine.service.CustomerService;
 import selling.sunshine.service.EventService;
 import selling.sunshine.service.OrderService;
@@ -368,6 +370,40 @@ public class StatementController {
         os.flush();
         os.close();
         return null;
+    }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/downloadPayedBillExcel")
+    public String downloadPayedBillExcel(HttpServletRequest request, HttpServletResponse response,String start, String end)
+            throws IOException, RowsExceededException, WriteException {
+    	 Map<String, Object> condition=new HashMap<>();
+         if(!StringUtils.isEmpty(start) && !StringUtils.isEmpty(end)){
+         	condition.put("start", start);
+         	condition.put("end", end);
+         }
+    	 List<Integer> statusList=new ArrayList<>();
+    	 statusList.add(1);
+    	 statusList.add(2);
+    	 condition.put("statusList", statusList);
+    	 ResultData fetchResponse=statementService.payedBillStatement(condition);
+    	 if (fetchResponse.getResponseCode()==ResponseCode.RESPONSE_OK) {
+			
+		 }
+    	 return null;
+    }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/downloadRefundBillExcel")
+    public String downloadRefundBillExcel(HttpServletRequest request, HttpServletResponse response,String start, String end)
+            throws IOException, RowsExceededException, WriteException {
+    	 Map<String, Object> condition=new HashMap<>();
+         if(!StringUtils.isEmpty(start) && !StringUtils.isEmpty(end)){
+         	condition.put("start", start);
+         	condition.put("end", end);
+         }
+    	 ResultData fetchResponse=statementService.refundBillStatement(condition);
+    	 if (fetchResponse.getResponseCode()==ResponseCode.RESPONSE_OK) {
+			
+		 }
+    	 return null;
     }
 
 

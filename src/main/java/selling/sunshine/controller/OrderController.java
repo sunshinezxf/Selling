@@ -7,6 +7,7 @@ import common.sunshine.model.selling.admin.Admin;
 import common.sunshine.model.selling.agent.Agent;
 import common.sunshine.model.selling.bill.CustomerOrderBill;
 import common.sunshine.model.selling.bill.OrderBill;
+import common.sunshine.model.selling.bill.RefundBill;
 import common.sunshine.model.selling.customer.Customer;
 import common.sunshine.model.selling.express.Express;
 import common.sunshine.model.selling.express.Express4Agent;
@@ -1736,6 +1737,16 @@ public class OrderController {
         }
         common.sunshine.model.selling.charge.Charge charge = ((List<common.sunshine.model.selling.charge.Charge>) response.getData()).get(0);
         response = chargeService.reimburse(charge);
+        if (response.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription(response.getDescription());
+            return result;
+        }
+        RefundBill refundBill=new RefundBill();
+        refundBill.setBillId(bill.getBillId());
+        refundBill.setRefundAmount(bill.getBillAmount());
+        refundBill.setBillAmount(bill.getBillAmount());
+        response = billService.createRefundBill(refundBill);
         if (response.getResponseCode() != ResponseCode.RESPONSE_OK) {
             result.setResponseCode(ResponseCode.RESPONSE_ERROR);
             result.setDescription(response.getDescription());

@@ -112,6 +112,12 @@ public class OrderItemDaoImpl extends BaseDao implements OrderItemDao {
                         break;
                 }
             }
+            if (json.containsKey("start")) {
+                condition.put("start", json.get("start"));            
+            }
+            if (json.containsKey("end")) {
+            	 condition.put("end", json.get("end"));
+			}
         }
         ResultData total = queryOrderItemSum(condition);
         if (total.getResponseCode() != ResponseCode.RESPONSE_OK) {

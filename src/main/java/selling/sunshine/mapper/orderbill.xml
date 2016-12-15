@@ -53,6 +53,12 @@
         <if test="status != null and status != ''">
             AND bill_status = #{status}
         </if>
+        <if test="statusList != null and statusList != ''">
+            AND bill_status IN
+            <foreach collection="statusList" item="mode" index="index" open="(" close=")" separator=",">
+                #{mode}
+            </foreach>
+        </if>
         <if test="channel != null and channel != ''">
             AND channel_name = #{channel}
         </if>
