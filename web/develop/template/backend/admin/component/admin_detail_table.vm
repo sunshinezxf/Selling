@@ -32,8 +32,8 @@
                     </div>
                 </div>
             </div>
-            <div class="ui center aligned segment">
-                <div class="ui large relaxed list" id="logList"></div>
+            <div class="ui segment">
+                <div class="ui large very relaxed list" id="logList"></div>
             </div>
         </div>
     </div>
