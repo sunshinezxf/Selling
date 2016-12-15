@@ -18,13 +18,14 @@
     </div>
 </div>
 <script>
-    var pageStart=0;
+    var pageStart;
     var pageLength=10;
     var starttime = "2016-01-01";
     var endtime = new Date();
     var start_flatpickr, end_flatpickr;
     var years=new Array();
     $(document).ready(function () {
+    	pageStart=0;
         $.ajax({
             type : 'POST',
             url : "${path.concat('/log/fetch')}",
@@ -76,14 +77,16 @@
         if(not_null(end)){
             param["end"]=end;
         }
-        ("#container").empty();
+        $("#container").empty();
+        years=[];
+        pageStart=0;
         $.ajax({
             type : 'POST',
             url : "${path.concat('/log/fetch')}",
             data : {
                 start : pageStart,
                 length : pageLength,
-                param:param
+                params: JSON.stringify(param)
             },
             dataType : 'json',
             success : function(result) {
@@ -184,7 +187,7 @@
             data : {
                 start : pageStart,
                 length : pageLength,
-                param:param
+                params: JSON.stringify(param)
             },
             dataType : 'json',
             success : function(result) {
