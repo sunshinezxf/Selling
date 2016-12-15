@@ -248,10 +248,13 @@
         $(".ui.pointing.secondary.menu > a").each(function () {
             if ($(this).hasClass("active")) {
                 var itemid = $(this).attr("id");
-                var param = {
-                    start: start,
-                    end: end
-                };
+                var param = {};
+                if(not_null(start)) {
+                    param["start"] = start;
+                }
+                if(not_null(end)){
+                    param["end"]=end;
+                }
                 $.each(urls, function (index, obj) {
                     if (obj.name == itemid) {
                         $.post(obj.url, param, function (result) {
@@ -336,4 +339,11 @@
     $("#download_directly_cancel").click(function () {
         $("#download_modal").modal("hide");
     });
+
+    function not_null(item) {
+        if (item == null || item == "" || item.length <= 0) {
+            return false;
+        }
+        return true;
+    }
 </script>

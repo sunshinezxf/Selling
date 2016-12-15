@@ -20,6 +20,9 @@
 <script>
     var pageStart=0;
     var pageLength=10;
+    var starttime = "2016-01-01";
+    var endtime = new Date();
+    var start_flatpickr, end_flatpickr;
     var years=new Array();
     $(document).ready(function () {
         $.ajax({
@@ -31,80 +34,25 @@
             },
             dataType : 'json',
             success : function(result) {
-                var total = result.total; 
-                var data=result.data;
-                var node="";
-                if(data==null){
-                    node+="<div class='ui center aligned segment'><h1>当前暂无操作日志</h1></div>";
-                    $('#container').append(node);
-                }else{
-                     var content=$("<div></div>");
-                     content.addClass("content");
-                     var wrapper=$("<div></div>");
-                     wrapper.addClass("wrapper");
-                     var hr_left=$("<hr>");
-                     hr_left.addClass("line-left");
-                     var hr_right=$("<hr>");
-                     hr_right.addClass("line-right");
-                     var main_container=$("<div></div>");
-                     main_container.addClass("main-container");
-                     var main_content=$("<div></div>");
-                     main_content.addClass("main-content");
-                     var title=$("<h1></h1>");
-                     title.addClass("title");
-                     title.text("系统日志");
-                     main_content.append(title);
-                     main_container.append(main_content);
-                     wrapper.append(hr_left);
-                     wrapper.append(hr_right);
-                     wrapper.append(main_container);
-                     content.append(wrapper);
-                    for(var i=0;i<data.length;i++){
-                        var item=data[i];
-                        var adminInfo=item.adminInfo;
-                        var ip=item.ip;
-                        var createAt=(new Date(item.createAt)).format("MM-dd hh:mm:ss");
-                        var operationEvent=item.operationEvent;
-                        var year=(new Date(item.createAt)).format("yyyy");
-                         if(ip!=null&&ip!=""){
-                             var li="<li class='cls'><p class='date'>"+createAt+"</p><div class='intro'><p class='event'>"+operationEvent+"</p><div class='more'><p class='account'>账号："+adminInfo+"</p><p class='ipInfo'>ip地址："+ip+"</p></div></div></li>";
-                        }else{
-                            var li="<li class='cls'><p class='date'>"+createAt+"</p><div class='intro'><p class='event'>"+operationEvent+"</p><div class='more'><p class='account'>账号："+adminInfo+"</p><p class='ipInfo'>ip地址：无</p></div></div></li>";
-                        }
-
-                        if($.inArray(year,years)==-1){
-                            var year_section=$("<div></div>");
-                            year_section.addClass("year");
-                            years.push(year);
-                            var new_year=$("<h2><a><i></i></a></h2>");
-                            new_year.text(year+"年");
-                            var list=$("<div class='list'></div>");
-                            var ul= $("<ul></ul>");
-                            ul.append(li);
-                            list.append(ul);
-                            year_section.append(new_year);
-                            year_section.append(list);
-                            main_content.append(year_section);
-                            $('#container').append(content);
-                        }else{
-                           $(".list>ul").append(li);
-                        }
-                    }
-                    pageStart+=pageLength;
-                    if(pageStart<total){
-                        node+="<div class='log_more'><button class='ui blue basic button' id='load'><i class='arrow circle right icon'></i>加载更多</button></div>";
-                    }
-                    $('.wrapper').append(node);
-                    var length=$('.cls').width()-$('.date').width();
-                    $('.intro').css('width',length-1);
-                    $(".log_more").css("position","absolute");
-                    $(".log_more").css("top",$(".main-container").height());
-                    $(".log_more").css("left","4%");
-                    $(".log_more").css("paddingTop","2em");
-                    $(".log_more").css("paddingBottom","2em");
-                    $("#load").on('click',load);
-                }
+                drawFirst(result);
             }
+        });
+        start_flatpickr = $("#start_flatpickr").flatpickr({
+            "locale": "zh",
+            minDate: starttime,
+            maxDate: endtime,
+            onChange: function (selectedDates, dateStr, instance) {
+                end_flatpickr.set("minDate", dateStr);
+            },
+        });
+
+        end_flatpickr = $("#end_flatpickr").flatpickr({
+            "locale": "zh",
+            minDate: starttime,
+            maxDate: endtime,
+            onChange: function (selectedDates, dateStr, instance) {
+                start_flatpickr.set("maxDate", dateStr);
+            },
         });
     });
 
@@ -118,62 +66,184 @@
         $(this).parents(".year").toggleClass("log_close");
     });
 
-    function load(){
+    $("#datetime_btn").click(function(){
+        var start = $("#start_time").val();
+        var end = $("#end_time").val();
+        var param = {};
+        if(not_null(start)) {
+            param["start"] = start;
+        }
+        if(not_null(end)){
+            param["end"]=end;
+        }
+        ("#container").empty();
         $.ajax({
             type : 'POST',
             url : "${path.concat('/log/fetch')}",
             data : {
                 start : pageStart,
                 length : pageLength,
+                param:param
             },
             dataType : 'json',
             success : function(result) {
-                var total = result.total; 
-                var data=result.data;
-                var node="";
-                if(data==null){
-                    node+="<div class='ui center aligned segment'><h1>当前暂无操作日志</h1></div>";
-                    $('#container').append(node);
-                }else{
-                    for(var i=0;i<data.length;i++){
-                        var item=data[i];
-                        var adminInfo=item.adminInfo;
-                        var ip=item.ip;
-                        var createAt=(new Date(item.createAt)).format("MM-dd hh:mm:ss");
-                        var operationEvent=item.operationEvent;
-                        var year=(new Date(item.createAt)).format("yyyy");
-                         if(ip!=null&&ip!=""){
-                             var li="<li class='cls'><p class='date'>"+createAt+"</p><div class='intro'><p class='event'>"+operationEvent+"</p><div class='more'><p class='account'>账号："+adminInfo+"</p><p class='ipInfo'>ip地址："+ip+"</p></div></div></li>";
-                        }else{
-                            var li="<li class='cls'><p class='date'>"+createAt+"</p><div class='intro'><p class='event'>"+operationEvent+"</p><div class='more'><p class='account'>账号："+adminInfo+"</p><p class='ipInfo'>ip地址：无</p></div></div></li>";
-                        }
+                drawFirst(result);
+            }
+        });
+    });
 
-                        if($.inArray(year,years)==-1){
-                           var year_section=$("<div></div>");
-                            year_section.addClass("year");
-                            years.push(year);
-                            var new_year=$("<h2><a><i></i></a></h2>");
-                            new_year.text(year+"年");
-                            var list=$("<div class='list'></div>");
-                            var ul= $("<ul></ul>");
-                            ul.append(li);
-                            list.append(ul);
-                            year_section.append(new_year);
-                            year_section.append(list);
-                            $(".main-content").append(year_section);
-                        }else{
-                           $(".list>ul").append(li);
-                        }
-                    }
-                    var length=$('.cls').width()-$('.date').width();
-                    $('.intro').css('width',length-1);
-                    $(".log_more").css("top",$(".main-container").height());
-                    pageStart+=pageLength;
-                    if(pageStart>=total){
-                       $("#load").remove();
-                    }
+    function drawFirst(result){
+        var total = result.total;
+        var data=result.data;
+        var node="";
+        if(data==null){
+            node+="<div class='ui center aligned segment'><h1>当前暂无操作日志</h1></div>";
+            $('#container').append(node);
+        }else{
+            var content=$("<div></div>");
+            content.addClass("content");
+            var wrapper=$("<div></div>");
+            wrapper.addClass("wrapper");
+            var hr_left=$("<hr>");
+            hr_left.addClass("line-left");
+            var hr_right=$("<hr>");
+            hr_right.addClass("line-right");
+            var main_container=$("<div></div>");
+            main_container.addClass("main-container");
+            var main_content=$("<div></div>");
+            main_content.addClass("main-content");
+            var title=$("<h1></h1>");
+            title.addClass("title");
+            title.text("系统日志");
+            main_content.append(title);
+            main_container.append(main_content);
+            wrapper.append(hr_left);
+            wrapper.append(hr_right);
+            wrapper.append(main_container);
+            content.append(wrapper);
+            for(var i=0;i<data.length;i++){
+                var item=data[i];
+                var adminInfo=item.adminInfo;
+                var ip=item.ip;
+                var createAt=(new Date(item.createAt)).format("MM-dd hh:mm:ss");
+                var operationEvent=item.operationEvent;
+                var year=(new Date(item.createAt)).format("yyyy");
+                if(ip!=null&&ip!=""){
+                    var li="<li class='cls'><p class='date'>"+createAt+"</p><div class='intro'><p class='event'>"+operationEvent+"</p><div class='more'><p class='account'>账号："+adminInfo+"</p><p class='ipInfo'>ip地址："+ip+"</p></div></div></li>";
+                }else{
+                    var li="<li class='cls'><p class='date'>"+createAt+"</p><div class='intro'><p class='event'>"+operationEvent+"</p><div class='more'><p class='account'>账号："+adminInfo+"</p><p class='ipInfo'>ip地址：无</p></div></div></li>";
+                }
+
+                if($.inArray(year,years)==-1){
+                    var year_section=$("<div></div>");
+                    year_section.addClass("year");
+                    years.push(year);
+                    var new_year=$("<h2><a><i></i></a></h2>");
+                    new_year.text(year+"年");
+                    var list=$("<div class='list'></div>");
+                    var ul= $("<ul></ul>");
+                    ul.append(li);
+                    list.append(ul);
+                    year_section.append(new_year);
+                    year_section.append(list);
+                    main_content.append(year_section);
+                    $('#container').append(content);
+                }else{
+                    $(".list>ul").append(li);
                 }
             }
+            pageStart+=pageLength;
+            if(pageStart<total){
+                node+="<div class='log_more'><button class='ui blue basic button' id='load'><i class='arrow circle right icon'></i>加载更多</button></div>";
+            }
+            $('.wrapper').append(node);
+            var length=$('.cls').width()-$('.date').width();
+            $('.intro').css('width',length-1);
+            $(".log_more").css("position","absolute");
+            $(".log_more").css("top",$(".main-container").height());
+            $(".log_more").css("left","4%");
+            $(".log_more").css("paddingTop","2em");
+            $(".log_more").css("paddingBottom","2em");
+            $("#load").on('click',load);
+        }
+    }
+
+    function load(){
+        var start = $("#start_time").val();
+        var end = $("#end_time").val();
+        var param = {};
+        if(not_null(start)) {
+            param["start"] = start;
+        }
+        if(not_null(end)){
+            param["end"]=end;
+        }
+        $.ajax({
+            type : 'POST',
+            url : "${path.concat('/log/fetch')}",
+            data : {
+                start : pageStart,
+                length : pageLength,
+                param:param
+            },
+            dataType : 'json',
+            success : function(result) {
+                drawMore(result);
+            }
         })
+    }
+
+    function drawMore(result){
+        var total = result.total;
+        var data=result.data;
+        var node="";
+        if(data==null){
+            $("#load").remove();
+        }else{
+            for(var i=0;i<data.length;i++){
+                var item=data[i];
+                var adminInfo=item.adminInfo;
+                var ip=item.ip;
+                var createAt=(new Date(item.createAt)).format("MM-dd hh:mm:ss");
+                var operationEvent=item.operationEvent;
+                var year=(new Date(item.createAt)).format("yyyy");
+                if(ip!=null&&ip!=""){
+                    var li="<li class='cls'><p class='date'>"+createAt+"</p><div class='intro'><p class='event'>"+operationEvent+"</p><div class='more'><p class='account'>账号："+adminInfo+"</p><p class='ipInfo'>ip地址："+ip+"</p></div></div></li>";
+                }else{
+                    var li="<li class='cls'><p class='date'>"+createAt+"</p><div class='intro'><p class='event'>"+operationEvent+"</p><div class='more'><p class='account'>账号："+adminInfo+"</p><p class='ipInfo'>ip地址：无</p></div></div></li>";
+                }
+
+                if($.inArray(year,years)==-1){
+                    var year_section=$("<div></div>");
+                    year_section.addClass("year");
+                    years.push(year);
+                    var new_year=$("<h2><a><i></i></a></h2>");
+                    new_year.text(year+"年");
+                    var list=$("<div class='list'></div>");
+                    var ul= $("<ul></ul>");
+                    ul.append(li);
+                    list.append(ul);
+                    year_section.append(new_year);
+                    year_section.append(list);
+                    $(".main-content").append(year_section);
+                }else{
+                    $(".list>ul").append(li);
+                }
+            }
+            var length=$('.cls').width()-$('.date').width();
+            $('.intro').css('width',length-1);
+            $(".log_more").css("top",$(".main-container").height());
+            pageStart+=pageLength;
+            if(pageStart>=total){
+                $("#load").remove();
+            }
+        }
+    }
+
+    function not_null(item) {
+        if (item == null || item == "" || item.length <= 0) {
+            return false;
+        }
+        return true;
     }
 </script>
