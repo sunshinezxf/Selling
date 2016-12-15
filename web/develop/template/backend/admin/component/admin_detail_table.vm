@@ -20,16 +20,24 @@
         </h1>
     </div>
     <div class="row">
-        <button type="button" id="update" class="ui positive basic button">修改密码</button>
-        <button type="button" id="delete" class="ui negative basic button">删除账号</button>
-    </div>
-    <!-- <div class="row">${user.username} ${user.admin.adminId} ${user.admin.username}</div> -->
-    <h3 class="ui header">日志操作</h3>
-
-    <div class="row">
-        <div class="ui relaxed divided list" id="logList">
+        <div class="column">
+            <div class="ui secondary pointing menu">
+                <div class="item active">日志操作</div>
+                <div class="right menu">
+                    <div class="item">
+                        <button type="button" id="update" class="ui positive button">修改密码</button>
+                    </div>
+                    <div class="item">
+                        <button type="button" id="delete" class="ui negative button">删除账号</button>
+                    </div>
+                </div>
+            </div>
+            <div class="ui center aligned segment">
+                <div class="ui large relaxed list" id="logList"></div>
+            </div>
         </div>
     </div>
+    <!-- <div class="row">${user.username} ${user.admin.adminId} ${user.admin.username}</div> -->
 </div>
 #parse("/backend/admin/component/admin_delete_modal.vm")
 #parse("/backend/admin/component/admin_update_modal.vm")
@@ -60,11 +68,11 @@
                         var adminInfo = item.adminInfo;
                         var createAt = (new Date(item.createAt)).format("yyyy/MM/dd hh:mm:ss");
                         var operationEvent = item.operationEvent;
-                        node += "<div class='item'><i class='mail icon'></i><div class='content'><a class='header'>" + createAt + "/" + adminInfo + "</a><div class='description'>" + operationEvent + "</div></div></div>"
+                        node += "<div class='item'><i class='tasks icon'></i><div class='content'><a class='header'>" + createAt + "/" + adminInfo + "</a><div class='description'>" + operationEvent + "</div></div></div>"
                     }
                     pageStart += pageLength;
                     if (pageStart < total) {
-                        node += "<button class='ui right labeled icon button' id='load'><i class='right arrow icon'></i>加载更多</button>";
+                        node += "<div class='item'><button class='ui blue basic button' id='load'><i class='arrow circle right icon'></i>加载更多</button></div>";
                     }
                     $('#logList').append(node);
                     $("#load").on('click', load);
@@ -108,11 +116,11 @@
                         var adminInfo = item.adminInfo;
                         var createAt = (new Date(item.createAt)).format("yyyy/MM/dd hh:mm:ss");
                         var operationEvent = item.operationEvent;
-                        node += "<div class='item'><i class='mail icon'></i><div class='content'><a class='header'>" + createAt + "/" + adminInfo + "</a><div class='description'>" + operationEvent + "</div></div></div>"
+                        node += "<div class='item'><i class='tasks icon'></i><div class='content'><a class='header'>" + createAt + "/" + adminInfo + "</a><div class='description'>" + operationEvent + "</div></div></div>"
                     }
                     pageStart += pageLength;
                     if (pageStart < total) {
-                        node += "<button class='ui right labeled icon button' id='load'><i class='right arrow icon'></i>加载更多</button>";
+                        node += "<div class='item'><button class='ui blue basic button' id='load'><i class='arrow circle right icon'></i>加载更多</button></div>";
                     }
                     $('#logList').append(node);
                     $("#load").on('click', load);

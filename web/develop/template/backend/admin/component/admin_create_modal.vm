@@ -41,8 +41,8 @@
         </div>
     </div>
     <div class="actions">
-        <div class="ui button" id="cancer">取消</div>
-        <div class="ui button" id="confirm">确认</div>
+        <div class="ui cancel button" id="cancel">取消</div>
+        <div class="ui positive button" id="confirm">确认</div>
     </div>
 </div>
 
@@ -81,7 +81,7 @@
             $("#register_admin_form").submit();
         }
     });
-    $("#cancer").on('click', function () {
+    $("#cancel").on('click', function () {
         $('#admin_create_modal').modal('hide');
         $('#username_error').hide();
         $('#password_error').hide();

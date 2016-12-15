@@ -11,14 +11,14 @@
         </div>
     </div>
     <div class="actions">
-        <div class="ui button" id="delete_cancer">取消</div>
-        <div class="ui button" id="delete_confirm">确认</div>
+        <div class="ui cancel button" id="delete_cancel">取消</div>
+        <div class="ui positive button" id="delete_confirm">确认</div>
     </div>
 </div>
 <script>
     $('#admin_delete_modal').modal('hide');
     $('#delete_error').hide();
-    $("#delete_cancer").on('click', function () {
+    $("#delete_cancel").on('click', function () {
         $('#admin_delete_modal').modal('hide');
         $('#delete_error').hide();
     });
