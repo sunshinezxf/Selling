@@ -1,7 +1,6 @@
 package common.sunshine.model.selling.order;
 
 import common.sunshine.model.Entity;
-
 import common.sunshine.model.selling.event.Event;
 import common.sunshine.model.selling.event.EventApplication;
 import common.sunshine.model.selling.goods.Goods4Customer;
@@ -12,6 +11,8 @@ import common.sunshine.model.selling.order.support.OrderItemStatus;
  */
 public class EventOrder extends Entity {
     private String orderId;
+
+    private String linkId;
 
     private String doneeName;
 
@@ -37,6 +38,14 @@ public class EventOrder extends Entity {
         this.orderId = orderId;
     }
 
+    public String getLinkId() {
+        return linkId;
+    }
+
+    public void setLinkId(String linkId) {
+        this.linkId = linkId;
+    }
+
     public String getDoneeName() {
         return doneeName;
     }
@@ -54,22 +63,22 @@ public class EventOrder extends Entity {
     }
 
     public String getDoneeAddress() {
-		return doneeAddress;
-	}
+        return doneeAddress;
+    }
 
-	public void setDoneeAddress(String doneeAddress) {
-		this.doneeAddress = doneeAddress;
-	}
+    public void setDoneeAddress(String doneeAddress) {
+        this.doneeAddress = doneeAddress;
+    }
 
     public OrderItemStatus getStatus() {
-		return status;
-	}
+        return status;
+    }
 
-	public void setStatus(OrderItemStatus status) {
-		this.status = status;
-	}
+    public void setStatus(OrderItemStatus status) {
+        this.status = status;
+    }
 
-	public int getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
