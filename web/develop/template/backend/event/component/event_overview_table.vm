@@ -79,6 +79,15 @@
                 }
                 },
                 {
+                    title: "活动类别", "mRender": function (data, type, full) {
+                       if(full.type=="GIFT"){
+                    	  return "赠送";
+                       }else{
+                    	   return "满赠";
+                       }
+                }
+                },
+                {
                     title: "活动状态", "mRender": function (data, type, full) {
                        if(full.blockFlag){
                     	  return "已结束";

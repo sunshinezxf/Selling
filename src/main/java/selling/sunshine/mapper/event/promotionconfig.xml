@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="selling.event.promotion.config">
+      
+    <resultMap id="promotionConfigVo" type="common.sunshine.model.selling.event.support.PromotionConfig">
+        <result property="configId" column="config_id"></result>
+        <result property="full" column="config_full"></result>
+        <result property="give" column="config_give"></result>
+        <result property="criterion" column="config_criterion"></result>
+        <result property="blockFlag" column="block_flag"></result>
+        <result property="createAt" column="create_time"></result>
+        <association property="buyGoods" column="goodsId = buy_goods_id" select="buyGoodsQuery"></association>
+        <association property="giveGoods" column="goodsId = give_goods_id" select="giveGoodsQuery"></association>
+        <association property="event" column="eventId = event_id" select="queryPromotionEvent"></association>
+    </resultMap>
+    
+    <resultMap id="promotionEventVo" type="common.sunshine.model.selling.event.PromotionEvent">
+        <result property="eventId" column="event_id"></result>
+        <result property="title" column="event_title"></result>
+        <result property="nickname" column="event_nickname"></result>
+        <result property="type" column="event_type" typeHandler="common.sunshine.mybatis.handler.event.EventTypeHandler"></result>
+        <result property="start" column="event_start"></result>
+        <result property="end" column="event_end"></result>
+        <result property="blockFlag" column="block_flag"></result>
+        <result property="createAt" column="create_time"></result>
+    </resultMap>
+    
+    <resultMap id="goodsVo" type="common.sunshine.model.selling.goods.AbstractGoods">
+        <result property="goodsId" column="goods_id"></result>
+        <result property="name" column="goods_name"></result>
+        <result property="description" column="goods_description"></result>
+        <result property="blockFlag" column="block_flag"></result>
+        <result property="createAt" column="create_time"></result>
+    </resultMap>
+    
+
+    <insert id="insert" parameterType="common.sunshine.model.selling.event.support.PromotionConfig" useGeneratedKeys="false">
+        INSERT INTO promotion_config(config_id, config_full, config_give, buy_goods_id, give_goods_id, block_flag, create_time,event_id,config_criterion)
+        VALUES (#{configId}, #{full}, #{give}, #{buyGoods.goodsId}, #{giveGoods.goodsId}, #{blockFlag}, #{createAt},#{event.eventId},#{criterion})
+    </insert>
+    
+    <select id="query" parameterType="java.util.HashMap" resultMap="promotionConfigVo">
+        SELECT config_id, config_full, config_give, config_criterion, buy_goods_id, give_goods_id,event_id,block_flag, create_time 
+        FROM promotion_config
+        WHERE 1 = 1
+        <if test="configId != null">
+            AND config_id = #{configId}
+        </if>
+        <if test="buyGoodsId != null">
+            AND buy_goods_id = #{buyGoodsId}
+        </if>
+        <if test="blockFlag != null">
+            AND block_flag = #{blockFlag}
+        </if>
+    </select>
+    
+    <update id="block" parameterType="common.sunshine.model.selling.event.support.PromotionConfig">
+        UPDATE promotion_config
+        <set>
+            block_flag = #{blockFlag}
+        </set>
+        WHERE config_id = #{configId}
+    </update>
+    
+    <select id="queryPromotionEvent" parameterType="java.util.HashMap" resultMap="promotionEventVo">
+        SELECT event_id, event_title, event_nickname, event_start, event_end, block_flag, create_time, event_type
+        FROM event
+        WHERE event_id = #{eventId}
+    </select>
+    
+    <select id="buyGoodsQuery" parameterType="java.util.Map" resultMap="goodsVo">
+    	SELECT goods_id, goods_name, goods_description, block_flag, create_time
+        FROM goods
+        WHERE goods_id = #{goodsId}
+    </select>
+    
+    <select id="giveGoodsQuery" parameterType="java.util.Map" resultMap="goodsVo">
+    	SELECT goods_id, goods_name, goods_description, block_flag, create_time
+        FROM goods
+        WHERE goods_id = #{goodsId}
+    </select>
+
+</mapper>

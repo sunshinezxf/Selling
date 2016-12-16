@@ -82,7 +82,7 @@ public class EventController {
 		return view;
 	}
 
-	@RequestMapping(method = RequestMethod.POST, value = "/create")
+	@RequestMapping(method = RequestMethod.POST, value = "/gift/create")
 	public ResultData create(@RequestBody GiftEventForm form, HttpSession session) {
 		ResultData resultData = new ResultData();
 		Map<String, Object> condition = new HashMap<>();
@@ -123,6 +123,19 @@ public class EventController {
 		eventService.createGiftEvent(giftEvent);
 		return resultData;
 	}
+	
+    @RequestMapping(method = RequestMethod.GET, value = "/promotionConfig/{goodsId}")
+    public ResultData promotionConfig(@PathVariable("goodsId") String goodsId) {
+        ResultData result = new ResultData();
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("buyGoodsId", goodsId);
+        ResultData response = eventService.fetchPromotionConfig(condition);
+        result.setResponseCode(response.getResponseCode());
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(response.getData());
+        }
+        return result;
+    }
 
 	@RequestMapping(method = RequestMethod.POST, value = "/overview")
 	public DataTablePage<Event> overview(DataTableParam param) {
@@ -131,7 +144,7 @@ public class EventController {
 			return result;
 		}
 		Map<String, Object> condition = new HashMap<>();
-		ResultData fetchResponse = eventService.fetchGiftEventByPage(condition, param);
+		ResultData fetchResponse = eventService.fetchEvent(condition, param);
 		if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
 			result = (DataTablePage<Event>) fetchResponse.getData();
 		}
@@ -148,7 +161,6 @@ public class EventController {
 	@RequestMapping(method = RequestMethod.GET, value = "/{eventId}")
 	public ModelAndView preview(@PathVariable("eventId") String eventId) {
 		ModelAndView view = new ModelAndView();
-
 		Map<String, Object> condition = new HashMap<>();
 		condition.put("eventId", eventId);
 		if (eventId.startsWith("GEV")) {

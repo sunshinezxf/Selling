@@ -475,7 +475,7 @@ public class OrderServiceImpl implements OrderService {
 								eventOrder.setDoneeName(orderItem.getCustomer().getName());
 								eventOrder.setDoneePhone(orderItem.getCustomer().getPhone().getPhone());
 								eventOrder.setEvent(event);
-								eventOrder.setGoods(promotionConfig.getGiveGoods());
+								//eventOrder.setGoods(promotionConfig.getGiveGoods());
 								eventOrder.setLinkId(orders.get(i).getOrderId());
 								if(promotionConfig.getFull() != 0 && orderItem.getGoodsQuantity() >= promotionConfig.getCriterion()){
 									eventOrder.setQuantity(orderItem.getGoodsQuantity() * promotionConfig.getGive() / promotionConfig.getFull());
@@ -518,7 +518,7 @@ public class OrderServiceImpl implements OrderService {
 							eventOrder.setDoneeName(customerOrder.getReceiverName());
 							eventOrder.setDoneePhone(customerOrder.getReceiverPhone());
 							eventOrder.setEvent(event);
-							eventOrder.setGoods(promotionConfig.getGiveGoods());
+							//eventOrder.setGoods(promotionConfig.getGiveGoods());
 							eventOrder.setLinkId(customerOrder.getOrderId());
 							if(promotionConfig.getFull() != 0 && customerOrder.getQuantity() >= promotionConfig.getCriterion()){
 								eventOrder.setQuantity(customerOrder.getQuantity() * promotionConfig.getGive() / promotionConfig.getFull());

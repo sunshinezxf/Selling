@@ -2,35 +2,23 @@ package selling.sunshine.controller;
 
 import com.alibaba.fastjson.JSONArray;
 
+
 import com.alibaba.fastjson.JSONObject;
-import common.sunshine.model.selling.admin.Admin;
 import common.sunshine.model.selling.user.User;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
-import org.springframework.validation.BindingResult;
+
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-import selling.sunshine.form.RefundConfigForm;
-import selling.sunshine.model.*;
-import selling.sunshine.model.cashback.CashBackRecord;
-import common.sunshine.model.selling.goods.Goods4Customer;
-import common.sunshine.pagination.DataTablePage;
-import common.sunshine.pagination.DataTableParam;
-import selling.sunshine.service.CommodityService;
-import selling.sunshine.service.LogService;
+
 import selling.sunshine.service.RefundService;
-import selling.sunshine.service.ToolService;
+
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,14 +34,14 @@ public class RefundController {
 	@Autowired
 	private RefundService refundService;
 
-	@Autowired
-	private ToolService toolService;
-
-	@Autowired
-	private LogService logService;
-
-	@Autowired
-	private CommodityService commodityService;
+//	@Autowired
+//	private ToolService toolService;
+//
+//	@Autowired
+//	private LogService logService;
+//
+//	@Autowired
+//	private CommodityService commodityService;
 
 	@ResponseBody
 	@RequestMapping(method = RequestMethod.POST, value = "/statistic/{agentId}")

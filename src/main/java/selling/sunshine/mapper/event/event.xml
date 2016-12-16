@@ -5,11 +5,35 @@
         <result property="eventId" column="event_id"></result>
         <result property="title" column="event_title"></result>
         <result property="nickname" column="event_nickname"></result>
+        <result property="type" column="event_type" typeHandler="common.sunshine.mybatis.handler.event.EventTypeHandler"></result>
         <result property="start" column="event_start"></result>
         <result property="end" column="event_end"></result>
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
         <collection property="questions" column="eventId = event_id" select="eventQuestionQuery"></collection>
+    </resultMap>
+    
+    <resultMap id="eventVo" type="common.sunshine.model.selling.event.Event">
+        <result property="eventId" column="event_id"></result>
+        <result property="title" column="event_title"></result>
+        <result property="nickname" column="event_nickname"></result>
+        <result property="type" column="event_type" typeHandler="common.sunshine.mybatis.handler.event.EventTypeHandler"></result>
+        <result property="start" column="event_start"></result>
+        <result property="end" column="event_end"></result>
+        <result property="blockFlag" column="block_flag"></result>
+        <result property="createAt" column="create_time"></result>
+    </resultMap>
+    
+    <resultMap id="promotionEventVo" type="common.sunshine.model.selling.event.PromotionEvent">
+        <result property="eventId" column="event_id"></result>
+        <result property="title" column="event_title"></result>
+        <result property="nickname" column="event_nickname"></result>
+        <result property="type" column="event_type"></result>
+        <result property="start" column="event_start"></result>
+        <result property="end" column="event_end"></result>
+        <result property="blockFlag" column="block_flag"></result>
+        <result property="createAt" column="create_time"></result>
+        <collection property="config" column="eventId = event_id" select="promotionConfigQuery"></collection>
     </resultMap>
     
     <resultMap id="eventQuestionVo" type="common.sunshine.model.selling.event.EventQuestion">
@@ -28,14 +52,33 @@
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
     </resultMap>
+    
+    <resultMap id="promotionConfigVo" type="common.sunshine.model.selling.event.support.PromotionConfig">
+        <result property="configId" column="config_id"></result>
+        <result property="full" column="config_full"></result>
+        <result property="give" column="config_give"></result>
+        <result property="criterion" column="config_criterion"></result>
+        <result property="blockFlag" column="block_flag"></result>
+        <result property="createAt" column="create_time"></result>
+        <association property="buyGoods" column="goodsId = buy_goods_id" select="buyGoodsQuery"></association>
+        <association property="giveGoods" column="goodsId = give_goods_id" select="giveGoodsQuery"></association>
+    </resultMap>
+    
+    <resultMap id="goodsVo" type="common.sunshine.model.selling.goods.AbstractGoods">
+        <result property="goodsId" column="goods_id"></result>
+        <result property="name" column="goods_name"></result>
+        <result property="description" column="goods_description"></result>
+        <result property="blockFlag" column="block_flag"></result>
+        <result property="createAt" column="create_time"></result>
+    </resultMap>
 
     <insert id="insert" parameterType="common.sunshine.model.selling.event.GiftEvent" useGeneratedKeys="false">
-        INSERT INTO event(event_id, event_title, event_nickname, event_start, event_end, block_flag, create_time)
-        VALUES (#{eventId}, #{title}, #{nickname}, #{start}, #{end}, #{blockFlag}, #{createAt})
+        INSERT INTO event(event_id, event_title, event_nickname, event_start, event_end, block_flag, create_time,event_type)
+        VALUES (#{eventId}, #{title}, #{nickname}, #{start}, #{end}, #{blockFlag}, #{createAt},#{type,typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler)
     </insert>
 
-    <select id="query" parameterType="java.util.HashMap" resultMap="giftEventVo">
-        SELECT event_id, event_title, event_nickname, event_start, event_end, block_flag, create_time
+    <select id="query" parameterType="java.util.HashMap" resultMap="eventVo">
+        SELECT event_id, event_title, event_nickname, event_start, event_end, block_flag, create_time,event_type
         FROM event
         WHERE 1 = 1
         <if test="eventId != null">
@@ -44,16 +87,78 @@
         <if test="title != null">
             AND event_title = #{title}
         </if>
+        <if test="type != null">
+            AND event_type = #{type,typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler}
+        </if>
         <if test="blockFlag != null">
             AND block_flag = #{blockFlag}
         </if>
     </select>
+    
+    <select id="queryGiftEvent" parameterType="java.util.HashMap" resultMap="giftEventVo">
+        SELECT event_id, event_title, event_nickname, event_start, event_end, block_flag, create_time,event_type
+        FROM event
+        WHERE 1 = 1
+        <if test="eventId != null">
+            AND event_id = #{eventId}
+        </if>
+        <if test="title != null">
+            AND event_title = #{title}
+        </if>
+        <if test="type != null">
+            AND event_type = #{type,typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler}
+        </if>
+        <if test="blockFlag != null">
+            AND block_flag = #{blockFlag}
+        </if>
+    </select>
+    
+    <select id="queryPromotionEvent" parameterType="java.util.HashMap" resultMap="promotionEventVo">
+        SELECT event_id, event_title, event_nickname, event_start, event_end, block_flag, create_time,event_type
+        FROM event
+        WHERE 1 = 1
+        <if test="eventId != null">
+            AND event_id = #{eventId}
+        </if>
+        <if test="title != null">
+            AND event_title = #{title}
+        </if>
+        <if test="type != null">
+            AND event_type = #{type,typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler}
+        </if>
+        <if test="blockFlag != null">
+            AND block_flag = #{blockFlag}
+        </if>
+    </select>
+    
+    <select id="promotionConfigQuery" parameterType="java.util.Map" resultMap="promotionConfigVo">
+        SELECT config_id, config_full, config_give, buy_goods_id, give_goods_id, block_flag, create_time,config_criterion
+        FROM promotion_config
+        WHERE 1 = 1
+        <if test="configId != null">
+            AND config_id = #{configId}
+        </if>
+        <if test="blockFlag != null">
+            AND block_flag = #{blockFlag}
+        </if>
+    </select>
+    
+    <select id="buyGoodsQuery" parameterType="java.util.Map" resultMap="goodsVo">
+    	SELECT goods_id, goods_name, goods_description, block_flag, create_time
+        FROM goods
+        WHERE goods_id = #{goodsId}
+    </select>
+    
+    <select id="giveGoodsQuery" parameterType="java.util.Map" resultMap="goodsVo">
+    	SELECT goods_id, goods_name, goods_description, block_flag, create_time
+        FROM goods
+        WHERE goods_id = #{goodsId}
+    </select>
       
     <select id="eventQuestionQuery" parameterType="java.util.Map" resultMap="eventQuestionVo">
-    	SELECT question_id, event_id, choice_type, question_content, question_rank, block_flag, create_time
-    	FROM event_question
-    	WHERE event_id = #{eventId}
-    	ORDER BY question_rank
+    	SELECT goods_id, goods_name, goods_description, block_flag, create_time
+        FROM goods
+        WHERE goods_id = #{goodsId}
     </select>
 
     <select id="questionOptionQuery" parameterType="java.util.Map" resultMap="questionOptionVo">

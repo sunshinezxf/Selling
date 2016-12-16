@@ -10,7 +10,7 @@ import java.util.List;
  * 活动默认从当前时间开始,默认持续时间为7天
  * Created by sunshine on 8/23/16.
  */
-public abstract class Event extends Entity {
+public class Event extends Entity {
     private final int DURATION = 7;
 
     private String eventId;
