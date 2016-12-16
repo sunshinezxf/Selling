@@ -7,6 +7,7 @@ import common.sunshine.model.selling.order.CustomerOrder;
 import common.sunshine.model.selling.order.EventOrder;
 import common.sunshine.model.selling.order.Order;
 import common.sunshine.model.selling.order.OrderItem;
+import common.sunshine.model.selling.order.support.OrderItemStatus;
 import common.sunshine.pagination.DataTableParam;
 import common.sunshine.pagination.MobilePageParam;
 import common.sunshine.utils.ResponseCode;
@@ -426,12 +427,13 @@ public class OrderServiceImpl implements OrderService {
 		
 		//处理代理商Order
 		condition.clear();
-		List<Integer> status = new ArrayList<>();
-		status.add(2);
-		status.add(3);
-		status.add(4);
-		status.add(5);
-		condition.put("status", status);
+		List<Integer> statusAgent = new ArrayList<>();
+		statusAgent.add(2);
+		statusAgent.add(3);
+		statusAgent.add(4);
+		statusAgent.add(5);
+		condition.put("status", statusAgent);
+		condition.put("type", 0);
 		condition.put("timeStampStart",tsStart);//这两个timeStamp需要配合order.xml->query测试
 		condition.put("timeStampEnd", tsEnd);
 		ResultData fetchOrderResponse = orderDao.queryOrder(condition);
@@ -454,14 +456,72 @@ public class OrderServiceImpl implements OrderService {
 							if(orderItems.get(j).getGoods().getGoodsId().equals(orderItems.get(k).getGoods().getGoodsId()) &&
 							   orderItems.get(j).getCustomer().getCustomerId().equals(orderItems.get(k).getCustomer().getCustomerId())){
 							   orderItems.get(j).setGoodsQuantity(orderItems.get(j).getGoodsQuantity() + orderItems.get(k).getGoodsQuantity());
-							  // orderItems.get(j).setOrderItemPrice(orderItemPrice);
+							   orderItems.get(j).setOrderItemPrice(orderItems.get(j).getOrderItemPrice() + orderItems.get(k).getOrderItemPrice());
+							   orderItems.remove(j);
+							   j--;
+							   break;
+							}
+						}
+					}
+					//合并完成，对每个OrderItem，生成拥有同一个linkId的EventOrder
+					for(OrderItem orderItem : orderItems){
+						for(PromotionConfig promotionConfig : promotionConfigs){
+							if(promotionConfig.getBuyGoods().getGoodsId().equals(orderItem.getGoods().getGoodsId())){
+								EventOrder eventOrder = new EventOrder();
+								eventOrder.setDoneeAddress(orderItem.getCustomer().getAddress().getAddress());
+								eventOrder.setDoneeName(orderItem.getCustomer().getName());
+								eventOrder.setDoneePhone(orderItem.getCustomer().getPhone().getPhone());
+								eventOrder.setEvent(event);
+								eventOrder.setGoods(promotionConfig.getGiveGoods());
+								eventOrder.setLinkId(orders.get(i).getOrderId());
+								if(promotionConfig.getFull() != 0 && orderItem.getGoodsQuantity() >= promotionConfig.getCriterion()){
+									eventOrder.setQuantity(orderItem.getGoodsQuantity() * promotionConfig.getGive() / promotionConfig.getFull());
+								} else {
+									break;
+								}
+								eventOrder.setStatus(OrderItemStatus.PAYED);
+								eventDao.insertEventOrder(eventOrder);//这里报错无法回滚，需检查xml，表结构，字段类型是否正确
 							}
 						}
 					}
 				}
 			}
 		}
-		return null;
+		
+		//处理客户订单
+		condition.clear();
+		List<Integer> statusCustomer = new ArrayList<>();
+		statusCustomer.add(1);
+		statusCustomer.add(2);
+		statusCustomer.add(3);
+		condition.put("status", statusCustomer);
+		condition.put("timeStampStart",tsStart);//这两个timeStamp需要配合order.xml->query测试
+		condition.put("timeStampEnd", tsEnd);
+		ResultData fetchCustomerOrderResponse = customerOrderDao.queryOrder(condition);
+		if(fetchCustomerOrderResponse.getResponseCode() == ResponseCode.RESPONSE_OK && !((List<CustomerOrder>)fetchCustomerOrderResponse.getData()).isEmpty()){
+			List<CustomerOrder> customerOrders = (List<CustomerOrder>) fetchOrderResponse.getData();
+			for(CustomerOrder customerOrder : customerOrders){
+				for(PromotionConfig promotionConfig : promotionConfigs){
+					if(promotionConfig.getBuyGoods().getGoodsId().equals(customerOrder.getGoods().getGoodsId())){
+						EventOrder eventOrder = new EventOrder();
+						eventOrder.setDoneeAddress(customerOrder.getReceiverAddress());
+						eventOrder.setDoneeName(customerOrder.getReceiverName());
+						eventOrder.setDoneePhone(customerOrder.getReceiverPhone());
+						eventOrder.setEvent(event);
+						eventOrder.setGoods(promotionConfig.getGiveGoods());
+						eventOrder.setLinkId(customerOrder.getOrderId());
+						if(promotionConfig.getFull() != 0 && customerOrder.getQuantity() >= promotionConfig.getCriterion()){
+							eventOrder.setQuantity(customerOrder.getQuantity() * promotionConfig.getGive() / promotionConfig.getFull());
+						} else {
+							break;
+						}
+						eventOrder.setStatus(OrderItemStatus.PAYED);
+						eventDao.insertEventOrder(eventOrder);//这里报错无法回滚，需检查xml，表结构，字段类型是否正确
+					}
+				}
+			}
+		}
+		return result;
 	}
 
 }

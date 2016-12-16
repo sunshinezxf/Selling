@@ -67,6 +67,12 @@
             AND (date_format(create_time, '%Y-%m-%d') &gt;= #{start} AND date_format(create_time, '%Y-%m-%d') &lt;=
             #{end})
         </if>
+        <if test="timeStampStart != null and timeStampStart != ''" >
+        	AND create_time &gt;= #{timeStampStart}
+        </if>
+        <if test="timeStampEnd != null and timeStampEnd != ''" >
+        	AND create_time &lt;= #{timeStampEnd}
+        </if>
         <if test="receiverPhone != null">
             AND receiver_phone = #{receiverPhone}
         </if>
