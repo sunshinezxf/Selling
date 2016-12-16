@@ -81,8 +81,7 @@
 	</div>
 </div>
 <script>
-    var starttime = "2016-01-01";
-    var endtime = new Date();
+    var starttime = new Date();
     var start_flatpickr, end_flatpickr;
 
 	$(document).ready(function(){
@@ -94,7 +93,6 @@
 			enableSeconds:true,
             minuteIncrement:1,
             minDate: starttime,
-            maxDate: endtime,
             onChange: function (selectedDates, dateStr, instance) {
                 end_flatpickr.set("minDate", dateStr);
             },
@@ -106,7 +104,6 @@
             enableSeconds:true,
             minuteIncrement:1,
             minDate: starttime,
-            maxDate: endtime,
             onChange: function (selectedDates, dateStr, instance) {
                 start_flatpickr.set("maxDate", dateStr);
             },
