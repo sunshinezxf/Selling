@@ -187,4 +187,8 @@
         }
         return true;
     }
+    
+    $("#publish_btn").click(function(){
+         
+    });
 </script>
