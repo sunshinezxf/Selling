@@ -1,6 +1,7 @@
 package common.sunshine.model.selling.event;
 
 import common.sunshine.model.Entity;
+import common.sunshine.model.selling.event.support.EventType;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -22,6 +23,8 @@ public abstract class Event extends Entity {
 
     private Timestamp end;
     
+    private EventType type;
+    
 
     public Event() {
         this.start = new Timestamp(System.currentTimeMillis());
@@ -38,7 +41,16 @@ public abstract class Event extends Entity {
         this.title = title;
     }
 
-    public String getEventId() {
+    public Event(String title, String nickname, Timestamp start, Timestamp end, EventType type) {
+		super();
+		this.title = title;
+		this.nickname = nickname;
+		this.start = start;
+		this.end = end;
+		this.type = type;
+	}
+
+	public String getEventId() {
         return eventId;
     }
 
@@ -77,4 +89,14 @@ public abstract class Event extends Entity {
     public void setEnd(Timestamp end) {
         this.end = end;
     }
+
+	public EventType getType() {
+		return type;
+	}
+
+	public void setType(EventType type) {
+		this.type = type;
+	}
+    
+    
 }
