@@ -688,49 +688,71 @@ AFTER `goods_name`;
 ##2016年12月15日
 CREATE TABLE IF NOT EXISTS `selling`.`refund_bill` (
   `refund_bill_id` VARCHAR(20) NOT NULL,
-  `bill_id` VARCHAR(20) NOT NULL,
-  `bill_amount` DOUBLE NOT NULL,
-  `refund_amount` DOUBLE NOT NULL,
-  `block_flag` TINYINT(1) NOT NULL DEFAULT 0,
-  `create_time` DATETIME NOT NULL,
-  PRIMARY KEY (`refund_bill_id`))
+  `bill_id`        VARCHAR(20) NOT NULL,
+  `bill_amount`    DOUBLE      NOT NULL,
+  `refund_amount`  DOUBLE      NOT NULL,
+  `block_flag`     TINYINT(1)  NOT NULL DEFAULT 0,
+  `create_time`    DATETIME    NOT NULL,
+  PRIMARY KEY (`refund_bill_id`)
+)
   ENGINE = InnoDB;
-  
+
 
 CREATE OR REPLACE VIEW bill_sum_view AS
   SELECT *
-  FROM (SELECT bill_id AS bill_id,
-  	           agent_id AS account_id,
-  	           order_id AS order_id,
-  	           channel_name AS channel_name,
-  	           client_ip AS client_ip,
-  	           bill_amount AS bill_amount,
-  	           bill_status AS bill_status,
-  	           block_flag AS block_flag,
-  	           create_time AS create_time
+  FROM (SELECT
+          bill_id      AS bill_id,
+          agent_id     AS account_id,
+          order_id     AS order_id,
+          channel_name AS channel_name,
+          client_ip    AS client_ip,
+          bill_amount  AS bill_amount,
+          bill_status  AS bill_status,
+          block_flag   AS block_flag,
+          create_time  AS create_time
         FROM order_bill
         UNION ALL
-        SELECT customer_order_bill.bill_id AS bill_id,
-  	           customer.customer_id AS account_id,
-  	           customer_order_bill.order_id AS order_id,
-  	           customer_order_bill.channel_name AS channel_name,
-  	           customer_order_bill.client_ip AS client_ip,
-  	           customer_order_bill.bill_amount AS bill_amount,
-  	           customer_order_bill.bill_status AS bill_status,
-  	           customer_order_bill.block_flag AS block_flag,
-  	           customer_order_bill.create_time AS create_time
-        FROM customer_order_bill,customer_order,customer_phone,customer 
-        WHERE customer_order_bill.order_id=customer_order.order_id AND customer_phone.phone=customer_order.receiver_phone
-        AND customer.customer_id=customer_phone.customer_id AND customer_phone.block_flag='0'
-  	    UNION ALL
-        SELECT bill_id AS bill_id,
-  	           agent_id AS account_id,
-  	           NULL AS order_id,
-  	           channel_name AS channel_name,
-  	           client_ip AS client_ip,
-  	           bill_amount AS bill_amount,
-  	           bill_status AS bill_status,
-  	           block_flag AS block_flag,
-  	           create_time AS create_time
-  	    FROM deposit_bill
-  	    ) t;
+        SELECT
+          customer_order_bill.bill_id      AS bill_id,
+          customer.customer_id             AS account_id,
+          customer_order_bill.order_id     AS order_id,
+          customer_order_bill.channel_name AS channel_name,
+          customer_order_bill.client_ip    AS client_ip,
+          customer_order_bill.bill_amount  AS bill_amount,
+          customer_order_bill.bill_status  AS bill_status,
+          customer_order_bill.block_flag   AS block_flag,
+          customer_order_bill.create_time  AS create_time
+        FROM customer_order_bill, customer_order, customer_phone, customer
+        WHERE customer_order_bill.order_id = customer_order.order_id AND
+              customer_phone.phone = customer_order.receiver_phone
+              AND customer.customer_id = customer_phone.customer_id AND customer_phone.block_flag = '0'
+        UNION ALL
+        SELECT
+          bill_id      AS bill_id,
+          agent_id     AS account_id,
+          NULL         AS order_id,
+          channel_name AS channel_name,
+          client_ip    AS client_ip,
+          bill_amount  AS bill_amount,
+          bill_status  AS bill_status,
+          block_flag   AS block_flag,
+          create_time  AS create_time
+        FROM deposit_bill
+       ) t;
+
+ALTER TABLE `selling`.`event_order`
+DROP FOREIGN KEY `fk_event_order_event_application1`;
+ALTER TABLE `selling`.`event_order`
+CHANGE COLUMN `application_id` `application_id` VARCHAR(45) NULL,
+ADD COLUMN `link_id` VARCHAR(20) NULL
+AFTER `application_id`;
+ALTER TABLE `selling`.`event_order`
+ADD CONSTRAINT `fk_event_order_event_application1`
+FOREIGN KEY (`application_id`)
+REFERENCES `selling`.`event_application` (`application_id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+
+ALTER TABLE `selling`.`event`
+ADD COLUMN `event_type` TINYINT(1) NOT NULL DEFAULT 0
+AFTER `event_end`;
