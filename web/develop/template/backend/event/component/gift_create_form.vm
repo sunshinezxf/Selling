@@ -3,14 +3,14 @@
         <h1 class="ui header">
             <i class="home icon"></i>
             <div class="content">
-                发布活动
+                发布赠送活动
                 <div class="sub header">
                     <div class="ui breadcrumb">
                         <a class="section">活动管理</a>
                         <div class="divider">/</div>
                         <a class="active">活动列表</a>
                         <div class="divider">/</div>
-                        <a class="active section">发布活动</a>
+                        <a class="active section">发布赠送活动</a>
                     </div>
                 </div>
             </div>
