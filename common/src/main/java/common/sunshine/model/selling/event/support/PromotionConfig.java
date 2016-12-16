@@ -1,6 +1,7 @@
 package common.sunshine.model.selling.event.support;
 
 import common.sunshine.model.Entity;
+import common.sunshine.model.selling.event.PromotionEvent;
 import common.sunshine.model.selling.goods.Goods4Customer;
 
 /**
@@ -8,6 +9,8 @@ import common.sunshine.model.selling.goods.Goods4Customer;
  */
 public class PromotionConfig extends Entity {
     private String configId;
+
+    private PromotionEvent event;
 
     private Goods4Customer buyGoods;
 
@@ -17,12 +20,22 @@ public class PromotionConfig extends Entity {
 
     private int give;
 
+    private int criterion;
+
     public String getConfigId() {
         return configId;
     }
 
     public void setConfigId(String configId) {
         this.configId = configId;
+    }
+
+    public PromotionEvent getEvent() {
+        return event;
+    }
+
+    public void setEvent(PromotionEvent event) {
+        this.event = event;
     }
 
     public Goods4Customer getBuyGoods() {
@@ -55,5 +68,13 @@ public class PromotionConfig extends Entity {
 
     public void setGive(int give) {
         this.give = give;
+    }
+
+    public int getCriterion() {
+        return criterion;
+    }
+
+    public void setCriterion(int criterion) {
+        this.criterion = criterion;
     }
 }
