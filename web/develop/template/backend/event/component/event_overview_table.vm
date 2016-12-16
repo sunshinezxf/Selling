@@ -20,8 +20,8 @@
                 <i class="dropdown icon"></i>
                  发布活动
                 <div class="menu">
-                    <a class="item">赠送活动</a>
-                    <a class="item">满赠活动</a>
+                    <a class="item" href="${path.concat('/event/create/gift')}">赠送活动</a>
+                    <a class="item" href="${path.concat('/event/create/promotion')}">满赠活动</a>
                 </div>
             </div>
         </div>
@@ -112,11 +112,6 @@
                 }
             }
         });
-    });
-    
-    $("#create").on('click', function () {
-    	 var url="${path.concat('/event/create')}";
-    	 window.location.href = url;
     });
     
  </script>
