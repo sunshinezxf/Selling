@@ -17,28 +17,65 @@
 			</div>
 		</h1>
 	</div>
-	<div class="row">
-	     <form class="ui form" id="contributionFactor_update_form">
-	           <div class="inline field">
-                    <label>${quantity.factorName}所占比例</label>
-                    <input type="text" name="quantityWeight" id="${quantity.factorId}" required="" autocomplete="off" value="${quantity.factorWeight}">
-               </div>
-               <div class="inline field">
-                    <label>${quantity.factorName}所占比例</label>
-                    <input type="text" name="priceWeight" id="${price.factorId}" required="" autocomplete="off" value="${price.factorWeight}">
-               </div>
-               <div class="inline field">
-                    <label>${quantity.factorName}所占比例</label>
-                    <input type="text" name="directAgentQuantityWeight" id="${directAgentQuantity.factorId}" required="" autocomplete="off" value="${directAgentQuantity.factorWeight}">
-               </div>
-                <div class="inline field">
-                    <div class="ui message">各因子比例之和等于1，不填默认为0</div>
+    <div class="row">
+        <div class="twelve wide column centered">
+            <div class="ui segments">
+                <div class="ui segment">
+                    <div class="ui item">
+                        <div class="ui red horizontal label">贡献度</div>
+                        <i class="chevron circle right icon"></i>
+                        <div class="ui horizontal label">${quantity.factorName}</div>
+                        <i class="remove icon"></i>
+                        <div class="ui horizontal  label">所占比例（因子1）</div>
+                        <i class="plus icon"></i>
+                        <div class="ui horizontal label">${price.factorName}</div>
+                        <i class="remove icon"></i>
+                        <div class="ui  horizontal label">所占比例（因子2）</div>
+                        <i class="plus icon"></i>
+                        <div class="ui horizontal label">${directAgentQuantity.factorName}</div>
+                        <i class="remove icon"></i>
+                        <div class="ui horizontal label">所占比例（因子3）</div>
+                    </div>
                 </div>
-                <div class="inline field">
-                   	<div class="ui submit button" id="submit">提交</div>
+                <div class="ui segment">
+                    <div class="ui items">
+                        <div class="item">
+                            <div class="content">
+                                <div class="description">
+                                    <form class="ui form" id="contributionFactor_update_form">
+                                        <div class="inline fields">
+                                            <label for="quantityWeight">因子1</label>
+                                            <div class="ten wide field">
+                                                <input type="text" name="quantityWeight" id="${quantity.factorId}" required="" autocomplete="off" value="${quantity.factorWeight}">
+                                            </div>
+                                        </div>
+                                        <div class="inline fields">
+                                            <label for="priceWeight">因子2</label>
+                                            <div class="ten wide field">
+                                                <input type="text" name="priceWeight" id="${price.factorId}" required="" autocomplete="off" value="${price.factorWeight}">
+                                            </div>
+                                        </div>
+                                        <div class="inline fields">
+                                            <label for="directAgentQuantityWeight">因子3</label>
+                                            <div class="ten wide field">
+                                                <input type="text" name="directAgentQuantityWeight" id="${directAgentQuantity.factorId}" required="" autocomplete="off" value="${directAgentQuantity.factorWeight}">
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="extra">
+                                    <div id="submit" class="ui right floated teal button">
+                                        提交
+                                    </div>
+                                    <div class="ui label">各因子比例之和等于1，不填默认为0</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-         </form>
-	</div>
+            </div>
+        </div>
+    </div>
 </div>
 <script>
 $("#submit").on('click', function () {
