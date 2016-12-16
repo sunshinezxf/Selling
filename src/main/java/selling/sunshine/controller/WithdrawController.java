@@ -1,5 +1,6 @@
 package selling.sunshine.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.pingplusplus.model.Event;
@@ -104,6 +105,33 @@ public class WithdrawController {
         return result;
     }
 
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value = "/list")
+    public DataTablePage<WithdrawRecord> list(DataTableParam param){
+    	DataTablePage<WithdrawRecord> result = new DataTablePage<WithdrawRecord>(param);
+        if (StringUtils.isEmpty(param)) {
+            return result;
+        }
+        Map<String, Object> condition = new HashMap<String, Object>();
+        List<Integer> status = new ArrayList<>();
+        status.add(1);
+        condition.put("status", status);
+        condition.put("blockFlag", false);
+        String params = param.getParams();
+        if(!StringUtils.isEmpty(params)){
+        	JSONObject jo = JSON.parseObject(params);
+        	if(jo.containsKey("start") && jo.containsKey("end")){
+        		condition.put("start", (String)jo.get("start"));
+        		condition.put("end", (String)jo.get("end"));
+        	}
+        }
+        ResultData fetchResponse = withdrawService.fetchWithdrawRecord(condition, param);
+        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result = (DataTablePage<WithdrawRecord>) fetchResponse.getData();
+        }
+        return result;
+    }
+    
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/check/download")
     public String download(HttpServletResponse response) throws UnsupportedEncodingException {

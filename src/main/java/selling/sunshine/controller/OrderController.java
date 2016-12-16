@@ -1903,6 +1903,31 @@ public class OrderController {
         resultData.setData(indentData.getData());
         return resultData;
     }
+    
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value = "/list")
+    public DataTablePage<Order> list(DataTableParam param){
+    	DataTablePage<Order> result = new DataTablePage<Order>(param);
+        if (StringUtils.isEmpty(param)) {
+            return result;
+        }
+        Map<String, Object> condition = new HashMap<String, Object>();
+        condition.put("type", 1);
+        condition.put("blockFlag", false);
+        String params = param.getParams();
+        if(!StringUtils.isEmpty(params)){
+        	JSONObject jo = JSON.parseObject(params);
+        	if(jo.containsKey("start") && jo.containsKey("end")){
+        		condition.put("start", (String)jo.get("start"));
+        		condition.put("end", (String)jo.get("end"));
+        	}
+        }
+        ResultData fetchResponse = orderService.fetchOrder(condition, param);
+        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result = (DataTablePage<Order>) fetchResponse.getData();
+        }
+        return result;
+    }
 
     @RequestMapping(method = RequestMethod.GET, value = "/indent/download/{fileName}/{tempFileName}")
     public String download(@PathVariable("fileName") String fileName, @PathVariable("tempFileName") String tempFileName, HttpServletRequest request,

@@ -46,6 +46,7 @@ import selling.sunshine.model.AgentVitality;
 import selling.sunshine.model.BackOperationLog;
 import selling.sunshine.model.ContributionFactor;
 import selling.sunshine.model.OrderPool;
+import selling.sunshine.model.WithdrawRecord;
 import selling.sunshine.model.cashback.CashBackRecord;
 import selling.sunshine.model.cashback.support.CashBackLevel;
 import selling.sunshine.model.gift.GiftApply;
@@ -2626,6 +2627,31 @@ public class AgentController {
 		result.setData(data);
 		return result;
 	}
+	
+	@ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value = "/list")
+    public DataTablePage<Agent> list(DataTableParam param){
+    	DataTablePage<Agent> result = new DataTablePage<Agent>(param);
+        if (StringUtils.isEmpty(param)) {
+            return result;
+        }
+        Map<String, Object> condition = new HashMap<String, Object>();
+        condition.put("blockFlag", false);
+        condition.put("granted", 1);
+        String params = param.getParams();
+        if(!StringUtils.isEmpty(params)){
+        	JSONObject jo = JSON.parseObject(params);
+        	if(jo.containsKey("start") && jo.containsKey("end")){
+        		condition.put("start", (String)jo.get("start"));
+        		condition.put("end", (String)jo.get("end"));
+        	}
+        }
+        ResultData fetchResponse = agentService.fetchAgent(condition, param);
+        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result = (DataTablePage<Agent>) fetchResponse.getData();
+        }
+        return result;
+    }
 
 	@RequestMapping(method = RequestMethod.GET, value = "/downloadAgentExcel")
 	public String downloadAgentExcel(HttpServletRequest request, HttpServletResponse response, String start, String end)
