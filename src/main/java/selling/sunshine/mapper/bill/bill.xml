@@ -2,15 +2,26 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="selling.bill.sum">
    
-    <resultMap id="billVo" type="selling.sunshine.model.bill.BillVolume">
+    <resultMap id="billVolumeVo" type="selling.sunshine.vo.bill.BillVolume">
         <result property="date" column="date"></result>
         <result property="amount" column="amount"></result>
     </resultMap>
+    
+    <resultMap id="billSumVo" type="selling.sunshine.vo.bill.BillSumVo">
+        <result property="billId" column="bill_id"></result>
+        <result property="accountId" column="account_id"></result>
+        <result property="orderId" column="order_id"></result>
+        <result property="billAmount" column="bill_amount"></result>
+        <result property="channel" column="channel_name"></result>
+        <result property="status" column="bill_status"
+                typeHandler="selling.sunshine.handler.mybatis.bill.BillStatusHandler"></result>
+        <result property="clientIp" column="client_ip"></result>
+        <result property="blockFlag" column="block_flag"></result>
+    </resultMap>
 
-	<select id="queryPayedBill" parameterType="java.util.Map" resultMap="billVo">
-		select date , sum(amount) as amount from (
+	<select id="queryPayedBill" parameterType="java.util.Map" resultMap="billVolumeVo">
 		  select date_format(create_time,'%Y-%m-%d') as date,sum(bill_amount) as amount
-		  from order_bill where 
+		  from bill_sum_view where 
 		  <if test="statusList != null and statusList != ''">
 			  bill_status IN
 			  <foreach collection="statusList" item="mode" index="index" open="(" close=")" separator=",">
@@ -20,44 +31,43 @@
 		  <if test="start != null and end != null and start != '' and end != ''">
 			AND (date_format(create_time, '%Y-%m-%d') &gt;= #{start} AND date_format(create_time, '%Y-%m-%d') &lt;=#{end})
 		  </if>
-		  group by date_format(create_time,'%Y-%m-%d')
-		  union all
-		  select date_format(create_time,'%Y-%m-%d') as date,sum(bill_amount) as amount
-		  from customer_order_bill where 
-		  <if test="statusList != null and statusList != ''">
-			  bill_status IN
-			  <foreach collection="statusList" item="mode" index="index" open="(" close=")" separator=",">
-			     #{mode}
-			  </foreach>
-		  </if>
-		  <if test="start != null and end != null and start != '' and end != ''">
-			AND (date_format(create_time, '%Y-%m-%d') &gt;= #{start} AND date_format(create_time, '%Y-%m-%d') &lt;=#{end})
-		  </if>
-		  group by date_format(create_time,'%Y-%m-%d')
-		  union all
-		  select date_format(create_time,'%Y-%m-%d') as date,sum(bill_amount) as amount
-		  from deposit_bill where 
-		  <if test="statusList != null and statusList != ''">
-			  bill_status IN
-			  <foreach collection="statusList" item="mode" index="index" open="(" close=")" separator=",">
-			     #{mode}
-			  </foreach>
-		  </if>
-		  <if test="start != null and end != null and start != '' and end != ''">
-			AND (date_format(create_time, '%Y-%m-%d') &gt;= #{start} AND date_format(create_time, '%Y-%m-%d') &lt;=#{end})
-		  </if>
-		  group by date_format(create_time,'%Y-%m-%d')
-		) t group by date;
 
 	</select>
 	
-	<select id="queryRefundBill" parameterType="java.util.Map" resultMap="billVo">
-	   select date , sum(refund_amount) as amount
+	<select id="queryRefundBill" parameterType="java.util.Map" resultMap="billVolumeVo">
+	   select date_format(create_time,'%Y-%m-%d') as date , sum(refund_amount) as amount
 	   from refund_bill 
 	   <if test="start != null and end != null and start != '' and end != ''">
 			where (date_format(create_time, '%Y-%m-%d') &gt;= #{start} AND date_format(create_time, '%Y-%m-%d') &lt;=#{end})
 	   </if>
 	   group by date_format(create_time,'%Y-%m-%d')
+	</select>
+	
+    <select id="query" parameterType="java.util.Map" resultMap="billSumVo">
+	   SELECT bill_id,account_id,order_id,channel_name,client_ip,bill_amount,bill_status,block_flag,create_time
+	   FROM bill_sum_view 
+	   WHERE 1 = 1
+        <if test="billId != null and billId != ''">
+            AND bill_id = #{billId}
+        </if>
+        <if test="orderId != null and orderId != ''">
+            AND order_id = #{orderId}
+        </if>
+        <if test="accountId != null and accountId != ''">
+            AND account_id = #{accountId}
+        </if>
+        <if test="status != null and status != ''">
+            AND bill_status = #{status}
+        </if>
+        <if test="statusList != null and statusList != ''">
+            AND bill_status IN
+            <foreach collection="statusList" item="mode" index="index" open="(" close=")" separator=",">
+                #{mode}
+            </foreach>
+        </if>
+	   <if test="start != null and end != null and start != '' and end != ''">
+			where (date_format(create_time, '%Y-%m-%d') &gt;= #{start} AND date_format(create_time, '%Y-%m-%d') &lt;=#{end})
+	   </if>
 	</select>
 
 </mapper>

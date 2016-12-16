@@ -1,28 +1,32 @@
 package selling.sunshine.controller;
 
 import common.sunshine.utils.IDGenerator;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
-
-import com.alibaba.fastjson.JSONObject;
 
 import selling.sunshine.form.TimeRangeForm;
 import common.sunshine.model.selling.bill.CustomerOrderBill;
 import common.sunshine.model.selling.bill.DepositBill;
 import common.sunshine.model.selling.bill.OrderBill;
+import common.sunshine.model.selling.bill.support.BillStatus;
+import common.sunshine.pagination.DataTablePage;
+import common.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.BillService;
 import selling.sunshine.service.GatherService;
 import selling.sunshine.utils.DateUtils;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
 import selling.sunshine.utils.ZipCompressor;
+import selling.sunshine.vo.bill.BillSumVo;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -47,6 +51,7 @@ public class GatherController {
 
     @Autowired
     private GatherService gatherService;
+    
 
     @RequestMapping(method = RequestMethod.GET, value = "/overview")
     public ResultData gather() {
@@ -170,5 +175,21 @@ public class GatherController {
             e.printStackTrace();
         }
         return "";
+    }
+    
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value = "/list")
+    public DataTablePage<BillSumVo> list(DataTableParam param) {
+        DataTablePage<BillSumVo> result = new DataTablePage<>(param);
+        if (StringUtils.isEmpty(param)) {
+            return result;
+        }
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("status", BillStatus.PAYED.getCode());
+        ResultData queryResponse = billService.fetchBillSum(condition, param);
+        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result = (DataTablePage<BillSumVo>) queryResponse.getData();
+        }
+        return result;
     }
 }

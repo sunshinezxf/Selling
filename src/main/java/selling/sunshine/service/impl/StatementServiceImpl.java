@@ -13,8 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
 import selling.sunshine.dao.StatementDao;
-import selling.sunshine.model.bill.BillVolume;
 import selling.sunshine.service.StatementService;
+import selling.sunshine.vo.bill.BillVolume;
 
 public class StatementServiceImpl implements StatementService {
 	

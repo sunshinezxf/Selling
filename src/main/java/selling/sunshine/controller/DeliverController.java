@@ -177,8 +177,8 @@ public class DeliverController {
     }
     
     @ResponseBody
-	@RequestMapping(method = RequestMethod.POST, value = "/express")
-    public DataTablePage<Express> express(DataTableParam param) {
+	@RequestMapping(method = RequestMethod.POST, value = "/list")
+    public DataTablePage<Express> list(DataTableParam param) {
     	DataTablePage<Express> result = new DataTablePage<>(param);
 		if (StringUtils.isEmpty(param)) {
 			return result;

@@ -5,6 +5,7 @@ import common.sunshine.model.selling.bill.CustomerOrderBill;
 import common.sunshine.model.selling.bill.DepositBill;
 import common.sunshine.model.selling.bill.OrderBill;
 import common.sunshine.model.selling.bill.RefundBill;
+import common.sunshine.pagination.DataTableParam;
 import common.sunshine.utils.ResultData;
 
 import java.util.Map;
@@ -36,4 +37,8 @@ public interface BillDao{
     ResultData queryRefundBill(Map<String, Object> condition);
     
     ResultData updateRefundBill(RefundBill bill);
+    
+    ResultData queryBillSum(Map<String, Object> condition);
+    
+    ResultData queryBillSumByPage(Map<String, Object> condition,DataTableParam param);
 }

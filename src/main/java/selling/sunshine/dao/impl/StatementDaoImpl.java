@@ -11,7 +11,7 @@ import common.sunshine.dao.BaseDao;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
 import selling.sunshine.dao.StatementDao;
-import selling.sunshine.model.bill.BillVolume;
+import selling.sunshine.vo.bill.BillVolume;
 
 public class StatementDaoImpl extends BaseDao implements StatementDao {
 	

@@ -2,6 +2,7 @@ package selling.sunshine.service.impl;
 
 import com.alibaba.fastjson.JSON;
 
+
 import com.pingplusplus.Pingpp;
 import com.pingplusplus.model.Charge;
 import org.slf4j.Logger;
@@ -15,8 +16,10 @@ import common.sunshine.model.selling.bill.CustomerOrderBill;
 import common.sunshine.model.selling.bill.DepositBill;
 import common.sunshine.model.selling.bill.OrderBill;
 import common.sunshine.model.selling.bill.RefundBill;
+import common.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.BillService;
 import selling.sunshine.utils.PlatformConfig;
+import selling.sunshine.vo.bill.BillSumVo;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
 
@@ -306,6 +309,35 @@ public class BillServiceImpl implements BillService {
             result.setData(updateResponse.getData());
         } else if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
             result.setDescription(updateResponse.getDescription());
+        }
+        return result;
+	}
+
+	@Override
+	public ResultData fetchBillSum(Map<String, Object> condition) {
+        ResultData result = new ResultData();
+        ResultData fetchResponse = billDao.queryBillSum(condition);
+        result.setResponseCode(fetchResponse.getResponseCode());
+        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            if (((List<BillSumVo>) fetchResponse.getData()).isEmpty()) {
+                result.setResponseCode(ResponseCode.RESPONSE_NULL);
+            }
+            result.setData(fetchResponse.getData());
+        } else {
+            result.setDescription(fetchResponse.getDescription());
+        }
+        return result;
+	}
+
+	@Override
+	public ResultData fetchBillSum(Map<String, Object> condition, DataTableParam param) {
+        ResultData result = new ResultData();
+        ResultData response = billDao.queryBillSumByPage(condition, param);
+        result.setResponseCode(response.getResponseCode());
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(response.getData());
+        } else {
+            result.setDescription(response.getDescription());
         }
         return result;
 	}

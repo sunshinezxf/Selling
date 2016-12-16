@@ -1,4 +1,4 @@
-package selling.sunshine.model.bill;
+package selling.sunshine.vo.bill;
 
 public class BillVolume {
 	
