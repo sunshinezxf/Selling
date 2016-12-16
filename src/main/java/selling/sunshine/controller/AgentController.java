@@ -2629,8 +2629,8 @@ public class AgentController {
 	}
 	
 	@ResponseBody
-    @RequestMapping(method = RequestMethod.POST, value = "/list")
-    public DataTablePage<Agent> list(DataTableParam param){
+    @RequestMapping(method = RequestMethod.POST, value = "/listagent")
+    public DataTablePage<Agent> listAgent(DataTableParam param){
     	DataTablePage<Agent> result = new DataTablePage<Agent>(param);
         if (StringUtils.isEmpty(param)) {
             return result;
