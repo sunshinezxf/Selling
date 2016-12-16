@@ -756,3 +756,24 @@ REFERENCES `selling`.`event_application` (`application_id`)
 ALTER TABLE `selling`.`event`
 ADD COLUMN `event_type` TINYINT(1) NOT NULL DEFAULT 0
 AFTER `event_end`;
+
+
+CREATE TABLE IF NOT EXISTS `selling`.`promotion_config` (
+  `config_id`        VARCHAR(20) NOT NULL,
+  `event_id`         VARCHAR(20) NOT NULL,
+  `buy_goods_id`     VARCHAR(20) NOT NULL,
+  `give_goods_id`    VARCHAR(20) NOT NULL,
+  `config_full`      INT         NOT NULL DEFAULT 1,
+  `config_give`      INT         NOT NULL DEFAULT 0,
+  `config_criterion` INT         NOT NULL DEFAULT 0,
+  `block_flag`       TINYINT(1)  NOT NULL DEFAULT 0,
+  `create_time`      DATETIME    NOT NULL,
+  PRIMARY KEY (`config_id`),
+  INDEX `fk_promotion_config_event_idx` (`event_id` ASC),
+  CONSTRAINT `fk_promotion_config_event`
+  FOREIGN KEY (`event_id`)
+  REFERENCES `selling`.`event` (`event_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+)
+  ENGINE = InnoDB;
