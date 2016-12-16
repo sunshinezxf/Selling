@@ -3,7 +3,7 @@
 <head>
     #parse("/backend/initialization/init.vm")
     #parse("/backend/initialization/init_datetimepicker.vm")
-    <title>发布活动</title>
+    <title>发布满赠活动</title>
 </head>
 <body id="dashboard" class="started pushable" ontouchstart>
     #parse("/backend/common/mobile_sidebar.vm")
@@ -15,7 +15,7 @@
             #parse("/backend/common/sidebar.vm")
         </div>
         <div class="ui main container">
-            #parse("/backend/event/component/event_create_form.vm")
+            #parse("/backend/event/component/promotion_create_form.vm")
         </div>
     </div>
 </div>

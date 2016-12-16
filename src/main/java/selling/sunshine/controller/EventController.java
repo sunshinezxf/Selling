@@ -71,10 +71,14 @@ public class EventController {
 	@Autowired
 	private MessageService messageService;
 
-	@RequestMapping(method = RequestMethod.GET, value = "/create")
-	public ModelAndView create() {
+	@RequestMapping(method = RequestMethod.GET, value = "/create/{type}")
+	public ModelAndView create(@PathVariable("type") String type) {
 		ModelAndView view = new ModelAndView();
-		view.setViewName("backend/event/create");
+		if (type.equals("gift")) {
+			view.setViewName("backend/event/gift_create");
+		}else {
+			view.setViewName("backend/event/promotion_create");
+		}		
 		return view;
 	}
 
