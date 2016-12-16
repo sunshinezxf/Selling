@@ -124,11 +124,12 @@ public class EventController {
 		return resultData;
 	}
 	
-    @RequestMapping(method = RequestMethod.GET, value = "/promotionConfig/{goodsId}")
-    public ResultData promotionConfig(@PathVariable("goodsId") String goodsId) {
+    @RequestMapping(method = RequestMethod.GET, value = "/promotionConfig/{eventId}/{goodsId}")
+    public ResultData promotionConfig(@PathVariable("eventId") String eventId,@PathVariable("goodsId") String goodsId) {
         ResultData result = new ResultData();
         Map<String, Object> condition = new HashMap<>();
         condition.put("buyGoodsId", goodsId);
+        condition.put("eventId", eventId);
         ResultData response = eventService.fetchPromotionConfig(condition);
         result.setResponseCode(response.getResponseCode());
         if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
