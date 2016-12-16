@@ -15,6 +15,8 @@ public interface EventDao {
 	
 	ResultData queryGiftEvent(Map<String, Object> condition);
 	
+	ResultData queryPromotionEvent(Map<String, Object> condition);
+	
 	ResultData updateGiftEvent(GiftEvent event);
 	
 	ResultData queryGiftEventByPage(Map<String, Object> condition, DataTableParam param);

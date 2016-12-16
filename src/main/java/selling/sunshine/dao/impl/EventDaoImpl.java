@@ -323,4 +323,20 @@ public class EventDaoImpl extends BaseDao implements EventDao {
         }
 	}
 
+	@Override
+	public ResultData queryPromotionEvent(Map<String, Object> condition) {
+		ResultData result = new ResultData();
+        condition = handle(condition);
+        try {
+            List<GiftEvent> list = sqlSession.selectList("selling.event.query", condition);
+            result.setData(list);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription(e.getMessage());
+        } finally {
+            return result;
+        }
+	}
+
 }

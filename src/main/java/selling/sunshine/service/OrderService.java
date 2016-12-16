@@ -58,5 +58,5 @@ public interface OrderService {
 
     ResultData checkOrderPool(Map<String, Object> condition);
 
-	
+	ResultData n4mScanner();
 }
