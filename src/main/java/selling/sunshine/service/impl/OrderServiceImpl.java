@@ -2,6 +2,7 @@ package selling.sunshine.service.impl;
 
 import common.sunshine.model.selling.customer.Customer;
 import common.sunshine.model.selling.event.Event;
+import common.sunshine.model.selling.event.support.EventType;
 import common.sunshine.model.selling.event.support.PromotionConfig;
 import common.sunshine.model.selling.order.CustomerOrder;
 import common.sunshine.model.selling.order.EventOrder;
@@ -401,7 +402,7 @@ public class OrderServiceImpl implements OrderService {
 		ResultData result = new ResultData();
 		Map<String, Object> condition = new HashMap<String, Object>();
 		condition.put("blockFlag", false);
-		//需要condition中加满赠条件！！！！！(待完成)
+		condition.put("type", EventType.PROMOTION.getCode());
 		ResultData fetchEventResponse = eventDao.queryPromotionEvent(condition);
 		if(fetchEventResponse.getResponseCode() != ResponseCode.RESPONSE_OK || ((List<Event>)fetchEventResponse.getData()).isEmpty()){
 			result.setDescription("未找到满赠活动");
@@ -412,7 +413,9 @@ public class OrderServiceImpl implements OrderService {
 		Timestamp tsStart = event.getStart();
 		Timestamp tsEnd = event.getEnd();
 		
-		//这里需要获取商品PromotinoConfig List！！！！！(待完成)
+		//这里需要获取商品PromotionConfig List！！！！！(待完成)
+		condition.clear();
+		condition.put("blockFlag", false);
 		List<PromotionConfig> promotionConfigs = null;
 		
 		//获取满赠已经生成的订单
@@ -501,22 +504,30 @@ public class OrderServiceImpl implements OrderService {
 		if(fetchCustomerOrderResponse.getResponseCode() == ResponseCode.RESPONSE_OK && !((List<CustomerOrder>)fetchCustomerOrderResponse.getData()).isEmpty()){
 			List<CustomerOrder> customerOrders = (List<CustomerOrder>) fetchOrderResponse.getData();
 			for(CustomerOrder customerOrder : customerOrders){
-				for(PromotionConfig promotionConfig : promotionConfigs){
-					if(promotionConfig.getBuyGoods().getGoodsId().equals(customerOrder.getGoods().getGoodsId())){
-						EventOrder eventOrder = new EventOrder();
-						eventOrder.setDoneeAddress(customerOrder.getReceiverAddress());
-						eventOrder.setDoneeName(customerOrder.getReceiverName());
-						eventOrder.setDoneePhone(customerOrder.getReceiverPhone());
-						eventOrder.setEvent(event);
-						eventOrder.setGoods(promotionConfig.getGiveGoods());
-						eventOrder.setLinkId(customerOrder.getOrderId());
-						if(promotionConfig.getFull() != 0 && customerOrder.getQuantity() >= promotionConfig.getCriterion()){
-							eventOrder.setQuantity(customerOrder.getQuantity() * promotionConfig.getGive() / promotionConfig.getFull());
-						} else {
-							break;
+				boolean findEventOrder = false;//标志该订单是否已经生成过了EventOrder
+				for(EventOrder eventOrder : eventOrders){//寻找是否有匹配的LinkId
+					if(customerOrder.getOrderId().equals(eventOrder.getLinkId())){
+						findEventOrder = true;
+					}
+				}
+				if(!findEventOrder){//好!发现了一个没有生成EventOrder的订单
+					for(PromotionConfig promotionConfig : promotionConfigs){
+						if(promotionConfig.getBuyGoods().getGoodsId().equals(customerOrder.getGoods().getGoodsId())){
+							EventOrder eventOrder = new EventOrder();
+							eventOrder.setDoneeAddress(customerOrder.getReceiverAddress());
+							eventOrder.setDoneeName(customerOrder.getReceiverName());
+							eventOrder.setDoneePhone(customerOrder.getReceiverPhone());
+							eventOrder.setEvent(event);
+							eventOrder.setGoods(promotionConfig.getGiveGoods());
+							eventOrder.setLinkId(customerOrder.getOrderId());
+							if(promotionConfig.getFull() != 0 && customerOrder.getQuantity() >= promotionConfig.getCriterion()){
+								eventOrder.setQuantity(customerOrder.getQuantity() * promotionConfig.getGive() / promotionConfig.getFull());
+							} else {
+								break;
+							}
+							eventOrder.setStatus(OrderItemStatus.PAYED);
+							eventDao.insertEventOrder(eventOrder);//这里报错无法回滚，需检查xml，表结构，字段类型是否正确
 						}
-						eventOrder.setStatus(OrderItemStatus.PAYED);
-						eventDao.insertEventOrder(eventOrder);//这里报错无法回滚，需检查xml，表结构，字段类型是否正确
 					}
 				}
 			}
