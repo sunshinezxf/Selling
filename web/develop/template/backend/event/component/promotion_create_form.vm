@@ -1,0 +1,189 @@
+<div class="ui stackable padded grid" name="event_list">
+	<div class="row">
+        <h1 class="ui header">
+            <i class="home icon"></i>
+            <div class="content">
+                发布满赠活动
+                <div class="sub header">
+                    <div class="ui breadcrumb">
+                        <a class="section">活动管理</a>
+                        <div class="divider">/</div>
+                        <a class="active">活动列表</a>
+                        <div class="divider">/</div>
+                        <a class="active section">发布满赠活动</a>
+                    </div>
+                </div>
+            </div>
+        </h1>
+    </div>
+	<div class="row">
+        <div class="column">
+            <div class="ui tablet stackable two steps">
+                <div id="create_event" class="active step">
+                    <i class="add to calendar icon"></i>
+                    <div class="content">
+                        <div class="title">创建活动</div>
+                    </div>
+                </div>
+                <div id="goods_settings" class="disabled step">
+                    <i class="settings icon"></i>
+                    <div class="content">
+                        <div class="title">商品配置</div>
+                    </div>
+                </div>
+            </div>
+			<div class="ui segment event_step">
+                <div class="ui form">
+                    <div class="field">
+                        <label for="event_title">活动标题</label>
+                        <input type="text" id="event_title" name="title" placeholder="活动标题"  required="required" autocomplete="off"/>
+                    </div>
+                    <div class="field">
+                        <label for="event_nickname">活动链接</label>
+                        <input type="text" id="event_nickname" name="nickname" placeholder="活动链接" required="required" autocomplete="off" />
+                    </div>
+					<div class="two fields">
+                        <div class="field">
+                            <label for="start_flatpickr">开始时间</label>
+                            <div id="start_flatpickr" class="ui action input" data-time_24hr=true data-wrap="true">
+                                <input id="start_time" type="text" name="start" placeholder="请选择开始时间" autocomplete="off" required="required" data-input>
+                                <button class="ui basic button" data-toggle><i class="calendar outline icon"></i></button>
+                                <button class="ui basic button" data-clear><i class="remove icon"></i></button>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label for="end_flatpickr">结束时间</label>
+                            <div id="end_flatpickr" class="ui action input" data-time_24hr=true data-wrap="true">
+                                <input id="end_time" type="text" name="end" placeholder="请选择结束时间" autocomplete="off" required="required" data-input>
+                                <button class="ui basic button" data-toggle><i class="calendar outline icon"></i></button>
+                                <button class="ui basic button" data-clear><i class="remove icon"></i></button>
+                            </div>
+                        </div>
+					</div>
+                </div>
+			</div>
+            <div class="ui segment goods_step">
+				//商品配置表
+            </div>
+            <div class="ui clearing basic segment event_step">
+                <div id="next_btn" class="ui right floated teal disabled button" disabled="disabled">下一步</div>
+            </div>
+            <div class="ui clearing basic segment goods_step">
+                <div id="publish_btn" class="ui right floated teal disabled button" disabled="disabled">发布活动</div>
+                <div id="last_btn" class="ui right floated button">上一步</div>
+            </div>
+        </div>
+	</div>
+</div>
+<script>
+    var starttime = new Date();
+    var start_flatpickr, end_flatpickr;
+
+	$(document).ready(function(){
+		$(".goods_step").hide();
+
+        start_flatpickr = $("#start_flatpickr").flatpickr({
+            "locale": "zh",
+			enableTime:true,
+			enableSeconds:true,
+            minuteIncrement:1,
+            minDate: starttime,
+            onChange: function (selectedDates, dateStr, instance) {
+                end_flatpickr.set("minDate", dateStr);
+            },
+        });
+
+        end_flatpickr = $("#end_flatpickr").flatpickr({
+            "locale": "zh",
+            enableTime:true,
+            enableSeconds:true,
+            minuteIncrement:1,
+            minDate: starttime,
+            onChange: function (selectedDates, dateStr, instance) {
+                start_flatpickr.set("maxDate", dateStr);
+            },
+        });
+
+		$("#event_title").on("input propertychange",function(){
+			if(event_validate()){
+				first_active();
+			}else{
+				first_inactive();
+			}
+		});
+
+        $("#event_nickname").on("input propertychange",function(){
+            if(event_validate()){
+                first_active();
+            }else{
+                first_inactive();
+            }
+        });
+
+        $("#start_time").on("input propertychange",function(){
+            if(event_validate()){
+                first_active();
+            }else{
+                first_inactive();
+            }
+        });
+
+        $("#end_time").on("input propertychange",function(){
+            if(event_validate()){
+                first_active();
+            }else{
+                first_inactive();
+            }
+        });
+	});
+
+	$("#next_btn").click(function(){
+		$(".event_step").hide();
+		$(".goods_step").show();
+		$("#create_event").removeClass("active");
+		$("#create_event").addClass("completed");
+        $("#goods_settings").removeClass("disabled");
+        $("#goods_settings").addClass("active");
+	});
+
+    $("#last_btn").click(function(){
+        $(".goods_step").hide();
+        $(".event_stepe").show();
+        $("#create_event").removeClass("completed");
+        $("#create_event").addClass("active");
+        $("#goods_settings").removeClass("active");
+        $("#goods_settings").addClass("disabled");
+    });
+
+    function event_validate() {
+        var title=$("#event_title").val();
+		var nickname=$("#event_nickname").val();
+		var starttime=$("#start_time").val();
+        var endtime=$("#end_time").val();
+        if (not_null(title)&&not_null(nickname)&&not_null(starttime)&&not_null(endtime)) {
+            return true;
+        }
+        return false;
+    }
+
+    function first_active() {
+        $("#next_btn").removeAttr("disabled");
+        $("#next_btn").removeClass("disabled");
+    }
+
+    function first_inactive() {
+        $("#next_btn").attr("disabled", "disabled");
+        $("#next_btn").addClass("disabled");
+    }
+
+    function not_null(item) {
+        if (item == null || item == "" || item.length <= 0) {
+            return false;
+        }
+        return true;
+    }
+    
+    $("#publish_btn").click(function(){
+         
+    });
+</script>

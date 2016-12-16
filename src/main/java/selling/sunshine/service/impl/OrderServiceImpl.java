@@ -1,7 +1,10 @@
 package selling.sunshine.service.impl;
 
 import common.sunshine.model.selling.customer.Customer;
+import common.sunshine.model.selling.event.Event;
+import common.sunshine.model.selling.event.support.PromotionConfig;
 import common.sunshine.model.selling.order.CustomerOrder;
+import common.sunshine.model.selling.order.EventOrder;
 import common.sunshine.model.selling.order.Order;
 import common.sunshine.model.selling.order.OrderItem;
 import common.sunshine.pagination.DataTableParam;
@@ -16,6 +19,8 @@ import selling.sunshine.dao.*;
 import selling.sunshine.service.OrderService;
 import selling.sunshine.vo.order.OrderItemSum;
 
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +44,8 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private CustomerDao customerDao;
 
+    @Autowired
+    private EventDao eventDao;
     /**
      * 下单主方法
      */
@@ -382,6 +389,79 @@ public class OrderServiceImpl implements OrderService {
             result.setDescription(receivedResponse.getDescription());
         }
         return result;
+	}
+
+	/**
+	 * 满赠活动扫描器
+	 * @return
+	 */
+	@Override
+	public ResultData n4mScanner() {
+		ResultData result = new ResultData();
+		Map<String, Object> condition = new HashMap<String, Object>();
+		condition.put("blockFlag", false);
+		//需要condition中加满赠条件！！！！！(待完成)
+		ResultData fetchEventResponse = eventDao.queryPromotionEvent(condition);
+		if(fetchEventResponse.getResponseCode() != ResponseCode.RESPONSE_OK || ((List<Event>)fetchEventResponse.getData()).isEmpty()){
+			result.setDescription("未找到满赠活动");
+			result.setResponseCode(fetchEventResponse.getResponseCode());
+			return result;
+		}
+		Event event = ((List<Event>)fetchEventResponse.getData()).get(0);
+		Timestamp tsStart = event.getStart();
+		Timestamp tsEnd = event.getEnd();
+		
+		//这里需要获取商品PromotinoConfig List！！！！！(待完成)
+		List<PromotionConfig> promotionConfigs = null;
+		
+		//获取满赠已经生成的订单
+		condition.clear();
+		condition.put("eventId", event.getEventId());
+		condition.put("blockFlag", false);
+		ResultData fetchEventOrderResponse = eventDao.queryEventOrder(condition);
+		List<EventOrder> eventOrders = null;
+		if(fetchEventResponse.getResponseCode() == ResponseCode.RESPONSE_OK && !((List<EventOrder>)fetchEventOrderResponse.getData()).isEmpty()){
+			eventOrders = (List<EventOrder>) fetchEventResponse.getData();
+		}
+		
+		//处理代理商Order
+		condition.clear();
+		List<Integer> status = new ArrayList<>();
+		status.add(2);
+		status.add(3);
+		status.add(4);
+		status.add(5);
+		condition.put("status", status);
+		condition.put("timeStampStart",tsStart);//这两个timeStamp需要配合order.xml->query测试
+		condition.put("timeStampEnd", tsEnd);
+		ResultData fetchOrderResponse = orderDao.queryOrder(condition);
+		if(fetchOrderResponse.getResponseCode() == ResponseCode.RESPONSE_OK && !((List<Order>)fetchOrderResponse.getData()).isEmpty()){
+			List<Order> orders = (List<Order>) fetchOrderResponse.getData();
+			for(int i = 0; i < orders.size() ; i++){
+				boolean findEventOrder = false;//标志该订单是否已经生成过了EventOrder
+				for(EventOrder eventOrder : eventOrders){//寻找是否有匹配的LinkId
+					if(orders.get(i).getOrderId().equals(eventOrder.getLinkId())){
+						findEventOrder = true;
+					}
+				}
+				if(!findEventOrder){//好!发现了一个没有生成EventOrder的订单
+					//于是开始生成EventOrder
+					//先合并OrderItem
+					List<OrderItem> orderItems = orders.get(i).getOrderItems();
+					//考虑到OrderItem通常很少，这里采用对每个OrderItem，寻找有没有可合并到之前的OrderItem的，有则合并到之前的OrderItem
+					for(int j = 1; j < orderItems.size(); j++){
+						for(int k = 0; k < j; k++){
+							if(orderItems.get(j).getGoods().getGoodsId().equals(orderItems.get(k).getGoods().getGoodsId()) &&
+							   orderItems.get(j).getCustomer().getCustomerId().equals(orderItems.get(k).getCustomer().getCustomerId())){
+							   orderItems.get(j).setGoodsQuantity(orderItems.get(j).getGoodsQuantity() + orderItems.get(k).getGoodsQuantity());
+							  // orderItems.get(j).setOrderItemPrice(orderItemPrice);
+							}
+						}
+					}
+				}
+			}
+		}
+		return null;
 	}
 
 }

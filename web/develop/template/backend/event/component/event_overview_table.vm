@@ -15,7 +15,16 @@
         </h1>
     </div>
     <div class="row">
-        <button type="button" class="ui positive basic button" id="create">发布活动</button> 
+        <div class="ui vertical menu">
+            <div class="ui dropdown item">
+                <i class="dropdown icon"></i>
+                 发布活动
+                <div class="menu">
+                    <a class="item" href="${path.concat('/event/create/gift')}">赠送活动</a>
+                    <a class="item" href="${path.concat('/event/create/promotion')}">满赠活动</a>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="row">
             <table id="event_overview_table" class="ui tablet stackable table" cellspacing="0" width="100%">
@@ -24,6 +33,8 @@
 </div>
 <script>
     $(document).ready(function () {
+        $(".ui.dropdown").dropdown();
+
         $("#event_overview_table").DataTable({
             searching: false,
             ordering: false,
@@ -103,11 +114,6 @@
                 }
             }
         });
-    });
-    
-    $("#create").on('click', function () {
-    	 var url="${path.concat('/event/create')}";
-    	 window.location.href = url;
     });
     
  </script>
