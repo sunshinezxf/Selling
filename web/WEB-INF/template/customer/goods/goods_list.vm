@@ -2,10 +2,13 @@
 <html lang="zh_CN">
 <head>
     #parse("/customer/component/init.vm")
+    <link rel="stylesheet" href="${path.concat('/plugins/limarquee/css/liMarquee.css')}"/>
     <link rel="stylesheet" href="${path.concat('/material/css/customer/goods_list.css')}"/>
+    <script type="text/javascript" src="${path.concat('/plugins/limarquee/js/jquery.liMarquee.js')}"></script>
     <title>商品列表</title>
 </head>
 <body ontouchstart>
+#parse("/customer/goods/component/notice.vm")
     <header class="head">
         <h4>云草纲目</h4>
     </header>

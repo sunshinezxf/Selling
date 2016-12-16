@@ -98,3 +98,11 @@ main{
 	color:#d0c080;
 	font:normal 1em/2em Arial, sans-serif;
 }
+
+.notice{
+    position:fixed;
+    width:100%;
+    top:0;
+    left:0;
+    z-index: 1;
+}

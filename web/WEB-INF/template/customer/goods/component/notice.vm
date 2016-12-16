@@ -1,0 +1,8 @@
+<div class="notice">
+	<a id="notice" href="#">为庆贺新春，我们三七满赠活动开始啦！点此可进入活动页面哦！</a>
+</div>
+<script>
+	$(function(){
+    		$('.notice').liMarquee();
+	});
+</script>
