@@ -416,7 +416,14 @@ public class OrderServiceImpl implements OrderService {
 		//这里需要获取商品PromotionConfig List！！！！！(待完成)
 		condition.clear();
 		condition.put("blockFlag", false);
-		List<PromotionConfig> promotionConfigs = null;
+		condition.put("eventId",event.getEventId());
+		fetchEventResponse=eventDao.queryPromotionConfig(condition);
+		if (fetchEventResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+			result.setDescription("未找到满赠活动配置");
+			result.setResponseCode(fetchEventResponse.getResponseCode());
+			return result;
+		}
+		List<PromotionConfig> promotionConfigs = (List<PromotionConfig>) fetchEventResponse.getData();
 		
 		//获取满赠已经生成的订单
 		condition.clear();
