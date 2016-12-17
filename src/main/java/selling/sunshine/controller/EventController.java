@@ -16,7 +16,7 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
+import javax.ws.rs.PUT;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.NPOIFSFileSystem;
@@ -40,10 +40,13 @@ import common.sunshine.model.selling.event.Event;
 import common.sunshine.model.selling.event.EventApplication;
 import common.sunshine.model.selling.event.EventQuestion;
 import common.sunshine.model.selling.event.GiftEvent;
+import common.sunshine.model.selling.event.PromotionEvent;
 import common.sunshine.model.selling.event.QuestionOption;
 import common.sunshine.model.selling.event.support.ApplicationStatus;
 import common.sunshine.model.selling.event.support.ChoiceType;
-
+import common.sunshine.model.selling.event.support.EventType;
+import common.sunshine.model.selling.event.support.PromotionConfig;
+import common.sunshine.model.selling.goods.AbstractGoods;
 import common.sunshine.model.selling.goods.Goods4Customer;
 import common.sunshine.model.selling.order.EventOrder;
 import common.sunshine.model.selling.order.support.OrderItemStatus;
@@ -53,6 +56,9 @@ import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
 import selling.sunshine.form.EventQuestionForm;
 import selling.sunshine.form.GiftEventForm;
+import selling.sunshine.form.PromotionConfigForm;
+import selling.sunshine.form.PromotionEventForm;
+import selling.sunshine.service.CommodityService;
 import selling.sunshine.service.EventService;
 import selling.sunshine.service.MessageService;
 import selling.sunshine.utils.PlatformConfig;
@@ -70,6 +76,9 @@ public class EventController {
 	
 	@Autowired
 	private MessageService messageService;
+	
+	@Autowired
+	private CommodityService commodityService;
 
 	@RequestMapping(method = RequestMethod.GET, value = "/create/{type}")
 	public ModelAndView create(@PathVariable("type") String type) {
@@ -77,6 +86,12 @@ public class EventController {
 		if (type.equals("gift")) {
 			view.setViewName("backend/event/gift_create");
 		}else {
+			Map<String, Object> condition = new HashMap<>();
+			condition.put("blockFlag",false);
+	        ResultData response = commodityService.fetchGoods4Customer(condition);
+	        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+	           view.addObject("goodsList", (List<Goods4Customer>)response.getData());
+	        }
 			view.setViewName("backend/event/promotion_create");
 		}		
 		return view;
@@ -87,7 +102,7 @@ public class EventController {
 		ResultData resultData = new ResultData();
 		Map<String, Object> condition = new HashMap<>();
 		condition.put("blockFlag", false);
-		ResultData queryResult = eventService.fetchGiftEvent(condition);
+		ResultData queryResult = eventService.fetchEvent(condition);
 		if (queryResult.getResponseCode() == ResponseCode.RESPONSE_OK) {
 			resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
 			return resultData;
@@ -97,6 +112,7 @@ public class EventController {
 		giftEvent.setNickname(form.getGiftEventNickname());
 		giftEvent.setStart(Timestamp.valueOf(form.getStartTime() + ":00"));
 		giftEvent.setEnd(Timestamp.valueOf(form.getEndTime() + ":00"));
+		giftEvent.setType(EventType.GIFT);
 		List<EventQuestion> eventQuestions = new ArrayList<>();
 		for (int i = 0; i < form.getQuestionList().length; i++) {
 			EventQuestionForm eventQuestionForm = form.getQuestionList()[i];
@@ -120,7 +136,43 @@ public class EventController {
 			eventQuestions.add(eventQuestion);
 		}
 		giftEvent.setQuestions(eventQuestions);
-		eventService.createGiftEvent(giftEvent);
+		resultData=eventService.createGiftEvent(giftEvent);
+		return resultData;
+	}
+	
+	@RequestMapping(method = RequestMethod.POST, value = "/promotion/create")
+	public ResultData create(@RequestBody PromotionEventForm form, HttpSession session) {
+		ResultData resultData = new ResultData();
+		Map<String, Object> condition = new HashMap<>();
+		condition.put("blockFlag", false);
+		ResultData queryResult = eventService.fetchEvent(condition);
+		if (queryResult.getResponseCode() == ResponseCode.RESPONSE_OK) {
+			resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
+			return resultData;
+		}
+		PromotionEvent event=new PromotionEvent();
+		event.setTitle(form.getPromotionEventTitle());
+		event.setNickname(form.getPromotionEventNickname());
+		event.setStart(Timestamp.valueOf(form.getStartTime()));
+		event.setEnd(Timestamp.valueOf(form.getEndTime()));
+		event.setType(EventType.PROMOTION);
+		PromotionConfigForm[] promotionConfigList=form.getPromotionConfigList();
+		List<PromotionConfig> promotionConfigs=new ArrayList<>();
+		for (PromotionConfigForm promotionConfigForm:promotionConfigList) {
+			PromotionConfig config=new PromotionConfig();
+			config.setCriterion(promotionConfigForm.getCriterion());
+			config.setFull(promotionConfigForm.getFull());
+			config.setGive(promotionConfigForm.getGive());
+			Goods4Customer buyGoods=new Goods4Customer();
+			buyGoods.setGoodsId(promotionConfigForm.getBuyGoods());
+			Goods4Customer giveGoods=new Goods4Customer();
+			giveGoods.setGoodsId(promotionConfigForm.getGiveGoods());
+			config.setBuyGoods(buyGoods);
+			config.setGiveGoods(giveGoods);
+			promotionConfigs.add(config);
+		}
+		event.setConfig(promotionConfigs);
+		resultData=eventService.createPromotionEvent(event);
 		return resultData;
 	}
 	
@@ -130,10 +182,32 @@ public class EventController {
         Map<String, Object> condition = new HashMap<>();
         condition.put("buyGoodsId", goodsId);
         condition.put("eventId", eventId);
+        condition.put("blockFlag", false);
         ResultData response = eventService.fetchPromotionConfig(condition);
         result.setResponseCode(response.getResponseCode());
         if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
             result.setData(response.getData());
+        }
+        return result;
+    }
+    
+    @RequestMapping(method = RequestMethod.POST, value = "/promotionConfig/{eventId}")
+    public ResultData promotionConfig(@RequestBody PromotionConfigForm form,@PathVariable("eventId") String eventId) {
+        ResultData result = new ResultData();
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("buyGoodsId", form.getBuyGoods());
+        condition.put("eventId", eventId);
+        condition.put("blockFlag", false);
+        ResultData response = eventService.fetchPromotionConfig(condition);
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+        	PromotionConfig config=((List<PromotionConfig>)response.getData()).get(0);
+        	config.setCriterion(form.getCriterion());
+        	config.setFull(form.getFull());
+        	config.setGive(form.getGive());
+			Goods4Customer giveGoods=new Goods4Customer();
+			giveGoods.setGoodsId(form.getGiveGoods());
+        	config.setGiveGoods(giveGoods);
+        	result=eventService.createPromotionConfig(config);
         }
         return result;
     }
@@ -170,7 +244,20 @@ public class EventController {
 				GiftEvent giftEvent = ((List<GiftEvent>) fetchResponse.getData()).get(0);
 				view.addObject("giftEvent", giftEvent);
 			}
-			view.setViewName("backend/event/preview");
+			view.setViewName("backend/event/gift_preview");
+		}else if(eventId.startsWith("PRE")){
+			ResultData fetchResponse = eventService.fetchPromotionEvent(condition);
+			if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+				PromotionEvent promotionEvent = ((List<PromotionEvent>) fetchResponse.getData()).get(0);
+				view.addObject("promotionEvent", promotionEvent);
+				condition.clear();
+				condition.put("blockFlag",false);
+		        ResultData response = commodityService.fetchGoods4Customer(condition);
+		        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+		           view.addObject("goodsList", (List<Goods4Customer>)response.getData());
+		        }
+			}
+			view.setViewName("backend/event/promotion_preview");
 		}
 
 		return view;

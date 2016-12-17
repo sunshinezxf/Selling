@@ -25,7 +25,7 @@
         <result property="createAt" column="create_time"></result>
     </resultMap>
     
-    <resultMap id="goodsVo" type="common.sunshine.model.selling.goods.AbstractGoods">
+    <resultMap id="goodsVo" type="common.sunshine.model.selling.goods.Goods4Customer">
         <result property="goodsId" column="goods_id"></result>
         <result property="name" column="goods_name"></result>
         <result property="description" column="goods_description"></result>

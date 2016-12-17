@@ -43,7 +43,7 @@ public class EventDaoImpl extends BaseDao implements EventDao {
 		synchronized (lock) {
 			try {
 				event.setEventId(IDGenerator.generate("GEV"));
-				sqlSession.insert("selling.event.insert", event);
+				sqlSession.insert("selling.event.insertGiftEvent", event);
 				List<EventQuestion> questions = event.getQuestions();
 				for (EventQuestion question : questions) {
 
@@ -77,10 +77,11 @@ public class EventDaoImpl extends BaseDao implements EventDao {
 		synchronized (lock) {
 			try {
 				event.setEventId(IDGenerator.generate("PRE"));
-				sqlSession.insert("selling.event.insert", event);
+				sqlSession.insert("selling.event.insertPromotionEvent", event);
 				List<PromotionConfig> configs=event.getConfig();
 				for (PromotionConfig promotionConfig : configs) {
 					promotionConfig.setConfigId(IDGenerator.generate("PRC"));
+					promotionConfig.setEvent(event);
 					sqlSession.insert("selling.event.promotion.config.insert", promotionConfig);
 				}
 				result.setData(event);
@@ -423,7 +424,7 @@ public class EventDaoImpl extends BaseDao implements EventDao {
 			try {
 				Map<String, Object> condition = new HashMap<>();
 				condition.put("configId", promotionConfig.getConfigId());
-				RefundConfig target = sqlSession.selectOne("selling.event.promotion.config.query", condition);
+				PromotionConfig target = sqlSession.selectOne("selling.event.promotion.config.query", condition);
 				if (target != null) {
 					target.setBlockFlag(true);
 					sqlSession.update("selling.event.promotion.config.block", target);

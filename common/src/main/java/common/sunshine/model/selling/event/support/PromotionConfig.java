@@ -2,8 +2,9 @@ package common.sunshine.model.selling.event.support;
 
 import common.sunshine.model.Entity;
 
+
 import common.sunshine.model.selling.event.PromotionEvent;
-import common.sunshine.model.selling.goods.AbstractGoods;
+import common.sunshine.model.selling.goods.Goods4Customer;
 
 /**
  * Created by sunshine on 2016/12/16.
@@ -13,9 +14,9 @@ public class PromotionConfig extends Entity {
 
     private PromotionEvent event;
 
-    private AbstractGoods buyGoods;
+    private Goods4Customer buyGoods;
 
-    private AbstractGoods giveGoods;
+    private Goods4Customer giveGoods;
 
     private int full;
 
@@ -39,19 +40,19 @@ public class PromotionConfig extends Entity {
         this.event = event;
     }
 
-    public AbstractGoods getBuyGoods() {
+    public Goods4Customer getBuyGoods() {
         return buyGoods;
     }
 
-    public void setBuyGoods(AbstractGoods buyGoods) {
+    public void setBuyGoods(Goods4Customer buyGoods) {
         this.buyGoods = buyGoods;
     }
 
-    public AbstractGoods getGiveGoods() {
+    public Goods4Customer getGiveGoods() {
         return giveGoods;
     }
 
-    public void setGiveGoods(AbstractGoods giveGoods) {
+    public void setGiveGoods(Goods4Customer giveGoods) {
         this.giveGoods = giveGoods;
     }
 

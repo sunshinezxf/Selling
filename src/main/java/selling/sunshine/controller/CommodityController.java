@@ -250,6 +250,25 @@ public class CommodityController {
         }
         return result;
     }
+    
+    /*
+     * 上架的所有商品
+     */
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value = "/shelve")
+    public DataTablePage<Goods4Customer> shelve(DataTableParam param) {
+        DataTablePage<Goods4Customer> result = new DataTablePage<>(param);
+        if (StringUtils.isEmpty(param)) {
+            return result;
+        }
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("blockFlag",false);
+        ResultData response = commodityService.fetchGoods4Customer(condition, param);
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result = (DataTablePage<Goods4Customer>) response.getData();
+        }
+        return result;
+    }
 
     @RequestMapping(method = RequestMethod.GET, value = "/viewlist")
     public ModelAndView viewList(HttpServletRequest request, String agentId, String code, String state) {

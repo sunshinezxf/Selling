@@ -7,6 +7,7 @@
         <result property="doneePhone" column="donee_phone"></result>
         <result property="doneeAddress" column="donee_address"></result>
         <result property="quantity" column="quantity"></result>
+        <result property="linkId" column="link_id"></result>
         <result property="status" column="order_status"
                 typeHandler="selling.sunshine.handler.mybatis.order.OrderItemStatusHandler"></result>
         <result property="blockFlag" column="block_flag"></result>
@@ -57,7 +58,7 @@
 
     <select id="query" parameterType="java.util.Map" resultMap="eventOrderVo">
         SELECT event_order_id, application_id, event_id, goods_id, donee_name, donee_phone, donee_address, order_status,
-        quantity, block_flag, create_time
+        quantity, block_flag, create_time,link_id
         FROM event_order
         WHERE 1=1
         <if test="orderId != null and orderId != ''">
@@ -65,6 +66,9 @@
         </if>
         <if test="eventId != null and eventId != ''">
             AND event_id = #{eventId}
+        </if>
+        <if test="linkId != null and linkId != ''">
+            AND link_id = #{linkId}
         </if>
         <if test="applicationId != null and applicationId != ''">
             AND application_id = #{applicationId}
@@ -130,7 +134,8 @@
             donee_address = #{doneeAddress},
             order_status = #{status,typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler},
             block_flag = #{blockFlag},
-            create_time = #{createAt}
+            create_time = #{createAt},
+             link_id = #{linkId}
         </set>
     </insert>
 

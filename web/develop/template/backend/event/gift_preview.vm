@@ -2,8 +2,7 @@
 <html lang="zh_CN">
 <head>
     #parse("/backend/initialization/init.vm")
-    #parse("/backend/common/datatable.lib.vm")
-    <title>活动详情</title>
+    <title>赠送活动详情</title>
 </head>
 <body id="dashboard" class="started pushable" ontouchstart>
     #parse("/backend/common/mobile_sidebar.vm")
@@ -15,7 +14,7 @@
             #parse("/backend/common/sidebar.vm")
         </div>
         <div class="ui main container">
-               #parse("/backend/event/component/event_preview_table.vm")
+               #parse("/backend/event/component/gift_event_preview_table.vm")
         </div>
     </div>
 </div>

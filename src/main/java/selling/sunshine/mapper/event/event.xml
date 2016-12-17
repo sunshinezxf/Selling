@@ -28,7 +28,7 @@
         <result property="eventId" column="event_id"></result>
         <result property="title" column="event_title"></result>
         <result property="nickname" column="event_nickname"></result>
-        <result property="type" column="event_type"></result>
+        <result property="type" column="event_type" typeHandler="common.sunshine.mybatis.handler.event.EventTypeHandler"></result>
         <result property="start" column="event_start"></result>
         <result property="end" column="event_end"></result>
         <result property="blockFlag" column="block_flag"></result>
@@ -64,7 +64,7 @@
         <association property="giveGoods" column="goodsId = give_goods_id" select="giveGoodsQuery"></association>
     </resultMap>
     
-    <resultMap id="goodsVo" type="common.sunshine.model.selling.goods.AbstractGoods">
+    <resultMap id="goodsVo" type="common.sunshine.model.selling.goods.Goods4Customer">
         <result property="goodsId" column="goods_id"></result>
         <result property="name" column="goods_name"></result>
         <result property="description" column="goods_description"></result>
@@ -72,9 +72,14 @@
         <result property="createAt" column="create_time"></result>
     </resultMap>
 
-    <insert id="insert" parameterType="common.sunshine.model.selling.event.GiftEvent" useGeneratedKeys="false">
+    <insert id="insertGiftEvent" parameterType="common.sunshine.model.selling.event.GiftEvent" useGeneratedKeys="false">
         INSERT INTO event(event_id, event_title, event_nickname, event_start, event_end, block_flag, create_time,event_type)
-        VALUES (#{eventId}, #{title}, #{nickname}, #{start}, #{end}, #{blockFlag}, #{createAt},#{type,typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler)
+        VALUES (#{eventId}, #{title}, #{nickname}, #{start}, #{end}, #{blockFlag}, #{createAt},#{type,typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler})
+    </insert>
+    
+    <insert id="insertPromotionEvent" parameterType="common.sunshine.model.selling.event.PromotionEvent" useGeneratedKeys="false">
+        INSERT INTO event(event_id, event_title, event_nickname, event_start, event_end, block_flag, create_time,event_type)
+        VALUES (#{eventId}, #{title}, #{nickname}, #{start}, #{end}, #{blockFlag}, #{createAt},#{type,typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler})
     </insert>
 
     <select id="query" parameterType="java.util.HashMap" resultMap="eventVo">
