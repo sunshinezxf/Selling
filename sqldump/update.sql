@@ -777,3 +777,12 @@ CREATE TABLE IF NOT EXISTS `selling`.`promotion_config` (
     ON UPDATE NO ACTION
 )
   ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `selling`.`notice` (
+  `notice_id` VARCHAR(20) NOT NULL,
+  `notice_content` LONGTEXT NOT NULL,
+  `notice_link` VARCHAR(200) NOT NULL,
+  `block_flag` TINYINT(1) NOT NULL DEFAULT 0,
+  `create_time` DATETIME NOT NULL,
+  PRIMARY KEY (`notice_id`))
+  ENGINE = InnoDB;

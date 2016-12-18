@@ -1,8 +1,18 @@
-<div class="notice">
-	<a id="notice" href="#">为庆贺新春，我们三七满赠活动开始啦！点此可进入活动页面哦！</a>
-</div>
+<div class="notice"></div>
 <script>
-	$(function(){
-    		$('.notice').liMarquee();
-	});
+    $(function () {
+        var notice_url = "${path.concat('/notice/list')}";
+        $.get(notice_url, function (result) {
+            if (result.responseCode == "RESPONSE_OK") {
+                var data = eval(result.data);
+                for (var i = 0; i < data.length; i++) {
+                    var item = $("<a></a>");
+                    item.attr("href", data[i].link);
+                    item.text(data[i].content);
+                    $(".notice").append(item);
+                }
+                $('.notice').liMarquee();
+            }
+        });
+    });
 </script>

@@ -8,14 +8,14 @@
     <title>商品列表</title>
 </head>
 <body ontouchstart>
-#parse("/customer/goods/component/notice.vm")
-    <header class="head">
-        <h4>云草纲目</h4>
-    </header>
-    <div class="gap"></div>
-    <main>
-        <div class="list">
-            #foreach($goods in ${goodsList})
+    #parse("/customer/goods/component/notice.vm")
+<header class="head">
+    <h4>云草纲目</h4>
+</header>
+<div class="gap"></div>
+<main>
+    <div class="list">
+        #foreach($goods in ${goodsList})
             <div class="item" id="${goods.goodsId}">
                 <div class="upper">
                     <img src="${goods.thumbnails.get(0).path}"/>
@@ -27,17 +27,17 @@
                     <p>￥<span>${goods.customerPrice}</span></p>
                 </div>
             </div>
-            #end
-        </div>
-    </main>
+        #end
+    </div>
+</main>
 </body>
 <script>
-    $(document).ready(function(){
-        
+    $(document).ready(function () {
+
     });
-    $(".item").each(function(){
-        $(this).click(function(){
-            window.location.href ="${path.concat('/commodity/')}" + $(this).attr("id");
+    $(".item").each(function () {
+        $(this).click(function () {
+            window.location.href = "${path.concat('/commodity/')}" + $(this).attr("id");
         });
     });
 </script>

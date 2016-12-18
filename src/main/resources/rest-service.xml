@@ -48,15 +48,17 @@
     <bean id="cashBackService" class="selling.sunshine.service.impl.CashBackServiceImpl"></bean>
 
     <bean id="eventService" class="selling.sunshine.service.impl.EventServiceImpl"></bean>
-    
+
     <bean id="shortUrlService" class="selling.sunshine.service.impl.ShortUrlServiceImpl"></bean>
-    
+
     <bean id="agentVitalityService" class="selling.sunshine.service.impl.AgentVitalityServiceImpl"></bean>
-    
+
     <bean id="agentKPIService" class="selling.sunshine.service.impl.AgentKPIServiceImpl"></bean>
-    
+
     <bean id="contributionFactorService" class="selling.sunshine.service.impl.ContributionFactorServiceImpl"></bean>
-    
+
     <bean id="statementService" class="selling.sunshine.service.impl.StatementServiceImpl"></bean>
-    
+
+    <bean id="noticeService" class="selling.sunshine.service.impl.NoticeServiceImpl"></bean>
+
 </beans>

@@ -113,11 +113,11 @@
                 },
                 {
                     title: "类型", "mRender": function (data, type, full) {
-                    if(full.orderType == 'ORDINARY') {
+                    if (full.orderType == 'ORDINARY') {
                         return "购买订单";
-                    }else if(full.orderType == 'GIFT') {
+                    } else if (full.orderType == 'GIFT') {
                         return "赠送订单";
-                    }else if(full.orderType == 'CUSTOMER') {
+                    } else if (full.orderType == 'CUSTOMER') {
                         return "顾客订单";
                     }
                 }

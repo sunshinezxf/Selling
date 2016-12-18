@@ -72,6 +72,7 @@
         <div id="download_directly_btn" class="ui positive button">下载</div>
     </div>
 </div>
+#parse("/backend/statement/component/statement_record_table.vm")
 <script>
     var indent = {"name": "indent", "url": "${path.concat('/indent/overview')}"};
     var deliver = {"name": "deliver", "url": "${path.concat('/deliver/overview')}"};
@@ -249,11 +250,11 @@
             if ($(this).hasClass("active")) {
                 var itemid = $(this).attr("id");
                 var param = {};
-                if(not_null(start)) {
+                if (not_null(start)) {
                     param["start"] = start;
                 }
-                if(not_null(end)){
-                    param["end"]=end;
+                if (not_null(end)) {
+                    param["end"] = end;
                 }
                 $.each(urls, function (index, obj) {
                     if (obj.name == itemid) {
