@@ -11,7 +11,10 @@
                     item.text(data[i].content);
                     $(".notice").append(item);
                 }
-                $('.notice').liMarquee();
+                $('.notice').liMarquee({
+                    scrollDelay: 10,
+                    circular: false
+                });
             }
         });
     });
