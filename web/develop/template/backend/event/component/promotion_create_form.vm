@@ -99,7 +99,7 @@
 							<td>        
 							   <select id="gift" class="ui search dropdown">
                                   <option value="">请输入赠送商品名</option>
-                                  #foreach( $elem in ${goodsList})
+                                  #foreach( $elem in ${giveGoodsList})
                                   <option value="$elem.goodsId">$elem.name</option>
 				                  #end
                                </select>

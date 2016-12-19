@@ -71,6 +71,11 @@ public class EventController {
             ResultData response = commodityService.fetchGoods4Customer(condition);
             if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
                 view.addObject("goodsList", (List<Goods4Customer>) response.getData());
+                condition.clear();
+                response = commodityService.fetchGoods4Customer(condition);
+                if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                    view.addObject("giveGoodsList", (List<Goods4Customer>) response.getData());
+                }
             }
             view.setViewName("backend/event/promotion_create");
         }
@@ -231,7 +236,7 @@ public class EventController {
                 PromotionEvent promotionEvent = ((List<PromotionEvent>) fetchResponse.getData()).get(0);
                 view.addObject("promotionEvent", promotionEvent);
                 condition.clear();
-                condition.put("blockFlag", false);
+               //condition.put("blockFlag", false);
                 ResultData response = commodityService.fetchGoods4Customer(condition);
                 if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
                     view.addObject("goodsList", (List<Goods4Customer>) response.getData());
