@@ -82,7 +82,7 @@ public class EventController {
         ResultData resultData = new ResultData();
         Map<String, Object> condition = new HashMap<>();
         condition.put("blockFlag", false);
-        ResultData queryResult = eventService.fetchEvent(condition);
+        ResultData queryResult = eventService.fetchGiftEvent(condition);
         if (queryResult.getResponseCode() == ResponseCode.RESPONSE_OK) {
             resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
             return resultData;
@@ -125,7 +125,7 @@ public class EventController {
         ResultData resultData = new ResultData();
         Map<String, Object> condition = new HashMap<>();
         condition.put("blockFlag", false);
-        ResultData queryResult = eventService.fetchEvent(condition);
+        ResultData queryResult = eventService.fetchPromotionEvent(condition);
         if (queryResult.getResponseCode() == ResponseCode.RESPONSE_OK) {
             resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
             return resultData;
@@ -404,8 +404,7 @@ public class EventController {
     public String expressAll(HttpServletRequest request, HttpServletResponse response) throws IOException {
         ResultData resultData = new ResultData();
         Map<String, Object> condition = new HashMap<>();
-        List<Integer> status = new ArrayList<>();
-        status.add(1);
+        List<Integer> status = new ArrayList<>(Arrays.asList(OrderItemStatus.PAYED.getCode()));
         condition.put("status", status);
         resultData = eventService.fetchEventOrder(condition);
         if (resultData.getResponseCode() == ResponseCode.RESPONSE_OK) {
@@ -459,7 +458,6 @@ public class EventController {
             os.flush();
             os.close();
         }
-
         return "";
     }
 

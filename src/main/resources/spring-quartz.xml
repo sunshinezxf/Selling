@@ -11,19 +11,21 @@
     <bean id="withdrawSchedule" class="selling.sunshine.schedule.WithdrawSchedule"></bean>
 
     <bean id="expressSchedule" class="selling.sunshine.schedule.ExpressSchedule"></bean>
-    
+
     <bean id="customerOrderSchedule" class="selling.sunshine.schedule.CustomerOrderSchedule"></bean>
-    
+
     <bean id="customerAddressSchedule" class="selling.sunshine.schedule.CustomerAddressSchedule"></bean>
-    
+
     <bean id="agentKPISchedule" class="selling.sunshine.schedule.AgentKPISchedule"></bean>
+
+    <bean id="promotionSchedule" class="selling.sunshine.schedule.PromotionSchedule"></bean>
 
     <bean id="poolDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <property name="targetObject" ref="poolSchedule"></property>
         <property name="targetMethod" value="schedule"></property>
         <property name="concurrent" value="false"></property>
     </bean>
-    
+
     <bean id="poolRefundDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <property name="targetObject" ref="poolSchedule"></property>
         <property name="targetMethod" value="refundSchedule"></property>
@@ -35,7 +37,7 @@
         <property name="targetMethod" value="schedule"></property>
         <property name="concurrent" value="false"></property>
     </bean>
-    
+
     <bean id="checkOrderPoolDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <property name="targetObject" ref="poolSchedule"></property>
         <property name="targetMethod" value="checkOrderPool"></property>
@@ -59,21 +61,28 @@
         <property name="targetMethod" value="schedule"></property>
         <property name="concurrent" value="false"></property>
     </bean>
-    
+
     <bean id="checkDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <property name="targetObject" ref="customerOrderSchedule"></property>
         <property name="targetMethod" value="schedule"></property>
         <property name="concurrent" value="false"></property>
     </bean>
-    
-    <bean id="customerAddressUpdateDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+
+    <bean id="customerAddressUpdateDetail"
+          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <property name="targetObject" ref="customerAddressSchedule"></property>
         <property name="targetMethod" value="schedule"></property>
         <property name="concurrent" value="false"></property>
     </bean>
-    
+
     <bean id="agentKPIUpdateDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <property name="targetObject" ref="agentKPISchedule"></property>
+        <property name="targetMethod" value="schedule"></property>
+        <property name="concurrent" value="false"></property>
+    </bean>
+
+    <bean id="promotionDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="promotionSchedule"></property>
         <property name="targetMethod" value="schedule"></property>
         <property name="concurrent" value="false"></property>
     </bean>
@@ -84,7 +93,7 @@
             <value>0 10 0 1 * ?</value>
         </property>
     </bean>
-    
+
     <bean id="poolRefundTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="poolRefundDetail"></property>
         <property name="cronExpression">
@@ -98,7 +107,7 @@
             <value>0 10 0 8 * ?</value>
         </property>
     </bean>
-    
+
     <bean id="checkOrderPoolTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="checkOrderPoolDetail"></property>
         <property name="cronExpression">
@@ -107,7 +116,7 @@
     </bean>
 
     <bean id="wechatTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-        <property name="jobDetail"	 ref="wechatDetail"></property>
+        <property name="jobDetail" ref="wechatDetail"></property>
         <property name="cronExpression">
             <value>0 0 * * * ?</value>
         </property>
@@ -126,25 +135,32 @@
             <value>0 0 * * * ?</value>
         </property>
     </bean>
-    
+
     <bean id="checkTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="checkDetail"></property>
         <property name="cronExpression">
             <value>0 0 0 * * ?</value>
         </property>
     </bean>
-    
+
     <bean id="customerAddressUpdateTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="customerAddressUpdateDetail"></property>
         <property name="cronExpression">
             <value>0 0 1 * * ?</value>
         </property>
     </bean>
-    
+
     <bean id="agentKPIUpdateTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="agentKPIUpdateDetail"></property>
         <property name="cronExpression">
             <value>0 20 1 * * ?</value>
+        </property>
+    </bean>
+
+    <bean id="promotionTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="promotionDetail"></property>
+        <property name="cronExpression">
+            <value>0 35/5 * * * ?</value>
         </property>
     </bean>
 
@@ -160,7 +176,8 @@
                 <ref bean="checkTrigger"></ref>
                 <ref bean="checkOrderPoolTrigger"></ref>
                 <ref bean="customerAddressUpdateTrigger"></ref>
-                <ref bean="agentKPIUpdateTrigger"></ref>               
+                <ref bean="agentKPIUpdateTrigger"></ref>
+                <ref bean="promotionTrigger"></ref>
             </list>
         </property>
     </bean>
