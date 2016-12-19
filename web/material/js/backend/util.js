@@ -1,0 +1,1 @@
+function not_null(n){return!(null==n||""==n||n.length<=0)}
