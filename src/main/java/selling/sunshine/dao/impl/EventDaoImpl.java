@@ -71,6 +71,7 @@ public class EventDaoImpl extends BaseDao implements EventDao {
                 event.setEventId(IDGenerator.generate("PRE"));
                 sqlSession.insert("selling.event.insertPromotionEvent", event);
                 List<PromotionConfig> configs = event.getConfig();
+                event.setConfig(null);
                 for (PromotionConfig promotionConfig : configs) {
                     promotionConfig.setConfigId(IDGenerator.generate("PRC"));
                     promotionConfig.setEvent(event);

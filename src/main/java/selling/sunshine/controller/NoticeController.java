@@ -55,6 +55,13 @@ public class NoticeController {
         return view;
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/overview")
+    public ModelAndView overview() {
+        ModelAndView view = new ModelAndView();
+        view.setViewName("/backend/notice/overview");
+        return view;
+    }
+
     @RequestMapping(method = RequestMethod.GET, value = "/list")
     public ResultData list() {
         ResultData result = new ResultData();
