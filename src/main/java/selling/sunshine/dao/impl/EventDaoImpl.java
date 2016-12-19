@@ -400,7 +400,7 @@ public class EventDaoImpl extends BaseDao implements EventDao {
         try {
             List<PromotionEvent> list = sqlSession.selectList("selling.event.queryPromotionEvent", condition);
             if (list.isEmpty()) {
-                result.setData(ResponseCode.RESPONSE_NULL);
+                result.setResponseCode(ResponseCode.RESPONSE_NULL);
             }
             result.setData(list);
         } catch (Exception e) {
