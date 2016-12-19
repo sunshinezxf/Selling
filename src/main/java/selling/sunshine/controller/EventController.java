@@ -5,8 +5,12 @@ import common.sunshine.model.selling.event.support.ApplicationStatus;
 import common.sunshine.model.selling.event.support.ChoiceType;
 import common.sunshine.model.selling.event.support.EventType;
 import common.sunshine.model.selling.event.support.PromotionConfig;
+import common.sunshine.model.selling.express.Express4Agent;
+import common.sunshine.model.selling.express.Express4Application;
+import common.sunshine.model.selling.express.Express4Customer;
 import common.sunshine.model.selling.goods.Goods4Customer;
 import common.sunshine.model.selling.order.EventOrder;
+import common.sunshine.model.selling.order.OrderItem;
 import common.sunshine.model.selling.order.support.OrderItemStatus;
 import common.sunshine.pagination.DataTablePage;
 import common.sunshine.pagination.DataTableParam;
@@ -28,9 +32,7 @@ import selling.sunshine.form.EventQuestionForm;
 import selling.sunshine.form.GiftEventForm;
 import selling.sunshine.form.PromotionConfigForm;
 import selling.sunshine.form.PromotionEventForm;
-import selling.sunshine.service.CommodityService;
-import selling.sunshine.service.EventService;
-import selling.sunshine.service.MessageService;
+import selling.sunshine.service.*;
 import selling.sunshine.utils.PlatformConfig;
 
 import javax.servlet.http.HttpServletRequest;
@@ -59,6 +61,12 @@ public class EventController {
 
     @Autowired
     private CommodityService commodityService;
+
+    @Autowired
+    private ExpressService expressService;
+
+    @Autowired
+    private OrderService orderService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/create/{type}")
     public ModelAndView create(@PathVariable("type") String type) {
@@ -598,4 +606,78 @@ public class EventController {
         return result;
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/promotion/setExpressNumber/{eventId}")
+    public ModelAndView setExpressNumber(@PathVariable("eventId") String eventId) {
+        ModelAndView view=new ModelAndView();
+        Map<String,Object> condition=new HashMap<>();
+        ResultData fetchResponse =new ResultData();
+        condition.put("eventId",eventId);
+        List<Integer> status = new ArrayList<>(Arrays.asList(OrderItemStatus.PAYED.getCode()));
+        condition.put("status",status);
+        fetchResponse=eventService.fetchEventOrder(condition);
+        if (fetchResponse.getResponseCode()==ResponseCode.RESPONSE_OK){
+            List<EventOrder> orderList=(List<EventOrder>)fetchResponse.getData();
+            for (EventOrder eventOrder:orderList){
+                condition.clear();
+                if (eventOrder.getLinkId().startsWith("ODR")){
+                    condition.put("orderId",eventOrder.getLinkId());
+                    condition.put("phone",eventOrder.getDoneePhone());
+                    fetchResponse= orderService.fetchOrderItem(condition);
+                    if(fetchResponse.getResponseCode()==ResponseCode.RESPONSE_OK){
+                        OrderItem item=((List<OrderItem>)fetchResponse.getData()).get(0);
+                        condition.clear();;
+                        condition.put("orderItemId",item.getOrderItemId());
+                        fetchResponse=expressService.fetchExpress4Agent(condition);
+                        if(fetchResponse.getResponseCode()==ResponseCode.RESPONSE_OK){
+                            Express4Agent express4Agent=((List<Express4Agent>)fetchResponse.getData()).get(0);
+                            eventOrder.setStatus(OrderItemStatus.SHIPPED);//更新eventorder状态为已发货
+                            eventService.updateEventOrder(eventOrder);
+                            Express4Application express4Application=new Express4Application();
+                            express4Application.setExpressNumber(express4Agent.getExpressNumber());
+                            express4Application.setEventOrder(eventOrder);
+                            express4Application.setDescription("赠品");
+                            express4Application.setGoodsName(eventOrder.getGoods().getName());
+                            express4Application.setGoodsQuantity(eventOrder.getQuantity());
+                            express4Application.setLinkId(eventOrder.getOrderId());
+                            express4Application.setReceiverAddress(eventOrder.getDoneeAddress());
+                            express4Application.setReceiverName(eventOrder.getDoneeName());
+                            express4Application.setReceiverPhone(eventOrder.getDoneePhone());
+                            express4Application.setSenderAddress("东风东路36号建工大厦2707室");
+                            express4Application.setSenderName("云草纲目");
+                            express4Application.setSenderPhone("15368099560");
+                            expressService.createExpress(express4Application);//创建赠送订单的快递单
+
+                        }
+                    }
+
+                }else {
+                    condition.put("orderId",eventOrder.getLinkId());
+                    fetchResponse=expressService.fetchExpress4Customer(condition);
+                    if(fetchResponse.getResponseCode()==ResponseCode.RESPONSE_OK){
+                        Express4Customer express4Customer=((List<Express4Customer>)fetchResponse.getData()).get(0);
+                        eventOrder.setStatus(OrderItemStatus.SHIPPED);//更新eventorder状态为已发货
+                        eventService.updateEventOrder(eventOrder);
+                        Express4Application express4Application=new Express4Application();
+                        express4Application.setExpressNumber(express4Customer.getExpressNumber());
+                        express4Application.setEventOrder(eventOrder);
+                        express4Application.setDescription("赠品");
+                        express4Application.setGoodsName(eventOrder.getGoods().getName());
+                        express4Application.setGoodsQuantity(eventOrder.getQuantity());
+                        express4Application.setLinkId(eventOrder.getOrderId());
+                        express4Application.setReceiverAddress(eventOrder.getDoneeAddress());
+                        express4Application.setReceiverName(eventOrder.getDoneeName());
+                        express4Application.setReceiverPhone(eventOrder.getDoneePhone());
+                        express4Application.setSenderAddress("东风东路36号建工大厦2707室");
+                        express4Application.setSenderName("云草纲目");
+                        express4Application.setSenderPhone("15368099560");
+                        expressService.createExpress(express4Application);//创建赠送订单的快递单
+
+                    }
+                }
+            }
+        }
+
+        view.setViewName("redirect:/event/present/"+eventId);
+        return  view;
+    }
 }
