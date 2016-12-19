@@ -9,6 +9,7 @@ import common.sunshine.model.selling.order.EventOrder;
 import common.sunshine.model.selling.order.Order;
 import common.sunshine.model.selling.order.OrderItem;
 import common.sunshine.model.selling.order.support.OrderItemStatus;
+import common.sunshine.model.selling.order.support.OrderStatus;
 import common.sunshine.model.selling.order.support.OrderType;
 import common.sunshine.pagination.DataTableParam;
 import common.sunshine.pagination.MobilePageParam;
@@ -430,14 +431,14 @@ public class OrderServiceImpl implements OrderService {
         condition.put("eventId", event.getEventId());
         condition.put("blockFlag", false);
         ResultData fetchEventOrderResponse = eventDao.queryEventOrder(condition);
-        List<EventOrder> eventOrders = null;
+        List<EventOrder> eventOrders = new ArrayList<>();
         if (fetchEventResponse.getResponseCode() == ResponseCode.RESPONSE_OK && !((List<EventOrder>) fetchEventOrderResponse.getData()).isEmpty()) {
-            eventOrders = (List<EventOrder>) fetchEventResponse.getData();
+            eventOrders = (List<EventOrder>) fetchEventOrderResponse.getData();
         }
 
         //处理代理商Order
         condition.clear();
-        List<Integer> statusAgent = new ArrayList<>(Arrays.asList(OrderItemStatus.PAYED.getCode(), OrderItemStatus.SHIPPED.getCode(), OrderItemStatus.RECEIVED.getCode()));
+        List<Integer> statusAgent = new ArrayList<>(Arrays.asList(OrderStatus.PAYED.getCode(), OrderStatus.PATIAL_SHIPMENT.getCode(), OrderStatus.FULLY_SHIPMENT.getCode(), OrderStatus.FINISHIED.getCode()));
         condition.put("status", statusAgent);
         condition.put("type", OrderType.ORDINARY.getCode());
         condition.put("timeStampStart", tsStart);//这两个timeStamp需要配合order.xml->query测试

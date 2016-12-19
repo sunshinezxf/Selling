@@ -283,10 +283,10 @@ public class EventController {
         ModelAndView view = new ModelAndView();
         Map<String, Object> condition = new HashMap<>();
         condition.put("eventId", eventId);
-        ResultData queryResult = eventService.fetchGiftEvent(condition);
+        ResultData queryResult = eventService.fetchEvent(condition);
         if (queryResult.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            view.addObject("giftEvent", ((List<GiftEvent>) queryResult.getData()).get(0));
-            condition.put("eventId", ((List<GiftEvent>) queryResult.getData()).get(0).getEventId());
+            view.addObject("giftEvent", ((List<Event>) queryResult.getData()).get(0));
+            condition.put("eventId", ((List<Event>) queryResult.getData()).get(0).getEventId());
             List<Integer> status = new ArrayList<>();
             status.add(1);
             condition.put("status", status);
@@ -295,8 +295,11 @@ public class EventController {
                 int size = ((List<EventOrder>) fetchResponse.getData()).size();
                 view.addObject("size", size);
             }
+            view.setViewName("backend/event/present");
+        } else {
+            view.setViewName("redirect:/event/" + eventId);
         }
-        view.setViewName("backend/event/present");
+
         return view;
     }
 
