@@ -45,6 +45,7 @@
         </div>
     </div>
 </div>
+    #parse("/customer/goods/component/promotion.vm")
 </body>
 <script>
     var t_img; // 定时器

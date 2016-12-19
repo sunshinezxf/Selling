@@ -1,0 +1,30 @@
+<script>
+    $(document).ready(function(){
+        //获取活动id
+        var eventUrl="${path.concat('/event/promotion/current')}";
+        $.get(eventUrl.function(result){
+            if(result.responseCode=="RESPONSE_OK"){
+                var eventId=result.data.eventId;
+                $("#goods_num").on("input propertychange",function(){
+                    var criterion,full,give;
+                    var url="${path.concat('/event/promotion/')}"+eventId+"/config/"+${goods.goodsId};
+                    $.get(url,function(result){
+                        if(result.responseCode=="RESPONSE_OK"){
+                            criterion=result.data.criterion;
+                            full=result.data.full;
+                            give=result.data.give;
+                        }
+                    });
+                    var num=$("#goods_num").val();
+                    if(criterion&&full&&give){
+                        if(num>=criterion){
+                            $("#purchase").text("买"+full+"赠"+give);
+                        }else{
+                            $("#purchase").text("立即购买");
+                        }
+                    }
+                });
+            }
+        });
+    });
+</script>
