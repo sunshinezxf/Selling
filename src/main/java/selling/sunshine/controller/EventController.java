@@ -574,4 +574,22 @@ public class EventController {
         return resultData;
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/promotion/current")
+    public ResultData current() {
+        ResultData result = new ResultData();
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("blockFlag", false);
+        ResultData response = eventService.fetchPromotionEvent(condition);
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(((List<PromotionEvent>) response.getData()).get(0));
+        } else if (response.getResponseCode() == ResponseCode.RESPONSE_NULL) {
+            result.setResponseCode(ResponseCode.RESPONSE_NULL);
+            result.setDescription("当前暂无正在进行的满赠活动");
+        } else {
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription(response.getDescription());
+        }
+        return result;
+    }
+
 }
