@@ -506,7 +506,7 @@ public class OrderServiceImpl implements OrderService {
         condition.put("timeStampEnd", tsEnd);
         ResultData fetchCustomerOrderResponse = customerOrderDao.queryOrder(condition);
         if (fetchCustomerOrderResponse.getResponseCode() == ResponseCode.RESPONSE_OK && !((List<CustomerOrder>) fetchCustomerOrderResponse.getData()).isEmpty()) {
-            List<CustomerOrder> customerOrders = (List<CustomerOrder>) fetchOrderResponse.getData();
+            List<CustomerOrder> customerOrders = (List<CustomerOrder>) fetchCustomerOrderResponse.getData();
             for (CustomerOrder customerOrder : customerOrders) {
                 boolean findEventOrder = false;//标志该订单是否已经生成过了EventOrder
                 for (EventOrder eventOrder : eventOrders) {//寻找是否有匹配的LinkId
