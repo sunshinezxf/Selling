@@ -103,8 +103,8 @@ public class EventController {
         GiftEvent giftEvent = new GiftEvent();
         giftEvent.setTitle(form.getGiftEventTitle());
         giftEvent.setNickname(form.getGiftEventNickname());
-        giftEvent.setStart(Timestamp.valueOf(form.getStartTime() + ":00"));
-        giftEvent.setEnd(Timestamp.valueOf(form.getEndTime() + ":00"));
+        giftEvent.setStart(Timestamp.valueOf(form.getStartTime()));
+        giftEvent.setEnd(Timestamp.valueOf(form.getEndTime()));
         giftEvent.setType(EventType.GIFT);
         List<EventQuestion> eventQuestions = new ArrayList<>();
         for (int i = 0; i < form.getQuestionList().length; i++) {

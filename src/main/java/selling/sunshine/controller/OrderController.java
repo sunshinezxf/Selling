@@ -311,6 +311,9 @@ public class OrderController {
         } else if (orderId.startsWith("CUO")) {
             condition.put("orderId", orderId);
             fetchExpressResponse = expressService.fetchExpress4Customer(condition);
+        }else{
+            condition.put("orderId", orderId);
+            fetchExpressResponse=expressService.fetchExpress4Application(condition);
         }
         if (fetchExpressResponse == null) {
             view.addObject("type", "2");//订单号错误
