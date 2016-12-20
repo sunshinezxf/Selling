@@ -82,45 +82,46 @@
         SELECT order_id, order_type, order_status, order_price, agent_id, block_flag, create_time
         FROM `order`
         WHERE 1 = 1
-        <if test="orderId != null and orderId != ''">
+        <if test="orderId != null">
             AND order_id = #{orderId}
         </if>
-        <if test="type != null and type != ''">
+        <if test="type != null">
             AND order_type = #{type}
         </if>
-        <if test="status != null and status != ''">
+        <if test="status != null">
             AND order_status IN
             <foreach collection="status" item="mode" index="index" open="(" close=")" separator=",">
                 #{mode}
             </foreach>
         </if>
-        <if test="agentId != null and agentId !=''">
+        <if test="agentId != null">
             AND agent_id = #{agentId}
         </if>
         <if test="blockFlag != null">
             AND block_flag = #{blockFlag}
         </if>
-        <if test="createAt != null and createAt != ''">
+        <if test="createAt != null">
             AND create_time = #{createAt}
         </if>
-        <if test="search !=null and search != ''">
-            AND (order_id LIKE #{search} OR DATE_FORMAT(create_time,'%Y-%m-%D') LIKE #{search} OR agent_id IN (SELECT agent_id FROM agent WHERE agent_name LIKE #{search}))
+        <if test="search !=null">
+            AND (order_id LIKE #{search} OR DATE_FORMAT(create_time,'%Y-%m-%D') LIKE #{search} OR agent_id IN (SELECT
+            agent_id FROM agent WHERE agent_name LIKE #{search}))
         </if>
-        <if test="date != null and date != ''">
+        <if test="date != null">
             AND DATE_FORMAT(create_time,'%Y-%m')>DATE_FORMAT(date_sub(current_date(), interval 3 month),'%Y-%m')
         </if>
-        <if test="month != null and month != ''">
+        <if test="month != null">
             AND create_time LIKE #{month}
         </if>
-        <if test="start != null and end != null and start != '' and end != ''">
+        <if test="start != null and end != null">
             AND (date_format(create_time, '%Y-%m-%d') &gt;= #{start} AND date_format(create_time, '%Y-%m-%d') &lt;=
             #{end})
         </if>
-        <if test="timeStampStart != null and timeStampStart != ''" >
-        	AND create_time &gt;= #{timeStampStart}
+        <if test="timeStampStart != null">
+            AND create_time &gt;= #{timeStampStart}
         </if>
-        <if test="timeStampEnd != null and timeStampEnd != ''" >
-        	AND create_time &lt;= #{timeStampEnd}
+        <if test="timeStampEnd != null">
+            AND create_time &lt;= #{timeStampEnd}
         </if>
         <if test="rule != null and rule != ''">
             ORDER BY ${rule}
@@ -142,8 +143,8 @@
             <if test="blockFlag != null and blockFlag != ''">
                 block_flag = #{blockFlag},
             </if>
-            <if test="price != null" >
-            	order_price = #{price}
+            <if test="price != null">
+                order_price = #{price}
             </if>
         </set>
         WHERE order_id = #{orderId}
