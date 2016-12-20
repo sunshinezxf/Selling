@@ -140,6 +140,10 @@
                 first_inactive();
             }
         });
+
+        $('.ui.radio.checkbox')
+                .checkbox()
+        ;
 	});
 
 	$("#next_btn").click(function(){
@@ -159,6 +163,58 @@
         $("#create_question").removeClass("active");
         $("#create_question").addClass("disabled");
     });
+
+    $("#add_question").click(function(){
+        var num=$("#question_form").find(".ui.dividing.header").length;
+        var h4=$("<h4></h4>");
+        h4.addClass("ui dividing header");
+        var rank=$("<span></span>");
+        rank.addClass("rank");
+        rank.html(num+1);
+        h4.html("问题");
+        h4.append(rank);
+        $("#question_form").append(h4);
+        var inline_fields=$("<div></div>");
+        inline_fields.addClass("inline fields");
+        var type="<label for='type'>问题类型：</label><div class='field'><div class='ui radio checkbox'><input type='radio' checked=''><label>单选</label></div></div><div class='field'><div class='ui radio checkbox'><input type='radio'><label>多选</label></div></div>";
+        inline_fields.append(type);
+        inline_fields.find("input[type='radio']").attr("name",num+1);
+        $("#question_form").append(inline_fields);
+        var content="<div class='inline fields'><label for='content'>问题内容：</label><div class='twelve wide field'><input type='text' placeholder='请输入问题内容' required='required' autocomplete='off' /></div></div>";
+        $("#question_form").append(content);
+        var answer="<div class='inline fields'><label for='answer'>问题选项：</label><div class='twelve wide field'><input type='text' placeholder='请输入选项内容' required='required' autocomplete='off' /></div><div class='one wide field'><button class='ui icon basic button' onclick='addAnswer(this)'><i class='icon plus'></i></button></div></div>";
+        $("#question_form").append(answer);
+    });
+
+    function addAnswer(obj){
+        var delete_btn=document.createElement("button");
+        delete_btn.setAttribute("class","ui icon basic button");
+        delete_btn.setAttribute("onclick","deleteAnswer(this)");
+        var delete_div="<i class=\"icon minus\"></i>";
+        delete_btn.innerHTML+=delete_div;
+        var new_answer=document.createElement("div");
+        new_answer.setAttribute("class","inline fields");
+        var new_div="<label for='answer'>问题选项：</label><div class='twelve wide field'><input type='text' placeholder='请输入选项内容' required='required' autocomplete='off' /></div><div class='one wide field'><button class='ui icon basic button' onclick='addAnswer(this)'><i class='icon plus'></i></button></div>";
+        new_answer.innerHTML+=new_div;
+        var field=obj.parentNode;
+        obj.remove();
+        field.appendChild(delete_btn);
+        var inline=field.parentNode;
+        insertAfter(new_answer,inline);
+    }
+
+    function deleteAnswer(obj){
+        obj.parentNode.parentNode.remove();
+    }
+
+    function insertAfter(newElement,targetElement){
+        var parent=targetElement.parentNode;
+        if(parent.lastchild==targetElement){
+            parent.appendChild(newElement);
+        }else{
+            parent.insertBefore(newElement,targetElement.nextSibling);
+        }
+    }
 
     function event_validate() {
         var title=$("#event_title").val();
