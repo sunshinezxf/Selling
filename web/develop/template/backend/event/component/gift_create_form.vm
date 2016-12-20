@@ -245,6 +245,9 @@
     }
     
     $("#publish_btn").click(function(){
-         
+        var title=$("#event_title").val();
+        var nickname=$("#event_nickname").val();
+        var startTime = $('#start_time').val();
+        var endTime = $('#end_time').val();
     });
 </script>
