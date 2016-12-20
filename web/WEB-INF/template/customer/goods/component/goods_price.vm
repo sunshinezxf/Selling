@@ -19,9 +19,9 @@
                 <p>购买数量</p>
 
                 <div class="number_choose">
-                    <button id="min_btn" class="min">—</button>
+                    <button id="min_btn" class="min num_btn">—</button>
                     <input id="goods_num" class="num_box" name="" type="text" value="1" readonly="true"/>
-                    <button id="add_btn" class="add">+</button>
+                    <button id="add_btn" class="add num_btn">+</button>
                 </div>
             </div>
             <button id="purchase" class="btn_area">立即购买</button>

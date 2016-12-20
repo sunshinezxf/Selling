@@ -497,10 +497,7 @@ public class OrderServiceImpl implements OrderService {
 
         //处理客户订单
         condition.clear();
-        List<Integer> statusCustomer = new ArrayList<>();
-        statusCustomer.add(1);
-        statusCustomer.add(2);
-        statusCustomer.add(3);
+        List<Integer> statusCustomer = new ArrayList<>(Arrays.asList(OrderItemStatus.PAYED.getCode(), OrderItemStatus.SHIPPED.getCode(), OrderItemStatus.RECEIVED.getCode()));
         condition.put("status", statusCustomer);
         condition.put("timeStampStart", tsStart);//这两个timeStamp需要配合order.xml->query测试
         condition.put("timeStampEnd", tsEnd);

@@ -144,6 +144,7 @@
                 /event/create = roles["admin, express"]
                 /event/overview = roles["admin, express"]
                 /event/promotion/current = anon
+                /event/promotion/*/config/* = anon
                 /event/* = roles["admin, express"]
                 /event/*/ = anon
 

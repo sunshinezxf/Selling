@@ -160,7 +160,7 @@
     <bean id="promotionTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="promotionDetail"></property>
         <property name="cronExpression">
-            <value>0 35/5 * * * ?</value>
+            <value>0 15/5 * * * ?</value>
         </property>
     </bean>
 

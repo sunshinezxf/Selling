@@ -263,7 +263,7 @@
         
 		var promotionConfigList=new Array();
 		var promotionConfig;
-		var flag=0;
+		var flag=1;
 		for(var i=0;i<goodsList.length;i++){
 			var goods=goodsList[i];
 			var id=goods.goodsId;
@@ -271,17 +271,20 @@
 			var full=$("#"+id).find("#full").val();
 			var give=$("#"+id).find("#give").val();
 			var gift=$("#"+id).find("#gift").val();
-			if(gift==""){
+            if(gift!=""&&(full!=0||give!=0||criterion!=0)){
+                flag=0;
+                promotionConfig=new Object();
+                promotionConfig.buyGoods=id;
+                promotionConfig.giveGoods=gift;
+                promotionConfig.full=full;
+                promotionConfig.give=give;
+                promotionConfig.criterion=criterion;
+                promotionConfigList.push(promotionConfig);
+            }
+			if(gift==""&&(full!=0||give!=0||criterion!=0)){
 				flag=1;
 				break;
 			}
-			promotionConfig=new Object();
-			promotionConfig.buyGoods=id;
-			promotionConfig.giveGoods=gift;
-			promotionConfig.full=full;
-			promotionConfig.give=give;
-			promotionConfig.criterion=criterion;
-			promotionConfigList.push(promotionConfig);
 		}
 		if(flag==1){
 			$("#info").html("赠送商品没有配置！");
