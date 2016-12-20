@@ -1,7 +1,15 @@
 package selling.sunshine.controller;
 
+import common.sunshine.model.selling.admin.Admin;
+import common.sunshine.model.selling.agent.lite.Agent;
+import common.sunshine.model.selling.goods.Goods4Agent;
+import common.sunshine.model.selling.user.User;
+import common.sunshine.pagination.DataTablePage;
+import common.sunshine.pagination.DataTableParam;
+import common.sunshine.utils.ResponseCode;
+import common.sunshine.utils.ResultData;
+import common.sunshine.utils.SortRule;
 import org.apache.shiro.SecurityUtils;
-
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,25 +21,16 @@ import org.springframework.web.servlet.ModelAndView;
 import selling.sunshine.form.gift.ApplyConfigForm;
 import selling.sunshine.form.gift.ApplyForm;
 import selling.sunshine.form.gift.ConfigForm;
-import common.sunshine.model.selling.admin.Admin;
 import selling.sunshine.model.BackOperationLog;
-import common.sunshine.model.selling.user.User;
 import selling.sunshine.model.gift.GiftApply;
-import selling.sunshine.model.gift.support.GiftApplyStatus;
 import selling.sunshine.model.gift.GiftConfig;
-import common.sunshine.model.selling.goods.Goods4Agent;
-import common.sunshine.model.selling.agent.lite.Agent;
-import common.sunshine.pagination.DataTablePage;
-import common.sunshine.pagination.DataTableParam;
+import selling.sunshine.model.gift.support.GiftApplyStatus;
 import selling.sunshine.service.AgentService;
 import selling.sunshine.service.CommodityService;
 import selling.sunshine.service.LogService;
 import selling.sunshine.service.ToolService;
 import selling.sunshine.utils.Prompt;
 import selling.sunshine.utils.PromptCode;
-import common.sunshine.utils.ResponseCode;
-import common.sunshine.utils.ResultData;
-import common.sunshine.utils.SortRule;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -54,20 +53,20 @@ public class GiftController {
 
     @Autowired
     private LogService logService;
-    
+
     @RequestMapping(method = RequestMethod.GET, value = "/config/{agentId}")
     public ModelAndView giftConfig(@PathVariable("agentId") String agentId) {
         ModelAndView view = new ModelAndView();
         Map<String, Object> condition = new HashMap<>();
         condition.put("agentId", agentId);
-        ResultData fetchData=agentService.fetchAgent(condition);
-        if (fetchData.getResponseCode()==ResponseCode.RESPONSE_OK) {
-        	common.sunshine.model.selling.agent.Agent agent = ((List<common.sunshine.model.selling.agent.Agent>) fetchData.getData()).get(0);
-             view.addObject("agentId", agentId);
-             view.addObject("agentName", agent.getName());
-             view.setViewName("/backend/agent/gift/config");
-             return view;
-		}
+        ResultData fetchData = agentService.fetchAgent(condition);
+        if (fetchData.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            common.sunshine.model.selling.agent.Agent agent = ((List<common.sunshine.model.selling.agent.Agent>) fetchData.getData()).get(0);
+            view.addObject("agentId", agentId);
+            view.addObject("agentName", agent.getName());
+            view.setViewName("/backend/agent/gift/config");
+            return view;
+        }
         view.setViewName("/backend/agent/gift/config");
         return view;
     }
@@ -90,7 +89,7 @@ public class GiftController {
     public ModelAndView giftConfig(@Valid ConfigForm form, BindingResult result, HttpServletRequest request) {
         ModelAndView view = new ModelAndView();
         if (result.hasErrors()) {
-            view.setViewName("redirect:/gift/config/"+form.getAgentId());
+            view.setViewName("redirect:/gift/config/" + form.getAgentId());
             return view;
         }
         Map<String, Object> condition = new HashMap<>();
@@ -105,7 +104,7 @@ public class GiftController {
             GiftConfig giftConfig = new GiftConfig(agent, goods, Integer.parseInt(form.getAmount()));
             response = agentService.createAgentGift(giftConfig);
             if (response.getResponseCode() != ResponseCode.RESPONSE_OK) {
-                view.setViewName("redirect:/gift/config/"+form.getAgentId());
+                view.setViewName("redirect:/gift/config/" + form.getAgentId());
                 return view;
             }
         } else if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
@@ -125,14 +124,14 @@ public class GiftController {
         common.sunshine.model.selling.agent.Agent agent = ((List<common.sunshine.model.selling.agent.Agent>) agentService.fetchAgent(condition).getData()).get(0);
         condition.clear();
         condition.put("goodsId", form.getGoodsId());
-        response=commodityService.fetchGoods4Agent(condition);
+        response = commodityService.fetchGoods4Agent(condition);
         if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
-        	Goods4Agent goods = ((List<Goods4Agent>)response.getData()).get(0);
-        	BackOperationLog backOperationLog = new BackOperationLog(
-                    admin.getUsername(), toolService.getIP(request), "管理员" + admin.getUsername() + "修改了代理商" + agent.getName() + "的赠送配置,将商品"+goods.getName()+"的赠送数量改为"+form.getAmount()+"盒");
+            Goods4Agent goods = ((List<Goods4Agent>) response.getData()).get(0);
+            BackOperationLog backOperationLog = new BackOperationLog(
+                    admin.getUsername(), toolService.getIP(request), "管理员" + admin.getUsername() + "修改了代理商" + agent.getName() + "的赠送配置,将商品" + goods.getName() + "的赠送数量改为" + form.getAmount() + "盒");
             logService.createbackOperationLog(backOperationLog);
-		}
-        view.setViewName("redirect:/gift/config/"+form.getAgentId());
+        }
+        view.setViewName("redirect:/gift/config/" + form.getAgentId());
         return view;
     }
 
@@ -140,7 +139,6 @@ public class GiftController {
     public ModelAndView apply() {
         ModelAndView view = new ModelAndView();
         Map<String, Object> condition = new HashMap<>();
-        condition.put("blockFlag", false);
         ResultData response = commodityService.fetchGoods4Agent(condition);
         if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
             List<Goods4Agent> list = (List<Goods4Agent>) response.getData();
@@ -167,7 +165,7 @@ public class GiftController {
         }
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
-        
+
         Map<String, Object> condition = new HashMap<String, Object>();
         condition.clear();
         condition.put("agentId", user.getAgent().getAgentId());
@@ -175,14 +173,14 @@ public class GiftController {
         orderBy.add(new SortRule("create_time", "desc"));
         condition.put("sort", orderBy);
         ResultData fetchApplyResponse = agentService.fetchGiftApply(condition);
-        if(fetchApplyResponse.getResponseCode() == ResponseCode.RESPONSE_OK){
-        	GiftApply apply = ((List<GiftApply>)fetchApplyResponse.getData()).get(0);
-        	if(apply.getStatus() == GiftApplyStatus.APPLYED){
-        		Prompt prompt = new Prompt(PromptCode.DANGER, "操作提示", "您有审核中的赠送申请，请先等待审核", "/agent/gift");
+        if (fetchApplyResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            GiftApply apply = ((List<GiftApply>) fetchApplyResponse.getData()).get(0);
+            if (apply.getStatus() == GiftApplyStatus.APPLYED) {
+                Prompt prompt = new Prompt(PromptCode.DANGER, "操作提示", "您有审核中的赠送申请，请先等待审核", "/agent/gift");
                 view.addObject("prompt", prompt);
                 view.setViewName("/agent/prompt");
                 return view;
-        	}
+            }
         }
         Agent agent = user.getAgent();
         Goods4Agent goods = new Goods4Agent();
@@ -205,15 +203,15 @@ public class GiftController {
         ModelAndView view = new ModelAndView();
         view.setViewName("/backend/agent/gift/check");
         if (type.equals("total")) {
-			view.addObject("type", "total");
-		}else {
-			view.addObject("type", type);
-		}
+            view.addObject("type", "total");
+        } else {
+            view.addObject("type", type);
+        }
         return view;
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/check/{type}")
-    public DataTablePage<GiftApply> check(DataTableParam param,@PathVariable("type") String type) {
+    public DataTablePage<GiftApply> check(DataTableParam param, @PathVariable("type") String type) {
         DataTablePage<GiftApply> result = new DataTablePage<>();
         if (StringUtils.isEmpty(param)) {
             return result;
@@ -226,8 +224,8 @@ public class GiftController {
         orderBy.add(new SortRule("create_time", "desc"));
         condition.put("sort", orderBy);
         if (!type.equals("total")) {
-        	condition.put("agentId", type);
-		}
+            condition.put("agentId", type);
+        }
         ResultData fetchResponse = agentService.fetchGiftApply(condition, param);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             result = (DataTablePage<GiftApply>) fetchResponse.getData();
@@ -276,17 +274,17 @@ public class GiftController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/apply/handle/{type}")
-    public ModelAndView handleApply(@Valid ApplyConfigForm form,@PathVariable("type") String type, BindingResult result) {
+    public ModelAndView handleApply(@Valid ApplyConfigForm form, @PathVariable("type") String type, BindingResult result) {
         ModelAndView view = new ModelAndView();
         if (result.hasErrors()) {
-            view.setViewName("redirect:/gift/check/"+type);
+            view.setViewName("redirect:/gift/check/" + type);
             return view;
         }
         Map<String, Object> condition = new HashMap<>();
         condition.put("applyId", form.getApplyId());
         ResultData response = agentService.fetchGiftApply(condition);
         if (response.getResponseCode() != ResponseCode.RESPONSE_OK) {
-            view.setViewName("redirect:/gift/check/"+type);
+            view.setViewName("redirect:/gift/check/" + type);
             return view;
         }
         GiftApply apply = ((List<GiftApply>) response.getData()).get(0);
@@ -308,7 +306,7 @@ public class GiftController {
         }
         apply.setStatus(GiftApplyStatus.PROCESSED);
         agentService.updateGiftApply(apply);
-        view.setViewName("redirect:/gift/check/"+type);
+        view.setViewName("redirect:/gift/check/" + type);
         return view;
     }
 }
