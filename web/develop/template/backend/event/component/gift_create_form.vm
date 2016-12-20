@@ -157,7 +157,7 @@
 
     $("#last_btn").click(function(){
         $(".question_step").hide();
-        $(".event_stepe").show();
+        $(".event_step").show();
         $("#create_event").removeClass("completed");
         $("#create_event").addClass("active");
         $("#create_question").removeClass("active");

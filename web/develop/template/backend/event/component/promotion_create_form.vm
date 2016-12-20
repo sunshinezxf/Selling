@@ -99,7 +99,7 @@
 							<td>        
 							   <select id="gift" class="ui search dropdown">
                                   <option value="">请输入赠送商品名</option>
-                                  #foreach( $elem in ${giveGoodsList})
+                                  #foreach( $elem in ${goodsList})
                                   <option value="$elem.goodsId">$elem.name</option>
 				                  #end
                                </select>
@@ -214,7 +214,7 @@
 
 	$("#last_btn").click(function() {
 		$(".goods_step").hide();
-		$(".event_stepe").show();
+		$(".event_step").show();
 		$("#create_event").removeClass("completed");
 		$("#create_event").addClass("active");
 		$("#goods_settings").removeClass("active");
@@ -263,7 +263,7 @@
         
 		var promotionConfigList=new Array();
 		var promotionConfig;
-		var flag=1;
+		var flag=0;
 		for(var i=0;i<goodsList.length;i++){
 			var goods=goodsList[i];
 			var id=goods.goodsId;
@@ -271,20 +271,17 @@
 			var full=$("#"+id).find("#full").val();
 			var give=$("#"+id).find("#give").val();
 			var gift=$("#"+id).find("#gift").val();
-            if(gift!=""&&(full!=0||give!=0||criterion!=0)){
-                flag=0;
-                promotionConfig=new Object();
-                promotionConfig.buyGoods=id;
-                promotionConfig.giveGoods=gift;
-                promotionConfig.full=full;
-                promotionConfig.give=give;
-                promotionConfig.criterion=criterion;
-                promotionConfigList.push(promotionConfig);
-            }
-			if(gift==""&&(full!=0||give!=0||criterion!=0)){
+			if(gift==""){
 				flag=1;
 				break;
 			}
+			promotionConfig=new Object();
+			promotionConfig.buyGoods=id;
+			promotionConfig.giveGoods=gift;
+			promotionConfig.full=full;
+			promotionConfig.give=give;
+			promotionConfig.criterion=criterion;
+			promotionConfigList.push(promotionConfig);
 		}
 		if(flag==1){
 			$("#info").html("赠送商品没有配置！");
