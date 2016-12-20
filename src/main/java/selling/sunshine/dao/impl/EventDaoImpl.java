@@ -37,15 +37,17 @@ public class EventDaoImpl extends BaseDao implements EventDao {
                 event.setEventId(IDGenerator.generate("GEV"));
                 sqlSession.insert("selling.event.insertGiftEvent", event);
                 List<EventQuestion> questions = event.getQuestions();
+                event.setQuestions(null);
                 for (EventQuestion question : questions) {
-
+                    question.setEvent(event);
                     question.setQuestionId(IDGenerator.generate("EQN"));
                     sqlSession.insert("selling.event.question.insert", question);
                     List<QuestionOption> options = question.getOptions();
+                    question.setOptions(null);
                     for (QuestionOption option : options) {
                         EventQuestion temp = new EventQuestion();
                         temp.setQuestionId(question.getQuestionId());
-                        option.setQuestion(temp);
+                        option.setQuestion(question);
                         option.setOptionId(IDGenerator.generate("OPT"));
                         sqlSession.insert("selling.event.question.option.insert", option);
                     }

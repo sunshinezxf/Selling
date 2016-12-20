@@ -80,7 +80,22 @@
         </div>
 	</div>
 </div>
+<div class="ui modal" id="dialog_modal">
+    <i class="close icon"></i>
+    <div class="header">
+        提示
+    </div>
+    <div class="image content">
+        <div class="description" id="info">
+
+        </div>
+    </div>
+    <div class="actions">
+        <div class="ui button" id="dialog_confirm">确定</div>
+    </div>
+</div>
 <script>
+    $('#dialog_modal').modal('hide');
     var starttime = new Date();
     var start_flatpickr, end_flatpickr;
 
@@ -253,6 +268,10 @@
         }
         return true;
     }
+
+    $("#dialog_confirm").on('click',function() {
+        $('#dialog_modal').modal('hide');
+    });
     
     $("#publish_btn").click(function(){
         var title=$("#event_title").val();
@@ -274,5 +293,22 @@
             question.questionOptionList=questionOptionList;
             questionList.push(question);
         }
+        var data = {"giftEventTitle":title, "giftEventNickname": nickname,"startTime":startTime,"endTime":endTime,"questionList":questionList};
+        $.ajax({
+            type: "POST",
+            url: "${path.concat('/event/gift/create')}",
+            data: JSON.stringify(data),
+            processData: false,
+            contentType: "application/json",
+            success: function (data) {
+                if(data.responseCode=="RESPONSE_ERROR"){
+                    $("#info").html("当前已有正在进行的活动，只有当前正在进行的活动结束之后才能创建新活动！");
+                    $('#dialog_modal').modal('show');
+                }else{
+                    window.location.href="${path.concat('/event/overview')}";
+                }
+            }
+
+        });
     });
 </script>
