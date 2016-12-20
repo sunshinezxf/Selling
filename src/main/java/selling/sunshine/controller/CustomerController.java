@@ -9,8 +9,10 @@ import common.sunshine.model.selling.customer.CustomerAddress;
 import common.sunshine.model.selling.customer.CustomerPhone;
 import common.sunshine.model.selling.goods.Goods4Customer;
 import common.sunshine.model.selling.order.CustomerOrder;
+import common.sunshine.model.selling.order.EventOrder;
 import common.sunshine.model.selling.order.Order;
 import common.sunshine.model.selling.order.OrderItem;
+import common.sunshine.model.selling.order.support.OrderItemStatus;
 import common.sunshine.model.selling.order.support.OrderType;
 import common.sunshine.model.selling.user.User;
 import common.sunshine.pagination.DataTablePage;
@@ -59,6 +61,9 @@ public class CustomerController {
 
     @Autowired
     private AgentKPIService agentKPIService;
+
+    @Autowired
+    private EventService eventService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/overview/{agentId}")
     public ModelAndView overview(@PathVariable String agentId) {
@@ -574,9 +579,9 @@ public class CustomerController {
         condition.put("phone", phone);
         condition.put("blockFlag", false);
         List<Integer> status = new ArrayList<>();
-        status.add(1);
-        status.add(2);
-        status.add(3);
+        status.add(OrderItemStatus.PAYED.getCode());
+        status.add(OrderItemStatus.SHIPPED.getCode());
+        status.add(OrderItemStatus.RECEIVED.getCode());
         condition.put("statusList", status);
         ResultData fetchResponse = orderService.fetchOrderItem(condition);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
@@ -601,15 +606,31 @@ public class CustomerController {
         status.clear();
         condition.put("receiverPhone", phone);
         condition.put("blockFlag", false);
-        status.add(1);
-        status.add(2);
-        status.add(3);
+        status.add(OrderItemStatus.PAYED.getCode());
+        status.add(OrderItemStatus.SHIPPED.getCode());
+        status.add(OrderItemStatus.RECEIVED.getCode());
         condition.put("status", status);
         fetchResponse = orderService.fetchCustomerOrder(condition);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             List<CustomerOrder> list = (List<CustomerOrder>) fetchResponse.getData();
             if (!list.isEmpty()) {
                 view.addObject("orderFromCustomer", list);
+                empty = false;
+            }
+        }
+        condition.clear();
+        status.clear();
+        condition.put("doneePhone", phone);
+        condition.put("blockFlag", false);
+        status.add(OrderItemStatus.PAYED.getCode());
+        status.add(OrderItemStatus.SHIPPED.getCode());
+        status.add(OrderItemStatus.RECEIVED.getCode());
+        condition.put("status", status);
+        fetchResponse=eventService.fetchEventOrder(condition);
+        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            List<EventOrder> list = (List<EventOrder>) fetchResponse.getData();
+            if (!list.isEmpty()) {
+                view.addObject("orderFromEvent", list);
                 empty = false;
             }
         }
