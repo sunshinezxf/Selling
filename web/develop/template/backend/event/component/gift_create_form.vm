@@ -166,24 +166,32 @@
 
     $("#add_question").click(function(){
         var num=$("#question_form").find(".ui.dividing.header").length;
+        var index=num+1;
         var h4=$("<h4></h4>");
         h4.addClass("ui dividing header");
         var rank=$("<span></span>");
-        rank.addClass("rank");
-        rank.html(num+1);
+        rank.html(index);
         h4.html("问题");
         h4.append(rank);
         $("#question_form").append(h4);
-        var inline_fields=$("<div></div>");
-        inline_fields.addClass("inline fields");
-        var type="<label for='type'>问题类型：</label><div class='field'><div class='ui radio checkbox'><input type='radio' checked=''><label>单选</label></div></div><div class='field'><div class='ui radio checkbox'><input type='radio'><label>多选</label></div></div>";
-        inline_fields.append(type);
-        inline_fields.find("input[type='radio']").attr("name",num+1);
-        $("#question_form").append(inline_fields);
-        var content="<div class='inline fields'><label for='content'>问题内容：</label><div class='twelve wide field'><input type='text' placeholder='请输入问题内容' required='required' autocomplete='off' /></div></div>";
-        $("#question_form").append(content);
-        var answer="<div class='inline fields'><label for='answer'>问题选项：</label><div class='twelve wide field'><input type='text' placeholder='请输入选项内容' required='required' autocomplete='off' /></div><div class='one wide field'><button class='ui icon basic button' onclick='addAnswer(this)'><i class='icon plus'></i></button></div></div>";
-        $("#question_form").append(answer);
+        var type_field=$("<div></div>");
+        type_field.addClass("inline fields");
+        var type="<label for='type'>问题类型：</label><div class='field'><div class='ui radio checkbox'><input type='radio' checked='' value='0'><label>单选</label></div></div><div class='field'><div class='ui radio checkbox'><input type='radio' value='1'><label>多选</label></div></div>";
+        type_field.append(type);
+        type_field.find("input[type='radio']").attr("name","type"+index);
+        $("#question_form").append(type_field);
+        var content_field=$("<div></div>");
+        content_field.addClass("inline fields");
+        var content="<label for='content'>问题内容：</label><div class='twelve wide field'><input type='text' placeholder='请输入问题内容' required='required' autocomplete='off' /></div>";
+        content_field.append(content);
+        content_field.find("input[type='text']").attr("name","content"+index);
+        $("#question_form").append(content_field);
+        var answer_field=$("<div></div>");
+        answer_field.addClass("inline fields");
+        answer_field.attr("title",index);
+        var answer="<label for='answer'>问题选项：</label><div class='twelve wide field'><input type='text' placeholder='请输入选项内容' required='required' autocomplete='off' /></div><div class='one wide field'><button class='ui icon basic button' onclick='addAnswer(this)'><i class='icon plus'></i></button></div>";
+        answer_field.append(answer);
+        $("#question_form").append(answer_field);
     });
 
     function addAnswer(obj){
@@ -200,6 +208,8 @@
         obj.remove();
         field.appendChild(delete_btn);
         var inline=field.parentNode;
+        var title=inline.getAttribute("title");
+        new_answer.setAttribute("title",title);
         insertAfter(new_answer,inline);
     }
 
@@ -249,5 +259,20 @@
         var nickname=$("#event_nickname").val();
         var startTime = $('#start_time').val();
         var endTime = $('#end_time').val();
+        var questionList=new Array();
+        var questionNum=$("#question_form").find(".ui.dividing.header").length;
+        for(var i=1;i<=questionNum;i++){
+            var question={};
+            question.rank=i;
+            question.type=$("input[name='type"+i+"']:checked").val();
+            question.content=$("input[name='content"+i+"']").val();;
+            var questionOptionList=new Array();
+            $("div[title='"+i+"']").each(function(){
+                var option=$(this).find("input[type='text']").val();
+                questionOptionList.push(option);
+            });
+            question.questionOptionList=questionOptionList;
+            questionList.push(question);
+        }
     });
 </script>
