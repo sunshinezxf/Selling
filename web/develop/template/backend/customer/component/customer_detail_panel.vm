@@ -22,21 +22,28 @@
                 <div class="ui divided items">
                     <div id="personal_info" class="item">
                         <div class="content">
-                            <div class="ui header">
-                                #if(${customer.gender}=="M")
-                                    <i class="blue male icon"></i>
-                                #else
-                                    <i class="pink female icon"></i>
-                                #end
-                                <div class="content">${customer.name}
-                                    <div id="agent_div" class="ui blue tag label">
-                                        代理商
-                                        #if(${customer.agent})
-                                            <div id="agent" class="detail">${customer.agent.name}</div>
-                                        #else
-                                            <div id="agent" class="detail">无</div>
-                                        #end
+                            <div class="floated_div">
+                                <div class="ui left floated header">
+                                    #if(${customer.gender}=="M")
+                                        <i class="blue male icon"></i>
+                                    #else
+                                        <i class="pink female icon"></i>
+                                    #end
+                                    <div class="content">${customer.name}
+                                        <div id="agent_div" class="ui blue tag label">
+                                            代理商
+                                            #if(${customer.agent})
+                                                <div id="agent" class="detail">${customer.agent.name}</div>
+                                            #else
+                                                <div id="agent" class="detail">无</div>
+                                            #end
+                                        </div>
                                     </div>
+                                </div>
+                                <div class="ui right floated header">
+                                    #if(${customer.transformed}==1)
+                                        <div class="ui label">已变成代理商</div>
+                                    #end
                                 </div>
                             </div>
                             <div class="ui very relax list">
