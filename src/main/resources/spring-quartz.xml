@@ -20,6 +20,8 @@
 
     <bean id="promotionSchedule" class="selling.sunshine.schedule.PromotionSchedule"></bean>
 
+    <bean id="customerSchedule" class="selling.sunshine.schedule.CustomerSchedule"></bean>
+
     <bean id="poolDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <property name="targetObject" ref="poolSchedule"></property>
         <property name="targetMethod" value="schedule"></property>
@@ -83,6 +85,12 @@
 
     <bean id="promotionDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <property name="targetObject" ref="promotionSchedule"></property>
+        <property name="targetMethod" value="schedule"></property>
+        <property name="concurrent" value="false"></property>
+    </bean>
+
+    <bean id="customerDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="customerSchedule"></property>
         <property name="targetMethod" value="schedule"></property>
         <property name="concurrent" value="false"></property>
     </bean>
@@ -164,6 +172,14 @@
         </property>
     </bean>
 
+    <bean id="customerTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="customerDetail"></property>
+        <property name="cronExpression">
+            <value>0 25 16 * * ?</value>
+        </property>
+    </bean>
+
+
     <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="triggers">
             <list>
@@ -178,6 +194,7 @@
                 <ref bean="customerAddressUpdateTrigger"></ref>
                 <ref bean="agentKPIUpdateTrigger"></ref>
                 <ref bean="promotionTrigger"></ref>
+                <ref bean="customerTrigger"></ref>
             </list>
         </property>
     </bean>

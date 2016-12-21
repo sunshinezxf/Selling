@@ -28,6 +28,7 @@
         <result property="customerId" column="customer_id"></result>
         <result property="name" column="customer_name"></result>
         <result property="transformed" column="transformed"></result>
+        <result property="wechat" column="wechat"></result>
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
         <association property="address" column="customerId = customer_id" select="addressQuery"></association>
@@ -36,7 +37,7 @@
     </resultMap>
 
     <select id="query" parameterType="java.util.Map" resultMap="customerVo">
-        SELECT customer_id, customer_name, agent_id, block_flag, create_time,transformed
+        SELECT customer_id, customer_name, agent_id, block_flag, create_time,transformed,wechat
         FROM customer
         WHERE 1 = 1
         <if test="customerId != null">
@@ -67,11 +68,11 @@
     </select>
 
     <insert id="insert" parameterType="common.sunshine.model.selling.customer.Customer" useGeneratedKeys="false">
-        INSERT INTO customer(customer_id, customer_name, agent_id, block_flag, create_time,transformed)
-        VALUES (#{customerId}, #{name}, #{agent.agentId}, #{blockFlag}, #{createAt},#{transformed})
+        INSERT INTO customer(customer_id, customer_name, agent_id, block_flag, create_time,transformed,wechat)
+        VALUES (#{customerId}, #{name}, #{agent.agentId}, #{blockFlag}, #{createAt},#{transformed},#{wechat})
     </insert>
 
-    <update id="update" parameterType="common.sunshine.model.selling.customer.Customer">>
+    <update id="update" parameterType="common.sunshine.model.selling.customer.Customer">
         UPDATE customer
         <set>
             transformed = #{transformed}

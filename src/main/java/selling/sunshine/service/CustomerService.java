@@ -26,4 +26,6 @@ public interface CustomerService {
     ResultData fetchCustomerAddress(Map<String, Object> condition);
     
     ResultData updateCustomerAddress(CustomerAddress customerAddress);
+
+    ResultData customerTransform(Map<String, Object> condition);
 }

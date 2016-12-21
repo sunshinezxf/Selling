@@ -1,10 +1,12 @@
 package selling.sunshine.service.impl;
 
+import common.sunshine.model.selling.agent.Agent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import selling.sunshine.dao.AgentDao;
 import selling.sunshine.dao.CustomerDao;
 import common.sunshine.model.selling.customer.Customer;
 import common.sunshine.model.selling.customer.CustomerAddress;
@@ -26,6 +28,9 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Autowired
     private CustomerDao customerDao;
+
+    @Autowired
+    private  AgentDao agentDao;
 
     @Override
     public ResultData createCustomer(Customer customer) {
@@ -136,6 +141,25 @@ public class CustomerServiceImpl implements CustomerService {
 		}
 		return result;
 	}
+
+    @Override
+    public ResultData customerTransform(Map<String, Object> condition) {
+        ResultData result = new ResultData();
+        result=customerDao.queryCustomer(condition);
+        if (result.getResponseCode()==ResponseCode.RESPONSE_OK){
+            List<Customer> customerList=(List<Customer>)result.getData();
+            for (Customer customer:customerList){
+                condition.put("phone",customer.getPhone().getPhone());
+                result= agentDao.queryAgent(condition);
+                if (((List< Agent>)result.getData()).size()!=0){
+                    customer.setTransformed(true);
+                    customerDao.updateCustomer(customer);
+                }
+            }
+
+        }
+        return result;
+    }
 
 
 }

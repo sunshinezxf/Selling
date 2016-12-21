@@ -56,13 +56,20 @@
                 })
             },
             columns: [
+                {
+                    title: "姓名", "mRender": function (data, type, full) {
+                    var url = "${path.concat('/customer/detail/')}${agentId}" + "/"+full.customerId;
+                    var operation = "<a href='" + url + "'>" + full.name + "</a>";
+                    return operation;
+                }
+                },
                 {title: "姓名", "mData": "name"},
                 {title: "联系方式", "mData": "phone.phone"},
                 {title: "当前地址", "mData": "address.address"},
                 {
                     title: "代理商", "mRender": function (data, type, full) {
                     var url = "${path.concat('/agent/detail/')}" + full.agent.agentId;
-                    var operation = "<a id='" + full.agentId + "' href='" + url + "'>" + full.agent.name + "</a>";
+                    var operation = "<a href='" + url + "'>" + full.agent.name + "</a>";
                     return operation;
                 }
                 }

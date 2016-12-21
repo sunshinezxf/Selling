@@ -95,31 +95,48 @@ public class CustomerController {
         return result;
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/detail/{customerId}")
+    @RequestMapping(method = RequestMethod.GET, value = "/detail/{agentId}/{customerId}")
     @ResponseBody
-    public ResultData detail(@PathVariable String customerId) {
-        ResultData resultData = new ResultData();
-        Map<String, Object> dataMap = new HashMap<>();
-
+    public ModelAndView detail(@PathVariable("agentId") String agentId,@PathVariable("customerId") String customerId) {
+        ModelAndView view=new ModelAndView();
         Map<String, Object> condition = new HashMap<>();
         condition.put("customerId", customerId);
-        Customer customer = ((List<Customer>) customerService.fetchCustomer(condition).getData()).get(0);
-        Map<String, Object> agentCondition = new HashMap<>();
-        agentCondition.put("agentId", customer.getAgent().getAgentId());
-        Agent agent = ((List<Agent>) agentService.fetchAgent(agentCondition).getData()).get(0);
-        Map<String, Object> orderItemCondition = new HashMap<>();
-        orderItemCondition.put("customerId", customerId);
-        List<OrderItem> orderItemList = (List<OrderItem>) orderService.fetchOrderItem(orderItemCondition).getData();
-        List<CustomerAddress> addressList = (List<CustomerAddress>) customerService.fetchCustomerAddress(condition).getData();
-        List<CustomerPhone> phoneList = (List<CustomerPhone>) customerService.fetchCustomerPhone(condition).getData();
+        ResultData fetchResponse=new ResultData();
+        fetchResponse=customerService.fetchCustomer(condition);
+        if (fetchResponse.getResponseCode()!=ResponseCode.RESPONSE_OK){
+            view.setViewName("redirect:/customer/overview/"+agentId);
+            return  view;
+        }
+        Customer customer = ((List<Customer>) fetchResponse.getData()).get(0);
+        view.addObject("customer",customer);
+        condition.clear();
+        condition.put("agentId", customer.getAgent().getAgentId());
+        fetchResponse=agentService.fetchAgent(condition);
+        if (fetchResponse.getResponseCode()!=ResponseCode.RESPONSE_OK){
+            view.setViewName("redirect:/customer/overview/"+agentId);
+            return  view;
+        }
+        Agent agent = ((List<Agent>)fetchResponse.getData()).get(0);
+        view.addObject("agent",agent);
+        condition.clear();
+        condition.put("customerId", customerId);
+        fetchResponse=customerService.fetchCustomerAddress(condition);
+        if (fetchResponse.getResponseCode()!=ResponseCode.RESPONSE_OK){
+            view.setViewName("redirect:/customer/overview/"+agentId);
+            return  view;
+        }
+//        List<CustomerAddress> addressList = (List<CustomerAddress>) fetchResponse.getData();
+//        view.addObject("addressList",addressList);
+//        fetchResponse=customerService.fetchCustomerPhone(condition);
+//        if (fetchResponse.getResponseCode()!=ResponseCode.RESPONSE_OK){
+//            view.setViewName("redirect:/customer/overview/"+agentId);
+//            return  view;
+//        }
+//        List<CustomerPhone> phoneList = (List<CustomerPhone>) fetchResponse.getData();
+//        view.addObject("phoneList",phoneList);
 
-        dataMap.put("customer", customer);
-        dataMap.put("agent", agent);
-        dataMap.put("orderItemList", orderItemList);
-        dataMap.put("addressList", addressList);
-        dataMap.put("phoneList", phoneList);
-        resultData.setData(dataMap);
-        return resultData;
+        view.setViewName("/backend/customer/detail");
+        return view;
     }
 
     @ResponseBody
