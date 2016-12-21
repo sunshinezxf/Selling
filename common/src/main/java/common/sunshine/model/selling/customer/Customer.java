@@ -12,6 +12,7 @@ public class Customer extends Entity {
     private CustomerPhone phone;
     private CustomerAddress address;
     private Agent agent;
+    private boolean transformed;
 
     public Customer() {
         super();
@@ -31,6 +32,23 @@ public class Customer extends Entity {
     public Customer(String name, String address, String phone, Agent agent) {
         this(name, address, phone);
         this.agent = agent;
+    }
+
+    public Customer(String customerId, String name, CustomerPhone phone, CustomerAddress address, Agent agent, boolean transformed) {
+        this.customerId = customerId;
+        this.name = name;
+        this.phone = phone;
+        this.address = address;
+        this.agent = agent;
+        this.transformed = transformed;
+    }
+
+    public void setTransformed(boolean transformed) {
+        this.transformed = transformed;
+    }
+
+    public boolean isTransformed() {
+        return transformed;
     }
 
     public String getCustomerId() {
