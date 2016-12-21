@@ -95,6 +95,7 @@ public class CustomerDaoImpl extends BaseDao implements CustomerDao {
         ResultData result = new ResultData();
         synchronized (lock) {
             try {
+                sqlSession.update("selling.customer.update", customer);//更新customer表本身
                 Map<String, Object> condition = new HashMap<>();
                 condition.put("customerId", customer.getCustomerId());
                 condition.put("blockFlag", false);

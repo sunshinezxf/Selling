@@ -759,7 +759,7 @@ public class AgentController {
 			view.setViewName("redirect:/agent/register");
 			return view;
 		}
-		try {
+			try {
 			// 验证有没有相同号码的用户注册过
 			Map<String, Object> condition = new HashMap<>();
 			condition.put("phone", form.getPhone());
@@ -793,6 +793,8 @@ public class AgentController {
 					condition.put("customerId", phone.getCustomer().getCustomerId());
 					Customer customer = ((List<Customer>) customerService.fetchCustomer(condition).getData()).get(0);
 					agent.setUpperAgent(customer.getAgent());
+					customer.setTransformed(true);
+					customerService.updateCustomer(customer);
 				}
 			}
 			ResultData createResponse = null;

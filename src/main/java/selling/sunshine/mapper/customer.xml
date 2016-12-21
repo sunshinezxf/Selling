@@ -70,6 +70,14 @@
         INSERT INTO customer(customer_id, customer_name, agent_id, block_flag, create_time,transformed)
         VALUES (#{customerId}, #{name}, #{agent.agentId}, #{blockFlag}, #{createAt},#{transformed})
     </insert>
+
+    <update id="update" parameterType="common.sunshine.model.selling.customer.Customer">>
+        UPDATE customer
+        <set>
+            transformed = #{transformed}
+        </set>
+        WHERE customer_id = #{customerId}
+    </update>
     
     <update id="delete" parameterType="common.sunshine.model.selling.customer.Customer">
     	UPDATE customer
