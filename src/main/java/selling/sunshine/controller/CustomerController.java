@@ -81,8 +81,13 @@ public class CustomerController {
             return result;
         }
         Map<String, Object> condition = new HashMap<String, Object>();
-        condition.put("agentId", agentId);
-        condition.put("blockFlag", false);
+        if (!agentId.equals("total")){
+            condition.put("agentId", agentId);
+            condition.put("blockFlag", false);
+        }
+        List<SortRule> sortRules=new ArrayList<>();
+        sortRules.add(new SortRule("agent_id","asc"));
+        condition.put("sort",sortRules);
         ResultData fetchResponse = customerService.fetchCustomer(condition, param);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             result = (DataTablePage<Customer>) fetchResponse.getData();

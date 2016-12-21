@@ -50,6 +50,13 @@
         <if test="agentId != null and agentId != ''">
             AND agent_id = #{agentId}
         </if>
+        <if test="search !=null and search != ''">
+            AND (customer_name LIKE BINARY #{search}
+                 OR agent_id IN (SELECT agent_id FROM agent WHERE agent_name LIKE BINARY #{search})
+                 OR customer_id IN (SELECT customer_id FROM customer_address WHERE address LIKE BINARY #{search})
+                 OR customer_id IN (SELECT customer_id FROM customer_phone WHERE phone LIKE BINARY #{search})
+                )
+        </if>
         <if test="rule != null and rule != ''">
             ORDER BY ${rule}
         </if>

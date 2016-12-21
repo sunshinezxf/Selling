@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import common.sunshine.dao.BaseDao;
+import org.springframework.util.StringUtils;
 import selling.sunshine.dao.CustomerDao;
 import selling.sunshine.utils.TencentMapAPI;
 import common.sunshine.model.selling.customer.Customer;
@@ -202,6 +203,10 @@ public class CustomerDaoImpl extends BaseDao implements CustomerDao {
         ResultData result = new ResultData();
         DataTablePage<Customer> page = new DataTablePage<>();
         page.setsEcho(param.getsEcho());
+        condition = handle(condition);
+        if (!StringUtils.isEmpty(param.getsSearch())) {
+            condition.put("search", "%"+param.getsSearch()+"%");
+        }
         ResultData total = queryCustomer(condition);
         if (total.getResponseCode() != ResponseCode.RESPONSE_OK) {
             result.setResponseCode(ResponseCode.RESPONSE_ERROR);

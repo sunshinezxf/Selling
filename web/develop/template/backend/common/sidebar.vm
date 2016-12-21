@@ -19,6 +19,15 @@
     #end
     #if($role == "admin" || $role == "express")
         <div class="item">
+            <a class="title"><i class="teal user icon left"></i><i class="dropdown icon"></i>顾客管理</a>
+
+            <div class="content menu">
+                <a id="customer_overview" class="item" href="${path.concat('/customer/overview/total')}">顾客概览</a>
+            </div>
+        </div>
+    #end
+    #if($role == "admin" || $role == "express")
+        <div class="item">
             <a class="title"><i class="teal file text icon left"></i><i class="dropdown icon"></i>订单管理</a>
 
             <div class="content menu">
