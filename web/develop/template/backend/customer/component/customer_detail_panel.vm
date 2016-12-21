@@ -1,0 +1,114 @@
+<div class="ui stackable padded grid" name="customer_overview">
+    <div class="row">
+        <h1 class="ui header">
+            <i class="home icon"></i>
+            <div class="content">
+                客户详情
+                <div class="sub header">
+                    <div class="ui breadcrumb">
+                        <a class="section">顾客管理</a>
+                        <div class="divider">/</div>
+                        <a class="section">客户概览</a>
+                        <div class="divider">/</div>
+                        <a class="active section">客户详情</a>
+                    </div>
+                </div>
+            </div>
+        </h1>
+    </div>
+    <div class="row">
+        <a class="ui primary basic button" href="${path.concat('/customer/overview')}">返回</a>
+    </div>
+    <div class="row">
+        <div class="column">
+            <div class="ui segment">
+                <div class="ui divided items">
+                    <div id="personal_info" class="item">
+                        <div class="content">
+                            <div class="ui header">
+                                #if(${customer.gender}=="M")
+                                    <i class="blue male icon"></i>
+                                #else
+                                    <i class="pink female icon"></i>
+                                #end
+                                <div class="content">${customer.name}
+                                    <div id="agent_div" class="ui blue tag label">
+                                        代理商
+                                        #if(${customer.agent})
+                                            <div id="agent" class="detail">${customer.agent.name}</div>
+                                        #else
+                                            <div id="agent" class="detail">无</div>
+                                        #end
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ui very relax list">
+                                <div class="item">
+                                    <i class="blue mobile icon"></i>${customer.phone}
+                                </div>
+                                <div class="item">
+                                    <i class="green wechat icon"></i><span id="wechat"></span>
+                                </div>
+                                <div class="item">
+                                    <i class="brown home icon"></i>${customer.address}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="content">
+                            <div id="sales_area" class="ui large teal ribbon label">购买情况</div>
+                            <div class="content">
+                                #parse("/backend/common/datetimepicker.vm")
+                            </div>
+                            <div class="description">
+                                //订单列表
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var starttime = "2016-01-01";
+    var endtime = new Date();
+    var start_flatpickr, end_flatpickr;
+    $(document).ready(function() {
+        var wechat = "${customer.wechat}";
+        if (wechat && wechat.slice(-1) != "}") {
+            var new_wechat = wechat.replace(wechat.slice(7, -8), "***");
+            $("#wechat").text(new_wechat);
+        } else {
+            $("#wechat").text("无");
+        }
+
+        start_flatpickr = $("#start_flatpickr").flatpickr({
+            "locale": "zh",
+            minDate: starttime,
+            maxDate: endtime,
+            onChange: function (selectedDates, dateStr, instance) {
+                end_flatpickr.set("minDate", dateStr);
+            },
+        });
+
+        end_flatpickr = $("#end_flatpickr").flatpickr({
+            "locale": "zh",
+            minDate: starttime,
+            maxDate: endtime,
+            onChange: function (selectedDates, dateStr, instance) {
+                start_flatpickr.set("maxDate", dateStr);
+            },
+        });
+    });
+
+    $("#datetime_btn").click(function(){
+        var start = $("#start_time").val();
+        var end = $("#end_time").val();
+        //查询
+        start_flatpickr.clear();
+        end_flatpickr.clear();
+    });
+</script>
