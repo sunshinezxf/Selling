@@ -13,6 +13,7 @@ public class Customer extends Entity {
     private CustomerAddress address;
     private Agent agent;
     private boolean transformed;
+    private String wechat;
 
     public Customer() {
         super();
@@ -41,6 +42,16 @@ public class Customer extends Entity {
         this.address = address;
         this.agent = agent;
         this.transformed = transformed;
+    }
+
+    public Customer(String customerId, String name, CustomerPhone phone, CustomerAddress address, Agent agent, boolean transformed, String wechat) {
+        this.customerId = customerId;
+        this.name = name;
+        this.phone = phone;
+        this.address = address;
+        this.agent = agent;
+        this.transformed = transformed;
+        this.wechat = wechat;
     }
 
     public void setTransformed(boolean transformed) {
@@ -91,7 +102,15 @@ public class Customer extends Entity {
         this.address = address;
     }
 
-	@Override
+    public String getWechat() {
+        return wechat;
+    }
+
+    public void setWechat(String wechat) {
+        this.wechat = wechat;
+    }
+
+    @Override
 	public int hashCode() {
 		return customerId.hashCode();
 	}
