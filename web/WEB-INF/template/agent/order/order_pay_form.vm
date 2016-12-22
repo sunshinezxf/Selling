@@ -12,7 +12,7 @@
     </div>
 </div>
 <div class="bd">
-    #parse("/agent/account/rebate.vm")
+##    #parse("/agent/account/rebate.vm")
 </div>
 <button type="button" class="weui_btn weui_btn_plain_primary" id="coffer_pay">账户余额付款</button>
 <button type="button" class="weui_btn weui_btn_primary" id="other_pay">其他支付方式</button>
