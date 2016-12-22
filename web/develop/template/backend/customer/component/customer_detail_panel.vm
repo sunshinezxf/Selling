@@ -65,6 +65,10 @@
                                 #parse("/backend/common/datetimepicker.vm")
                             </div>
                             <div class="description">
+                                <div class="ui segments">
+                                    <div class="ui segment">
+                                        <h4>代理订单</h4>
+                                    </div>
                                     <div class="ui segment" id="orderItem_list">
                                         <div class="row">
                                             <div class="column">
@@ -81,6 +85,11 @@
                                                 <table id="orderItem_list_table" class="ui tablet stackable table"></table>
                                             </div>
                                         </div>
+                                    </div>
+                                </div>
+                                <div class="ui segments">
+                                    <div class="ui segment">
+                                        <h4>自助订单</h4>
                                     </div>
                                     <div class="ui segment" id="customerOrder_list">
                                         <div class="row">
@@ -99,11 +108,11 @@
                                             </div>
                                         </div>
                                     </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
