@@ -57,6 +57,12 @@
         <if test="goodsId != null and goodsId != ''">
             AND goods_id = #{goodsId}
         </if>
+        <if test="phoneList != null and phoneList != ''">
+            AND receiver_phone IN
+            <foreach collection="phoneList" item="mode" index="index" open="(" close=")" separator=",">
+                #{mode}
+            </foreach>
+        </if>
         <if test="status != null and status != ''">
             AND order_status IN
             <foreach collection="status" item="mode" index="index" open="(" close=")" separator=",">
@@ -80,7 +86,7 @@
             AND (order_id LIKE #{search} OR DATE_FORMAT(create_time,'%Y-%m-%D') LIKE #{search} OR receiver_name LIKE
             #{search} OR receiver_addr LIKE #{search} OR receiver_phone LIKE #{search}
             OR total_price LIKE #{search} OR quantity LIKE #{search} OR agent_id IN (SELECT agent_id FROM agent WHERE
-            agent_name LIKE #{search}))
+            agent_name LIKE #{search}) OR goods_id in (SELECT goods_id FROM goods WHERE goods_name LIKE #{search}))
         </if>
         <if test="rule != null and rule != ''">
             ORDER BY ${rule}

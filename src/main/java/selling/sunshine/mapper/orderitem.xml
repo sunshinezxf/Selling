@@ -108,6 +108,12 @@
         <if test="daily != null and daily == true">
             AND to_days(now()) - to_days(create_time) = 1
         </if>
+        <if test="search !=null and search != ''">
+            AND (order_item_description LIKE #{search} OR DATE_FORMAT(create_time,'%Y-%m-%D') LIKE #{search}  OR receive_address LIKE #{search}
+            OR order_item_price LIKE #{search} OR goods_quantity LIKE #{search} OR customer_id IN (SELECT customer_id FROM customer WHERE
+            customer_name LIKE #{search}) OR goods_id in (SELECT goods_id FROM goods WHERE goods_name LIKE #{search})
+            OR order_id in (SELECT order_id FROM `order` WHERE agent_id IN (SELECT agent_id FROM agent where agent_name LIKE #{search})))
+        </if>
         <if test="rule != null and rule != ''">
             ORDER BY ${rule}
         </if>

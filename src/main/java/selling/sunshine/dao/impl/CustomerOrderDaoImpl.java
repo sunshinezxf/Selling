@@ -1,5 +1,8 @@
 package selling.sunshine.dao.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import common.sunshine.model.selling.order.support.OrderItemStatus;
 import common.sunshine.utils.IDGenerator;
 import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
@@ -112,6 +115,37 @@ public class CustomerOrderDaoImpl extends BaseDao implements CustomerOrderDao {
             String searchParam=param.getsSearch().replace("/", "-");
         	   condition.put("search", "%"+searchParam+"%");
  		}
+        if (!StringUtils.isEmpty(param.getParams())) {
+            JSONObject json = JSON.parseObject(param.getParams());
+            if (json.containsKey("status")) {
+                switch (json.getString("status")) {
+                    case "PAYED":
+                        condition.put("status", OrderItemStatus.PAYED.getCode());
+                        break;
+                    case "NOT_PAYED":
+                        condition.put("status", OrderItemStatus.NOT_PAYED.getCode());
+                        break;
+                    case "SENT":
+                        condition.put("status", OrderItemStatus.SHIPPED.getCode());
+                        break;
+                    case "RECEIVED":
+                        condition.put("status", OrderItemStatus.RECEIVED.getCode());
+                        break;
+                    case "REFUNDING":
+                        condition.put("status", OrderItemStatus.REFUNDING.getCode());
+                        break;
+                    case "REFUNDED":
+                        condition.put("status", OrderItemStatus.REFUNDED.getCode());
+                        break;
+                }
+            }
+            if (json.containsKey("start")) {
+                condition.put("start", json.get("start"));
+            }
+            if (json.containsKey("end")) {
+                condition.put("end", json.get("end"));
+            }
+        }
         ResultData total = queryOrder(condition);
         if (total.getResponseCode() != ResponseCode.RESPONSE_OK) {
             result.setResponseCode(ResponseCode.RESPONSE_ERROR);

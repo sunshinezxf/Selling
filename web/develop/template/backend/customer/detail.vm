@@ -6,6 +6,7 @@
     #parse("/backend/common/datatable.lib.vm")
     #parse("/backend/initialization/init_datetimepicker.vm")
     <link rel="stylesheet" href="${path.concat('/material/css/backend/customer-detail.css')}">
+    <link rel="stylesheet" href="${path.concat('/material/css/backend/order.css')}">
     <title>客户详情</title>
 </head>
 <body id="dashboard" class="started pushable" ontouchstart>

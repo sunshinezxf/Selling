@@ -277,6 +277,19 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public ResultData fetchOrderItem(Map<String, Object> condition, DataTableParam param) {
+        ResultData result = new ResultData();
+        ResultData queryResponse = orderItemDao.queryOrderItemByPage(condition, param);
+        result.setResponseCode(queryResponse.getResponseCode());
+        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(queryResponse.getData());
+        } else {
+            result.setDescription(queryResponse.getDescription());
+        }
+        return result;
+    }
+
+    @Override
     public ResultData fetchOrderItemSum(Map<String, Object> condition) {
         ResultData result = new ResultData();
         ResultData fetchResponse = orderItemDao.queryOrderItemSum(condition);

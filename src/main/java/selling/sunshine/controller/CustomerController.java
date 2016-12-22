@@ -140,6 +140,53 @@ public class CustomerController {
     }
 
     @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value = "/orderItem/{customerId}")
+    public DataTablePage<OrderItem> orderItem(DataTableParam param,@PathVariable("customerId")String customerId) {
+        DataTablePage<OrderItem> result = new DataTablePage<>(param);
+        if (StringUtils.isEmpty(param)) {
+            return result;
+        }
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("blockFlag", false);
+        condition.put("customerId", customerId);
+//        List<Integer> status = new ArrayList<>(Arrays.asList(OrderItemStatus.PAYED.getCode(), OrderItemStatus.SHIPPED.getCode(), OrderItemStatus.RECEIVED.getCode(), OrderItemStatus.EXCHANGED.getCode()));
+//        condition.put("statusList", status);
+        ResultData queryResponse = orderService.fetchOrderItem(condition, param);
+        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result = (DataTablePage<OrderItem>) queryResponse.getData();
+        }
+        return result;
+    }
+
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value = "/customerOrder/{customerId}")
+    public DataTablePage<CustomerOrder> customerOrder(DataTableParam param,@PathVariable("customerId")String customerId) {
+        DataTablePage<CustomerOrder> result = new DataTablePage<>(param);
+        if (StringUtils.isEmpty(param)) {
+            return result;
+        }
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("customerId", customerId);
+        ResultData queryResponse =customerService.fetchCustomerPhone(condition);
+        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK){
+            List<CustomerPhone> phoneList=(List<CustomerPhone>)queryResponse.getData();
+            List<String> phoneNumbers=new ArrayList<>();
+            for (CustomerPhone phone:phoneList){
+                phoneNumbers.add(phone.getPhone());
+            }
+            condition.put("blockFlag", false);
+            condition.put("phoneList", phoneNumbers);
+//            List<Integer> status = new ArrayList<>(Arrays.asList(OrderItemStatus.PAYED.getCode(), OrderItemStatus.SHIPPED.getCode(), OrderItemStatus.RECEIVED.getCode(), OrderItemStatus.EXCHANGED.getCode()));
+//            condition.put("status", status);
+            queryResponse = orderService.fetchCustomerOrder(condition, param);
+            if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                result = (DataTablePage<CustomerOrder>) queryResponse.getData();
+            }
+        }
+        return result;
+    }
+
+    @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/add")
     public ResultData addCustomer(@Valid CustomerForm customerForm, BindingResult result) {
         ResultData resultData = new ResultData();

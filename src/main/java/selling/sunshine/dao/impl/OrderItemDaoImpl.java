@@ -64,6 +64,74 @@ public class OrderItemDaoImpl extends BaseDao implements OrderItemDao {
     }
 
     @Override
+    public ResultData queryOrderItemByPage(Map<String, Object> condition, DataTableParam param) {
+        ResultData result = new ResultData();
+        DataTablePage<OrderItem> page = new DataTablePage<>();
+        condition = handle(condition);
+        if (!StringUtils.isEmpty(param.getsSearch())) {
+            String searchParam = param.getsSearch().replace("/", "-");
+            condition.put("search", "%" + searchParam + "%");
+        }
+        if (!StringUtils.isEmpty(param.getParams())) {
+            JSONObject json = JSON.parseObject(param.getParams());
+            if (json.containsKey("status")) {
+                switch (json.getString("status")) {
+                    case "PAYED":
+                        condition.put("status", OrderItemStatus.PAYED.getCode());
+                        break;
+                    case "NOT_PAYED":
+                        condition.put("status", OrderItemStatus.NOT_PAYED.getCode());
+                        break;
+                    case "SENT":
+                        condition.put("status", OrderItemStatus.SHIPPED.getCode());
+                        break;
+                    case "RECEIVED":
+                        condition.put("status", OrderItemStatus.RECEIVED.getCode());
+                        break;
+                    case "REFUNDING":
+                        condition.put("status", OrderItemStatus.REFUNDING.getCode());
+                        break;
+                    case "REFUNDED":
+                        condition.put("status", OrderItemStatus.REFUNDED.getCode());
+                        break;
+                }
+            }
+            if (json.containsKey("start")) {
+                condition.put("start", json.get("start"));
+            }
+            if (json.containsKey("end")) {
+                condition.put("end", json.get("end"));
+            }
+        }
+        ResultData total = queryOrderItem(condition);
+        if (total.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription(total.getDescription());
+            return result;
+        }
+        page.setiTotalRecords(((List) total.getData()).size());
+        page.setiTotalDisplayRecords(((List) total.getData()).size());
+        List<OrderItem> current = queryOrderItemByPage(condition, param.getiDisplayStart(), param.getiDisplayLength());
+        if (current.size() == 0) {
+            result.setResponseCode(ResponseCode.RESPONSE_NULL);
+        }
+        page.setData(current);
+        result.setData(page);
+        return result;
+    }
+
+    private List<OrderItem> queryOrderItemByPage(Map<String, Object> condition, int start, int length){
+        List<OrderItem> result = new ArrayList<>();
+        try {
+            result = sqlSession.selectList("selling.order.item.query", condition, new RowBounds(start, length));
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        } finally {
+            return result;
+        }
+    }
+
+    @Override
     public ResultData queryOrderItemSum(Map<String, Object> condition) {
         ResultData result = new ResultData();
         try {
