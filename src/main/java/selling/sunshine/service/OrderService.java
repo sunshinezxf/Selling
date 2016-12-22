@@ -44,6 +44,8 @@ public interface OrderService {
 
     ResultData fetchOrderItem(Map<String, Object> condition);
 
+    ResultData fetchOrderItem(Map<String, Object> condition,DataTableParam param);
+
     ResultData fetchOrderItemSum(Map<String, Object> condition);
 
     ResultData fetchOrderItemSum(Map<String, Object> condition, DataTableParam param);
