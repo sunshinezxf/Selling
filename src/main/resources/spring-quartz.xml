@@ -168,14 +168,14 @@
     <bean id="promotionTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="promotionDetail"></property>
         <property name="cronExpression">
-            <value>0 15/5 * * * ?</value>
+            <value>0 0/30 * * * ?</value>
         </property>
     </bean>
 
     <bean id="customerTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="customerDetail"></property>
         <property name="cronExpression">
-            <value>0 25 16 * * ?</value>
+            <value>0 30 1 * * ?</value>
         </property>
     </bean>
 
