@@ -9,6 +9,8 @@ import common.sunshine.model.selling.bill.CustomerOrderBill;
 import common.sunshine.model.selling.bill.OrderBill;
 import common.sunshine.model.selling.bill.RefundBill;
 import common.sunshine.model.selling.customer.Customer;
+import common.sunshine.model.selling.event.PromotionEvent;
+import common.sunshine.model.selling.event.support.PromotionConfig;
 import common.sunshine.model.selling.express.Express;
 import common.sunshine.model.selling.express.Express4Agent;
 import common.sunshine.model.selling.express.Express4Customer;
@@ -311,9 +313,9 @@ public class OrderController {
         } else if (orderId.startsWith("CUO")) {
             condition.put("orderId", orderId);
             fetchExpressResponse = expressService.fetchExpress4Customer(condition);
-        }else{
+        } else {
             condition.put("orderId", orderId);
-            fetchExpressResponse=expressService.fetchExpress4Application(condition);
+            fetchExpressResponse = expressService.fetchExpress4Application(condition);
         }
         if (fetchExpressResponse == null) {
             view.addObject("type", "2");//订单号错误
@@ -591,18 +593,30 @@ public class OrderController {
         }
         List<Express> expresses = new ArrayList<>();
         Map<String, Object> condition = new HashMap<>();
+        condition.put("blockFlag", false);
+        //查询当前是否有正在进行的满赠活动
+        Map<String, PromotionConfig> config = new HashMap<>();
+        PromotionEvent event = null;
+        ResultData fetchResponse = eventService.fetchPromotionEvent(condition);
+        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            event = ((List<PromotionEvent>) fetchResponse.getData()).get(0);
+            for (PromotionConfig item : event.getConfig()) {
+                config.put(item.getBuyGoods().getGoodsId(), item);
+            }
+        }
         //查询代理商的该状态的所有有效订单信息
+        condition.clear();
         switch (status) {
             case "PAYED":
                 List<Integer> statusList = new ArrayList<>(Arrays.asList(OrderStatus.PAYED.getCode(), OrderStatus.PATIAL_SHIPMENT.getCode()));
                 condition.put("status", statusList);
                 break;
         }
-        ResultData fetchResponse = orderService.fetchOrder(condition);
+        fetchResponse = orderService.fetchOrder(condition);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             List<Order> list = (List<Order>) fetchResponse.getData();
             for (Order order : list) {
-                order.getOrderItems().forEach(item -> {
+                for (OrderItem item : order.getOrderItems()) {
                     if (item.getStatus() == OrderItemStatus.PAYED) {
                         Customer customer = item.getCustomer();
                         Goods4Agent goods = item.getGoods();
@@ -610,9 +624,14 @@ public class OrderController {
                         express.setLinkId(item.getOrderItemId());
                         express.setGoodsQuantity(item.getGoodsQuantity());
                         express.setItem(item);
+                        PromotionConfig currentConfig = config.get(item.getGoods().getGoodsId());
+                        if ("PAYED".equals(status) && !StringUtils.isEmpty(event) && !StringUtils.isEmpty(currentConfig) && item.getGoodsQuantity() >= currentConfig.getCriterion()) {
+                            String name = StringUtils.isEmpty(currentConfig.getGiveGoods().getNickname()) ? currentConfig.getGiveGoods().getName() : currentConfig.getGiveGoods().getNickname();
+                            express.setDescription("赠送" + item.getGoodsQuantity() * currentConfig.getGive() / currentConfig.getFull() + "盒" + name);
+                        }
                         expresses.add(express);
                     }
-                });
+                }
             }
         } else if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_NULL) {
             logger.debug("当前暂无代理商该状态下的订单信息");
@@ -637,6 +656,11 @@ public class OrderController {
                 express.setLinkId(item.getOrderId());
                 express.setOrder(item);
                 express.setGoodsQuantity(item.getQuantity());
+                PromotionConfig currentConfig = config.get(item.getGoods().getGoodsId());
+                if ("PAYED".equals(status) && !StringUtils.isEmpty(event) && !StringUtils.isEmpty(currentConfig) && item.getQuantity() >= currentConfig.getCriterion()) {
+                    String name = StringUtils.isEmpty(currentConfig.getGiveGoods().getNickname()) ? currentConfig.getGiveGoods().getName() : currentConfig.getGiveGoods().getNickname();
+                    express.setDescription("赠送" + item.getQuantity() * currentConfig.getGive() / currentConfig.getFull() + "盒" + name);
+                }
                 expresses.add(express);
             }
         } else if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_NULL) {
@@ -671,7 +695,7 @@ public class OrderController {
             goods.setCellValue(express.getGoodsName());
             Cell description = current.createCell(22);
             StringBuffer descriptionContent = new StringBuffer();
-            descriptionContent.append(express.getGoodsQuantity()).append("盒");
+            descriptionContent.append(express.getGoodsQuantity()).append("盒").append(express.getGoodsName());
             if (!StringUtils.isEmpty(express.getDescription())) {
                 descriptionContent.append(", ").append(express.getDescription());
             }
@@ -1745,7 +1769,7 @@ public class OrderController {
             result.setDescription(response.getDescription());
             return result;
         }
-        RefundBill refundBill=new RefundBill();
+        RefundBill refundBill = new RefundBill();
         refundBill.setBillId(bill.getBillId());
         refundBill.setRefundAmount(bill.getBillAmount());
         refundBill.setBillAmount(bill.getBillAmount());
@@ -1906,11 +1930,11 @@ public class OrderController {
         resultData.setData(indentData.getData());
         return resultData;
     }
-    
+
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/list")
-    public DataTablePage<Order> list(DataTableParam param){
-    	DataTablePage<Order> result = new DataTablePage<Order>(param);
+    public DataTablePage<Order> list(DataTableParam param) {
+        DataTablePage<Order> result = new DataTablePage<Order>(param);
         if (StringUtils.isEmpty(param)) {
             return result;
         }
@@ -1918,12 +1942,12 @@ public class OrderController {
         condition.put("type", 1);
         condition.put("blockFlag", false);
         String params = param.getParams();
-        if(!StringUtils.isEmpty(params)){
-        	JSONObject jo = JSON.parseObject(params);
-        	if(jo.containsKey("start") && jo.containsKey("end")){
-        		condition.put("start", (String)jo.get("start"));
-        		condition.put("end", (String)jo.get("end"));
-        	}
+        if (!StringUtils.isEmpty(params)) {
+            JSONObject jo = JSON.parseObject(params);
+            if (jo.containsKey("start") && jo.containsKey("end")) {
+                condition.put("start", (String) jo.get("start"));
+                condition.put("end", (String) jo.get("end"));
+            }
         }
         ResultData fetchResponse = orderService.fetchOrder(condition, param);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
@@ -1993,7 +2017,7 @@ public class OrderController {
                 return view;
             }
             view.addObject("order", ((List<CustomerOrder>) response.getData()).get(0));
-        } else if (orderId.startsWith("ORI")){
+        } else if (orderId.startsWith("ORI")) {
             condition.put("orderItemId", orderId);
             ResultData response = orderService.fetchOrderItem(condition);
             if (response.getResponseCode() != ResponseCode.RESPONSE_OK) {
@@ -2011,15 +2035,15 @@ public class OrderController {
             Order order = ((List<Order>) response.getData()).get(0);
             item.setOrder(order);
             view.addObject("order", item);
-        }else {
-        	condition.put("orderId", orderId);
-        	ResultData response = eventService.fetchEventOrder(condition);
-        	if (response.getResponseCode() != ResponseCode.RESPONSE_OK) {
+        } else {
+            condition.put("orderId", orderId);
+            ResultData response = eventService.fetchEventOrder(condition);
+            if (response.getResponseCode() != ResponseCode.RESPONSE_OK) {
                 view.setViewName("redirect:/event/overview");
                 return view;
             }
-        	view.addObject("order", ((List<EventOrder>) response.getData()).get(0));
-		}
+            view.addObject("order", ((List<EventOrder>) response.getData()).get(0));
+        }
         view.setViewName("/backend/order/detail");
         return view;
     }
