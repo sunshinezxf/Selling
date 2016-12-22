@@ -50,8 +50,7 @@
                                 <div class="item">
                                     <i class="blue mobile icon"></i>${customer.phone.phone}
                                 </div>
-                                <div class="item">
-                                    <i class="green wechat icon"></i><span id="wechat"></span>
+                                <div id="wechat" class="item">
                                 </div>
                                 <div class="item">
                                     <i class="brown home icon"></i>${customer.address.address}
@@ -66,7 +65,14 @@
                                 #parse("/backend/common/datetimepicker.vm")
                             </div>
                             <div class="description">
-                                //订单列表
+                                <div class="ui two column stackable grid">
+                                    <div class="column">
+                                        //datatable1
+                                    </div>
+                                    <div class="column">
+                                        //datatable2
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -84,9 +90,11 @@
         var wechat = "${customer.wechat}";
         if (wechat && wechat.slice(-1) != "}") {
             var new_wechat = wechat.replace(wechat.slice(7, -8), "***");
-            $("#wechat").text(new_wechat);
+            var wechat_div="<i class='green wechat icon'></i>"+new_wechat;
+            $("#wechat").append(wechat_div);
         } else {
-            $("#wechat").text("无");
+            var no_wechat="<i class='green wechat icon'></i>无";
+            $("#wechat").append(no_wechat);
         }
 
         start_flatpickr = $("#start_flatpickr").flatpickr({
