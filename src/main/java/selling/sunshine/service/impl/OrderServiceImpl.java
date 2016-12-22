@@ -352,22 +352,12 @@ public class OrderServiceImpl implements OrderService {
         List<CustomerOrder> customerOrders = (List<CustomerOrder>) queryData.getData();
         for (CustomerOrder customerOrder : customerOrders) {
             if (customerOrder.getAgent() != null) {
-                condition.put("agentId", customerOrder.getAgent().getAgentId());
-                queryData = customerDao.queryCustomer(condition);
-                if (queryData.getResponseCode() == ResponseCode.RESPONSE_OK) {
-                    List<Customer> customers = (List<Customer>) queryData.getData();
-                    boolean flag = false;
-                    for (Customer customer : customers) {
-                        if (customer.getName().equals(customerOrder.getReceiverName())) {
-                            flag = true;
-                            break;
-                        }
-                    }
-                    if (!flag) {
-                        Customer newCustomer = new Customer(customerOrder.getReceiverName(), customerOrder.getReceiverAddress(),
-                                customerOrder.getReceiverPhone(), customerOrder.getAgent());
-                        customerDao.insertCustomer(newCustomer);
-                    }
+                condition.put("phone", customerOrder.getReceiverPhone());
+                condition.put("customerBlockFlag", false);
+                queryData = customerDao.queryCustomerPhone(condition);
+                if (queryData.getResponseCode() == ResponseCode.RESPONSE_NULL) {
+                    Customer newCustomer = new Customer(customerOrder.getReceiverName(), customerOrder.getReceiverAddress(), customerOrder.getReceiverPhone(), customerOrder.getAgent());
+                    customerDao.insertCustomer(newCustomer);
                 }
             }
         }
