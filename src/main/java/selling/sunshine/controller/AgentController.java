@@ -2885,7 +2885,6 @@ public class AgentController {
         condition.put("granted", true);
         condition.put("monthly", true);
         condition.put("blockFlag", false);
-        condition.put("agentType", 0);//只查询普通代理商
         response = agentService.fetchAgent(condition);
         if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
             List<Agent> list = (List<Agent>) response.getData();
@@ -2895,9 +2894,7 @@ public class AgentController {
         }
         // 获取本月已购买的代理商的人数
         condition.clear();
-        condition.put("monthly", true);
         condition.put("purchase", true);
-        condition.put("agentType", 0);//只查询普通代理商
         response = agentService.fetchAgent(condition);
         if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
             List<Agent> list = (List<Agent>) response.getData();
