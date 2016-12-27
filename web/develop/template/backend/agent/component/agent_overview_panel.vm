@@ -17,7 +17,7 @@
     </div>
     <div class="row">
         <div class="four wide column" id="check">
-            <div class="ui inverted tertiary teal center aligned segment">
+            <div class="ui inverted tertiary teal center aligned segment agent_block">
                 <h3 class="ui header">
                     当前未审核代理商
                 </h3>
@@ -29,7 +29,7 @@
             </div>
         </div>
         <div class="four wide column" id="month_register">
-            <div class="ui inverted secondary teal center aligned segment">
+            <div class="ui inverted secondary teal center aligned segment agent_block">
                 <h3 class="ui header">
                     本月新注册代理商
                 </h3>
@@ -41,7 +41,7 @@
             </div>
         </div>
         <div class="four wide column" id="month_purchase">
-            <div class="ui inverted teal center aligned segment">
+            <div class="ui inverted teal center aligned segment agent_block">
                 <h3 class="ui header">
                     本月已购买代理商
                 </h3>
@@ -53,7 +53,7 @@
             </div>
         </div>
         <div class="four wide column" id="total">
-            <div id="agent_list" class="ui teal inverted center aligned segment">
+            <div class="ui teal inverted center aligned segment agent_block">
                 <h3 class="ui header">
                     当前代理商总人数
                 </h3>

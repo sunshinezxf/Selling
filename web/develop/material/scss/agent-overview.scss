@@ -9,10 +9,9 @@
   }
 }
 
-#agent_list{
-  cursor:pointer;
-}
-
-#agent_list:hover{
-  background-color: #2185D0 !important;
+.agent_block{
+  cursor:pointer !important;
+  &:hover{
+  	background-color: #2185D0 !important;
+  }
 }
