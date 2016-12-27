@@ -1,98 +1,137 @@
 <div class="ui stackable padded grid" name="agent_overview">
-	<div class="row">
-		<h1 class="ui header">
-			<i class="home icon"></i>
+    <div class="row">
+        <h1 class="ui header">
+            <i class="home icon"></i>
 
-			<div class="content">
-				#if(${name}=="month") 本月新注册代理商
-							#elseif(${name}=="purchase") 本月已购买代理商 #else 当前总代理商 #end
-				<div class="sub header">
-					<div class="ui breadcrumb">
-						<a class="section">代理管理</a>
-						<div class="divider">/</div>
-						<a class="section">代理概览</a>
-						<div class="divider">/</div>
-						<a class="active section"> #if(${name}=="month") 本月新注册代理商
-							#elseif(${name}=="purchase") 本月已购买代理商 #else 当前总代理商 #end </a>
-					</div>
-				</div>
-			</div>
-		</h1>
-	</div>
-	<div class="row">
-		<div class="column">
-			<table id="agent_list_table" class="ui tablet stackable table"></table>
-		</div>
-	</div>
+            <div class="content">
+                #if(${name}=="month")
+                    新注册代理
+                #elseif(${name}=="purchase")
+                    已购买代理
+                #else
+                    代理商列表
+                #end
+                <div class="sub header">
+                    <div class="ui breadcrumb">
+                        <a class="section">代理管理</a>
+
+                        <div class="divider">/</div>
+                        <a class="section" href="${path.concat('/agent/overview')}">代理概览</a>
+
+                        <div class="divider">/</div>
+                        <a class="active section">
+                            #if(${name}=="month")
+                                新注册代理
+                            #elseif(${name}=="purchase")
+                                已购买代理
+                            #else
+                                代理商列表
+                            #end
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </h1>
+    </div>
+    <div class="row">
+        <div class="column">
+            <table id="agent_list_table" class="ui tablet stackable table"></table>
+        </div>
+    </div>
 </div>
 <script>
-var table = $("#agent_list_table").DataTable({
-    searching: true,
-    paging: true,
-    aaSorting: false,
-    "sPaginationType": "full_numbers",
-    "bPaginate": true,
-    "bLengthChange": true,
-    "bAutoWidth": true,
-    "bSort": false,
-    "bDeferRender": true,
-    "bProcessing": true,
-    "bServerSide": true,
-    "bInfoFiltered": false,
-    "sAjaxSource": '${path.concat('/agent/list')}',
-    "infoFiltered": false,
-    "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
-        $(nRow).removeClass('dataTable');
-        $(nRow).css("text-align", "left");
-    },
-    "fnInitComplete": function () {
-        $("#overview_agent_table").removeClass('no-footer');
-    },
-    "fnServerParams": function (aoData) {
-        var param = {};
-        param["status"] = "${name}";
-        aoData.push({"name": "params", "value": JSON.stringify(param)});
-    },
-    "fnServerData": function (sSource, aoData, fnCallback) {
-        $.ajax({
-            "dataType": "json",
-            "type": "POST",
-            "url": sSource,
-            "data": aoData,
-            "success": fnCallback
-        })
-    },
-    columns: [
-        {
-             title: "姓名", "mRender": function (data, type, full) {
-                  var url = "${path.concat('/agent/detail/')}" + full.agentId;
-                  var operation = "<a id='" + full.agentId + "' href='" + url + "'>" + full.name + "</a>";
-                  return operation;
-             }
+    var table = $("#agent_list_table").DataTable({
+        searching: true,
+        paging: true,
+        aaSorting: [[4, "desc"]],
+        aoColumnDefs: [{"bSortable": false, "aTargets": [2]}],
+        "sPaginationType": "full_numbers",
+        "bPaginate": true,
+        "bLengthChange": true,
+        "bAutoWidth": true,
+        "bSort": true,
+        "bDeferRender": true,
+        "bProcessing": true,
+        "bServerSide": true,
+        "bInfoFiltered": false,
+        "sAjaxSource": '${path.concat('/agent/list')}',
+        "infoFiltered": false,
+        "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+            $(nRow).removeClass('dataTable');
+            $(nRow).css("text-align", "left");
         },
-        {title: "手机", "mData": "phone"},
-        {title: "地址", "mData": "address"},
-        {
-            title: "注册时间", "mRender": function (data, type, full) {
+        "fnInitComplete": function () {
+            $("#overview_agent_table").removeClass('no-footer');
+        },
+        "fnServerParams": function (aoData) {
+            var param = {};
+            param["status"] = "${name}";
+            aoData.push({"name": "params", "value": JSON.stringify(param)});
+        },
+        "fnServerData": function (sSource, aoData, fnCallback) {
+            $.ajax({
+                "dataType": "json",
+                "type": "POST",
+                "url": sSource,
+                "data": aoData,
+                "success": fnCallback
+            })
+        },
+        columns: [
+            {
+                title: "姓名", "mRender": function (data, type, full) {
+                var url = "${path.concat('/agent/detail/')}" + full.agentId;
+                var operation = "<a id='" + full.agentId + "' href='" + url + "'>" + full.name + "</a>";
+                return operation;
+            }
+            },
+            {
+                title: "类型", "mRender": function (data, type, full) {
+                if (full.agentType == 'ORDINARY') {
+                    return "普通";
+                } else if (ful.agentType == 'COMPANY') {
+                    return "公司";
+                } else if (full.agentType == 'SUPPORT') {
+                    return "客服";
+                } else {
+                    return "未识别";
+                }
+            }
+            },
+            {
+                title: "上级代理", "mRender": function (data, type, full) {
+                if (full.upperAgent == null || full.upperAgent.length <= 0) {
+                    return "无";
+                }
+                return full.upperAgent.name;
+            }
+            },
+            {
+                title: "累计返现", "mRender": function (data, type, full) {
+                return full.agentRefund;
+            }
+            },
+            {
+                title: "注册时间", "mRender": function (data, type, full) {
                 return ((new Date(full.createAt)).format("yyyy-MM-dd"));
             }
+            }
+        ],
+        "language": {
+            "processing": "正在加载中",
+            "lengthMenu": "每页显示 _MENU_ 条记录",
+            "zeroRecords": "抱歉， 没有找到",
+            "info": "从 _START_ 到 _END_, 共 _TOTAL_ 条数据",
+            "infoEmpty": "暂无数据",
+            "infoFiltered": "数据表中共 _MAX_ 条记录)",
+            "zeroRecords": "当前暂无代理商数据",
+            "search": "搜索:",
+            "paginate": {
+                "first": "首页",
+                "previous": "上一页",
+                "next": "下一页",
+                "last": "尾页"
+            }
         }
-    ],
-    "language": {
-        "processing": "正在加载中",
-        "lengthMenu": "每页显示 _MENU_ 条记录",
-        "zeroRecords": "抱歉， 没有找到",
-        "info": "从 _START_ 到 _END_, 共 _TOTAL_ 条数据",
-        "infoEmpty": "暂无数据",
-        "infoFiltered": "数据表中共 _MAX_ 条记录)",
-        "zeroRecords": "当前暂无代理商数据",
-        "search": "搜索:",
-        "paginate": {
-            "first": "首页",
-            "previous": "上一页",
-            "next": "下一页",
-            "last": "尾页"
-        }
-    }
-});
+    });
 </script>

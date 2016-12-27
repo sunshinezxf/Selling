@@ -65,46 +65,46 @@
         agent_wechat, agent_refund, agent_granted, block_flag, create_time, scale,agent_type
         FROM agent
         WHERE 1 = 1
-        <if test="agentId != null and agentId != ''">
+        <if test="agentId != null">
             AND agent_id = #{agentId}
         </if>
-        <if test="agentType != null and agentType != ''">
+        <if test="agentType != null">
             AND agent_type = #{agentType}
         </if>
         <if test="upperAgent != null and upperAgent.agentId != null">
             AND upper_agent_id = #{upperAgent.agentId}
         </if>
-        <if test="upperAgentId != null and upperAgentId != ''">
+        <if test="upperAgentId != null">
             AND upper_agent_id = #{upperAgentId}
         </if>
-        <if test="upperAgentIds != null and upperAgentIds != ''">
+        <if test="upperAgentIds != null">
             AND upper_agent_id IN
             <foreach collection="upperAgentIds" index="index" item="item" open="(" close=")" separator=",">
                 #{item}
             </foreach>
         </if>
-        <if test="name != null and name != ''">
+        <if test="name != null">
             AND agent_name = #{name}
         </if>
-        <if test="gender != null and gender != ''">
+        <if test="gender != null">
             AND agent_gender = #{gender}
         </if>
-        <if test="phone != null and phone != ''">
+        <if test="phone != null">
             AND agent_phone = #{phone}
         </if>
-        <if test="card != null and card != ''">
+        <if test="card != null">
             AND agent_card = #{card}
         </if>
         <if test="agentRefund != null">
             AND agent_refund = #{agentRefund}
         </if>
-        <if test="wechat != null and wechat != ''">
+        <if test="wechat != null">
             AND agent_wechat = #{wechat}
         </if>
         <if test="granted != null">
             AND agent_granted = #{granted}
         </if>
-        <if test="start != null and end != null and start != '' and end != ''">
+        <if test="start != null and end != null">
             AND (date_format(create_time, '%Y-%m-%d') &gt;= #{start} AND date_format(create_time, '%Y-%m-%d') &lt;=
             #{end})
         </if>
