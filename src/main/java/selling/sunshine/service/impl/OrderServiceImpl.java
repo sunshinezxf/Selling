@@ -357,6 +357,16 @@ public class OrderServiceImpl implements OrderService {
         return result;
     }
 
+    /**
+     * 此方法用于扫描顾客订单,将自助购买的客户添加到代理商的顾客列表中
+     * 扫描顾客订单,获取订单中的customer phone和agent_id
+     * 查找该customer phone是否存在于系统的customer表中
+     * 若已存在,则不需要再次插入
+     * 若不存在,根据订单信息构造顾客信息,添加到customer中
+     * 包括没有代理商的顾客也需要进行添加
+     *
+     * @return
+     */
     @Override
     public ResultData check() {
         ResultData resultData = new ResultData();
