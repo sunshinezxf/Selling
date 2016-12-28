@@ -38,7 +38,7 @@
             "bProcessing": true,
             "bServerSide": true,
             "bInfoFiltered": false,
-            "sAjaxSource": '${path.concat('/customer/overview/')}${agentId}',
+            "sAjaxSource": '${path.concat('/customer/overview/')}$!{agentId}',
             "infoFiltered": false,
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                 $(nRow).removeClass('dataTable');

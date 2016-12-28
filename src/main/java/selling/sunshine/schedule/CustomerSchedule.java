@@ -19,7 +19,7 @@ public class CustomerSchedule {
     private CustomerService customerService;
 
     public void schedule() {
-        Map<String,Object> condition=new HashMap<>();
+        Map<String, Object> condition = new HashMap<>();
         customerService.customerTransform(condition);
     }
 }

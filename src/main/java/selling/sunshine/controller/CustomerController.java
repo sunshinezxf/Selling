@@ -34,12 +34,15 @@ import selling.sunshine.form.CustomerForm;
 import selling.sunshine.form.PurchaseForm;
 import selling.sunshine.service.*;
 import selling.sunshine.utils.WechatConfig;
+import selling.sunshine.vo.customer.CustomerVo;
 import selling.sunshine.vo.order.OrderItemSum;
 
 import javax.validation.Valid;
 import java.util.*;
 
 /**
+ * Customer涉及到三个model, Customer, CustomerPhone & CustomerAddress
+ * 所有的查询以及更新操作返回的都是CustomerVo
  * Created by sunshine on 4/11/16.
  */
 @RequestMapping("/customer")
@@ -65,6 +68,13 @@ public class CustomerController {
     @Autowired
     private EventService eventService;
 
+    @RequestMapping(method = RequestMethod.GET, value = "/overview")
+    public ModelAndView overview() {
+        ModelAndView view = new ModelAndView();
+        view.setViewName("/backend/customer/overview");
+        return view;
+    }
+
     @RequestMapping(method = RequestMethod.GET, value = "/overview/{agentId}")
     public ModelAndView overview(@PathVariable String agentId) {
         ModelAndView view = new ModelAndView();
@@ -75,73 +85,69 @@ public class CustomerController {
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/overview/{agentId}")
-    public DataTablePage<Customer> overview(@PathVariable String agentId, DataTableParam param) {
-        DataTablePage<Customer> result = new DataTablePage<Customer>();
+    public DataTablePage<CustomerVo> overview(@PathVariable String agentId, DataTableParam param) {
+        DataTablePage<CustomerVo> result = new DataTablePage<>();
         if (StringUtils.isEmpty(result)) {
             return result;
         }
-        Map<String, Object> condition = new HashMap<String, Object>();
-        if (!agentId.equals("total")){
-            condition.put("agentId", agentId);
-            condition.put("blockFlag", false);
+        Map<String, Object> condition = new HashMap<>();
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        if (user == null) {
+            return result;
         }
-        List<SortRule> sortRules=new ArrayList<>();
-        sortRules.add(new SortRule("agent_id","asc"));
-        condition.put("sort",sortRules);
+        if (user.getAgent() != null) {
+            condition.put("agentId", user.getAgent().getAgentId());
+        }
+        if (user.getAdmin() != null && !StringUtils.isEmpty(agentId)) {
+            condition.put("agentId", agentId);
+        }
+        List<SortRule> rules = new ArrayList<>();
+        rules.add(new SortRule("agent_id", "asc"));
+        condition.put("sort", rules);
         ResultData fetchResponse = customerService.fetchCustomer(condition, param);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            result = (DataTablePage<Customer>) fetchResponse.getData();
+            result = (DataTablePage<CustomerVo>) fetchResponse.getData();
         }
         return result;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/detail/{agentId}/{customerId}")
     @ResponseBody
-    public ModelAndView detail(@PathVariable("agentId") String agentId,@PathVariable("customerId") String customerId) {
-        ModelAndView view=new ModelAndView();
+    public ModelAndView detail(@PathVariable("agentId") String agentId, @PathVariable("customerId") String customerId) {
+        ModelAndView view = new ModelAndView();
         Map<String, Object> condition = new HashMap<>();
         condition.put("customerId", customerId);
-        ResultData fetchResponse=new ResultData();
-        fetchResponse=customerService.fetchCustomer(condition);
-        if (fetchResponse.getResponseCode()!=ResponseCode.RESPONSE_OK){
-            view.setViewName("redirect:/customer/overview/"+agentId);
-            return  view;
+        ResultData fetchResponse = customerService.fetchCustomer(condition);
+        if (fetchResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            view.setViewName("redirect:/customer/overview/" + agentId);
+            return view;
         }
-        Customer customer = ((List<Customer>) fetchResponse.getData()).get(0);
-        view.addObject("customer",customer);
+        CustomerVo customer = ((List<CustomerVo>) fetchResponse.getData()).get(0);
+        view.addObject("customer", customer);
         condition.clear();
         condition.put("agentId", customer.getAgent().getAgentId());
-        fetchResponse=agentService.fetchAgent(condition);
-        if (fetchResponse.getResponseCode()!=ResponseCode.RESPONSE_OK){
-            view.setViewName("redirect:/customer/overview/"+agentId);
-            return  view;
+        fetchResponse = agentService.fetchAgent(condition);
+        if (fetchResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            view.setViewName("redirect:/customer/overview/" + agentId);
+            return view;
         }
-        Agent agent = ((List<Agent>)fetchResponse.getData()).get(0);
-        view.addObject("agent",agent);
+        Agent agent = ((List<Agent>) fetchResponse.getData()).get(0);
+        view.addObject("agent", agent);
         condition.clear();
         condition.put("customerId", customerId);
-        fetchResponse=customerService.fetchCustomerAddress(condition);
-        if (fetchResponse.getResponseCode()!=ResponseCode.RESPONSE_OK){
-            view.setViewName("redirect:/customer/overview/"+agentId);
-            return  view;
+        fetchResponse = customerService.fetchCustomerAddress(condition);
+        if (fetchResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            view.setViewName("redirect:/customer/overview/" + agentId);
+            return view;
         }
-//        List<CustomerAddress> addressList = (List<CustomerAddress>) fetchResponse.getData();
-//        view.addObject("addressList",addressList);
-//        fetchResponse=customerService.fetchCustomerPhone(condition);
-//        if (fetchResponse.getResponseCode()!=ResponseCode.RESPONSE_OK){
-//            view.setViewName("redirect:/customer/overview/"+agentId);
-//            return  view;
-//        }
-//        List<CustomerPhone> phoneList = (List<CustomerPhone>) fetchResponse.getData();
-//        view.addObject("phoneList",phoneList);
-
         view.setViewName("/backend/customer/detail");
         return view;
     }
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/orderItem/{customerId}")
-    public DataTablePage<OrderItem> orderItem(DataTableParam param,@PathVariable("customerId")String customerId) {
+    public DataTablePage<OrderItem> orderItem(DataTableParam param, @PathVariable("customerId") String customerId) {
         DataTablePage<OrderItem> result = new DataTablePage<>(param);
         if (StringUtils.isEmpty(param)) {
             return result;
@@ -160,18 +166,18 @@ public class CustomerController {
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/customerOrder/{customerId}")
-    public DataTablePage<CustomerOrder> customerOrder(DataTableParam param,@PathVariable("customerId")String customerId) {
+    public DataTablePage<CustomerOrder> customerOrder(DataTableParam param, @PathVariable("customerId") String customerId) {
         DataTablePage<CustomerOrder> result = new DataTablePage<>(param);
         if (StringUtils.isEmpty(param)) {
             return result;
         }
         Map<String, Object> condition = new HashMap<>();
         condition.put("customerId", customerId);
-        ResultData queryResponse =customerService.fetchCustomerPhone(condition);
-        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK){
-            List<CustomerPhone> phoneList=(List<CustomerPhone>)queryResponse.getData();
-            List<String> phoneNumbers=new ArrayList<>();
-            for (CustomerPhone phone:phoneList){
+        ResultData queryResponse = customerService.fetchCustomerPhone(condition);
+        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            List<CustomerPhone> phoneList = (List<CustomerPhone>) queryResponse.getData();
+            List<String> phoneNumbers = new ArrayList<>();
+            for (CustomerPhone phone : phoneList) {
                 phoneNumbers.add(phone.getPhone());
             }
             condition.put("blockFlag", false);
@@ -207,8 +213,7 @@ public class CustomerController {
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         common.sunshine.model.selling.agent.lite.Agent agent = user.getAgent();
-        Customer customer = new Customer(customerForm.getName(),
-                customerForm.getAddress(), customerForm.getPhone(), agent);
+        Customer customer = new Customer(customerForm.getName(), customerForm.getAddress(), customerForm.getPhone(), agent);
         resultData = customerService.createCustomer(customer);
         //添加顾客，要对顾客对应的代理商的agentKPI表进行修改
         condition.clear();
@@ -245,8 +250,7 @@ public class CustomerController {
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         common.sunshine.model.selling.agent.lite.Agent agent = user.getAgent();
-        Customer customer = new Customer(customerForm.getName(),
-                customerForm.getAddress(), customerForm.getPhone(), agent);
+        Customer customer = new Customer(customerForm.getName(), customerForm.getAddress(), customerForm.getPhone(), agent);
         customer.setCustomerId(customerId);
         ResultData updateResponse = customerService.updateCustomer(customer);
         if (updateResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
@@ -266,7 +270,6 @@ public class CustomerController {
             response.setResponseCode(ResponseCode.RESPONSE_ERROR);
             return response;
         }
-        Map<String, Object> condition = new HashMap<>();
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         common.sunshine.model.selling.agent.lite.Agent agent = user.getAgent();
@@ -297,7 +300,9 @@ public class CustomerController {
             response.setDescription(fetchCustomerResponse.getDescription());
             return response;
         }
-        Customer customer = ((List<Customer>) fetchCustomerResponse.getData()).get(0);
+        CustomerVo vo = ((List<CustomerVo>) fetchCustomerResponse.getData()).get(0);
+        Customer customer = new Customer(vo.getName(), vo.getAddress(), vo.getPhone());
+        customer.setCustomerId(vo.getCustomerId());
         ResultData updateResponse = customerService.deleteCustomer(customer);
         if (updateResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
             response.setResponseCode(updateResponse.getResponseCode());
@@ -357,17 +362,11 @@ public class CustomerController {
         //以下是查找该客户最近一次的购买订单，顺便统计该客户的各商品购买盒数
         OrderItemSum orderItemSum = null;
         Map<String, Object[]> goodsMap = new HashMap<String, Object[]>();//商品ID->(商品name, 购买数量quantity)
-        Customer customer = ((List<Customer>) fetchCustomerResponse.getData()).get(0);
-        String phone = customer.getPhone().getPhone();
+        CustomerVo customer = ((List<CustomerVo>) fetchCustomerResponse.getData()).get(0);
+        String phone = customer.getPhone();
         condition.clear();
         condition.put("customerId", customer.getCustomerId());
-        List<Integer> statusList = new ArrayList<>();
-        statusList.add(1);
-        statusList.add(2);
-        statusList.add(3);
-        statusList.add(4);
-        statusList.add(5);
-        statusList.add(6);
+        List<Integer> statusList = new ArrayList<>(Arrays.asList(OrderItemStatus.PAYED.getCode(), OrderItemStatus.SHIPPED.getCode(), OrderItemStatus.RECEIVED.getCode(), OrderItemStatus.EXCHANGED.getCode()));
         condition.put("statusList", statusList);
         condition.put("blockFlag", false);
         List<SortRule> orderBy = new ArrayList<>();
@@ -473,17 +472,11 @@ public class CustomerController {
             return view;
         }
 
-        Customer customer = ((List<Customer>) fetchCustomerResponse.getData()).get(0);
-        String phone = customer.getPhone().getPhone();
+        CustomerVo customer = ((List<CustomerVo>) fetchCustomerResponse.getData()).get(0);
+        String phone = customer.getPhone();
         condition.clear();
         condition.put("customerId", customer.getCustomerId());
-        List<Integer> statusList = new ArrayList<>();
-        statusList.add(1);
-        statusList.add(2);
-        statusList.add(3);
-        statusList.add(4);
-        statusList.add(5);
-        statusList.add(6);
+        List<Integer> statusList = new ArrayList<>(Arrays.asList(OrderItemStatus.PAYED.getCode(), OrderItemStatus.SHIPPED.getCode(), OrderItemStatus.RECEIVED.getCode(), OrderItemStatus.EXCHANGED.getCode()));
         condition.put("statusList", statusList);
         condition.put("blockFlag", false);
         List<SortRule> orderBy = new ArrayList<>();
@@ -501,7 +494,7 @@ public class CustomerController {
         ResultData fetchCustomerOrderResponse = orderService.fetchCustomerOrder(condition);
         List<CustomerOrder> customerOrderList = (List<CustomerOrder>) (fetchCustomerOrderResponse.getData());
 
-        List<OrderItemSum> orderItemSumList = new ArrayList<OrderItemSum>();
+        List<OrderItemSum> orderItemSumList = new ArrayList<>();
         if (orderItemList != null) {
             for (OrderItem orderItem : orderItemList) {
                 condition.clear();
@@ -530,7 +523,7 @@ public class CustomerController {
         });
 
         view.addObject("customerName", customer.getName());
-        view.addObject("customerPhone", customer.getPhone().getPhone());
+        view.addObject("customerPhone", customer.getPhone());
         view.addObject("orderItemSums", orderItemSumList);
         view.setViewName("/agent/customer/order_list");
         return view;
@@ -664,7 +657,9 @@ public class CustomerController {
                     item.setOrder(order);
                     condition.clear();
                     condition.put("customerId", item.getCustomer().getCustomerId());
-                    Customer customer = ((List<Customer>) customerService.fetchCustomer(condition).getData()).get(0);
+                    CustomerVo vo = ((List<CustomerVo>) customerService.fetchCustomer(condition).getData()).get(0);
+                    Customer customer = new Customer(vo.getName(), vo.getAddress(), vo.getPhone(), vo.getAgent());
+                    customer.setCustomerId(vo.getCustomerId());
                     item.setCustomer(customer);
                 }
                 view.addObject("orderFromAgent", list);
@@ -695,7 +690,7 @@ public class CustomerController {
         status.add(OrderItemStatus.SHIPPED.getCode());
         status.add(OrderItemStatus.RECEIVED.getCode());
         condition.put("status", status);
-        fetchResponse=eventService.fetchEventOrder(condition);
+        fetchResponse = eventService.fetchEventOrder(condition);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             List<EventOrder> list = (List<EventOrder>) fetchResponse.getData();
             if (!list.isEmpty()) {

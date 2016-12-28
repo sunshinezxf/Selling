@@ -1,22 +1,23 @@
 package selling.sunshine.dao.impl;
 
-import common.sunshine.utils.IDGenerator;
-import org.apache.ibatis.session.RowBounds;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import common.sunshine.dao.BaseDao;
-import org.springframework.util.StringUtils;
-import selling.sunshine.dao.CustomerDao;
-import selling.sunshine.utils.TencentMapAPI;
 import common.sunshine.model.selling.customer.Customer;
 import common.sunshine.model.selling.customer.CustomerAddress;
 import common.sunshine.model.selling.customer.CustomerPhone;
 import common.sunshine.pagination.DataTablePage;
 import common.sunshine.pagination.DataTableParam;
+import common.sunshine.utils.IDGenerator;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
+import org.apache.ibatis.session.RowBounds;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+import selling.sunshine.dao.CustomerDao;
+import selling.sunshine.utils.TencentMapAPI;
+import selling.sunshine.vo.customer.CustomerVo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,15 +59,15 @@ public class CustomerDaoImpl extends BaseDao implements CustomerDao {
                 address.setAddressId(IDGenerator.generate("ADR"));
                 address.setCustomer(customer);
                 Map<String, String> map = TencentMapAPI.getDetailInfoByAddress(address.getAddress());
-				if (map.containsKey("province")) {
-					address.setProvince(map.get("province"));
-				}
-				if (map.containsKey("city")) {
-					address.setCity(map.get("city"));
-				}
-				if (map.containsKey("district")) {
-					address.setDistrict(map.get("district"));
-				}
+                if (map.containsKey("province")) {
+                    address.setProvince(map.get("province"));
+                }
+                if (map.containsKey("city")) {
+                    address.setCity(map.get("city"));
+                }
+                if (map.containsKey("district")) {
+                    address.setDistrict(map.get("district"));
+                }
                 sqlSession.insert("selling.customer.address.insert", address);
                 //从数据库中获取刚插入的记录
                 Map<String, Object> condition = new HashMap<>();
@@ -119,15 +120,15 @@ public class CustomerDaoImpl extends BaseDao implements CustomerDao {
                         address.setAddressId(IDGenerator.generate("ADR"));
                         address.setCustomer(customer);
                         Map<String, String> map = TencentMapAPI.getDetailInfoByAddress(address.getAddress());
-        				if (map.containsKey("province")) {
-        					address.setProvince(map.get("province"));
-        				}
-        				if (map.containsKey("city")) {
-        					address.setCity(map.get("city"));
-        				}
-        				if (map.containsKey("district")) {
-        					address.setDistrict(map.get("district"));
-        				}
+                        if (map.containsKey("province")) {
+                            address.setProvince(map.get("province"));
+                        }
+                        if (map.containsKey("city")) {
+                            address.setCity(map.get("city"));
+                        }
+                        if (map.containsKey("district")) {
+                            address.setDistrict(map.get("district"));
+                        }
                         sqlSession.insert("selling.customer.address.insert", address);
                         if (currentAddress != null) {
                             sqlSession.update("selling.customer.address.block", currentAddress);
@@ -137,7 +138,7 @@ public class CustomerDaoImpl extends BaseDao implements CustomerDao {
                 //查询当前持久化的客户信息
                 condition.remove("blockFlag");
                 customer = sqlSession.selectOne("selling.customer.query", condition);
-                result.setData(customer);
+                result.setData(new CustomerVo(customer));
             } catch (Exception e) {
                 logger.error(e.getMessage());
                 result.setResponseCode(ResponseCode.RESPONSE_ERROR);
@@ -181,7 +182,10 @@ public class CustomerDaoImpl extends BaseDao implements CustomerDao {
     public ResultData queryCustomer(Map<String, Object> condition) {
         ResultData result = new ResultData();
         try {
-            List<Customer> list = sqlSession.selectList("selling.customer.query", condition);
+            List<CustomerVo> list = sqlSession.selectList("selling.customer.query", condition);
+            if (list.isEmpty()) {
+                result.setResponseCode(ResponseCode.RESPONSE_NULL);
+            }
             result.setData(list);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -202,11 +206,11 @@ public class CustomerDaoImpl extends BaseDao implements CustomerDao {
     @Override
     public ResultData queryCustomerByPage(Map<String, Object> condition, DataTableParam param) {
         ResultData result = new ResultData();
-        DataTablePage<Customer> page = new DataTablePage<>();
+        DataTablePage<CustomerVo> page = new DataTablePage<>();
         page.setsEcho(param.getsEcho());
         condition = handle(condition);
         if (!StringUtils.isEmpty(param.getsSearch())) {
-            condition.put("search", "%"+param.getsSearch()+"%");
+            condition.put("search", "%" + param.getsSearch() + "%");
         }
         ResultData total = queryCustomer(condition);
         if (total.getResponseCode() != ResponseCode.RESPONSE_OK) {
@@ -214,9 +218,9 @@ public class CustomerDaoImpl extends BaseDao implements CustomerDao {
             result.setDescription(total.getDescription());
             return result;
         }
-        page.setiTotalRecords(((List<Customer>) total.getData()).size());
-        page.setiTotalDisplayRecords(((List<Customer>) total.getData()).size());
-        List<Customer> current = queryCustomerByPage(condition, param.getiDisplayStart(), param.getiDisplayLength());
+        page.setiTotalRecords(((List<CustomerVo>) total.getData()).size());
+        page.setiTotalDisplayRecords(((List<CustomerVo>) total.getData()).size());
+        List<CustomerVo> current = queryCustomerByPage(condition, param.getiDisplayStart(), param.getiDisplayLength());
         if (current.size() == 0) {
             result.setResponseCode(ResponseCode.RESPONSE_NULL);
         }
@@ -233,8 +237,8 @@ public class CustomerDaoImpl extends BaseDao implements CustomerDao {
      * @param length
      * @return
      */
-    private List<Customer> queryCustomerByPage(Map<String, Object> condition, int start, int length) {
-        List<Customer> result = new ArrayList<>();
+    private List<CustomerVo> queryCustomerByPage(Map<String, Object> condition, int start, int length) {
+        List<CustomerVo> result = new ArrayList<>();
         try {
             result = sqlSession.selectList("selling.customer.query", condition, new RowBounds(start, length));
         } catch (Exception e) {
@@ -249,8 +253,10 @@ public class CustomerDaoImpl extends BaseDao implements CustomerDao {
         ResultData result = new ResultData();
         try {
             List<CustomerPhone> list = sqlSession.selectList("selling.customer.phone.query", condition);
+            if (list.isEmpty()) {
+                result.setResponseCode(ResponseCode.RESPONSE_OK);
+            }
             result.setData(list);
-            result.setResponseCode(ResponseCode.RESPONSE_OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
             result.setResponseCode(ResponseCode.RESPONSE_ERROR);
@@ -265,10 +271,11 @@ public class CustomerDaoImpl extends BaseDao implements CustomerDao {
         ResultData result = new ResultData();
         try {
             condition = handle(condition);
-            List<CustomerAddress> list = sqlSession.selectList(
-                    "selling.customer.address.query", condition);
+            List<CustomerAddress> list = sqlSession.selectList("selling.customer.address.query", condition);
+            if (list.isEmpty()) {
+                result.setResponseCode(ResponseCode.RESPONSE_NULL);
+            }
             result.setData(list);
-            result.setResponseCode(ResponseCode.RESPONSE_OK);
         } catch (Exception e) {
             logger.error(e.getMessage());
             result.setResponseCode(ResponseCode.RESPONSE_ERROR);
@@ -278,22 +285,22 @@ public class CustomerDaoImpl extends BaseDao implements CustomerDao {
         }
     }
 
-	@Override
-	public ResultData updateCustomerAddress(CustomerAddress customerAddress) {
-		ResultData result = new ResultData();
-		synchronized (lock) {
-			try {
-				sqlSession.update("selling.customer.address.update", customerAddress);
-				result.setData(customerAddress);
-			} catch (Exception e) {
-				logger.error(e.getMessage());
-				result.setResponseCode(ResponseCode.RESPONSE_ERROR);
-				result.setDescription(e.getMessage());
-			} finally {
-				return result;
-			}
-		}
-	}
+    @Override
+    public ResultData updateCustomerAddress(CustomerAddress customerAddress) {
+        ResultData result = new ResultData();
+        synchronized (lock) {
+            try {
+                sqlSession.update("selling.customer.address.update", customerAddress);
+                result.setData(customerAddress);
+            } catch (Exception e) {
+                logger.error(e.getMessage());
+                result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+                result.setDescription(e.getMessage());
+            } finally {
+                return result;
+            }
+        }
+    }
 
 
 }
