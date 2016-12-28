@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import selling.sunshine.dao.AgentDao;
 import selling.sunshine.dao.CustomerDao;
+import selling.sunshine.dao.PurchaseDao;
 import selling.sunshine.service.CustomerService;
 import selling.sunshine.vo.customer.CustomerVo;
 
@@ -31,6 +32,9 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Autowired
     private AgentDao agentDao;
+
+    @Autowired
+    private PurchaseDao purchaseDao;
 
     @Override
     public ResultData createCustomer(Customer customer) {
@@ -161,5 +165,16 @@ public class CustomerServiceImpl implements CustomerService {
         return result;
     }
 
-
+    @Override
+    public ResultData fetchCustomerPurchase(Map<String, Object> condition, DataTableParam param) {
+        ResultData result = new ResultData();
+        ResultData response = purchaseDao.queryCustomerPurchaseByPage(condition, param);
+        result.setResponseCode(response.getResponseCode());
+        if (response.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
+            result.setDescription(response.getDescription());
+        } else {
+            result.setData(response.getData());
+        }
+        return result;
+    }
 }

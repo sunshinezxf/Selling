@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import selling.sunshine.dao.CustomerDao;
 import selling.sunshine.utils.TencentMapAPI;
+import selling.sunshine.vo.customer.CustomerPurchase;
 import selling.sunshine.vo.customer.CustomerVo;
 
 import java.util.ArrayList;
@@ -301,6 +302,4 @@ public class CustomerDaoImpl extends BaseDao implements CustomerDao {
             }
         }
     }
-
-
 }

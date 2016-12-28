@@ -46,5 +46,6 @@
         <mapper resource="selling/sunshine/mapper/refundbill.xml"/>
         <mapper resource="selling/sunshine/mapper/event/promotionconfig.xml"/>
         <mapper resource="selling/sunshine/mapper/notice/notice.xml"/>
+        <mapper resource="selling/sunshine/mapper/purchase/customerpurchase.xml"/>
     </mappers>
 </configuration>

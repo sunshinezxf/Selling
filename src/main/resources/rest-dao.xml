@@ -117,4 +117,8 @@
     <bean id="noticeDao" class="selling.sunshine.dao.impl.NoticeDaoImpl">
         <property name="sqlSession" ref="sqlSession"></property>
     </bean>
+
+    <bean id="purchaseDao" class="selling.sunshine.dao.impl.PurchaseDaoImpl">
+        <property name="sqlSession" ref="sqlSession"></property>
+    </bean>
 </beans>

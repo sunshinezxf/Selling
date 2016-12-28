@@ -28,4 +28,6 @@ public interface CustomerService {
     ResultData updateCustomerAddress(CustomerAddress customerAddress);
 
     ResultData customerTransform(Map<String, Object> condition);
+
+    ResultData fetchCustomerPurchase(Map<String, Object> condition, DataTableParam param);
 }
