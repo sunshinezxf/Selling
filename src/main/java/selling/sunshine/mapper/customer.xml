@@ -68,8 +68,21 @@
     </select>
 
     <insert id="insert" parameterType="common.sunshine.model.selling.customer.Customer" useGeneratedKeys="false">
-        INSERT INTO customer(customer_id, customer_name, agent_id, block_flag, create_time,transformed,wechat)
-        VALUES (#{customerId}, #{name}, #{agent.agentId}, #{blockFlag}, #{createAt},#{transformed},#{wechat})
+        INSERT INTO customer
+        <set>
+            customer_id=#{customerId},
+            customer_name=#{name},
+            <if test="agent !=null and agent.agentId !=null">
+                agent_id=#{agent.agentId},
+            </if>
+            <if test="agent ==null">
+                agent_id=NULL,
+            </if>
+            block_flag=#{blockFlag},
+            create_time=#{createAt},
+            transformed=#{transformed},
+            wechat=#{wechat}
+        </set>
     </insert>
 
     <update id="update" parameterType="common.sunshine.model.selling.customer.Customer">
