@@ -34,6 +34,7 @@ import selling.sunshine.form.CustomerForm;
 import selling.sunshine.form.PurchaseForm;
 import selling.sunshine.service.*;
 import selling.sunshine.utils.WechatConfig;
+import selling.sunshine.vo.customer.CustomerPurchase;
 import selling.sunshine.vo.customer.CustomerVo;
 import selling.sunshine.vo.order.OrderItemSum;
 
@@ -704,5 +705,21 @@ public class CustomerController {
         }
         view.setViewName("/customer/order/order_list");
         return view;
+    }
+
+
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value = "/summary")
+    public DataTablePage<CustomerPurchase> summary(DataTableParam param) {
+        DataTablePage<CustomerPurchase> result = new DataTablePage<>(param);
+        if (StringUtils.isEmpty(param)) {
+            return result;
+        }
+        Map<String, Object> condition = new HashMap<>();
+        ResultData response = customerService.fetchCustomerPurchase(condition, param);
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result = (DataTablePage<CustomerPurchase>) response.getData();
+        }
+        return result;
     }
 }
