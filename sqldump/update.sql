@@ -786,3 +786,9 @@ CREATE TABLE IF NOT EXISTS `selling`.`notice` (
   `create_time` DATETIME NOT NULL,
   PRIMARY KEY (`notice_id`))
   ENGINE = InnoDB;
+
+##2016年12月28日
+CREATE VIEW `customer_view`(customer_id, agent_id, customer_name, customer_phone, customer_address, customer_province, customer_city, customer_district, transformed, block_flag, create_time) AS
+  select c.customer_id, c.agent_id, c.customer_name, cp.phone, ca.address, ca.province, ca.city, ca.district, c.transformed, c.block_flag, c.create_time
+  from customer c left join customer_phone cp on cp.block_flag = 0 and c.customer_id = cp.customer_id
+    left join customer_address ca on ca.block_flag = 0 and c.customer_id = ca.customer_id
