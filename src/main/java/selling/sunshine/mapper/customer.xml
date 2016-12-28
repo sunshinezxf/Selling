@@ -75,9 +75,6 @@
             <if test="agent !=null and agent.agentId !=null">
                 agent_id=#{agent.agentId},
             </if>
-            <if test="agent ==null">
-                agent_id=NULL,
-            </if>
             block_flag=#{blockFlag},
             create_time=#{createAt},
             transformed=#{transformed},
