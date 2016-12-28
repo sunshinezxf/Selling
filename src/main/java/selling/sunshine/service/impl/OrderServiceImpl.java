@@ -1,6 +1,7 @@
 package selling.sunshine.service.impl;
 
 import common.sunshine.model.selling.customer.Customer;
+import common.sunshine.model.selling.customer.CustomerPhone;
 import common.sunshine.model.selling.event.Event;
 import common.sunshine.model.selling.event.support.EventType;
 import common.sunshine.model.selling.event.support.PromotionConfig;
@@ -374,15 +375,13 @@ public class OrderServiceImpl implements OrderService {
         ResultData queryData = customerOrderDao.queryOrder(condition);
         List<CustomerOrder> customerOrders = (List<CustomerOrder>) queryData.getData();
         for (CustomerOrder customerOrder : customerOrders) {
-            if (customerOrder.getAgent() != null) {
                 condition.put("phone", customerOrder.getReceiverPhone());
                 condition.put("customerBlockFlag", false);
                 queryData = customerDao.queryCustomerPhone(condition);
-                if (queryData.getResponseCode() == ResponseCode.RESPONSE_NULL) {
+                if (((List<CustomerPhone>)queryData.getData()).isEmpty()) {
                     Customer newCustomer = new Customer(customerOrder.getReceiverName(), customerOrder.getReceiverAddress(), customerOrder.getReceiverPhone(), customerOrder.getAgent());
                     customerDao.insertCustomer(newCustomer);
                 }
-            }
         }
 
         return resultData;
