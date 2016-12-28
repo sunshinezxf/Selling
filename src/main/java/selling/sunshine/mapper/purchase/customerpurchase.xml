@@ -11,12 +11,12 @@
         <result property="customerId" column="customer_id"></result>
         <result property="customerName" column="customer_name"></result>
         <result property="motant" column="order_price"></result>
-        <result property="dealNum" column="goods_quantity"></result>
+        <result property="dealNum" column="deal_quantity"></result>
         <association property="agent" column="agentId = agent_id" select="agentLiteQuery"></association>
     </resultMap>
 
     <select id="query" parameterType="java.util.Map">
-        SELECT customer_id, customer_name, agent_id, sum(order_item_price) AS order_price, count(order_id)
+        SELECT customer_id, customer_name, agent_id, sum(order_item_price) AS order_price, count(order_id) AS deal_quantity
         FROM order_item_sum
         WHERE 1 = 1
         <if test="customerId != null">
@@ -25,6 +25,7 @@
         <if test="agentId != null">
             AND agent_id = #{agentId}
         </if>
+        GROUP BY customer_id, agent_id
     </select>
 
     <select id="agentLiteQuery" parameterType="java.util.Map" resultMap="agentLiteVo">

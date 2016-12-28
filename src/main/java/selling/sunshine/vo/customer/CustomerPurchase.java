@@ -1,5 +1,7 @@
 package selling.sunshine.vo.customer;
 
+import common.sunshine.model.selling.agent.lite.Agent;
+
 /**
  * Created by sunshine on 2016/12/28.
  */
@@ -8,7 +10,7 @@ public class CustomerPurchase {
 
     private String customerName;
 
-    private String agentId;
+    private Agent agent;
 
     private double montant;
 
@@ -30,12 +32,12 @@ public class CustomerPurchase {
         this.customerName = customerName;
     }
 
-    public String getAgentId() {
-        return agentId;
+    public Agent getAgent() {
+        return agent;
     }
 
-    public void setAgentId(String agentId) {
-        this.agentId = agentId;
+    public void setAgent(Agent agent) {
+        this.agent = agent;
     }
 
     public double getMontant() {
