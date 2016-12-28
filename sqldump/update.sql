@@ -586,7 +586,7 @@ VALUES ('VIT00000001', '1', '0', '0', '2016-10-24 00:10:00');
 
 
 ##2016年11月2日更新
-CREATE OR REPLACE VIEW order_item_sum(agent_id, order_type, order_id, goods_id, order_item_status, goods_quantity, order_item_price, customer_name, block_flag, create_time)
+CREATE OR REPLACE VIEW order_item_sum(agent_id, order_type, order_id, goods_id, order_item_status, goods_quantity, order_item_price, customer_id, customer_name, block_flag, create_time)
 AS SELECT
      o.agent_id           AS agent_id,
      o.order_type         AS order_type,
@@ -595,6 +595,7 @@ AS SELECT
      oi.order_item_status AS order_item_status,
      oi.goods_quantity    AS goods_quantity,
      oi.order_item_price  AS order_item_price,
+     c.customer_id        AS customer_id,
      c.customer_name      AS customer_name,
      oi.block_flag        AS block_flag,
      oi.create_time       AS create_time
@@ -609,6 +610,7 @@ AS SELECT
      co.order_status  AS order_item_status,
      co.quantity      AS goods_quantity,
      co.total_price   AS order_item_price,
+     co.customer_id   AS customer_id,
      co.receiver_name AS customer_name,
      co.block_flag    AS block_flag,
      co.create_time   AS create_time
@@ -788,7 +790,11 @@ CREATE TABLE IF NOT EXISTS `selling`.`notice` (
   ENGINE = InnoDB;
 
 ##2016年12月28日
-CREATE VIEW `customer_view`(customer_id, agent_id, customer_name, customer_phone, customer_address, customer_province, customer_city, customer_district, transformed, block_flag, create_time) AS
-  select c.customer_id, c.agent_id, c.customer_name, cp.phone, ca.address, ca.province, ca.city, ca.district, c.transformed, c.block_flag, c.create_time
+CREATE VIEW `customer_view`(customer_id, agent_id, customer_name, customer_wechat, customer_phone, customer_address, customer_province, customer_city, customer_district, transformed, block_flag, create_time) AS
+  select c.customer_id, c.agent_id, c.customer_name, c.wechat, cp.phone, ca.address, ca.province, ca.city, ca.district, c.transformed, c.block_flag, c.create_time
   from customer c left join customer_phone cp on cp.block_flag = 0 and c.customer_id = cp.customer_id
-    left join customer_address ca on ca.block_flag = 0 and c.customer_id = ca.customer_id
+    left join customer_address ca on ca.block_flag = 0 and c.customer_id = ca.customer_id;
+
+##给customer_order表添加customer_id字段
+ALTER TABLE `selling`.`customer_order`
+ADD COLUMN `customer_id` VARCHAR(45) NULL AFTER `order_id`;
