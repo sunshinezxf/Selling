@@ -2,7 +2,6 @@ package selling.sunshine.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import common.sunshine.model.selling.customer.Customer;
 import common.sunshine.model.selling.goods.Goods4Agent;
 import common.sunshine.pagination.DataTablePage;
 import common.sunshine.pagination.DataTableParam;
@@ -17,12 +16,9 @@ import org.springframework.web.bind.annotation.*;
 import selling.sunshine.model.sum.AgentGoods;
 import selling.sunshine.model.sum.OrderStatistics;
 import selling.sunshine.model.sum.Vendition;
-import selling.sunshine.service.AgentService;
-import selling.sunshine.service.CommodityService;
-import selling.sunshine.service.CustomerService;
-import selling.sunshine.service.OrderService;
-import selling.sunshine.service.StatisticService;
+import selling.sunshine.service.*;
 import selling.sunshine.vo.agent.AgentPurchase;
+import selling.sunshine.vo.customer.CustomerVo;
 import selling.sunshine.vo.order.OrderItemSum;
 
 import java.io.IOException;
@@ -47,7 +43,7 @@ public class StatisticController {
 
     @Autowired
     private CustomerService customerService;
-    
+
     @Autowired
     private CommodityService commodityService;
 
@@ -232,7 +228,7 @@ public class StatisticController {
                 series.add(jsonObject);
             }
             dataObject.put("ALL", series);
-        } 
+        }
         condition.clear();
         condition.put("orderType", 0);
         ResultData responseOrdinary = statisticService.orderLastYear(condition);
@@ -313,10 +309,10 @@ public class StatisticController {
         condition.put("blockFlag", false);
         ResultData queryData = customerService.fetchCustomer(condition);
         if (queryData.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            List<Customer> customers = (List<Customer>) queryData.getData();
+            List<CustomerVo> customers = (List<CustomerVo>) queryData.getData();
             Map<String, Integer> map = new HashMap<>();
-            for (Customer customer : customers) {
-                String province = customer.getAddress().getProvince();
+            for (CustomerVo customer : customers) {
+                String province = customer.getProvince();
                 if (province != null) {
                     if (map.containsKey(province)) {
                         map.put(province, map.get(province) + 1);
@@ -465,65 +461,65 @@ public class StatisticController {
         result.setResponseCode(ResponseCode.RESPONSE_NULL);
         return result;
     }
-    
+
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/goods/purchaseRecord/month")
     public ResultData perGoodsPurchaseRecordMonth() {
-    	ResultData result = new ResultData();
-        Map<String, Object> condition=new HashMap<>();
-        ResultData fetchResponse=commodityService.fetchGoods4Agent(condition);
-        if (fetchResponse.getResponseCode()==ResponseCode.RESPONSE_OK) {
-			List<Goods4Agent> goods=(List<Goods4Agent>)fetchResponse.getData();
-			JSONArray goodsArray = new JSONArray();
-			for (Goods4Agent goods4Agent:goods) {
-				condition.put("goodsId", goods4Agent.getGoodsId());
-				fetchResponse=statisticService.perGoodsPurchaseRecordMonth(condition);
-				if (fetchResponse.getResponseCode()==ResponseCode.RESPONSE_OK) {
-					JSONObject record = (JSONObject)fetchResponse.getData();
-					if (StringUtils.isEmpty(goods4Agent.getNickname())) {
-						record.put("name", goods4Agent.getName());
-					}else {
-						record.put("name", goods4Agent.getNickname());
-					}
-					record.put("id", goods4Agent.getGoodsId());
-					goodsArray.add(record);
-				}
-			}
-			result.setData(goodsArray);
-			return result;
-		}
+        ResultData result = new ResultData();
+        Map<String, Object> condition = new HashMap<>();
+        ResultData fetchResponse = commodityService.fetchGoods4Agent(condition);
+        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            List<Goods4Agent> goods = (List<Goods4Agent>) fetchResponse.getData();
+            JSONArray goodsArray = new JSONArray();
+            for (Goods4Agent goods4Agent : goods) {
+                condition.put("goodsId", goods4Agent.getGoodsId());
+                fetchResponse = statisticService.perGoodsPurchaseRecordMonth(condition);
+                if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                    JSONObject record = (JSONObject) fetchResponse.getData();
+                    if (StringUtils.isEmpty(goods4Agent.getNickname())) {
+                        record.put("name", goods4Agent.getName());
+                    } else {
+                        record.put("name", goods4Agent.getNickname());
+                    }
+                    record.put("id", goods4Agent.getGoodsId());
+                    goodsArray.add(record);
+                }
+            }
+            result.setData(goodsArray);
+            return result;
+        }
         result.setResponseCode(ResponseCode.RESPONSE_ERROR);
         return result;
     }
-    
+
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/goods/purchaseRecord/day")
     public ResultData perGoodsPurchaseRecordDay() {
-      ResultData result = new ResultData();
-      Map<String, Object> condition=new HashMap<>();
-      ResultData fetchResponse=commodityService.fetchGoods4Agent(condition);
-      if (fetchResponse.getResponseCode()==ResponseCode.RESPONSE_OK) {
-			List<Goods4Agent> goods=(List<Goods4Agent>)fetchResponse.getData();
-			JSONArray goodsArray = new JSONArray();
-			for (Goods4Agent goods4Agent:goods) {
-				condition.put("goodsId", goods4Agent.getGoodsId());
-				fetchResponse=statisticService.perGoodsPurchaseRecordDay(condition);
-				if (fetchResponse.getResponseCode()==ResponseCode.RESPONSE_OK) {
-					JSONObject record = (JSONObject)fetchResponse.getData();
-					if (StringUtils.isEmpty(goods4Agent.getNickname())) {
-						record.put("name", goods4Agent.getName());
-					}else {
-						record.put("name", goods4Agent.getNickname());
-					}
-					record.put("id", goods4Agent.getGoodsId());
-					goodsArray.add(record);
-				}
-			}
-			result.setData(goodsArray);
-			return result;
-		}
-      result.setResponseCode(ResponseCode.RESPONSE_ERROR);
-      return result;
+        ResultData result = new ResultData();
+        Map<String, Object> condition = new HashMap<>();
+        ResultData fetchResponse = commodityService.fetchGoods4Agent(condition);
+        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            List<Goods4Agent> goods = (List<Goods4Agent>) fetchResponse.getData();
+            JSONArray goodsArray = new JSONArray();
+            for (Goods4Agent goods4Agent : goods) {
+                condition.put("goodsId", goods4Agent.getGoodsId());
+                fetchResponse = statisticService.perGoodsPurchaseRecordDay(condition);
+                if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                    JSONObject record = (JSONObject) fetchResponse.getData();
+                    if (StringUtils.isEmpty(goods4Agent.getNickname())) {
+                        record.put("name", goods4Agent.getName());
+                    } else {
+                        record.put("name", goods4Agent.getNickname());
+                    }
+                    record.put("id", goods4Agent.getGoodsId());
+                    goodsArray.add(record);
+                }
+            }
+            result.setData(goodsArray);
+            return result;
+        }
+        result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+        return result;
     }
-    
+
 }
