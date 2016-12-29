@@ -998,8 +998,7 @@ public class AgentController {
             view.setViewName("/agent/order/modify");
             return view;
         }
-        Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "尊敬的代理商，您的资料现在正在审核中，只有当审核通过后才能代客下单，请耐心等待！",
-                "/agent/login");
+        Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "尊敬的代理商，您的资料现在正在审核中，只有当审核通过后才能代客下单，请耐心等待！", "/agent/login");
         view.addObject("prompt", prompt);
         WechatConfig.oauthWechat(view, "/agent/prompt");
         view.setViewName("/agent/prompt");
@@ -1551,8 +1550,7 @@ public class AgentController {
         if (orderId.startsWith("ORI")) {
             condition.put("orderItemId", orderId);
             ResultData fetchOrderItemResponse = orderService.fetchOrderItem(condition);
-            if (fetchOrderItemResponse.getResponseCode() != ResponseCode.RESPONSE_OK
-                    || ((List<OrderItem>) fetchOrderItemResponse.getData()).isEmpty()) {
+            if (fetchOrderItemResponse.getResponseCode() != ResponseCode.RESPONSE_OK || ((List<OrderItem>) fetchOrderItemResponse.getData()).isEmpty()) {
                 Prompt prompt = new Prompt(PromptCode.WARNING, "提示信息", "未找到该订单", "/agent/manage/2");
                 view.addObject("prompt", prompt);
                 WechatConfig.oauthWechat(view, "/agent/prompt");
