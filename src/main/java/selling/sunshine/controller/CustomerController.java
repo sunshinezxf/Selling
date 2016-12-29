@@ -569,34 +569,35 @@ public class CustomerController {
         String phone = form.getPhone();
         String address = form.getAddress();
         String wechat = form.getWechat();
+        //判断该顾客是否已经存在与顾客列表中
         Map<String, Object> condition = new HashMap<>();
-        //判断代理商是否合法
+        condition.put("phone", phone);
+        condition.put("blockFlag", false);
+        ResultData response = customerService.fetchCustomer(condition);
+        //若存在，则查出这个customer并记录到order中
         Agent agent = null;
-        if (agentId != null && agentId != "") {
-            condition.clear();
-            condition.put("agentId", agentId);
-            condition.put("granted", true);
-            condition.put("blockFlag", false);
-            ResultData fetchAgentData = agentService.fetchAgent(condition);
-            if (fetchAgentData.getResponseCode() == ResponseCode.RESPONSE_OK) {
-                agent = ((List<Agent>) fetchAgentData.getData()).get(0);
-                Thread thread = new Thread() {
-                    @Override
-                    public void run() {
-                        Map<String, Object> condition = new HashMap<>();
-                        condition.put("phone", phone);
-                        condition.put("blockFlag", false);
-                        condition.put("customerBlockFlag", false);
-                        ResultData response = customerService.fetchCustomerPhone(condition);
-                        if (response.getResponseCode() == ResponseCode.RESPONSE_NULL) {
-                            common.sunshine.model.selling.agent.lite.Agent agent = new common.sunshine.model.selling.agent.lite.Agent();
-                            agent.setAgentId(agentId);
-                            Customer customer = new Customer(customerName, address, phone, agent);
-                            customerService.createCustomer(customer);
-                        }
-                    }
-                };
-                thread.start();
+        CustomerVo vo = null;
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            vo = ((List<CustomerVo>) response.getData()).get(0);
+        } else {
+            Customer customer = new Customer(customerName, address, phone);
+            if (!StringUtils.isEmpty(agentId)) {
+                //验证该agentId是否存在
+                condition.clear();
+                condition.put("agentId", agentId);
+                response = agentService.fetchAgent(condition);
+                if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                    agent = ((List<Agent>) response.getData()).get(0);
+                    customer.setAgent(new common.sunshine.model.selling.agent.lite.Agent(agent));
+                }
+            }
+            response = customerService.createCustomer(customer);
+            if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                vo = (CustomerVo) response.getData();
+            } else {
+                resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
+                resultData.setDescription(response.getDescription());
+                logger.error(response.getDescription());
             }
         }
         //判断商品是否合法
@@ -616,7 +617,7 @@ public class CustomerController {
         CustomerOrder customerOrder = new CustomerOrder(goods, goodsQuantity, customerName, phone, address, agentLite);
         customerOrder.setTotalPrice(totalPrice);
         customerOrder.setWechat(wechat);
-
+        customerOrder.setCustomerId(vo.getCustomerId());
         ResultData fetchResponse = orderService.placeOrder(customerOrder);
         if (fetchResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
             resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);

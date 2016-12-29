@@ -377,7 +377,6 @@ public class CommodityController {
         condition.put("blockFlag", false);
         ResultData fetchCommodityData = commodityService.fetchGoods4Customer(condition);
         if (fetchCommodityData.getResponseCode() != ResponseCode.RESPONSE_OK) {
-            // 商品不存在错误页面!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             WechatConfig.oauthWechat(view, "/customer/component/goods_error_msg");
             view.setViewName("/customer/component/goods_error_msg");
             return view;
@@ -390,7 +389,6 @@ public class CommodityController {
             condition.put("blockFlag", false);
             ResultData fetchAgentData = agentService.fetchAgent(condition);
             if (fetchAgentData.getResponseCode() != ResponseCode.RESPONSE_OK) {
-                // 代理商不存在错误页面!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 WechatConfig.oauthWechat(view, "/customer/component/agent_error_msg");
                 view.setViewName("/customer/component/agent_error_msg");
                 return view;

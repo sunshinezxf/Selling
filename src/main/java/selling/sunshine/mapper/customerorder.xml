@@ -5,6 +5,7 @@
         <result property="orderId" column="order_id"></result>
         <result property="wechat" column="wechat"></result>
         <result property="quantity" column="quantity"></result>
+        <result property="customerId" column="customer_id"></result>
         <result property="receiverName" column="receiver_name"></result>
         <result property="receiverPhone" column="receiver_phone"></result>
         <result property="receiverAddress" column="receiver_addr"></result>
@@ -41,8 +42,8 @@
     </resultMap>
 
     <select id="query" parameterType="java.util.Map" resultMap="customerOrderVo">
-        SELECT order_id, agent_id, wechat, quantity, receiver_name, receiver_phone, receiver_addr, total_price,
-        order_status, goods_id, block_flag, create_time
+        SELECT order_id, agent_id, wechat, quantity, customer_id, receiver_name, receiver_phone, receiver_addr,
+        total_price, order_status, goods_id, block_flag, create_time
         FROM customer_order
         WHERE 1=1
         <if test="orderId != null and orderId != ''">
@@ -73,11 +74,11 @@
             AND (date_format(create_time, '%Y-%m-%d') &gt;= #{start} AND date_format(create_time, '%Y-%m-%d') &lt;=
             #{end})
         </if>
-        <if test="timeStampStart != null and timeStampStart != ''" >
-        	AND create_time &gt;= #{timeStampStart}
+        <if test="timeStampStart != null and timeStampStart != ''">
+            AND create_time &gt;= #{timeStampStart}
         </if>
-        <if test="timeStampEnd != null and timeStampEnd != ''" >
-        	AND create_time &lt;= #{timeStampEnd}
+        <if test="timeStampEnd != null and timeStampEnd != ''">
+            AND create_time &lt;= #{timeStampEnd}
         </if>
         <if test="receiverPhone != null">
             AND receiver_phone = #{receiverPhone}
@@ -132,6 +133,7 @@
             </if>
             order_id = #{orderId},
             quantity = #{quantity},
+            customer_id = #{customerId},
             receiver_name = #{receiverName},
             receiver_phone = #{receiverPhone},
             receiver_addr = #{receiverAddress},

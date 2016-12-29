@@ -14,6 +14,7 @@ public class CustomerOrder extends Entity {
     private Agent agent;
     private int quantity;
     private String wechat;
+    private String customerId;
     private String receiverName;
     private String receiverPhone;
     private String receiverAddress;
@@ -122,5 +123,13 @@ public class CustomerOrder extends Entity {
 
     public void setWechat(String wechat) {
         this.wechat = wechat;
+    }
+
+    public String getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
     }
 }

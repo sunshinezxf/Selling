@@ -781,20 +781,45 @@ CREATE TABLE IF NOT EXISTS `selling`.`promotion_config` (
   ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `selling`.`notice` (
-  `notice_id` VARCHAR(20) NOT NULL,
-  `notice_content` LONGTEXT NOT NULL,
-  `notice_link` VARCHAR(200) NOT NULL,
-  `block_flag` TINYINT(1) NOT NULL DEFAULT 0,
-  `create_time` DATETIME NOT NULL,
-  PRIMARY KEY (`notice_id`))
+  `notice_id`      VARCHAR(20)  NOT NULL,
+  `notice_content` LONGTEXT     NOT NULL,
+  `notice_link`    VARCHAR(200) NOT NULL,
+  `block_flag`     TINYINT(1)   NOT NULL DEFAULT 0,
+  `create_time`    DATETIME     NOT NULL,
+  PRIMARY KEY (`notice_id`)
+)
   ENGINE = InnoDB;
 
 ##2016年12月28日
 CREATE VIEW `customer_view`(customer_id, agent_id, customer_name, customer_wechat, customer_phone, customer_address, customer_province, customer_city, customer_district, transformed, block_flag, create_time) AS
-  select c.customer_id, c.agent_id, c.customer_name, c.wechat, cp.phone, ca.address, ca.province, ca.city, ca.district, c.transformed, c.block_flag, c.create_time
-  from customer c left join customer_phone cp on cp.block_flag = 0 and c.customer_id = cp.customer_id
-    left join customer_address ca on ca.block_flag = 0 and c.customer_id = ca.customer_id;
+  SELECT
+    c.customer_id,
+    c.agent_id,
+    c.customer_name,
+    c.wechat,
+    cp.phone,
+    ca.address,
+    ca.province,
+    ca.city,
+    ca.district,
+    c.transformed,
+    c.block_flag,
+    c.create_time
+  FROM customer c LEFT JOIN customer_phone cp ON cp.block_flag = 0 AND c.customer_id = cp.customer_id
+    LEFT JOIN customer_address ca ON ca.block_flag = 0 AND c.customer_id = ca.customer_id;
 
 ##给customer_order表添加customer_id字段
 ALTER TABLE `selling`.`customer_order`
-ADD COLUMN `customer_id` VARCHAR(45) NULL AFTER `order_id`;
+ADD COLUMN `customer_id` VARCHAR(45) NULL
+AFTER `order_id`;
+
+ALTER TABLE `selling`.`customer`
+DROP FOREIGN KEY `fk_customer_agent1`;
+ALTER TABLE `selling`.`customer`
+CHANGE COLUMN `agent_id` `agent_id` VARCHAR(20) NULL DEFAULT NULL;
+ALTER TABLE `selling`.`customer`
+ADD CONSTRAINT `fk_customer_agent1`
+FOREIGN KEY (`agent_id`)
+REFERENCES `selling`.`agent` (`agent_id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
