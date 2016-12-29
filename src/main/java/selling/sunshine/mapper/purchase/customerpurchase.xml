@@ -10,12 +10,12 @@
     <resultMap id="customerPurchaseVo" type="selling.sunshine.vo.customer.CustomerPurchase">
         <result property="customerId" column="customer_id"></result>
         <result property="customerName" column="customer_name"></result>
-        <result property="motant" column="order_price"></result>
+        <result property="montant" column="order_price"></result>
         <result property="dealNum" column="deal_quantity"></result>
         <association property="agent" column="agentId = agent_id" select="agentLiteQuery"></association>
     </resultMap>
 
-    <select id="query" parameterType="java.util.Map">
+    <select id="query" parameterType="java.util.Map" resultMap="customerPurchaseVo">
         SELECT customer_id, customer_name, agent_id, sum(order_item_price) AS order_price, count(order_id) AS deal_quantity
         FROM order_item_sum
         WHERE 1 = 1
@@ -25,7 +25,12 @@
         <if test="agentId != null">
             AND agent_id = #{agentId}
         </if>
-        GROUP BY customer_id, agent_id
+        <if test="search !=null">
+            AND (customer_name LIKE BINARY #{search}
+            OR agent_id IN (select agent_id FROM agent WHERE agent_name LIKE BINARY #{search})
+                )
+        </if>
+        GROUP BY customer_id, customer_name,agent_id
     </select>
 
     <select id="agentLiteQuery" parameterType="java.util.Map" resultMap="agentLiteVo">

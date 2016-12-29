@@ -81,7 +81,7 @@ public class CustomerServiceImpl implements CustomerService {
         ResultData queryResponse = customerDao.queryCustomer(condition);
         result.setResponseCode(queryResponse.getResponseCode());
         if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            if (((List<Customer>) queryResponse.getData()).isEmpty()) {
+            if (((List<CustomerVo>) queryResponse.getData()).isEmpty()) {
                 result.setResponseCode(ResponseCode.RESPONSE_NULL);
             }
             result.setData(queryResponse.getData());

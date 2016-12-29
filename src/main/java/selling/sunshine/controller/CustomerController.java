@@ -1,5 +1,6 @@
 package selling.sunshine.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import common.sunshine.model.selling.agent.Agent;
@@ -84,44 +85,44 @@ public class CustomerController {
         return view;
     }
 
-    @ResponseBody
-    @RequestMapping(method = RequestMethod.POST, value = "/overview/{agentId}")
-    public DataTablePage<CustomerVo> overview(@PathVariable String agentId, DataTableParam param) {
-        DataTablePage<CustomerVo> result = new DataTablePage<>();
-        if (StringUtils.isEmpty(result)) {
-            return result;
-        }
-        Map<String, Object> condition = new HashMap<>();
-        Subject subject = SecurityUtils.getSubject();
-        User user = (User) subject.getPrincipal();
-        if (user == null) {
-            return result;
-        }
-        if (user.getAgent() != null) {
-            condition.put("agentId", user.getAgent().getAgentId());
-        }
-        if (user.getAdmin() != null && !StringUtils.isEmpty(agentId)) {
-            condition.put("agentId", agentId);
-        }
-        List<SortRule> rules = new ArrayList<>();
-        rules.add(new SortRule("agent_id", "asc"));
-        condition.put("sort", rules);
-        ResultData fetchResponse = customerService.fetchCustomer(condition, param);
-        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            result = (DataTablePage<CustomerVo>) fetchResponse.getData();
-        }
-        return result;
-    }
+//    @ResponseBody
+//    @RequestMapping(method = RequestMethod.POST, value = "/overview/{agentId}")
+//    public DataTablePage<CustomerVo> overview(@PathVariable String agentId, DataTableParam param) {
+//        DataTablePage<CustomerVo> result = new DataTablePage<>();
+//        if (StringUtils.isEmpty(result)) {
+//            return result;
+//        }
+//        Map<String, Object> condition = new HashMap<>();
+//        Subject subject = SecurityUtils.getSubject();
+//        User user = (User) subject.getPrincipal();
+//        if (user == null) {
+//            return result;
+//        }
+//        if (user.getAgent() != null) {
+//            condition.put("agentId", user.getAgent().getAgentId());
+//        }
+//        if (user.getAdmin() != null && !StringUtils.isEmpty(agentId)) {
+//            condition.put("agentId", agentId);
+//        }
+//        List<SortRule> rules = new ArrayList<>();
+//        rules.add(new SortRule("agent_id", "asc"));
+//        condition.put("sort", rules);
+//        ResultData fetchResponse = customerService.fetchCustomer(condition, param);
+//        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+//            result = (DataTablePage<CustomerVo>) fetchResponse.getData();
+//        }
+//        return result;
+//    }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/detail/{agentId}/{customerId}")
+    @RequestMapping(method = RequestMethod.GET, value = "/detail/{customerId}")
     @ResponseBody
-    public ModelAndView detail(@PathVariable("agentId") String agentId, @PathVariable("customerId") String customerId) {
+    public ModelAndView detail(@PathVariable("customerId") String customerId) {
         ModelAndView view = new ModelAndView();
         Map<String, Object> condition = new HashMap<>();
         condition.put("customerId", customerId);
         ResultData fetchResponse = customerService.fetchCustomer(condition);
         if (fetchResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
-            view.setViewName("redirect:/customer/overview/" + agentId);
+            view.setViewName("redirect:/customer/overview");
             return view;
         }
         CustomerVo customer = ((List<CustomerVo>) fetchResponse.getData()).get(0);
@@ -130,7 +131,7 @@ public class CustomerController {
         condition.put("agentId", customer.getAgent().getAgentId());
         fetchResponse = agentService.fetchAgent(condition);
         if (fetchResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
-            view.setViewName("redirect:/customer/overview/" + agentId);
+            view.setViewName("redirect:/customer/overview");
             return view;
         }
         Agent agent = ((List<Agent>) fetchResponse.getData()).get(0);
@@ -139,7 +140,7 @@ public class CustomerController {
         condition.put("customerId", customerId);
         fetchResponse = customerService.fetchCustomerAddress(condition);
         if (fetchResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
-            view.setViewName("redirect:/customer/overview/" + agentId);
+            view.setViewName("redirect:/customer/overview");
             return view;
         }
         view.setViewName("/backend/customer/detail");
@@ -717,6 +718,20 @@ public class CustomerController {
             return result;
         }
         Map<String, Object> condition = new HashMap<>();
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        if (user == null) {
+            return result;
+        }
+        if (user.getAgent() != null) {
+            condition.put("agentId", user.getAgent().getAgentId());
+        }
+        if (user.getAdmin() != null && !StringUtils.isEmpty(param.getParams())) {
+            JSONObject json = JSON.parseObject(param.getParams());
+            if(json.containsKey("agentId")){
+                condition.put("agentId", json.getString("agentId"));
+            }
+        }
         ResultData response = customerService.fetchCustomerPurchase(condition, param);
         if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
             result = (DataTablePage<CustomerPurchase>) response.getData();

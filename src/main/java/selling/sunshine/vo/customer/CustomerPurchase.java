@@ -36,10 +36,6 @@ public class CustomerPurchase {
         return agent;
     }
 
-    public void setAgent(Agent agent) {
-        this.agent = agent;
-    }
-
     public double getMontant() {
         return montant;
     }
