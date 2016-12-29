@@ -578,7 +578,7 @@ public class EventController {
     public ResultData all() {
         ResultData resultData = new ResultData();
         Map<String, Object> condition = new HashMap<>();
-        ResultData fetchResponse = eventService.fetchGiftEvent(condition);
+        ResultData fetchResponse = eventService.fetchEvent(condition);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             List<Event> events = (List<Event>) fetchResponse.getData();
             resultData.setData(events);
