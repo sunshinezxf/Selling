@@ -38,7 +38,7 @@
                             <a class="weui_btn weui_btn_mini weui_btn_primary" id="gift_order_btn">赠送</a>
                         </div>
                     #else
-                        <div class="weui_cell_ft">
+                        <div class="weui_cell_ft" style="padding-right:0.5em">
                             <a class="weui_btn weui_btn_mini weui_btn_plain_primary" style="display:none;"
                                id="save_order_btn">保存</a>
                         </div>
