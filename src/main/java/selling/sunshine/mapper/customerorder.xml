@@ -157,6 +157,9 @@
             <if test="quantity != null">
                 quantity = #{quantity},
             </if>
+            <if test="customerId != null">
+                customer_id = #{customerId},
+            </if>
             <if test="receiverName != null">
                 receiver_name = #{receiverName},
             </if>

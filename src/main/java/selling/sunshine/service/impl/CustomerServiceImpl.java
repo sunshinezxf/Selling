@@ -151,7 +151,7 @@ public class CustomerServiceImpl implements CustomerService {
         ResultData result = new ResultData();
         ResultData response = customerDao.queryCustomer(condition);
         if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            List<CustomerVo> list = (List<CustomerVo>) result.getData();
+            List<CustomerVo> list = (List<CustomerVo>) response.getData();
             for (CustomerVo item : list) {
                 condition.put("phone", item.getPhone());
                 result = agentDao.queryAgent(condition);

@@ -20,8 +20,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import selling.sunshine.dao.*;
 import selling.sunshine.service.OrderService;
+import selling.sunshine.vo.customer.CustomerVo;
 import selling.sunshine.vo.order.OrderItemSum;
 
 import java.sql.Timestamp;
@@ -375,15 +377,30 @@ public class OrderServiceImpl implements OrderService {
         ResultData queryData = customerOrderDao.queryOrder(condition);
         List<CustomerOrder> customerOrders = (List<CustomerOrder>) queryData.getData();
         for (CustomerOrder customerOrder : customerOrders) {
-                condition.put("phone", customerOrder.getReceiverPhone());
-                condition.put("customerBlockFlag", false);
-                queryData = customerDao.queryCustomerPhone(condition);
-                if (((List<CustomerPhone>)queryData.getData()).isEmpty()) {
-                    Customer newCustomer = new Customer(customerOrder.getReceiverName(), customerOrder.getReceiverAddress(), customerOrder.getReceiverPhone(), customerOrder.getAgent());
-                    customerDao.insertCustomer(newCustomer);
+            condition.put("phone", customerOrder.getReceiverPhone());
+            condition.put("customerBlockFlag", false);
+            queryData = customerDao.queryCustomerPhone(condition);
+            if (((List<CustomerPhone>) queryData.getData()).isEmpty()) {
+                Customer newCustomer = new Customer(customerOrder.getReceiverName(), customerOrder.getReceiverAddress(), customerOrder.getReceiverPhone(), customerOrder.getAgent());
+                ResultData response = customerDao.insertCustomer(newCustomer);
+                if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                    CustomerVo vo = (CustomerVo) response.getData();
+                    customerOrder.setCustomerId(vo.getCustomerId());
+                    customerOrderDao.updateOrder(customerOrder);
                 }
+            }
+            if (StringUtils.isEmpty(customerOrder.getCustomerId())) {
+                condition.clear();
+                condition.put("phone", customerOrder.getReceiverPhone());
+                condition.put("blockFlag", false);
+                queryData = customerDao.queryCustomer(condition);
+                if (queryData.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                    CustomerVo vo = ((List<CustomerVo>) queryData.getData()).get(0);
+                    customerOrder.setCustomerId(vo.getCustomerId());
+                    customerOrderDao.updateOrder(customerOrder);
+                }
+            }
         }
-
         return resultData;
     }
 
