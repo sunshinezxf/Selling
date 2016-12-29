@@ -21,7 +21,7 @@
     </div>
     <div class="weui_btn_area" style="text-align:center">
         <button type="button" class="weui_btn weui_btn_primary" id="order_all">查看所有订单</button>
-    </div> 
+    </div>
     <div class="weui_cells_title" id="last_order_title">最近购买订单</div>
     <div class="weui_cells" id="last_order">
     </div>
@@ -29,20 +29,24 @@
     <div class="weui_cells" id="sales_info">
     </div>
     <div class="weui_btn_area" style="text-align:center">
-    	<button type="button" class="weui_btn weui_btn_warn" style="display:inline-block;width:45%" id="update_delete_btn">删除客户</button>
-        <button type="button" class="weui_btn weui_btn_primary" style="display:inline-block;width:45%" id="update_confirm_btn">确认修改</button>
+        <button type="button" class="weui_btn weui_btn_warn" style="display:inline-block;width:45%"
+                id="update_delete_btn">删除客户
+        </button>
+        <button type="button" class="weui_btn weui_btn_primary" style="display:inline-block;width:45%"
+                id="update_confirm_btn">确认修改
+        </button>
         <button type="button" class="weui_btn weui_btn_default" id="update_cancel_btn">返回</button>
-    </div> 
+    </div>
 </div>
 <div class="weui_dialog_alert" id="dialog" style="display: none;">
-	    <div class="weui_mask"></div>
-	    <div class="weui_dialog">
-	        <div class="weui_dialog_hd"><strong class="weui_dialog_title">消息</strong></div>
-	        <div class="weui_dialog_bd"></div>
-	        <div class="weui_dialog_ft">
-	            <a href="javascript:;" class="weui_btn_dialog primary">确定</a>
-	        </div>
-	    </div>
+    <div class="weui_mask"></div>
+    <div class="weui_dialog">
+        <div class="weui_dialog_hd"><strong class="weui_dialog_title">消息</strong></div>
+        <div class="weui_dialog_bd"></div>
+        <div class="weui_dialog_ft">
+            <a href="javascript:;" class="weui_btn_dialog primary">确定</a>
+        </div>
+    </div>
 </div>
 <div class="weui_dialog_confirm" id="delete_dialog" style="display:none;">
     <div class="weui_mask"></div>
@@ -52,201 +56,207 @@
         <div class="weui_dialog_ft">
             <a href="javascript:;" class="weui_btn_dialog default">取消</a>
             <a href="javascript:;" class="weui_btn_dialog primary">确定</a>
-        <iframe id="tmp_downloadhelper_iframe" style="display: none;"></iframe></div>
-	</div>
+            <iframe id="tmp_downloadhelper_iframe" style="display: none;"></iframe>
+        </div>
+    </div>
 </div>
 <script>
 
     $("#update_confirm_btn").click(function () {
-       
 
-        var url = "${path.concat('/customer/modify/')}" + customerId;
+
+        var url = "${path.concat('/customer/modify')}";
         var name = $("#customer_name_new").val();
         var phone = $("#customer_phone_new").val();
         var address = $("#customer_address_new").val();
-        
-    
-        if((typeof phone == "undefined" || phone == "")&&(typeof address == "undefined" || address == "")){
+
+
+        if ((typeof phone == "undefined" || phone == "") && (typeof address == "undefined" || address == "")) {
             $("#dialog").find(".weui_dialog_bd").html("手机号码和地址不能为空！");
-    		$("#dialog").fadeIn();
-    		$("#customer_phone_new").val(customer.phone.phone);
-            $("#customer_address_new").val(customer.address.address);       
+            $("#dialog").fadeIn();
+            $("#customer_phone_new").val(customer.phone.phone);
+            $("#customer_address_new").val(customer.address.address);
         }
-        else if(typeof phone == "undefined" || phone == "") {
-    		$("#dialog").find(".weui_dialog_bd").html("手机号码不能为空！");
-    		$("#dialog").fadeIn();
-    		$("#customer_phone_new").val(customer.phone.phone);     
-    	}else if(typeof address == "undefined" || address == "") {
-    		$("#dialog").find(".weui_dialog_bd").html("地址不能为空！");
-    		$("#dialog").fadeIn();
-            $("#customer_address_new").val(customer.address.address);       
-    	}else if(!(/^1[3|4|5|7|8]\d{9}$/.test($.phoneFilter(phone)))){ 
+        else if (typeof phone == "undefined" || phone == "") {
+            $("#dialog").find(".weui_dialog_bd").html("手机号码不能为空！");
+            $("#dialog").fadeIn();
+            $("#customer_phone_new").val(customer.phone.phone);
+        } else if (typeof address == "undefined" || address == "") {
+            $("#dialog").find(".weui_dialog_bd").html("地址不能为空！");
+            $("#dialog").fadeIn();
+            $("#customer_address_new").val(customer.address.address);
+        } else if (!(/^1[3|4|5|7|8]\d{9}$/.test($.phoneFilter(phone)))) {
             $("#dialog").find(".weui_dialog_bd").html("手机号码有误，请重填！");
-    		$("#dialog").fadeIn();
-    		$("#customer_phone_new").val(customer.phone.phone);     
-        } else{
-            $.post(url, {customerId: customerId, name: name, phone: $.phoneFilter(phone), address: address}, function (result) {
-               if (result.responseCode == "RESPONSE_OK") {
-                  var newCustomer = result.data;
-                  var node = "<a class='weui_cell' onclick='updateCustomer(this)' id='" + newCustomer.customerId + "'><div class='weui_cell_bd weui_cell_primary'><p>" + name + "</p></div><div class='weui_cell_ft'>" + $.phoneFilter(phone) + "</div></a>";
-                  $("#customer_list").append(node);
-                  $("#" + customerId).remove();    
-                  $("#update_customer_form").hide();
-                  $("#customer_panel").fadeIn();  
-                  $("#customer_name_new").val("");
-                  $("#customer_phone_new").val("");
-                  $("#customer_address_new").val("");
-               }else{
-               	  alert(result.responseCode);
-                  $("#dialog").find(".weui_dialog_bd").html("您新填入的手机号已经有其他人正在使用，请检查是否输入错误！");
-    		      $("#dialog").fadeIn();
-               }
-                  
+            $("#dialog").fadeIn();
+            $("#customer_phone_new").val(customer.phone.phone);
+        } else {
+            $.post(url, {
+                customerId: customerId,
+                name: name,
+                phone: $.phoneFilter(phone),
+                address: address
+            }, function (result) {
+                if (result.responseCode == "RESPONSE_OK") {
+                    var newCustomer = result.data;
+                    var node = "<a class='weui_cell' onclick='updateCustomer(this)' id='" + newCustomer.customerId + "'><div class='weui_cell_bd weui_cell_primary'><p>" + name + "</p></div><div class='weui_cell_ft'>" + $.phoneFilter(phone) + "</div></a>";
+                    $("#customer_list").append(node);
+                    $("#" + customerId).remove();
+                    $("#update_customer_form").hide();
+                    $("#customer_panel").fadeIn();
+                    $("#customer_name_new").val("");
+                    $("#customer_phone_new").val("");
+                    $("#customer_address_new").val("");
+                } else {
+                    alert(result.responseCode);
+                    $("#dialog").find(".weui_dialog_bd").html("您新填入的手机号已经有其他人正在使用，请检查是否输入错误！");
+                    $("#dialog").fadeIn();
+                }
+
             });
-    	
-    	}
-       
-       
+
+        }
+
+
     });
-    
-    $.phoneFilter = function(phone){
-    	return phone.replace(/-/g,"");
+
+    $.phoneFilter = function (phone) {
+        return phone.replace(/-/g, "");
     }
-    
-	
-	$("#update_delete_btn").click(function(){
-    	$("#delete_dialog").fadeIn();
+
+
+    $("#update_delete_btn").click(function () {
+        $("#delete_dialog").fadeIn();
     });
 
     $("#update_cancel_btn").click(function () {
         $("#update_customer_form").hide();
         $("#customer_panel").fadeIn();
     });
-    
-    $("#order_all").click(function(){
-    	window.location = "${path.concat('/customer/allOrder/" + customerId + "')}";
+
+    $("#order_all").click(function () {
+        window.location = "${path.concat('/customer/allOrder/" + customerId + "')}";
     });
-    
-    
+
+
     var customerId;
     var customer;
     function updateCustomer(obj) {
         $("#update_customer_form").fadeIn();
         customerId = obj.id;
-        
+
         var url = "${path.concat('/customer/" + customerId + "')}";
         $.post(url, function (result) {
             customer = result.data;
-			$("#customer_name_new").val(customer.name);
-            $("#customer_phone_new").val(customer.phone.phone);
-            $("#customer_address_new").val(customer.address.address);            
+            $("#customer_name_new").val(customer.name);
+            $("#customer_phone_new").val(customer.phone);
+            $("#customer_address_new").val(customer.address);
         });
-        
+
         $("#last_order").empty();
         $("#sales_info").empty();
         var url = "${path.concat('/customer/info/" + customerId + "')}";
         $.get(url, function (result) {
-            if(result.responseCode != "RESPONSE_OK"){
-            	var html = 
-	    			"<a class='weui_cell'>" + 
-					"<div class='weui_cell_bd weui_cell_primary'>" +
-					"<p style='text-decoration:none;color:#000000;'>无购买记录<span style='color:#888;'></span></p>" +
-					"</div>" + 
-					"</a>";
-				$("#last_order").append(html);
-				var html = 
-	            	"<div class='weui_cell'> \
-			    		<div class='weui_cell_bd weui_cell_primary'>无购买记录</div> \
-			    		<div class='weui_cell_ft'></div> \
-			    	</div>";
-			    $("#sales_info").append(html);
-            	return;
+            if (result.responseCode != "RESPONSE_OK") {
+                var html =
+                        "<a class='weui_cell'>" +
+                        "<div class='weui_cell_bd weui_cell_primary'>" +
+                        "<p style='text-decoration:none;color:#000000;'>无购买记录<span style='color:#888;'></span></p>" +
+                        "</div>" +
+                        "</a>";
+                $("#last_order").append(html);
+                var html =
+                        "<div class='weui_cell'> \
+                            <div class='weui_cell_bd weui_cell_primary'>无购买记录</div> \
+                            <div class='weui_cell_ft'></div> \
+                        </div>";
+                $("#sales_info").append(html);
+                return;
             }
             var lastOrder = result.data.lastOrder;
             var salesInfo = result.data.salesInfo;
-            
+
             var typeString = "";
-    			switch(lastOrder.orderType){
-    			case "ORDINARY":
-    				break;
-    			case "GIFT":
-    				typeString = "(赠送)";
-    				break;
-    			case "CUSTOMER":
-    				typeString = "(分享)";
-    				break;
-    			default:
-    			}
+            switch (lastOrder.orderType) {
+                case "ORDINARY":
+                    break;
+                case "GIFT":
+                    typeString = "(赠送)";
+                    break;
+                case "CUSTOMER":
+                    typeString = "(分享)";
+                    break;
+                default:
+            }
             var hrefURL = "${path.concat('/agent/orderitem/detail/" + lastOrder.orderId + "')}";
-            var	timeString = (new Date(lastOrder.createAt)).format("yyyy MM dd");
-    		var time = timeString.split(" ");
-            var html = 
-    			"<a href='" + hrefURL + "'class='weui_cell' id='" + lastOrder.orderId+ "'>" + 
-				"<div class='weui_cell_hd'>" + 
-				"</div>" + 
-				"<div class='weui_cell_bd weui_cell_primary'>" +
-				"<p style='text-decoration:none;color:#000000;'>" + time[0] + "年" + parseInt(time[1]) + "月" + time[2] + "日<span style='color:#888;'>" + typeString + "</span></p>" +
-				"</div>" + 
-				"<div class='weui_cell_ft'>" + lastOrder.customerName + "(" + lastOrder.goodsQuantity + "瓶)</div>" + 
-				"</a>";
+            var timeString = (new Date(lastOrder.createAt)).format("yyyy MM dd");
+            var time = timeString.split(" ");
+            var html =
+                    "<a href='" + hrefURL + "'class='weui_cell' id='" + lastOrder.orderId + "'>" +
+                    "<div class='weui_cell_hd'>" +
+                    "</div>" +
+                    "<div class='weui_cell_bd weui_cell_primary'>" +
+                    "<p style='text-decoration:none;color:#000000;'>" + time[0] + "年" + parseInt(time[1]) + "月" + time[2] + "日<span style='color:#888;'>" + typeString + "</span></p>" +
+                    "</div>" +
+                    "<div class='weui_cell_ft'>" + lastOrder.customerName + "(" + lastOrder.goodsQuantity + "瓶)</div>" +
+                    "</a>";
             $("#last_order").append(html);
-            $.each(salesInfo, function(i, val){
-            	var html = 
-	            	"<div class='weui_cell'> \
-			    		<div class='weui_cell_bd weui_cell_primary'>" + val.name + "</div> \
+            $.each(salesInfo, function (i, val) {
+                var html =
+                        "<div class='weui_cell'> \
+                            <div class='weui_cell_bd weui_cell_primary'>" + val.name + "</div> \
 			    		<div class='weui_cell_ft'>X" + val.quantity + "</div> \
 			    	</div>";
-			    $("#sales_info").append(html);
+                $("#sales_info").append(html);
             });
-            
+
         });
-        
+
         $("#customer_panel").hide();
     }
-    
-    $("#dialog").find(".weui_btn_dialog.primary").click(function(){
-    	$("#dialog").hide();
+
+    $("#dialog").find(".weui_btn_dialog.primary").click(function () {
+        $("#dialog").hide();
     });
-    
-    $("#delete_dialog").find(".weui_btn_dialog.default").click(function(){
-    	$("#delete_dialog").hide();
+
+    $("#delete_dialog").find(".weui_btn_dialog.default").click(function () {
+        $("#delete_dialog").hide();
     });
-    
-    $("#delete_dialog").find(".weui_btn_dialog.primary").click(function(){
-    	var url = "${path.concat('/customer/delete/')}" + customerId;
-    	$.post(url,{},function(result){
-    		$("#" + customerId).remove();
-    		$("#delete_dialog").hide();
-    		$("#update_customer_form").hide();
-    		$("#customer_panel").fadeIn();
-    	});
+
+    $("#delete_dialog").find(".weui_btn_dialog.primary").click(function () {
+        var url = "${path.concat('/customer/delete/')}" + customerId;
+        $.post(url, {}, function (result) {
+            $("#" + customerId).remove();
+            $("#delete_dialog").hide();
+            $("#update_customer_form").hide();
+            $("#customer_panel").fadeIn();
+        });
     });
-    
+
     Date.prototype.format = function (format) {
-    var o = {
-        "M+": this.getMonth() + 1,
-        // month
-        "d+": this.getDate(),
-        // day
-        "h+": this.getHours(),
-        // hour
-        "m+": this.getMinutes(),
-        // minute
-        "s+": this.getSeconds(),
-        // second
-        "q+": Math.floor((this.getMonth() + 3) / 3),
-        // quarter
-        "S": this.getMilliseconds()
-        // millisecond
-    };
-    if (/(y+)/.test(format) || /(Y+)/.test(format)) {
-        format = format.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
-    }
-    for (var k in o) {
-        if (new RegExp("(" + k + ")").test(format)) {
-            format = format.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k] : ("00" + o[k]).substr(("" + o[k]).length));
+        var o = {
+            "M+": this.getMonth() + 1,
+            // month
+            "d+": this.getDate(),
+            // day
+            "h+": this.getHours(),
+            // hour
+            "m+": this.getMinutes(),
+            // minute
+            "s+": this.getSeconds(),
+            // second
+            "q+": Math.floor((this.getMonth() + 3) / 3),
+            // quarter
+            "S": this.getMilliseconds()
+            // millisecond
+        };
+        if (/(y+)/.test(format) || /(Y+)/.test(format)) {
+            format = format.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
         }
-    }
-    return format;
-	};
+        for (var k in o) {
+            if (new RegExp("(" + k + ")").test(format)) {
+                format = format.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k] : ("00" + o[k]).substr(("" + o[k]).length));
+            }
+        }
+        return format;
+    };
 </script>

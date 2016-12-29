@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import selling.sunshine.dao.CustomerDao;
 import selling.sunshine.utils.TencentMapAPI;
-import selling.sunshine.vo.customer.CustomerPurchase;
 import selling.sunshine.vo.customer.CustomerVo;
 
 import java.util.ArrayList;
@@ -73,8 +72,8 @@ public class CustomerDaoImpl extends BaseDao implements CustomerDao {
                 //从数据库中获取刚插入的记录
                 Map<String, Object> condition = new HashMap<>();
                 condition.put("customerId", customer.getCustomerId());
-                customer = sqlSession.selectOne("selling.customer.query", condition);
-                result.setData(customer);
+                CustomerVo vo = sqlSession.selectOne("selling.customer.query", condition);
+                result.setData(vo);
             } catch (Exception e) {
                 logger.error(e.getMessage());
                 result.setResponseCode(ResponseCode.RESPONSE_ERROR);
@@ -138,8 +137,8 @@ public class CustomerDaoImpl extends BaseDao implements CustomerDao {
                 }
                 //查询当前持久化的客户信息
                 condition.remove("blockFlag");
-                customer = sqlSession.selectOne("selling.customer.query", condition);
-                result.setData(new CustomerVo(customer));
+                CustomerVo vo = sqlSession.selectOne("selling.customer.query", condition);
+                result.setData(vo);
             } catch (Exception e) {
                 logger.error(e.getMessage());
                 result.setResponseCode(ResponseCode.RESPONSE_ERROR);

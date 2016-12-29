@@ -230,8 +230,8 @@ public class CustomerController {
     }
 
     @ResponseBody
-    @RequestMapping(method = RequestMethod.POST, value = "/modify/{customerId}")
-    public ResultData updateCustomer(@PathVariable("customerId") String customerId, @Valid CustomerForm customerForm, BindingResult result) {
+    @RequestMapping(method = RequestMethod.POST, value = "/modify")
+    public ResultData updateCustomer(String customerId, @Valid CustomerForm customerForm, BindingResult result) {
         ResultData response = new ResultData();
         if (result.hasErrors()) {
             response.setResponseCode(ResponseCode.RESPONSE_ERROR);
