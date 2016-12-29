@@ -111,31 +111,37 @@ public class CustomerOrderDaoImpl extends BaseDao implements CustomerOrderDao {
         ResultData result = new ResultData();
         DataTablePage<CustomerOrder> page = new DataTablePage<>();
         condition = handle(condition);
-        if (!StringUtils.isEmpty(param.getsSearch())) {  
-            String searchParam=param.getsSearch().replace("/", "-");
-        	   condition.put("search", "%"+searchParam+"%");
- 		}
+        if (!StringUtils.isEmpty(param.getsSearch())) {
+            String searchParam = param.getsSearch().replace("/", "-");
+            condition.put("search", "%" + searchParam + "%");
+        }
         if (!StringUtils.isEmpty(param.getParams())) {
             JSONObject json = JSON.parseObject(param.getParams());
             if (json.containsKey("status")) {
+                List<Integer> status = new ArrayList<>();
                 switch (json.getString("status")) {
                     case "PAYED":
-                        condition.put("status", OrderItemStatus.PAYED.getCode());
+                        condition.put("status", status.add(OrderItemStatus.PAYED.getCode()));
                         break;
                     case "NOT_PAYED":
-                        condition.put("status", OrderItemStatus.NOT_PAYED.getCode());
+                        status.add(OrderItemStatus.NOT_PAYED.getCode());
+                        condition.put("status", status);
                         break;
                     case "SENT":
-                        condition.put("status", OrderItemStatus.SHIPPED.getCode());
+                        status.add(OrderItemStatus.SHIPPED.getCode());
+                        condition.put("status", status);
                         break;
                     case "RECEIVED":
-                        condition.put("status", OrderItemStatus.RECEIVED.getCode());
+                        status.add(OrderItemStatus.RECEIVED.getCode());
+                        condition.put("status", status);
                         break;
                     case "REFUNDING":
-                        condition.put("status", OrderItemStatus.REFUNDING.getCode());
+                        status.add(OrderItemStatus.REFUNDING.getCode());
+                        condition.put("status", status);
                         break;
                     case "REFUNDED":
-                        condition.put("status", OrderItemStatus.REFUNDED.getCode());
+                        status.add(OrderItemStatus.REFUNDED.getCode());
+                        condition.put("status", status);
                         break;
                 }
             }

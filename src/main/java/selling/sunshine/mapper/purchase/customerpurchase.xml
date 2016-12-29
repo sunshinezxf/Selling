@@ -16,21 +16,22 @@
     </resultMap>
 
     <select id="query" parameterType="java.util.Map" resultMap="customerPurchaseVo">
-        SELECT customer_id, customer_name, agent_id, sum(order_item_price) AS order_price, count(order_id) AS deal_quantity
-        FROM order_item_sum
-        WHERE 1 = 1
+        SELECT c.customer_id, c.customer_name, c.agent_id, ifnull(sum(order_item_price), 0) AS order_price, ifnull(count(order_id), 0) AS
+        deal_quantity
+        FROM order_item_sum ois RIGHT JOIN customer c on ois.customer_id = c.customer_id
+        WHERE 1 = 1 AND ois.order_type IN (0,2) AND ois.order_item_status IN (1,2,3)
         <if test="customerId != null">
-            AND customer_id = #{customerId}
+            AND c.customer_id = #{customerId}
         </if>
         <if test="agentId != null">
-            AND agent_id = #{agentId}
+            AND c.agent_id = #{agentId}
         </if>
         <if test="search !=null">
             AND (customer_name LIKE BINARY #{search}
-            OR agent_id IN (select agent_id FROM agent WHERE agent_name LIKE BINARY #{search})
-                )
+            OR c.agent_id IN (select agent_id FROM agent WHERE agent_name LIKE BINARY #{search})
+            )
         </if>
-        GROUP BY customer_id, customer_name,agent_id
+        GROUP BY customer_id, customer_name
     </select>
 
     <select id="agentLiteQuery" parameterType="java.util.Map" resultMap="agentLiteVo">

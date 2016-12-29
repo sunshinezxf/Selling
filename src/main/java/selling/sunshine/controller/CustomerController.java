@@ -128,14 +128,16 @@ public class CustomerController {
         CustomerVo customer = ((List<CustomerVo>) fetchResponse.getData()).get(0);
         view.addObject("customer", customer);
         condition.clear();
-        condition.put("agentId", customer.getAgent().getAgentId());
-        fetchResponse = agentService.fetchAgent(condition);
-        if (fetchResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
-            view.setViewName("redirect:/customer/overview");
-            return view;
+        if (customer.getAgent()!=null){
+            condition.put("agentId", customer.getAgent().getAgentId());
+            fetchResponse = agentService.fetchAgent(condition);
+            if (fetchResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+                view.setViewName("redirect:/customer/overview");
+                return view;
+            }
+            Agent agent = ((List<Agent>) fetchResponse.getData()).get(0);
+            view.addObject("agent", agent);
         }
-        Agent agent = ((List<Agent>) fetchResponse.getData()).get(0);
-        view.addObject("agent", agent);
         condition.clear();
         condition.put("customerId", customerId);
         fetchResponse = customerService.fetchCustomerAddress(condition);

@@ -230,9 +230,11 @@
                 },
                 {
                     title: "代理商", "mRender": function (data, type, full) {
-                    var agent="${customer.agent.name}";
-                    return agent;
-                }
+
+                           var agent = "$!{customer.agent.name}";
+                           return agent;
+
+                    }
                 }
             ],
             "language": {
@@ -302,9 +304,12 @@
                 },
                 {
                     title: "代理商", "mRender": function (data, type, full) {
-                    var agent="${customer.agent.name}";
-                    return agent;
-                }
+
+                            var agent="$!{customer.agent.name}";
+                            return agent;
+
+
+                    }
                 }
             ],
             "language": {
