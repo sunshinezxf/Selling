@@ -16,9 +16,7 @@
                            href="${path.concat('/agent/order/overview')}">查看订单统计</a>
                     </div>
                     <div class="weui_panel">
-                        <div class="list-cell" id="order_item_list">
-                            <!-- 改成了动态添加 -->
-                        </div>
+                        <div class="list-cell" id="order_item_list"></div>
                     </div>
                     <div class="weui_btn_area">
                     </div>
@@ -37,16 +35,15 @@
                     </div>
                     #if(${operation} == "GIFT")
                         <div class="weui_cell_ft">
-                            <a class="weui_btn weui_btn_mini weui_btn_primary" id="gift_order_btn">&nbsp&nbsp&nbsp赠送&nbsp&nbsp&nbsp</a>
+                            <a class="weui_btn weui_btn_mini weui_btn_primary" id="gift_order_btn">赠送</a>
                         </div>
                     #else
                         <div class="weui_cell_ft">
                             <a class="weui_btn weui_btn_mini weui_btn_plain_primary" style="display:none;"
-                               id="save_order_btn">&nbsp&nbsp&nbsp保存&nbsp&nbsp&nbsp</a>
+                               id="save_order_btn">保存</a>
                         </div>
-                        &nbsp;
                         <div class="weui_cell_ft">
-                            <a class="weui_btn weui_btn_mini weui_btn_primary" id="place_order_btn">&nbsp&nbsp&nbsp下单&nbsp&nbsp&nbsp</a>
+                            <a class="weui_btn weui_btn_mini weui_btn_primary" id="place_order_btn">下单</a>
                         </div>
                     #end
                 </div>
@@ -103,15 +100,15 @@
         //判断是否选择过商品，如果没有就给个默认的
         if (typeof goods_id == "undefined") {
             var goods_dom = $("#goods_option").children(".weui_cells").children(".goods").eq(0);
-            if (goods_dom.length >0 ) {
+            if (goods_dom.length > 0) {
                 goods_id = goods_dom.attr("id");
                 goods_name = goods_dom.find(".weui_cell_bd").children("span").eq(0).html();
                 goods_price = goods_dom.find(".weui_cell_bd").children("span").eq(1).html();
                 $("#goods").find(".weui_cell_bd").html("<p>" + goods_name + "</p>");
                 $("#price").html("单价：" + goods_price + "元");
             } else {
-            	$("#goods").find(".weui_cell_bd").html("<p>无可选商品 </p>");
-            	$("#price").html("单价：0元");
+                $("#goods").find(".weui_cell_bd").html("<p>无可选商品 </p>");
+                $("#price").html("单价：0元");
             }
         }
         $.init_add_order_item();

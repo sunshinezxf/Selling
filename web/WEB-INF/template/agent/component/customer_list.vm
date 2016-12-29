@@ -1,16 +1,16 @@
 <div id="customer_option" style="display: none;padding-bottom:55px;">
 	<div class="weui_cells weui_cells_radio" >
 	    #foreach($elem in $customer)
-	    <label class="weui_cell customer" id="${elem.customerId}">
+	    <label class="weui_cell customer" id="$!{elem.customerId}">
 	        <div class="weui_cell_bd weui_cell_primary">
-	            <span>${elem.name}</span>(<span>${elem.phone.phone}</span>)
+	            <span>$!{elem.name}</span>(<span>$!{elem.phone}</span>)
 	        </div>
 	        <div class="weui_cell_ft">
 	        	<input type="radio" class="weui_check" >
-	        	<span id="radio${elem.customerId}" class="weui_icon_checked"></span>
+	        	<span id="radio$!{elem.customerId}" class="weui_icon_checked"></span>
 	        </div>
-	        <input id="customer_phone${elem.customerId}" type="hidden" value="${elem.phone.phone}"/>
-	        <div style="display:none;" id="customer_address${elem.customerId}">${elem.address.address}</div>
+	        <input id="customer_phone$!{elem.customerId}" type="hidden" value="$!{elem.phone}"/>
+	        <div style="display:none;" id="customer_address$!{elem.customerId}">$!{elem.address}</div>
 	    </label>
 	    #end
 	</div>

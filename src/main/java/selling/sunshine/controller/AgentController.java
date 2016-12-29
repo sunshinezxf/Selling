@@ -55,6 +55,7 @@ import selling.sunshine.model.sum.VolumeTotal;
 import selling.sunshine.service.*;
 import selling.sunshine.utils.*;
 import selling.sunshine.vo.cashback.CashBack;
+import selling.sunshine.vo.customer.CustomerVo;
 import selling.sunshine.vo.order.OrderItemSum;
 import selling.sunshine.vo.order.OrderSumOverview;
 
@@ -1564,7 +1565,10 @@ public class AgentController {
             condition.put("customerId", orderItem.getCustomer().getCustomerId());
             ResultData fetchCustomerResponse = customerService.fetchCustomer(condition);
             if (fetchCustomerResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-                orderItem.setCustomer(((List<Customer>) fetchCustomerResponse.getData()).get(0));
+                CustomerVo vo = ((List<CustomerVo>) fetchCustomerResponse.getData()).get(0);
+                Customer customer = new Customer(vo.getName(), vo.getAddress(), vo.getPhone());
+                customer.setCustomerId(vo.getCustomerId());
+                orderItem.setCustomer(customer);
             } else {
                 Customer customer = new Customer();
                 CustomerPhone customerPhone = new CustomerPhone();

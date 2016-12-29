@@ -10,23 +10,23 @@
             <div class="bd spacing">
                 <button id="add_customer_btn" class="weui_btn weui_btn_plain_primary">新增客户</a>
             </div>
-            
+
             <div class="weui_search_bar" id="search_bar">
-		        <form class="weui_search_outer">
-		            <div class="weui_search_inner">
-		                <i class="weui_icon_search"></i>
-		                <input type="search" class="weui_search_input" id="search_input" placeholder="搜索"/>
-		                <a href="javascript:" class="weui_icon_clear" id="search_clear"></a>
-		            </div>
-		            <label for="search_input" class="weui_search_text" id="search_text">
-		                <i class="weui_icon_search"></i>
-		                <input type="search" class="weui_search_input" style="display:none" placeholder="搜索"/>
-		                <span>搜索</span>
-		            </label>
-		        </form>
-		        <a href="javascript:" class="weui_search_cancel" id="search_cancel">取消</a>
-		    </div>
-            
+                <form class="weui_search_outer">
+                    <div class="weui_search_inner">
+                        <i class="weui_icon_search"></i>
+                        <input type="search" class="weui_search_input" id="search_input" placeholder="搜索"/>
+                        <a href="javascript:" class="weui_icon_clear" id="search_clear"></a>
+                    </div>
+                    <label for="search_input" class="weui_search_text" id="search_text">
+                        <i class="weui_icon_search"></i>
+                        <input type="search" class="weui_search_input" style="display:none" placeholder="搜索"/>
+                        <span>搜索</span>
+                    </label>
+                </form>
+                <a href="javascript:" class="weui_search_cancel" id="search_cancel">取消</a>
+            </div>
+
             <div class="weui_panel">
                 <div class="list-cell">
                     <div class="weui_cells weui_cells_access" id="customer_list" style="margin-top:0;">
@@ -47,62 +47,65 @@
     window.onload = function () {
         var url = "${path.concat('/agent/customer/list')}";
         $.post(url, function (result) {
-          if('responseCode' in result){      
-        	if(result.description == "您需要重新登录 "){
-        		window.location="${path.concat('/agent/login')}";
-        		return;
-        	}
-            var list = result.data;
-            for (var i = 0; i < list.length; i++) {
-                var item = list[i];
-                var node = "<a class='weui_cell customer' onclick='updateCustomer(this)' id='" + item.customerId + "' ><div class='weui_cell_bd weui_cell_primary'><p>" + item.name + "</p></div><div class='weui_cell_ft'>" + item.phone.phone + "</div></a>";
-                $("#customer_list").append(node);
+            if ('responseCode' in result) {
+                if (result.description == "您需要重新登录 ") {
+                    window.location = "${path.concat('/agent/login')}";
+                    return;
+                }
+                var list = result.data;
+                for (var i = 0; i < list.length; i++) {
+                    var item = list[i];
+                    var node = "<a class='weui_cell customer' onclick='updateCustomer(this)' id='" + item.customerId + "' ><div class='weui_cell_bd weui_cell_primary'><p>" + item.name + "</p></div><div class='weui_cell_ft'>" + item.phone + "</div></a>";
+                    $("#customer_list").append(node);
+                }
             }
-          }
         });
     };
-    
-    function search(s){
-    	$.each($(".customer"), function(i, val){
-    		$(val).hide();
-    		if($(val).text().indexOf(s) >= 0){
-    			$(val).show();
-    		}
-    	});
+
+    function search(s) {
+        $.each($(".customer"), function (i, val) {
+            $(val).hide();
+            if ($(val).text().indexOf(s) >= 0) {
+                $(val).show();
+            }
+        });
     }
-    
-    function showAll(){
-    	$.each($(".customer"), function(i, val){
-    		$(val).show();
-    	});	
+
+    function showAll() {
+        $.each($(".customer"), function (i, val) {
+            $(val).show();
+        });
     }
-    
+
     $('#customer_panel').on('focus', '#search_input', function () {
-        var $weuiSearchBar = $('#search_bar');
-        $weuiSearchBar.addClass('weui_search_focusing');
+        var $weuiSearchBar =
+        $('#search_bar');
+            $weuiSearchBar.addClass('weui_search_focusing');
     }).on('blur', '#search_input', function () {
-        var $weuiSearchBar = $('#search_bar');
-        $weuiSearchBar.removeClass('weui_search_focusing');
+        var $weuiSearchBar =
+        $('#search_bar');
+            $weuiSearchBar.removeClass('weui_search_focusing');
         if ($(this).val()) {
             $('#search_text').hide();
         } else {
             $('#search_text').show();
         }
     }).on('input', '#search_input', function () {
-        var $searchShow = $("#search_show");
+        var $searchShow =
+        $("#search_show");
         if ($(this).val()) {
-        	search($(this).val());
-            $searchShow.show();
+            search($(this).val());
+                $searchShow.show();
         } else {
-        	showAll();
-            $searchShow.hide();
+            showAll();
+                $searchShow.hide();
         }
     }).on('touchend', '#search_cancel', function () {
-    	showAll();
+        showAll();
         $("#search_show").hide();
         $('#search_input').val('');
     }).on('touchend', '#search_clear', function () {
-    	showAll();
+        showAll();
         $("#search_show").hide();
         $('#search_input').val('');
     });

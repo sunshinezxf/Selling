@@ -3,7 +3,6 @@ package selling.sunshine.form;
 import javax.validation.constraints.NotNull;
 
 public class CustomerForm {
-
 	@NotNull
 	private String name;
 	@NotNull
