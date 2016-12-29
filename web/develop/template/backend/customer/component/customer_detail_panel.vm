@@ -48,12 +48,12 @@
                             </div>
                             <div class="ui very relax list">
                                 <div class="item">
-                                    <i class="blue mobile icon"></i>${customer.phone.phone}
+                                    <i class="blue mobile icon"></i>${customer.phone}
                                 </div>
                                 <div id="wechat" class="item">
                                 </div>
                                 <div class="item">
-                                    <i class="brown home icon"></i>${customer.address.address}
+                                    <i class="brown home icon"></i>${customer.address}
                                 </div>
                             </div>
                         </div>

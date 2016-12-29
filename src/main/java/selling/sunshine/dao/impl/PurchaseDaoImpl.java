@@ -5,6 +5,7 @@ import common.sunshine.pagination.DataTablePage;
 import common.sunshine.pagination.DataTableParam;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
+import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -58,13 +59,14 @@ public class PurchaseDaoImpl extends BaseDao implements PurchaseDao {
         page.setiTotalDisplayRecords(((List) total.getData()).size());
         List<CustomerPurchase> current = queryCustomerPurchaseByPage(condition, param.getiDisplayStart(), param.getiDisplayLength());
         page.setData(current);
+        result.setData(page);
         return result;
     }
 
     private List<CustomerPurchase> queryCustomerPurchaseByPage(Map<String, Object> condition, int start, int length) {
         List<CustomerPurchase> result = new ArrayList<>();
         try {
-            result = sqlSession.selectList("selling.purchase.customer.query", condition);
+            result = sqlSession.selectList("selling.purchase.customer.query", condition, new RowBounds(start, length));
         } catch (Exception e) {
             logger.error(e.getMessage());
         }

@@ -24,7 +24,6 @@
         </table>
     </div>
 </div>
-#parse("/backend/customer/component/customer_detail_modal.vm")
 <script>
     $(document).ready(function () {
         $("#overview_customer_table").DataTable({
@@ -38,7 +37,7 @@
             "bProcessing": true,
             "bServerSide": true,
             "bInfoFiltered": false,
-            "sAjaxSource": '${path.concat('/customer/overview/')}$!{agentId}',
+            "sAjaxSource": '${path.concat('/customer/summary')}',
             "infoFiltered": false,
             "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
                 $(nRow).removeClass('dataTable');
@@ -46,6 +45,13 @@
             },
             "fnInitComplete": function () {
                 $("#overview_customer_table").removeClass('no-footer');
+            },
+            "fnServerParams": function (aoData) {
+                var param = {};
+                if('$!{agentId}'!=''){
+                    param["agentId"] = '$!{agentId}';
+                }
+                aoData.push({"name": "params", "value": JSON.stringify(param)});
             },
             "fnServerData": function (sSource, aoData, fnCallback) {
                 $.ajax({
@@ -59,20 +65,25 @@
             columns: [
                 {
                     title: "姓名", "mRender": function (data, type, full) {
-                    var url = "${path.concat('/customer/detail/')}${agentId}" + "/" + full.customerId;
-                    var operation = "<a href='" + url + "'>" + full.name + "</a>";
-                    return operation;
-                }
+                      var url = "${path.concat('/customer/detail/')}" + full.customerId;
+                      var operation = "<a href='" + url + "'>" + full.customerName + "</a>";
+                      return operation;
+                    }
                 },
                 {
                     title: "代理商", "mRender": function (data, type, full) {
-                    var url = "${path.concat('/agent/detail/')}" + full.agent.agentId;
-                    var operation = "<a href='" + url + "'>" + full.agent.name + "</a>";
-                    return operation;
-                }
+                        if(full.agent!=null){
+                            var url = "${path.concat('/agent/detail/')}" + full.agent.agentId;
+                            var operation = "<a href='" + url + "'>" + full.agent.name + "</a>";
+                            return operation;
+                        }else{
+                            return "无";
+                        }
+
+                   }
                 },
-                {title: "联系方式", "mData": "phone.phone"},
-                {title: "当前地址", "mData": "address.address"}
+                {title: "购买金额", "mData": "montant"},
+                {title: "购买笔数", "mData": "dealNum"}
             ],
             "language": {
                 "processing": "正在加载中",
@@ -93,53 +104,4 @@
         });
     });
 
-    function detail(obj) {
-        $.post("${path.concat('/customer/detail/')}" + obj.id, function (result) {
-            document.getElementById("customerName").innerHTML = "客户姓名： " + result.data.customer.name;
-            document.getElementById("customerPhone").innerHTML = "联系方式： " + result.data.customer.phone.phone;
-            document.getElementById("customerAddress").innerHTML = "当前住址： " + result.data.customer.address.address;
-            if (result.data.customer.agent != null) {
-                document.getElementById("agent").innerHTML = "代理商： " + result.data.customer.agent.name;
-            } else {
-                document.getElementById("agent").innerHTML = "暂无代理商";
-            }
-            if (result.data.orderItemList == "") {
-                document.getElementById("orderItemList").innerHTML = "暂无订单";
-            } else {
-                var f = document.getElementById("orderItemList");
-                var childs = f.childNodes;
-                for (var i = childs.length - 1; i >= 0; i--) {
-                    f.removeChild(childs[i]);
-                }
-                var node1 = "<table class='table table-striped'><tr><th>订单号</th><th>商品</th><th>数量</th><th>总价</th><th>状态</th><th>日期</th></tr>";
-                for (var i = 0; i < result.data.orderItemList.length; i++) {
-                    var orderItem = result.data.orderItemList[i];
-                    if (orderItem.status == 'NOT_PAYED') {
-                        var status = "未付款";
-                    } else if (orderItem.status == 'PAYED') {
-                        var status = "已付款";
-                    } else if (orderItem.status == 'SHIPPED') {
-                        var status = "已发货";
-                    } else if (orderItem.status == 'RECEIVED') {
-                        var status = "已接收";
-                    } else {
-                        var status = "退货";
-                    }
-                    var date = (new Date(orderItem.createAt)).format("yyyy/MM/dd");
-                    var node2 = "<tr><td>" + orderItem.order.orderId + "</td><td>" + orderItem.goods.name + "</td><td>" + orderItem.goodsQuantity + "</td><td>" + orderItem.orderItemPrice + "</td><td>" + status + "</td><td>" + date + "</td></tr>";
-                    node1 += node2;
-                }
-                node1 += "</table>";
-                $("#orderItemList").append(node1);
-            }
-        });
-    }
 </script>
-<style>
-
-
-    #customer_detail_modal .modal-body #orderItemList {
-        height: 300px;
-        overflow: auto;
-    }
-</style>

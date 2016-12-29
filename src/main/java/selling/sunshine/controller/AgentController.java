@@ -55,6 +55,7 @@ import selling.sunshine.model.sum.VolumeTotal;
 import selling.sunshine.service.*;
 import selling.sunshine.utils.*;
 import selling.sunshine.vo.cashback.CashBack;
+import selling.sunshine.vo.customer.CustomerVo;
 import selling.sunshine.vo.order.OrderItemSum;
 import selling.sunshine.vo.order.OrderSumOverview;
 
@@ -2497,7 +2498,7 @@ public class AgentController {
         condition.put("blockFlag", false);
         queryData = customerService.fetchCustomer(condition);
         if (queryData.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            int customerNum = ((List<Customer>) queryData.getData()).size();
+            int customerNum = ((List<CustomerVo>) queryData.getData()).size();
             view.addObject("customerNum", customerNum);
         } else {
             view.addObject("customerNum", 0);
