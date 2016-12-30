@@ -68,12 +68,10 @@
                                     <div class="ui segment" id="orderItem_list">
                                         <div class="row">
                                             <div class="column">
-                                                <button class="ui small primary basic button orderItem_status" target-value="PAYED">已付款</button>
-                                                <button class="ui small basic button orderItem_status" target-value="NOT_PAYED">未付款</button>
+                                                <button class="ui small primary basic button orderItem_status" target-value="ALL">全部</button>
+                                                <button class="ui small button orderItem_status" target-value="PAYED">已付款</button>
                                                 <button class="ui small basic button orderItem_status" target-value="SENT">已发货</button>
                                                 <button class="ui small basic button orderItem_status" target-value="RECEIVED">已签收</button>
-                                                <button class="ui small basic button orderItem_status" target-value="REFUNDING">退款中</button>
-                                                <button class="ui small basic button orderItem_status" target-value="REFUNDED">已退款</button>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -90,12 +88,10 @@
                                     <div class="ui segment" id="customerOrder_list">
                                         <div class="row">
                                             <div class="column">
-                                                <button class="ui small primary basic button customerOrder_status" target-value="PAYED">已付款</button>
-                                                <button class="ui small basic button customerOrder_status" target-value="NOT_PAYED">未付款</button>
+                                                <button class="ui small primary basic button customerOrder_status" target-value="ALL">已付款</button>
+                                                <button class="ui small button customerOrder_status" target-value="PAYED">已付款</button>
                                                 <button class="ui small basic button customerOrder_status" target-value="SENT">已发货</button>
                                                 <button class="ui small basic button customerOrder_status" target-value="RECEIVED">已签收</button>
-                                                <button class="ui small basic button customerOrder_status" target-value="REFUNDING">退款中</button>
-                                                <button class="ui small basic button customerOrder_status" target-value="REFUNDED">已退款</button>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -120,8 +116,8 @@
     var end;
     var table1;
     var table2;
-    var orderItemValue="PAYED";
-    var customerOrderValue="PAYED";
+    var orderItemValue="ALL";
+    var customerOrderValue="ALL";
     var start_flatpickr, end_flatpickr;
     $(document).ready(function() {
         var wechat = "${customer.wechat}";
@@ -227,10 +223,40 @@
                 {
                     title: "代理商", "mRender": function (data, type, full) {
 
-                           var agent = "$!{customer.agent.name}";
-                           return agent;
+                        var agent = "$!{customer.agent.name}";
+                        return agent;
 
                     }
+                },
+                {
+                    title: "订单状态", "mRender": function (data, type, full) {
+                    var order_status="<i class='payment icon'></i>";
+                    switch (full.status){
+                        case "NOT_PAYED":
+                            order_status += "未付款";
+                            break;
+                        case "PAYED":
+                            order_status += "已付款";
+                            break;
+                        case "SHIPPED":
+                            order_status += "已发货";
+                            break;
+                        case "RECEIVED":
+                            order_status += "已签收";
+                            break;
+                        case "EXCHANGED":
+                            order_status += "换货";
+                            break;
+                        case "REFUNDING":
+                            order_status += "退款中";
+                            break;
+                        case "REFUNDED":
+                            order_status += "已退款";
+                            break;
+                    }
+                    return order_status;
+
+                }
                 }
             ],
             "language": {
@@ -306,6 +332,36 @@
 
 
                     }
+                },
+                {
+                    title: "订单状态", "mRender": function (data, type, full) {
+                    var order_status="<i class='payment icon'></i>";
+                    switch (full.status){
+                        case "NOT_PAYED":
+                            order_status += "未付款";
+                            break;
+                        case "PAYED":
+                            order_status += "已付款";
+                            break;
+                        case "SHIPPED":
+                            order_status += "已发货";
+                            break;
+                        case "RECEIVED":
+                            order_status += "已签收";
+                            break;
+                        case "EXCHANGED":
+                            order_status += "换货";
+                            break;
+                        case "REFUNDING":
+                            order_status += "退款中";
+                            break;
+                        case "REFUNDED":
+                            order_status += "已退款";
+                            break;
+                    }
+                    return order_status;
+
+                }
                 }
             ],
             "language": {

@@ -27,7 +27,7 @@
             AND c.agent_id = #{agentId}
         </if>
         <if test="search !=null">
-            AND (customer_name LIKE BINARY #{search}
+            AND (c.customer_name LIKE BINARY #{search}
             OR c.agent_id IN (select agent_id FROM agent WHERE agent_name LIKE BINARY #{search})
             )
         </if>
