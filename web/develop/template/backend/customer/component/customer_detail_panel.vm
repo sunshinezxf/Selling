@@ -24,11 +24,7 @@
                         <div class="content">
                             <div class="floated_div">
                                 <div class="ui left floated header">
-                                    #if(${customer.gender}=="M")
-                                        <i class="blue male icon"></i>
-                                    #else
-                                        <i class="pink female icon"></i>
-                                    #end
+                                    <i class="male icon"></i>
                                     <div class="content">${customer.name}
                                         <div id="agent_div" class="ui blue tag label">
                                             代理商
