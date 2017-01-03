@@ -11,10 +11,10 @@
         </h1>
     </div>
     <div class="row">
-        <div class="eleven wide column">
+        <div class="ten wide column">
             #parse("/backend/charts/goods/sales_volume_charts.vm")
         </div>
-        <div class="five wide column">
+        <div class="six wide column">
             #parse("/backend/charts/sales/sales_money_summary.vm")
         </div>
     </div>

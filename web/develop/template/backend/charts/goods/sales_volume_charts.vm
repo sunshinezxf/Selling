@@ -1,20 +1,39 @@
 <div id="goods_sales_volume" class="ui segment" style="height: 350px;"></div>
 <script>
-    var goods_sales_volume = "${path.concat('/commodity/volume')}";
+    var goods_sales_volume = "${path.concat('/statistic/goods/purchaseRecord/month')}";
 
     $(document).ready(function () {
         $.get(goods_sales_volume, function (result) {
             if (result.responseCode != "RESPONSE_ERROR") {
                 var data = result.data;
                 var volume_chart = echarts.init(document.getElementById('goods_sales_volume'), 'macarons');
-                var goods_list = [];
-                var goods_sale_monthly = [];
-                var goods_sale_overall = [];
-                var length = data.length;
-                for (var i = 0; i < length; i++) {
-                    goods_list.push(data[i].goodsName);
-                    goods_sale_monthly.push(data[i].monthQuantity);
-                    goods_sale_overall.push(data[i].overallQuantity);
+                var goods_list=[];
+                var months;
+                var series=[];
+                var length=data.length;
+                var max_month_length=0;
+                for(var i=0;i<length;i++){
+                    goods_list.push(data[i].name);
+                    if(data[i].categories.length>max_month_length){
+                        months=data[i].categories;
+                        max_month_length=data[i].categories.length;
+                    }
+                }
+                for(var i=0;i<length;i++){
+                    var goods_sale_monthly=[];
+                    for(var j=0;j<months.length;j++){
+                        var position=jQuery.inArray(months[j],data[i].categories);
+                        if(position==-1){
+                            goods_sale_monthly[j]=0;
+                        }else{
+                            goods_sale_monthly[j]=data[i].quantitySeriesData[position];
+                        }
+                    }
+                    var line={};
+                    line.name=data[i].name;
+                    line.type="line";
+                    line.data=goods_sale_monthly;
+                    series.push(line);
                 }
                 option = {
                     title: {
@@ -24,58 +43,25 @@
                         trigger: 'axis'
                     },
                     legend: {
-                        data: ["当月销量", "累计销量"]
+                        data: goods_list
                     },
                     calculable: true,
                     xAxis: [
                         {
-                            type: 'value',
-                            boundaryGap: [0, 0.1]
+                            type: 'category',
+                            boundaryGap : false,
+                            data: months
                         }
                     ],
                     yAxis: [
                         {
-                            type: 'category',
-                            data: goods_list,
-                            axisLabel: {
-                                interval: 0,
-                                formatter: function (params) {
-                                    var newParamsName = "";
-                                    var paramsNameNumber = params.length;
-                                    var provideNumber = 4;
-                                    var rowNumber = Math.ceil(paramsNameNumber / provideNumber);
-                                    if (paramsNameNumber > provideNumber) {
-                                        for (var p = 0; p < rowNumber; p++) {
-                                            var tempStr = "";
-                                            var start = p * provideNumber;
-                                            var end = start + provideNumber;
-                                            if (p == rowNumber - 1) {
-                                                tempStr = params.substring(start, paramsNameNumber);
-                                            } else {
-                                                tempStr = params.substring(start, end) + "\n";
-                                            }
-                                            newParamsName += tempStr;
-                                        }
-                                    } else {
-                                        newParamsName = params;
-                                    }
-                                    return newParamsName
-                                }
+                            type: 'value',
+                            axisLabel : {
+                                formatter: '{value} 盒'
                             }
                         }
                     ],
-                    series: [
-                        {
-                            name: '当月销量',
-                            type: 'bar',
-                            data: goods_sale_monthly
-                        },
-                        {
-                            name: '累计销量',
-                            type: 'bar',
-                            data: goods_sale_overall
-                        }
-                    ]
+                    series: series
                 };
                 volume_chart.setOption(option);
                 window.addEventListener('resize', function () {
