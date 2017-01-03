@@ -20,8 +20,9 @@
        <a class="ui primary basic button" href="${path.concat('/event/application/')}${giftEvent.eventId}">申请列表</a>
        <a class="ui blue basic button" href="${path.concat('/event/present/')}${giftEvent.eventId}">赠送订单</a>
        #if(${giftEvent.blockFlag})
-       <button class="ui positive basic button" id="informApplication">通知申请人</button>
-       <button class="ui teal basic button" id="informAll">通知所有人</button>
+       <button class="ui positive basic button" id="send_message">发送短信</button>
+       ## <button class="ui positive basic button" id="informApplication">通知申请人</button>
+       ## <button class="ui teal basic button" id="informAll">通知所有人</button>
        #end
     </div>
     <div class="sixteen wide column">
@@ -73,84 +74,128 @@
              #end
     </div>
 </div>
-<div class="ui modal" id="inform_application_modal">
+<div class="ui modal" id="send_message_modal">
     <i class="close icon"></i>
-
-    <div class="header">发送短信给赠送人</div>
-    <div class="image content">
-        <div class="description">
-            点击确定之后就将发送短信给赠送人，是否确定？（注意不要重复发送）
+    <div class="header">发送短信</div>
+    <div class="content">
+        <div class="ui form">
+          <div class="field">
+            <label>短信内容</label>
+            <textarea id="text" maxlength="100"></textarea>
+          </div>
         </div>
     </div>
     <div class="actions">
-        <div class="ui cancer button" id="inform_application_cancel">取消</div>
-        <div class="ui button" id="inform_application_confirm">确定</div>
-    </div>
-</div>
-<div class="ui modal" id="inform_all_modal">
-    <i class="close icon"></i>
-
-    <div class="header">发送短信给赠送人和受赠人</div>
-    <div class="image content">
-        <div class="description">
-            点击确定之后就将发送短信给赠送人和受赠人，是否确定？（注意不要重复发送）
-        </div>
-    </div>
-    <div class="actions">
-        <div class="ui cancer button" id="inform_all_cancel">取消</div>
-        <div class="ui button" id="inform_all_confirm">确定</div>
+        <div class="ui cancel button" id="send_cancel">取消</div>
+        <div class="ui positive disabled button" id="inform_donor" disabled="disabled">通知赠送人</div>
+        <div class="ui positive disabled button" id="inform_donee" disabled="disabled">通知受赠人</div>
+        <div class="ui positive disabled button" id="inform_all" disabled="disabled">通知赠送人</div>
     </div>
 </div>
 <div class="ui modal" id="dialog_modal">
     <i class="close icon"></i>
-
     <div class="header">提示</div>
-    <div class="image content">
+    <div class="content">
         <div class="description">
             发送短信成功！
         </div>
     </div>
     <div class="actions">
-        <div class="ui cancer button" id="confirm">确认</div>
+        <div class="ui positive button" id="confirm">确认</div>
     </div>
 </div>
 <script>
-$('#inform_application_modal').modal('hide');
-$('#inform_all_modal').modal('hide');
-$('#dialog_modal').modal('hide');
-$("#informApplication").on('click', function () {
-	$('#inform_application_modal').modal('show');
+$(document).ready(function(){
+    $('#send_message_modal').modal('hide');
+    $('#dialog_modal').modal('hide');
+
+    $("#text").on("input propertychange",function(){
+        if(text_validate())
+            active();
+        else
+            inactive();
+    });
 });
-$("#informAll").on('click', function () {
-	$('#inform_all_modal').modal('show');
+
+$("#send_message").on('click', function () {
+	$('#send_message_modal').modal('show');
 });
-$("#inform_application_confirm").on('click', function () {
-	$.post("${path.concat('/event/sendMessage/')}${giftEvent.eventId}",function(result){
+$("#inform_donor").on('click', function () {
+               var donor_url="${path.concat('/message/gift/')}${giftEvent.eventId}"+"/send/donor";
+               var text = $("#text").val();
+               var param={"text":text};
+	$.post(donor_url,param,function(result){
 		if(result.responseCode=='RESPONSE_OK'){
-			$('#inform_application_modal').modal('hide');
+			$('#send_message_modal').modal('hide');
 			$('#dialog_modal').modal('show');
 		}else{
 			alert("发送失败！");
 		}
 	});
 });
-$("#inform_all_confirm").on('click', function () {
-	$.post("${path.concat('/event/sendMessageAll/')}${giftEvent.eventId}",function(result){
+$("#inform_donee").on('click', function () {
+    var donee_url="${path.concat('/message/gift/')}${giftEvent.eventId}"+"/send/donee";
+     var text = $("#text").val();
+    var param={"text":text};
+    $.post(donee_url,param,function(result){
+        if(result.responseCode=='RESPONSE_OK'){
+            $('#send_message_modal').modal('hide');
+            $('#dialog_modal').modal('show');
+        }else{
+            alert("发送失败！");
+        }
+    });
+});
+$("#inform_all").on('click', function () {
+               var all_url="${path.concat('/message/gift/')}${giftEvent.eventId}"+"/send/all";
+                var text = $("#text").val();
+               var param={"text":text};
+	$.post(all_url,param,function(result){
 		if(result.responseCode=='RESPONSE_OK'){
-			$('#inform_all_modal').modal('hide');
+			$('#send_message_modal').modal('hide');
 			$('#dialog_modal').modal('show');
 		}else{
 			alert("发送失败！");
 		}
 	});
 });
-$("#inform_application_cancel").on('click', function () {
-	$('#inform_application_modal').modal('hide');
-});
-$("#inform_all_cancel").on('click', function () {
-	$('#inform_all_modal').modal('hide');
+$("#send_cancel").on('click', function () {
+	$('#send_message_modal').modal('hide');
 });
 $("#confirm").on('click', function () {
 	$('#dialog_modal').modal('hide');
 });
+
+ function active() {
+        $("#inform_donor").removeAttr("disabled");
+        $("#inform_donor").removeClass("disabled");
+        $("#inform_donee").removeAttr("disabled");
+        $("#inform_donee").removeClass("disabled");
+        $("#inform_all").removeAttr("disabled");
+        $("#inform_all").removeClass("disabled");
+    }
+
+    function inactive() {
+        $("#inform_donor").attr("disabled", "disabled");
+        $("#inform_donor").addClass("disabled");
+        $("#inform_donee").attr("disabled", "disabled");
+        $("#inform_donee").addClass("disabled");
+        $("#inform_all").attr("disabled", "disabled");
+        $("#inform_all").addClass("disabled");
+    }
+
+    function text_validate() {
+        var text = $("#text").val();
+        if (not_null(text)) {
+            return true;
+        }
+        return false;
+    }
+
+    function not_null(item) {
+        if (item == null || item == "" || item.length <= 0) {
+            return false;
+        }
+        return true;
+    }
 </script>
