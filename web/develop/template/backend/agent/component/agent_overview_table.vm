@@ -2,7 +2,10 @@
     <div class="row">
        <div class="column">
             <div class="ui labeled button" tabindex="0">
-                       <a class="ui positive basic button" href="${path.concat('/agent/contributionFactor')}">贡献度因子配置</a>
+                <div class="ui basic blue button">
+                    <a href="${path.concat('/agent/contributionFactor')}">贡献度因子配置</a>
+                </div>
+                <a class="ui basic left pointing label" href="${path.concat('/message/send')}">短信通知</a>
             </div>
        </div>
     </div>
@@ -92,4 +95,5 @@
     
               
     });
+
 </script>
