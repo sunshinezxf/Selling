@@ -14,7 +14,7 @@
             #parse("/backend/common/sidebar.vm")
         </div>
         <div class="ui main container">
-            #parse("/backend/message/component/send_message.area.vm")
+            #parse("/backend/message/component/send_message_area.vm")
         </div>
     </div>
 </div>
