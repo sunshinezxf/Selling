@@ -19,7 +19,7 @@
                         #end
                         <div class="list-cell" id="order_item_list">
                             #foreach($orderItem in ${order.orderItems})
-                                <div class="weui_cells_access">
+                                <div class="weui_cells">
                                     <div class="weui_cell order_item_head">
                                         <div class="weui_cell_bd weui_cell_primary">${orderItem.customer.name}</div>
                                         <div class="weui_cell_ft">
