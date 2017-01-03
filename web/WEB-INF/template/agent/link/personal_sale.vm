@@ -15,16 +15,24 @@
             <p class="page_desc">我的优惠码：${str}</p>
         </div>
         <div class="bd">
-            <div class="weui-cells">
-                #foreach($goods in $goodsList)
-                <div class="weui_cells_access weui_cell goods" id="${goods.goodsId}">
-                    <div class="weui_cell_bd weui_cell_primary">
-                        <p>${goods.name}<span>(</span>${goods.agentPrice}<span>)</span></p>
+            #foreach($goods in $goodsList)
+                <div class="weui_form_preview" style="margin-bottom: 1em">
+                    <div class="weui_form_preview_bd">
+                        <div class="weui_form_preview_item">
+                            <label class="weui_form_preview_label">商品名称</label>
+                            <span class="weui_form_preview_value">${goods.name}</span>
+                        </div>
+                        <div class="weui_form_preview_item">
+                            <label class="weui_form_preview_label">商品价格</label>
+                            <span class="weui_form_preview_value">${goods.agentPrice}</span>
+                        </div>
                     </div>
-                    <div class="weui_cell_ft"></div>
+                    <div class="weui_form_preview_ft">
+                        <a id="${goods.goodsId}" class="weui_form_preview_btn weui_form_preview_btn_primary goods"
+                           href="javascript:;">查看商品分享码</a>
+                    </div>
                 </div>
-                #end
-            </div>
+            #end
         </div>
     </div>
     #parse("/agent/component/navigate.vm")
