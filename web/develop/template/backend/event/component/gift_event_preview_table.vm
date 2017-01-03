@@ -89,7 +89,7 @@
         <div class="ui cancel button" id="send_cancel">取消</div>
         <div class="ui positive disabled button" id="inform_donor" disabled="disabled">通知赠送人</div>
         <div class="ui positive disabled button" id="inform_donee" disabled="disabled">通知受赠人</div>
-        <div class="ui positive disabled button" id="inform_all" disabled="disabled">通知赠送人</div>
+        <div class="ui positive disabled button" id="inform_all" disabled="disabled">通知所有人</div>
     </div>
 </div>
 <div class="ui modal" id="dialog_modal">
