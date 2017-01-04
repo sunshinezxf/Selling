@@ -23,7 +23,7 @@
     var starttime = "2016-01-01";
     var endtime = new Date();
     var start_flatpickr, end_flatpickr;
-    var years=new Array();
+    var years=[];
     $(document).ready(function () {
     	pageStart=0;
         $.ajax({
@@ -57,15 +57,15 @@
         });
     });
 
-    $(".main .year .list").each(function (e, target) {
-        var $target=  $(target);
-        var $ul = $target.find("ul");
-        $target.height($ul.outerHeight()), $ul.css("position", "absolute");
-    });
-    $(".main .year>h2>a").click(function (e) {
-        e.preventDefault();
-        $(this).parents(".year").toggleClass("log_close");
-    });
+##    $(".wrapper .year .list").each(function (e, target) {
+##        var $target=  $(target);
+##        var $ul = $target.find("ul");
+##        $target.height($ul.outerHeight()), $ul.css("position", "absolute");
+##    });
+##    $(".wrapper .year>h2>a").on("click",function (e) {
+##        e.preventDefault();
+##        $(this).parents(".year").toggleClass("log_close");
+##    });
 
     $("#datetime_btn").click(function(){
         var start = $("#start_time").val();
@@ -140,9 +140,14 @@
                 if($.inArray(year,years)==-1){
                     var year_section=$("<div></div>");
                     year_section.addClass("year");
+                    year_section.attr("id",year);
                     years.push(year);
-                    var new_year=$("<h2><a><i></i></a></h2>");
+                    var new_year=$("<h2></h2>");
+                    var link=$("<a></a>");
+                    var icon=$("<i></i>");
+                    link.append(icon);
                     new_year.text(year+"年");
+                    new_year.append(link);
                     var list=$("<div class='list'></div>");
                     var ul= $("<ul></ul>");
                     ul.append(li);
@@ -152,7 +157,8 @@
                     main_content.append(year_section);
                     $('#container').append(content);
                 }else{
-                    $(".list>ul").append(li);
+                    var now_year=years[years.length-1];
+                    $("#"+now_year+" .list>ul").append(li);
                 }
             }
             pageStart+=pageLength;
@@ -219,9 +225,14 @@
                 if($.inArray(year,years)==-1){
                     var year_section=$("<div></div>");
                     year_section.addClass("year");
+                    year_section.attr("id",year);
                     years.push(year);
-                    var new_year=$("<h2><a><i></i></a></h2>");
+                    var new_year=$("<h2></h2>");
+                    var link=$("<a></a>");
+                    var icon=$("<i></i>");
+                    link.append(icon);
                     new_year.text(year+"年");
+                    new_year.append(link);
                     var list=$("<div class='list'></div>");
                     var ul= $("<ul></ul>");
                     ul.append(li);
@@ -230,7 +241,8 @@
                     year_section.append(list);
                     $(".main-content").append(year_section);
                 }else{
-                    $(".list>ul").append(li);
+                    var now_year=years[years.length-1];
+                    $("#"+now_year+" .list>ul").append(li);
                 }
             }
             var length=$('.cls').width()-$('.date').width();
