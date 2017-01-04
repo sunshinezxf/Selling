@@ -1,17 +1,22 @@
 package selling.sunshine.controller;
 
+import common.sunshine.model.selling.agent.Agent;
+import common.sunshine.model.selling.event.EventApplication;
+import common.sunshine.model.selling.event.support.ApplicationStatus;
+import common.sunshine.utils.ResponseCode;
+import common.sunshine.utils.ResultData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
-import common.sunshine.model.selling.agent.Agent;
 import selling.sunshine.service.AgentService;
+import selling.sunshine.service.EventService;
 import selling.sunshine.service.MessageService;
-import common.sunshine.utils.ResponseCode;
-import common.sunshine.utils.ResultData;
 
 import java.util.*;
 
@@ -28,6 +33,9 @@ public class MessageController {
 
     @Autowired
     private AgentService agentService;
+
+    @Autowired
+    private EventService eventService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/send")
     public ModelAndView message() {
@@ -64,4 +72,37 @@ public class MessageController {
         }
         return result;
     }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/gift/{eventId}/send/{type}")
+    public ResultData event(@PathVariable("eventId") String eventId, @PathVariable("type") String type, String text) {
+        ResultData result = new ResultData();
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("eventId", eventId);
+        condition.put("status", ApplicationStatus.APPROVED.getCode());
+        ResultData fetchResponse = eventService.fetchEventApplication(condition);
+        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            List<EventApplication> eventApplications = (List<EventApplication>) fetchResponse.getData();
+            Set<String> phone = new HashSet<>();
+            if (!StringUtils.isEmpty(type) && type.equals("donor")) {
+                for (EventApplication item : eventApplications) {
+                    phone.add(item.getDonorPhone());
+                }
+            }
+            if (!StringUtils.isEmpty(type) && type.equals("donee")) {
+                for (EventApplication item : eventApplications) {
+                    phone.add(item.getDoneePhone());
+                }
+            }
+            if (!StringUtils.isEmpty(type) && type.equals("all")) {
+                for (EventApplication item : eventApplications) {
+                    phone.add(item.getDonorPhone());
+                    phone.add(item.getDoneePhone());
+                }
+            }
+            messageService.send(phone, text + "【云草纲目】");
+        }
+        return result;
+    }
+
+
 }

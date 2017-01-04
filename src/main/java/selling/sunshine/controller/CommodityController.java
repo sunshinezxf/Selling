@@ -250,7 +250,7 @@ public class CommodityController {
         }
         return result;
     }
-    
+
     /*
      * 上架的所有商品
      */
@@ -262,7 +262,7 @@ public class CommodityController {
             return result;
         }
         Map<String, Object> condition = new HashMap<>();
-        condition.put("blockFlag",false);
+        condition.put("blockFlag", false);
         ResultData response = commodityService.fetchGoods4Customer(condition, param);
         if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
             result = (DataTablePage<Goods4Customer>) response.getData();
@@ -327,8 +327,7 @@ public class CommodityController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{goodsId}")
-    public ModelAndView view(HttpServletRequest request, @PathVariable("goodsId") String goodsId, String agentId,
-                             String code, String state) {
+    public ModelAndView view(HttpServletRequest request, @PathVariable("goodsId") String goodsId, String agentId, String code, String state) {
         ModelAndView view = new ModelAndView();
         String openId = null;
         if (request.getHeader("user-agent").toLowerCase().contains("micromessenger")) {

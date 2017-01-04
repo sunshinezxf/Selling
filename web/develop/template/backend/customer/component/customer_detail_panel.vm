@@ -2,13 +2,16 @@
     <div class="row">
         <h1 class="ui header">
             <i class="home icon"></i>
+
             <div class="content">
                 客户详情
                 <div class="sub header">
                     <div class="ui breadcrumb">
                         <a class="section">顾客管理</a>
+
                         <div class="divider">/</div>
                         <a class="section">客户概览</a>
+
                         <div class="divider">/</div>
                         <a class="active section">客户详情</a>
                     </div>
@@ -25,6 +28,7 @@
                             <div class="floated_div">
                                 <div class="ui left floated header">
                                     <i class="male icon"></i>
+
                                     <div class="content">${customer.name}
                                         <div id="agent_div" class="ui blue tag label">
                                             代理商
@@ -68,15 +72,24 @@
                                     <div class="ui segment" id="orderItem_list">
                                         <div class="row">
                                             <div class="column">
-                                                <button class="ui small primary basic button orderItem_status" target-value="ALL">全部</button>
-                                                <button class="ui small button orderItem_status" target-value="PAYED">已付款</button>
-                                                <button class="ui small basic button orderItem_status" target-value="SENT">已发货</button>
-                                                <button class="ui small basic button orderItem_status" target-value="RECEIVED">已签收</button>
+                                                <button class="ui small primary basic button orderItem_status"
+                                                        target-value="ALL">全部
+                                                </button>
+                                                <button class="ui small basic button orderItem_status"
+                                                        target-value="PAYED">已付款
+                                                </button>
+                                                <button class="ui small basic button orderItem_status"
+                                                        target-value="SENT">已发货
+                                                </button>
+                                                <button class="ui small basic button orderItem_status"
+                                                        target-value="RECEIVED">已签收
+                                                </button>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="column">
-                                                <table id="orderItem_list_table" class="ui tablet stackable table"></table>
+                                                <table id="orderItem_list_table"
+                                                       class="ui tablet stackable table"></table>
                                             </div>
                                         </div>
                                     </div>
@@ -88,15 +101,24 @@
                                     <div class="ui segment" id="customerOrder_list">
                                         <div class="row">
                                             <div class="column">
-                                                <button class="ui small primary basic button customerOrder_status" target-value="ALL">已付款</button>
-                                                <button class="ui small button customerOrder_status" target-value="PAYED">已付款</button>
-                                                <button class="ui small basic button customerOrder_status" target-value="SENT">已发货</button>
-                                                <button class="ui small basic button customerOrder_status" target-value="RECEIVED">已签收</button>
+                                                <button class="ui small primary basic button customerOrder_status"
+                                                        target-value="ALL">全部
+                                                </button>
+                                                <button class="ui small basic button customerOrder_status"
+                                                        target-value="PAYED">已付款
+                                                </button>
+                                                <button class="ui small basic button customerOrder_status"
+                                                        target-value="SENT">已发货
+                                                </button>
+                                                <button class="ui small basic button customerOrder_status"
+                                                        target-value="RECEIVED">已签收
+                                                </button>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="column">
-                                                <table id="customerOrder_list_table" class="ui tablet stackable table"></table>
+                                                <table id="customerOrder_list_table"
+                                                       class="ui tablet stackable table"></table>
                                             </div>
                                         </div>
                                     </div>
@@ -116,17 +138,17 @@
     var end;
     var table1;
     var table2;
-    var orderItemValue="ALL";
-    var customerOrderValue="ALL";
+    var orderItemValue = "ALL";
+    var customerOrderValue = "ALL";
     var start_flatpickr, end_flatpickr;
-    $(document).ready(function() {
+    $(document).ready(function () {
         var wechat = "${customer.wechat}";
         if (wechat && wechat.slice(-1) != "}") {
             var new_wechat = wechat.replace(wechat.slice(7, -8), "***");
-            var wechat_div="<i class='green wechat icon'></i>微信："+new_wechat;
+            var wechat_div = "<i class='green wechat icon'></i>微信：" + new_wechat;
             $("#wechat").append(wechat_div);
         } else {
-            var no_wechat="<i class='green wechat icon'></i>微信：无";
+            var no_wechat = "<i class='green wechat icon'></i>微信：无";
             $("#wechat").append(no_wechat);
         }
 
@@ -223,15 +245,15 @@
                 {
                     title: "代理商", "mRender": function (data, type, full) {
 
-                        var agent = "$!{customer.agent.name}";
-                        return agent;
+                    var agent = "$!{customer.agent.name}";
+                    return agent;
 
-                    }
+                }
                 },
                 {
                     title: "订单状态", "mRender": function (data, type, full) {
-                    var order_status="<i class='payment icon'></i>";
-                    switch (full.status){
+                    var order_status = "<i class='payment icon'></i>";
+                    switch (full.status) {
                         case "NOT_PAYED":
                             order_status += "未付款";
                             break;
@@ -276,7 +298,7 @@
                 }
             }
         });
-       table2 = $("#customerOrder_list_table").DataTable({
+        table2 = $("#customerOrder_list_table").DataTable({
             searching: true,
             paging: true,
             aaSorting: false,
@@ -327,16 +349,16 @@
                 {
                     title: "代理商", "mRender": function (data, type, full) {
 
-                            var agent="$!{customer.agent.name}";
-                            return agent;
+                    var agent = "$!{customer.agent.name}";
+                    return agent;
 
 
-                    }
+                }
                 },
                 {
                     title: "订单状态", "mRender": function (data, type, full) {
-                    var order_status="<i class='payment icon'></i>";
-                    switch (full.status){
+                    var order_status = "<i class='payment icon'></i>";
+                    switch (full.status) {
                         case "NOT_PAYED":
                             order_status += "未付款";
                             break;
@@ -385,7 +407,7 @@
 //        $('#customerOrder_list').hide();
     });
 
-    $("#datetime_btn").click(function(){
+    $("#datetime_btn").click(function () {
         start = $("#start_time").val();
         end = $("#end_time").val();
         //查询

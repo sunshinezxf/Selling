@@ -1326,7 +1326,7 @@ public class OrderController {
         JSONObject params = toolService.getParams(request);
         Subject subject = SecurityUtils.getSubject();
         String clientIp = toolService.getIP(request);
-        Map<String, Object> condition = new HashMap<String, Object>();
+        Map<String, Object> condition = new HashMap<>();
         condition.put("orderId", String.valueOf(params.get("order_id")));
         ResultData orderData = orderService.fetchCustomerOrder(condition);
         CustomerOrder customerOrder = null;

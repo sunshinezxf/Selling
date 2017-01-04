@@ -1,10 +1,15 @@
 package selling.sunshine.service.impl;
 
 import com.alibaba.fastjson.JSON;
-
-
 import com.pingplusplus.Pingpp;
 import com.pingplusplus.model.Charge;
+import common.sunshine.model.selling.bill.CustomerOrderBill;
+import common.sunshine.model.selling.bill.DepositBill;
+import common.sunshine.model.selling.bill.OrderBill;
+import common.sunshine.model.selling.bill.RefundBill;
+import common.sunshine.pagination.DataTableParam;
+import common.sunshine.utils.ResponseCode;
+import common.sunshine.utils.ResultData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,16 +17,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import selling.sunshine.dao.BillDao;
 import selling.sunshine.dao.ChargeDao;
-import common.sunshine.model.selling.bill.CustomerOrderBill;
-import common.sunshine.model.selling.bill.DepositBill;
-import common.sunshine.model.selling.bill.OrderBill;
-import common.sunshine.model.selling.bill.RefundBill;
-import common.sunshine.pagination.DataTableParam;
 import selling.sunshine.service.BillService;
 import selling.sunshine.utils.PlatformConfig;
 import selling.sunshine.vo.bill.BillSumVo;
-import common.sunshine.utils.ResponseCode;
-import common.sunshine.utils.ResultData;
 
 import java.util.HashMap;
 import java.util.List;
@@ -63,8 +61,8 @@ public class BillServiceImpl implements BillService {
         params.put("channel", bill.getChannel());
         if (!StringUtils.isEmpty(bill.getChannel()) && bill.getChannel().equals("alipay_wap")) {
             Map<String, String> url = new HashMap<>();
-            url.put("success_url", PlatformConfig.getValue("server_url") + "/account/charge/" + bill.getBillId() + "/prompt");
-            url.put("cancel_url", PlatformConfig.getValue("server_url") + "/account/charge/" + bill.getBillId() + "/prompt");
+            url.put("success_url", PlatformConfig.getValue("server_url") + "/payment/" + bill.getBillId() + "/result/success");
+            url.put("cancel_url", PlatformConfig.getValue("server_url") + "/payment/" + bill.getBillId() + "/result/failure");
             params.put("extra", url);
         }
         if (!StringUtils.isEmpty(bill.getChannel()) && bill.getChannel().equals("wx_pub")) {
@@ -136,8 +134,8 @@ public class BillServiceImpl implements BillService {
         params.put("channel", bill.getChannel());
         if (!StringUtils.isEmpty(bill.getChannel()) && bill.getChannel().equals("alipay_wap")) {
             Map<String, String> url = new HashMap<>();
-            url.put("success_url", PlatformConfig.getValue("server_url") + "/account/charge/" + bill.getBillId() + "/prompt");
-            url.put("cancel_url", PlatformConfig.getValue("server_url") + "/account/charge/" + bill.getBillId() + "/prompt");
+            url.put("success_url", PlatformConfig.getValue("server_url") + "/payment/" + bill.getBillId() + "/result/success");
+            url.put("cancel_url", PlatformConfig.getValue("server_url") + "/payment/" + bill.getBillId() + "/result/failure");
             params.put("extra", url);
         }
         if (!StringUtils.isEmpty(bill.getChannel()) && bill.getChannel().equals("wx_pub")) {
@@ -209,8 +207,8 @@ public class BillServiceImpl implements BillService {
         params.put("channel", bill.getChannel());
         if (!StringUtils.isEmpty(bill.getChannel()) && bill.getChannel().equals("alipay_wap")) {
             Map<String, String> url = new HashMap<>();
-            url.put("success_url", PlatformConfig.getValue("server_url") + "/account/charge/" + bill.getBillId() + "/prompt");
-            url.put("cancel_url", PlatformConfig.getValue("server_url") + "/account/charge/" + bill.getBillId() + "/prompt");
+            url.put("success_url", PlatformConfig.getValue("server_url") + "/payment/" + bill.getBillId() + "/result/success");
+            url.put("cancel_url", PlatformConfig.getValue("server_url") + "/payment/" + bill.getBillId() + "/result/failure");
             params.put("extra", url);
         }
         if (!StringUtils.isEmpty(bill.getChannel()) && bill.getChannel().equals("wx_pub")) {
@@ -271,8 +269,8 @@ public class BillServiceImpl implements BillService {
         return result;
     }
 
-	@Override
-	public ResultData createRefundBill(RefundBill bill) {
+    @Override
+    public ResultData createRefundBill(RefundBill bill) {
         ResultData result = new ResultData();
         ResultData insertResponse = billDao.insertRefundBill(bill);
         result.setResponseCode(insertResponse.getResponseCode());
@@ -282,10 +280,10 @@ public class BillServiceImpl implements BillService {
             result.setDescription(insertResponse.getDescription());
         }
         return result;
-	}
+    }
 
-	@Override
-	public ResultData fetchRefundBill(Map<String, Object> condition) {
+    @Override
+    public ResultData fetchRefundBill(Map<String, Object> condition) {
         ResultData result = new ResultData();
         ResultData queryResponse = billDao.queryRefundBill(condition);
         result.setResponseCode(queryResponse.getResponseCode());
@@ -298,10 +296,10 @@ public class BillServiceImpl implements BillService {
             result.setDescription(queryResponse.getDescription());
         }
         return result;
-	}
+    }
 
-	@Override
-	public ResultData updateRefundBill(RefundBill bill) {
+    @Override
+    public ResultData updateRefundBill(RefundBill bill) {
         ResultData result = new ResultData();
         ResultData updateResponse = billDao.updateRefundBill(bill);
         result.setResponseCode(updateResponse.getResponseCode());
@@ -311,10 +309,10 @@ public class BillServiceImpl implements BillService {
             result.setDescription(updateResponse.getDescription());
         }
         return result;
-	}
+    }
 
-	@Override
-	public ResultData fetchBillSum(Map<String, Object> condition) {
+    @Override
+    public ResultData fetchBillSum(Map<String, Object> condition) {
         ResultData result = new ResultData();
         ResultData fetchResponse = billDao.queryBillSum(condition);
         result.setResponseCode(fetchResponse.getResponseCode());
@@ -327,10 +325,10 @@ public class BillServiceImpl implements BillService {
             result.setDescription(fetchResponse.getDescription());
         }
         return result;
-	}
+    }
 
-	@Override
-	public ResultData fetchBillSum(Map<String, Object> condition, DataTableParam param) {
+    @Override
+    public ResultData fetchBillSum(Map<String, Object> condition, DataTableParam param) {
         ResultData result = new ResultData();
         ResultData response = billDao.queryBillSumByPage(condition, param);
         result.setResponseCode(response.getResponseCode());
@@ -340,7 +338,5 @@ public class BillServiceImpl implements BillService {
             result.setDescription(response.getDescription());
         }
         return result;
-	}
-
-
+    }
 }

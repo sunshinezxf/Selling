@@ -89,7 +89,7 @@
                 title: "类型", "mRender": function (data, type, full) {
                 if (full.agentType == 'ORDINARY') {
                     return "普通";
-                } else if (ful.agentType == 'COMPANY') {
+                } else if (full.agentType == 'COMPANY') {
                     return "公司";
                 } else if (full.agentType == 'SUPPORT') {
                     return "客服";

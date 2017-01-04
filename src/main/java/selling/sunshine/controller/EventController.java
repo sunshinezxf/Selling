@@ -244,7 +244,7 @@ public class EventController {
                 PromotionEvent promotionEvent = ((List<PromotionEvent>) fetchResponse.getData()).get(0);
                 view.addObject("promotionEvent", promotionEvent);
                 condition.clear();
-               //condition.put("blockFlag", false);
+                //condition.put("blockFlag", false);
                 ResultData response = commodityService.fetchGoods4Customer(condition);
                 if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
                     view.addObject("goodsList", (List<Goods4Customer>) response.getData());
@@ -538,42 +538,6 @@ public class EventController {
         return "";
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/sendMessage/{eventId}")
-    public ResultData sendMessage(@PathVariable("eventId") String eventId) {
-        ResultData resultData = new ResultData();
-        Map<String, Object> condition = new HashMap<>();
-        condition.put("eventId", eventId);
-        condition.put("status", ApplicationStatus.APPROVED.getCode());
-        ResultData fetchResponse = eventService.fetchEventApplication(condition);
-        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            List<EventApplication> eventApplications = (List<EventApplication>) fetchResponse.getData();
-            for (EventApplication eventApplication : eventApplications) {
-                messageService.send(eventApplication.getDonorPhone(), "悠悠寸草心，云草见真情。恭喜您获赠云草纲目超细三七粉。8号发货，快递5天。如有疑问，欢迎咨询健康大使。预祝您身体健康，阖家团圆！【云草纲目】");
-            }
-        }
-        return resultData;
-    }
-
-    @RequestMapping(method = RequestMethod.POST, value = "/sendMessageAll/{eventId}")
-    public ResultData sendMessageAll(@PathVariable("eventId") String eventId) {
-        ResultData resultData = new ResultData();
-        Map<String, Object> condition = new HashMap<>();
-        condition.put("eventId", eventId);
-        condition.put("status", ApplicationStatus.APPROVED.getCode());
-        ResultData fetchResponse = eventService.fetchEventApplication(condition);
-        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            List<EventApplication> eventApplications = (List<EventApplication>) fetchResponse.getData();
-            Set<String> phone = new HashSet<>();
-            for (EventApplication eventApplication : eventApplications) {
-                phone.add(eventApplication.getDonorPhone());
-                phone.add(eventApplication.getDoneePhone());
-            }
-
-            messageService.send(phone, "您获赠并服用云草超细三七粉后，身体健康状况有否改善？关注微信号：ycgm2016，得到更多的服务。【云草纲目】");
-        }
-        return resultData;
-    }
-
     @RequestMapping(method = RequestMethod.GET, value = "/all")
     public ResultData all() {
         ResultData resultData = new ResultData();
@@ -608,31 +572,32 @@ public class EventController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/promotion/setExpressNumber/{eventId}")
     public ModelAndView setExpressNumber(@PathVariable("eventId") String eventId) {
-        ModelAndView view=new ModelAndView();
-        Map<String,Object> condition=new HashMap<>();
-        ResultData fetchResponse =new ResultData();
-        condition.put("eventId",eventId);
+        ModelAndView view = new ModelAndView();
+        Map<String, Object> condition = new HashMap<>();
+        ResultData fetchResponse = new ResultData();
+        condition.put("eventId", eventId);
         List<Integer> status = new ArrayList<>(Arrays.asList(OrderItemStatus.PAYED.getCode()));
-        condition.put("status",status);
-        fetchResponse=eventService.fetchEventOrder(condition);
-        if (fetchResponse.getResponseCode()==ResponseCode.RESPONSE_OK){
-            List<EventOrder> orderList=(List<EventOrder>)fetchResponse.getData();
-            for (EventOrder eventOrder:orderList){
+        condition.put("status", status);
+        fetchResponse = eventService.fetchEventOrder(condition);
+        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            List<EventOrder> orderList = (List<EventOrder>) fetchResponse.getData();
+            for (EventOrder eventOrder : orderList) {
                 condition.clear();
-                if (eventOrder.getLinkId().startsWith("ODR")){
-                    condition.put("orderId",eventOrder.getLinkId());
-                    condition.put("phone",eventOrder.getDoneePhone());
-                    fetchResponse= orderService.fetchOrderItem(condition);
-                    if(fetchResponse.getResponseCode()==ResponseCode.RESPONSE_OK){
-                        OrderItem item=((List<OrderItem>)fetchResponse.getData()).get(0);
-                        condition.clear();;
-                        condition.put("orderItemId",item.getOrderItemId());
-                        fetchResponse=expressService.fetchExpress4Agent(condition);
-                        if(fetchResponse.getResponseCode()==ResponseCode.RESPONSE_OK){
-                            Express4Agent express4Agent=((List<Express4Agent>)fetchResponse.getData()).get(0);
+                if (eventOrder.getLinkId().startsWith("ODR")) {
+                    condition.put("orderId", eventOrder.getLinkId());
+                    condition.put("phone", eventOrder.getDoneePhone());
+                    fetchResponse = orderService.fetchOrderItem(condition);
+                    if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                        OrderItem item = ((List<OrderItem>) fetchResponse.getData()).get(0);
+                        condition.clear();
+                        ;
+                        condition.put("orderItemId", item.getOrderItemId());
+                        fetchResponse = expressService.fetchExpress4Agent(condition);
+                        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                            Express4Agent express4Agent = ((List<Express4Agent>) fetchResponse.getData()).get(0);
                             eventOrder.setStatus(OrderItemStatus.SHIPPED);//更新eventorder状态为已发货
                             eventService.updateEventOrder(eventOrder);
-                            Express4Application express4Application=new Express4Application();
+                            Express4Application express4Application = new Express4Application();
                             express4Application.setExpressNumber(express4Agent.getExpressNumber());
                             express4Application.setEventOrder(eventOrder);
                             express4Application.setDescription("赠品");
@@ -650,14 +615,14 @@ public class EventController {
                         }
                     }
 
-                }else {
-                    condition.put("orderId",eventOrder.getLinkId());
-                    fetchResponse=expressService.fetchExpress4Customer(condition);
-                    if(fetchResponse.getResponseCode()==ResponseCode.RESPONSE_OK){
-                        Express4Customer express4Customer=((List<Express4Customer>)fetchResponse.getData()).get(0);
+                } else {
+                    condition.put("orderId", eventOrder.getLinkId());
+                    fetchResponse = expressService.fetchExpress4Customer(condition);
+                    if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                        Express4Customer express4Customer = ((List<Express4Customer>) fetchResponse.getData()).get(0);
                         eventOrder.setStatus(OrderItemStatus.SHIPPED);//更新eventorder状态为已发货
                         eventService.updateEventOrder(eventOrder);
-                        Express4Application express4Application=new Express4Application();
+                        Express4Application express4Application = new Express4Application();
                         express4Application.setExpressNumber(express4Customer.getExpressNumber());
                         express4Application.setEventOrder(eventOrder);
                         express4Application.setDescription("赠品");
@@ -677,7 +642,7 @@ public class EventController {
             }
         }
 
-        view.setViewName("redirect:/event/present/"+eventId);
-        return  view;
+        view.setViewName("redirect:/event/present/" + eventId);
+        return view;
     }
 }
