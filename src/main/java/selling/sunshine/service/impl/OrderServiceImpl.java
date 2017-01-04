@@ -3,7 +3,6 @@ package selling.sunshine.service.impl;
 import common.sunshine.model.selling.agent.Agent;
 import common.sunshine.model.selling.agent.support.AgentType;
 import common.sunshine.model.selling.customer.Customer;
-import common.sunshine.model.selling.customer.CustomerPhone;
 import common.sunshine.model.selling.event.Event;
 import common.sunshine.model.selling.event.support.EventType;
 import common.sunshine.model.selling.event.support.PromotionConfig;
@@ -377,16 +376,24 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public ResultData check() {
-        ResultData resultData = new ResultData();
+        ResultData result = new ResultData();
         Map<String, Object> condition = new HashMap<>();
+        condition.put("blockFlag", false);
+        //查询所有的顾客订单
         ResultData queryData = customerOrderDao.queryOrder(condition);
-        List<CustomerOrder> customerOrders = (List<CustomerOrder>) queryData.getData();
-        for (CustomerOrder customerOrder : customerOrders) {
+        if (queryData.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            result.setResponseCode(ResponseCode.RESPONSE_NULL);
+            result.setDescription("未查询到顾客订单");
+            return result;
+        }
+        List<CustomerOrder> list = (List<CustomerOrder>) queryData.getData();
+        for (CustomerOrder customerOrder : list) {
+            condition.clear();
             condition.put("phone", customerOrder.getReceiverPhone());
             condition.put("customerBlockFlag", false);
             queryData = customerDao.queryCustomerPhone(condition);
             //当顾客不存在时添加
-            if (((List<CustomerPhone>) queryData.getData()).isEmpty()) {
+            if (queryData.getResponseCode() == ResponseCode.RESPONSE_NULL) {
                 Customer newCustomer = new Customer(customerOrder.getReceiverName(), customerOrder.getReceiverAddress(), customerOrder.getReceiverPhone(), customerOrder.getAgent());
                 ResultData response = customerDao.insertCustomer(newCustomer);
                 if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
@@ -397,10 +404,9 @@ public class OrderServiceImpl implements OrderService {
                     logger.error("添加顾客失败," + response.getDescription());
                 }
             } else {
-                //当该顾客已经存在时
-                CustomerPhone phone = ((List<CustomerPhone>) queryData.getData()).get(0);
+                //顾客的电话号码已存在顾客列表中
                 condition.clear();
-                condition.put("customerId", phone.getCustomer().getAgent());
+                condition.put("customerId", customerOrder.getCustomerId());
                 queryData = customerDao.queryCustomer(condition);
                 CustomerVo customer = ((List<CustomerVo>) queryData.getData()).get(0);
                 if (customer.getAgent() != null) {
@@ -408,7 +414,7 @@ public class OrderServiceImpl implements OrderService {
                     condition.clear();
                     condition.put("agentId", customer.getAgent().getAgentId());
                     ResultData response = agentDao.queryAgent(condition);
-                    if (!((List<Agent>) response.getData()).isEmpty()) {
+                    if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
                         Agent agent = ((List<Agent>) response.getData()).get(0);
                         if (agent.getAgentType() == AgentType.SUPPORT && customerOrder.getAgent() != null) {
                             Customer newCustomer = new Customer(customer.getName(), customer.getAddress(), customer.getPhone(), customerOrder.getAgent());
@@ -447,7 +453,7 @@ public class OrderServiceImpl implements OrderService {
                 }
             }
         }
-        return resultData;
+        return result;
     }
 
     @Override

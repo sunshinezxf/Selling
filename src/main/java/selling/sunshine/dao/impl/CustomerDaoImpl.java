@@ -254,7 +254,7 @@ public class CustomerDaoImpl extends BaseDao implements CustomerDao {
         try {
             List<CustomerPhone> list = sqlSession.selectList("selling.customer.phone.query", condition);
             if (list.isEmpty()) {
-                result.setResponseCode(ResponseCode.RESPONSE_OK);
+                result.setResponseCode(ResponseCode.RESPONSE_NULL);
             }
             result.setData(list);
         } catch (Exception e) {

@@ -73,7 +73,13 @@
     <update id="update" parameterType="common.sunshine.model.selling.customer.Customer">
         UPDATE customer
         <set>
-            transformed = #{transformed}
+            <if test="transformed != null">
+                transformed = #{transformed},
+            </if>
+            <if test="agentId != null">
+                agent_id = #{agentId},
+            </if>
+            custoemr_id = #{customerId}
         </set>
         WHERE customer_id = #{customerId}
     </update>

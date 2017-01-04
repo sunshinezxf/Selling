@@ -1,23 +1,22 @@
 package selling.sunshine.dao.impl;
 
+import common.sunshine.dao.BaseDao;
+import common.sunshine.model.selling.agent.Agent;
+import common.sunshine.model.selling.agent.Credit;
+import common.sunshine.model.selling.user.Role;
+import common.sunshine.model.selling.user.User;
+import common.sunshine.pagination.DataTablePage;
+import common.sunshine.pagination.DataTableParam;
 import common.sunshine.utils.IDGenerator;
-
+import common.sunshine.utils.ResponseCode;
+import common.sunshine.utils.ResultData;
 import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import selling.sunshine.dao.AgentDao;
-import common.sunshine.dao.BaseDao;
-import common.sunshine.model.selling.agent.Agent;
-import common.sunshine.model.selling.agent.Credit;
-import common.sunshine.model.selling.user.Role;
-import common.sunshine.model.selling.user.User;
 import selling.sunshine.model.gift.GiftConfig;
-import common.sunshine.pagination.DataTablePage;
-import common.sunshine.pagination.DataTableParam;
-import common.sunshine.utils.ResponseCode;
-import common.sunshine.utils.ResultData;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -78,6 +77,9 @@ public class AgentDaoImpl extends BaseDao implements AgentDao {
         try {
             condition = handle(condition);
             List<Agent> list = sqlSession.selectList("selling.agent.query", condition);
+            if (list.isEmpty()) {
+                result.setResponseCode(ResponseCode.RESPONSE_NULL);
+            }
             result.setData(list);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -100,10 +102,10 @@ public class AgentDaoImpl extends BaseDao implements AgentDao {
         ResultData result = new ResultData();
         DataTablePage<Agent> page = new DataTablePage<>(param);
         condition = handle(condition);
-        if (!StringUtils.isEmpty(param.getsSearch())) {  
-            String searchParam=param.getsSearch().replace("/", "-");
-        	condition.put("search", "%"+searchParam+"%");
- 		}
+        if (!StringUtils.isEmpty(param.getsSearch())) {
+            String searchParam = param.getsSearch().replace("/", "-");
+            condition.put("search", "%" + searchParam + "%");
+        }
         ResultData total = queryAgent(condition);
         if (total.getResponseCode() != ResponseCode.RESPONSE_OK) {
             result.setResponseCode(ResponseCode.RESPONSE_ERROR);

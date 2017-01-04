@@ -2,23 +2,23 @@ package selling.sunshine.dao.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import common.sunshine.dao.BaseDao;
+import common.sunshine.model.selling.order.CustomerOrder;
 import common.sunshine.model.selling.order.support.OrderItemStatus;
+import common.sunshine.pagination.DataTablePage;
+import common.sunshine.pagination.DataTableParam;
+import common.sunshine.pagination.MobilePage;
+import common.sunshine.pagination.MobilePageParam;
 import common.sunshine.utils.IDGenerator;
+import common.sunshine.utils.ResponseCode;
+import common.sunshine.utils.ResultData;
 import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
-import common.sunshine.dao.BaseDao;
 import selling.sunshine.dao.CustomerOrderDao;
-import common.sunshine.model.selling.order.CustomerOrder;
 import selling.sunshine.model.OrderPool;
-import common.sunshine.pagination.DataTablePage;
-import common.sunshine.pagination.DataTableParam;
-import common.sunshine.pagination.MobilePage;
-import common.sunshine.pagination.MobilePageParam;
-import common.sunshine.utils.ResponseCode;
-import common.sunshine.utils.ResultData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,6 +75,9 @@ public class CustomerOrderDaoImpl extends BaseDao implements CustomerOrderDao {
         synchronized (lock) {
             try {
                 List<OrderPool> list = sqlSession.selectList("selling.customer.order.query", condition);
+                if (list.isEmpty()) {
+                    result.setResponseCode(ResponseCode.RESPONSE_NULL);
+                }
                 result.setData(list);
             } catch (Exception e) {
                 logger.error(e.getMessage());
