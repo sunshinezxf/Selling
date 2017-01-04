@@ -398,6 +398,10 @@ public class OrderServiceImpl implements OrderService {
                 }
             } else {
                 //当该顾客已经存在时
+                CustomerPhone phone = ((List<CustomerPhone>) queryData.getData()).get(0);
+                condition.clear();
+                condition.put("customerId", phone.getCustomer().getAgent());
+                queryData = customerDao.queryCustomer(condition);
                 CustomerVo customer = ((List<CustomerVo>) queryData.getData()).get(0);
                 if (customer.getAgent() != null) {
                     //当已经存在的顾客有代理商时,判断这个代理商是否是客服，是客服的话要根据这次customer order中是否有agent来update

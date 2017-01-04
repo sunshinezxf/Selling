@@ -128,7 +128,7 @@ public class CustomerController {
         CustomerVo customer = ((List<CustomerVo>) fetchResponse.getData()).get(0);
         view.addObject("customer", customer);
         condition.clear();
-        if (customer.getAgent()!=null){
+        if (customer.getAgent() != null) {
             condition.put("agentId", customer.getAgent().getAgentId());
             fetchResponse = agentService.fetchAgent(condition);
             if (fetchResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
@@ -579,20 +579,22 @@ public class CustomerController {
         ResultData response = customerService.fetchCustomer(condition);
         //若存在，则查出这个customer并记录到order中
         Agent agent = null;
+        if (!StringUtils.isEmpty(agentId)) {
+            //验证该agentId是否存在
+            condition.clear();
+            condition.put("agentId", agentId);
+            ResultData fetchAgentResponse = agentService.fetchAgent(condition);
+            if (fetchAgentResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                agent = ((List<Agent>) fetchAgentResponse.getData()).get(0);
+            }
+        }
         CustomerVo vo = null;
         if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
             vo = ((List<CustomerVo>) response.getData()).get(0);
         } else {
             Customer customer = new Customer(customerName, address, phone);
-            if (!StringUtils.isEmpty(agentId)) {
-                //验证该agentId是否存在
-                condition.clear();
-                condition.put("agentId", agentId);
-                response = agentService.fetchAgent(condition);
-                if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
-                    agent = ((List<Agent>) response.getData()).get(0);
-                    customer.setAgent(new common.sunshine.model.selling.agent.lite.Agent(agent));
-                }
+            if (!StringUtils.isEmpty(agent)) {
+                customer.setAgent(new common.sunshine.model.selling.agent.lite.Agent(agent));
             }
             response = customerService.createCustomer(customer);
             if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
@@ -603,6 +605,7 @@ public class CustomerController {
                 logger.error(response.getDescription());
             }
         }
+
         //判断商品是否合法
         condition.clear();
         condition.put("goodsId", goodsId);
@@ -730,7 +733,7 @@ public class CustomerController {
         }
         if (user.getAdmin() != null && !StringUtils.isEmpty(param.getParams())) {
             JSONObject json = JSON.parseObject(param.getParams());
-            if(json.containsKey("agentId")){
+            if (json.containsKey("agentId")) {
                 condition.put("agentId", json.getString("agentId"));
             }
         }
