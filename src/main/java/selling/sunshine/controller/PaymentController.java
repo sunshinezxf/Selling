@@ -65,18 +65,18 @@ public class PaymentController {
                 return view;
             }
             if (bill.getStatus() == BillStatus.NOT_PAYED && (StringUtils.isEmpty(status) || (!StringUtils.isEmpty(status) && status.equals("success")))) {
-                Prompt prompt = new Prompt(PromptCode.WARNING, "支付处理中", "您的订单付款尚在处理中,请稍后核对订单状态", "/commodity/list");
+                Prompt prompt = new Prompt(PromptCode.WARNING, "支付处理中", "您的订单付款尚在处理中,请稍后核对订单状态", "/commodity/viewlist");
                 view.addObject("prompt", prompt);
                 view.setViewName("/customer/prompt");
                 return view;
             }
             if (bill.getStatus() == BillStatus.NOT_PAYED && (!StringUtils.isEmpty(status) && status.equals("failure"))) {
-                Prompt prompt = new Prompt(PromptCode.DANGER, "支付失败", "您已取消支付", "/commodity/list");
+                Prompt prompt = new Prompt(PromptCode.DANGER, "支付失败", "您已取消支付", "/commodity/viewlist");
                 view.addObject("prompt", prompt);
                 view.setViewName("/customer/prompt");
                 return view;
             }
-            Prompt prompt = new Prompt(PromptCode.WARNING, "系统提醒", "您的订单尚未完成支付，请付款后进行查询", "/commodity/list");
+            Prompt prompt = new Prompt(PromptCode.WARNING, "系统提醒", "您的订单尚未完成支付，请付款后进行查询", "/commodity/viewlist");
             view.addObject("prompt", prompt);
             view.setViewName("/customer/prompt");
             return view;
