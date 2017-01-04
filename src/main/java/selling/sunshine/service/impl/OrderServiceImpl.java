@@ -1,5 +1,7 @@
 package selling.sunshine.service.impl;
 
+import common.sunshine.model.selling.agent.Agent;
+import common.sunshine.model.selling.agent.support.AgentType;
 import common.sunshine.model.selling.customer.Customer;
 import common.sunshine.model.selling.customer.CustomerPhone;
 import common.sunshine.model.selling.event.Event;
@@ -50,6 +52,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private EventDao eventDao;
+
+    @Autowired
+    private AgentDao agentDao;
 
     /**
      * 下单主方法
@@ -380,6 +385,7 @@ public class OrderServiceImpl implements OrderService {
             condition.put("phone", customerOrder.getReceiverPhone());
             condition.put("customerBlockFlag", false);
             queryData = customerDao.queryCustomerPhone(condition);
+            //当顾客不存在时添加
             if (((List<CustomerPhone>) queryData.getData()).isEmpty()) {
                 Customer newCustomer = new Customer(customerOrder.getReceiverName(), customerOrder.getReceiverAddress(), customerOrder.getReceiverPhone(), customerOrder.getAgent());
                 ResultData response = customerDao.insertCustomer(newCustomer);
@@ -388,7 +394,32 @@ public class OrderServiceImpl implements OrderService {
                     customerOrder.setCustomerId(vo.getCustomerId());
                     customerOrderDao.updateOrder(customerOrder);
                 }
+            }else {
+                //当该顾客已经存在时
+                CustomerVo customer=((List<CustomerVo>)queryData.getData()).get(0);
+                if (customer.getAgent()!=null){
+                    //当已经存在的顾客有代理商时,判断这个代理商是否是客服，是客服的话要根据这次customer order中是否有agent来update
+                    condition.clear();
+                    condition.put("agentId",customer.getAgent().getAgentId());
+                    ResultData response = agentDao.queryAgent(condition);
+                    if (!((List<Agent>) response.getData()).isEmpty()){
+                        Agent agent=((List<Agent>) response.getData()).get(0);
+                        if (agent.getAgentType()== AgentType.SUPPORT&&customerOrder.getAgent()!=null){
+                            Customer newCustomer = new Customer(customer.getName(), customer.getAddress(), customer.getPhone(), customerOrder.getAgent());
+                            newCustomer.setCustomerId(customer.getCustomerId());
+                            response = customerDao.updateCustomer(newCustomer);
+                        }
+                    }
+                }else {
+                    //当已经存在的顾客没有代理商时，根据这次customer order中是否有agent来update
+                    if (customerOrder.getAgent()!=null){
+                        Customer newCustomer = new Customer(customer.getName(), customer.getAddress(), customer.getPhone(), customerOrder.getAgent());
+                        newCustomer.setCustomerId(customer.getCustomerId());
+                        ResultData response = customerDao.updateCustomer(newCustomer);
+                    }
+                }
             }
+
             if (StringUtils.isEmpty(customerOrder.getCustomerId())) {
                 condition.clear();
                 condition.put("phone", customerOrder.getReceiverPhone());
