@@ -24,9 +24,9 @@
             </div>
             <div class="weui_cell_bd weui_cell_primary">
                 <div id="province">
-                    <select id="prov" class="prov"></select>   
-                    <select id="city" class="city" disabled="disabled" style="display:none"></select>  
-                    <select id="dist" class="dist" disabled="disabled" style="display:none"></select>  
+                    <select id="prov" class="prov"></select>
+                    <select id="city" class="city" disabled="disabled" style="display:none"></select>
+                    <select id="dist" class="dist" disabled="disabled" style="display:none"></select>
                 </div>
             </div>
         </div>
@@ -40,18 +40,20 @@
         </div>
     </div>
     <div class="weui_btn_area">
-        <button type="button" class="weui_btn weui_btn_disabled weui_btn_default" id="add_confirm_btn" disabled="disabled">确认添加</button>
+        <button type="button" class="weui_btn weui_btn_disabled weui_btn_default" id="add_confirm_btn"
+                disabled="disabled">确认添加
+        </button>
         <button type="button" class="weui_btn weui_btn_default" id="add_cancel_btn">取消</button>
     </div>
 </div>
 <script>
-	$('#province').citySelect({
-        url:'${path.concat('/plugins/jquery/city.min.js')}',
-        required:false,
-        nodata:'none',//当子集无数据时，隐藏select
+    $('#province').citySelect({
+        url: '${path.concat('/plugins/jquery/city.min.js')}',
+        required: false,
+        nodata: 'none',//当子集无数据时，隐藏select
     });
-    
-	$("#prov").change(function () {
+
+    $("#prov").change(function () {
         $("#city").empty();
         $("#dist").empty();
         if (addressInfo_validate()) {
@@ -60,7 +62,7 @@
             inactive();
         }
     });
-        
+
     $("#city").change(function () {
         $("#dist").empty();
         if (addressInfo_validate()) {
@@ -77,7 +79,7 @@
             inactive();
         }
     });
-    
+
     $('#customer_name').on('input propertychange', function () {
         if (addressInfo_validate()) {
             active();
@@ -111,13 +113,13 @@
         var phone = $('#customer_phone').val();
         var address = $('#customer_address').val();
         var area;
-        if($("#prov").val()=="北京"||$("#prov").val()=="天津"||$("#prov").val()=="上海"||$("#prov").val()=="重庆"||$("#prov").val()=="香港"||$("#prov").val()=="澳门"||$("#prov").val()=="台湾"){
-            area=$("#city").val();
-        }else{
-            if($("#prov").val()=="国外"){
-                area=$("#prov").val();
-            }else{
-                area=$("#dist").val();
+        if ($("#prov").val() == "北京" || $("#prov").val() == "天津" || $("#prov").val() == "上海" || $("#prov").val() == "重庆" || $("#prov").val() == "香港" || $("#prov").val() == "澳门" || $("#prov").val() == "台湾") {
+            area = $("#city").val();
+        } else {
+            if ($("#prov").val() == "国外") {
+                area = $("#prov").val();
+            } else {
+                area = $("#dist").val();
             }
         }
         if (not_null(name) && not_null(phone) && not_null(address) && not_null(area)) {
@@ -140,70 +142,70 @@
         $("#add_confirm_btn").addClass("weui_btn_default");
     }
     $("#add_confirm_btn").click(function () {
-        
+
         var url = "${path.concat('/customer/add')}";
         var name = $("#customer_name").val();
         var phone = $("#customer_phone").val();
         var address;
-        if($("#dist").is(":hidden")){
-            if($("#city").is(":hidden")){
+        if ($("#dist").is(":hidden")) {
+            if ($("#city").is(":hidden")) {
                 address = $("#prov").val() + $("#customer_address").val();
-            }else{
+            } else {
                 address = $("#prov").val() + $("#city").val() + $("#customer_address").val();
             }
-        }else{
+        } else {
             address = $("#prov").val() + $("#city").val() + $("#dist").val() + $("#customer_address").val();
         }
-        
-        if((typeof name == "undefined" || name == "")&&(typeof phone == "undefined" || phone == "")&&(typeof address == "undefined" || address == "")){
+
+        if ((typeof name == "undefined" || name == "") && (typeof phone == "undefined" || phone == "") && (typeof address == "undefined" || address == "")) {
             $("#dialog").find(".weui_dialog_bd").html("姓名、手机号码和地址不能为空！");
-    		$("#dialog").fadeIn();      
-        }else if((typeof name == "undefined" || name == "")&&(typeof phone == "undefined" || phone == "")){
+            $("#dialog").fadeIn();
+        } else if ((typeof name == "undefined" || name == "") && (typeof phone == "undefined" || phone == "")) {
             $("#dialog").find(".weui_dialog_bd").html("姓名和手机号码不能为空！");
-    		$("#dialog").fadeIn();   
-        }else if((typeof name == "undefined" || name == "")&&(typeof address == "undefined" || address == "")){
+            $("#dialog").fadeIn();
+        } else if ((typeof name == "undefined" || name == "") && (typeof address == "undefined" || address == "")) {
             $("#dialog").find(".weui_dialog_bd").html("姓名和地址不能为空！");
-    		$("#dialog").fadeIn();   
-        }else if((typeof address == "undefined" || address == "")&&(typeof phone == "undefined" || phone == "")){
+            $("#dialog").fadeIn();
+        } else if ((typeof address == "undefined" || address == "") && (typeof phone == "undefined" || phone == "")) {
             $("#dialog").find(".weui_dialog_bd").html("手机号码和地址不能为空！");
-    		$("#dialog").fadeIn();   
-        }else if(typeof name == "undefined" || name == ""){
+            $("#dialog").fadeIn();
+        } else if (typeof name == "undefined" || name == "") {
             $("#dialog").find(".weui_dialog_bd").html("姓名不能为空！");
-    		$("#dialog").fadeIn();  
-        }else if(typeof phone == "undefined" || phone == "") {
-    		$("#dialog").find(".weui_dialog_bd").html("手机号码不能为空！");
-    		$("#dialog").fadeIn();   
-    	}else if(typeof address == "undefined" || address == "") {
-    		$("#dialog").find(".weui_dialog_bd").html("地址不能为空！");
-    		$("#dialog").fadeIn();   
-    	}else if(!(/^1[3|4|5|7|8]\d{9}$/.test($.phoneFilter(phone)))){ 
+            $("#dialog").fadeIn();
+        } else if (typeof phone == "undefined" || phone == "") {
+            $("#dialog").find(".weui_dialog_bd").html("手机号码不能为空！");
+            $("#dialog").fadeIn();
+        } else if (typeof address == "undefined" || address == "") {
+            $("#dialog").find(".weui_dialog_bd").html("地址不能为空！");
+            $("#dialog").fadeIn();
+        } else if (!(/^1[3|4|5|7|8]\d{9}$/.test($.phoneFilter(phone)))) {
             $("#dialog").find(".weui_dialog_bd").html("手机号码有误，请重填！");
-    		$("#dialog").fadeIn();
-        } else{
-           $.post(url, {
-               name: name,
-               phone: $.phoneFilter(phone),
-               address: address,
-           }, function (result) {
-              if (result.responseCode == "RESPONSE_OK") {
-                  var item = result.data;
-                  var node = "<a class='weui_cell customer' onclick='updateCustomer(this)' id='" + item.customerId + "' ><div class='weui_cell_bd weui_cell_primary'><p>" + item.name + "</p></div><div class='weui_cell_ft'>" + item.phone.phone + "</div></a>";
-                  $("#customer_list").append(node);
-                  $("#add_customer_form").hide();
-                  $("#customer_panel").fadeIn();
-                  $("#customer_name").val("");
-                  $("#customer_phone").val("");
-                  $("#customer_address").val("");
-              }else{
-                   $("#dialog").find(".weui_dialog_bd").html("该手机号码已经有其他人正在使用，请检查是否输入错误！");
-    		       $("#dialog").fadeIn();
-              }
-          });
-        }       
+            $("#dialog").fadeIn();
+        } else {
+            $.post(url, {
+                name: name,
+                phone: $.phoneFilter(phone),
+                address: address,
+            }, function (result) {
+                if (result.responseCode == "RESPONSE_OK") {
+                    var item = result.data;
+                    var node = "<a class='weui_cell customer' onclick='updateCustomer(this)' id='" + item.customerId + "' ><div class='weui_cell_bd weui_cell_primary'><p>" + item.name + "</p></div><div class='weui_cell_ft'>" + item.phone + "</div></a>";
+                    $("#customer_list").append(node);
+                    $("#add_customer_form").hide();
+                    $("#customer_panel").fadeIn();
+                    $("#customer_name").val("");
+                    $("#customer_phone").val("");
+                    $("#customer_address").val("");
+                } else {
+                    $("#dialog").find(".weui_dialog_bd").html("该手机号码已经有其他人正在使用，请检查是否输入错误！");
+                    $("#dialog").fadeIn();
+                }
+            });
+        }
     });
-    
-    $.phoneFilter = function(phone){
-    	return phone.replace(/-/g,"");
+
+    $.phoneFilter = function (phone) {
+        return phone.replace(/-/g, "");
     }
 
     $("#add_cancel_btn").click(function () {

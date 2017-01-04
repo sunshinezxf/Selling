@@ -58,6 +58,7 @@ import selling.sunshine.form.TimeRangeForm;
 import selling.sunshine.model.BackOperationLog;
 import selling.sunshine.service.*;
 import selling.sunshine.utils.*;
+import selling.sunshine.vo.customer.CustomerVo;
 import selling.sunshine.vo.order.OrderItemSum;
 
 import javax.servlet.http.HttpServletRequest;
@@ -1480,10 +1481,10 @@ public class OrderController {
                 result.setDescription("发货客户信息获取失败");
                 return result;
             }
-            Customer customer = ((List<Customer>) fetchCustomerResponse.getData()).get(0);
+            CustomerVo customer = ((List<CustomerVo>) fetchCustomerResponse.getData()).get(0);
             Express4Agent express = new Express4Agent(expressNo, PlatformConfig.getValue("sender_name"),
                     PlatformConfig.getValue("sender_phone"),
-                    PlatformConfig.getValue("sender_address"), customer.getName(), customer.getPhone().getPhone(), orderItem.getReceiveAddress(), orderItem.getGoods().getName());
+                    PlatformConfig.getValue("sender_address"), customer.getName(), customer.getPhone(), orderItem.getReceiveAddress(), orderItem.getGoods().getName());
             orderItem.setStatus(OrderItemStatus.SHIPPED);
             express.setItem(orderItem);
             ResultData createExpressResponse = expressService.createExpress(express);

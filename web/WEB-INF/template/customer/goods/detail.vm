@@ -505,7 +505,7 @@
                     channel = "wx_pub";
                     open_id = "$!{wechat}";
                 } else {
-                    channel = "";
+                    channel = "alipay_wap";
                     open_id = "$!{wechat}"
                 }
                 pingpp_one.init({
