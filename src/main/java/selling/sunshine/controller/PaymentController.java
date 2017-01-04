@@ -128,7 +128,7 @@ public class PaymentController {
                 return view;
             }
             if (bill.getStatus() == BillStatus.NOT_PAYED && (StringUtils.isEmpty(status) || (!StringUtils.isEmpty(status) && status.equals("success")))) {
-                Prompt prompt = new Prompt(PromptCode.WARNING, "支付处理中", "您的充值尚在处理中,请稍后核对订单状态", "/agent/order/manage/2");
+                Prompt prompt = new Prompt(PromptCode.WARNING, "支付处理中", "您的充值尚在处理中,请稍后核对订单状态", "/account/info");
                 view.addObject("prompt", prompt);
                 view.setViewName("/agent/prompt");
                 return view;

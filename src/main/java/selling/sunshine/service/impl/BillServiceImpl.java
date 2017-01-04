@@ -60,10 +60,11 @@ public class BillServiceImpl implements BillService {
         params.put("app", app);
         params.put("channel", bill.getChannel());
         if (!StringUtils.isEmpty(bill.getChannel()) && bill.getChannel().equals("alipay_wap")) {
-            Map<String, String> url = new HashMap<>();
-            url.put("success_url", PlatformConfig.getValue("server_url") + "/payment/" + bill.getBillId() + "/result/success");
-            url.put("cancel_url", PlatformConfig.getValue("server_url") + "/payment/" + bill.getBillId() + "/result/failure");
-            params.put("extra", url);
+            Map<String, Object> con = new HashMap<>();
+            con.put("success_url", PlatformConfig.getValue("server_url") + "/payment/" + bill.getBillId() + "/result/success");
+            con.put("cancel_url", PlatformConfig.getValue("server_url") + "/payment/" + bill.getBillId() + "/result/failure");
+            con.put("app_pay", true);
+            params.put("extra", con);
         }
         if (!StringUtils.isEmpty(bill.getChannel()) && bill.getChannel().equals("wx_pub")) {
             Map<String, String> user = new HashMap<>();
@@ -133,10 +134,11 @@ public class BillServiceImpl implements BillService {
         params.put("app", app);
         params.put("channel", bill.getChannel());
         if (!StringUtils.isEmpty(bill.getChannel()) && bill.getChannel().equals("alipay_wap")) {
-            Map<String, String> url = new HashMap<>();
-            url.put("success_url", PlatformConfig.getValue("server_url") + "/payment/" + bill.getBillId() + "/result/success");
-            url.put("cancel_url", PlatformConfig.getValue("server_url") + "/payment/" + bill.getBillId() + "/result/failure");
-            params.put("extra", url);
+            Map<String, Object> con = new HashMap<>();
+            con.put("success_url", PlatformConfig.getValue("server_url") + "/payment/" + bill.getBillId() + "/result/success");
+            con.put("cancel_url", PlatformConfig.getValue("server_url") + "/payment/" + bill.getBillId() + "/result/failure");
+            con.put("app_pay", true);
+            params.put("extra", con);
         }
         if (!StringUtils.isEmpty(bill.getChannel()) && bill.getChannel().equals("wx_pub")) {
             Map<String, String> user = new HashMap<>();
@@ -206,10 +208,11 @@ public class BillServiceImpl implements BillService {
         params.put("app", app);
         params.put("channel", bill.getChannel());
         if (!StringUtils.isEmpty(bill.getChannel()) && bill.getChannel().equals("alipay_wap")) {
-            Map<String, String> url = new HashMap<>();
-            url.put("success_url", PlatformConfig.getValue("server_url") + "/payment/" + bill.getBillId() + "/result/success");
-            url.put("cancel_url", PlatformConfig.getValue("server_url") + "/payment/" + bill.getBillId() + "/result/failure");
-            params.put("extra", url);
+            Map<String, Object> con = new HashMap<>();
+            con.put("success_url", PlatformConfig.getValue("server_url") + "/payment/" + bill.getBillId() + "/result/success");
+            con.put("cancel_url", PlatformConfig.getValue("server_url") + "/payment/" + bill.getBillId() + "/result/failure");
+            con.put("app_pay", true);
+            params.put("extra", con);
         }
         if (!StringUtils.isEmpty(bill.getChannel()) && bill.getChannel().equals("wx_pub")) {
             Map<String, String> user = new HashMap<>();

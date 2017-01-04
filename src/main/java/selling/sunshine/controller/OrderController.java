@@ -1325,7 +1325,6 @@ public class OrderController {
     public Charge customerPay(HttpServletRequest request) {
         Charge charge = new Charge();
         JSONObject params = toolService.getParams(request);
-        Subject subject = SecurityUtils.getSubject();
         String clientIp = toolService.getIP(request);
         Map<String, Object> condition = new HashMap<>();
         condition.put("orderId", String.valueOf(params.get("order_id")));

@@ -393,29 +393,40 @@ public class OrderServiceImpl implements OrderService {
                     CustomerVo vo = (CustomerVo) response.getData();
                     customerOrder.setCustomerId(vo.getCustomerId());
                     customerOrderDao.updateOrder(customerOrder);
+                } else {
+                    logger.error("添加顾客失败," + response.getDescription());
                 }
-            }else {
+            } else {
                 //当该顾客已经存在时
-                CustomerVo customer=((List<CustomerVo>)queryData.getData()).get(0);
-                if (customer.getAgent()!=null){
+                CustomerVo customer = ((List<CustomerVo>) queryData.getData()).get(0);
+                if (customer.getAgent() != null) {
                     //当已经存在的顾客有代理商时,判断这个代理商是否是客服，是客服的话要根据这次customer order中是否有agent来update
                     condition.clear();
-                    condition.put("agentId",customer.getAgent().getAgentId());
+                    condition.put("agentId", customer.getAgent().getAgentId());
                     ResultData response = agentDao.queryAgent(condition);
-                    if (!((List<Agent>) response.getData()).isEmpty()){
-                        Agent agent=((List<Agent>) response.getData()).get(0);
-                        if (agent.getAgentType()== AgentType.SUPPORT&&customerOrder.getAgent()!=null){
+                    if (!((List<Agent>) response.getData()).isEmpty()) {
+                        Agent agent = ((List<Agent>) response.getData()).get(0);
+                        if (agent.getAgentType() == AgentType.SUPPORT && customerOrder.getAgent() != null) {
                             Customer newCustomer = new Customer(customer.getName(), customer.getAddress(), customer.getPhone(), customerOrder.getAgent());
                             newCustomer.setCustomerId(customer.getCustomerId());
-                            response = customerDao.updateCustomer(newCustomer);
+                            customerDao.deleteCustomer(newCustomer);
+                            newCustomer.setCustomerId("");
+                            response = customerDao.insertCustomer(newCustomer);
+                            if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                                CustomerVo vo = (CustomerVo) response.getData();
+                                customerOrder.setCustomerId(vo.getCustomerId());
+                                customerOrderDao.updateOrder(customerOrder);
+                            } else {
+                                logger.error("删除原客服后,添加顾客失败," + response.getDescription());
+                            }
                         }
                     }
-                }else {
+                } else {
                     //当已经存在的顾客没有代理商时，根据这次customer order中是否有agent来update
-                    if (customerOrder.getAgent()!=null){
+                    if (customerOrder.getAgent() != null) {
                         Customer newCustomer = new Customer(customer.getName(), customer.getAddress(), customer.getPhone(), customerOrder.getAgent());
                         newCustomer.setCustomerId(customer.getCustomerId());
-                        ResultData response = customerDao.updateCustomer(newCustomer);
+                        customerDao.updateCustomer(newCustomer);
                     }
                 }
             }
