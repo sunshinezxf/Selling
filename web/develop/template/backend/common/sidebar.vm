@@ -8,7 +8,7 @@
     #end
     #if($role == "admin" || $role == "auditor")
         <div class="item">
-            <a class="title"><i class="teal user icon left"></i><i class="dropdown icon"></i>代理管理</a>
+            <a class="title"><i class="teal spy icon left"></i><i class="dropdown icon"></i>代理管理</a>
 
             <div class="content menu">
                 <a id="agent_overview" class="item" href="${path.concat('/agent/overview')}">代理概览</a>
