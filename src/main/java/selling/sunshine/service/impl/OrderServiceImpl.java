@@ -379,75 +379,108 @@ public class OrderServiceImpl implements OrderService {
         ResultData result = new ResultData();
         Map<String, Object> condition = new HashMap<>();
         condition.put("blockFlag", false);
-        //查询所有的顾客订单
-        ResultData queryData = customerOrderDao.queryOrder(condition);
-        if (queryData.getResponseCode() != ResponseCode.RESPONSE_OK) {
+        //查询顾客订单
+        ResultData response = customerOrderDao.queryOrder(condition);
+        if (response.getResponseCode() != ResponseCode.RESPONSE_OK) {
             result.setResponseCode(ResponseCode.RESPONSE_NULL);
-            result.setDescription("未查询到顾客订单");
+            result.setDescription("当前未查询到顾客订单");
             return result;
         }
-        List<CustomerOrder> list = (List<CustomerOrder>) queryData.getData();
-        for (CustomerOrder customerOrder : list) {
+        //根据查询到的顾客订单进行订单处理
+        List<CustomerOrder> list = (List<CustomerOrder>) response.getData();
+        for (CustomerOrder item : list) {
             condition.clear();
-            condition.put("phone", customerOrder.getReceiverPhone());
-            condition.put("customerBlockFlag", false);
-            queryData = customerDao.queryCustomerPhone(condition);
-            //当顾客不存在时添加
-            if (queryData.getResponseCode() == ResponseCode.RESPONSE_NULL) {
-                Customer newCustomer = new Customer(customerOrder.getReceiverName(), customerOrder.getReceiverAddress(), customerOrder.getReceiverPhone(), customerOrder.getAgent());
-                ResultData response = customerDao.insertCustomer(newCustomer);
-                if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
-                    CustomerVo vo = (CustomerVo) response.getData();
-                    customerOrder.setCustomerId(vo.getCustomerId());
-                    customerOrderDao.updateOrder(customerOrder);
-                } else {
-                    logger.error("添加顾客失败," + response.getDescription());
+            //查询是否有此顾客存在
+            condition.put("phone", item.getReceiverPhone());
+            condition.put("blockFlag", false);
+            response = customerDao.queryCustomer(condition);
+            if (response.getResponseCode() == ResponseCode.RESPONSE_NULL) {
+                Customer customer = new Customer(item.getReceiverName(), item.getReceiverAddress(), item.getReceiverPhone());
+                customer.setAgent(item.getAgent());
+                response = customerDao.insertCustomer(customer);
+                if (response.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
+                    logger.error(response.getDescription());
                 }
-            } else {
-                //顾客的电话号码已存在顾客列表中
+                CustomerVo vo = (CustomerVo) response.getData();
+                item.setCustomerId(vo.getCustomerId());
+                response = customerOrderDao.updateOrder(item);
+                if (response.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
+                    logger.error(response.getDescription());
+                }
+                continue;
+            }
+            if (StringUtils.isEmpty(item.getAgent())) {
+                continue;
+            }
+            //此顾客之前已存在，需要判断该顾客的客服是否存在及客服类型
+            if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                CustomerVo target = ((List<CustomerVo>) response.getData()).get(0);
+                //获取顾客之前的代理商
                 condition.clear();
-                condition.put("customerId", customerOrder.getCustomerId());
-                queryData = customerDao.queryCustomer(condition);
-                CustomerVo customer = ((List<CustomerVo>) queryData.getData()).get(0);
-                if (customer.getAgent() != null) {
-                    //当已经存在的顾客有代理商时,判断这个代理商是否是客服，是客服的话要根据这次customer order中是否有agent来update
-                    condition.clear();
-                    condition.put("agentId", customer.getAgent().getAgentId());
-                    ResultData response = agentDao.queryAgent(condition);
-                    if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
-                        Agent agent = ((List<Agent>) response.getData()).get(0);
-                        if (agent.getAgentType() == AgentType.SUPPORT && customerOrder.getAgent() != null) {
-                            Customer newCustomer = new Customer(customer.getName(), customer.getAddress(), customer.getPhone(), customerOrder.getAgent());
-                            newCustomer.setCustomerId(customer.getCustomerId());
-                            customerDao.deleteCustomer(newCustomer);
-                            newCustomer.setCustomerId("");
-                            response = customerDao.insertCustomer(newCustomer);
-                            if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
-                                CustomerVo vo = (CustomerVo) response.getData();
-                                customerOrder.setCustomerId(vo.getCustomerId());
-                                customerOrderDao.updateOrder(customerOrder);
-                            } else {
-                                logger.error("删除原客服后,添加顾客失败," + response.getDescription());
-                            }
-                        }
+                Agent customerAgent = null;
+                if (!StringUtils.isEmpty(target.getAgent())) {
+                    condition.put("agentId", target.getAgent().getAgentId());
+                    response = agentDao.queryAgent(condition);
+                    customerAgent = ((List<Agent>) response.getData()).get(0);
+                }
+                if (customerAgent != null && customerAgent.getAgentType() != AgentType.SUPPORT) {
+                    continue;
+                }
+                //获取顾客订单中的代理商
+                condition.clear();
+                condition.put("agentId", item.getAgent().getAgentId());
+                response = agentDao.queryAgent(condition);
+                Agent orderAgent = ((List<Agent>) response.getData()).get(0);
+                if (customerAgent == null || orderAgent.getAgentType() != AgentType.SUPPORT) {
+                    //更新顾客的代理商
+                    //将原来的顾客block
+                    Customer customer = new Customer(target.getName(), target.getAddress(), target.getPhone(), target.getAgent());
+                    customer.setCustomerId(target.getCustomerId());
+                    response = customerDao.deleteCustomer(customer);
+                    if (response.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
+                        logger.error(response.getDescription());
+                        continue;
                     }
-                } else {
-                    //当已经存在的顾客没有代理商时，根据这次customer order中是否有agent来update
-                    if (customerOrder.getAgent() != null) {
-                        Customer newCustomer = new Customer(customer.getName(), customer.getAddress(), customer.getPhone(), customerOrder.getAgent());
-                        newCustomer.setCustomerId(customer.getCustomerId());
-                        customerDao.updateCustomer(newCustomer);
+                    //根据新的agent创建顾客并回填到customer order中
+                    customer.setAgent(new common.sunshine.model.selling.agent.lite.Agent(orderAgent));
+                    customer.setCustomerId("");
+                    response = customerDao.insertCustomer(customer);
+                    if (response.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
+                        logger.error(response.getDescription());
+                    }
+                    CustomerVo vo = (CustomerVo) response.getData();
+                    item.setCustomerId(vo.getCustomerId());
+                    response = customerOrderDao.updateOrder(item);
+                    if (response.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
+                        logger.error(response.getDescription());
                     }
                 }
             }
 
+        }
+        return result;
+    }
+
+    @Override
+    public ResultData fullFillCusOrder() {
+        ResultData result = new ResultData();
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("blockFlag", false);
+        ResultData response = customerOrderDao.queryOrder(condition);
+        if (response.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            result.setResponseCode(ResponseCode.RESPONSE_NULL);
+            result.setDescription("未查询到顾客订单");
+            return result;
+        }
+        List<CustomerOrder> list = (List<CustomerOrder>) response.getData();
+        for (CustomerOrder customerOrder : list) {
             if (StringUtils.isEmpty(customerOrder.getCustomerId())) {
                 condition.clear();
                 condition.put("phone", customerOrder.getReceiverPhone());
                 condition.put("blockFlag", false);
-                queryData = customerDao.queryCustomer(condition);
-                if (queryData.getResponseCode() == ResponseCode.RESPONSE_OK) {
-                    CustomerVo vo = ((List<CustomerVo>) queryData.getData()).get(0);
+                response = customerDao.queryCustomer(condition);
+                if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                    CustomerVo vo = ((List<CustomerVo>) response.getData()).get(0);
                     customerOrder.setCustomerId(vo.getCustomerId());
                     customerOrderDao.updateOrder(customerOrder);
                 }

@@ -76,10 +76,10 @@
             <if test="transformed != null">
                 transformed = #{transformed},
             </if>
-            <if test="agentId != null">
-                agent_id = #{agentId},
+            <if test="agent != null and agent.agentId != null">
+                agent_id = #{agent.agentId},
             </if>
-            custoemr_id = #{customerId}
+            customer_id = #{customerId}
         </set>
         WHERE customer_id = #{customerId}
     </update>
