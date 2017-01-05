@@ -49,7 +49,7 @@
             create_time = #{createAt},
             agent_coffer = #{coffer},
             <!--             customer_service=#{customerService}  -->
-            agent_type = #{agentType}
+            agent_type = #{agentType, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler}
         </set>
     </insert>
 
