@@ -27,12 +27,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
-
-import selling.sunshine.service.BillService;
 import selling.sunshine.service.CustomerService;
 import selling.sunshine.service.EventService;
 import selling.sunshine.service.OrderService;
 import selling.sunshine.service.StatementService;
+import selling.sunshine.vo.customer.CustomerVo;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -133,7 +132,7 @@ public class StatementController {
                                 condition.put("customerId", customer.getCustomerId());
                                 condition.put("blockFlag", false);
                                 ResultData fetchCustomerResponse = customerService.fetchCustomer(condition);
-                                Customer customerDetail = ((List<Customer>) fetchCustomerResponse.getData()).get(0);
+                                CustomerVo customerDetail = ((List<CustomerVo>) fetchCustomerResponse.getData()).get(0);
                                 //以下是查找该客户最近一次的购买订单，顺便统计该客户的各商品购买盒数
                                 Map<String, Object[]> goodsMap = new HashMap<String, Object[]>();//商品ID->(商品name, 购买数量quantity)
                                 String phone = customerPhone.getPhone();
