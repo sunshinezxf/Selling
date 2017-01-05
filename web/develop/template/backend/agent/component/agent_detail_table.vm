@@ -27,7 +27,6 @@
             <div class="ui segment">
                 <div class="ui divided items">
                     <div id="personal_info" class="item">
-                    <div class="ui container">
                         <div class="ui stackable grid">
                             <div class="six wide column">
                                 <div class="ui two column stackable grid">
@@ -53,6 +52,10 @@
                                         <i class="pink female icon"></i>
                                     #end
                                     <div class="content">${agent.name}
+                                        <div  id="type_div" class="ui blue tag label">
+                                            类别
+                                            <div class="detail">${agent.agentType}</div>
+                                        </div>
                                         <a  id="upper_agent_div" class="ui blue tag label">
                                             上级代理
                                             #if(${agent.upperAgent})
@@ -114,7 +117,6 @@
                             </div>
                         </div>
                             </div>
-                        </div>
                         </div>
                     </div>
                     <div class="item">
