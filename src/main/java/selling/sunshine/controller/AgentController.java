@@ -150,7 +150,7 @@ public class AgentController {
         }
         String openId = WechatUtil.queryOauthOpenId(code);
         view.addObject("wechat", openId);
-        String url = "http://" + PlatformConfig.getValue("server_url") + "/agent/bind";
+        String url = "https://" + PlatformConfig.getValue("server_url") + "/agent/bind";
         String configUrl = url + "?code=" + code + "&state=" + state;
         try {
             String shareLink = "https://open.weixin.qq.com/connect/oauth2/authorize?appid="
@@ -274,7 +274,7 @@ public class AgentController {
     @RequestMapping(method = RequestMethod.GET, value = "/lethe")
     public ModelAndView lethe() {
         ModelAndView view = new ModelAndView();
-        String url = "http://" + PlatformConfig.getValue("server_url") + "/agent/lethe";
+        String url = "https://" + PlatformConfig.getValue("server_url") + "/agent/lethe";
         String configUrl = url;
         try {
             String shareLink = url;
@@ -395,7 +395,7 @@ public class AgentController {
     @RequestMapping(method = RequestMethod.GET, value = "/register")
     public ModelAndView register(String code, String state) {
         ModelAndView view = new ModelAndView();
-        String url = "http://" + PlatformConfig.getValue("server_url") + "/agent/register";
+        String url = "https://" + PlatformConfig.getValue("server_url") + "/agent/register";
         String configUrl;
         if (!StringUtils.isEmpty(code) && !StringUtils.isEmpty(code)) {
             String openId = WechatUtil.queryOauthOpenId(code);
@@ -497,7 +497,7 @@ public class AgentController {
             view.setViewName("/agent/login");
             return view;
         }
-        String url = "http://" + PlatformConfig.getValue("server_url") + "/agent/" + user.getAgent().getAgentId()
+        String url = "https://" + PlatformConfig.getValue("server_url") + "/agent/" + user.getAgent().getAgentId()
                 + "/embrace";
         Map<String, Object> condition = new HashMap<String, Object>();
         condition.put("longUrl", url);
@@ -579,7 +579,7 @@ public class AgentController {
             goodsList = (List) fetchGoodsResponse.getData();
         }
         for (Goods4Agent goods : goodsList) {
-            String url = "http://" + PlatformConfig.getValue("server_url") + "/commodity/" + goods.getGoodsId()
+            String url = "https://" + PlatformConfig.getValue("server_url") + "/commodity/" + goods.getGoodsId()
                     + "?agentId=" + user.getAgent().getAgentId();
             try {
                 String shareURL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid="
@@ -611,7 +611,7 @@ public class AgentController {
         view.addObject("goodsList", goodsList);
         view.addObject("agent", user.getAgent());
         view.addObject("urls", urls);
-        String linkUrl = "http://" + PlatformConfig.getValue("server_url") + "/commodity/viewlist";
+        String linkUrl = "https://" + PlatformConfig.getValue("server_url") + "/commodity/viewlist";
         String link = "";
         try {
             link = "https://open.weixin.qq.com/connect/oauth2/authorize?appid="
@@ -647,7 +647,7 @@ public class AgentController {
         }
         Goods4Agent goods = ((List<Goods4Agent>) fetchGoodsData.getData()).get(0);
         String link = "";
-        String url = "http://" + PlatformConfig.getValue("server_url") + "/commodity/" + goods.getGoodsId()
+        String url = "https://" + PlatformConfig.getValue("server_url") + "/commodity/" + goods.getGoodsId()
                 + "?agentId=" + user.getAgent().getAgentId();
         try {
             String shareURL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid="
@@ -679,9 +679,9 @@ public class AgentController {
             condition.put("type", "cover");
             ResultData fetchThumbnailData = commodityService.fetchThumbnail(condition);
             if (fetchThumbnailData.getResponseCode() != ResponseCode.RESPONSE_OK) {
-                view.addObject("img", "http://www.yuncaogangmu.com/material/images/logo.jpeg");
+                view.addObject("img", "https://www.yuncaogangmu.com/material/images/logo.jpeg");
             } else {
-                view.addObject("img", "http://" + PlatformConfig.getValue("server_url")
+                view.addObject("img", "https://" + PlatformConfig.getValue("server_url")
                         + ((List<Thumbnail>) fetchThumbnailData.getData()).get(0).getPath());
             }
             view.addObject("agent", user.getAgent());

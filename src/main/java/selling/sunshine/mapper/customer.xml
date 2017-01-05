@@ -91,7 +91,7 @@
         </set>
         WHERE customer_id = #{customerId}
         <if test="agent != null and agent.agentId != null">
-            AND agent_id = agent.agentId
+            AND agent_id = #{agent.agentId}
         </if>
     </update>
 

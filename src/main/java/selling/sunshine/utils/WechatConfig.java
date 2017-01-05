@@ -45,7 +45,7 @@ public class WechatConfig {
     }
 
     public static void oauthWechat(ModelAndView view, String urlBase) {
-        String url = "http://" + PlatformConfig.getValue("server_url") + urlBase;
+        String url = "https://" + PlatformConfig.getValue("server_url") + urlBase;
         String configUrl = url + "";
         Configuration configuration = WechatConfig.config(configUrl);
         configuration.setShareLink(url);
@@ -53,7 +53,7 @@ public class WechatConfig {
     }
 
     public static void oauthWechat(ModelAndView view, String urlBase, String shareURL) {
-        String url = "http://" + PlatformConfig.getValue("server_url") + urlBase;
+        String url = "https://" + PlatformConfig.getValue("server_url") + urlBase;
         String configUrl = url + "";
         Configuration configuration = WechatConfig.config(configUrl);
         configuration.setShareLink(shareURL);
@@ -61,7 +61,7 @@ public class WechatConfig {
     }
 
     public static void oauthWechat(ModelAndView view, String urlBase, String code, String state) {
-        String url = "http://" + PlatformConfig.getValue("server_url") + urlBase;
+        String url = "https://" + PlatformConfig.getValue("server_url") + urlBase;
         String configUrl;
         if (!StringUtils.isEmpty(code) && !StringUtils.isEmpty(code)) {
             String openId = WechatUtil.queryOauthOpenId(code);

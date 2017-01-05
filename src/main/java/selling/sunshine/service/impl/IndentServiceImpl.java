@@ -26,6 +26,7 @@ import selling.sunshine.dao.OrderDao;
 import selling.sunshine.service.IndentService;
 import selling.sunshine.utils.PlatformConfig;
 import selling.sunshine.utils.WorkBookUtil;
+import selling.sunshine.vo.customer.CustomerVo;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -172,9 +173,9 @@ public class IndentServiceImpl implements IndentService {
         condition.put("customerId", item.getCustomer().getCustomerId());
         ResultData queryResponse = customerDao.queryCustomer(condition);
         if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            List<Customer> list = (List<Customer>) queryResponse.getData();
+            List<CustomerVo> list = (List<CustomerVo>) queryResponse.getData();
             if (!list.isEmpty()) {
-                bookerPhone.setCellValue(list.get(0).getPhone().getPhone());
+                bookerPhone.setCellValue(list.get(0).getPhone());
             }
         }
         Row receiveAddr = sheet.getRow(9);
@@ -398,7 +399,7 @@ public class IndentServiceImpl implements IndentService {
         int l = 1;
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i) instanceof OrderItem) {
-                row = sheet1.createRow((int) k);
+                row = sheet1.createRow(k);
                 OrderItem orderItem = (OrderItem) list.get(i);
                 // 第四步，创建单元格，并设置值
                 row.createCell((short) 0).setCellValue(orderItem.getOrderItemId());
@@ -409,9 +410,9 @@ public class IndentServiceImpl implements IndentService {
                 row.createCell((short) 2).setCellValue(orderItem.getCustomer().getName());
                 condition.clear();
                 condition.put("customerId", orderItem.getCustomer().getCustomerId());
-                Customer customer = ((List<Customer>) customerDao.queryCustomer(condition).getData()).get(0);
-                row.createCell((short) 3).setCellValue(customer.getPhone().getPhone());
-                row.createCell((short) 4).setCellValue(customer.getAddress().getAddress());
+                CustomerVo customer = ((List<CustomerVo>) customerDao.queryCustomer(condition).getData()).get(0);
+                row.createCell((short) 3).setCellValue(customer.getPhone());
+                row.createCell((short) 4).setCellValue(customer.getAddress());
                 row.createCell((short) 5).setCellValue(orderItem.getGoods().getName());
                 row.createCell((short) 6).setCellValue(orderItem.getGoodsQuantity());
                 row.createCell((short) 7).setCellValue(orderItem.getOrderItemPrice());
@@ -439,7 +440,7 @@ public class IndentServiceImpl implements IndentService {
                 }
                 k++;
             } else if (list.get(i) instanceof CustomerOrder) {
-                row = sheet2.createRow((int) j);
+                row = sheet2.createRow(j);
                 CustomerOrder customerOrder = (CustomerOrder) list.get(i);
                 // 第四步，创建单元格，并设置值
                 row.createCell((short) 0).setCellValue(customerOrder.getOrderId());
@@ -550,12 +551,6 @@ public class IndentServiceImpl implements IndentService {
             if (item instanceof OrderItem) {
                 OrderItem o = (OrderItem) item;
                 Customer customer = o.getCustomer();
-                Map<String, Object> condition = new HashMap<>();
-                condition.put("customerId", ((OrderItem) item).getCustomer().getCustomerId());
-                ResultData response = customerDao.queryCustomer(condition);
-                if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
-                    customer = ((List<Customer>) response.getData()).get(0);
-                }
                 //设置订单编号
                 Row current = sheet.createRow(row);
                 Cell noCell = current.createCell(0);
@@ -565,9 +560,10 @@ public class IndentServiceImpl implements IndentService {
                 SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日");
                 dateCell.setCellValue(format.format(o.getCreateAt()));
                 //设置代理商姓名
+                Map<String, Object> condition = new HashMap<>();
                 condition.clear();
                 condition.put("orderId", o.getOrder().getOrderId());
-                response = orderDao.queryOrder(condition);
+                ResultData response = orderDao.queryOrder(condition);
                 if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
                     Cell agentCell = current.createCell(2);
                     Order order = ((List<Order>) response.getData()).get(0);
@@ -581,7 +577,7 @@ public class IndentServiceImpl implements IndentService {
                 phoneCell.setCellValue(customer.getPhone().getPhone());
                 //设置顾客收货地址
                 Cell addressCell = current.createCell(5);
-                addressCell.setCellValue(customer.getAddress().getAddress());
+                addressCell.setCellValue(o.getReceiveAddress());
                 //设置购买商品名称
                 Cell productNameCell = current.createCell(6);
                 productNameCell.setCellValue(o.getGoods().getName());
