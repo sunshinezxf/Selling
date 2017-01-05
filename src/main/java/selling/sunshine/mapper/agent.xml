@@ -16,7 +16,7 @@
         <result property="createAt" column="create_time"></result>
         <result property="agentRefund" column="agent_refund"></result>
         <result property="claimScale" column="scale"></result>
-    <!--     <result property="customerService" column="customer_service"></result> -->
+        <!--     <result property="customerService" column="customer_service"></result> -->
         <result property="agentType" column="agent_type"
                 typeHandler="common.sunshine.mybatis.handler.agent.AgentTypeHandler"></result>
         <association property="upperAgent" column="agentId = upper_agent_id" select="agentLiteQuery"></association>
@@ -48,7 +48,7 @@
             block_flag = #{blockFlag},
             create_time = #{createAt},
             agent_coffer = #{coffer},
-<!--             customer_service=#{customerService}  --> 
+            <!--             customer_service=#{customerService}  -->
             agent_type = #{agentType}
         </set>
     </insert>
@@ -116,8 +116,10 @@
         </if>
         <if test="purchase != null">
             AND agent_id IN (
-            SELECT agent_id FROM order_item_sum WHERE order_type IN (0, 2) AND
-            date_format(create_time,'%Y-%m')=date_format(now(),'%Y-%m') AND agent_id IS NOT NULL)
+            SELECT agent_id FROM order_item_sum WHERE order_type IN (0, 2)
+            AND date_format(create_time,'%Y-%m')=date_format(now(),'%Y-%m')
+            AND order_item_status IN (1, 2, 3)
+            AND agent_id IS NOT NULL)
         </if>
         <if test="search !=null and search != ''">
             AND (agent_name LIKE BINARY #{search} OR create_time LIKE BINARY #{search} OR agent_phone LIKE BINARY
@@ -127,9 +129,9 @@
             ORDER BY ${rule}
         </if>
         <if test="sortByName !=null and sortByName != ''">
-                ORDER BY convert(agent_name using gbk)
-        </if> 
-        
+            ORDER BY convert(agent_name using gbk)
+        </if>
+
 
     </select>
 
@@ -163,9 +165,9 @@
             <if test="agentRefund != null and agentRefund != ''">
                 agent_refund = #{agentRefund},
             </if>
-<!--             <if test="customerService != null and customerService != ''">
-                customer_service = #{customerService},
-            </if> -->
+            <!--             <if test="customerService != null and customerService != ''">
+                            customer_service = #{customerService},
+                        </if> -->
             <if test="claimScale != null and claimScale != ''">
                 scale = #{claimScale},
             </if>

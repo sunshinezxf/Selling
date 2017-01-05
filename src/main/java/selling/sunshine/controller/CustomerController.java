@@ -209,7 +209,7 @@ public class CustomerController {
         condition.put("blockFlag", false);
         condition.put("customerBlockFlag", false);
         resultData = customerService.fetchCustomerPhone(condition);
-        if (((List<CustomerPhone>) resultData.getData()).size() != 0) {
+        if (resultData.getResponseCode() != ResponseCode.RESPONSE_NULL) {
             resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
             return resultData;
         }
@@ -295,7 +295,7 @@ public class CustomerController {
         ResultData response = new ResultData();
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
-        Map<String, Object> condition = new HashMap<String, Object>();
+        Map<String, Object> condition = new HashMap<>();
         condition.put("agentId", user.getAgent().getAgentId());
         condition.put("customerId", customerId);
         ResultData fetchCustomerResponse = customerService.fetchCustomer(condition);
@@ -305,7 +305,7 @@ public class CustomerController {
             return response;
         }
         CustomerVo vo = ((List<CustomerVo>) fetchCustomerResponse.getData()).get(0);
-        Customer customer = new Customer(vo.getName(), vo.getAddress(), vo.getPhone());
+        Customer customer = new Customer(vo.getName(), vo.getAddress(), vo.getPhone(), user.getAgent());
         customer.setCustomerId(vo.getCustomerId());
         ResultData updateResponse = customerService.deleteCustomer(customer);
         if (updateResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {

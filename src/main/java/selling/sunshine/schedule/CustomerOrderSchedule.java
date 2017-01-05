@@ -15,6 +15,7 @@ public class CustomerOrderSchedule {
 
     public void schedule() {
         orderService.check();
+        orderService.fullFillCusOrder();
     }
 
 }
