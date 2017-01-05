@@ -748,7 +748,6 @@ public class AgentController {
      *
      * @param form
      * @param result
-     * @param attr
      * @return
      */
     @RequestMapping(method = RequestMethod.POST, value = "/register")
@@ -2698,8 +2697,6 @@ public class AgentController {
             condition.put("start", start);
             condition.put("end", end);
         }
-
-        List<Agent> agentList = (List<Agent>) agentService.fetchAgent(condition).getData();
         response.reset();
         response.setContentType("application/vnd.ms-excel");
         response.setCharacterEncoding("utf-8");
@@ -2709,6 +2706,25 @@ public class AgentController {
         WritableSheet sheet1;
         // book = Workbook.createWorkbook(os);
         book = jxl.Workbook.createWorkbook(os);
+
+        ResultData fetchResponse = agentService.fetchAgent(condition);
+        if (fetchResponse.getResponseCode()!=ResponseCode.RESPONSE_OK){
+            sheet1 = book.createSheet(" 代理商 ", 0);
+            String headerArr[] = {"代理商编号", "姓名", "性别", "手机号", "地址", "注册时间", "身份证", "群员人数", "上级代理编号", "上级代理姓名"};
+            int h = 0;
+            for (; h < headerArr.length; h++) {
+                sheet1.addCell(new Label(h, 0, headerArr[h]));
+            }
+
+            // 写入数据并关闭文件
+            book.write();
+            book.close();
+            os.flush();
+            os.close();
+            return null;
+        }
+        List<Agent> agentList = (List<Agent>) fetchResponse.getData();
+
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat dateSearchFormat = new SimpleDateFormat("yyyy-MM");
         condition.clear();
