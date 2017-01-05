@@ -174,7 +174,9 @@ public class StatementController {
                                 }
                                 condition.clear();
                                 condition.put("receiverPhone", phone);
-                                condition.put("agentId", customerDetail.getAgent().getAgentId());
+                                if (customerDetail.getAgent()!=null) {
+                                    condition.put("agentId", customerDetail.getAgent().getAgentId());
+                                }
                                 condition.put("blockFlag", false);
                                 condition.put("status", statusList);
                                 condition.put("sort", orderBy);
@@ -285,7 +287,7 @@ public class StatementController {
             condition.clear();
             condition.put("customerId", customer.getCustomerId());
             ResultData fetchCustomerResponse = customerService.fetchCustomer(condition);
-            Customer customerDetail = ((List<Customer>) fetchCustomerResponse.getData()).get(0);
+            CustomerVo customerDetail = ((List<CustomerVo>) fetchCustomerResponse.getData()).get(0);
             //以下是查找该客户最近一次的购买订单，顺便统计该客户的各商品购买盒数
             Map<String, Object[]> goodsMap = new HashMap<String, Object[]>();//商品ID->(商品name, 购买数量quantity)
             String phone = customer.getPhone().getPhone();
