@@ -89,7 +89,10 @@
         <set>
             block_flag = 1
         </set>
-        WHERE customer_id = #{customerId} AND agent_id = #{agent.agentId}
+        WHERE customer_id = #{customerId}
+        <if test="agent != null and agent.agentId != null">
+            AND agent_id = agent.agentId
+        </if>
     </update>
 
     <select id="agentLiteQuery" parameterType="java.util.Map" resultMap="agentLiteVo">
