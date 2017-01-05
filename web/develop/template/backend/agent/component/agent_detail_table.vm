@@ -54,7 +54,15 @@
                                     <div class="content">${agent.name}
                                         <div  id="type_div" class="ui blue tag label">
                                             类别
-                                            <div class="detail">${agent.agentType}</div>
+                                            #if(${agent.agentType}=="ORDINARY")
+                                                <div class="detail">代理商</div>
+                                            #end
+                                            #if(${agent.agentType}=="COMPANY")
+                                                <div class="detail">公司代理</div>
+                                            #end
+                                            #if(${agent.agentType}=="SUPPORT")
+                                                <div class="detail">客服</div>
+                                            #end
                                         </div>
                                         <a  id="upper_agent_div" class="ui blue tag label">
                                             上级代理
