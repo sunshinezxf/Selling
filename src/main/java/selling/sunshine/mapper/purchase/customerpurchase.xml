@@ -18,8 +18,9 @@
     <select id="query" parameterType="java.util.Map" resultMap="customerPurchaseVo">
         SELECT c.customer_id, c.customer_name, c.agent_id, ifnull(sum(order_item_price), 0) AS order_price, ifnull(count(order_id), 0) AS
         deal_quantity
-        FROM order_item_sum ois RIGHT JOIN customer c on ois.customer_id = c.customer_id
-        WHERE 1 = 1 AND ois.order_type IN (0,2) AND ois.order_item_status IN (1,2,3)
+        FROM customer c LEFT JOIN (SELECT *from order_item_sum ois WHERE ois.order_type IN (0,2) AND ois.order_item_status IN (1,2,3)) t
+        on t.customer_id = c.customer_id
+        WHERE 1 = 1 AND c.block_flag='0'
         <if test="customerId != null">
             AND c.customer_id = #{customerId}
         </if>
@@ -31,7 +32,7 @@
             OR c.agent_id IN (select agent_id FROM agent WHERE agent_name LIKE BINARY #{search})
             )
         </if>
-        GROUP BY customer_id, customer_name
+        GROUP BY c.customer_id, c.customer_name
     </select>
 
     <select id="agentLiteQuery" parameterType="java.util.Map" resultMap="agentLiteVo">

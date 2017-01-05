@@ -1,26 +1,21 @@
 package selling.sunshine.schedule;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import common.sunshine.model.selling.agent.Agent;
 import common.sunshine.model.selling.agent.AgentKPI;
 import common.sunshine.model.selling.customer.Customer;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import selling.sunshine.model.ContributionFactor;
-import selling.sunshine.service.AgentKPIService;
-import selling.sunshine.service.AgentService;
-import selling.sunshine.service.ContributionFactorService;
-import selling.sunshine.service.CustomerService;
-import selling.sunshine.service.OrderService;
+import selling.sunshine.service.*;
 import selling.sunshine.vo.order.OrderItemSum;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class AgentKPISchedule {
 	
@@ -58,7 +53,8 @@ public class AgentKPISchedule {
 				}
 				//顾客人数
 				condition.clear();
-				condition.put("agentId", agent.getAgentId());				
+				condition.put("agentId", agent.getAgentId());
+				condition.put("blockFlag", 0);
 				queryData=customerService.fetchCustomer(condition);
 				if (queryData.getResponseCode()==ResponseCode.RESPONSE_OK) {
 					List<Customer> customers=(List<Customer>)queryData.getData();
