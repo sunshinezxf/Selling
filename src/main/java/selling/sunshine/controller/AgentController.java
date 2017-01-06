@@ -748,7 +748,7 @@ public class AgentController {
      *
      * @param form
      * @param result
-     * @param attr
+     * @param
      * @return
      */
     @RequestMapping(method = RequestMethod.POST, value = "/register")
@@ -2966,16 +2966,14 @@ public class AgentController {
         ResultData result = new ResultData();
         Map<String, List<CashBackRecord>> map = new HashMap<>();
         Map<String, Object> condition = new HashMap<>();
-        int mon = Integer.parseInt(month) + 1;
-        if (mon < 10) {
-            month = "0" + mon;
-        } else {
-            month = String.valueOf(mon);
-        }
+        Calendar calendar=Calendar.getInstance();
+        calendar.set(Calendar.YEAR,Integer.parseInt(year));
+        calendar.set(Calendar.MONTH,Integer.parseInt(month));
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-");
         condition.clear();
         // 获取自销的返现记录详情
         condition.put("agentId", agentId);
-        condition.put("createAt", year + "-" + month + "-" + "%");
+        condition.put("createAt", sdf.format(calendar.getTime()) + "%");
         condition.put("level", CashBackLevel.SELF.getCode());
         ResultData response = refundService.fetchRefundRecord(condition);
         if (response.getResponseCode() != ResponseCode.RESPONSE_OK) {
@@ -2987,7 +2985,7 @@ public class AgentController {
         condition.clear();
         // 获取所有的直接拓展代理的返现详情
         condition.put("agentId", agentId);
-        condition.put("createAt", year + "-" + month + "-" + "%");
+        condition.put("createAt", sdf.format(calendar.getTime()) + "%");
         condition.put("level", CashBackLevel.DIRECT.getCode());
         response = refundService.fetchRefundRecord(condition);
         if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
@@ -2997,7 +2995,7 @@ public class AgentController {
         condition.clear();
         // 获取所有的间接拓展代理的返现详情
         condition.put("agentId", agentId);
-        condition.put("createAt", year + "-" + month + "-" + "%");
+        condition.put("createAt", sdf.format(calendar.getTime())+ "%");
         condition.put("level", CashBackLevel.INDIRECT.getCode());
         response = refundService.fetchRefundRecord(condition);
         if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
