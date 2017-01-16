@@ -120,6 +120,7 @@
                 /dashboard = roles["admin", "express", "finance"]
 
                 /express/queryExpress/* = anon
+                /express/*/query = anon
 
                 /commodity/create = roles[admin]
                 /commodity/detail/** = roles["admin", "finance"]
@@ -165,6 +166,7 @@
                 /order/overview = roles["admin, express"]
                 /order/customerOrder/overview = roles["admin, express"]
                 /order/customerpay = anon
+                /order/search = anon
                 /order/viewexpress/** = anon
                 /order/view/* = roles["admin, express"]
 

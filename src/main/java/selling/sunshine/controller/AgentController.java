@@ -185,6 +185,7 @@ public class AgentController {
         }
         Map<String, Object> condition = new HashMap<>();
         condition.put("wechat", wechat);
+        condition.put("blockFlag", false);
         ResultData fetchResponse = agentService.fetchAgent(condition);
         if (fetchResponse.getResponseCode() != ResponseCode.RESPONSE_NULL) {
             Subject subject = SecurityUtils.getSubject();
@@ -1995,7 +1996,9 @@ public class AgentController {
                 CustomerPhone phone = ((List<CustomerPhone>) fetchCustomerResponse.getData()).get(0);
                 condition.clear();
                 condition.put("customerId", phone.getCustomer().getCustomerId());
-                Customer customer = ((List<Customer>) customerService.fetchCustomer(condition).getData()).get(0);
+                CustomerVo vo = ((List<CustomerVo>) customerService.fetchCustomer(condition).getData()).get(0);
+                Customer customer = new Customer(vo.getName(), vo.getAddress(), vo.getPhone());
+                customer.setCustomerId(vo.getCustomerId());
                 customerService.deleteCustomer(customer);
             }
             // 授权的同时更改agentKPI表的内容
@@ -2966,9 +2969,9 @@ public class AgentController {
         ResultData result = new ResultData();
         Map<String, List<CashBackRecord>> map = new HashMap<>();
         Map<String, Object> condition = new HashMap<>();
-        Calendar calendar=Calendar.getInstance();
-        calendar.set(Calendar.YEAR,Integer.parseInt(year));
-        calendar.set(Calendar.MONTH,Integer.parseInt(month));
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, Integer.parseInt(year));
+        calendar.set(Calendar.MONTH, Integer.parseInt(month));
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-");
         condition.clear();
         // 获取自销的返现记录详情
@@ -2995,7 +2998,7 @@ public class AgentController {
         condition.clear();
         // 获取所有的间接拓展代理的返现详情
         condition.put("agentId", agentId);
-        condition.put("createAt", sdf.format(calendar.getTime())+ "%");
+        condition.put("createAt", sdf.format(calendar.getTime()) + "%");
         condition.put("level", CashBackLevel.INDIRECT.getCode());
         response = refundService.fetchRefundRecord(condition);
         if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {

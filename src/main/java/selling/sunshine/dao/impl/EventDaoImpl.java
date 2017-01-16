@@ -327,6 +327,9 @@ public class EventDaoImpl extends BaseDao implements EventDao {
         condition = handle(condition);
         try {
             List<EventOrder> list = sqlSession.selectList("selling.event.order.query", condition);
+            if (list.isEmpty()) {
+                result.setResponseCode(ResponseCode.RESPONSE_NULL);
+            }
             result.setData(list);
         } catch (Exception e) {
             logger.error(e.getMessage());

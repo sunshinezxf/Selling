@@ -22,6 +22,7 @@
     <div class="bd">
         #parse("/agent/component/register_form.vm")
     </div>
+
 </div>
 </body>
 <script>

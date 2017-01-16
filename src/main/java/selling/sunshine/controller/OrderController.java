@@ -60,6 +60,7 @@ import selling.sunshine.service.*;
 import selling.sunshine.utils.*;
 import selling.sunshine.vo.customer.CustomerVo;
 import selling.sunshine.vo.order.OrderItemSum;
+import selling.sunshine.vo.order.OrderItemVo;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -2107,6 +2108,72 @@ public class OrderController {
         }
         List<OrderItemSum> orderItemSums = (List<OrderItemSum>) fetchOrderItemSumResponse.getData();
         result.setData(orderItemSums.size());
+        return result;
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/search")
+    public ResultData search(String phone, String data) {
+        ResultData result = new ResultData();
+        if (StringUtils.isEmpty(phone)) {
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription("查询订单的电话号码不可为空!");
+            return result;
+        }
+        List<OrderItemVo> content = new ArrayList<>();
+        Map<String, Object> condition = new HashMap<>();
+        //以电话号码为条件查询所有有效订单
+        condition.put("blockFlag", false);
+        //查询代理商的所有订单
+        condition.put("phone", phone);
+        List<Integer> status = new ArrayList<>(Arrays.asList(OrderItemStatus.PAYED.getCode(), OrderItemStatus.SHIPPED.getCode(), OrderItemStatus.RECEIVED.getCode()));
+        condition.put("statusList", status);
+        ResultData response = orderService.fetchOrderItem(condition);
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            List<OrderItem> list = (List<OrderItem>) response.getData();
+            for (OrderItem item : list) {
+                condition.clear();
+                condition.put("orderId", item.getOrder().getOrderId());
+                Order order = ((List<Order>) orderService.fetchOrder(condition).getData()).get(0);
+                item.setOrder(order);
+                OrderItemVo vo = new OrderItemVo(item);
+                content.add(vo);
+            }
+        }
+        //查询顾客订单
+        condition.clear();
+        status.clear();
+        condition.put("receiverPhone", phone);
+        condition.put("blockFlag", false);
+        status.addAll(Arrays.asList(OrderItemStatus.PAYED.getCode(), OrderItemStatus.SHIPPED.getCode(), OrderItemStatus.RECEIVED.getCode()));
+        condition.put("status", status);
+        response = orderService.fetchCustomerOrder(condition);
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            List<CustomerOrder> list = (List<CustomerOrder>) response.getData();
+            for (CustomerOrder item : list) {
+                OrderItemVo vo = new OrderItemVo(item);
+                content.add(vo);
+            }
+        }
+        //查询活动订单
+        condition.clear();
+        status.clear();
+        condition.put("doneePhone", phone);
+        condition.put("blockFlag", false);
+        status.addAll(Arrays.asList(OrderItemStatus.PAYED.getCode(), OrderItemStatus.SHIPPED.getCode(), OrderItemStatus.RECEIVED.getCode()));
+        condition.put("status", status);
+        response = eventService.fetchEventOrder(condition);
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            List<EventOrder> list = (List<EventOrder>) response.getData();
+            for (EventOrder item : list) {
+                OrderItemVo vo = new OrderItemVo(item);
+                content.add(vo);
+            }
+        }
+        if (content.isEmpty()) {
+            result.setResponseCode(ResponseCode.RESPONSE_NULL);
+            result.setDescription("未查询到相关的订单信息!");
+        }
+        result.setData(content);
         return result;
     }
 }

@@ -183,14 +183,14 @@
                 var node = 
                 	"<label class='weui_cell customer' id='" + item.customerId + "'>" +
 					"<div class='weui_cell_bd weui_cell_primary'>" +
-					"<span>" + item.name + "</span>(<span>" + item.phone.phone + "</span>)" + 
+					"<span>" + item.name + "</span>(<span>" + item.phone + "</span>)" +
 					"</div>" + 
 					" <div class='weui_cell_ft'>" + 
 					"<input type='radio' class='weui_check'>" + 
 					"<span id='radio'" + item.customerId + " class='weui_ico_checked'>" +
 					"</div>" +
-					"<input id='customer_phone" + item.customerId + "' type='hidden' value='" + item.phone.phone  + "'/>" +
-					"<div style='display:none;' id='customer_address" + item.customerId + "'> " + item.address.address + "</div>" +
+					"<input id='customer_phone" + item.customerId + "' type='hidden' value='" + item.phone  + "'/>" +
+					"<div style='display:none;' id='customer_address" + item.customerId + "'> " + item.address + "</div>" +
 					"</label>";
                 $("#customer_option").children(".weui_cells").prepend(node);
                 

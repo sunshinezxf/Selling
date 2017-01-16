@@ -53,6 +53,9 @@ public class OrderItemDaoImpl extends BaseDao implements OrderItemDao {
         ResultData result = new ResultData();
         try {
             List<OrderItem> list = sqlSession.selectList("selling.order.item.query", condition);
+            if (list.isEmpty()) {
+                result.setResponseCode(ResponseCode.RESPONSE_NULL);
+            }
             result.setData(list);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -120,7 +123,7 @@ public class OrderItemDaoImpl extends BaseDao implements OrderItemDao {
         return result;
     }
 
-    private List<OrderItem> queryOrderItemByPage(Map<String, Object> condition, int start, int length){
+    private List<OrderItem> queryOrderItemByPage(Map<String, Object> condition, int start, int length) {
         List<OrderItem> result = new ArrayList<>();
         try {
             result = sqlSession.selectList("selling.order.item.query", condition, new RowBounds(start, length));
@@ -181,11 +184,11 @@ public class OrderItemDaoImpl extends BaseDao implements OrderItemDao {
                 }
             }
             if (json.containsKey("start")) {
-                condition.put("start", json.get("start"));            
+                condition.put("start", json.get("start"));
             }
             if (json.containsKey("end")) {
-            	 condition.put("end", json.get("end"));
-			}
+                condition.put("end", json.get("end"));
+            }
         }
         ResultData total = queryOrderItemSum(condition);
         if (total.getResponseCode() != ResponseCode.RESPONSE_OK) {
