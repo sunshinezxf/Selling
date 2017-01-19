@@ -16,9 +16,11 @@
     </resultMap>
 
     <select id="query" parameterType="java.util.Map" resultMap="customerPurchaseVo">
-        SELECT c.customer_id, c.customer_name, c.agent_id, ifnull(sum(order_item_price), 0) AS order_price, ifnull(count(order_id), 0) AS
+        SELECT c.customer_id, c.customer_name, c.agent_id, ifnull(sum(order_item_price), 0) AS order_price,
+        ifnull(count(order_id), 0) AS
         deal_quantity
-        FROM customer c LEFT JOIN (SELECT *from order_item_sum ois WHERE ois.order_type IN (0,2) AND ois.order_item_status IN (1,2,3)) t
+        FROM customer c LEFT JOIN (SELECT *from order_item_sum ois WHERE ois.order_type IN (0,2) AND
+        ois.order_item_status IN (1,2,3)) t
         on t.customer_id = c.customer_id
         WHERE 1 = 1 AND c.block_flag='0'
         <if test="customerId != null">
@@ -33,6 +35,12 @@
             )
         </if>
         GROUP BY c.customer_id, c.customer_name
+        <if test="rule == null">
+            ORDER BY deal_quantity DESC, order_price DESC
+        </if>
+        <if test="rule != null">
+            ORDER BY ${rule}
+        </if>
     </select>
 
     <select id="agentLiteQuery" parameterType="java.util.Map" resultMap="agentLiteVo">

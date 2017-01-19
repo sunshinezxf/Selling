@@ -30,4 +30,6 @@ public interface CustomerService {
     ResultData customerTransform(Map<String, Object> condition);
 
     ResultData fetchCustomerPurchase(Map<String, Object> condition, DataTableParam param);
+
+    ResultData fetchCustomerPurchase(Map<String, Object> condition);
 }

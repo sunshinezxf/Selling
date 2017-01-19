@@ -177,4 +177,17 @@ public class CustomerServiceImpl implements CustomerService {
         }
         return result;
     }
+
+    @Override
+    public ResultData fetchCustomerPurchase(Map<String, Object> condition) {
+        ResultData result = new ResultData();
+        ResultData response = purchaseDao.queryCustomerPurchase(condition);
+        result.setResponseCode(response.getResponseCode());
+        if (response.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
+            result.setDescription(response.getDescription());
+        } else {
+            result.setData(response.getData());
+        }
+        return result;
+    }
 }

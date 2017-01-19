@@ -59,6 +59,12 @@
                 #end
             </div>
         #end
+        #if(${order} && ${order.description})
+            <div class="item">
+                <i class="terminal icon"></i>订单备注:
+                ${order.description}
+            </div>
+        #end
         <div class="item">
             <i class="calendar icon"></i>创建时间:
             ${order.createAt}

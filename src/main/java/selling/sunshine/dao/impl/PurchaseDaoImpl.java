@@ -27,6 +27,7 @@ public class PurchaseDaoImpl extends BaseDao implements PurchaseDao {
     @Override
     public ResultData queryCustomerPurchase(Map<String, Object> condition) {
         ResultData result = new ResultData();
+        condition = handle(condition);
         try {
             List<CustomerPurchase> list = sqlSession.selectList("selling.purchase.customer.query", condition);
             if (list.isEmpty()) {

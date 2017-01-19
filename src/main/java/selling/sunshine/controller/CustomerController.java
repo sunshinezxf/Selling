@@ -21,6 +21,12 @@ import common.sunshine.pagination.DataTableParam;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
 import common.sunshine.utils.SortRule;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.poifs.filesystem.NPOIFSFileSystem;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
@@ -34,12 +40,21 @@ import selling.sunshine.form.CustomerAddressForm;
 import selling.sunshine.form.CustomerForm;
 import selling.sunshine.form.PurchaseForm;
 import selling.sunshine.service.*;
+import selling.sunshine.utils.PlatformConfig;
 import selling.sunshine.utils.WechatConfig;
 import selling.sunshine.vo.customer.CustomerPurchase;
 import selling.sunshine.vo.customer.CustomerVo;
 import selling.sunshine.vo.order.OrderItemSum;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.URLEncoder;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -743,4 +758,111 @@ public class CustomerController {
         }
         return result;
     }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/download")
+    public String download(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("blockFlag", false);
+        Subject subject = SecurityUtils.getSubject();
+        if (StringUtils.isEmpty(subject)) {
+            return "";
+        }
+        User user = (User) subject.getPrincipal();
+        if (StringUtils.isEmpty(user)) {
+            return "";
+        }
+        if (!StringUtils.isEmpty(user.getAgent())) {
+            condition.put("agentId", user.getAgent().getAgentId());
+        }
+        List<SortRule> rules = new ArrayList<>();
+        rules.add(new SortRule("deal_quantity", "desc"));
+        rules.add(new SortRule("order_price", "desc"));
+        condition.put("sort", rules);
+        ResultData queryResponse = customerService.fetchCustomerPurchase(condition);
+        if (queryResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            return "";
+        }
+        List<CustomerPurchase> list = (List<CustomerPurchase>) queryResponse.getData();
+        String context = request.getSession().getServletContext().getRealPath("/");
+        StringBuffer path = new StringBuffer(context).append(PlatformConfig.getValue("customer_list_template"));
+        File file = new File(path.toString());
+        if (!file.exists()) {
+            logger.error("客户信息表模板文件不存在");
+            return "";
+        }
+        response.setContentType("multipart/form-data");
+        response.setHeader("Content-Disposition", "attachment;fileName=" + URLEncoder.encode("客户信息表.xls", "utf-8"));
+        OutputStream stream = response.getOutputStream();
+        NPOIFSFileSystem pkg = new NPOIFSFileSystem(file);
+        Workbook workbook = new HSSFWorkbook(pkg.getRoot(), true);
+        int size = list.size();
+        Sheet sheet = workbook.getSheetAt(0);
+        Row summary = sheet.getRow(1);
+        Cell total = summary.createCell(1);
+        total.setCellValue(size);
+        Cell date = summary.createCell(5);
+        Calendar time = Calendar.getInstance();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        date.setCellValue(format.format(time.getTime()));
+        for (int i = 3; i < list.size(); i++) {
+            Timestamp begin = null, end = null;
+            CustomerPurchase vo = list.get(i);
+            Row current = sheet.createRow(i);
+            //设置客户编号
+            Cell customerNo = current.createCell(0);
+            customerNo.setCellValue(vo.getCustomerId());
+            //设置客户姓名getCustomerId
+            Cell customerName = current.createCell(1);
+            customerName.setCellValue(vo.getCustomerName());
+            //设置所属代理商
+            if (!StringUtils.isEmpty(vo.getAgent())) {
+                Cell agentName = current.createCell(2);
+                agentName.setCellValue(vo.getAgent().getName());
+            }
+            //设置购买次数
+            Cell purchaseTimes = current.createCell(3);
+            purchaseTimes.setCellValue(vo.getDealNum());
+            //设置购买金额
+            Cell montant = current.createCell(4);
+            montant.setCellValue(vo.getMontant());
+            if (vo.getDealNum() > 0) {
+                condition.clear();
+                condition.put("customerId", vo.getCustomerId());
+                List<Integer> status = new ArrayList<>(Arrays.asList(OrderItemStatus.PAYED.getCode(), OrderItemStatus.SHIPPED.getCode(), OrderItemStatus.RECEIVED.getCode()));
+                condition.put("statusList", status);
+                List<Integer> types = new ArrayList<>(Arrays.asList(OrderType.CUSTOMER.getCode(), OrderType.ORDINARY.getCode()));
+                condition.put("orderTypeList", types);
+                rules.clear();
+                rules.add(new SortRule("create_time", "asc"));
+                condition.put("sort", rules);
+                queryResponse = orderService.fetchOrderItemSum(condition);
+                if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                    List<OrderItemSum> sums = (List<OrderItemSum>) queryResponse.getData();
+                    //设置第一次购买时间
+                    OrderItemSum first = sums.get(0);
+                    Cell firstTime = current.createCell(5);
+                    begin = first.getCreateAt();
+                    firstTime.setCellValue(format.format(begin));
+                    //设置最后一次购买时间
+                    if (sums.size() >= 2) {
+                        OrderItemSum last = sums.get(sums.size() - 1);
+                        Cell lastTime = current.createCell(6);
+                        end = last.getCreateAt();
+                        lastTime.setCellValue(format.format(end));
+                    }
+                }
+            }
+            //计算时间间隔
+            if (vo.getDealNum() >= 2) {
+                Cell intervalDate = current.createCell(7);
+                intervalDate.setCellValue(((end.getTime() - begin.getTime()) / 86400000 / vo.getDealNum()) + "天");
+            }
+        }
+        workbook.write(stream);
+        workbook.close();
+        stream.flush();
+        stream.close();
+        return "";
+    }
+
 }

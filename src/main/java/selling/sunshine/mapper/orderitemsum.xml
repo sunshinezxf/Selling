@@ -39,6 +39,9 @@
         <if test="agentId != null and agentId !=''">
             AND agent_id = #{agentId}
         </if>
+        <if test="customerId != null">
+            AND customer_id = #{customerId}
+        </if>
         <if test="orderId != null and orderId != ''">
             AND order_id = #{orderId}
         </if>

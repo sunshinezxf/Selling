@@ -428,7 +428,6 @@ public class EventController {
             String context = request.getSession().getServletContext().getRealPath("/");
             StringBuffer path = new StringBuffer(context);
             path.append(PlatformConfig.getValue("express_template"));
-            logger.debug(path.toString());
             File file = new File(path.toString());
             if (!file.exists()) {
                 logger.error("文件不存在");
@@ -441,9 +440,9 @@ public class EventController {
 
             NPOIFSFileSystem pkg = new NPOIFSFileSystem(file);
             Workbook workbook = new HSSFWorkbook(pkg.getRoot(), true);
+            Sheet sheet = workbook.getSheetAt(0);
             for (int row = 3, i = 0; i < eventOrders.size(); i++, row++) {
                 EventOrder eventOrder = eventOrders.get(i);
-                Sheet sheet = workbook.getSheetAt(0);
                 Row current = sheet.createRow(row);
                 Cell senderName = current.createCell(2);
                 senderName.setCellValue(PlatformConfig.getValue("sender_name"));
