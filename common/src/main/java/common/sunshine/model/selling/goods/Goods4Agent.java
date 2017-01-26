@@ -1,5 +1,7 @@
 package common.sunshine.model.selling.goods;
 
+import common.sunshine.model.selling.goods.support.GoodsType;
+
 /**
  * Created by sunshine on 6/16/16.
  */
@@ -8,6 +10,7 @@ public class Goods4Agent extends AbstractGoods {
 
     public Goods4Agent() {
         super();
+        this.setType(GoodsType.REAL);
     }
 
     public Goods4Agent(String name, String description, String standard) {

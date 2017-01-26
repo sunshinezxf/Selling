@@ -11,6 +11,8 @@
         <result property="produceDate" column="goods_produce_date"></result>
         <result property="description" column="goods_description"></result>
         <result property="agentPrice" column="agent_price"></result>
+        <result property="type" column="goods_type"
+                typeHandler="common.sunshine.mybatis.handler.goods.GoodsTypeHandler"></result>
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
     </resultMap>
@@ -26,6 +28,8 @@
         <result property="description" column="goods_description"></result>
         <result property="customerPrice" column="prime_price"></result>
         <result property="agentPrice" column="agent_price"></result>
+        <result property="type" column="goods_type"
+                typeHandler="common.sunshine.mybatis.handler.goods.GoodsTypeHandler"></result>
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
         <collection property="thumbnails" column="goodsId = goods_id" select="thumbnailQuery"></collection>
@@ -41,8 +45,8 @@
 
     <!-- insert record of goods -->
     <insert id="insert" parameterType="common.sunshine.model.selling.goods.Goods4Customer" useGeneratedKeys="false">
-        INSERT INTO goods(goods_id, goods_name, goods_nickname, prime_price, agent_price, standard, goods_measure, goods_produce_no, goods_produce_date, goods_description, block_flag, create_time)
-        VALUE (#{goodsId}, #{name}, #{nickname}, #{customerPrice}, #{agentPrice}, #{standard}, #{measure}, #{produceNo}, #{produceDate}, #{description}, #{blockFlag}, #{createAt})
+        INSERT INTO goods(goods_id, goods_name, goods_nickname, prime_price, agent_price, standard, goods_measure, goods_produce_no, goods_produce_date, goods_type, goods_description, block_flag, create_time)
+        VALUE (#{goodsId}, #{name}, #{nickname}, #{customerPrice}, #{agentPrice}, #{standard}, #{measure}, #{produceNo}, #{produceDate}, #{type, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler}, #{description}, #{blockFlag}, #{createAt})
     </insert>
 
     <!-- fetch goods info for agent -->
@@ -127,6 +131,9 @@
             </if>
             <if test="produceDate != null">
                 goods_produce_date = #{produceDate},
+            </if>
+            <if test="type != null">
+                goods_type = #{type, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler}
             </if>
             <if test="blockFlag != null">
                 block_flag = #{blockFlag},

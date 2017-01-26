@@ -6,22 +6,22 @@
     <title>错误提示</title>
 </head>
 <body ontouchstart>
-    <div class="mother" id="mother">
-	    <div class="errorBox">
-	        <div class="error_img">
-	            <i class="weui_icon_warn"></i>
-	        </div>
-		    <div class="errorText">
-			    <h1>商品不存在！</h1>
-			</div>
-			<div class="confirm_area">
-				<button class="weui_btn weui_btn_default" id="confirm">确定</button>
-			</div>
-		</div>
-	</div>
+<div class="mother" id="mother">
+    <div class="errorBox">
+        <div class="error_img">
+            <i class="weui_icon_warn"></i>
+        </div>
+        <div class="errorText">
+            <h1>商品不存在！</h1>
+        </div>
+        <div class="confirm_area">
+            <button class="weui_btn weui_btn_default" id="confirm">确定</button>
+        </div>
+    </div>
+</div>
 </body>
 <script>
-    $("#confirm").click(function(){
+    $("#confirm").click(function () {
         WeixinJSBridge.call('closeWindow');
     });
 </script>

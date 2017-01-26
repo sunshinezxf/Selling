@@ -1,0 +1,55 @@
+#parse("/common/util.vm")
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+    #parse("/customer/component/init.vm")
+    <link rel="stylesheet" href="${path.concat('/material/css/customer/coupon.css')}">
+    <title>礼券兑换</title>
+</head>
+<body>
+<div class="draw-gift">
+    <div class="draw-img">
+        <div class="draw-up hide"></div>
+        <div class="draw-up-up" id="draw-up-up"></div>
+        <div class="draw-mid draw-mid-move"></div>
+        <div class="draw-down"></div>
+        <div class="draw-down2 hide"></div>
+        <div class="draw-list">
+            #if(${coupon})
+                #set($cover = ${coupon.goods.thumbnails[0].path})
+                <img src="https://www.yuncaogangmu.com${cover}">
+            #end
+        </div>
+    </div>
+    <a href="javascript:;" id="draw-btn">点击打开</a>
+</div>
+<script>
+    $(function () {
+        $("#draw-btn,.draw-img").on("click", function () {
+            $(".draw-mid").removeClass("draw-mid-move").css({display: "none"});
+            $(".draw-up").animate({
+                opacity: "1"
+            }, 100);
+            $("#draw-up-up").animate({
+                opacity: "1",
+                top: "-4.12rem"
+            }, 200);
+
+            $(".draw-down").animate({
+                opacity: "0"
+            }, 300);
+            $(".draw-down2").animate({
+                opacity: "1"
+            }, 300);
+            $(".draw-list").animate({opacity: "1"}, 600).animate({top: "-4.4rem"}, 1000);
+        });
+    })
+</script>
+</body>
+<script>
+    var title = "点开有喜～用云草,福气到!";
+    var description = "您的好友送您一盒云草纲目超细三七粉,填写地址即可收礼!";
+    var imgURL = "https://www.yuncaogangmu.com${cover}";
+</script>
+    #parse("/agent/link/validation.vm")
+</html>

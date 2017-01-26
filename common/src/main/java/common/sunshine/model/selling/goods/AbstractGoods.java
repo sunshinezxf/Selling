@@ -1,6 +1,7 @@
 package common.sunshine.model.selling.goods;
 
 import common.sunshine.model.Entity;
+import common.sunshine.model.selling.goods.support.GoodsType;
 
 /**
  * Created by sunshine on 6/16/16.
@@ -17,6 +18,8 @@ public abstract class AbstractGoods extends Entity {
     private String produceNo;
 
     private String produceDate;
+
+    private GoodsType type;
 
     public String getGoodsId() {
         return goodsId;
@@ -80,5 +83,13 @@ public abstract class AbstractGoods extends Entity {
 
     public void setProduceDate(String produceDate) {
         this.produceDate = produceDate;
+    }
+
+    public GoodsType getType() {
+        return type;
+    }
+
+    public void setType(GoodsType type) {
+        this.type = type;
     }
 }

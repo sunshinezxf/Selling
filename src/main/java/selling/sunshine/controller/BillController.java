@@ -1,6 +1,7 @@
 package selling.sunshine.controller;
 
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.pingplusplus.model.Event;
 import com.pingplusplus.model.Webhooks;
@@ -9,11 +10,18 @@ import common.sunshine.model.selling.bill.CustomerOrderBill;
 import common.sunshine.model.selling.bill.DepositBill;
 import common.sunshine.model.selling.bill.OrderBill;
 import common.sunshine.model.selling.bill.support.BillStatus;
+import common.sunshine.model.selling.coupon.Coupon;
+import common.sunshine.model.selling.goods.AbstractGoods;
+import common.sunshine.model.selling.goods.Goods4Customer;
+import common.sunshine.model.selling.goods.support.GoodsType;
 import common.sunshine.model.selling.order.CustomerOrder;
 import common.sunshine.model.selling.order.Order;
 import common.sunshine.model.selling.order.OrderItem;
 import common.sunshine.model.selling.order.support.OrderItemStatus;
 import common.sunshine.model.selling.order.support.OrderStatus;
+import common.sunshine.utils.ResponseCode;
+import common.sunshine.utils.ResultData;
+import common.sunshine.utils.SerialGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +30,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import selling.sunshine.service.AgentService;
-import selling.sunshine.service.BillService;
-import selling.sunshine.service.OrderService;
-import selling.sunshine.service.ToolService;
-import common.sunshine.utils.ResponseCode;
-import common.sunshine.utils.ResultData;
+import selling.sunshine.service.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -58,6 +61,9 @@ public class BillController {
     @Autowired
     private OrderService orderService;
 
+    @Autowired
+    private CouponService couponService;
+
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/inform")
@@ -83,16 +89,14 @@ public class BillController {
         }
 
         if (dealId.startsWith("DPB")) {//充值的账单
-            Map<String, Object> condition = new HashMap<String, Object>();
+            Map<String, Object> condition = new HashMap<>();
             condition.put("billId", dealId);
             resultData = billService.fetchDepositBill(condition);
             DepositBill depositBill = ((List<DepositBill>) resultData.getData()).get(0);
 
-            Map<String, Object> agentCondition = new HashMap<String, Object>();
+            Map<String, Object> agentCondition = new HashMap<>();
             agentCondition.put("agentId", depositBill.getAgent().getAgentId());
             Agent agent = ((List<Agent>) agentService.fetchAgent(agentCondition).getData()).get(0);
-            logger.debug("current coffer: " + agent.getCoffer());
-            logger.debug("adding money: " + depositBill.getBillAmount());
             int coffer100 = (int) (agent.getCoffer() * 100);
             int amount100 = (int) (depositBill.getBillAmount() * 100);
             double cofferNew = (coffer100 + amount100) * 1.0 / 100;
@@ -103,7 +107,7 @@ public class BillController {
 
         } else if (dealId.startsWith("ODB")) {//其他方式付款的账单
             //处理账单状态
-            Map<String, Object> condition = new HashMap<String, Object>();
+            Map<String, Object> condition = new HashMap<>();
             condition.put("billId", dealId);
             resultData = billService.fetchOrderBill(condition);
             OrderBill orderBill = ((List<OrderBill>) resultData.getData()).get(0);
@@ -124,8 +128,28 @@ public class BillController {
                     total_price_database += orderItem.getOrderItemPrice();
                 }
                 if (orderBill.getBillAmount() >= total_price_database) {
+                    logger.debug("order info: " + JSON.toJSONString(order));
                     for (OrderItem orderItem : order.getOrderItems()) {
+                        //判断是否是礼券
                         orderItem.setStatus(OrderItemStatus.PAYED);
+                        AbstractGoods goods = orderItem.getGoods();
+                        if (goods.getType() == GoodsType.VIRTUAL) {
+                            //生成礼品券
+                            for (int i = 0; i < orderItem.getGoodsQuantity(); i++) {
+                                Coupon coupon = new Coupon(SerialGenerator.generate());
+                                //获取礼品券所对应的商品, 当前固定为环保装
+                                Goods4Customer g = new Goods4Customer();
+                                g.setGoodsId("COMyfxwez26");
+                                coupon.setGoods(g);
+                                condition.clear();
+                                condition.put("agentId", orderBill.getAgent().getAgentId());
+                                Agent agent = ((List<Agent>) agentService.fetchAgent(condition).getData()).get(0);
+                                coupon.setWechat(agent.getWechat());
+                                coupon.setOrderId(orderItem.getOrderItemId());
+                                ResultData createResponse = couponService.createCoupon(coupon);
+                                logger.debug(JSON.toJSONString(createResponse));
+                            }
+                        }
                         orderItem.setCreateAt(new Timestamp(System.currentTimeMillis()));
                     }
                     order.setStatus(OrderStatus.PAYED);
@@ -134,7 +158,7 @@ public class BillController {
                 }
             }
         } else if (dealId.startsWith("COB")) {
-            Map<String, Object> condition = new HashMap<String, Object>();
+            Map<String, Object> condition = new HashMap<>();
             condition.put("billId", dealId);
             ResultData customerOrderBillData = billService.fetchCustomerOrderBill(condition);
             if (customerOrderBillData.getResponseCode() != ResponseCode.RESPONSE_OK || customerOrderBillData.getData() == null) {
@@ -158,6 +182,21 @@ public class BillController {
             }
             CustomerOrder customerOrder = ((List<CustomerOrder>) customerOrderData.getData()).get(0);
             if (customerOrderBill.getBillAmount() >= customerOrder.getTotalPrice()) {
+                if (customerOrder.getGoods().getType() == GoodsType.VIRTUAL) {
+                    //生成礼品券
+                    for (int i = 0; i < customerOrder.getQuantity(); i++) {
+                        Coupon coupon = new Coupon(SerialGenerator.generate());
+                        //获取礼品券所对应的商品, 当前固定为环保装
+                        Goods4Customer g = new Goods4Customer();
+                        g.setGoodsId("COMyfxwez26");
+                        coupon.setGoods(g);
+                        condition.clear();
+                        coupon.setWechat(customerOrder.getWechat());
+                        coupon.setOrderId(customerOrder.getOrderId());
+                        ResultData createResponse = couponService.createCoupon(coupon);
+                        logger.debug(JSON.toJSONString(createResponse));
+                    }
+                }
                 customerOrder.setStatus(OrderItemStatus.PAYED);
                 customerOrder.setCreateAt(new Timestamp(System.currentTimeMillis()));
                 ResultData payData = orderService.payOrder(customerOrder);

@@ -1,0 +1,50 @@
+#parse("/common/util.vm")
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+    #parse("/customer/component/init.vm")
+    <link rel="stylesheet" href="${path.concat('/material/css/agent/custom.css')}"/>
+    <title>我的礼券</title>
+</head>
+<body>
+<div class="hd">
+    <h1 class="page_title">我的礼券</h1>
+</div>
+<div class="bd">
+    #if(${coupons})
+        #foreach($item in ${coupons})
+            <div class="weui_form_preview" style="margin-bottom: 1em">
+                <div class="weui_form_preview_bd">
+                    <div class="weui_form_preview_item">
+                        <label class="weui_form_preview_label">礼券号码</label>
+                        <span class="weui_form_preview_value">${item.couponSerial}</span>
+                    </div>
+                    <div class="weui_form_preview_item">
+                        <label class="weui_form_preview_label">礼券状态</label>
+                        <span class="weui_form_preview_value">
+                            #if(${item.status} == "CREATED")
+                                未兑换
+                            #elseif(${item.status} == "CONSUMED" || ${item.status} == "LOCKED")
+                                已使用
+                            #end
+                        </span>
+                    </div>
+                </div>
+                <div class="weui_form_preview_ft">
+                    <a href="${path.concat('/coupon/exchange')}?couponSerial=${item.couponSerial}"
+                       class="weui_form_preview_btn weui_form_preview_btn_primary">查看礼券</a>
+                </div>
+            </div>
+        #end
+    #else
+        <div class="msg">
+            <div class="weui_msg">
+                <div class="weui_text_area">
+                    <p class="weui_msg_desc">对不起,未查询到您的礼券信息</p>
+                </div>
+            </div>
+        </div>
+    #end
+</div>
+</body>
+</html>

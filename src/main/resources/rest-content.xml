@@ -129,7 +129,11 @@
                 /commodity/volume = roles["admin", "finance", "express"]
                 /commodity/** = anon
 
+                /coupon/exchange = anon
+                /coupon/list = anon
+
                 /credit/upload = anon
+
 
                 /customer/place = anon
                 /customer/consult = anon

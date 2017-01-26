@@ -62,6 +62,8 @@
         <result property="name" column="goods_name"></result>
         <result property="description" column="goods_description"></result>
         <result property="agentPrice" column="agent_price"></result>
+        <result property="type" column="goods_type"
+                typeHandler="common.sunshine.mybatis.handler.goods.GoodsTypeHandler"></result>
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
     </resultMap>
@@ -177,7 +179,7 @@
     </select>
 
     <select id="goods4AgentQuery" parameterType="java.util.Map" resultMap="goods4AgentVo">
-        SELECT goods_id, goods_name, goods_description, prime_price, agent_price, block_flag, create_time
+        SELECT goods_id, goods_name, goods_description, prime_price, agent_price, goods_type, block_flag, create_time
         FROM goods
         WHERE goods_id = #{goodsId}
     </select>

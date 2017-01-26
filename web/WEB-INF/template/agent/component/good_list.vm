@@ -13,7 +13,7 @@
 	    #end
 	</div>
 	<div class="weui_btn_area">
-	    <button type="button" class="weui_btn weui_btn_default" id="return_goods">返回</a>
+	    <a type="button" class="weui_btn weui_btn_default" id="return_goods">返回</a>
 	</div>
 </div>
 <script>

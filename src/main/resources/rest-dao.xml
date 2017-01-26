@@ -121,4 +121,8 @@
     <bean id="purchaseDao" class="selling.sunshine.dao.impl.PurchaseDaoImpl">
         <property name="sqlSession" ref="sqlSession"></property>
     </bean>
+
+    <bean id="couponDao" class="selling.sunshine.dao.impl.CouponDaoImpl">
+        <property name="sqlSession" ref="sqlSession"></property>
+    </bean>
 </beans>
