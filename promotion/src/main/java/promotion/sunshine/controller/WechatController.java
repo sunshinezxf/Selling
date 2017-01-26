@@ -191,6 +191,394 @@ public class WechatController {
                         return xml;
                         */
                     }
+                    if(message.getContent().equals("三七") || message.getContent().equals("云草纲目")
+                            || message.getContent().equals("云草")||message.getContent().equals("使用")){
+                        content.alias("xml", Articles.class);
+                        content.alias("item", Article.class);
+                        Articles result = new Articles();
+                        result.setFromUserName(message.getToUserName());
+                        result.setToUserName(message.getFromUserName());
+                        result.setCreateTime(new Date().getTime());
+                        List<Article> list = new ArrayList<>();
+                        Article article = new Article();
+                        article.setTitle("三七与云草，关于三七你要知道的全部");
+                        article.setPicUrl("https://mmbiz.qlogo.cn/mmbiz_jpg/LvSutA9l9GqmdeibHMNA2kr8DleCBGEnzvgn5eH8ia69Cs1GY5VQYblfTPpc3RPQafoP5m5PrLAEZAoiaTUibGQScA/0?wx_fmt=jpeg");
+                        article.setUrl("http://mp.weixin.qq.com/s/WOlOHz7oQiwJc6HCfx9xLQ");
+                        list.add(article);
+                        result.setArticles(list);
+                        result.setArticleCount(list.size());
+                        content.processAnnotations(Article.class);
+                        String xml = content.toXML(result);
+                        logger.debug(JSON.toJSONString(xml));
+                        return xml;
+                    }
+                    if(message.getContent().equals("高血压")||message.getContent().equals("高血脂") || message.getContent().equals("高脂血症")||message.getContent().equals("高血糖") ||message.getContent().equals("三高")){
+                        content.alias("xml", Articles.class);
+                        content.alias("item", Article.class);
+                        Articles result = new Articles();
+                        result.setFromUserName(message.getToUserName());
+                        result.setToUserName(message.getFromUserName());
+                        result.setCreateTime(new Date().getTime());
+                        List<Article> list = new ArrayList<>();
+                        Article article = new Article();
+                        article.setTitle("高血压、高血脂、高血糖");
+                        article.setPicUrl("https://mmbiz.qlogo.cn/mmbiz_jpg/LvSutA9l9GqmdeibHMNA2kr8DleCBGEnzvgn5eH8ia69Cs1GY5VQYblfTPpc3RPQafoP5m5PrLAEZAoiaTUibGQScA/0?wx_fmt=jpeg");
+                        article.setUrl("http://mp.weixin.qq.com/s/5dU4Lm407ZUE3KEGoIexxQ");
+                        list.add(article);
+                        result.setArticles(list);
+                        result.setArticleCount(list.size());
+                        content.processAnnotations(Article.class);
+                        String xml = content.toXML(result);
+                        logger.debug(JSON.toJSONString(xml));
+                        return xml;
+                    }
+                    if(message.getContent().equals("心脑血管疾病") || message.getContent().equals("血管") ||
+                            message.getContent().equals("中风") || message.getContent().equals("冠心病")|| message.getContent().equals("软化血管")
+                            || message.getContent().equals("心痛") || message.getContent().equals("心肌梗死")
+                            || message.getContent().equals("血管堵塞") || message.getContent().equals("血管硬化")){
+                        content.alias("xml", Articles.class);
+                        content.alias("item", Article.class);
+                        Articles result = new Articles();
+                        result.setFromUserName(message.getToUserName());
+                        result.setToUserName(message.getFromUserName());
+                        result.setCreateTime(new Date().getTime());
+                        List<Article> list = new ArrayList<>();
+                        Article article = new Article();
+                        article.setTitle("心脑血管疾病");
+                        article.setPicUrl("https://mmbiz.qlogo.cn/mmbiz_jpg/LvSutA9l9GqmdeibHMNA2kr8DleCBGEnzvgn5eH8ia69Cs1GY5VQYblfTPpc3RPQafoP5m5PrLAEZAoiaTUibGQScA/0?wx_fmt=jpeg");
+                        article.setUrl("http://mp.weixin.qq.com/s/gdlj1zeesmZge_ZObFCvBA");
+                        list.add(article);
+                        result.setArticles(list);
+                        result.setArticleCount(list.size());
+                        content.processAnnotations(Article.class);
+                        String xml = content.toXML(result);
+                        logger.debug(JSON.toJSONString(xml));
+                        return xml;
+                    }
+                    if(message.getContent().equals("糖尿病")){
+                        content.alias("xml", Articles.class);
+                        content.alias("item", Article.class);
+                        Articles result = new Articles();
+                        result.setFromUserName(message.getToUserName());
+                        result.setToUserName(message.getFromUserName());
+                        result.setCreateTime(new Date().getTime());
+                        List<Article> list = new ArrayList<>();
+                        Article article = new Article();
+                        article.setTitle("糖尿病及其并发症");
+                        article.setPicUrl("https://mmbiz.qlogo.cn/mmbiz_jpg/LvSutA9l9GqmdeibHMNA2kr8DleCBGEnzvgn5eH8ia69Cs1GY5VQYblfTPpc3RPQafoP5m5PrLAEZAoiaTUibGQScA/0?wx_fmt=jpeg");
+                        article.setUrl("http://mp.weixin.qq.com/s/iHA2PwnKnxYF6dMIsuIFNA");
+                        list.add(article);
+                        result.setArticles(list);
+                        result.setArticleCount(list.size());
+                        content.processAnnotations(Article.class);
+                        String xml = content.toXML(result);
+                        logger.debug(JSON.toJSONString(xml));
+                        return xml;
+                    }
+                    if(message.getContent().equals("脂肪肝") || message.getContent().equals("酒精肝") || message.getContent().equals("肝")){
+                        content.alias("xml", Articles.class);
+                        content.alias("item", Article.class);
+                        Articles result = new Articles();
+                        result.setFromUserName(message.getToUserName());
+                        result.setToUserName(message.getFromUserName());
+                        result.setCreateTime(new Date().getTime());
+                        List<Article> list = new ArrayList<>();
+                        Article article = new Article();
+                        article.setTitle("肝脏有问题，三七帮您治");
+                        article.setPicUrl("https://mmbiz.qlogo.cn/mmbiz_jpg/LvSutA9l9GqmdeibHMNA2kr8DleCBGEnzvgn5eH8ia69Cs1GY5VQYblfTPpc3RPQafoP5m5PrLAEZAoiaTUibGQScA/0?wx_fmt=jpeg");
+                        article.setUrl("http://mp.weixin.qq.com/s/U-FfskIWr-WqHxqTpshlsg");
+                        list.add(article);
+                        result.setArticles(list);
+                        result.setArticleCount(list.size());
+                        content.processAnnotations(Article.class);
+                        String xml = content.toXML(result);
+                        logger.debug(JSON.toJSONString(xml));
+                        return xml;
+                    }
+                    if(message.getContent().equals("癌症") || message.getContent().equals("肿瘤")){
+                        content.alias("xml", Articles.class);
+                        content.alias("item", Article.class);
+                        Articles result = new Articles();
+                        result.setFromUserName(message.getToUserName());
+                        result.setToUserName(message.getFromUserName());
+                        result.setCreateTime(new Date().getTime());
+                        List<Article> list = new ArrayList<>();
+                        Article article = new Article();
+                        article.setTitle("笑对肿瘤，干掉癌症");
+                        article.setPicUrl("https://mmbiz.qlogo.cn/mmbiz_jpg/LvSutA9l9GqmdeibHMNA2kr8DleCBGEnzvgn5eH8ia69Cs1GY5VQYblfTPpc3RPQafoP5m5PrLAEZAoiaTUibGQScA/0?wx_fmt=jpeg");
+                        article.setUrl("http://mp.weixin.qq.com/s/Mt82rRgeHhPzMF079X2gGw");
+                        list.add(article);
+                        result.setArticles(list);
+                        result.setArticleCount(list.size());
+                        content.processAnnotations(Article.class);
+                        String xml = content.toXML(result);
+                        logger.debug(JSON.toJSONString(xml));
+                        return xml;
+                    }
+                    if(message.getContent().equals("补血") || message.getContent().equals("贫血") || message.getContent().equals("血虚")){
+                        content.alias("xml", Articles.class);
+                        content.alias("item", Article.class);
+                        Articles result = new Articles();
+                        result.setFromUserName(message.getToUserName());
+                        result.setToUserName(message.getFromUserName());
+                        result.setCreateTime(new Date().getTime());
+                        List<Article> list = new ArrayList<>();
+                        Article article = new Article();
+                        article.setTitle("补血");
+                        article.setPicUrl("https://mmbiz.qlogo.cn/mmbiz_jpg/LvSutA9l9GqmdeibHMNA2kr8DleCBGEnzvgn5eH8ia69Cs1GY5VQYblfTPpc3RPQafoP5m5PrLAEZAoiaTUibGQScA/0?wx_fmt=jpeg");
+                        article.setUrl("http://mp.weixin.qq.com/s/WbR0iM_KpEYEr9i9oIxyOA");
+                        list.add(article);
+                        result.setArticles(list);
+                        result.setArticleCount(list.size());
+                        content.processAnnotations(Article.class);
+                        String xml = content.toXML(result);
+                        logger.debug(JSON.toJSONString(xml));
+                        return xml;
+                    }
+                    if(message.getContent().equals("女性") || message.getContent().equals("祛斑") || message.getContent().equals("美白") || message.getContent().equals("冻龄")||message.getContent().equals("养颜")
+                            || message.getContent().equals("护肤") || message.getContent().equals("补水")|| message.getContent().equals("保湿")|| message.getContent().equals("防晒")){
+                        content.alias("xml", Articles.class);
+                        content.alias("item", Article.class);
+                        Articles result = new Articles();
+                        result.setFromUserName(message.getToUserName());
+                        result.setToUserName(message.getFromUserName());
+                        result.setCreateTime(new Date().getTime());
+                        List<Article> list = new ArrayList<>();
+                        Article article = new Article();
+                        article.setTitle("女性，美丽健康永相伴");
+                        article.setPicUrl("https://mmbiz.qlogo.cn/mmbiz_jpg/LvSutA9l9GqmdeibHMNA2kr8DleCBGEnzvgn5eH8ia69Cs1GY5VQYblfTPpc3RPQafoP5m5PrLAEZAoiaTUibGQScA/0?wx_fmt=jpeg");
+                        article.setUrl("http://mp.weixin.qq.com/s/5uA8yaSN83duXZoacxKK7w");
+                        list.add(article);
+                        result.setArticles(list);
+                        result.setArticleCount(list.size());
+                        content.processAnnotations(Article.class);
+                        String xml = content.toXML(result);
+                        logger.debug(JSON.toJSONString(xml));
+                        return xml;
+                    }
+                    if(message.getContent().equals("美食") || message.getContent().equals("做饭")){
+                        content.alias("xml", Articles.class);
+                        content.alias("item", Article.class);
+                        Articles result = new Articles();
+                        result.setFromUserName(message.getToUserName());
+                        result.setToUserName(message.getFromUserName());
+                        result.setCreateTime(new Date().getTime());
+                        List<Article> list = new ArrayList<>();
+                        Article article = new Article();
+                        article.setTitle("赏食·本周吃什么");
+                        article.setPicUrl("https://mmbiz.qlogo.cn/mmbiz_jpg/LvSutA9l9GqmdeibHMNA2kr8DleCBGEnzvgn5eH8ia69Cs1GY5VQYblfTPpc3RPQafoP5m5PrLAEZAoiaTUibGQScA/0?wx_fmt=jpeg");
+                        article.setUrl("http://mp.weixin.qq.com/s/GrGzk1fYWX5CmtjX3UAa7g");
+                        list.add(article);
+                        result.setArticles(list);
+                        result.setArticleCount(list.size());
+                        content.processAnnotations(Article.class);
+                        String xml = content.toXML(result);
+                        logger.debug(JSON.toJSONString(xml));
+                        return xml;
+                    }
+                    if(message.getContent().equals("减肥") || message.getContent().equals("瘦身") || message.getContent().equals("睡眠") || message.getContent().equals("失眠")||message.getContent().equals("精力不济")
+                            || message.getContent().equals("腰疼")|| message.getContent().equals("酸") || message.getContent().equals("肠胃") || message.getContent().equals("头疼") || message.getContent().equals("感冒") ){
+                        content.alias("xml", Articles.class);
+                        content.alias("item", Article.class);
+                        Articles result = new Articles();
+                        result.setFromUserName(message.getToUserName());
+                        result.setToUserName(message.getFromUserName());
+                        result.setCreateTime(new Date().getTime());
+                        List<Article> list = new ArrayList<>();
+                        Article article = new Article();
+                        article.setTitle("告别现代病");
+                        article.setPicUrl("https://mmbiz.qlogo.cn/mmbiz_jpg/LvSutA9l9GqmdeibHMNA2kr8DleCBGEnzvgn5eH8ia69Cs1GY5VQYblfTPpc3RPQafoP5m5PrLAEZAoiaTUibGQScA/0?wx_fmt=jpeg");
+                        article.setUrl("http://mp.weixin.qq.com/s/jnTTIQjyRUBjNPdMhrvq_w");
+                        list.add(article);
+                        result.setArticles(list);
+                        result.setArticleCount(list.size());
+                        content.processAnnotations(Article.class);
+                        String xml = content.toXML(result);
+                        logger.debug(JSON.toJSONString(xml));
+                        return xml;
+                    }
+                    if(message.getContent().equals("舌") || message.getContent().equals("体质") || message.getContent().equals("血瘀")
+                            || message.getContent().equals("痰湿")||message.getContent().equals("气虚")||message.getContent().equals("湿气")){
+                        content.alias("xml", Articles.class);
+                        content.alias("item", Article.class);
+                        Articles result = new Articles();
+                        result.setFromUserName(message.getToUserName());
+                        result.setToUserName(message.getFromUserName());
+                        result.setCreateTime(new Date().getTime());
+                        List<Article> list = new ArrayList<>();
+                        Article article = new Article();
+                        article.setTitle("看舌知百病");
+                        article.setPicUrl("https://mmbiz.qlogo.cn/mmbiz_jpg/LvSutA9l9GqmdeibHMNA2kr8DleCBGEnzvgn5eH8ia69Cs1GY5VQYblfTPpc3RPQafoP5m5PrLAEZAoiaTUibGQScA/0?wx_fmt=jpeg");
+                        article.setUrl("http://mp.weixin.qq.com/s/PU0ujGlc4TM93L6996vA1w");
+                        list.add(article);
+                        result.setArticles(list);
+                        result.setArticleCount(list.size());
+                        content.processAnnotations(Article.class);
+                        String xml = content.toXML(result);
+                        logger.debug(JSON.toJSONString(xml));
+                        return xml;
+                    }
+                    if(message.getContent().equals("四季") || message.getContent().equals("养生") || message.getContent().equals("节气")){
+                        content.alias("xml", Articles.class);
+                        content.alias("item", Article.class);
+                        Articles result = new Articles();
+                        result.setFromUserName(message.getToUserName());
+                        result.setToUserName(message.getFromUserName());
+                        result.setCreateTime(new Date().getTime());
+                        List<Article> list = new ArrayList<>();
+                        Article article = new Article();
+                        article.setTitle("四季与养生");
+                        article.setPicUrl("http://mp.weixin.qq.com/s/pMbWBXmmXPpo186EEGiQIQ");
+                        article.setUrl("https://mmbiz.qlogo.cn/mmbiz_jpg/LvSutA9l9GqmdeibHMNA2kr8DleCBGEnzvgn5eH8ia69Cs1GY5VQYblfTPpc3RPQafoP5m5PrLAEZAoiaTUibGQScA/0?wx_fmt=jpeg");
+                        list.add(article);
+                        result.setArticles(list);
+                        result.setArticleCount(list.size());
+                        content.processAnnotations(Article.class);
+                        String xml = content.toXML(result);
+                        logger.debug(JSON.toJSONString(xml));
+                        return xml;
+                    }
+                    if(message.getContent().equals("陈淑长")){
+                        content.alias("xml", Articles.class);
+                        content.alias("item", Article.class);
+                        Articles result = new Articles();
+                        result.setFromUserName(message.getToUserName());
+                        result.setToUserName(message.getFromUserName());
+                        result.setCreateTime(new Date().getTime());
+                        List<Article> list = new ArrayList<>();
+                        Article article = new Article();
+                        article.setTitle("真实案例：70岁老教授年轻20岁的秘密是... | 云草与三七");
+                        article.setPicUrl("https://mmbiz.qlogo.cn/mmbiz_jpg/LvSutA9l9GqmdeibHMNA2kr8DleCBGEnzvgn5eH8ia69Cs1GY5VQYblfTPpc3RPQafoP5m5PrLAEZAoiaTUibGQScA/0?wx_fmt=jpeg");
+                        article.setUrl("http://mp.weixin.qq.com/s?__biz=MzI1OTMyNTI1NQ==&mid=2247485499&idx=1&sn=a56bf963166f0aee095249f1b48efb6f&chksm=ea7be413dd0c6d050b3c65d7c204100f797a2198daf512c0e8ddccbce93ef7b46d0d7db3b48f&scene=21#wechat_redirect");
+                        list.add(article);
+                        result.setArticles(list);
+                        result.setArticleCount(list.size());
+                        content.processAnnotations(Article.class);
+                        String xml = content.toXML(result);
+                        logger.debug(JSON.toJSONString(xml));
+                        return xml;
+                    }
+                    if(message.getContent().equals("面膜")){
+                        content.alias("xml", Articles.class);
+                        content.alias("item", Article.class);
+                        Articles result = new Articles();
+                        result.setFromUserName(message.getToUserName());
+                        result.setToUserName(message.getFromUserName());
+                        result.setCreateTime(new Date().getTime());
+                        List<Article> list = new ArrayList<>();
+                        Article article = new Article();
+                        article.setTitle("与其花千万，不如DIY：三七面膜，美白一夏｜永远二十岁");
+                        article.setPicUrl("https://mmbiz.qlogo.cn/mmbiz_jpg/LvSutA9l9GqmdeibHMNA2kr8DleCBGEnzvgn5eH8ia69Cs1GY5VQYblfTPpc3RPQafoP5m5PrLAEZAoiaTUibGQScA/0?wx_fmt=jpeg");
+                        article.setUrl("http://mp.weixin.qq.com/s?__biz=MzI1OTMyNTI1NQ==&mid=2247483688&idx=1&sn=ce6866ffd5b0637b67b08bce4253eda7&scene=21#wechat_redirect");
+                        list.add(article);
+                        result.setArticles(list);
+                        result.setArticleCount(list.size());
+                        content.processAnnotations(Article.class);
+                        String xml = content.toXML(result);
+                        logger.debug(JSON.toJSONString(xml));
+                        return xml;
+                    }
+                    if(message.getContent().equals("青春期功血") || message.getContent().equals("青春期宫血")){
+                        content.alias("xml", Articles.class);
+                        content.alias("item", Article.class);
+                        Articles result = new Articles();
+                        result.setFromUserName(message.getToUserName());
+                        result.setToUserName(message.getFromUserName());
+                        result.setCreateTime(new Date().getTime());
+                        List<Article> list = new ArrayList<>();
+                        Article article = new Article();
+                        article.setTitle("三七治好了我女儿的月经不调和青春期功血！| 三七与云草");
+                        article.setPicUrl("https://mmbiz.qlogo.cn/mmbiz_jpg/LvSutA9l9GqmdeibHMNA2kr8DleCBGEnzvgn5eH8ia69Cs1GY5VQYblfTPpc3RPQafoP5m5PrLAEZAoiaTUibGQScA/0?wx_fmt=jpeg");
+                        article.setUrl("http://mp.weixin.qq.com/s?__biz=MzI1OTMyNTI1NQ==&mid=2247484682&idx=1&sn=2bd3e7b57a378828212511f27e14910e&chksm=ea7be922dd0c6034b18879d9eddb82dbabfca2e2b3cd7d0bf8f3fec3cdbae37043bd49af0afb&scene=21#wechat_redirect");
+                        list.add(article);
+                        result.setArticles(list);
+                        result.setArticleCount(list.size());
+                        content.processAnnotations(Article.class);
+                        String xml = content.toXML(result);
+                        logger.debug(JSON.toJSONString(xml));
+                        return xml;
+                    }
+                    if(message.getContent().equals("养生堂")){
+                        content.alias("xml", Articles.class);
+                        content.alias("item", Article.class);
+                        Articles result = new Articles();
+                        result.setFromUserName(message.getToUserName());
+                        result.setToUserName(message.getFromUserName());
+                        result.setCreateTime(new Date().getTime());
+                        List<Article> list = new ArrayList<>();
+                        Article article = new Article();
+                        article.setTitle("不再暴殄天物，三七三大功能熟记于心，百病除｜三七与云草");
+                        article.setPicUrl("https://mmbiz.qlogo.cn/mmbiz_jpg/LvSutA9l9GqmdeibHMNA2kr8DleCBGEnzvgn5eH8ia69Cs1GY5VQYblfTPpc3RPQafoP5m5PrLAEZAoiaTUibGQScA/0?wx_fmt=jpeg");
+                        article.setUrl("http://mp.weixin.qq.com/s?__biz=MzI1OTMyNTI1NQ==&mid=2247483750&idx=1&sn=a469fa10ec978b80ffa4cb80a5364327&scene=21#wechat_redirect");
+                        list.add(article);
+                        result.setArticles(list);
+                        result.setArticleCount(list.size());
+                        content.processAnnotations(Article.class);
+                        String xml = content.toXML(result);
+                        logger.debug(JSON.toJSONString(xml));
+                        return xml;
+                    }
+                    if(message.getContent().equals("健康之路")){
+                        content.alias("xml", Articles.class);
+                        content.alias("item", Article.class);
+                        Articles result = new Articles();
+                        result.setFromUserName(message.getToUserName());
+                        result.setToUserName(message.getFromUserName());
+                        result.setCreateTime(new Date().getTime());
+                        List<Article> list = new ArrayList<>();
+                        Article article = new Article();
+                        article.setTitle("三七真的那么神？看看《健康之路》专家怎么说 | 三七与云草");
+                        article.setPicUrl("https://mmbiz.qlogo.cn/mmbiz_jpg/LvSutA9l9GqmdeibHMNA2kr8DleCBGEnzvgn5eH8ia69Cs1GY5VQYblfTPpc3RPQafoP5m5PrLAEZAoiaTUibGQScA/0?wx_fmt=jpeg");
+                        article.setUrl("http://mp.weixin.qq.com/s?__biz=MzI1OTMyNTI1NQ==&mid=2247484971&idx=1&sn=af829b4c85566aba02b99c14a8762abd&chksm=ea7bea03dd0c63151c050909faa3bd9cc03eb3fb1747f51f39f8583e6016b2db8e91f08835ca&scene=21#wechat_redirect");
+                        list.add(article);
+                        result.setArticles(list);
+                        result.setArticleCount(list.size());
+                        content.processAnnotations(Article.class);
+                        String xml = content.toXML(result);
+                        logger.debug(JSON.toJSONString(xml));
+                        return xml;
+                    }
+                    if(message.getContent().equals("雾霾")){
+                        content.alias("xml", Articles.class);
+                        content.alias("item", Article.class);
+                        Articles result = new Articles();
+                        result.setFromUserName(message.getToUserName());
+                        result.setToUserName(message.getFromUserName());
+                        result.setCreateTime(new Date().getTime());
+                        List<Article> list = new ArrayList<>();
+                        Article article = new Article();
+                        article.setTitle("空气指数再爆表，三七还能抗雾霾？| 三七与云草");
+                        article.setPicUrl("https://mmbiz.qlogo.cn/mmbiz_jpg/LvSutA9l9GqmdeibHMNA2kr8DleCBGEnzvgn5eH8ia69Cs1GY5VQYblfTPpc3RPQafoP5m5PrLAEZAoiaTUibGQScA/0?wx_fmt=jpeg");
+                        article.setUrl("http://mp.weixin.qq.com/s?__biz=MzI1OTMyNTI1NQ==&mid=2247485920&idx=1&sn=507cd055e115dd3400780f09e2030125&chksm=ea7be5c8dd0c6cde3a527d91e59701502da1cf6a7c6dac1c9c45978ac7493e9c4011c04163c7&scene=21#wechat_redirect");
+                        list.add(article);
+                        result.setArticles(list);
+                        result.setArticleCount(list.size());
+                        content.processAnnotations(Article.class);
+                        String xml = content.toXML(result);
+                        logger.debug(JSON.toJSONString(xml));
+                        return xml;
+                    }
+                    if(message.getContent().equals("查询") || message.getContent().equals("快递") || message.getContent().equals("物流") || message.getContent().equals("订单")){
+                        content.alias("xml", Articles.class);
+                        content.alias("item", Article.class);
+                        Articles result = new Articles();
+                        result.setFromUserName(message.getToUserName());
+                        result.setToUserName(message.getFromUserName());
+                        result.setCreateTime(new Date().getTime());
+                        List<Article> list = new ArrayList<>();
+                        Article article = new Article();
+                        article.setTitle("如何自助查询订单物流？| 公众号使用指南");
+                        article.setPicUrl("https://mmbiz.qlogo.cn/mmbiz_jpg/LvSutA9l9GqmdeibHMNA2kr8DleCBGEnzvgn5eH8ia69Cs1GY5VQYblfTPpc3RPQafoP5m5PrLAEZAoiaTUibGQScA/0?wx_fmt=jpeg");
+                        article.setUrl("http://mp.weixin.qq.com/s?__biz=MzI1OTMyNTI1NQ==&mid=2247484266&idx=3&sn=0d3c9e5b6c3f54960146625387d8759b&chksm=ea7bef42dd0c66546dc3897691eaf77056558f893bff0098c6430c8d8d88b840f8ce699738f2&scene=21#wechat_redirect");
+                        list.add(article);
+                        result.setArticles(list);
+                        result.setArticleCount(list.size());
+                        content.processAnnotations(Article.class);
+                        String xml = content.toXML(result);
+                        logger.debug(JSON.toJSONString(xml));
+                        return xml;
+                    }
+
                     break;
             }
         } catch (Exception e) {
