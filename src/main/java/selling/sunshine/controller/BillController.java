@@ -128,7 +128,6 @@ public class BillController {
                     total_price_database += orderItem.getOrderItemPrice();
                 }
                 if (orderBill.getBillAmount() >= total_price_database) {
-                    logger.debug("order info: " + JSON.toJSONString(order));
                     for (OrderItem orderItem : order.getOrderItems()) {
                         //判断是否是礼券
                         orderItem.setStatus(OrderItemStatus.PAYED);
@@ -147,8 +146,8 @@ public class BillController {
                                 coupon.setWechat(agent.getWechat());
                                 coupon.setOrderId(orderItem.getOrderItemId());
                                 ResultData createResponse = couponService.createCoupon(coupon);
-                                logger.debug(JSON.toJSONString(createResponse));
                             }
+                            orderItem.setStatus(OrderItemStatus.RECEIVED);
                         }
                         orderItem.setCreateAt(new Timestamp(System.currentTimeMillis()));
                     }
@@ -197,7 +196,11 @@ public class BillController {
                         logger.debug(JSON.toJSONString(createResponse));
                     }
                 }
-                customerOrder.setStatus(OrderItemStatus.PAYED);
+                if (customerOrder.getGoods().getType() == GoodsType.VIRTUAL) {
+                    customerOrder.setStatus(OrderItemStatus.RECEIVED);
+                } else {
+                    customerOrder.setStatus(OrderItemStatus.PAYED);
+                }
                 customerOrder.setCreateAt(new Timestamp(System.currentTimeMillis()));
                 ResultData payData = orderService.payOrder(customerOrder);
                 if (payData.getResponseCode() != ResponseCode.RESPONSE_OK) {
@@ -205,7 +208,6 @@ public class BillController {
                 }
             }
         }
-
         return resultData;
     }
 }

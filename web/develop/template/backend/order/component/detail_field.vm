@@ -65,6 +65,12 @@
                 ${order.description}
             </div>
         #end
+        #if(${order} && $!{order.couponSerial})
+            <div class="item">
+                <i class="browser icon"></i>礼券兑换码:
+                ${order.couponSerial}
+            </div>
+        #end
         <div class="item">
             <i class="calendar icon"></i>创建时间:
             ${order.createAt}

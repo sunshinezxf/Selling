@@ -10,6 +10,7 @@
         <result property="receiverPhone" column="receiver_phone"></result>
         <result property="receiverAddress" column="receiver_addr"></result>
         <result property="totalPrice" column="total_price"></result>
+        <result property="couponSerial" column="coupon_serial"></result>
         <result property="status" column="order_status"
                 typeHandler="selling.sunshine.handler.mybatis.order.OrderItemStatusHandler"></result>
         <result property="blockFlag" column="block_flag"></result>
@@ -45,7 +46,7 @@
 
     <select id="query" parameterType="java.util.Map" resultMap="customerOrderVo">
         SELECT order_id, agent_id, wechat, quantity, customer_id, receiver_name, receiver_phone, receiver_addr,
-        total_price, order_status, goods_id, block_flag, create_time
+        total_price, coupon_serial, order_status, goods_id, block_flag, create_time
         FROM customer_order
         WHERE 1=1
         <if test="orderId != null and orderId != ''">

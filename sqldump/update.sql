@@ -113,7 +113,7 @@ ADD COLUMN `order_item_description` VARCHAR(100) NULL
 AFTER `order_item_price`;
 
 ##mysql version 5.7 use this
-CREATE VIEW purchase_record_view AS
+CREATE OR REPLACE VIEW purchase_record_view AS
   SELECT *
   FROM (
          SELECT
@@ -139,10 +139,11 @@ CREATE VIEW purchase_record_view AS
            co.create_time  AS create_time
          FROM customer_order co
            LEFT JOIN goods g ON co.goods_id = g.goods_id
-         WHERE co.order_status IN (1, 2, 3)) temp;
+         WHERE co.order_status IN (1, 2, 3)
+               AND co.coupon_serial IS NULL OR co.coupon_serial = '') temp;
 
 ##mysql 5.6, 5.5 use the following
-CREATE VIEW purchase_item AS
+CREATE OR REPLACE VIEW purchase_item AS
   SELECT
     g.goods_id           AS goods_id,
     g.goods_name         AS goods_name,
@@ -166,9 +167,9 @@ CREATE VIEW purchase_item AS
     co.create_time  AS create_time
   FROM customer_order co
     LEFT JOIN goods g ON co.goods_id = g.goods_id
-  WHERE co.order_status IN (1, 2, 3);
+  WHERE co.order_status IN (1, 2, 3) AND (co.coupon_serial IS NULL OR co.coupon_serial = '');
 
-CREATE VIEW purchase_record_view AS
+CREATE OR REPLACE VIEW purchase_record_view AS
   SELECT *
   FROM purchase_item;
 
@@ -823,3 +824,40 @@ FOREIGN KEY (`agent_id`)
 REFERENCES `selling`.`agent` (`agent_id`)
   ON DELETE NO ACTION
   ON UPDATE NO ACTION;
+
+ALTER TABLE `selling`.`goods`
+ADD COLUMN `goods_type` TINYINT(1) NOT NULL DEFAULT 0
+AFTER `goods_id`;
+
+
+CREATE TABLE IF NOT EXISTS `selling`.`coupon` (
+  `coupon_id`     VARCHAR(20) NOT NULL,
+  `order_id`      VARCHAR(20) NOT NULL,
+  `coupon_serial` VARCHAR(45) NOT NULL,
+  `goods_id`      VARCHAR(20) NOT NULL,
+  `coupon_holder` VARCHAR(45) NOT NULL,
+  `coupon_status` VARCHAR(45) NOT NULL DEFAULT 0,
+  `block_flag`    TINYINT(1)  NOT NULL DEFAULT 0,
+  `create_time`   DATETIME    NOT NULL,
+  PRIMARY KEY (`coupon_id`),
+  INDEX `fk_coupon_goods_idx` (`goods_id` ASC),
+  CONSTRAINT `fk_coupon_goods`
+  FOREIGN KEY (`goods_id`)
+  REFERENCES `selling`.`goods` (`goods_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+)
+  ENGINE = InnoDB;
+
+ALTER TABLE `selling`.`coupon`
+CHANGE COLUMN `coupon_holder` `coupon_holder` VARCHAR(45) NULL;
+
+ALTER TABLE `selling`.`coupon`
+CHANGE COLUMN `order_id` `order_id` VARCHAR(20) NULL;
+
+ALTER TABLE `selling`.`customer_order`
+ADD COLUMN `coupon_serial` VARCHAR(20) NULL
+AFTER `total_price`;
+
+ALTER TABLE `selling`.`coupon`
+CHANGE COLUMN `coupon_status` `coupon_status` TINYINT(1) NOT NULL DEFAULT '0';
