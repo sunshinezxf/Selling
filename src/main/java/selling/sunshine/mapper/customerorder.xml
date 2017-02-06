@@ -103,12 +103,15 @@
     <select id="sumCustomerOrder" parameterType="java.util.Map" resultMap="sumCustomerOrderVo">
         SELECT agent_id, goods_id, SUM(quantity) AS quantity, SUM(total_price) AS price
         FROM customer_order
-        WHERE 1 = 1 AND (order_status IN (1, 2, 3)) AND agent_id IS NOT NULL
-        <if test="date != null and date != ''">
+        WHERE 1 = 1 AND order_status IN (1, 2, 3) AND agent_id IS NOT NULL
+        <if test="date != null ">
             AND create_time LIKE #{date}
         </if>
-        <if test="agentId != null and agentId != ''">
+        <if test="agentId != null ">
             AND agent_id = #{agentId}
+        </if>
+        <if test="goodsId != null">
+            AND goods_id= #{goodsId}
         </if>
         GROUP BY agent_id,goods_id
     </select>

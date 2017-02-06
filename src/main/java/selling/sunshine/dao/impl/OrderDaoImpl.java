@@ -272,6 +272,7 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
         try {
             Map<String, Object> condition = new HashMap<>();
             condition.put("date", date + "%");
+            condition.put("goodsId", "COMlezflw12");
             List<Map<String, Object>> sumOrderList = sqlSession.selectList(
                     "selling.order.pool.sumOrder", condition);
             List<Map<String, Object>> sumCustomerOrderList = sqlSession.selectList(

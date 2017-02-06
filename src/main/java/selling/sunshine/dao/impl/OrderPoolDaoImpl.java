@@ -1,24 +1,24 @@
 package selling.sunshine.dao.impl;
 
-import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import common.sunshine.dao.BaseDao;
 import common.sunshine.model.selling.agent.Agent;
 import common.sunshine.model.selling.agent.support.AgentType;
-import selling.sunshine.dao.OrderPoolDao;
-import selling.sunshine.model.AgentVitality;
-import selling.sunshine.model.OrderPool;
-import selling.sunshine.model.cashback.CashBackRecord;
-import selling.sunshine.model.cashback.support.CashBackLevel;
+import common.sunshine.model.selling.goods.Goods4Agent;
 import common.sunshine.utils.IDGenerator;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import selling.sunshine.dao.OrderPoolDao;
+import selling.sunshine.model.AgentVitality;
+import selling.sunshine.model.OrderPool;
+import selling.sunshine.model.RefundConfig;
+import selling.sunshine.model.cashback.CashBackRecord;
+import selling.sunshine.model.cashback.support.CashBackLevel;
+
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class OrderPoolDaoImpl extends BaseDao implements OrderPoolDao {
 	private Logger logger = LoggerFactory.getLogger(OrderItemDaoImpl.class);
@@ -59,7 +59,7 @@ public class OrderPoolDaoImpl extends BaseDao implements OrderPoolDao {
 			List<CashBackRecord> list=sqlSession.selectList("selling.refund.record.query", condition);
 			if (list.size()==3) {//有三条返现记录表示没有遗漏，不用处理
 				continue;
-			}else if (list.size()==1||list.size()==2) {//有一条或两条返现记录表示只有需要同时检查上级和上上级代理商看有没有遗漏
+			}else if (list.size()==1||list.size()==2) {//有一条或两条返现记录表示需要同时检查上级和上上级代理商看有没有遗漏
 				//首先查询有没有上级代理商，没有的话就不用检查了
 				condition.clear();
 				condition.put("agentId", orderPool.getAgent().getAgentId());
