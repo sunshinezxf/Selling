@@ -108,7 +108,6 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
 			String currentDate = dateFormat.format(current.getTime());
 			condition.put("blockFlag", false);
 			condition.put("date", currentDate + "%");
-			condition.put("goodsId", "COMlezflw12");
 			List<OrderPool> poolList = sqlSession.selectList("selling.order.pool.query", condition);
 			if (!poolList.isEmpty()) {
 				for (int j = 0; j < poolList.size(); j++) {

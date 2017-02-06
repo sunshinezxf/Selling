@@ -1,25 +1,25 @@
 package selling.sunshine.dao.impl;
 
+import common.sunshine.dao.BaseDao;
 import common.sunshine.model.selling.agent.lite.Agent;
+import common.sunshine.model.selling.goods.Goods4Agent;
+import common.sunshine.model.selling.order.Order;
+import common.sunshine.model.selling.order.OrderItem;
+import common.sunshine.pagination.DataTablePage;
+import common.sunshine.pagination.DataTableParam;
+import common.sunshine.pagination.MobilePage;
+import common.sunshine.pagination.MobilePageParam;
 import common.sunshine.utils.IDGenerator;
+import common.sunshine.utils.ResponseCode;
+import common.sunshine.utils.ResultData;
 import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-import common.sunshine.dao.BaseDao;
 import selling.sunshine.dao.OrderDao;
-import common.sunshine.model.selling.order.Order;
-import common.sunshine.model.selling.order.OrderItem;
 import selling.sunshine.model.OrderPool;
 import selling.sunshine.model.RefundConfig;
-import common.sunshine.model.selling.goods.Goods4Agent;
-import common.sunshine.pagination.DataTablePage;
-import common.sunshine.pagination.DataTableParam;
-import common.sunshine.pagination.MobilePage;
-import common.sunshine.pagination.MobilePageParam;
-import common.sunshine.utils.ResponseCode;
-import common.sunshine.utils.ResultData;
 
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -64,15 +64,15 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
             }
         }
     }
-    
+
     /**
      * 仅仅添加一条order，不考虑orderItem
      */
     @Override
-	public ResultData insertOrderLite(Order order) {
-    	ResultData result = new ResultData();
-    	order.setOrderId(IDGenerator.generate("ODR"));
-    	synchronized (lock) {
+    public ResultData insertOrderLite(Order order) {
+        ResultData result = new ResultData();
+        order.setOrderId(IDGenerator.generate("ODR"));
+        synchronized (lock) {
             try {
                 sqlSession.insert("selling.order.insert", order);
                 result.setData(order);
@@ -84,7 +84,7 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
                 return result;
             }
         }
-	}
+    }
 
     /**
      * 查询符合查询条件的订单列表
@@ -272,7 +272,6 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
         try {
             Map<String, Object> condition = new HashMap<>();
             condition.put("date", date + "%");
-            condition.put("goodsId", "COMlezflw12");
             List<Map<String, Object>> sumOrderList = sqlSession.selectList(
                     "selling.order.pool.sumOrder", condition);
             List<Map<String, Object>> sumCustomerOrderList = sqlSession.selectList(
@@ -322,63 +321,63 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
                     pool.setGoods(goods);
                     configCondition.put("goodsId", resultList.get(i).get("goods"));
                     configCondition.put("blockFlag", false);
-                    List<RefundConfig> configs=sqlSession.selectList("selling.refund.config.query", configCondition);
-                    if (configs.size()>0) {//当返现配置存在时才能生成order pool
-                    	 boolean flag=false;
-                         RefundConfig configMonth = null;
-                         RefundConfig configAll = null;
-                         for (RefundConfig config:configs) {
-     						if (!config.isUniversal()) {
-     							flag=true;
-     							configMonth=config;
-     						}else {
-     							configAll=config;
-     						}
-     					}
-                         if (flag) {
-     						int monthConfig=configMonth.getUniversalMonth();
-     						configCondition.clear();
-     						configCondition.put("agentId", agent.getAgentId());
-     						common.sunshine.model.selling.agent.Agent agent2 = sqlSession.selectOne("selling.agent.query", configCondition);
-     						
-     						Calendar calendar = Calendar.getInstance();
-     						calendar.setTime(agent2.getCreateAt());
-     						int month=c.get(Calendar.MONTH)-calendar.get(Calendar.MONTH);
-     						System.out.println(c.get(Calendar.MONTH));
-     						if(month<monthConfig){
-     							pool.setRefundConfig(configMonth);
-     		                    if (pool.getQuantity() >= configMonth.getAmountTrigger()) {
-     		                        pool.setBlockFlag(false);
-     		                        pool.setRefundAmount(Double.parseDouble(resultList.get(i).get("quantity").toString()) * configMonth.getLevel1Percent());
-     		                    } else {
-     		                        pool.setBlockFlag(true);
-     		                        pool.setRefundAmount(0);
-     		                    }		                    
-     						}else {
-     							pool.setRefundConfig(configAll);
-     		                    if (pool.getQuantity() >= configAll.getAmountTrigger()) {
-     		                        pool.setBlockFlag(false);
-     		                        pool.setRefundAmount(Double.parseDouble(resultList.get(i).get("quantity").toString()) * configAll.getLevel1Percent());
-     		                    } else {
-     		                        pool.setBlockFlag(true);
-     		                        pool.setRefundAmount(0);
-     		                    }		      
-     						}
-     					}else {
-     						 RefundConfig config = configs.get(0);
-     		                    pool.setRefundConfig(config);
-     		                    if (pool.getQuantity() >= config.getAmountTrigger()) {
-     		                        pool.setBlockFlag(false);
-     		                        pool.setRefundAmount(Double.parseDouble(resultList.get(i).get("quantity").toString()) * config.getLevel1Percent());
-     		                    } else {
-     		                        pool.setBlockFlag(true);
-     		                        pool.setRefundAmount(0);
-     		                    }		                   
-     					}
-                         sqlSession.insert("selling.order.pool.insert", pool);
-                         configCondition.clear();
-					}                   
-                }              
+                    List<RefundConfig> configs = sqlSession.selectList("selling.refund.config.query", configCondition);
+                    if (configs.size() > 0) {//当返现配置存在时才能生成order pool
+                        boolean flag = false;
+                        RefundConfig configMonth = null;
+                        RefundConfig configAll = null;
+                        for (RefundConfig config : configs) {
+                            if (!config.isUniversal()) {
+                                flag = true;
+                                configMonth = config;
+                            } else {
+                                configAll = config;
+                            }
+                        }
+                        if (flag) {
+                            int monthConfig = configMonth.getUniversalMonth();
+                            configCondition.clear();
+                            configCondition.put("agentId", agent.getAgentId());
+                            common.sunshine.model.selling.agent.Agent agent2 = sqlSession.selectOne("selling.agent.query", configCondition);
+
+                            Calendar calendar = Calendar.getInstance();
+                            calendar.setTime(agent2.getCreateAt());
+                            int month = c.get(Calendar.MONTH) - calendar.get(Calendar.MONTH);
+                            System.out.println(c.get(Calendar.MONTH));
+                            if (month < monthConfig) {
+                                pool.setRefundConfig(configMonth);
+                                if (pool.getQuantity() >= configMonth.getAmountTrigger()) {
+                                    pool.setBlockFlag(false);
+                                    pool.setRefundAmount(Double.parseDouble(resultList.get(i).get("quantity").toString()) * configMonth.getLevel1Percent());
+                                } else {
+                                    pool.setBlockFlag(true);
+                                    pool.setRefundAmount(0);
+                                }
+                            } else {
+                                pool.setRefundConfig(configAll);
+                                if (pool.getQuantity() >= configAll.getAmountTrigger()) {
+                                    pool.setBlockFlag(false);
+                                    pool.setRefundAmount(Double.parseDouble(resultList.get(i).get("quantity").toString()) * configAll.getLevel1Percent());
+                                } else {
+                                    pool.setBlockFlag(true);
+                                    pool.setRefundAmount(0);
+                                }
+                            }
+                        } else {
+                            RefundConfig config = configs.get(0);
+                            pool.setRefundConfig(config);
+                            if (pool.getQuantity() >= config.getAmountTrigger()) {
+                                pool.setBlockFlag(false);
+                                pool.setRefundAmount(Double.parseDouble(resultList.get(i).get("quantity").toString()) * config.getLevel1Percent());
+                            } else {
+                                pool.setBlockFlag(true);
+                                pool.setRefundAmount(0);
+                            }
+                        }
+                        sqlSession.insert("selling.order.pool.insert", pool);
+                        configCondition.clear();
+                    }
+                }
             }
             result.setData(resultList);
             result.setResponseCode(ResponseCode.RESPONSE_OK);
