@@ -102,25 +102,25 @@
 		SELECT pool_id,agent_id,goods_id,refund_config_id,quantity,price,refund_amount,pool_date,block_flag,create_time
 		FROM order_pool
 		WHERE 1 = 1 
-		<if test="orderPoolId != null and orderPoolId != ''">
+		<if test="orderPoolId != null ">
             AND pool_id	 = #{orderPoolId}
         </if>
-        <if test="agentId != null and agentId != ''">
+        <if test="agentId != null ">
             AND agent_id = #{agentId}
         </if>
-        <if test="goodsId != null and goodsId != ''">
+        <if test="goodsId != null ">
             AND goods_id = #{goodsId}
         </if>
-        <if test="poolDate != null and poolDate != ''">
+        <if test="poolDate != null ">
             AND pool_date = #{poolDate}
         </if>
         <if test="blockFlag != null">
             AND block_flag = #{blockFlag}
         </if>
-        <if test="date != null and date != ''">
+        <if test="date != null ">
 			AND pool_date LIKE #{date}
 		</if>
-		<if test="monthConfig != null and monthConfig != ''">
+		<if test="monthConfig != null ">
 		    AND create_time >= DATE_SUB( CURDATE() , INTERVAL #{monthConfig} MONTH )
 		</if>
         ORDER BY pool_date
@@ -129,12 +129,15 @@
 	<select id="sumOrder" parameterType="java.util.Map" resultMap="sumOrderVo">
 		SELECT o.agent_id AS agent,i.goods_id AS goods,SUM(i.goods_quantity) AS quantity,SUM(i.order_item_price) AS price
 		FROM `order` o,order_item i
-		WHERE 1 = 1 AND o.order_id=i.order_id AND (i.order_item_status='1' OR i.order_item_status='2' OR i.order_item_status='3') AND order_type='0'
-		<if test="date != null and date != ''">
+		WHERE 1 = 1 AND o.order_id=i.order_id AND i.order_item_status IN (1,2,3) AND order_type='0'
+		<if test="date != null ">
 			AND i.create_time LIKE #{date}
 		</if>
-		<if test="agentId != null and agentId != ''">
+		<if test="agentId != null ">
 			AND o.agent_id = #{agentId}
+		</if>
+		<if test="goodsId != null">
+			AND i.goods_id= #{goodsId}
 		</if>
         GROUP BY o.agent_id,i.goods_id
 	</select>
