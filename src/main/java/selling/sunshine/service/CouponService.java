@@ -12,4 +12,6 @@ public interface CouponService {
     ResultData fetchCoupon(Map<String, Object> condition);
 
     ResultData createCoupon(Coupon coupon);
+
+    ResultData updateCoupon(Coupon coupon);
 }

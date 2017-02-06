@@ -1,0 +1,78 @@
+<div id="actionSheet_wrap">
+    <div class="weui_mask_transition" id="number_div" style="display: none;"></div>
+    <div class="weui_actionsheet" id="weui_actionsheet">
+        <div class="weui_actionsheet_menu">
+            <div class="menu_title">
+                <h3>领取信息</h3>
+            </div>
+            <div class="address_area">
+                <div class="address_information">
+                    <div class="address_title">
+                        <div class="address_icon">
+                            <img class="icon" src="${path.concat('/material/images/address_icon.jpg')}"/>
+                        </div>
+                        <p>收货地址</p>
+                    </div>
+                    <div class="weui_cells">
+                        <form id="coupon_exchange_form">
+                            <div class="weui_cell">
+                                <div class="weui_cell_hd">
+                                    <label class="weui_label">姓名</label>
+                                </div>
+                                <div class="weui_cell_bd weui_cell_primary">
+                                    <input id="customer_name" name="customerName" class="weui_input" type="text"
+                                           placeholder="请填写收货人姓名" autocomplete="off"/>
+                                </div>
+                            </div>
+                            <div class="weui_cell">
+                                <div class="weui_cell_hd">
+                                    <label class="weui_label">手机号</label>
+                                </div>
+                                <div class="weui_cell_bd weui_cell_primary">
+                                    <input id="customer_phone" name="phone" class="weui_input" type="tel"
+                                           placeholder="请填写手机号" autocomplete="off" value=""/>
+                                </div>
+                            </div>
+
+                            <div class="weui_cells">
+                                <div class="weui_cell">
+                                    <div class="weui_cell_hd">
+                                        <label class="weui_label">地区</label>
+                                    </div>
+                                    <div class="weui_cell_bd weui_cell_primary">
+                                        <div id="province">
+                                            <select id="prov" class="prov"></select>
+                                            <select id="city" class="city" disabled="disabled"
+                                                    style="display:none"></select>
+                                            <select id="dist" class="dist" disabled="disabled"
+                                                    style="display:none"></select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="weui_cell">
+                                    <div class="weui_cell_hd">
+                                        <label class="weui_label">地址</label>
+                                    </div>
+                                    <div class="weui_cell_bd weui_cell_primary">
+                                        <input id="customer_address" name="address" class="weui_input" type="text"
+                                               placeholder="请填写详细地址"
+                                               autocomplete="off"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" name="goodsId" value="$!{coupon.goods.goodsId}">
+                            <input type="hidden" name="address" id="address">
+                            <input type="hidden" name="couponSerial" value="$!{coupon.couponSerial}">
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="confirm_area">
+                <div class="to_pay">
+                    <button id="confirm" class="weui_btn weui_btn_disabled weui_btn_default" disabled="disabled">兑换
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

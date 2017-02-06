@@ -19,6 +19,7 @@ public class CustomerOrder extends Entity {
     private String receiverPhone;
     private String receiverAddress;
     private double totalPrice;
+    private String couponSerial;
     private OrderItemStatus status;
 
     public CustomerOrder() {
@@ -131,5 +132,13 @@ public class CustomerOrder extends Entity {
 
     public void setCustomerId(String customerId) {
         this.customerId = customerId;
+    }
+
+    public String getCouponSerial() {
+        return couponSerial;
+    }
+
+    public void setCouponSerial(String couponSerial) {
+        this.couponSerial = couponSerial;
     }
 }

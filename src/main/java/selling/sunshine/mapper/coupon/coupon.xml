@@ -6,7 +6,8 @@
         <result property="orderId" column="order_id"></result>
         <result property="couponSerial" column="coupon_serial"></result>
         <result property="wechat" column="coupon_holder"></result>
-        <result property="status" column="coupon_status"></result>
+        <result property="status" column="coupon_status"
+                typeHandler="common.sunshine.mybatis.handler.coupon.CouponStatusHandler"></result>
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
         <association property="goods" column="goodsId = goods_id" select="goodsQuery"></association>
@@ -38,7 +39,7 @@
 
     <insert id="insert" parameterType="common.sunshine.model.selling.coupon.Coupon" useGeneratedKeys="false">
         INSERT INTO selling.coupon(coupon_id, order_id, goods_id, coupon_holder, coupon_serial, coupon_status, block_flag, create_time)
-        VALUES (#{couponId}, #{orderId}, #{goods.goodsId}, #{wechat}, #{couponSerial}, #{status}, #{blockFlag}, #{createAt})
+        VALUES (#{couponId}, #{orderId}, #{goods.goodsId}, #{wechat}, #{couponSerial}, #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler}, #{blockFlag}, #{createAt})
     </insert>
 
     <select id="query" parameterType="java.util.Map" resultMap="couponVo">
@@ -69,10 +70,11 @@
         UPDATE selling.coupon
         <set>
             <if test="status != null">
-                coupon_stauts = #{status}
+                coupon_status = #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler},
             </if>
             coupon_id = #{couponId}
         </set>
+        WHERE coupon_id = #{couponId}
     </update>
 
     <select id="goodsQuery" parameterType="java.util.Map" resultMap="goods4CustomerVo">

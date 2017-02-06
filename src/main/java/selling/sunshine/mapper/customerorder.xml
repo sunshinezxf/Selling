@@ -133,6 +133,9 @@
             <if test="agent != null and agent.agentId != null and agent.agentId != ''">
                 agent_id = #{agent.agentId},
             </if>
+            <if test="couponSerial != null">
+                coupon_serial = #{couponSerial},
+            </if>
             order_id = #{orderId},
             quantity = #{quantity},
             customer_id = #{customerId},

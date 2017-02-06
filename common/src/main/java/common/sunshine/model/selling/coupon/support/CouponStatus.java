@@ -13,6 +13,6 @@ public enum CouponStatus {
     }
 
     public int getCode() {
-        return this.code;
+        return code;
     }
 }

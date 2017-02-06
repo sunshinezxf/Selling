@@ -43,4 +43,17 @@ public class CouponServiceImpl implements CouponService {
         }
         return result;
     }
+
+    @Override
+    public ResultData updateCoupon(Coupon coupon) {
+        ResultData result = new ResultData();
+        ResultData response = couponDao.updateCoupon(coupon);
+        result.setResponseCode(response.getResponseCode());
+        if (response.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
+            result.setDescription(response.getDescription());
+        } else if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(response.getData());
+        }
+        return result;
+    }
 }

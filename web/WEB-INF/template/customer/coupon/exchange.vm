@@ -4,6 +4,9 @@
 <head>
     #parse("/customer/component/init.vm")
     <link rel="stylesheet" href="${path.concat('/material/css/customer/coupon.css')}">
+    <link rel="stylesheet" href="${path.concat('/material/css/customer/goods_detail.css')}"/>
+    <link rel="stylesheet" href="${path.concat('/material/css/common/address_plugin.css')}"/>
+    <script type="text/javascript" src="${path.concat('/plugins/jquery/jquery.cityselect.js')}"></script>
     <title>礼券兑换</title>
 </head>
 <body>
@@ -17,12 +20,13 @@
         <div class="draw-list">
             #if(${coupon})
                 #set($cover = ${coupon.goods.thumbnails[0].path})
-                <img src="https://www.yuncaogangmu.com${cover}">
+                <img id="target_goods" src="https://www.yuncaogangmu.com${cover}">
             #end
         </div>
     </div>
     <a href="javascript:;" id="draw-btn">点击打开</a>
 </div>
+    #parse("/customer/coupon/component/coupon_exchange_form.vm")
 <script>
     $(function () {
         $("#draw-btn,.draw-img").on("click", function () {
@@ -50,6 +54,156 @@
     var title = "点开有喜～用云草,福气到!";
     var description = "您的好友送您一盒云草纲目超细三七粉,填写地址即可收礼!";
     var imgURL = "https://www.yuncaogangmu.com${cover}";
+
+    $(document).ready(function () {
+        $("#target_goods").on('click', function () {
+            $.toggleNumModifySheet();
+        });
+
+        $("#confirm").on('click', function () {
+            var url = '${path.concat('/coupon/exchange')}';
+            var goodsId = '${coupon.goods.goodsId}';
+            var customerName = $('#customer_name').val();
+            var phone = $('#customer_phone').val();
+            var address;
+            if ($("#dist").is(":hidden")) {
+                if ($("#city").is(":hidden")) {
+                    address = $("#prov").val() + $("#customer_address").val();
+                } else {
+                    address = $("#prov").val() + $("#city").val() + $("#customer_address").val();
+                }
+            } else {
+                address = $("#prov").val() + $("#city").val() + $("#dist").val() + $("#customer_address").val();
+            }
+            $("#address").val(address);
+
+            $("#coupon_exchange_form").attr("method", "post");
+            $("#coupon_exchange_form").attr("action", url);
+            $("#coupon_exchange_form").submit();
+        });
+
+        $('#province').citySelect({
+            url: '${path.concat('/plugins/jquery/city.min.js')}',
+            required: false,
+            nodata: 'none',//当子集无数据时，隐藏select
+        });
+
+        $("#prov").change(function () {
+            $("#city").empty();
+            $("#dist").empty();
+            if (addressInfo_validate()) {
+                active();
+            } else {
+                inactive();
+            }
+        });
+
+        $("#city").change(function () {
+            $("#dist").empty();
+            if (addressInfo_validate()) {
+                active();
+            } else {
+                inactive();
+            }
+        });
+
+        $("#dist").change(function () {
+            if (addressInfo_validate()) {
+                active();
+            } else {
+                inactive();
+            }
+        });
+
+        function addressInfo_validate() {
+            var name = $('#customer_name').val();
+            var phone = $('#customer_phone').val();
+            var address = $('#customer_address').val();
+            var area;
+            if ($("#prov").val() == "北京" || $("#prov").val() == "天津" || $("#prov").val() == "上海" || $("#prov").val() == "重庆" || $("#prov").val() == "香港" || $("#prov").val() == "澳门" || $("#prov").val() == "台湾") {
+                area = $("#city").val();
+            } else {
+                if ($("#prov").val() == "国外") {
+                    area = $("#prov").val();
+                } else {
+                    area = $("#dist").val();
+                }
+            }
+            if (not_null(name) && not_null(phone) && not_null(address) && (not_null(area) || second_time_purchase)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        function active() {
+            $("#confirm").removeAttr("disabled");
+            $("#confirm").removeClass("weui_btn_disabled");
+            $("#confirm").removeClass("weui_btn_default");
+            $("#confirm").addClass("weui_btn_primary");
+        }
+
+        function inactive() {
+            $("#confirm").attr("disabled", "disabled");
+            $("#confirm").removeClass("weui_btn_primary");
+            $("#confirm").addClass("weui_btn_disabled");
+            $("#confirm").addClass("weui_btn_default");
+        }
+
+        function not_null(item) {
+            if (item == null || item == "" || item.length <= 0) {
+                return false;
+            }
+            return true;
+        }
+
+        $.toggleNumModifySheet = function () {
+            var number_div = $('#number_div');
+            var weuiActionsheet = $('#weui_actionsheet');
+            weuiActionsheet.addClass('weui_actionsheet_toggle');
+            number_div.show()
+                    .focus()
+                    .addClass('weui_fade_toggle').one('click', function () {
+                        forbidden = false;
+                        hideActionSheet(weuiActionsheet, number_div);
+                    });
+            number_div.unbind('transitionend').unbind('webkitTransitionEnd');
+
+            function hideActionSheet(weuiActionsheet, number_div) {
+                weuiActionsheet.removeClass('weui_actionsheet_toggle');
+                number_div.removeClass('weui_fade_toggle');
+                number_div.on('transitionend', function () {
+                    number_div.hide();
+                }).on('webkitTransitionEnd', function () {
+                    number_div.hide();
+                })
+            }
+        }
+
+        $('#customer_name').on('input propertychange', function () {
+            if (addressInfo_validate()) {
+                active();
+            } else {
+                inactive();
+            }
+        });
+
+        $('#customer_phone').on('input propertychange', function () {
+            if (addressInfo_validate()) {
+                active();
+            } else {
+                inactive();
+            }
+        });
+
+        $('#customer_address').on('input propertychange', function () {
+            if (addressInfo_validate()) {
+                active();
+            } else {
+                inactive();
+            }
+        });
+    });
 </script>
     #parse("/agent/link/validation.vm")
 </html>
