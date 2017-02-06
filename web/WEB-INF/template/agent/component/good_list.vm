@@ -1,4 +1,5 @@
 <div id="goods_option" style="display: none;">
+	<div class="weui_cells_title">点击可选择相应商品</div>
 	<div class="weui_cells weui_cells_radio">
 	    #foreach($elem in $goods)
 	    <label class="weui_cell goods" id="${elem.goodsId}">

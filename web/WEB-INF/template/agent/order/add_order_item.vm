@@ -4,19 +4,19 @@
             <div class="weui_cell_bd weui_cell_primary">
                 <p>客户姓名</p>
             </div>
-            <div class="weui_cell_ft"></div>
+            <div class="weui_cell_ft">点击选择</div>
         </a>
         <a class="weui_cell" id="phone">
             <div class="weui_cell_bd weui_cell_primary">
                 <p>手机号</p>
             </div>
-            <div class="weui_cell_ft"></div>
+##            <div class="weui_cell_ft"></div>
         </a>
         <a class="weui_cell" id="goods">
             <div class="weui_cell_bd weui_cell_primary">
                 <p>商品名称</p>
             </div>
-            <div class="weui_cell_ft"></div>
+            <div class="weui_cell_ft">点击选择</div>
         </a>
         <a class="weui_cell" id="quantity">
             <div class="weui_cell_hd">
