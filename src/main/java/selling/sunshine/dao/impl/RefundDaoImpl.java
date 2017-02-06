@@ -143,7 +143,7 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
 						// 查询活跃度配置表
 						Map<String, Object> con4 = new HashMap<>();
 						con4.put("blockFlag", false);
-						AgentVitality agentVitality = (AgentVitality) sqlSession
+						AgentVitality agentVitality =  sqlSession
 								.selectOne("selling.agent.vitality.query", con4);
 						if (agent.getAgentType() == AgentType.ORDINARY) {
 							CashBackRecord refundRecord = new CashBackRecord();

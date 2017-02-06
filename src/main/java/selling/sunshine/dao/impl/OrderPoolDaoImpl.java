@@ -3,7 +3,6 @@ package selling.sunshine.dao.impl;
 import common.sunshine.dao.BaseDao;
 import common.sunshine.model.selling.agent.Agent;
 import common.sunshine.model.selling.agent.support.AgentType;
-import common.sunshine.model.selling.goods.Goods4Agent;
 import common.sunshine.utils.IDGenerator;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
@@ -12,13 +11,13 @@ import org.slf4j.LoggerFactory;
 import selling.sunshine.dao.OrderPoolDao;
 import selling.sunshine.model.AgentVitality;
 import selling.sunshine.model.OrderPool;
-import selling.sunshine.model.RefundConfig;
 import selling.sunshine.model.cashback.CashBackRecord;
 import selling.sunshine.model.cashback.support.CashBackLevel;
 
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class OrderPoolDaoImpl extends BaseDao implements OrderPoolDao {
 	private Logger logger = LoggerFactory.getLogger(OrderItemDaoImpl.class);
@@ -90,7 +89,7 @@ public class OrderPoolDaoImpl extends BaseDao implements OrderPoolDao {
 						if (agent2.getAgentType()==AgentType.ORDINARY) {//上级代理商非客服可以有机会得到返现
 							condition.clear();
 							condition.put("blockFlag", false);
-							AgentVitality agentVitality=(AgentVitality)sqlSession.selectOne("selling.agent.vitality.query", condition);
+							AgentVitality agentVitality=sqlSession.selectOne("selling.agent.vitality.query", condition);
 							condition.clear();
 	                        condition.put("agentId", agent2.getAgentId());
 	                        condition.put("poolDate", orderPool.getPoolDate());
@@ -104,7 +103,7 @@ public class OrderPoolDaoImpl extends BaseDao implements OrderPoolDao {
 									price+=pool.getPrice();
 								 }
                             	 if (quantity>=agentVitality.getVitalityQuantity()&&price>=agentVitality.getVitalityPrice()) {
-                            		 flag=false;//当购买金额和数量都达到活跃度配置标准，就可以获取下级代理商的返现
+                            		 flag=true;//当购买金额和数量都达到活跃度配置标准，就可以获取下级代理商的返现
 								 }
 	                        }else {
 	                   	         if (agentVitality.getVitalityQuantity()==0&&agentVitality.getVitalityPrice()==0.0) {
@@ -145,7 +144,7 @@ public class OrderPoolDaoImpl extends BaseDao implements OrderPoolDao {
 						if (agent3!=null&&agent3.getAgentType()==AgentType.ORDINARY) {//上上级代理商非客服可以有机会得到返现
 							condition.clear();
 							condition.put("blockFlag", false);
-							AgentVitality agentVitality=(AgentVitality)sqlSession.selectOne("selling.agent.vitality.query", condition);
+							AgentVitality agentVitality=sqlSession.selectOne("selling.agent.vitality.query", condition);
 							condition.clear();
 	                        condition.put("agentId", agent3.getAgentId());
 	                        condition.put("poolDate", orderPool.getPoolDate());
@@ -159,7 +158,7 @@ public class OrderPoolDaoImpl extends BaseDao implements OrderPoolDao {
 									price+=pool.getPrice();
 							     }
                             	 if (quantity>=agentVitality.getVitalityQuantity()&&price>=agentVitality.getVitalityPrice()) {
-                            		 flag=false;//当购买金额和数量都达到活跃度配置标准，就可以获取下级代理商的返现
+                            		 flag=true;//当购买金额和数量都达到活跃度配置标准，就可以获取下级代理商的返现
 								 }
 	                        }else {
 	                   	         if (agentVitality.getVitalityQuantity()==0&&agentVitality.getVitalityPrice()==0.0) {
