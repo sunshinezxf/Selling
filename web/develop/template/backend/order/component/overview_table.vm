@@ -96,6 +96,11 @@
             },
             columns: [
                 {title: "订单号", "mData": "orderId"},
+                {
+                    title: "时间", "mRender": function (data, type, full) {
+                    return ((new Date(full.createAt)).format("yyyy-MM-dd"));
+                }
+                },
                 {title: "姓名", "mData": "customerName"},
                 {
                     title: "代理商", "mRender": function (data, type, full) {
@@ -112,6 +117,15 @@
                 }
                 },
                 {
+                    title: "价格", "mRender": function (data, type, full) {
+                    if ("totalPrice" in full) {
+                        return full.totalPrice;
+                    } else {
+                        return full.orderItemPrice;
+                    }
+                    }
+                },
+                {
                     title: "类型", "mRender": function (data, type, full) {
                     if (full.orderType == 'ORDINARY') {
                         return "购买订单";
@@ -122,11 +136,7 @@
                     }
                 }
                 },
-                {
-                    title: "时间", "mRender": function (data, type, full) {
-                    return ((new Date(full.createAt)).format("yyyy-MM-dd"));
-                }
-                }
+
             ],
             "language": {
                 "processing": "正在加载中",
