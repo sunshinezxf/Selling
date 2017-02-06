@@ -188,7 +188,15 @@ public class OrderPoolDaoImpl extends BaseDao implements OrderPoolDao {
                         }
                     }
 
-                } else {
+                } else if (list.size() == 0){
+					condition.clear();
+					condition.put("agentId", orderPool.getAgent().getAgentId());
+					Agent agent = sqlSession.selectOne("selling.agent.query", condition);
+					if (agent.getAgentType() == AgentType.ORDINARY){
+						//当该代理商是正常代理商时检查是否有返现的资格，有的话补上
+
+					}
+				}else {
                     //其他非正常情况，说明之前的返现代理有错误，抛出异常
                     logger.error("refund record has errors");
                     result.setResponseCode(ResponseCode.RESPONSE_ERROR);
