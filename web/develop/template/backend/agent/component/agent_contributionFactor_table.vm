@@ -9,7 +9,7 @@
 					<div class="ui breadcrumb">
 						<a class="section">代理管理</a>
 						<div class="divider">/</div>
-						<a class="section">代理概览</a>
+						<a class="section" href="${path.concat('/agent/overview')}">代理概览</a>
 						<div class="divider">/</div>
 						<a class="active section"> 贡献度因子配置 </a>
 					</div>
