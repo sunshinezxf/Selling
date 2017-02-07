@@ -18,15 +18,36 @@
 
     <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
 
-    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+    <bean id="coreDataSource" class="org.apache.commons.dbcp.BasicDataSource">
         <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
-        <property name="url" value="${jdbc_url}"/>
-        <property name="username" value="${mysql_username}"/>
-        <property name="password" value="${mysql_password}"/>
+        <property name="url" value="${core_jdbc_url}"/>
+        <property name="username" value="${core_mysql_username}"/>
+        <property name="password" value="${core_mysql_password}"/>
         <property name="maxActive" value="100"/>
         <property name="maxIdle" value="30"/>
         <property name="maxWait" value="500"/>
         <property name="defaultAutoCommit" value="true"/>
+    </bean>
+
+    <bean id="eventDataSource" class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="${event_jdbc_url}"/>
+        <property name="username" value="${event_mysql_username}"/>
+        <property name="password" value="${event_mysql_password}"/>
+        <property name="maxActive" value="100"/>
+        <property name="maxIdle" value="30"/>
+        <property name="maxWait" value="500"/>
+        <property name="defaultAutoCommit" value="true"/>
+    </bean>
+
+    <bean id="dataSource" class="common.sunshine.mybatis.DynamicDataSource">
+        <property name="targetDataSources">
+            <map key-type="java.lang.String">
+                <entry value-ref="coreDataSource" key="core"></entry>
+                <entry value-ref="eventDataSource" key="event"></entry>
+            </map>
+        </property>
+        <property name="defaultTargetDataSource" ref="coreDataSource"></property>
     </bean>
 
     <bean id="transactionManager"

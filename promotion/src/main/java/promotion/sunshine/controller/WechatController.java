@@ -191,8 +191,8 @@ public class WechatController {
                         return xml;
                         */
                     }
-                    if(message.getContent().equals("三七") || message.getContent().equals("云草纲目")
-                            || message.getContent().equals("云草")||message.getContent().equals("使用")){
+                    if (message.getContent().equals("三七") || message.getContent().equals("云草纲目")
+                            || message.getContent().equals("云草") || message.getContent().equals("使用")) {
                         content.alias("xml", Articles.class);
                         content.alias("item", Article.class);
                         Articles result = new Articles();
@@ -212,7 +212,7 @@ public class WechatController {
                         logger.debug(JSON.toJSONString(xml));
                         return xml;
                     }
-                    if(message.getContent().equals("高血压")||message.getContent().equals("高血脂") || message.getContent().equals("高脂血症")||message.getContent().equals("高血糖") ||message.getContent().equals("三高")){
+                    if (message.getContent().equals("高血压") || message.getContent().equals("高血脂") || message.getContent().equals("高脂血症") || message.getContent().equals("高血糖") || message.getContent().equals("三高")) {
                         content.alias("xml", Articles.class);
                         content.alias("item", Article.class);
                         Articles result = new Articles();
@@ -232,10 +232,10 @@ public class WechatController {
                         logger.debug(JSON.toJSONString(xml));
                         return xml;
                     }
-                    if(message.getContent().equals("心脑血管疾病") || message.getContent().equals("血管") ||
-                            message.getContent().equals("中风") || message.getContent().equals("冠心病")|| message.getContent().equals("软化血管")
+                    if (message.getContent().equals("心脑血管疾病") || message.getContent().equals("血管") ||
+                            message.getContent().equals("中风") || message.getContent().equals("冠心病") || message.getContent().equals("软化血管")
                             || message.getContent().equals("心痛") || message.getContent().equals("心肌梗死")
-                            || message.getContent().equals("血管堵塞") || message.getContent().equals("血管硬化")){
+                            || message.getContent().equals("血管堵塞") || message.getContent().equals("血管硬化")) {
                         content.alias("xml", Articles.class);
                         content.alias("item", Article.class);
                         Articles result = new Articles();
@@ -255,7 +255,7 @@ public class WechatController {
                         logger.debug(JSON.toJSONString(xml));
                         return xml;
                     }
-                    if(message.getContent().equals("糖尿病")){
+                    if (message.getContent().equals("糖尿病")) {
                         content.alias("xml", Articles.class);
                         content.alias("item", Article.class);
                         Articles result = new Articles();
@@ -275,7 +275,7 @@ public class WechatController {
                         logger.debug(JSON.toJSONString(xml));
                         return xml;
                     }
-                    if(message.getContent().equals("脂肪肝") || message.getContent().equals("酒精肝") || message.getContent().equals("肝")){
+                    if (message.getContent().equals("脂肪肝") || message.getContent().equals("酒精肝") || message.getContent().equals("肝")) {
                         content.alias("xml", Articles.class);
                         content.alias("item", Article.class);
                         Articles result = new Articles();
@@ -295,7 +295,7 @@ public class WechatController {
                         logger.debug(JSON.toJSONString(xml));
                         return xml;
                     }
-                    if(message.getContent().equals("癌症") || message.getContent().equals("肿瘤")){
+                    if (message.getContent().equals("癌症") || message.getContent().equals("肿瘤")) {
                         content.alias("xml", Articles.class);
                         content.alias("item", Article.class);
                         Articles result = new Articles();
@@ -315,7 +315,7 @@ public class WechatController {
                         logger.debug(JSON.toJSONString(xml));
                         return xml;
                     }
-                    if(message.getContent().equals("补血") || message.getContent().equals("贫血") || message.getContent().equals("血虚")){
+                    if (message.getContent().equals("补血") || message.getContent().equals("贫血") || message.getContent().equals("血虚")) {
                         content.alias("xml", Articles.class);
                         content.alias("item", Article.class);
                         Articles result = new Articles();
@@ -335,8 +335,8 @@ public class WechatController {
                         logger.debug(JSON.toJSONString(xml));
                         return xml;
                     }
-                    if(message.getContent().equals("女性") || message.getContent().equals("祛斑") || message.getContent().equals("美白") || message.getContent().equals("冻龄")||message.getContent().equals("养颜")
-                            || message.getContent().equals("护肤") || message.getContent().equals("补水")|| message.getContent().equals("保湿")|| message.getContent().equals("防晒")){
+                    if (message.getContent().equals("女性") || message.getContent().equals("祛斑") || message.getContent().equals("美白") || message.getContent().equals("冻龄") || message.getContent().equals("养颜")
+                            || message.getContent().equals("护肤") || message.getContent().equals("补水") || message.getContent().equals("保湿") || message.getContent().equals("防晒")) {
                         content.alias("xml", Articles.class);
                         content.alias("item", Article.class);
                         Articles result = new Articles();
@@ -356,7 +356,7 @@ public class WechatController {
                         logger.debug(JSON.toJSONString(xml));
                         return xml;
                     }
-                    if(message.getContent().equals("美食") || message.getContent().equals("做饭")){
+                    if (message.getContent().equals("美食") || message.getContent().equals("做饭")) {
                         content.alias("xml", Articles.class);
                         content.alias("item", Article.class);
                         Articles result = new Articles();
@@ -376,8 +376,8 @@ public class WechatController {
                         logger.debug(JSON.toJSONString(xml));
                         return xml;
                     }
-                    if(message.getContent().equals("减肥") || message.getContent().equals("瘦身") || message.getContent().equals("睡眠") || message.getContent().equals("失眠")||message.getContent().equals("精力不济")
-                            || message.getContent().equals("腰疼")|| message.getContent().equals("酸") || message.getContent().equals("肠胃") || message.getContent().equals("头疼") || message.getContent().equals("感冒") ){
+                    if (message.getContent().equals("减肥") || message.getContent().equals("瘦身") || message.getContent().equals("睡眠") || message.getContent().equals("失眠") || message.getContent().equals("精力不济")
+                            || message.getContent().equals("腰疼") || message.getContent().equals("酸") || message.getContent().equals("肠胃") || message.getContent().equals("头疼") || message.getContent().equals("感冒")) {
                         content.alias("xml", Articles.class);
                         content.alias("item", Article.class);
                         Articles result = new Articles();
@@ -397,8 +397,8 @@ public class WechatController {
                         logger.debug(JSON.toJSONString(xml));
                         return xml;
                     }
-                    if(message.getContent().equals("舌") || message.getContent().equals("体质") || message.getContent().equals("血瘀")
-                            || message.getContent().equals("痰湿")||message.getContent().equals("气虚")||message.getContent().equals("湿气")){
+                    if (message.getContent().equals("舌") || message.getContent().equals("体质") || message.getContent().equals("血瘀")
+                            || message.getContent().equals("痰湿") || message.getContent().equals("气虚") || message.getContent().equals("湿气")) {
                         content.alias("xml", Articles.class);
                         content.alias("item", Article.class);
                         Articles result = new Articles();
@@ -418,7 +418,7 @@ public class WechatController {
                         logger.debug(JSON.toJSONString(xml));
                         return xml;
                     }
-                    if(message.getContent().equals("四季") || message.getContent().equals("养生") || message.getContent().equals("节气")){
+                    if (message.getContent().equals("四季") || message.getContent().equals("养生") || message.getContent().equals("节气")) {
                         content.alias("xml", Articles.class);
                         content.alias("item", Article.class);
                         Articles result = new Articles();
@@ -438,7 +438,7 @@ public class WechatController {
                         logger.debug(JSON.toJSONString(xml));
                         return xml;
                     }
-                    if(message.getContent().equals("陈淑长")){
+                    if (message.getContent().equals("陈淑长")) {
                         content.alias("xml", Articles.class);
                         content.alias("item", Article.class);
                         Articles result = new Articles();
@@ -458,7 +458,7 @@ public class WechatController {
                         logger.debug(JSON.toJSONString(xml));
                         return xml;
                     }
-                    if(message.getContent().equals("面膜")){
+                    if (message.getContent().equals("面膜")) {
                         content.alias("xml", Articles.class);
                         content.alias("item", Article.class);
                         Articles result = new Articles();
@@ -478,7 +478,7 @@ public class WechatController {
                         logger.debug(JSON.toJSONString(xml));
                         return xml;
                     }
-                    if(message.getContent().equals("青春期功血") || message.getContent().equals("青春期宫血")){
+                    if (message.getContent().equals("青春期功血") || message.getContent().equals("青春期宫血")) {
                         content.alias("xml", Articles.class);
                         content.alias("item", Article.class);
                         Articles result = new Articles();
@@ -498,7 +498,7 @@ public class WechatController {
                         logger.debug(JSON.toJSONString(xml));
                         return xml;
                     }
-                    if(message.getContent().equals("养生堂")){
+                    if (message.getContent().equals("养生堂")) {
                         content.alias("xml", Articles.class);
                         content.alias("item", Article.class);
                         Articles result = new Articles();
@@ -518,7 +518,7 @@ public class WechatController {
                         logger.debug(JSON.toJSONString(xml));
                         return xml;
                     }
-                    if(message.getContent().equals("健康之路")){
+                    if (message.getContent().equals("健康之路")) {
                         content.alias("xml", Articles.class);
                         content.alias("item", Article.class);
                         Articles result = new Articles();
@@ -538,7 +538,7 @@ public class WechatController {
                         logger.debug(JSON.toJSONString(xml));
                         return xml;
                     }
-                    if(message.getContent().equals("雾霾")){
+                    if (message.getContent().equals("雾霾")) {
                         content.alias("xml", Articles.class);
                         content.alias("item", Article.class);
                         Articles result = new Articles();
@@ -558,7 +558,7 @@ public class WechatController {
                         logger.debug(JSON.toJSONString(xml));
                         return xml;
                     }
-                    if(message.getContent().equals("查询") || message.getContent().equals("快递") || message.getContent().equals("物流") || message.getContent().equals("订单")){
+                    if (message.getContent().equals("查询") || message.getContent().equals("快递") || message.getContent().equals("物流") || message.getContent().equals("订单")) {
                         content.alias("xml", Articles.class);
                         content.alias("item", Article.class);
                         Articles result = new Articles();
