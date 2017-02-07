@@ -122,7 +122,7 @@
                     } else {
                         return full.orderItemPrice;
                     }
-                    }
+                }
                 },
                 {
                     title: "类型", "mRender": function (data, type, full) {
@@ -131,10 +131,10 @@
                     } else if (full.orderType == 'GIFT') {
                         return "赠送订单";
                     } else if (full.orderType == 'CUSTOMER') {
-                        if(full.couponSerial!=""){
-                        	return "兑换订单";
-                        }else{
-                        	return "顾客订单";
+                        if (full.couponSerial != '') {
+                            return "兑换订单";
+                        } else {
+                            return "顾客订单";
                         }
                     }
                 }

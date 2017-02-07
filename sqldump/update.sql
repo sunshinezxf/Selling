@@ -605,7 +605,7 @@ AS SELECT
    UNION ALL
    SELECT
      co.agent_id      AS agent_id,
-     2                AS order_type,
+     if(co.coupon_serial IS NULL OR co.coupon_serial = '', 2, 3) AS order_type,
      co.order_id      AS order_id,
      co.goods_id      AS goods_id,
      co.order_status  AS order_item_status,
@@ -618,6 +618,7 @@ AS SELECT
    FROM customer_order co;
 
 -- -----------------------------------------------------
+-- Table `selling`.`agent_kpi`
 -- Table `selling`.`agent_kpi`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `selling`.`agent_kpi` (

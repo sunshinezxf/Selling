@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import selling.sunshine.dao.CustomerDao;
 import selling.sunshine.dao.ExpressDao;
 import selling.sunshine.dao.OrderDao;
@@ -211,6 +212,10 @@ public class IndentServiceImpl implements IndentService {
         quantity.setCellValue(item.getQuantity());
         Cell totalPrice = content.getCell(5);
         totalPrice.setCellValue((item.getAgent() != null) ? item.getGoods().getAgentPrice() : item.getGoods().getCustomerPrice());
+        if (!StringUtils.isEmpty(item.getCouponSerial())) {
+            Cell description = content.getCell(6);
+            description.setCellValue("兑换码:" + item.getCouponSerial());
+        }
         Row booker = sheet.getRow(8);
         Cell bookerName = booker.getCell(1);
         bookerName.setCellValue(item.getReceiverName());
@@ -647,6 +652,11 @@ public class IndentServiceImpl implements IndentService {
                     Express express = ((List<Express>) response.getData()).get(0);
                     Cell deliverDateCell = current.createCell(10);
                     deliverDateCell.setCellValue(format.format(express.getCreateAt()));
+                }
+                //设置备注
+                if (!StringUtils.isEmpty(c.getCouponSerial())) {
+                    Cell description = current.createCell(11);
+                    description.setCellValue(c.getCouponSerial());
                 }
                 row++;
             } else if (item instanceof EventOrder) {

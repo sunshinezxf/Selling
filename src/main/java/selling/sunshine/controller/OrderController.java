@@ -216,7 +216,6 @@ public class OrderController {
         if (StringUtils.isEmpty(param)) {
             return result;
         }
-        logger.debug(JSON.toJSONString(param));
         Map<String, Object> condition = new HashMap<>();
         ResultData response = orderService.fetchOrderItemSum(condition, param);
         if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
