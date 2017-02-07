@@ -131,11 +131,9 @@
                     } else if (full.orderType == 'GIFT') {
                         return "赠送订单";
                     } else if (full.orderType == 'CUSTOMER') {
-                        if (full.couponSerial != '') {
-                            return "兑换订单";
-                        } else {
-                            return "顾客订单";
-                        }
+                        return "顾客订单";
+                    } else if(full.orderType == 'EXCHANGE'){
+                        return "兑换订单";
                     }
                 }
                 },
