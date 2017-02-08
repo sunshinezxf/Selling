@@ -7,5 +7,7 @@
         <mapper resource="promotion/sunshine/mapper/questionoption.xml"></mapper>
         <mapper resource="promotion/sunshine/mapper/questionanswer.xml"></mapper>
         <mapper resource="promotion/sunshine/mapper/follower.xml"></mapper>
+        <mapper resource="promotion/sunshine/mapper/article.xml"></mapper>
+        <mapper resource="promotion/sunshine/mapper/keyword.xml"></mapper>
     </mappers>
 </configuration>
