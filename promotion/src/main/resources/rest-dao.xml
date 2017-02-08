@@ -10,4 +10,12 @@
     <bean id="followerDao" class="promotion.sunshine.dao.impl.FollowerDaoImpl">
         <property name="sqlSession" ref="sqlSession"></property>
     </bean>
+
+    <bean id="articleDao" class="promotion.sunshine.dao.impl.ArticleDaoImpl">
+        <property name="sqlSession" ref="sqlSession"></property>
+    </bean>
+
+    <bean id="keywordDao" class="promotion.sunshine.dao.impl.KeywordDaoImpl">
+        <property name="sqlSession" ref="sqlSession"></property>
+    </bean>
 </beans>

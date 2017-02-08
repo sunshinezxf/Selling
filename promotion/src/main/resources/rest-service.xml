@@ -4,4 +4,6 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
     <bean id="eventService" class="promotion.sunshine.service.impl.EventServiceImpl"></bean>
     <bean id="followerService" class="promotion.sunshine.service.impl.FollowerServiceImpl"></bean>
+    <bean id="articleService" class="promotion.sunshine.service.impl.ArticleServiceImpl"></bean>
+    <bean id="keywordService" class="promotion.sunshine.service.impl.KeywordServiceImpl"></bean>
 </beans>
