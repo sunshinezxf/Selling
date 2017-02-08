@@ -1,9 +1,11 @@
 package promotion.sunshine.model;
 
+import common.sunshine.model.Entity;
+
 /**
  * Created by sunshine on 2017/2/7.
  */
-public class Keyword {
+public class Keyword extends Entity {
     private String wordId;
 
     private String content;

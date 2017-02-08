@@ -31,6 +31,11 @@
         </if>
     </select>
 
+    <insert id="insert" parameterType="promotion.sunshine.model.Keyword">
+        INSERT INTO event.keyword(word_id, article_id, word_content, block_flag, create_time)
+        VALUES (#{wordId}, #{article.articleId}, #{content}, #{blockFlag}, #{createAt})
+    </insert>
+
     <select id="articleQuery" parameterType="java.util.Map">
         SELECT article_id, article_title, article_description, article_pic_url, block_flag, create_time
         FROM event.article
