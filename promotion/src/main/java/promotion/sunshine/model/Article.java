@@ -14,15 +14,18 @@ public class Article extends Entity {
 
     private String url;
 
+    private String picUrl;
+
     public Article() {
         super();
     }
 
-    public Article(String title, String description, String url) {
+    public Article(String title, String description, String url,String picUrl) {
         this();
         this.title = title;
         this.description = description;
         this.url = url;
+        this.picUrl=picUrl;
     }
 
     public String getArticleId() {
@@ -55,5 +58,13 @@ public class Article extends Entity {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getPicUrl() {
+        return picUrl;
+    }
+
+    public void setPicUrl(String picUrl) {
+        picUrl = picUrl;
     }
 }

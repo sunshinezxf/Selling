@@ -4,9 +4,14 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.thoughtworks.xstream.XStream;
 import common.sunshine.model.wechat.*;
+import common.sunshine.model.wechat.Article;
 import common.sunshine.utils.Encryption;
+import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
 import common.sunshine.utils.XStreamFactory;
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +19,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.wltea.analyzer.lucene.IKAnalyzer;
+import promotion.sunshine.model.*;
 import promotion.sunshine.service.FollowerService;
+import promotion.sunshine.service.KeywordService;
 import promotion.sunshine.utils.PlatformConfig;
 import promotion.sunshine.utils.WechatUtil;
 
@@ -22,6 +30,8 @@ import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.*;
 
 /**
@@ -43,6 +53,9 @@ public class WechatController {
 
     @Autowired
     private FollowerService followerService;
+
+    @Autowired
+    private KeywordService keywordService;
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/wechat")
@@ -159,6 +172,61 @@ public class WechatController {
                     }
                     break;
                 case "text":
+
+                    Map<String,Object> condition=new HashMap<>();
+                    ResultData fetchResponse=keywordService.fetchKeyword(condition);
+                    if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                        //得到所有的关键词
+                        List<Keyword> keywordList = (List<Keyword>) fetchResponse.getData();
+                        Map<String, promotion.sunshine.model.Article> map=new HashMap<>();
+                        for (Keyword keyword:keywordList){
+                            map.put(keyword.getContent(),keyword.getArticle());
+                        }
+
+                        content.alias("xml", Articles.class);
+                        content.alias("item", Article.class);
+                        Articles result = new Articles();
+                        result.setFromUserName(message.getToUserName());
+                        result.setToUserName(message.getFromUserName());
+                        result.setCreateTime(new Date().getTime());
+                        List<Article> list = new ArrayList<>();
+
+                        //创建分词对象
+                        Analyzer anal=new IKAnalyzer(true);
+                        StringReader reader=new StringReader(message.getContent());
+                        //分词
+                        TokenStream ts;
+                        try {
+                            ts = anal.tokenStream("", reader);
+                            CharTermAttribute term=ts.getAttribute(CharTermAttribute.class);
+                            //遍历分词数据
+                            while(ts.incrementToken()){
+                                if (map.containsKey(term.toString())){
+                                    Article article = new Article();
+                                    article.setTitle(map.get(term.toString()).getTitle());
+                                    article.setPicUrl(map.get(term.toString()).getPicUrl());
+                                    article.setUrl(map.get(term.toString()).getUrl());
+                                    list.add(article);
+                                }
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }finally {
+                            reader.close();
+                            //去重
+                            Set<Article> set=new HashSet<>();
+                            set.addAll(list);
+                            list.clear();
+                            list.addAll(set);
+                            result.setArticles(list);
+                            result.setArticleCount(list.size());
+                            content.processAnnotations(Article.class);
+                            String xml = content.toXML(result);
+                            logger.debug(JSON.toJSONString(xml));
+                            return xml;
+                        }
+                    }
+
                     if (message.getContent().equals("团圆")) {
                         /*
                         String openId = message.getFromUserName();
