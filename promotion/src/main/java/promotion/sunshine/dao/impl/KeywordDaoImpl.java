@@ -1,6 +1,7 @@
 package promotion.sunshine.dao.impl;
 
 import common.sunshine.dao.BaseDao;
+import common.sunshine.mybatis.DataSourceContextHolder;
 import common.sunshine.utils.IDGenerator;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
@@ -26,9 +27,11 @@ public class KeywordDaoImpl extends BaseDao implements KeywordDao {
         ResultData result = new ResultData();
         synchronized (lock) {
             try {
+                DataSourceContextHolder.setDbType("event");
                 keyword.setWordId(IDGenerator.generate("KEY"));
                 sqlSession.insert("promotion.keyword.insert", keyword);
                 result.setData(keyword);
+                DataSourceContextHolder.clearDbType();
             } catch (Exception e) {
                 logger.error(e.getMessage());
                 result.setResponseCode(ResponseCode.RESPONSE_ERROR);
@@ -44,8 +47,10 @@ public class KeywordDaoImpl extends BaseDao implements KeywordDao {
         ResultData result = new ResultData();
         condition = handle(condition);
         try {
+            DataSourceContextHolder.setDbType("event");
             List<Keyword> list = sqlSession.selectList("promotion.keyword.query", condition);
             result.setData(list);
+            DataSourceContextHolder.clearDbType();
         } catch (Exception e) {
             logger.error(e.getMessage());
             result.setResponseCode(ResponseCode.RESPONSE_ERROR);

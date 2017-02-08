@@ -1,6 +1,7 @@
 package promotion.sunshine.dao.impl;
 
 import common.sunshine.dao.BaseDao;
+import common.sunshine.mybatis.DataSourceContextHolder;
 import common.sunshine.utils.IDGenerator;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
@@ -23,9 +24,11 @@ public class ArticleDaoImpl extends BaseDao implements ArticleDao {
         ResultData result = new ResultData();
         synchronized (lock) {
             try {
+                DataSourceContextHolder.setDbType("event");
                 article.setArticleId(IDGenerator.generate("ART"));
                 sqlSession.insert("promotion.article.insert", article);
                 result.setData(article);
+                DataSourceContextHolder.clearDbType();
             } catch (Exception e) {
                 logger.error(e.getMessage());
                 result.setResponseCode(ResponseCode.RESPONSE_ERROR);
