@@ -22,7 +22,8 @@ CREATE TABLE IF NOT EXISTS `event`.`article` (
   `article_id`          VARCHAR(20)  NOT NULL,
   `article_title`       VARCHAR(50)  NOT NULL,
   `article_description` VARCHAR(100) NOT NULL,
-  `article_pic_url`     VARCHAR(100) NOT NULL,
+  `article_url`         VARCHAR(300) NOT NULL,
+  `article_pic_url`     VARCHAR(300) NOT NULL,
   `block_flag`          TINYINT(1)   NOT NULL DEFAULT 0,
   `create_time`         DATETIME     NOT NULL,
   PRIMARY KEY (`article_id`)

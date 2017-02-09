@@ -19,6 +19,9 @@ public class GraphicMessageForm {
     @NotNull
     private String url;
 
+    @NotNull
+    private String picUrl;
+
     public String[] getKeywordList() {
         return keywordList;
     }
@@ -49,5 +52,13 @@ public class GraphicMessageForm {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getPicUrl() {
+        return picUrl;
+    }
+
+    public void setPicUrl(String picUrl) {
+        this.picUrl = picUrl;
     }
 }

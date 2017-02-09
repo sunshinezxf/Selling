@@ -5,18 +5,19 @@
         <result property="articleId" column="article_id"></result>
         <result property="title" column="article_title"></result>
         <result property="description" column="article_description"></result>
-        <result property="url" column="article_pic_url"></result>
+        <result property="url" column="article_url"></result>
+        <result property="picUrl" column="article_pic_url"></result>
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
     </resultMap>
 
     <insert id="insert" parameterType="promotion.sunshine.model.Article" useGeneratedKeys="false">
-        INSERT INTO event.article(article_id, article_title, article_description, article_pic_url, block_flag, create_time)
-        VALUES (#{articleId}, #{title}, #{description}, #{url}, #{blockFlag}, #{createAt})
+        INSERT INTO event.article(article_id, article_title, article_description,article_url, article_pic_url, block_flag, create_time)
+        VALUES (#{articleId}, #{title}, #{description}, #{url}, #{picUrl},#{blockFlag}, #{createAt})
     </insert>
 
     <select id="query" parameterType="java.util.Map">
-        SELECT article_id, article_title, article_description, article_pic_url, block_flag, create_time
+        SELECT article_id, article_title, article_description,article_url, article_pic_url, block_flag, create_time
         FROM event.article
         WHERE 1 = 1
         <if test="articleId != null">

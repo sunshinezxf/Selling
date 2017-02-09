@@ -42,6 +42,7 @@ public class GraphicMessageController {
         article.setDescription(form.getDescription());
         article.setTitle(form.getTitle());
         article.setUrl(form.getUrl());
+        article.setPicUrl(form.getPicUrl());
         ResultData insertResponse=articleService.insertArticle(article);
         if (insertResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
             resultData.setResponseCode(insertResponse.getResponseCode());
