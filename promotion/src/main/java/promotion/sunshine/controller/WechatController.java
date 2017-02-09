@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.thoughtworks.xstream.XStream;
 import common.sunshine.model.wechat.*;
 import common.sunshine.utils.Encryption;
-import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
 import common.sunshine.utils.XStreamFactory;
 import org.slf4j.Logger;
@@ -164,24 +163,24 @@ public class WechatController {
                     }
                     break;
                 case "text":
-                    Map<String,Object> condition=new HashMap<>();
-                    condition.put("message",message.getContent());
-                    ResultData fetchResponse= articleService.queryArticle(condition);
-                    if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK){
-                        content.alias("xml", Articles.class);
-                        content.alias("item", Article.class);
-                        Articles result = new Articles();
-                        result.setFromUserName(message.getToUserName());
-                        result.setToUserName(message.getFromUserName());
-                        result.setCreateTime(new Date().getTime());
-                        List<Article> list =  (List<Article>) fetchResponse.getData();
-                        result.setArticles(list);
-                        result.setArticleCount(list.size());
-                        content.processAnnotations(Article.class);
-                        String xml = content.toXML(result);
-                        logger.debug(JSON.toJSONString(xml));
-                        return xml;
-                    }
+//                    Map<String,Object> condition=new HashMap<>();
+//                    condition.put("message",message.getContent());
+//                    ResultData fetchResponse= articleService.queryArticle(condition);
+//                    if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK){
+//                        content.alias("xml", Articles.class);
+//                        content.alias("item", Article.class);
+//                        Articles result = new Articles();
+//                        result.setFromUserName(message.getToUserName());
+//                        result.setToUserName(message.getFromUserName());
+//                        result.setCreateTime(new Date().getTime());
+//                        List<Article> list =  (List<Article>) fetchResponse.getData();
+//                        result.setArticles(list);
+//                        result.setArticleCount(list.size());
+//                        content.processAnnotations(Article.class);
+//                        String xml = content.toXML(result);
+//                        logger.debug(JSON.toJSONString(xml));
+//                        return xml;
+//                    }
                     if (message.getContent().equals("团圆")) {
                         /*
                         String openId = message.getFromUserName();
