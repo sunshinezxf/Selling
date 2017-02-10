@@ -2,8 +2,8 @@ package selling.sunshine.controller;
 
 import common.sunshine.model.selling.customer.Customer;
 import common.sunshine.model.selling.customer.CustomerPhone;
+import common.sunshine.model.selling.event.Event;
 import common.sunshine.model.selling.event.EventApplication;
-import common.sunshine.model.selling.event.GiftEvent;
 import common.sunshine.model.selling.goods.Goods4Agent;
 import common.sunshine.model.selling.order.CustomerOrder;
 import common.sunshine.model.selling.order.EventOrder;
@@ -84,21 +84,19 @@ public class StatementController {
         String headerArr[] = {"活动名称", "被赠送人姓名", "被赠送人手机号", "被赠送人地址", "赠送人姓名", "赠送人手机号",
                 "被赠送商品名称", "被赠送商品数量", "购买商品数量"};
 
-        // 1.查询所有的event
+        // 1.根据eventId查询对应的event
         Map<String, Object> condition = new HashMap<>();
         condition.put("eventId", eventId);
         ResultData queryData = new ResultData();
-        queryData = eventService.fetchGiftEvent(condition);
+        queryData = eventService.fetchEvent(condition);
         if (queryData.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            List<GiftEvent> events = (List<GiftEvent>) queryData.getData();
+            Event event=((List<Event>)queryData.getData()).get(0);
+            sheet = book.createSheet(event.getTitle(), 0);
+            for (int h = 0; h < headerArr.length; h++) {
+                sheet.addCell(new Label(h, 0, headerArr[h]));
+            }
             // 2.对每一个event，统计被赠送人的个人信息、赠送信息和购买信息
-            int count = 0;
-            for (GiftEvent event : events) {
-                sheet = book.createSheet(event.getTitle(), count);
-                count++;
-                for (int h = 0; h < headerArr.length; h++) {
-                    sheet.addCell(new Label(h, 0, headerArr[h]));
-                }
+            if (event.getEventId().startsWith("GEV")){ //赠送活动
                 condition.clear();
                 condition.put("eventId", event.getEventId());
                 condition.put("status", 2);
@@ -113,14 +111,6 @@ public class StatementController {
                         queryData = eventService.fetchEventOrder(condition);
                         if (queryData.getResponseCode() == ResponseCode.RESPONSE_OK) {
                             EventOrder eventOrder = ((List<EventOrder>) queryData.getData()).get(0);
-                            sheet.addCell(new Label(0, i, event.getTitle()));
-                            sheet.addCell(new Label(1, i, eventOrder.getDoneeName()));
-                            sheet.addCell(new Label(2, i, eventOrder.getDoneePhone()));
-                            sheet.addCell(new Label(3, i, eventOrder.getDoneeAddress()));
-                            sheet.addCell(new Label(4, i, eventApplication.getDonorName()));
-                            sheet.addCell(new Label(5, i, eventApplication.getDonorPhone()));
-                            sheet.addCell(new Label(6, i, eventOrder.getGoods().getName()));
-                            sheet.addCell(new Label(7, i, String.valueOf(eventOrder.getQuantity())));
                             condition.clear();
                             condition.put("phone", eventOrder.getDoneePhone());
                             queryData = customerService.fetchCustomerPhone(condition);
@@ -130,7 +120,7 @@ public class StatementController {
                                 Customer customer = customerPhone.getCustomer();
                                 condition.clear();
                                 condition.put("customerId", customer.getCustomerId());
-                                condition.put("blockFlag", false);
+                                //  condition.put("blockFlag", false);
                                 ResultData fetchCustomerResponse = customerService.fetchCustomer(condition);
                                 CustomerVo customerDetail = ((List<CustomerVo>) fetchCustomerResponse.getData()).get(0);
                                 //以下是查找该客户最近一次的购买订单，顺便统计该客户的各商品购买盒数
@@ -199,31 +189,161 @@ public class StatementController {
                                     Object[] goodsObject = goodsMap.get(goodsId);
                                     Goods4Agent goods4Agent = new Goods4Agent();
                                     goods4Agent.setGoodsId(goodsId);
+                                    sheet.addCell(new Label(0, i, event.getTitle()));
+                                    sheet.addCell(new Label(1, i, eventOrder.getDoneeName()));
+                                    sheet.addCell(new Label(2, i, eventOrder.getDoneePhone()));
+                                    sheet.addCell(new Label(3, i, eventOrder.getDoneeAddress()));
+                                    sheet.addCell(new Label(4, i, eventApplication.getDonorName()));
+                                    sheet.addCell(new Label(5, i, eventApplication.getDonorPhone()));
                                     if (goodsId.equals(eventOrder.getGoods().getGoodsId())) {
+                                        sheet.addCell(new Label(6, i, eventOrder.getGoods().getName()));
+                                        sheet.addCell(new Label(7, i, String.valueOf(eventOrder.getQuantity())));
                                         sheet.addCell(new Label(8, i, ((Integer) ((goodsMap.get(goodsId))[1])).toString()));
                                     } else {
-                                        i++;
-                                        sheet.addCell(new Label(0, i, event.getTitle()));
-                                        sheet.addCell(new Label(1, i, eventOrder.getDoneeName()));
-                                        sheet.addCell(new Label(2, i, eventOrder.getDoneePhone()));
-                                        sheet.addCell(new Label(3, i, eventOrder.getDoneeAddress()));
-                                        sheet.addCell(new Label(4, i, eventApplication.getDonorName()));
-                                        sheet.addCell(new Label(5, i, eventApplication.getDonorPhone()));
                                         sheet.addCell(new Label(6, i, (String) goodsObject[0]));
                                         sheet.addCell(new Label(7, i, "0"));
                                         sheet.addCell(new Label(8, i, ((Integer) ((goodsMap.get(goodsId))[1])).toString()));
                                     }
+                                    i++;
                                 }
+                                i--;
                             } else {
                                 //否则，没有购买，购买数量为0
+                                sheet.addCell(new Label(0, i, event.getTitle()));
+                                sheet.addCell(new Label(1, i, eventOrder.getDoneeName()));
+                                sheet.addCell(new Label(2, i, eventOrder.getDoneePhone()));
+                                sheet.addCell(new Label(3, i, eventOrder.getDoneeAddress()));
+                                sheet.addCell(new Label(4, i, eventApplication.getDonorName()));
+                                sheet.addCell(new Label(5, i, eventApplication.getDonorPhone()));
+                                sheet.addCell(new Label(6, i, eventOrder.getGoods().getName()));
+                                sheet.addCell(new Label(7, i, String.valueOf(eventOrder.getQuantity())));
                                 sheet.addCell(new Label(8, i, "0"));
                             }
                         }
                     }
+                }
+                }else if (event.getEventId().startsWith("PRE")) { //满赠活动
+                    condition.clear();
+                    condition.put("eventId", event.getEventId());
+                    queryData = eventService.fetchEventOrder(condition);
+                    if (queryData.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                        List<EventOrder> eventOrderList = (List<EventOrder>) queryData.getData();
+                        int i=0;
+                        for (EventOrder eventOrder:eventOrderList){
+                            i++;
+                            condition.clear();
+                            condition.put("phone", eventOrder.getDoneePhone());
+                            queryData = customerService.fetchCustomerPhone(condition);
+                            //在顾客电话表中有记录证明其有购买记录
+                            if (queryData.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                                CustomerPhone customerPhone = ((List<CustomerPhone>) queryData.getData()).get(0);
+                                Customer customer = customerPhone.getCustomer();
+                                condition.clear();
+                                condition.put("customerId", customer.getCustomerId());
+                                //  condition.put("blockFlag", false);
+                                ResultData fetchCustomerResponse = customerService.fetchCustomer(condition);
+                                CustomerVo customerDetail = ((List<CustomerVo>) fetchCustomerResponse.getData()).get(0);
+                                //以下是查找该客户最近一次的购买订单，顺便统计该客户的各商品购买盒数
+                                Map<String, Object[]> goodsMap = new HashMap<String, Object[]>();//商品ID->(商品name, 购买数量quantity)
+                                String phone = customerPhone.getPhone();
+                                condition.clear();
+                                condition.put("customerId", customer.getCustomerId());
+                                List<Integer> statusList = new ArrayList<>();
+                                statusList.add(1);
+                                statusList.add(2);
+                                statusList.add(3);
+                                statusList.add(4);
+                                statusList.add(5);
+                                statusList.add(6);
+                                condition.put("statusList", statusList);
+                                condition.put("blockFlag", false);
+                                List<SortRule> orderBy = new ArrayList<>();
+                                orderBy.add(new SortRule("create_time", "desc"));
+                                condition.put("sort", orderBy);
+                                ResultData fetchOrderItemResponse = orderService.fetchOrderItem(condition);
+                                if (fetchOrderItemResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                                    //分商品统计购买数量
+                                    for (OrderItem orderItem : (List<OrderItem>) fetchOrderItemResponse.getData()) {
+                                        if (goodsMap.containsKey(orderItem.getGoods().getGoodsId())) {
+                                            Object[] goodsInfo = goodsMap.get(orderItem.getGoods().getGoodsId());
+                                            if (orderItem.getOrder().getType() != OrderType.GIFT) {
+                                                goodsInfo[1] = (Integer) goodsInfo[1] + orderItem.getGoodsQuantity();
+                                            }
+                                        } else {
+                                            Object[] goodsInfo = new Object[2];
+                                            goodsInfo[0] = orderItem.getGoods().getName();
+                                            if (orderItem.getOrder().getType() != OrderType.GIFT) {
+                                                goodsInfo[1] = orderItem.getGoodsQuantity();
+                                            } else {
+                                                goodsInfo[1] = Integer.valueOf(0);
+                                            }
+                                            goodsMap.put(orderItem.getGoods().getGoodsId(), goodsInfo);
+                                        }
+                                    }
 
+                                }
+                                condition.clear();
+                                condition.put("receiverPhone", phone);
+                                if (customerDetail.getAgent()!=null) {
+                                    condition.put("agentId", customerDetail.getAgent().getAgentId());
+                                }
+                                condition.put("blockFlag", false);
+                                condition.put("status", statusList);
+                                condition.put("sort", orderBy);
+                                ResultData fetchCustomerOrderResponse = orderService.fetchCustomerOrder(condition);
+                                if (fetchCustomerOrderResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                                    //分商品统计购买数量
+                                    for (CustomerOrder customerOrder : (List<CustomerOrder>) fetchCustomerOrderResponse.getData()) {
+                                        if (goodsMap.containsKey(customerOrder.getGoods().getGoodsId())) {
+                                            Object[] goodsInfo = goodsMap.get(customerOrder.getGoods().getGoodsId());
+                                            goodsInfo[1] = (Integer) goodsInfo[1] + customerOrder.getQuantity();
+                                        } else {
+                                            Object[] goodsInfo = new Object[2];
+                                            goodsInfo[0] = customerOrder.getGoods().getName();
+                                            goodsInfo[1] = customerOrder.getQuantity();
+                                            goodsMap.put(customerOrder.getGoods().getGoodsId(), goodsInfo);
+                                        }
+                                    }
+                                }
+                                for (String goodsId : goodsMap.keySet()) {
+                                    Object[] goodsObject = goodsMap.get(goodsId);
+                                    Goods4Agent goods4Agent = new Goods4Agent();
+                                    goods4Agent.setGoodsId(goodsId);
+                                    sheet.addCell(new Label(0, i, event.getTitle()));
+                                    sheet.addCell(new Label(1, i, eventOrder.getDoneeName()));
+                                    sheet.addCell(new Label(2, i, eventOrder.getDoneePhone()));
+                                    sheet.addCell(new Label(3, i, eventOrder.getDoneeAddress()));
+                                    sheet.addCell(new Label(4, i, ""));
+                                    sheet.addCell(new Label(5, i, ""));
+                                    if (goodsId.equals(eventOrder.getGoods().getGoodsId())) {
+                                        sheet.addCell(new Label(6, i, eventOrder.getGoods().getName()));
+                                        sheet.addCell(new Label(7, i, String.valueOf(eventOrder.getQuantity())));
+                                        sheet.addCell(new Label(8, i, ((Integer) ((goodsMap.get(goodsId))[1])).toString()));
+                                    } else {
+                                        sheet.addCell(new Label(6, i, (String) goodsObject[0]));
+                                        sheet.addCell(new Label(7, i, "0"));
+                                        sheet.addCell(new Label(8, i, ((Integer) ((goodsMap.get(goodsId))[1])).toString()));
+                                    }
+                                    i++;
+                                }
+                                i--;
+                            } else {
+                                //否则，没有购买，购买数量为0
+                                sheet.addCell(new Label(0, i, event.getTitle()));
+                                sheet.addCell(new Label(1, i, eventOrder.getDoneeName()));
+                                sheet.addCell(new Label(2, i, eventOrder.getDoneePhone()));
+                                sheet.addCell(new Label(3, i, eventOrder.getDoneeAddress()));
+                                sheet.addCell(new Label(4, i, ""));
+                                sheet.addCell(new Label(5, i, ""));
+                                sheet.addCell(new Label(6, i, eventOrder.getGoods().getName()));
+                                sheet.addCell(new Label(7, i, String.valueOf(eventOrder.getQuantity())));
+                                sheet.addCell(new Label(8, i, "0"));
+                            }
+                        }
+                    }
                 }
             }
-        }
+
         // 写入数据并关闭文件
         book.write();
         book.close();
