@@ -865,3 +865,10 @@ CHANGE COLUMN `coupon_status` `coupon_status` TINYINT(1) NOT NULL DEFAULT '0';
 
 ALTER TABLE `selling`.`goods`
 ADD COLUMN `goods_position` INT NOT NULL DEFAULT 0 COMMENT 'this column aims to sort goods list that showed to the customer & agent' AFTER `goods_produce_date`;
+
+
+update goods set goods_position='5' where goods_id='COMyfxwez26' limit 1;
+update goods set goods_position='4' where goods_id='COMyeivfe49' limit 1;
+update goods set goods_position='3' where goods_id='COMoelyxf22' limit 1;
+update goods set goods_position='2' where goods_id='COMwilflf20' limit 1;
+update goods set goods_position='1' where goods_id='COMlezflw12' limit 1;

@@ -87,6 +87,7 @@ public class CommodityDaoImpl extends BaseDao implements CommodityDao {
     public ResultData queryGoods4Agent(Map<String, Object> condition) {
         ResultData result = new ResultData();
         try {
+            condition = handle(condition);
             List<Goods4Agent> list = sqlSession.selectList("selling.goods.query4Agent", condition);
             result.setData(list);
         } catch (Exception e) {
@@ -108,6 +109,7 @@ public class CommodityDaoImpl extends BaseDao implements CommodityDao {
     public ResultData queryGoods4Customer(Map<String, Object> condition) {
         ResultData result = new ResultData();
         try {
+            condition = handle(condition);
             List<Goods4Agent> list = sqlSession.selectList("selling.goods.query4Customer", condition);
             result.setData(list);
         } catch (Exception e) {

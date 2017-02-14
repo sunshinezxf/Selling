@@ -907,6 +907,9 @@ public class AgentController {
         Map<String, Object> condition = new HashMap<>();
         // 查询商品信息
         condition.put("blockFlag", false);
+        List<SortRule> rules = new ArrayList<>();
+        rules.add(new SortRule("goods_position", "desc"));
+        condition.put("sort", rules);
         ResultData fetchGoodsResponse = commodityService.fetchGoods4Agent(condition);
         if (fetchGoodsResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             view.addObject("goods", fetchGoodsResponse.getData());

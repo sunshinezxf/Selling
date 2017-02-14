@@ -304,6 +304,9 @@ public class CommodityController {
         }
         Map<String, Object> condition = new HashMap<String, Object>();
         condition.put("blockFlag", false);
+        List<SortRule> rules = new ArrayList<>();
+        rules.add(new SortRule("goods_position", "desc"));
+        condition.put("sort", rules);
         ResultData fetchGoodsData = commodityService.fetchGoods4Customer(condition);
         if (fetchGoodsData.getResponseCode() != ResponseCode.RESPONSE_OK) {
             WechatConfig.oauthWechat(view, "/customer/component/goods_error_msg");
