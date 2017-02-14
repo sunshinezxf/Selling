@@ -82,6 +82,7 @@ public class CouponController {
             Prompt prompt = new Prompt(PromptCode.WARNING, "出问题了", "您的兑换申请未能成功提交", "");
             view.addObject("prompt", prompt);
             view.setViewName("/customer/inform");
+            return view;
         }
         synchronized (lock) {
             Map<String, Object> condition = new HashMap<>();
@@ -93,6 +94,7 @@ public class CouponController {
                 Prompt prompt = new Prompt(PromptCode.WARNING, "出问题了", "您的兑换申请未能成功提交", "");
                 view.addObject("prompt", prompt);
                 view.setViewName("/customer/inform");
+                return view;
             }
             Coupon coupon = ((List<Coupon>) fetchResponse.getData()).get(0);
             String goodsId = form.getGoodsId();
@@ -127,6 +129,7 @@ public class CouponController {
                 Prompt prompt = new Prompt(PromptCode.WARNING, "出问题了", "未能找到兑换的商品", "");
                 view.addObject("prompt", prompt);
                 view.setViewName("/customer/inform");
+                return view;
             }
             Goods4Customer goods = ((List<Goods4Customer>) fetchCommodityData.getData()).get(0);
             double goodsPrice = goods.getCustomerPrice();
@@ -142,6 +145,7 @@ public class CouponController {
                 Prompt prompt = new Prompt(PromptCode.WARNING, "出问题了", "订单生成错误", "");
                 view.addObject("prompt", prompt);
                 view.setViewName("/customer/inform");
+                return view;
             }
             coupon.setStatus(CouponStatus.CONSUMED);
             couponService.updateCoupon(coupon);
