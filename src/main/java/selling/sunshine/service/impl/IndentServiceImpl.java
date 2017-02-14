@@ -594,7 +594,7 @@ public class IndentServiceImpl implements IndentService {
                 quantityCell.setCellValue(o.getGoodsQuantity());
                 //设置订单的价格
                 Cell payMoneyCell = current.createCell(9);
-                payMoneyCell.setCellValue(o.getOrderItemPrice());
+                payMoneyCell.setCellValue(o.getOrder().getType() == OrderType.GIFT ? 0 : o.getOrderItemPrice());
                 //设置发货时间
                 condition.clear();
                 condition.put("linkId", o.getOrderItemId());
@@ -643,7 +643,7 @@ public class IndentServiceImpl implements IndentService {
                 quantityCell.setCellValue(c.getQuantity());
                 //设置订单的价格
                 Cell priceCell = current.createCell(9);
-                priceCell.setCellValue(c.getTotalPrice());
+                priceCell.setCellValue(!StringUtils.isEmpty(c.getCouponSerial()) ? 0 : c.getTotalPrice());
                 //设置发货时间
                 Map<String, Object> condition = new HashMap<>();
                 condition.put("linkId", c.getOrderId());

@@ -21,6 +21,8 @@ public abstract class AbstractGoods extends Entity {
 
     private GoodsType type;
 
+    private int position;
+
     public String getGoodsId() {
         return goodsId;
     }
@@ -91,5 +93,13 @@ public abstract class AbstractGoods extends Entity {
 
     public void setType(GoodsType type) {
         this.type = type;
+    }
+    
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
     }
 }

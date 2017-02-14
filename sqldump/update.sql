@@ -862,3 +862,6 @@ AFTER `total_price`;
 
 ALTER TABLE `selling`.`coupon`
 CHANGE COLUMN `coupon_status` `coupon_status` TINYINT(1) NOT NULL DEFAULT '0';
+
+ALTER TABLE `selling`.`goods`
+ADD COLUMN `goods_position` INT NOT NULL DEFAULT 0 COMMENT 'this column aims to sort goods list that showed to the customer & agent' AFTER `goods_produce_date`;
