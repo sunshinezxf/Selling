@@ -604,8 +604,11 @@ public class IndentServiceImpl implements IndentService {
                     Cell deliverDateCell = current.createCell(10);
                     deliverDateCell.setCellValue(format.format(express.getCreateAt()));
                 }
+                //设置商品的类型
+                Cell typeCell = current.createCell(11);
+                typeCell.setCellValue((o.getOrder().getType() == OrderType.GIFT) ? "赠送" : "购买");
                 //设置备注
-                Cell description = current.createCell(11);
+                Cell description = current.createCell(12);
                 description.setCellValue((o.getOrder().getType() == OrderType.GIFT) ? "赠品" : "");
                 row++;
             } else if (item instanceof CustomerOrder) {
@@ -653,9 +656,12 @@ public class IndentServiceImpl implements IndentService {
                     Cell deliverDateCell = current.createCell(10);
                     deliverDateCell.setCellValue(format.format(express.getCreateAt()));
                 }
+                //设置商品的类型
+                Cell typeCell = current.createCell(11);
+                typeCell.setCellValue((c.getCouponSerial()!=null) ? "兑换" : "购买");
                 //设置备注
                 if (!StringUtils.isEmpty(c.getCouponSerial())) {
-                    Cell description = current.createCell(11);
+                    Cell description = current.createCell(12);
                     description.setCellValue(c.getCouponSerial());
                 }
                 row++;
