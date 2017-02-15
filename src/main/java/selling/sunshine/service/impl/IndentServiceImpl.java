@@ -700,7 +700,7 @@ public class IndentServiceImpl implements IndentService {
                 priceCell.setCellValue(c.getQuantity() * c.getGoods().getCustomerPrice());
                 //设置发货时间
                 Map<String, Object> condition = new HashMap<>();
-                condition.put("applicationId", c.getOrderId());
+                condition.put("linkId", c.getOrderId());
                 ResultData response = expressDao.queryExpress(condition);
                 if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
                     Express express = ((List<Express>) response.getData()).get(0);
