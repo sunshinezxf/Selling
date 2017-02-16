@@ -159,7 +159,6 @@
     </div>
 </div>
 <div class="ui modal" id="tip_modal">
-    <i class="close icon"></i>
     <div class="header">
         提示
     </div>
@@ -243,11 +242,15 @@
             $("#new_password").val("");
             $("#new_password_again").val("");
             if (result.responseCode == "RESPONSE_OK") {
-                $('#tip_modal').modal('show');
+                $('#tip_modal').modal({
+                    closable  : false,
+                }).modal('show');
                 $('#success_info').show();
                 $('#failed_info').hide();
             }else {
-                $('#tip_modal').modal('show');
+                $('#tip_modal').modal({
+                    closable  : false,
+                }).modal('show');
                 $('#success_info').hide();
                 $('#failed_info').show();
             }
@@ -266,6 +269,8 @@
         $('#tip_modal').modal('hide');
         $('#success_info').hide();
         $('#failed_info').hide();
+        var url = "${path.concat('/login')}";
+        window.location.href = url;
     });
 
 
