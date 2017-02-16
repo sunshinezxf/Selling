@@ -57,12 +57,9 @@
                                                 <i class="pink female icon"></i>
                                             #end
                                             <div class="content">${agent.name}
-                                                <div id="type_div" class="ui blue tag label">
-                                                    类别
-                                                    <span>(#if(${agent.agentType}=="ORDINARY")
+                                                <span>(#if(${agent.agentType}=="ORDINARY")
                                                         代理商#end#if(${agent.agentType}=="COMPANY")
                                                         公司代理#end#if(${agent.agentType}=="SUPPORT")客服#end)</span>
-                                                </div>
                                                 <a id="upper_agent_div" class="ui blue tag label">
                                                     上级代理
                                                     #if(${agent.upperAgent})
