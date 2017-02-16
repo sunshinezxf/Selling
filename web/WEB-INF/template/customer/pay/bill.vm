@@ -1,0 +1,119 @@
+#parse("/common/util.vm")
+<html lang="zh_CN">
+<head>
+    #parse("/agent/component/init.vm")
+    <title>支付信息</title>
+</head>
+<body ontouchstart>
+<div class="container">
+    <div class="hd">
+        <h1 class="page_title">支付信息</h1>
+    </div>
+    <div class="weui_cells">
+	    <div class="weui_cell">
+	        <div class="weui_cell_bd weui_cell_primary">
+	            <p>金额：</p>
+	        </div>
+	        <div class="weui_cell_ft">${total_price}元</div>
+	    </div>
+    </div>
+	<div class="weui_btn_area">
+		<button type="button" class="weui_btn weui_btn_primary" id="pay">支付</button>
+	</div>
+	#if(${type} == "agent")
+    #parse("/agent/component/navigate.vm")
+    #end
+</div>
+<div class="weui_dialog_alert" id="fail_dialog" style="display: none;">
+    <div class="weui_mask"></div>
+    <div class="weui_dialog">
+        <div class="weui_dialog_hd"><strong class="weui_dialog_title">网络环境较差，请重试</strong></div>
+        <div class="weui_dialog_bd"></div>
+        <div class="weui_dialog_ft">
+            <a href="javascript:;" class="weui_btn_dialog primary">确定</a>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="${path.concat('/plugins/pingxx/pingpp_one.js')}"></script>
+<script>
+    $("#fail_dialog").find(".weui_btn_dialog.primary").click(function () {
+        $("#fail_dialog").hide();
+    });
+
+    document.addEventListener('pingpp_one_ready', function () {
+        $("#pay").click(function () {
+            if (!is_weixin()) {
+                pay("alipay_wap", "");
+            } else {
+            	#if(${type} == "agent")
+                var url = "${path.concat('/agent/checkbinding')}"
+                $.get(url, function (result) {
+                    if (result.responseCode == "RESPONSE_NULL") {
+                        $("#bind_dialog").show();
+                        return;
+                    }
+                    if (result.responseCode == "RESPONSE_ERROR") {
+                        window.location == "${path.concat('/agent/login')}";
+                    } else {
+                        pay("wx_pub", result.data.wechat);
+                    }
+                });
+                #else
+                	pay("wx_pub", "$!{wechat}");
+                #end
+            }
+        });
+    });
+
+    function pay(channel, open_id) {
+        pingpp_one.init({
+            app_id: "app_K4evXLKq50O8CuL8",
+            amount: ${total_price},
+            channel: [channel],
+            charge_url: "${path}${charge_url}",
+            charge_param: {order_id: "${orderId}"},
+            open_id: open_id,
+            debug: false
+        }, function (result) {
+            //debug 模式下获取 charge_url 的返回结果
+            if (result.debug && result.chargeUrlOutput) {
+                console.log(result.chargeUrlOutput);
+            }
+            if (!result.status) {
+                $("#fail_dialog").show();
+            }
+            else {
+                //debug 模式下调用 charge_url 后会暂停，可以调用 pingpp_one.resume 方法继续执行
+                if (result.debug && !result.wxSuccess) {
+                    if (confirm('当前为 debug 模式，是否继续支付？')) {
+                        pingpp_one.resume();
+                    }
+                }
+                //若微信公众号渠道需要使用壹收款的支付成功页面，则在这里进行成功回调，
+                //调用 pingpp_one.success 方法，你也可以自己定义回调函数
+                //其他渠道的处理方法请见第 2 节
+                else pingpp_one.success(function (result) {
+                    if (!result.status) {
+                        $("#fail_dialog").show();
+                    }
+                }, function () {
+                    //这里处理支付成功页面点击“继续购物”按钮触发的方法，
+                    //例如：若你需要点击“继续购物”按钮跳转到你的购买页，
+                    //则在该方法内写入 window.location.href = "你的购买页面 url"
+                    window.location.href = '${path}${return_url}';//示例
+                });
+            }
+        });
+    }
+    
+    function is_weixin() {
+        var ua = navigator.userAgent.toLowerCase();
+        if (ua.match(/MicroMessenger/i) == "micromessenger") {
+            return true;
+        } else {
+            return false;
+        }
+    }
+</script>
+</html>
