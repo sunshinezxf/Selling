@@ -4,22 +4,38 @@ import common.sunshine.model.selling.bill.CustomerOrderBill;
 import common.sunshine.model.selling.bill.DepositBill;
 import common.sunshine.model.selling.bill.OrderBill;
 import common.sunshine.model.selling.bill.support.BillStatus;
+import common.sunshine.model.selling.order.CustomerOrder;
+import common.sunshine.model.selling.order.Order;
+import common.sunshine.model.selling.order.support.OrderItemStatus;
+import common.sunshine.model.selling.order.support.OrderStatus;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
+
+import org.apache.poi.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import selling.sunshine.form.PayForm;
 import selling.sunshine.service.BillService;
+import selling.sunshine.service.OrderService;
+import selling.sunshine.utils.PlatformConfig;
 import selling.sunshine.utils.Prompt;
 import selling.sunshine.utils.PromptCode;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 /**
  * Created by sunshine on 6/16/16.
@@ -29,6 +45,9 @@ import java.util.Map;
 public class PaymentController {
     @Autowired
     private BillService billService;
+    
+    @Autowired
+    private OrderService orderService;
 
     /**
      * 使用支付宝付款后的订单状态页面
@@ -148,5 +167,82 @@ public class PaymentController {
         view.addObject("prompt", prompt);
         view.setViewName("/customer/prompt");
         return view;
+    }
+    
+    @RequestMapping(method = RequestMethod.GET, value="/bill/{orderId}")
+    public ModelAndView bill(HttpServletRequest request, @PathVariable("orderId") String orderId){
+    	ModelAndView view = new ModelAndView();
+    	if(StringUtils.isEmpty(orderId)){
+    		Prompt prompt = new Prompt(PromptCode.WARNING, "系统提醒", "您好,您当前的订单异常,请重新尝试", "/commodity/list");
+	        view.addObject("prompt", prompt);
+	        view.setViewName("/customer/prompt");
+	        return view;
+    	}
+    	if(orderId.startsWith("ODR")) {
+	    	Map<String, Object> condition = new HashMap<String, Object>();
+	    	condition.put("orderId", orderId);
+	    	ResultData fetchOrderResponse = orderService.fetchOrder(condition);
+	    	if(fetchOrderResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
+				Prompt prompt = new Prompt(PromptCode.WARNING, "系统提醒", "您好,您当前的订单异常,请重新尝试", "/agent/order/place");
+		        view.addObject("prompt", prompt);
+		        view.setViewName("/agent/prompt");
+		        return view;
+	    	}
+	    	Order order = ((List<Order>)fetchOrderResponse.getData()).get(0);
+	    	if(order.getStatus() != OrderStatus.SAVED && order.getStatus() != OrderStatus.SUBMITTED){
+	    		Prompt prompt = new Prompt(PromptCode.WARNING, "系统提醒", "您好,您当前的订单已经付过款", "/agent/order/place");
+		        view.addObject("prompt", prompt);
+		        view.setViewName("/agent/prompt");
+		        return view;
+	    	}
+	    	view.addObject("charge_url", "/order/otherpay");
+	    	view.addObject("return_url", "/agent/order/manage/2");
+	    	view.addObject("total_price", order.getPrice());
+	    	view.addObject("orderId", orderId);
+	    	view.addObject("type", "agent");
+	    	view.setViewName("/customer/pay/bill");
+	    	return view;
+    	} else if(orderId.startsWith("CUO")){
+    		Map<String, Object> condition = new HashMap<String, Object>();
+    		condition.put("orderId", orderId);
+    		ResultData fetchCustomerOrderResponse = orderService.fetchCustomerOrder(condition);
+    		if(fetchCustomerOrderResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
+				Prompt prompt = new Prompt(PromptCode.WARNING, "系统提醒", "您好,您当前的订单异常,请重新尝试", "/commodity/list");
+		        view.addObject("prompt", prompt);
+		        view.setViewName("/customer/prompt");
+		        return view;
+	    	}
+    		CustomerOrder customerOrder = ((List<CustomerOrder>)fetchCustomerOrderResponse.getData()).get(0);
+    		if(customerOrder.getStatus() != OrderItemStatus.NOT_PAYED) {
+    			Prompt prompt = new Prompt(PromptCode.WARNING, "系统提醒", "您好,您当前的订单已经付过款", "/commodity/list");
+		        view.addObject("prompt", prompt);
+		        view.setViewName("/customer/prompt");
+		        return view;
+    		}
+    		if (request.getHeader("user-agent").toLowerCase().contains("micromessenger")) {
+            	HttpSession session = request.getSession();
+                if (session.getAttribute("openId") != null && !session.getAttribute("openId").equals("")) {
+                    String openId = (String) session.getAttribute("openId");
+                    view.addObject("wechat", openId);
+                } else {
+                	Prompt prompt = new Prompt(PromptCode.WARNING, "系统提醒", "您好,当前操作已超时,请重新下单", "/commodity/list");
+    		        view.addObject("prompt", prompt);
+    		        view.setViewName("/customer/prompt");
+    		        return view;
+                }
+            }
+    		view.addObject("charge_url", "/order/customerpay");
+    		view.addObject("return_url", "/commodity/customerorder?orderId=" + orderId);
+	    	view.addObject("total_price", customerOrder.getTotalPrice());
+	    	view.addObject("orderId", orderId);
+	    	view.addObject("type","customer");
+	    	view.setViewName("/customer/pay/bill");
+	    	return view;
+    	} else {
+    		Prompt prompt = new Prompt(PromptCode.WARNING, "系统提醒", "您好,您当前的订单异常,请重新尝试", "/commodity/list");
+	        view.addObject("prompt", prompt);
+	        view.setViewName("/customer/prompt");
+	        return view;
+    	}
     }
 }
