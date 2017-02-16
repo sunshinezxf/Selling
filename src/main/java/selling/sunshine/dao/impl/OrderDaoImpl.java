@@ -324,18 +324,18 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
                     List<RefundConfig> configs = sqlSession.selectList("selling.refund.config.query", configCondition);
                     if (configs.size() > 0) {//当返现配置存在时才能生成order pool
                         boolean flag = false;
-                        RefundConfig configMonth = null;
-                        RefundConfig configAll = null;
+                        List<RefundConfig> configMonthList=new ArrayList<>();
+                        List<RefundConfig> configAllList=new ArrayList<>();
                         for (RefundConfig config : configs) {
                             if (!config.isUniversal()) {
                                 flag = true;
-                                configMonth = config;
+                                configMonthList.add(config);
                             } else {
-                                configAll = config;
+                                configAllList.add(config);
                             }
                         }
-                        if (flag) {
-                            int monthConfig = configMonth.getUniversalMonth();
+                        if (flag) { //当有前n个月返现配置存在，看月份有没有满足
+                            int monthConfig = configMonthList.get(0).getUniversalMonth();
                             configCondition.clear();
                             configCondition.put("agentId", agent.getAgentId());
                             common.sunshine.model.selling.agent.Agent agent2 = sqlSession.selectOne("selling.agent.query", configCondition);
@@ -343,33 +343,82 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
                             Calendar calendar = Calendar.getInstance();
                             calendar.setTime(agent2.getCreateAt());
                             int month = c.get(Calendar.MONTH) - calendar.get(Calendar.MONTH);
-                            System.out.println(c.get(Calendar.MONTH));
                             if (month < monthConfig) {
-                                pool.setRefundConfig(configMonth);
-                                if (pool.getQuantity() >= configMonth.getAmountTrigger()) {
-                                    pool.setBlockFlag(false);
-                                    pool.setRefundAmount(Double.parseDouble(resultList.get(i).get("quantity").toString()) * configMonth.getLevel1Percent());
-                                } else {
+                                boolean poolFlag=true;
+                                for (RefundConfig config:configMonthList){
+                                    if (config.getAmountTopTrigger()!=0){
+                                        if (pool.getQuantity() >= config.getAmountTrigger() && pool.getQuantity() <= config.getAmountTopTrigger()){
+                                            pool.setBlockFlag(false);
+                                            pool.setRefundAmount(Double.parseDouble(resultList.get(i).get("quantity").toString()) * config.getLevel1Percent());
+                                            pool.setRefundConfig(config);
+                                            poolFlag=false;
+                                            break;
+                                        }
+                                    }else {
+                                        if (pool.getQuantity() >= config.getAmountTrigger()) {
+                                            pool.setBlockFlag(false);
+                                            pool.setRefundAmount(Double.parseDouble(resultList.get(i).get("quantity").toString()) * config.getLevel1Percent());
+                                            pool.setRefundConfig(config);
+                                            poolFlag=false;
+                                            break;
+                                        }
+                                    }
+                                }
+                                if (poolFlag){
+                                    pool.setRefundConfig(configMonthList.get(0));
                                     pool.setBlockFlag(true);
                                     pool.setRefundAmount(0);
                                 }
                             } else {
-                                pool.setRefundConfig(configAll);
-                                if (pool.getQuantity() >= configAll.getAmountTrigger()) {
-                                    pool.setBlockFlag(false);
-                                    pool.setRefundAmount(Double.parseDouble(resultList.get(i).get("quantity").toString()) * configAll.getLevel1Percent());
-                                } else {
+                                boolean poolFlag=true;
+                                for (RefundConfig config:configAllList){
+                                    if (config.getAmountTopTrigger()!=0){
+                                        if (pool.getQuantity() >= config.getAmountTrigger() && pool.getQuantity() <= config.getAmountTopTrigger()){
+                                            pool.setBlockFlag(false);
+                                            pool.setRefundAmount(Double.parseDouble(resultList.get(i).get("quantity").toString()) * config.getLevel1Percent());
+                                            pool.setRefundConfig(config);
+                                            poolFlag=false;
+                                            break;
+                                        }
+                                    }else {
+                                        if (pool.getQuantity() >= config.getAmountTrigger()) {
+                                            pool.setBlockFlag(false);
+                                            pool.setRefundAmount(Double.parseDouble(resultList.get(i).get("quantity").toString()) * config.getLevel1Percent());
+                                            pool.setRefundConfig(config);
+                                            poolFlag=false;
+                                            break;
+                                        }
+                                    }
+                                }
+                                if (poolFlag){
+                                    pool.setRefundConfig(configAllList.get(0));
                                     pool.setBlockFlag(true);
                                     pool.setRefundAmount(0);
                                 }
                             }
-                        } else {
-                            RefundConfig config = configs.get(0);
-                            pool.setRefundConfig(config);
-                            if (pool.getQuantity() >= config.getAmountTrigger()) {
-                                pool.setBlockFlag(false);
-                                pool.setRefundAmount(Double.parseDouble(resultList.get(i).get("quantity").toString()) * config.getLevel1Percent());
-                            } else {
+                        } else { //没有前n个月返现配置存在
+                            boolean poolFlag=true;
+                            for (RefundConfig config:configs){
+                                if (config.getAmountTopTrigger()!=0){
+                                    if (pool.getQuantity() >= config.getAmountTrigger() && pool.getQuantity() <= config.getAmountTopTrigger()){
+                                        pool.setBlockFlag(false);
+                                        pool.setRefundAmount(Double.parseDouble(resultList.get(i).get("quantity").toString()) * config.getLevel1Percent());
+                                        pool.setRefundConfig(config);
+                                        poolFlag=false;
+                                        break;
+                                    }
+                                }else {
+                                    if (pool.getQuantity() >= config.getAmountTrigger()) {
+                                        pool.setBlockFlag(false);
+                                        pool.setRefundAmount(Double.parseDouble(resultList.get(i).get("quantity").toString()) * config.getLevel1Percent());
+                                        pool.setRefundConfig(config);
+                                        poolFlag=false;
+                                        break;
+                                    }
+                                }
+                            }
+                            if (poolFlag){
+                                pool.setRefundConfig(configs.get(0));
                                 pool.setBlockFlag(true);
                                 pool.setRefundAmount(0);
                             }

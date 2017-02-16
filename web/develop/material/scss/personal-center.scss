@@ -1,0 +1,44 @@
+#personal_info{
+  > .ui.grid{
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+  }
+}
+
+.ui.horizontal.statistic {
+  -webkit-box-align: baseline;
+  -ms-flex-align: baseline;
+  align-items: baseline;
+}
+
+.ui.segment{
+  >.ui.statistic{
+    margin-top: 0;
+  }
+}
+
+#customers_list,#cashback_list{
+  cursor:pointer;
+}
+
+#customers_list:hover,#cashback_list:hover{
+  background-color: #00B5AD !important;
+}
+
+.floated_div{
+  position:relative;
+  zoom:1;
+}
+
+.floated_div:after{
+  content: ".";
+  display: block;
+  clear: both;
+  visibility: hidden;
+  height: 0;
+}
+
+#password_label{
+  margin-left: 1em;
+}

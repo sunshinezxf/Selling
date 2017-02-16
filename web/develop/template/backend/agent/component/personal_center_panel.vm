@@ -1,0 +1,308 @@
+<div class="ui stackable padded grid" name="personal_center">
+    <div class="row">
+        <h1 class="ui header">
+            <i class="home icon"></i>
+            <div class="content">
+                个人中心
+            </div>
+        </h1>
+    </div>
+    <div class="row">
+        <div class="column">
+            <div class="ui segment">
+                <div class="ui divided items">
+                    <div id="personal_info" class="item">
+
+                        <div class="content">
+                            <div class="floated_div">
+                                <div class="ui left floated header">
+                                    #if(${agent.gender}=="M")
+                                        <i class="blue male icon"></i>
+                                    #else
+                                        <i class="pink female icon"></i>
+                                    #end
+                                    <div class="content">${agent.name}
+                                        <span>(#if(${agent.agentType}=="ORDINARY")代理商#end#if(${agent.agentType}=="COMPANY")公司代理#end#if(${agent.agentType}=="SUPPORT")客服#end)</span>
+                                    </div>
+                                </div>
+                                <div class="ui right floated header">
+                                    <button class="ui blue basic button" id="password">修改密码</button>
+                                </div>
+                            </div>
+                            <div class="ui horizontal divided list">
+                                <div class="item">
+                                    <i class="blue mobile icon"></i>${agent.phone}
+                                </div>
+                                #set($code = ${agent.agentId.substring(3)})
+                                <div class="item">
+                                    <i class="black newspaper icon"></i>${code}
+                                </div>
+                                <div class="item">
+                                    <i class="green wechat icon"></i><span id="wechat"></span>
+                                </div>
+                                <div class="item">
+                                    <i class="brown home icon"></i>${agent.address}
+                                </div>
+                            </div>
+                            <div class="description">
+                                <div class="ui three column stackable grid">
+                                    <div class="column">
+                                        <div id="customers_list" class="ui center aligned segment">
+                                            <h4 class="ui header">顾客数</h4>
+
+                                            <div class="ui small horizontal statistic">
+                                                #if(${customerNum}==0)
+                                                    <div class="value">0</div>
+                                                #else
+                                                    <div class="value">${customerNum}</div>
+                                                #end
+                                                <div class="label">人</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="column">
+                                        <div id="cashback_list" class="ui center aligned segment">
+                                            <h4 class="ui header">累计返现</h4>
+
+                                            <div class="ui small horizontal statistic">
+                                                <div class="value">${agent.agentRefund}</div>
+                                                <div class="label">元</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="column">
+                                        <div id="account_balance" class="ui center aligned segment">
+                                            <h4 class="ui header">账户余额</h4>
+
+                                            <div class="ui small horizontal statistic">
+                                                <div class="value">${agent.coffer}</div>
+                                                <div class="label">元</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="content">
+                            <div id="sales_area" class="ui large teal ribbon label">销售情况
+                                <div class="detail">前<span id="rank"></span>%</div>
+                            </div>
+                            <div class="description">
+                                <table class="ui tablet stackable table">
+                                    <thead>
+                                    <tr>
+                                        <th>商品名</th>
+                                        <th>月销量</th>
+                                        <th>年销量</th>
+                                        <th>累计销量</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                        #foreach($sales in ${volumeTotalList})
+                                        <tr>
+                                            <td>${sales.goods.name}</td>
+                                            <td>${sales.monthQuantity}</td>
+                                            <td>${sales.yearQuantity}</td>
+                                            <td>${sales.totalQuantity}</td>
+                                        </tr>
+                                        #end
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="content">
+                            <div class="ui large teal ribbon label">拓展信息</div>
+                            <div class="description">
+                                <div class="ui center aligned basic segment">
+                                    <div id="tree"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="ui modal" id="modify_password_modal">
+    <i class="close icon"></i>
+    <div class="header">修改账户密码</div>
+    <div class="content">
+        <div class="ui form">
+            <div class="inline field">
+                <label id="password_label">新密码</label>
+                <div class="ui input">
+                    <input id="new_password" type="password">
+                </div>
+            </div>
+            <div class="inline field">
+                <label>确认密码</label>
+                <div class="ui input">
+                    <input id="new_password_again" type="password">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="actions">
+        <div class="ui cancel button" id="modify_cancel">取消</div>
+        <div id="modify_btn" class="ui disabled positive button" disabled="disabled">确定</div>
+    </div>
+</div>
+<div class="ui modal" id="tip_modal">
+    <div class="header">
+        提示
+    </div>
+    <div class="content">
+        <div class="description" id="success_info">
+            您的账户密码已修改成功！
+        </div>
+        <div class="description" id="failed_info">
+            您的账户密码修改失败！
+        </div>
+    </div>
+    <div class="actions">
+        <div class="ui positive button" id="tip_confirm">确认</div>
+    </div>
+</div>
+<script>
+    var upperAgentId;
+    $(document).ready(function () {
+        var wechat = "${agent.wechat}";
+        if (wechat && wechat.slice(-1) != "}") {
+            var new_wechat = wechat.replace(wechat.slice(7, -8), "***");
+            $("#wechat").text(new_wechat);
+        } else {
+            $("#wechat").text("无");
+        }
+
+        var ranking = "${ranking}";
+        var total = "${totalNum}";
+        var topRate = parseInt((ranking / total) * 100);
+        if (topRate > 50) {
+            $('#sales_area > .detail').hide();
+        } else {
+            if ((topRate % 5 == 0) && (topRate != 0)) {
+                topRate = (parseInt(topRate / 5)) * 5;
+            } else {
+                topRate = (parseInt(topRate / 5) + 1) * 5;
+            }
+            $("#rank").html(topRate);
+        }
+
+        var url = "${path.concat('/agent/subordinate/')}" + "${agent.agentId}";
+        $("#tree").tree({
+            dataUrl: url,
+            selectable: false,
+        });
+
+        $(".ui.dropdown").dropdown();
+
+        $("#new_password").on("input propertychange",function(){
+            if (information_validate()) {
+                active();
+            } else {
+                inactive();
+            }
+        })
+
+        $("#new_password_again").on("input propertychange",function(){
+            if (information_validate()) {
+                active();
+            } else {
+                inactive();
+            }
+        })
+
+        $("#password").click(function () {
+            $("#modify_password_modal").modal("show");
+        });
+    });
+
+    $('#modify_password_modal').modal('hide');
+    $('#tip_modal').modal('hide');
+    $('#success_info').hide();
+    $('#failed_info').hide();
+
+    $("#modify_btn").on('click', function () {
+        var url = "${path.concat('/agent/password/modify')}";
+        var newPassword=$("#new_password_again").val();
+        var param={password:newPassword};
+        $.post(url,param, function (result) {
+            $('#modify_password_modal').modal('hide');
+            $("#new_password").val("");
+            $("#new_password_again").val("");
+            if (result.responseCode == "RESPONSE_OK") {
+                $('#tip_modal').modal({
+                    closable  : false,
+                }).modal('show');
+                $('#success_info').show();
+                $('#failed_info').hide();
+            }else {
+                $('#tip_modal').modal({
+                    closable  : false,
+                }).modal('show');
+                $('#success_info').hide();
+                $('#failed_info').show();
+            }
+        });
+    });
+    $("#modify_cancel").on('click', function () {
+        $('#modify_password_modal').modal('hide');
+        $("#new_password").val("");
+        $("#new_password_again").val("");
+        $('#tip_modal').modal('hide');
+        $('#success_info').hide();
+        $('#failed_info').hide();
+    });
+
+    $("#tip_confirm").on('click', function () {
+        $('#tip_modal').modal('hide');
+        $('#success_info').hide();
+        $('#failed_info').hide();
+        var url = "${path.concat('/login')}";
+        window.location.href = url;
+    });
+
+
+    function active() {
+        $("#modify_btn").removeAttr("disabled");
+        $("#modify_btn").removeClass("disabled");
+    }
+
+    function inactive() {
+        $("#modify_btn").attr("disabled", "disabled");
+        $("#modify_btn").addClass("disabled");
+    }
+
+    function information_validate() {
+        var password1 = $("#new_password").val();
+        var password2 = $("#new_password_again").val();
+        if (not_null(password1)&&not_null(password2)&&(password1==password2)) {
+            return true;
+        }
+        return false;
+    }
+
+    function not_null(item) {
+        if (item == null || item == "" || item.length <= 0) {
+            return false;
+        }
+        return true;
+    }
+
+
+    $("#customers_list").on('click', function () {
+        var url = "${path.concat('/customer/overview/')}${agent.agentId}";
+        window.location.href = url;
+    });
+
+    $("#cashback_list").on('click', function () {
+        var url = "${path.concat('/agent/cashback/detail/')}${agent.agentId}";
+        window.location.href = url;
+    });
+</script>

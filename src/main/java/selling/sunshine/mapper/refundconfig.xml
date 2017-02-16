@@ -4,6 +4,7 @@
     <resultMap id="refundConfigVo" type="selling.sunshine.model.RefundConfig">
         <result property="refundConfigId" column="refund_config_id"></result>
         <result property="amountTrigger" column="refund_trigger_amount"></result>
+        <result property="amountTopTrigger" column="refund_trigger_amount_top"></result>
         <result property="level1Percent" column="level_1_percent"></result>
         <result property="level2Percent" column="level_2_percent"></result>
         <result property="level3Percent" column="level_3_percent"></result>
@@ -25,19 +26,19 @@
     </resultMap>
 
     <insert id="insert" parameterType="selling.sunshine.model.RefundConfig" useGeneratedKeys="false">
-        INSERT INTO refund_config(refund_config_id, goods_id, refund_trigger_amount, level_1_percent,level_2_percent,level_3_percent,month_config, block_flag, create_time,universal,universal_month)
-        VALUES (#{refundConfigId}, #{goods.goodsId}, #{amountTrigger}, #{level1Percent},#{level2Percent},#{level3Percent},#{monthConfig}, #{blockFlag}, #{createAt},#{universal}, #{universalMonth})
+        INSERT INTO refund_config(refund_config_id, goods_id, refund_trigger_amount, level_1_percent,level_2_percent,level_3_percent,month_config, block_flag, create_time,universal,universal_month,refund_trigger_amount_top)
+        VALUES (#{refundConfigId}, #{goods.goodsId}, #{amountTrigger}, #{level1Percent},#{level2Percent},#{level3Percent},#{monthConfig}, #{blockFlag}, #{createAt},#{universal}, #{universalMonth},#{amountTopTrigger})
     </insert>
 
     <select id="query" parameterType="java.util.Map" resultMap="refundConfigVo">
         SELECT refund_config_id, goods_id, refund_trigger_amount, level_1_percent,level_2_percent,level_3_percent,month_config,
-        block_flag, create_time,universal,universal_month
+        block_flag, create_time,universal,universal_month,refund_trigger_amount_top
         FROM refund_config
         WHERE 1 = 1
-        <if test="refundConfigId != null and refundConfigId != ''">
+        <if test="refundConfigId != null">
             AND refund_config_id = #{refundConfigId}
         </if>
-        <if test="goodsId != null and goodsId != ''">
+        <if test="goodsId != null">
             AND goods_id = #{goodsId}
         </if>
         <if test="blockFlag != null">
@@ -46,8 +47,17 @@
         <if test="universal != null">
             AND universal = #{universal}
         </if>
-        <if test="rule != null and rule != ''">
+        <if test="amountTrigger != null">
+            AND refund_trigger_amount = #{amountTrigger}
+        </if>
+        <if test="amountTopTrigger != null">
+            AND refund_trigger_amount_top = #{amountTopTrigger}
+        </if>
+        <if test="rule != null ">
             ORDER BY ${rule}
+        </if>
+        <if test="rule == null ">
+            ORDER BY universal,refund_trigger_amount
         </if>
     </select>
 

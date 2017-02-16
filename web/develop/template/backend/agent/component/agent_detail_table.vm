@@ -57,12 +57,7 @@
                                                 <i class="pink female icon"></i>
                                             #end
                                             <div class="content">${agent.name}
-                                                <div id="type_div" class="ui blue tag label">
-                                                    类别
-                                                    <span>(#if(${agent.agentType}=="ORDINARY")
-                                                        代理商#end#if(${agent.agentType}=="COMPANY")
-                                                        公司代理#end#if(${agent.agentType}=="SUPPORT")客服#end)</span>
-                                                </div>
+                                                <span>(#if(${agent.agentType}=="ORDINARY")代理商#end#if(${agent.agentType}=="COMPANY")公司代理#end#if(${agent.agentType}=="SUPPORT")客服#end)</span>
                                                 <a id="upper_agent_div" class="ui blue tag label">
                                                     上级代理
                                                     #if(${agent.upperAgent})
@@ -107,7 +102,6 @@
                                             <div class="column">
                                                 <div id="customers_list" class="ui center aligned segment">
                                                     <h4 class="ui header">顾客数</h4>
-
                                                     <div class="ui small horizontal statistic">
                                                         #if(${customerNum}==0)
                                                             <div class="value">0</div>
@@ -121,8 +115,7 @@
                                             <div class="column">
                                                 <div id="cashback_list" class="ui center aligned segment">
                                                     <h4 class="ui header">累计返现</h4>
-
-                                                    <div id="refund_list" class="ui small horizontal statistic">
+                                                    <div class="ui small horizontal statistic">
                                                         <div class="value">${agent.agentRefund}</div>
                                                         <div class="label">元</div>
                                                     </div>
@@ -277,10 +270,6 @@
             $("#now_upper").val($("#upper_agent").html());
             $("#set_upperAgent_modal").modal("show");
         });
-
-        $("#customer_list").click(function () {
-            window.location.href = "${path.concat('/customer/overview/')}" + "${agent.agentId}";
-        });
     });
     $('#set_upperAgent_modal').modal('hide');
     $('#fobid_modal').modal('hide');
@@ -352,7 +341,7 @@
         window.location.href = url;
     });
 
-    $("#refund_list").on('click', function () {
+    $("#cashback_list").on('click', function () {
         var url = "${path.concat('/agent/cashback/detail/')}${agent.agentId}";
         window.location.href = url;
     });

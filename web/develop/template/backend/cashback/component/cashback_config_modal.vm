@@ -16,8 +16,10 @@
                         <text id="goods_price"></text>
                     </div>
                     <div class="inline field">
-                        <label>返现的标准数量:</label>
-                        <input type="number" id="config_trigger" name="amountTrigger" value="0" autocomplete="off"/>&nbsp;<span>件</span>
+                        <label>返现的购买数量配置:</label>
+                        <input type="number" id="config_trigger" name="amountTrigger" value="0" autocomplete="off"/>&nbsp;<span>盒-</span>
+                        <input type="number" id="config_top_trigger" name="amountTriggerTop" value="0" autocomplete="off"/>&nbsp;<span>盒&nbsp;&nbsp;</span>
+                        <label>*右边为0或空代表上限没有，例如10盒-0盒代表10盒以上</label>
                     </div>
                     <div class="inline field" id="config">
                         <label style="margin-right:3.86em">适用情况:</label>
