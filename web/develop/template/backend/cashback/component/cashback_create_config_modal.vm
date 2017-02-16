@@ -36,11 +36,12 @@
 						<option value="11">11</option>
 					</select>&nbsp;<span>个月适用</span>
 				</div>
-				<div class="inline field">
-					<label>返现标准数量:</label>
-					<input type="number" id="config_trigger" name="amountTrigger"
-						value="0" autocomplete="off" />&nbsp;<span>件</span>
-				</div>
+                <div class="inline field">
+                    <label>返现的购买数量配置:</label>
+                    <input type="number" id="config_trigger" name="amountTrigger" value="0" autocomplete="off"/>&nbsp;<span>盒-</span>
+                    <input type="number" id="config_top_trigger" name="amountTriggerTop" value="0" autocomplete="off"/>&nbsp;<span>盒&nbsp;&nbsp;</span>
+                    <label>*右边为0或空代表上限没有，例如10盒-0盒代表10盒以上</label>
+                </div>
 				<div class="inline field">
 					<label style="margin-right:2.86em">自己返现:</label>
 					<input type="number" name="level1Percent" value="0"

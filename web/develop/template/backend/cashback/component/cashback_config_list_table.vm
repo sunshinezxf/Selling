@@ -76,11 +76,21 @@ $(document).ready(function () {
                 return operation;
             }
             },
-            {title: "当前配置(件)", "mData": "amountTrigger"},
+            {
+                title: "购买数量配置(盒)", "mRender": function (data, type, full) {
+                var operation = "";
+                if(full.amountTopTrigger==0){
+                    operation = full.amountTrigger+"盒及以上";
+                }else{
+                    operation = full.amountTrigger+"盒-"+full.amountTopTrigger+"盒";
+                }
+                return operation;
+            }
+            },
             {title: "月份配置(个月)", "mData": "monthConfig"},
-            {title: "自己返现(元/件)", "mData": "level1Percent"},
-            {title: "直接关联返现(元/件)", "mData": "level2Percent"}, 
-            {title: "间接关联返现(元/件)", "mData": "level3Percent"},
+            {title: "自己返现(元/盒)", "mData": "level1Percent"},
+            {title: "直接关联返现(元/盒)", "mData": "level2Percent"},
+            {title: "间接关联返现(元/盒)", "mData": "level3Percent"},
             {
                 title: "操作", "mRender": function (data, type, full) {
                 var operation = "";
@@ -104,6 +114,7 @@ $(document).ready(function () {
                             var config = result.data;
                             if (result.responseCode == "RESPONSE_OK") { 
                                 $("#config_trigger").val(config.amountTrigger);
+                                $("#config_top_trigger").val(config.amountTopTrigger);
                                 $("#config_percent_1").val(config.level1Percent);
                                 $("#config_percent_2").val(config.level2Percent);
                                 $("#config_percent_3").val(config.level3Percent);
