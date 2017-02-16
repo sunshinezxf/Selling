@@ -13,7 +13,7 @@
                 <div class="ui divided items">
                     <div id="personal_info" class="item">
                         <div class="ui stackable grid">
-                            <div class="sixteen wide column">
+                            <div class="column">
                                 <div class="content">
                                     <div class="floated_div">
                                         <div class="ui left floated header">
