@@ -10,6 +10,7 @@ import common.sunshine.model.selling.goods.Goods4Customer;
 public class RefundConfig extends Entity {
     private String refundConfigId;
     private int amountTrigger;
+    private int amountTopTrigger;//购买数量上限，默认值为0，代表购买数量在amountTrigger以上
     private double level1Percent;
     private double level2Percent;
     private double level3Percent;
@@ -55,7 +56,20 @@ public class RefundConfig extends Entity {
 		this.universalMonth = universalMonth;
 	}
 
-	public Goods4Agent getGoods() {
+    public RefundConfig(String refundConfigId, int amountTrigger, int amountTopTrigger, double level1Percent, double level2Percent, double level3Percent, int monthConfig, Goods4Agent goods, boolean universal, int universalMonth) {
+        this.refundConfigId = refundConfigId;
+        this.amountTrigger = amountTrigger;
+        this.amountTopTrigger = amountTopTrigger;
+        this.level1Percent = level1Percent;
+        this.level2Percent = level2Percent;
+        this.level3Percent = level3Percent;
+        this.monthConfig = monthConfig;
+        this.goods = goods;
+        this.universal = universal;
+        this.universalMonth = universalMonth;
+    }
+
+    public Goods4Agent getGoods() {
         return goods;
     }
 
@@ -126,8 +140,12 @@ public class RefundConfig extends Entity {
 	public void setUniversal(boolean universal) {
 		this.universal = universal;
 	}
-    
-    
 
+    public int getAmountTopTrigger() {
+        return amountTopTrigger;
+    }
 
+    public void setAmountTopTrigger(int amountTopTrigger) {
+        this.amountTopTrigger = amountTopTrigger;
+    }
 }

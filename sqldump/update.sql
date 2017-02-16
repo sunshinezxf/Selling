@@ -872,3 +872,6 @@ update goods set goods_position='4' where goods_id='COMyeivfe49' limit 1;
 update goods set goods_position='3' where goods_id='COMoelyxf22' limit 1;
 update goods set goods_position='2' where goods_id='COMwilflf20' limit 1;
 update goods set goods_position='1' where goods_id='COMlezflw12' limit 1;
+
+ALTER TABLE `selling`.`refund_config`
+ADD COLUMN `refund_trigger_amount_top` INT NOT NULL DEFAULT 0  AFTER `refund_trigger_amount`;

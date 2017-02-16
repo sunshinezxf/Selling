@@ -10,6 +10,8 @@ public class RefundConfigForm {
     private String goodsId;
     @NotNull
     private String amountTrigger;
+
+	private String amountTriggerTop;
     @NotNull
     private String level1Percent;
     @NotNull
@@ -78,9 +80,11 @@ public class RefundConfigForm {
 		this.applyMonths = applyMonths;
 	}
 
+	public String getAmountTriggerTop() {
+		return amountTriggerTop;
+	}
 
-	
-	
-
-    
+	public void setAmountTriggerTop(String amountTriggerTop) {
+		this.amountTriggerTop = amountTriggerTop;
+	}
 }

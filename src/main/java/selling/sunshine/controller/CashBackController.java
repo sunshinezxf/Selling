@@ -8,7 +8,6 @@ import common.sunshine.pagination.DataTablePage;
 import common.sunshine.pagination.DataTableParam;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
-
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
@@ -18,28 +17,19 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
 import selling.sunshine.form.RefundConfigForm;
 import selling.sunshine.model.BackOperationLog;
 import selling.sunshine.model.RefundConfig;
 import selling.sunshine.model.cashback.CashBackRecord;
 import selling.sunshine.model.cashback.support.CashBackLevel;
-import selling.sunshine.service.AgentService;
-import selling.sunshine.service.CashBackService;
-import selling.sunshine.service.CommodityService;
-import selling.sunshine.service.LogService;
-import selling.sunshine.service.RefundService;
-import selling.sunshine.service.ToolService;
-import selling.sunshine.utils.WechatConfig;
+import selling.sunshine.service.*;
 import selling.sunshine.utils.ZipCompressor;
-import selling.sunshine.vo.cashback.CashBack;
 import selling.sunshine.vo.cashback.CashBack4Agent;
 import selling.sunshine.vo.cashback.CashBack4AgentPerMonth;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-
 import java.io.*;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
@@ -310,6 +300,15 @@ public class CashBackController {
 		return result;
 	}
 
+	/**
+	 * 修改返现配置
+	 * @param configId
+	 * @param goodsId
+	 * @param form
+	 * @param result
+	 * @param request
+	 * @return
+	 */
 	@RequestMapping(method = RequestMethod.POST, value = "/config/goods/{configId}/{goodsId}")
 	public ModelAndView config(@PathVariable("configId") String configId, @PathVariable("goodsId") String goodsId,
 			@Valid RefundConfigForm form, BindingResult result, HttpServletRequest request) {
@@ -318,14 +317,24 @@ public class CashBackController {
 			view.setViewName("redirect:/cashback/config/list/goods/" + goodsId);
 			return view;
 		}
-		Goods4Customer goods = new Goods4Customer();
 		Map<String, Object> condition = new HashMap<>();
 		condition.put("goodsId", goodsId);
-		goods = ((List<Goods4Customer>) commodityService.fetchGoods4Customer(condition).getData()).get(0);
+		ResultData fetchResponse=commodityService.fetchGoods4Customer(condition);
+		if (fetchResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
+			//相应的商品没有找到，直接返回
+			view.setViewName("redirect:/cashback/config/list/goods/" + goodsId);
+			return view;
+		}
+		Goods4Customer goods = ((List<Goods4Customer>) fetchResponse.getData()).get(0);
 		RefundConfig config = new RefundConfig(goods, Integer.parseInt(form.getAmountTrigger()),
 				Double.parseDouble(form.getLevel1Percent()), Double.parseDouble(form.getLevel2Percent()),
 				Double.parseDouble(form.getLevel3Percent()), Integer.parseInt(form.getMonthConfig()));
 		config.setRefundConfigId(configId);
+		if (form.getAmountTriggerTop()==null || form.getAmountTriggerTop()==""){
+			config.setAmountTopTrigger(0);
+		}else {
+			config.setAmountTopTrigger(Integer.parseInt(form.getAmountTriggerTop()));
+		}
 		if (form.getApplyMonths() != "" && !form.getApplyMonths().equals("普遍适用")) {
 			config.setUniversal(false);
 			config.setUniversalMonth(Integer.parseInt(form.getApplyMonths()));
@@ -353,6 +362,14 @@ public class CashBackController {
 		return view;
 	}
 
+	/**
+	 * 新建返现配置
+	 * @param goodsId
+	 * @param form
+	 * @param result
+	 * @param request
+	 * @return
+	 */
 	@RequestMapping(method = RequestMethod.POST, value = "/config/create/{goodsId}")
 	public ModelAndView createConfig(@PathVariable("goodsId") String goodsId, @Valid RefundConfigForm form,
 			BindingResult result, HttpServletRequest request) {
@@ -361,7 +378,6 @@ public class CashBackController {
 			view.setViewName("redirect:/cashback/config/list/goods/" + goodsId);
 			return view;
 		}
-		Goods4Customer goods = new Goods4Customer();
 		Map<String, Object> condition = new HashMap<>();
 		condition.put("goodsId", goodsId);
 		condition.put("blockFlag", false);
@@ -370,17 +386,43 @@ public class CashBackController {
 		} else {
 			condition.put("universal", true);
 		}
-		if (refundService.fetchRefundConfig(condition).getResponseCode() != ResponseCode.RESPONSE_NULL) {
+		//当数据库中已经存在前n个月的返现配置时，不能新建前m个月的返现配置
+		if (form.getApplyMonths() != ""){
+			ResultData fetchResponse=refundService.fetchRefundConfig(condition);
+			if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+				RefundConfig config=((List<RefundConfig>)fetchResponse.getData()).get(0);
+				if (config.getUniversalMonth()!=Integer.parseInt(form.getApplyMonths())){
+					view.setViewName("redirect:/cashback/config/list/goods/" + goodsId);
+					return view;
+				}
+			}
+		}
+		condition.put("amountTrigger", form.getAmountTrigger());
+		condition.put("amountTopTrigger", form.getAmountTriggerTop());
+		ResultData fetchResponse=refundService.fetchRefundConfig(condition);
+		if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+			//当数据库中相应的返现配置已经存在，则不能添加，直接返回
 			view.setViewName("redirect:/cashback/config/list/goods/" + goodsId);
 			return view;
 		}
 		condition.clear();
 		condition.put("goodsId", goodsId);
-		goods = ((List<Goods4Customer>) commodityService.fetchGoods4Customer(condition).getData()).get(0);
+		fetchResponse=commodityService.fetchGoods4Customer(condition);
+		if (fetchResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
+			//相应的商品没有找到，直接返回
+			view.setViewName("redirect:/cashback/config/list/goods/" + goodsId);
+			return view;
+		}
+		Goods4Customer goods = ((List<Goods4Customer>) fetchResponse.getData()).get(0);
 		RefundConfig config = new RefundConfig(goods, Integer.parseInt(form.getAmountTrigger()),
 				Double.parseDouble(form.getLevel1Percent()), Double.parseDouble(form.getLevel2Percent()),
 				Double.parseDouble(form.getLevel3Percent()), Integer.parseInt(form.getMonthConfig()));
 		config.setRefundConfigId("null");
+		if (form.getAmountTriggerTop()==null || form.getAmountTriggerTop()==""){
+			config.setAmountTopTrigger(0);
+		}else {
+			config.setAmountTopTrigger(Integer.parseInt(form.getAmountTriggerTop()));
+		}
 		if (form.getApplyMonths() != "") {
 			config.setUniversal(false);
 			config.setUniversalMonth(Integer.parseInt(form.getApplyMonths()));
