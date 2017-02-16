@@ -12,76 +12,76 @@
             <div class="ui segment">
                 <div class="ui divided items">
                     <div id="personal_info" class="item">
-                        <div class="ui stackable grid">
-                            <div class="sixteen wide column">
-                                <div class="content">
-                                    <div class="floated_div">
-                                        <div class="ui left floated header">
-                                            #if(${agent.gender}=="M")
-                                                <i class="blue male icon"></i>
-                                            #else
-                                                <i class="pink female icon"></i>
-                                            #end
-                                            <div class="content">${agent.name}
-                                                <div id="type_div" class="ui blue tag label">
-                                                    类别
+
+                        <div class="content">
+                            <div class="floated_div">
+                                <div class="ui left floated header">
+                                    #if(${agent.gender}=="M")
+                                        <i class="blue male icon"></i>
+                                    #else
+                                        <i class="pink female icon"></i>
+                                    #end
+                                    <div class="content">${agent.name}
+                                        <div id="type_div" class="ui blue tag label">
+                                            类别
                                                     <span>(#if(${agent.agentType}=="ORDINARY")
                                                         代理商#end#if(${agent.agentType}=="COMPANY")
                                                         公司代理#end#if(${agent.agentType}=="SUPPORT")客服#end)</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="ui right floated header">
-                                            <button class="ui blue basic button" id="password">修改密码</button>
                                         </div>
                                     </div>
-                                    <div class="ui horizontal divided list">
-                                        <div class="item">
-                                            <i class="blue mobile icon"></i>${agent.phone}
-                                        </div>
-                                        #set($code = ${agent.agentId.substring(3)})
-                                        <div class="item">
-                                            <i class="black newspaper icon"></i>${code}
-                                        </div>
-                                        <div class="item">
-                                            <i class="green wechat icon"></i><span id="wechat"></span>
-                                        </div>
-                                        <div class="item">
-                                            <i class="brown home icon"></i>${agent.address}
+                                </div>
+                                <div class="ui right floated header">
+                                    <button class="ui blue basic button" id="password">修改密码</button>
+                                </div>
+                            </div>
+                            <div class="ui horizontal divided list">
+                                <div class="item">
+                                    <i class="blue mobile icon"></i>${agent.phone}
+                                </div>
+                                #set($code = ${agent.agentId.substring(3)})
+                                <div class="item">
+                                    <i class="black newspaper icon"></i>${code}
+                                </div>
+                                <div class="item">
+                                    <i class="green wechat icon"></i><span id="wechat"></span>
+                                </div>
+                                <div class="item">
+                                    <i class="brown home icon"></i>${agent.address}
+                                </div>
+                            </div>
+                            <div class="description">
+                                <div class="ui three column stackable grid">
+                                    <div class="column">
+                                        <div id="customers_list" class="ui center aligned segment">
+                                            <h4 class="ui header">顾客数</h4>
+
+                                            <div class="ui small horizontal statistic">
+                                                #if(${customerNum}==0)
+                                                    <div class="value">0</div>
+                                                #else
+                                                    <div class="value">${customerNum}</div>
+                                                #end
+                                                <div class="label">人</div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="description">
-                                        <div class="ui three column stackable grid">
-                                            <div class="column">
-                                                <div id="customers_list" class="ui center aligned segment">
-                                                    <h4 class="ui header">顾客数</h4>
-                                                    <div class="ui small horizontal statistic">
-                                                        #if(${customerNum}==0)
-                                                            <div class="value">0</div>
-                                                        #else
-                                                            <div class="value">${customerNum}</div>
-                                                        #end
-                                                        <div class="label">人</div>
-                                                    </div>
-                                                </div>
+                                    <div class="column">
+                                        <div id="cashback_list" class="ui center aligned segment">
+                                            <h4 class="ui header">累计返现</h4>
+
+                                            <div class="ui small horizontal statistic">
+                                                <div class="value">${agent.agentRefund}</div>
+                                                <div class="label">元</div>
                                             </div>
-                                            <div class="column">
-                                                <div id="cashback_list" class="ui center aligned segment">
-                                                    <h4 class="ui header">累计返现</h4>
-                                                    <div class="ui small horizontal statistic">
-                                                        <div class="value">${agent.agentRefund}</div>
-                                                        <div class="label">元</div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="column">
-                                                <div id="account_balance" class="ui center aligned segment">
-                                                    <h4 class="ui header">账户余额</h4>
-                                                    <div class="ui small horizontal statistic">
-                                                        <div class="value">${agent.coffer}</div>
-                                                        <div class="label">元</div>
-                                                    </div>
-                                                </div>
+                                        </div>
+                                    </div>
+                                    <div class="column">
+                                        <div id="account_balance" class="ui center aligned segment">
+                                            <h4 class="ui header">账户余额</h4>
+
+                                            <div class="ui small horizontal statistic">
+                                                <div class="value">${agent.coffer}</div>
+                                                <div class="label">元</div>
                                             </div>
                                         </div>
                                     </div>
