@@ -1,3 +1,4 @@
+#set($role = $session.getAttribute("role"))
 <div id="mobileTopMenu" class="ui top fixed inverted menu">
     <div class="header item">
         <a id="menuIcon">
@@ -6,7 +7,9 @@
         </a>
     </div>
     <div class="right menu">
-        <a href="#" class="item">个人中心</a>
+        #if($role == "agent")
+        <a href="${path.concat('/me')}" class="item">个人中心</a>
+        #end
         <a href="${path.concat('/logout')}" class="item">退出</a>
     </div>
 </div>
