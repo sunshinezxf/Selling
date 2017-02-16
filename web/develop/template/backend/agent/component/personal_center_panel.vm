@@ -1,29 +1,11 @@
-<div class="ui stackable padded grid" name="agent_overview">
+<div class="ui stackable padded grid" name="personal_center">
     <div class="row">
         <h1 class="ui header">
             <i class="home icon"></i>
-
             <div class="content">
-                代理商个人详情
-                <div class="sub header">
-                    <div class="ui breadcrumb">
-                        <a class="section">代理管理</a>
-
-                        <div class="divider">/</div>
-                        <a class="section">代理概览</a>
-
-                        <div class="divider">/</div>
-                        <a class="active section">代理商个人详情</a>
-                    </div>
-                </div>
+                个人中心
             </div>
         </h1>
-    </div>
-    <div class="row">
-        <a class="ui primary basic button" href="${path.concat('/agent/overview')}">返回</a>
-        <button type="button" class="ui negative basic button" id="fobid">禁用</button>
-        <a class="ui positive basic button" href="${path.concat('/gift/config/')}${agent.agentId}">赠送配置</a>
-        <a class="ui blue basic button" href="${path.concat('/gift/check/')}${agent.agentId}">个人赠送申请列表</a>
     </div>
     <div class="row">
         <div class="column">
@@ -31,23 +13,7 @@
                 <div class="ui divided items">
                     <div id="personal_info" class="item">
                         <div class="ui stackable grid">
-                            <div class="six wide column">
-                                <div class="ui two column stackable grid">
-                                    #if(${credit.frontPath})
-                                        <img class="ui column image credit" src="${credit.frontPath}">
-                                    #else
-                                        <img class="ui column image credit"
-                                             src="${path.concat('/material/images/no_credit.png')}">
-                                    #end
-                                    #if(${credit.frontPath})
-                                        <img class="ui column image credit" src="${credit.backPath}">
-                                    #else
-                                        <img class="ui column image credit"
-                                             src="${path.concat('/material/images/no_credit.png')}">
-                                    #end
-                                </div>
-                            </div>
-                            <div class="ten wide column">
+                            <div class="sixteen wide column">
                                 <div class="content">
                                     <div class="floated_div">
                                         <div class="ui left floated header">
@@ -63,29 +29,11 @@
                                                         代理商#end#if(${agent.agentType}=="COMPANY")
                                                         公司代理#end#if(${agent.agentType}=="SUPPORT")客服#end)</span>
                                                 </div>
-                                                <a id="upper_agent_div" class="ui blue tag label">
-                                                    上级代理
-                                                    #if(${agent.upperAgent})
-                                                        <div id="upper_agent"
-                                                             class="detail">${agent.upperAgent.name}</div>
-                                                    #else
-                                                        <div id="upper_agent" class="detail">无</div>
-                                                    #end
-                                                </a>
                                             </div>
                                         </div>
                                         <div class="ui right floated header">
-                                            <div class="ui positive toggle checkbox">
-                                                #if(${agent.blockFlag}==0&&${agent.granted}==0)
-                                                    <input type="checkbox" readonly="readonly" disabled="disabled">
-                                                #else
-                                                    <input type="checkbox" readonly="readonly" checked="checked"
-                                                           disabled="disabled">
-                                                #end
-                                                <label>授权</label>
-                                            </div>
+                                            <button class="ui blue basic button" id="password">修改密码</button>
                                         </div>
-
                                     </div>
                                     <div class="ui horizontal divided list">
                                         <div class="item">
@@ -103,7 +51,7 @@
                                         </div>
                                     </div>
                                     <div class="description">
-                                        <div class="ui two column stackable grid">
+                                        <div class="ui three column stackable grid">
                                             <div class="column">
                                                 <div id="customers_list" class="ui center aligned segment">
                                                     <h4 class="ui header">顾客数</h4>
@@ -122,6 +70,15 @@
                                                     <h4 class="ui header">累计返现</h4>
                                                     <div class="ui small horizontal statistic">
                                                         <div class="value">${agent.agentRefund}</div>
+                                                        <div class="label">元</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="column">
+                                                <div id="account_balance" class="ui center aligned segment">
+                                                    <h4 class="ui header">账户余额</h4>
+                                                    <div class="ui small horizontal statistic">
+                                                        <div class="value">${agent.coffer}</div>
                                                         <div class="label">元</div>
                                                     </div>
                                                 </div>
@@ -177,61 +134,50 @@
         </div>
     </div>
 </div>
-<div class="ui modal" id="set_upperAgent_modal">
+<div class="ui modal" id="modify_password_modal">
     <i class="close icon"></i>
-
-    <div class="header">代理配置</div>
+    <div class="header">修改账户密码</div>
     <div class="content">
         <div class="ui form">
             <div class="inline field">
-                <label>当前上级代理商为</label>
-
-                <div class="ui transparent input">
-                    <input input id="now_upper" type="text" readonly="readonly">
+                <label id="password_label">新密码</label>
+                <div class="ui input">
+                    <input id="new_password" type="password">
                 </div>
             </div>
             <div class="inline field">
-                <label>将上级代理商改为</label>
-                <select id="modified_upper" class="ui search dropdown">
-                    <option value="">请输入代理商姓名</option>
-                    #foreach( $elem in ${agentList})
-                        <option value="$elem.agentId">$elem.name</option>
-                    #end
-                </select>
-
-                <div class="ui left pointing red basic label" id="set_upperAgent_error">
-                    一个代理商的上级代理商的上级代理商(或上上级代理商。。。)不能是他自己！！！
+                <label>确认密码</label>
+                <div class="ui input">
+                    <input id="new_password_again" type="password">
                 </div>
             </div>
         </div>
     </div>
     <div class="actions">
         <div class="ui cancel button" id="modify_cancel">取消</div>
-        <div id="modify_btn" class="ui disabled button" disabled="disabled">确定</div>
+        <div id="modify_btn" class="ui disabled positive button" disabled="disabled">确定</div>
     </div>
 </div>
-<div class="ui modal" id="fobid_modal">
+<div class="ui modal" id="tip_modal">
     <i class="close icon"></i>
-
     <div class="header">
-        警告
+        提示
     </div>
-    <div class="image content">
-        <div class="description">
-            禁用该代理商后，该代理商的信息将会被注销掉，该代理商的手机号码可以被重新注册！！！
+    <div class="content">
+        <div class="description" id="success_info">
+            您的账户密码已修改成功！
+        </div>
+        <div class="description" id="failed_info">
+            您的账户密码修改失败！
         </div>
     </div>
     <div class="actions">
-        <div class="ui button" id="fobid_cancel">取消</div>
-        <div class="ui button" id="fobid_confirm">确认</div>
+        <div class="ui positive button" id="tip_confirm">确认</div>
     </div>
 </div>
 <script>
     var upperAgentId;
     $(document).ready(function () {
-        var img_width = $("#personal_info img").width();
-        $("#personal_info img").css("height", img_width * 2 / 3);
-
         var wechat = "${agent.wechat}";
         if (wechat && wechat.slice(-1) != "}") {
             var new_wechat = wechat.replace(wechat.slice(7, -8), "***");
@@ -262,58 +208,66 @@
 
         $(".ui.dropdown").dropdown();
 
-        $("#modified_upper").change(function () {
+        $("#new_password").on("input propertychange",function(){
             if (information_validate()) {
                 active();
-                upperAgentId = $(this).val();
             } else {
                 inactive();
             }
-        });
+        })
 
-        $("#upper_agent_div").click(function () {
-            $("#now_upper").val($("#upper_agent").html());
-            $("#set_upperAgent_modal").modal("show");
+        $("#new_password_again").on("input propertychange",function(){
+            if (information_validate()) {
+                active();
+            } else {
+                inactive();
+            }
+        })
+
+        $("#password").click(function () {
+            $("#modify_password_modal").modal("show");
         });
     });
-    $('#set_upperAgent_modal').modal('hide');
-    $('#fobid_modal').modal('hide');
-    $('#set_upperAgent_error').hide();
-    $("#modify_btn").on('click', function () {
-        var url = "${path.concat('/agent/modifyUpperAgent/')}${agent.agentId}/" + upperAgentId;
-        $.post(url, function (result) {
-            if (result.responseCode == "RESPONSE_OK") {
-                url = "${path.concat('/agent/detail/')}${agent.agentId}";
-                window.location.href = url;
-                $('#set_upperAgent_modal').modal('hide');
-            } else if (result.description == "recursion") {
-                $('#set_upperAgent_error').show();
-            } else {
 
+    $('#modify_password_modal').modal('hide');
+    $('#tip_modal').modal('hide');
+    $('#success_info').hide();
+    $('#failed_info').hide();
+
+    $("#modify_btn").on('click', function () {
+        var url = "${path.concat('/agent/password/modify')}";
+        var newPassword=$("#new_password_again").val();
+        var param={password:newPassword};
+        $.post(url,param, function (result) {
+            $('#modify_password_modal').modal('hide');
+            $("#new_password").val("");
+            $("#new_password_again").val("");
+            if (result.responseCode == "RESPONSE_OK") {
+                $('#tip_modal').modal('show');
+                $('#success_info').show();
+                $('#failed_info').hide();
+            }else {
+                $('#tip_modal').modal('show');
+                $('#success_info').hide();
+                $('#failed_info').show();
             }
         });
     });
     $("#modify_cancel").on('click', function () {
-        $('#set_upperAgent_modal').modal('hide');
-        $('#set_upperAgent_error').hide();
+        $('#modify_password_modal').modal('hide');
+        $("#new_password").val("");
+        $("#new_password_again").val("");
+        $('#tip_modal').modal('hide');
+        $('#success_info').hide();
+        $('#failed_info').hide();
     });
 
-    $("#waring_confirm").on('click', function () {
-        $('#waring_modal').modal('hide');
-        url = "${path.concat('/agent/detail/')}${agent.agentId}";
-        window.location.href = url;
+    $("#tip_confirm").on('click', function () {
+        $('#tip_modal').modal('hide');
+        $('#success_info').hide();
+        $('#failed_info').hide();
     });
-    $("#fobid").on('click', function () {
-        $('#fobid_modal').modal('show');
-    });
-    $("#fobid_confirm").on('click', function () {
-        $('#fobid_modal').modal('hide');
-        var url = "${path.concat('/agent/forbid/')}${agent.agentId}";
-        window.location.href = url;
-    });
-    $("#fobid_cancel").on('click', function () {
-        $('#fobid_modal').modal('hide');
-    });
+
 
     function active() {
         $("#modify_btn").removeAttr("disabled");
@@ -326,8 +280,9 @@
     }
 
     function information_validate() {
-        var upper_agent = $("#modified_upper").val();
-        if (not_null(upper_agent)) {
+        var password1 = $("#new_password").val();
+        var password2 = $("#new_password_again").val();
+        if (not_null(password1)&&not_null(password2)&&(password1==password2)) {
             return true;
         }
         return false;
