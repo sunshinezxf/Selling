@@ -26,7 +26,7 @@
             </div>
         </div>
     #end
-    #if($role == "admin" || $role == "express")
+    #if($role == "admin" || $role == "express"||$role == "agent")
         <div class="item">
             <a class="title"><i class="teal file text icon left"></i><i class="dropdown icon"></i>订单管理</a>
 
