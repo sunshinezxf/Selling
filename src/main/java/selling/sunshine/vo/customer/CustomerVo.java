@@ -6,28 +6,29 @@ import common.sunshine.model.selling.customer.Customer;
 import java.sql.Timestamp;
 
 /**
+ * 顾客个人信息vo类
  * Created by sunshine on 2016/12/28.
  */
 public class CustomerVo {
-    private String customerId;
+    private String customerId;//顾客ID
 
-    private String name;
+    private String name;//顾客姓名
 
-    private String wechat;
+    private String wechat;//顾客微信号
 
-    private String phone;
+    private String phone;//顾客手机号码
 
-    private String address;
+    private String address;//顾客住址
 
-    private String province;
+    private String province;//顾客所在地省份
 
-    private String city;
+    private String city;//顾客所在地市名
 
-    private String district;
+    private String district;//顾客所在区名
 
-    private Agent agent;
+    private Agent agent;//顾客所属代理商
 
-    private boolean transformed;
+    private boolean transformed;//1代表顾客已经成为代理商，0代表还没有
 
     private boolean blockFlag;
 

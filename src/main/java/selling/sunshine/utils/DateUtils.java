@@ -1,14 +1,18 @@
 package selling.sunshine.utils;
 
-import java.text.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+/**
+ * 日期处理类
+ * @author wxd
+ */
 public class DateUtils {
 	private String dateFormat ;
 	private SimpleDateFormat format ;
@@ -21,6 +25,11 @@ public class DateUtils {
 		dateList=new ArrayList<>();
 	}
 
+	/**
+	 * 以string类型把从date1起，到date2为止的每一天的日期加入到一个list中，返回给调用者使用
+	 * @param date1
+	 * @param date2
+	 */
 	public void process(String date1, String date2) {
 		if (date1.equals(date2)) {
 			dateList.add(date1);
@@ -44,6 +53,11 @@ public class DateUtils {
 		 dateList.add(date2);
 	}
 
+	/**
+	 * 把string类型的日期转化为date类型
+	 * @param str
+	 * @return
+	 */
 	private Date str2Date(String str) {
 		if (str == null)
 			return null;

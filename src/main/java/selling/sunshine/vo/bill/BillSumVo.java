@@ -3,15 +3,19 @@ package selling.sunshine.vo.bill;
 import common.sunshine.model.Entity;
 import common.sunshine.model.selling.bill.support.BillStatus;
 
+/**
+ * 账单统计vo类
+ * @author
+ */
 public class BillSumVo extends Entity{
 	
-	private String billId;
-	private String accountId;
-	private String orderId;
-	private String channel;
-	private String clientIp;
-	private String billAmount;
-	private BillStatus status;
+	private String billId; //账单ID
+	private String accountId;//关联的账户ID
+	private String orderId; //关联的订单号
+	private String channel;//渠道（三种：微信、支付宝、余额）
+	private String clientIp;//客户端IP地址
+	private String billAmount;//账单金额
+	private BillStatus status;//账单状态
 	
 	public BillSumVo() {
 		super();

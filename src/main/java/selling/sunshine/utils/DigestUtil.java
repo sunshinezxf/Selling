@@ -1,12 +1,12 @@
 package selling.sunshine.utils;
 
-import java.security.MessageDigest;
-
-
 import sun.misc.BASE64Encoder;
+
+import java.security.MessageDigest;
 
 /**
  * 生成摘要工具类
+ * @author sunshine
  */
 public class DigestUtil {
     public static final String GBK="GBK";

@@ -10,11 +10,19 @@ import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 
+/**
+ * 腾讯地图开发者API调用类
+ * @author wxd
+ */
 public class TencentMapAPI {
      static String key="7VKBZ-HEYRD-D624I-HTE3L-3O5WV-VRBV7";
-     
+
+	/**
+	 * 解析一个详细地址得到省、市、区
+	 * @param address
+	 * @return
+	 */
      public static Map<String, String> getDetailInfoByAddress(String address){
     	try {
 			address = java.net.URLEncoder.encode(address, "UTF-8");

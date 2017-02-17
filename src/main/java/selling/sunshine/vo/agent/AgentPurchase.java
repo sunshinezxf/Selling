@@ -3,12 +3,13 @@ package selling.sunshine.vo.agent;
 import common.sunshine.model.selling.agent.lite.Agent;
 
 /**
+ * 代理商购买商品数量类
  * Created by sunshine on 2016/11/14.
  */
 public class AgentPurchase {
-    private Agent agent;
+    private Agent agent;//关联代理商
 
-    private int quantity;
+    private int quantity;//购买商品数量
 
     public AgentPurchase() {
         super();

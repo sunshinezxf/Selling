@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 
 /**
  * Created by sunshine on 5/27/16.
+ * @author sunshine
  */
 public class Configuration {
     private String appId;

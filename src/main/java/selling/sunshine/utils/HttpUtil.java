@@ -1,19 +1,16 @@
 package selling.sunshine.utils;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
+import com.alibaba.fastjson.JSONObject;
+
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.alibaba.fastjson.JSONObject;
-
+/**
+ * @author sunshine
+ */
 public class HttpUtil {
 	
 	/**
@@ -69,7 +66,16 @@ public class HttpUtil {
 		}
 		return result.toString();
 	}
-	
+
+
+	/**
+	 * post请求，以json格式返回
+	 * @param url
+	 * @param charset
+	 * @param params
+	 * @return
+	 * @throws Exception
+	 */
 	public static String postJSON(String url, String charset, JSONObject params) throws Exception{
 		HttpURLConnection conn = null;
 		OutputStreamWriter out = null;

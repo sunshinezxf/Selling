@@ -6,15 +6,19 @@ import common.sunshine.model.selling.goods.Goods4Agent;
 import common.sunshine.model.selling.order.support.OrderItemStatus;
 import common.sunshine.model.selling.order.support.OrderType;
 
+/**
+ * 订单项统计信息vo类
+ * @author wxd
+ */
 public class OrderItemSum extends Entity {
-    private Agent agent;
-    private Goods4Agent goods;
-    private OrderType orderType;
-    private String orderId;
-    private OrderItemStatus status;
-    private int goodsQuantity;
-    private double orderItemPrice;
-    private String customerName;
+    private Agent agent;//关联的代理商
+    private Goods4Agent goods;//购买的商品
+    private OrderType orderType;//订单类别
+    private String orderId;//关联的订单ID
+    private OrderItemStatus status;//订单项状态
+    private int goodsQuantity;//购买的商品数量
+    private double orderItemPrice;//购买的商品总价
+    private String customerName;//购买的顾客姓名
 
     public Agent getAgent() {
         return agent;

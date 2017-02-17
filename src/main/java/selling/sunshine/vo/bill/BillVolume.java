@@ -1,9 +1,12 @@
 package selling.sunshine.vo.bill;
 
+/**
+ * 按照日期统计的账单金额
+ */
 public class BillVolume {
 	
-	private String date;
-	private double amount;
+	private String date; //日期
+	private double amount;//账单金额
 	
 	public BillVolume() {
 		super();

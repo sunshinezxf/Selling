@@ -13,7 +13,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 
 /**
+ * excel文件处理类
  * Created by sunshine on 7/7/16.
+ * @author sunshine
  */
 public class WorkBookUtil {
     private static Logger logger = LoggerFactory.getLogger(WorkBookUtil.class);
@@ -36,6 +38,10 @@ public class WorkBookUtil {
         return workbook;
     }
 
+    /**
+     * 读取订货单清单模板文件
+     * @return
+     */
     public static Workbook getIndentSummaryTemplate() {
         Workbook workbook = null;
         String path = WorkBookUtil.class.getResource("/").getPath();
@@ -54,6 +60,10 @@ public class WorkBookUtil {
         return workbook;
     }
 
+    /**
+     * 读取发货单模板文件
+     * @return
+     */
     public static Workbook getExpressTemplate() {
         Workbook workbook = null;
         String path = WorkBookUtil.class.getResource("/").getPath();
@@ -73,6 +83,10 @@ public class WorkBookUtil {
         return workbook;
     }
 
+    /**
+     * 读取发货单模板文件
+     * @return
+     */
     public static Workbook getDeliverTemplate() {
         Workbook workbook = null;
         String path = WorkBookUtil.class.getResource("/").getPath();
@@ -91,6 +105,10 @@ public class WorkBookUtil {
         return workbook;
     }
 
+    /**
+     * 读取发货单清单模板
+     * @return
+     */
     public static Workbook getDeliverSummaryTemplate() {
         Workbook workbook = null;
         String path = WorkBookUtil.class.getResource("/").getPath();
@@ -109,6 +127,10 @@ public class WorkBookUtil {
         return workbook;
     }
 
+    /**
+     * 读取收款单模板文件
+     * @return
+     */
     public static Workbook getGatherTemplate() {
         Workbook workbook = null;
         String path = WorkBookUtil.class.getResource("/").getPath();
@@ -127,6 +149,10 @@ public class WorkBookUtil {
         return workbook;
     }
 
+    /**
+     * 读取收款单清单模板文件
+     * @return
+     */
     public static Workbook getGatherSummaryTemplate() {
         Workbook workbook = null;
         String path = WorkBookUtil.class.getResource("/").getPath();
@@ -145,6 +171,10 @@ public class WorkBookUtil {
         return workbook;
     }
 
+    /**
+     * 读取提现申请模板文件
+     * @return
+     */
     public static Workbook getWithdrawApplyTemplate() {
         Workbook workbook = null;
         String path = WorkBookUtil.class.getResource("/").getPath();
@@ -163,6 +193,10 @@ public class WorkBookUtil {
         return workbook;
     }
 
+    /**
+     * 读取返现清单模板文件
+     * @return
+     */
     public static Workbook getCashbackSummaryTemplate() {
         Workbook workbook = null;
         String path = WorkBookUtil.class.getResource("/").getPath();
@@ -181,6 +215,10 @@ public class WorkBookUtil {
         return workbook;
     }
 
+    /**
+     * 读取返现详单模板文件
+     * @return
+     */
     public static Workbook getCashbackDetailTemplate() {
         Workbook workbook = null;
         String path = WorkBookUtil.class.getResource("/").getPath();
@@ -199,6 +237,11 @@ public class WorkBookUtil {
         return workbook;
     }
 
+    /**
+     * 创建订货单模板文件
+     * @param context
+     * @return
+     */
     public static boolean createIndentTemplate(String context) {
         int length = 7;
         try {
@@ -255,6 +298,15 @@ public class WorkBookUtil {
         return true;
     }
 
+    /**
+     *
+     * @param wb
+     * @param row
+     * @param column
+     * @param halign
+     * @param valign
+     * @return
+     */
     private static Cell createCell(Workbook wb, Row row, short column, short halign, short valign) {
         Cell cell = row.createCell(column);
         CellStyle cellStyle = wb.createCellStyle();

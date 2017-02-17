@@ -9,28 +9,29 @@ import common.sunshine.model.selling.order.support.OrderItemStatus;
 import java.sql.Timestamp;
 
 /**
+ * 订单项信息vo类
  * Created by sunshine on 2017/1/12.
  */
 public class OrderItemVo {
-    private String orderItemId;
+    private String orderItemId;//订单项ID
 
-    private String couponCode;
+    private String couponCode; //优惠码
 
-    private String customerName;
+    private String customerName;//顾客姓名
 
-    private String customerAddress;
+    private String customerAddress;//顾客住址
 
-    private String customerPhone;
+    private String customerPhone;//顾客手机号码
 
-    private AbstractGoods goods;
+    private AbstractGoods goods;//购买的商品
 
-    private int itemQuantity;
+    private int itemQuantity;//购买的商品总量
 
-    private double itemPrice;
+    private double itemPrice;//购买的商品总价
 
-    private OrderItemStatus status;
+    private OrderItemStatus status;//订单项状态
 
-    private Timestamp createAt;
+    private Timestamp createAt;//订单项创建时间
 
     public OrderItemVo() {
         super();

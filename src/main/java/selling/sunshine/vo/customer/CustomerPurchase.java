@@ -3,18 +3,19 @@ package selling.sunshine.vo.customer;
 import common.sunshine.model.selling.agent.lite.Agent;
 
 /**
+ * 顾客购买信息vo类
  * Created by sunshine on 2016/12/28.
  */
 public class CustomerPurchase {
-    private String customerId;
+    private String customerId;//顾客ID
 
-    private String customerName;
+    private String customerName;//顾客姓名
 
-    private Agent agent;
+    private Agent agent;//顾客所属代理商
 
-    private double montant;
+    private double montant;//购买金额
 
-    private int dealNum;
+    private int dealNum;//购买数量
 
     public String getCustomerId() {
         return customerId;

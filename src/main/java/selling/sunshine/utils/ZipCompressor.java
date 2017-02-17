@@ -1,19 +1,23 @@
 package selling.sunshine.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.CRC32;
 import java.util.zip.CheckedOutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+/**
+ * 文件压缩类
+ * @author wxd
+ */
 public class ZipCompressor {   
     static final int BUFFER = 8192;   
   
@@ -22,7 +26,12 @@ public class ZipCompressor {
     
     public ZipCompressor(String pathName) {   
         zipFile = new File(pathName);   
-    }   
+    }
+
+    /**
+     * 压缩一系列文件
+     * @param pathList
+     */
     public void compress(List<String> pathList) { 
     	ZipOutputStream out = null;   
     	try {  
@@ -38,7 +47,12 @@ public class ZipCompressor {
     	} catch (Exception e) {   
 			throw new RuntimeException(e);   
 		} 
-    }   
+    }
+
+    /**
+     * 压缩文件
+     * @param srcPathName
+     */
     public void compress(String srcPathName) {   
         File file = new File(srcPathName);   
         if (!file.exists())   
@@ -54,8 +68,14 @@ public class ZipCompressor {
         } catch (Exception e) {   
             throw new RuntimeException(e);   
         }   
-    }   
-  
+    }
+
+    /**
+     * 判断是文件还是目录，再调用相应的方法压缩
+     * @param file
+     * @param out
+     * @param basedir
+     */
     private void compress(File file, ZipOutputStream out, String basedir) {   
     	if (!file.exists()) {
 			return;
@@ -68,9 +88,14 @@ public class ZipCompressor {
         	logger.debug("压缩：" + basedir + file.getName());      
             this.compressFile(file, out, basedir);   
         }   
-    }   
-  
-    /** 压缩一个目录 */  
+    }
+
+    /**
+     * 压缩一个目录
+     * @param dir
+     * @param out
+     * @param basedir
+     */
     private void compressDirectory(File dir, ZipOutputStream out, String basedir) {   
         if (!dir.exists())   
             return;   
@@ -80,9 +105,14 @@ public class ZipCompressor {
             /* 递归 */  
             compress(files[i], out, basedir + dir.getName() + "/");   
         }   
-    }   
-  
-    /** 压缩一个文件 */  
+    }
+
+    /**
+     * 压缩一个文件
+      * @param file
+     * @param out
+     * @param basedir
+     */
     private void compressFile(File file, ZipOutputStream out, String basedir) {   
         if (!file.exists()) {   
             return;   

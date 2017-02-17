@@ -2,16 +2,20 @@ package selling.sunshine.vo.cashback;
 
 import common.sunshine.model.selling.agent.lite.Agent;
 
+/**
+ * 某一个月的返现信息vo类
+ * @author sunshine
+ */
 public class CashBack {
-	private Agent agent;
+	private Agent agent; //关联的代理商
 	
-	private String month;
+	private String month;  //月份
 	
-	private int quantity;
+	private int quantity; //购买数量
 	
-	private double amount;
+	private double amount; //返现金额
 	
-	private int level;
+	private int level;  //级别（自身，上级代理商，上上级代理商）
 
 	public Agent getAgent() {
 		return agent;
