@@ -1836,6 +1836,48 @@ public class AgentController {
         }
     }
 
+    /**
+     * 代理商修改个人密码信息
+     *
+     * @param password
+     * @return
+     */
+    @RequestMapping(method = RequestMethod.POST, value = "/password/modify")
+    public ResultData modifyPassword(String password) {
+        ResultData result = new ResultData();
+        if (StringUtils.isEmpty(password)) {
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription("请您重新设置密码,当前密码不符合要求");
+            return result;
+        }
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        if (StringUtils.isEmpty(user) || StringUtils.isEmpty(user.getAgent())) {
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription("您当前无权限不能进行此操作");
+            return result;
+        }
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("agentId", user.getAgent().getAgentId());
+        condition.put("blockFlag", false);
+        ResultData response = agentService.fetchAgent(condition);
+        if (response.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription(response.getDescription());
+            return result;
+        }
+        Agent agent = ((List<Agent>) response.getData()).get(0);
+        response = agentService.modifyPassword(agent, password);
+        if (response.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription(response.getDescription());
+            return result;
+        }
+        result.setDescription("密码修改成功,请重新登录");
+        subject.logout();
+        return result;
+    }
+
     @RequestMapping(method = RequestMethod.GET, value = "/modifyscale")
     public ModelAndView modifyScale() {
         ModelAndView view = new ModelAndView();
