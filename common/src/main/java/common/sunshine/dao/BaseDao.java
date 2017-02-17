@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 该类用于管理持久层与数据库的连接sql session, 所有的Dao需要继承此方法
  * Created by sunshine on 4/18/16.
  */
 public class BaseDao {
@@ -22,6 +23,12 @@ public class BaseDao {
         this.sqlSession = sqlSession;
     }
 
+    /**
+     * 该方法用于过滤查询条件, 若查询条件中包含sort, 需将sort转变成sql中的排序字符串
+     *
+     * @param condition
+     * @return
+     */
     public Map<String, Object> handle(Map<String, Object> condition) {
         List<SortRule> constraints = (List<SortRule>) condition.get("sort");
         if (constraints != null && constraints.size() != 0) {

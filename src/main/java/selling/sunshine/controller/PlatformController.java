@@ -1,5 +1,6 @@
 package selling.sunshine.controller;
 
+import common.sunshine.model.selling.agent.Agent;
 import common.sunshine.model.selling.user.User;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
@@ -9,6 +10,7 @@ import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -18,15 +20,14 @@ import selling.sunshine.form.AdminLoginForm;
 import selling.sunshine.model.sum.OrderMonth;
 import selling.sunshine.model.sum.TopThreeAgent;
 import selling.sunshine.model.sum.Vendition;
+import selling.sunshine.model.sum.VolumeTotal;
 import selling.sunshine.service.*;
+import selling.sunshine.vo.customer.CustomerVo;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by sunshine on 4/10/16.
@@ -45,6 +46,12 @@ public class PlatformController {
 
     @Autowired
     private ToolService toolService;
+
+    @Autowired
+    private AgentService agentService;
+
+    @Autowired
+    private CustomerService customerService;
 
     @Autowired
     private LogService logService;
@@ -82,12 +89,15 @@ public class PlatformController {
             User user = (User) subject.getPrincipal();
             HttpSession session = request.getSession();
             session.setAttribute("role", user.getRole().getName());
-            view.setViewName("redirect:/dashboard");
+            if (!StringUtils.isEmpty(user.getAgent())) {
+                view.setViewName("redirect:/me");
+            } else {
+                view.setViewName("redirect:/dashboard");
+            }
         } catch (Exception e) {
             view.setViewName("redirect:/login");
             return view;
         }
-        view.setViewName("redirect:/dashboard");
         return view;
     }
 
@@ -270,6 +280,82 @@ public class PlatformController {
     public ModelAndView log() {
         ModelAndView view = new ModelAndView();
         view.setViewName("/backend/system/log");
+        return view;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/me")
+    public ModelAndView me() {
+        ModelAndView view = new ModelAndView();
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        if (StringUtils.isEmpty(user.getAgent())) {
+            subject.logout();
+            view.setViewName("redirect:/login");
+            return view;
+        }
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("agentId", user.getAgent().getAgentId());
+        ResultData responose = agentService.fetchAgent(condition);
+        if (responose.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            Agent agent = ((List<Agent>) responose.getData()).get(0);
+            view.addObject("agent", agent);
+        }
+        // 代理商列表（除该代理商之外的其他已授权的代理商列表，用来配置该代理商的上级代理商）
+        condition.clear();
+        condition.put("granted", true);
+        condition.put("blockFlag", false);
+        condition.put("sortByName", true);
+        condition.put("agentType", 0);//只查询普通代理商
+        responose = agentService.fetchAgent(condition);
+        if (responose.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            List<Agent> agentList = (List<Agent>) responose.getData();
+            Iterator<Agent> iter = agentList.iterator();
+            while (iter.hasNext()) {
+                if (iter.next().getAgentId().equals(user.getAgent().getAgentId())) {
+                    iter.remove();
+                }
+            }
+            view.addObject("agentList", agentList);
+        }
+
+        // 顾客人数
+        condition.clear();
+        condition.put("agentId", user.getAgent().getAgentId());
+        condition.put("blockFlag", false);
+        responose = customerService.fetchCustomer(condition);
+        if (responose.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            int customerNum = ((List<CustomerVo>) responose.getData()).size();
+            view.addObject("customerNum", customerNum);
+        } else {
+            view.addObject("customerNum", 0);
+        }
+        // 代理商统计信息
+        // 累计销售信息
+        responose = statisticService.queryAgentGoods(condition);
+        if (responose.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            List<VolumeTotal> volumeTotalList = (List<VolumeTotal>) responose.getData();
+            view.addObject("volumeTotalList", volumeTotalList);
+        }
+
+        // 排名
+        condition.clear();
+        condition.put("blockFlag", false);
+        condition.put("granted", true);
+        condition.put("agentType", 0);//只查询普通代理商
+        responose = agentService.fetchAgent(condition);
+        if (responose.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            int totalNum = ((List<Agent>) responose.getData()).size();
+            view.addObject("totalNum", totalNum);
+        }
+        condition.clear();
+        condition.put("agentId", user.getAgent().getAgentId());
+        responose = statisticService.agentRanking(condition);
+        if (responose.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            int ranking = (int) responose.getData();
+            view.addObject("ranking", ranking);
+        }
+
+        view.setViewName("/backend/agent/personalcenter");
         return view;
     }
 }
