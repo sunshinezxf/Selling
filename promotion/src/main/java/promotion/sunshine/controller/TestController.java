@@ -36,29 +36,13 @@ public class TestController {
         resultData=articleService.queryArticle(condition);
         return resultData;
     }
-
+    
+    /**
+     * 关键词分析
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/IKAnalyzer")
     public ResultData testIKAnalyzer(){
-//        String text="基于java语言开发的轻量级的中文分词工具包";
-//        //创建分词对象
-//        Analyzer anal=new IKAnalyzer(true);
-//        StringReader reader=new StringReader(text);
-//        //分词
-//        TokenStream ts;
-//        try {
-//            ts = anal.tokenStream("", reader);
-//            CharTermAttribute term=ts.getAttribute(CharTermAttribute.class);
-//            //遍历分词数据
-//            while(ts.incrementToken()){
-//                System.out.print(term.toString()+"|");
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }finally {
-//            reader.close();
-//            System.out.println();
-//        }
-
         ResultData resultData=new ResultData();
         try {
             String str="基于java语言开发的轻量级的中文分词工具包";

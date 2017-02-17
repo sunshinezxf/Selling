@@ -13,6 +13,7 @@ import java.util.UUID;
 
 /**
  * Created by sunshine on 5/27/16.
+ * 微信配置
  */
 public class WechatConfig {
     private static Logger logger = LoggerFactory.getLogger(WechatConfig.class);

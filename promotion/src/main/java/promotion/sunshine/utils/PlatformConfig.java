@@ -7,6 +7,7 @@ import java.util.Properties;
 
 /**
  * Created by sunshine on 5/18/16.
+ * 平台通用配置
  */
 public class PlatformConfig {
 

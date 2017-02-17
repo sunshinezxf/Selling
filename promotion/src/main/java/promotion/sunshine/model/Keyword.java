@@ -6,11 +6,11 @@ import common.sunshine.model.Entity;
  * Created by sunshine on 2017/2/7.
  */
 public class Keyword extends Entity {
-    private String wordId;
+    private String wordId;//关键词id
 
-    private String content;
+    private String content;//内容
 
-    private Article article;
+    private Article article;//文章
 
     public Keyword() {
         super();

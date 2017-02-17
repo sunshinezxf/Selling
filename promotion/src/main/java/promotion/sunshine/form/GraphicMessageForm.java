@@ -8,19 +8,19 @@ import javax.validation.constraints.NotNull;
 public class GraphicMessageForm {
 
     @NotNull
-    private String[] keywordList;
+    private String[] keywordList;//关键词列表
 
     @NotNull
-    private String title;
+    private String title;//图文标题
 
     @NotNull
-    private String description;
+    private String description;//图文描述
 
     @NotNull
-    private String url;
+    private String url;//图文url
 
     @NotNull
-    private String picUrl;
+    private String picUrl;//图片url
 
     public String[] getKeywordList() {
         return keywordList;

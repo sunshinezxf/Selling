@@ -17,6 +17,7 @@ import javax.validation.Valid;
 
 /**
  * Created by wxd on 2017/2/7.
+ * 活动关键词分析
  */
 @RestController
 @RequestMapping("/graphicMessage")

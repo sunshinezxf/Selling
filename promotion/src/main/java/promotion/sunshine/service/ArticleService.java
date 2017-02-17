@@ -10,7 +10,9 @@ import java.util.Map;
  */
 public interface ArticleService {
 
+	//插入文章
     ResultData insertArticle(Article article);
 
+    //查询文章
     ResultData queryArticle(Map<String,Object> condition);
 }

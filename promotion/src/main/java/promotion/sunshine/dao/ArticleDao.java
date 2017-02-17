@@ -8,5 +8,6 @@ import promotion.sunshine.model.Article;
  */
 public interface ArticleDao {
 
+	//插入文章
     ResultData insertArticle(Article article);
 }

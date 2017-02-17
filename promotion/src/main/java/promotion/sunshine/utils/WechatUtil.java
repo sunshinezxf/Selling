@@ -21,6 +21,7 @@ import java.util.Date;
 
 /**
  * Created by sunshine on 5/24/16.
+ * 微信工具类
  */
 public class WechatUtil {
     private static Logger logger = LoggerFactory.getLogger(WechatUtil.class);

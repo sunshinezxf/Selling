@@ -2,13 +2,14 @@ package promotion.sunshine.utils;
 
 /**
  * Created by sunshine on 4/17/16.
+ * 通用提示页面
  */
 public class Prompt {
-    private PromptCode code;
-    private String message;
-    private String title;
-    private String confirmURL;
-    private String extra;
+    private PromptCode code;//提示页面类型
+    private String message;//提示消息
+    private String title;//页面标题
+    private String confirmURL;//页面确认按钮跳转url
+    private String extra;//额外信息
 
     private Prompt() {
         code = PromptCode.SUCCESS;

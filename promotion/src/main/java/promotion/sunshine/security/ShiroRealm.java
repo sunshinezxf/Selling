@@ -10,6 +10,7 @@ import org.apache.shiro.subject.PrincipalCollection;
 
 /**
  * Created by sunshine on 4/21/16.
+ * shiro验证类
  */
 public class ShiroRealm extends AuthorizingRealm {
 

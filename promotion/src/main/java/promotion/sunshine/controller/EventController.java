@@ -30,6 +30,7 @@ import java.util.Map;
 
 /**
  * Created by sunshine on 8/22/16.
+ * @author wangmin
  */
 @RestController
 @RequestMapping("/event")
@@ -51,6 +52,9 @@ public class EventController {
     @RequestMapping(method = RequestMethod.GET, value = "/{eventName}/{openId}")
     public ModelAndView view(@PathVariable("eventName") String eventName, @PathVariable("openId") String openId, HttpServletRequest request) {
         ModelAndView view = new ModelAndView();
+        /*
+         * 先从订阅号菜单链接获取openId，如果没有则从session中获取openId
+         */
         HttpSession session = request.getSession();
         if (openId.equals("") || openId == null) {
             if (session.getAttribute("openId") == null || (session.getAttribute("openId")).equals("") || openId.equals("")) {
@@ -80,7 +84,9 @@ public class EventController {
             return view;
         }
         GiftEvent event = ((List<GiftEvent>) fetchEventResponse.getData()).get(0);
-
+		/*
+		 * 查询用户是否已经填过表单
+		 */
         condition.clear();
         condition.put("eventId", event.getEventId());
         condition.put("donorWechat", openId);
@@ -93,19 +99,10 @@ public class EventController {
             WechatConfig.oauthWechat(view, "/event/" + eventName + "/" + openId, url);
             view.setViewName("/customer/event/prompt");
             return view;
-        }/*
-        condition.clear();
-        condition.put("openId", openId);
-        condition.put("channel", "dingyue");
-        ResultData response = followerService.queryFollower(condition);
-        if (response.getResponseCode() != ResponseCode.RESPONSE_OK) {
-            Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "请求链接失效,请重新在订阅号中获取链接", "");
-            view.addObject("prompt", prompt);
-            String url = "http://mp.weixin.qq.com/s?__biz=MzI1OTMyNTI1NQ==&mid=100000233&idx=1&sn=85b05c7a3dca6429e66ddf7762de06aa#wechat_redirect";
-            WechatConfig.oauthWechat(view, "/event/" + eventName + "/" + openId, url);
-            view.setViewName("/customer/event/prompt");
-            return view;
-        }*/
+        }
+        /*
+         * 查询活动是否开始
+         */
         Timestamp now = new Timestamp(System.currentTimeMillis());
         if (now.before(event.getStart())) {
             Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "活动尚未开始", "");
@@ -115,6 +112,9 @@ public class EventController {
             view.setViewName("/customer/event/prompt");
             return view;
         }
+        /*
+         * 活动已结束判断 
+         */
         if (now.after(event.getEnd())) {
             Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "活动已结束", "");
             view.addObject("prompt", prompt);
@@ -129,10 +129,20 @@ public class EventController {
         view.setViewName("/customer/event/apply");
         return view;
     }
-
+    
+    /**
+     * 活动申请表单的post方法
+     * @param form
+     * @param result
+     * @param request
+     * @return
+     */
     @RequestMapping(method = RequestMethod.POST, value = "/giftapplication")
     public ModelAndView giftApplication(@Valid EventApplicationForm form, BindingResult result, HttpServletRequest request) {
         ModelAndView view = new ModelAndView();
+        /*
+         *先判断是否有openId 
+         */
         HttpSession session = request.getSession();
         if (session.getAttribute("openId") == null || ((String) session.getAttribute("openId")).equals("")) {
             Prompt prompt = new Prompt(PromptCode.WARNING, "提示", "操作超时，请重新进入活动", "");
@@ -140,7 +150,9 @@ public class EventController {
             view.setViewName("/customer/event/prompt");
             return view;
         }
-
+        /*
+         * 判断该活动是否因过期等原因被block
+         */
         Map<String, Object> condition = new HashMap<String, Object>();
         condition.put("eventId", form.getEvent_id());
         condition.put("blockFlag", false);
@@ -154,6 +166,9 @@ public class EventController {
         }
         String eventName = event.getNickname();
         String openId = (String) session.getAttribute("openId");
+        /*
+         * 判断是否已经提交过申请 
+         */
         condition.clear();
         condition.put("eventId", event.getEventId());
         condition.put("donorWechat", (String) session.getAttribute("openId"));
@@ -167,7 +182,9 @@ public class EventController {
             view.setViewName("/customer/event/prompt");
             return view;
         }
-
+        /*
+         * 数据库插入申请
+         */
         EventApplication eventApplication = new EventApplication(event, form.getDonor_name(), form.getDonor_phone(), form.getDonee_name(), form.getDonee_phone(), form.getDonee_gender(), form.getDonee_address(), form.getDonee_age_range(), form.getRelation(), form.getWishes(), (String) session.getAttribute("openId"));
         ResultData insertEventApplicationResponse = eventService.insertEventApplication(eventApplication);
         if (insertEventApplicationResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
@@ -176,15 +193,21 @@ public class EventController {
             view.setViewName("/customer/event/prompt");
             return view;
         }
+        /*
+         * 对于中秋活动来说，有多选题，这里一个申请对应多个选择(option)，数据库插入这些选择(option)
+         */
         if (form.getOption_id() != null) {
             String[] optionIds = form.getOption_id();
+            //插入一个申请
             eventApplication = (EventApplication) insertEventApplicationResponse.getData();
             for (String optionId : optionIds) {
                 condition.clear();
                 condition.put("optionId", optionId);
                 condition.put("blockFlag", false);
+                //对每个传过来的回答选项id，查询选项
                 ResultData fetchOption = eventService.fetchQuestionOption(condition);
                 if (fetchOption.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                	//将每个申请的回答插入数据库
                     QuestionOption questionOption = ((List<QuestionOption>) fetchOption.getData()).get(0);
                     QuestionAnswer questionAnswer = new QuestionAnswer(eventApplication, questionOption.getQuestion().getContent(), questionOption.getValue(), questionOption.getQuestion().getRank());
                     eventService.insertQuestionAnswer(questionAnswer);
@@ -198,14 +221,22 @@ public class EventController {
         view.setViewName("/customer/event/prompt");
         return view;
     }
-
+	/**
+	 * 查询申请结果-查询页面
+	 */
     @RequestMapping(method = RequestMethod.GET, value = "/consultapplication")
     public ModelAndView consultApplication() {
         ModelAndView view = new ModelAndView();
         view.setViewName("/customer/event/consult");
         return view;
     }
-
+    
+	/**
+	 * 查询申请结果-结果页面
+	 * @param request
+	 * @param phone
+	 * @return
+	 */
     @RequestMapping(method = RequestMethod.GET, value = "/giftapplication/{phone}")
     public ModelAndView giftApplication(HttpServletRequest request, @PathVariable("phone") String phone) {
         ModelAndView view = new ModelAndView();

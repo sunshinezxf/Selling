@@ -2,29 +2,33 @@ package promotion.sunshine.form;
 
 import javax.validation.constraints.NotNull;
 
+/**
+ * 活动申请表单
+ * @author wang_min
+ */
 public class EventApplicationForm {
 	@NotNull
-	private String event_id;
+	private String event_id;//活动id
 	@NotNull
-	private String donor_name;
+	private String donor_name;//申请人名字
 	@NotNull
-	private String donor_phone;
+	private String donor_phone;//申请人电话
 	@NotNull
-	private String donee_name;
+	private String donee_name;//被送人名字
 	@NotNull
-	private String donee_gender;
+	private String donee_gender;//被送人性别
 	@NotNull
-	private String donee_phone;
+	private String donee_phone;//被送人电话
 	@NotNull
-	private String donee_address;
+	private String donee_address;//被送人地址
 	@NotNull
-	private String donee_age_range;
+	private String donee_age_range;//被送人年龄段
 	@NotNull
-	private String relation;
+	private String relation;//申请人与被送人关系
 	
-	private String wishes;
+	private String wishes;//祝福语
 	
-	private String option_id[];
+	private String option_id[];//关联多选题选项
 	
 
 	public String getEvent_id() {

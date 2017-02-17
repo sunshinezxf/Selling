@@ -32,10 +32,9 @@ import java.util.*;
 public class WechatController {
     private Logger logger = LoggerFactory.getLogger(WechatController.class);
 
-    //    private static String KEFU1 = "ytSMk-WMouat73cGNz5jwBVCCs6hDPl071GteBgYa32oYqAw6lT9yMedTFzoeQx6";
-//    private static String KEFU2 = "aP2fkurURlOPGxaL-4MNdkTZLK41i_676GjdaaeWi8dz95RzS8cHo6ZACo35Qz1D";
-//    private static String KEFU3 = "nNre-oi78h1iTmRfSwNJcTr5W0Lw9VkNXzLCZu8P6DRO71J_D6dsKLr_5OWvH78k";
-//    private static String KEFU4 = "Eca1cAZ0-cryjo8hI5CTGKxyupPYFJFTd8PYZaWBu1AceJHvDpYhmugsBmqFDUgs";
+    /**
+     * 客服的图片资源号(微信用)
+     */
     private static String KEFU1 = "Fk1CCke3zdxLUi-x3PGAxWYVEMWgEM8W8iDAjv-LV9A";
     private static String KEFU2 = "Fk1CCke3zdxLUi-x3PGAxWkGUzd-t5-BktNRO2ZVOtE";
     private static String KEFU3 = "Fk1CCke3zdxLUi-x3PGAxTOUCE1pVLf2dLbvr-1EfTM";
@@ -48,6 +47,10 @@ public class WechatController {
     @Autowired
     private ArticleService articleService;
 
+    /**
+     * @param request
+     * @return
+     */
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/wechat")
     public String check(HttpServletRequest request) {
@@ -70,7 +73,13 @@ public class WechatController {
         }
         return "";
     }
-
+    
+	/**
+	 * 微信订阅号的事件配置
+	 * @param request
+	 * @param response
+	 * @return
+	 */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/wechat", produces = "text/xml;charset=utf-8")
     public String handle(HttpServletRequest request, HttpServletResponse response) {
@@ -84,7 +93,13 @@ public class WechatController {
             session.setAttribute("openId", message.getFromUserName());
             logger.debug(JSONObject.toJSONString(message));
             switch (message.getMsgType()) {
+            	/*
+            	 * event事件
+            	 */
                 case "event":
+                	/*
+                	 * 订阅事件 
+                	 */
                     if (message.getEvent().equals("subscribe")) {
                         new Thread() {
                             @Override
@@ -111,6 +126,9 @@ public class WechatController {
                         logger.debug(JSON.toJSONString(xml));
                         return xml;
                     } else if (message.getEvent().equals("unsubscribe")) {
+                    	/*
+                    	 * 取消订阅事件
+                    	 */
                         new Thread() {
                             @Override
                             public void run() {
@@ -119,6 +137,9 @@ public class WechatController {
                         }.start();
                         return "";
                     } else if (message.getEvent().equalsIgnoreCase("click")) {
+                    	/*
+                    	 * 菜单点击事件 
+                    	 */
                         if (message.getEventKey().equalsIgnoreCase("unbind")) {
                             content.alias("xml", TextOutMessage.class);
                             TextOutMessage result = new TextOutMessage();
@@ -163,55 +184,10 @@ public class WechatController {
                     }
                     break;
                 case "text":
-//                    Map<String,Object> condition=new HashMap<>();
-//                    condition.put("message",message.getContent());
-//                    ResultData fetchResponse= articleService.queryArticle(condition);
-//                    if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK){
-//                        content.alias("xml", Articles.class);
-//                        content.alias("item", Article.class);
-//                        Articles result = new Articles();
-//                        result.setFromUserName(message.getToUserName());
-//                        result.setToUserName(message.getFromUserName());
-//                        result.setCreateTime(new Date().getTime());
-//                        List<Article> list =  (List<Article>) fetchResponse.getData();
-//                        result.setArticles(list);
-//                        result.setArticleCount(list.size());
-//                        content.processAnnotations(Article.class);
-//                        String xml = content.toXML(result);
-//                        logger.debug(JSON.toJSONString(xml));
-//                        return xml;
-//                    }
+                	/*
+                	 * 文字回复事件
+                	 */
                     if (message.getContent().equals("团圆")) {
-                        /*
-                        String openId = message.getFromUserName();
-                        content.alias("xml", TextOutMessage.class);
-                        TextOutMessage result = new TextOutMessage();
-                        result.setFromUserName(message.getToUserName());
-                        result.setToUserName(message.getFromUserName());
-                        result.setCreateTime(new Date().getTime());
-                        result.setContent("1. 点击下方菜单栏“活动”中的“中秋活动”，申请页面自动弹出。填写完毕后请按右上角转发至朋友圈（如图1），将好消息分享给更多亲朋～\n2. 扫码添加健康大使（图2），将第1步您的转发截图发送给TA，并告诉TA您最早是从哪里知道我们的活动消息～\n填链接，转票圈；加大使，发截图；搞定！如果您有任何问题，都可以咨询健康大使，TA会为您提供1对1的定制健康服务哦～");
-                        String xml = content.toXML(result);
-                        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-                        String thirteen = "13:00:00";
-                        String seventeen = "17:00:00";
-                        String twenty = "20:00:00";
-                        String twentythree = "23:00:00";
-                        String now = (new SimpleDateFormat("HH:mm:ss")).format(new Date());
-                        String media_id = null;
-                        if (now.compareTo(twentythree) >= 0 || thirteen.compareTo(now) >= 0) {
-                            media_id = KEFU1;
-                        } else if (now.compareTo(thirteen) >= 0 && seventeen.compareTo(now) >= 0) {
-                            media_id = KEFU2;
-                        } else if (now.compareTo(seventeen) >= 0 && twenty.compareTo(now) >= 0) {
-                            media_id = KEFU3;
-                        } else {
-                            media_id = KEFU4;
-                        }
-                        String token = WechatUtil.queryAccessToken();
-                        WechatUtil.sendImageMessage(token, openId, SHARE);
-                        WechatUtil.sendImageMessage(token, openId, media_id);
-                        return xml;
-                        */
                     }
                     if (message.getContent().equals("三七") || message.getContent().equals("云草纲目")
                             || message.getContent().equals("云草") || message.getContent().equals("使用")) {
@@ -609,6 +585,10 @@ public class WechatController {
         return "";
     }
 
+    /**
+     * 订阅事件触发后，订阅号推送文章
+     * @return
+     */
     private List<Article> subscribe() {
         List<Article> list = new ArrayList<>();
         Article welcome = new Article();

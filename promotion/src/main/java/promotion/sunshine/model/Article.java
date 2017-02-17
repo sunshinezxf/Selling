@@ -6,15 +6,15 @@ import common.sunshine.model.Entity;
  * Created by sunshine on 2017/2/7.
  */
 public class Article extends Entity {
-    private String articleId;
+    private String articleId;//订阅号文章id
 
-    private String title;
+    private String title;//文章标题
 
-    private String description;
+    private String description;//文章描述
 
-    private String url;
+    private String url;//文章url
 
-    private String picUrl;
+    private String picUrl;//图片url
 
     public Article() {
         super();
