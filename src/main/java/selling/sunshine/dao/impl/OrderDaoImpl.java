@@ -343,6 +343,7 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
                             Calendar calendar = Calendar.getInstance();
                             calendar.setTime(agent2.getCreateAt());
                             int month = c.get(Calendar.MONTH) - calendar.get(Calendar.MONTH);
+                            month+=(c.get(Calendar.YEAR) - calendar.get(Calendar.YEAR)) * 12;
                             if (month < monthConfig) {
                                 boolean poolFlag=true;
                                 for (RefundConfig config:configMonthList){
