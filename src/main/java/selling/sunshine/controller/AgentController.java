@@ -846,7 +846,7 @@ public class AgentController {
                 WechatConfig.oauthWechat(view, "/agent/prompt");
                 view.setViewName("/agent/prompt");
                 // 构建agentKPI信息
-                AgentKPI agentKPI = new AgentKPI("", agent.getAgentId(), agent.getName(), 0, 0, 0);
+                AgentKPI agentKPI = new AgentKPI(agent.getAgentId(), agent.getName(), 0, 0, 0);
                 agentKPI.setBlockFlag(true);
                 agentKPIService.createAgentKPI(agentKPI);
                 return view;
