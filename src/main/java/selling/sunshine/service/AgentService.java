@@ -26,30 +26,32 @@ public interface AgentService {
 
     ResultData updateAgent(Agent agent);
 
+    /*用代理商的余额来付钱 */
     ResultData consume(Agent agent, double money);
 
+    /*解绑代理商（跟微信号）*/
     ResultData unbindAgent(String openId);
 
+    /*重置代理商登陆密码*/
     ResultData resetPassword(Agent agent);
 
+    /*修改代理商登陆密码*/
     ResultData modifyPassword(Agent agent, String password);
 
+    /*重置代理商群规模*/
     ResultData modifyScale(Agent agent);
 
+    /*查询代理商身份证照片*/
     ResultData fetchCredit(Map<String, Object> condition);
-
-    ResultData fetchBankCard(Map<String, Object> condition);
-
-    ResultData modifyBankCard(BankCard bankCard);
 
     ResultData createCredit(Credit credit);
 
     ResultData updateCredit(Credit credit);
 
+    /*申请提现*/
     ResultData applyWithdraw(WithdrawRecord record);
 
-    ResultData queryWithdraw(Map<String, Object> condition);
-
+    /*查询代理商赠送的配置*/
     ResultData fetchAgentGift(Map<String, Object> condition);
 
     ResultData updateAgentGift(GiftConfig giftConfig);
@@ -58,6 +60,7 @@ public interface AgentService {
 
     ResultData createAgentGift(GiftConfig giftConfig);
 
+    /*添加代理商赠送申请*/
     ResultData createGiftApply(GiftApply apply);
 
     ResultData fetchGiftApply(Map<String, Object> condition);
@@ -66,5 +69,12 @@ public interface AgentService {
 
     ResultData fetchGiftApply(Map<String, Object> condition, DataTableParam param);
 
+    /*拒绝赠送申请*/
     ResultData declineGiftApply(GiftApply apply);
+
+    ResultData queryWithdraw(Map<String, Object> condition);
+
+    ResultData fetchBankCard(Map<String, Object> condition);
+
+    ResultData modifyBankCard(BankCard bankCard);
 }
