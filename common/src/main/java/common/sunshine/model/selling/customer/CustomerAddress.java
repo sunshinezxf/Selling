@@ -3,14 +3,25 @@ package common.sunshine.model.selling.customer;
 import common.sunshine.model.Entity;
 
 /**
+ * 该类为顾客地址
  * Created by sunshine on 5/5/16.
  */
 public class CustomerAddress extends Entity {
     private String addressId;
+
+    /* 地址信息 */
     private String address;
+
+    /* 所属顾客 */
     private Customer customer;
+
+    /* 省 */
     private String province;
+
+    /* 市 */
     private String city;
+
+    /* 区 */
     private String district;
 
     public CustomerAddress() {
@@ -45,41 +56,41 @@ public class CustomerAddress extends Entity {
     public void setCustomer(Customer customer) {
         this.customer = customer;
     }
-    
+
     public String getProvince() {
-		return province;
-	}
-
-	public void setProvince(String province) {
-		this.province = province;
-	}
-
-	public String getCity() {
-		return city;
-	}
-
-	public void setCity(String city) {
-		this.city = city;
-	}
-
-	public String getDistrict() {
-		return district;
-	}
-
-	public void setDistrict(String district) {
-		this.district = district;
-	}
-
-	@Override
-    public boolean equals(Object obj){
-    	if(obj instanceof CustomerAddress){
-    		return this.address.equals(((CustomerAddress)obj).getAddress());
-    	}
-    	return false;
+        return province;
     }
-    
+
+    public void setProvince(String province) {
+        this.province = province;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
+    }
+
     @Override
-    public int hashCode(){
-    	return address.hashCode();
+    public boolean equals(Object obj) {
+        if (obj instanceof CustomerAddress) {
+            return this.address.equals(((CustomerAddress) obj).getAddress());
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return address.hashCode();
     }
 }

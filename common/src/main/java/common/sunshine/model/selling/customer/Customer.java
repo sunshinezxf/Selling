@@ -4,15 +4,28 @@ import common.sunshine.model.Entity;
 import common.sunshine.model.selling.agent.lite.Agent;
 
 /**
+ * 该类为顾客类
  * Created by sunshine on 4/8/16.
  */
 public class Customer extends Entity {
     private String customerId;
+
+    /* 顾客姓名 */
     private String name;
+
+    /* 顾客手机号 */
     private CustomerPhone phone;
+
+    /* 顾客地址 */
     private CustomerAddress address;
+
+    /* 顾客所属代理商 */
     private Agent agent;
+
+    /* 当前顾客是否已成为代理商 */
     private boolean transformed;
+
+    /* 顾客微信号 */
     private String wechat;
 
     public Customer() {
@@ -111,23 +124,23 @@ public class Customer extends Entity {
     }
 
     @Override
-	public int hashCode() {
-		return customerId.hashCode();
-	}
+    public int hashCode() {
+        return customerId.hashCode();
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if(this == obj){
-			return true;
-		}
-		if(obj == null){
-			return false;
-		}
-		if(obj instanceof Customer){
-			return this.customerId.equals(((Customer)obj).getCustomerId());
-		}
-		return false;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (obj instanceof Customer) {
+            return this.customerId.equals(((Customer) obj).getCustomerId());
+        }
+        return false;
+    }
 
-    
+
 }

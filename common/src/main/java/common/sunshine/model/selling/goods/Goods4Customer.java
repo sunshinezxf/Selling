@@ -3,11 +3,15 @@ package common.sunshine.model.selling.goods;
 import java.util.List;
 
 /**
+ * 顾客商品类, 继承代理商商品类
  * Created by sunshine on 6/16/16.
  */
 public class Goods4Customer extends Goods4Agent {
+
+    /* 顾客购买价格 */
     private double customerPrice;
 
+    /* 商品图片 */
     private List<Thumbnail> thumbnails;
 
     public Goods4Customer() {

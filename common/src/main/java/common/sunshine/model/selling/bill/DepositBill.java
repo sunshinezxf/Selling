@@ -1,13 +1,14 @@
 package common.sunshine.model.selling.bill;
 
 import common.sunshine.model.selling.agent.lite.Agent;
-import common.sunshine.model.selling.bill.Bill;
 import common.sunshine.model.selling.bill.support.BillStatus;
 
 /**
+ * 该类为充值账单类
  * Created by sunshine on 5/10/16.
  */
 public class DepositBill extends Bill {
+    /* 充值的代理商 */
     private Agent agent;
 
     public DepositBill() {

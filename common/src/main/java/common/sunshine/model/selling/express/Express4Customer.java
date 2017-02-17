@@ -2,12 +2,12 @@ package common.sunshine.model.selling.express;
 
 import common.sunshine.model.selling.order.CustomerOrder;
 
-import java.io.Serializable;
-
 /**
+ * 顾客订单物流单, 继承抽象类Express
  * Created by sunshine on 6/22/16.
  */
-public class Express4Customer extends Express implements Serializable {
+public class Express4Customer extends Express {
+    /* 关联的顾客订单 */
     private CustomerOrder order;
 
     public Express4Customer() {

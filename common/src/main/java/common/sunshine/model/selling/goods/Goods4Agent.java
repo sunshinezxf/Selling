@@ -3,11 +3,17 @@ package common.sunshine.model.selling.goods;
 import common.sunshine.model.selling.goods.support.GoodsType;
 
 /**
+ * 代理商查询时的商品类, 继承抽象类商品
  * Created by sunshine on 6/16/16.
  */
 public class Goods4Agent extends AbstractGoods {
+
+    /* 代理商购买价格 */
     private double agentPrice;
 
+    /**
+     *默认构造方法, 商品默认为实物商品
+     */
     public Goods4Agent() {
         super();
         this.setType(GoodsType.REAL);

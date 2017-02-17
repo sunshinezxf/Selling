@@ -4,9 +4,11 @@ import common.sunshine.model.selling.order.OrderItem;
 import org.springframework.util.StringUtils;
 
 /**
+ * 该类为代理商的订单的物流单, 继承抽象物流类
  * Created by sunshine on 6/22/16.
  */
 public class Express4Agent extends Express {
+    /* 关联的代理商订单item */
     private OrderItem item;
 
     public Express4Agent() {
@@ -35,7 +37,7 @@ public class Express4Agent extends Express {
 
     public void setItem(OrderItem item) {
         this.item = item;
-        if(!StringUtils.isEmpty(item.getDescription())) {
+        if (!StringUtils.isEmpty(item.getDescription())) {
             setDescription(item.getDescription());
         }
         this.setLinkId(item.getOrderItemId());

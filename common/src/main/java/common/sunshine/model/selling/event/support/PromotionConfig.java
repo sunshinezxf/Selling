@@ -1,27 +1,32 @@
 package common.sunshine.model.selling.event.support;
 
 import common.sunshine.model.Entity;
-
-
 import common.sunshine.model.selling.event.PromotionEvent;
 import common.sunshine.model.selling.goods.Goods4Customer;
 
 /**
+ * 该类为买赠活动配置
  * Created by sunshine on 2016/12/16.
  */
 public class PromotionConfig extends Entity {
     private String configId;
 
+    /* 买赠活动 */
     private PromotionEvent event;
 
+    /* 购买商品 */
     private Goods4Customer buyGoods;
 
+    /* 赠送商品 */
     private Goods4Customer giveGoods;
 
+    /* 每买数量full */
     private int full;
 
+    /* 赠送数量give */
     private int give;
 
+    /* 满足基准数量 */
     private int criterion;
 
     public String getConfigId() {

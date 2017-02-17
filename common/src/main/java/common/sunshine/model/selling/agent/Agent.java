@@ -6,25 +6,54 @@ import org.springframework.util.StringUtils;
 
 
 /**
+ * 该类为代理商模型类, 包含代理商的各属性
  * Created by sunshine on 4/7/16.
  */
 public class Agent extends Entity {
     private String agentId;
+
+    /* 代理商姓名 */
     private String name;
+
+    /* 代理商性别 M-男 F-女*/
     private String gender;
+
+    /* 手机号 */
     private String phone;
+
+    /* 地址 */
     private String address;
+
+    /* 银行卡信息 */
     private String card;
+
+    /* 账号密码 */
     private String password;
+
+    /* 微信号 */
     private String wechat;
+
+    /* 授权标识位 */
     private boolean granted;
+
+    /* 账户余额 */
     private double coffer;
+
+    /* 代理商累计返现金额 */
     private double agentRefund;
+
+    /* 代理商生成群规模 */
     private int claimScale;
-    //    private boolean customerService;
+
+    /* 代理商类别 */
     private AgentType agentType;
+
+    /* 当前代理商的上级代理 */
     private common.sunshine.model.selling.agent.lite.Agent upperAgent;
 
+    /**
+     * 默认构造方法, 代理商默认为普通代理, 未授权, 声称群规模为0
+     */
     public Agent() {
         super();
         agentType = AgentType.ORDINARY;
@@ -60,45 +89,15 @@ public class Agent extends Entity {
         this.claimScale = claimScale;
     }
 
-    public Agent(String agentId, String name, String gender, String phone, String address, String card, String password,
-                 String wechat, boolean granted, double coffer, double agentRefund, int claimScale, AgentType agentType,
-                 common.sunshine.model.selling.agent.lite.Agent upperAgent) {
-        super();
+    public Agent(String agentId, String name, String gender, String phone, String address, String card, String password, String wechat, boolean granted, double coffer, double agentRefund, int claimScale, AgentType agentType, common.sunshine.model.selling.agent.lite.Agent upperAgent) {
+        this(name, gender, phone, address, card, password, wechat, claimScale);
         this.agentId = agentId;
-        this.name = name;
-        this.gender = gender;
-        this.phone = phone;
-        this.address = address;
-        this.card = card;
-        this.password = password;
-        this.wechat = wechat;
         this.granted = granted;
         this.coffer = coffer;
         this.agentRefund = agentRefund;
-        this.claimScale = claimScale;
         this.agentType = agentType;
         this.upperAgent = upperAgent;
     }
-
-//    public Agent(String agentId, String name, String gender, String phone, String address, String card, String password,
-//			String wechat, boolean granted, double coffer, double agentRefund, int claimScale, boolean customerService,
-//			common.sunshine.model.selling.agent.lite.Agent upperAgent) {
-//		super();
-//		this.agentId = agentId;
-//		this.name = name;
-//		this.gender = gender;
-//		this.phone = phone;
-//		this.address = address;
-//		this.card = card;
-//		this.password = password;
-//		this.wechat = wechat;
-//		this.granted = granted;
-//		this.coffer = coffer;
-//		this.agentRefund = agentRefund;
-//		this.claimScale = claimScale;
-//		this.customerService = customerService;
-//		this.upperAgent = upperAgent;
-//	}
 
     public String getAgentId() {
         return agentId;
@@ -203,14 +202,6 @@ public class Agent extends Entity {
     public void setClaimScale(int claimScale) {
         this.claimScale = claimScale;
     }
-
-//	public boolean isCustomerService() {
-//		return customerService;
-//	}
-//
-//	public void setCustomerService(boolean customerService) {
-//		this.customerService = customerService;
-//	}
 
     public AgentType getAgentType() {
         return agentType;

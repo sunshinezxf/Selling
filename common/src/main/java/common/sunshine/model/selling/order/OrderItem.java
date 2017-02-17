@@ -8,17 +8,34 @@ import common.sunshine.model.selling.goods.Goods4Customer;
 import common.sunshine.model.selling.order.support.OrderItemStatus;
 
 /**
+ * 订单项
  * Created by sunshine on 4/8/16.
  */
 public class OrderItem extends Entity {
     private String orderItemId;
+
+    /* 订单项状态 */
     private OrderItemStatus status;
+
+    /* 商品数量 */
     private int goodsQuantity;
+
+    /* 订单项的价格 */
     private double orderItemPrice;
+
+    /* 收件人地址 */
     private String receiveAddress;
+
+    /* 备注信息 */
     private String description;
+
+    /* 所属顾客 */
     private Customer customer;
+
+    /* 订单中的商品 */
     private Goods4Agent goods;
+
+    /* 所属订单 */
     private Order order;
 
     public OrderItem() {

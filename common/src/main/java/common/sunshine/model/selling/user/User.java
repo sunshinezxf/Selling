@@ -5,14 +5,25 @@ import common.sunshine.model.selling.admin.Admin;
 import common.sunshine.model.selling.agent.lite.Agent;
 
 /**
+ * 该类为系统用户类
  * Created by sunshine on 4/23/16.
  */
 public class User extends Entity {
     private String userId;
+
+    /* 用户名 */
     private String username;
+
+    /* 密码 */
     private String password;
+
+    /* 角色 */
     private Role role;
+
+    /* 关联的管理员账号, 二选一 */
     private Admin admin;
+
+    /* 关联的代理商账号, 二选一 */
     private Agent agent;
 
     public User() {

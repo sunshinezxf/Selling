@@ -4,27 +4,32 @@ import common.sunshine.model.Entity;
 import common.sunshine.model.selling.event.support.EventType;
 
 import java.sql.Timestamp;
-import java.util.List;
 
 /**
  * 活动默认从当前时间开始,默认持续时间为7天
  * Created by sunshine on 8/23/16.
  */
 public class Event extends Entity {
+    /* 活动默认持续时间 */
     private final int DURATION = 7;
 
     private String eventId;
 
+    /* 活动标题 */
     private String title;
 
+    /* 活动别名, 为活动访问URL中的路径 */
     private String nickname;
 
+    /* 活动开始时间 */
     private Timestamp start;
 
+    /* 活动结束时间 */
     private Timestamp end;
-    
+
+    /* 活动类型 */
     private EventType type;
-    
+
 
     public Event() {
         this.start = new Timestamp(System.currentTimeMillis());
@@ -42,15 +47,12 @@ public class Event extends Entity {
     }
 
     public Event(String title, String nickname, Timestamp start, Timestamp end, EventType type) {
-		super();
-		this.title = title;
-		this.nickname = nickname;
-		this.start = start;
-		this.end = end;
-		this.type = type;
-	}
+        this(title, start, end);
+        this.nickname = nickname;
+        this.type = type;
+    }
 
-	public String getEventId() {
+    public String getEventId() {
         return eventId;
     }
 
@@ -90,13 +92,11 @@ public class Event extends Entity {
         this.end = end;
     }
 
-	public EventType getType() {
-		return type;
-	}
+    public EventType getType() {
+        return type;
+    }
 
-	public void setType(EventType type) {
-		this.type = type;
-	}
-    
-    
+    public void setType(EventType type) {
+        this.type = type;
+    }
 }

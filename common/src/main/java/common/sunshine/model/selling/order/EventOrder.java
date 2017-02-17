@@ -7,27 +7,37 @@ import common.sunshine.model.selling.goods.Goods4Customer;
 import common.sunshine.model.selling.order.support.OrderItemStatus;
 
 /**
+ * 该类为活动生成的订单
  * Created by sunshine on 8/26/16.
  */
 public class EventOrder extends Entity {
     private String orderId;
 
+    /* 关联的购买订单编号 */
     private String linkId;
 
+    /* 受赠人姓名 */
     private String doneeName;
 
+    /* 受赠人手机号 */
     private String doneePhone;
 
+    /* 受赠人收货地址 */
     private String doneeAddress;
 
+    /* 订单项状态 */
     private OrderItemStatus status;
 
+    /* 数量 */
     private int quantity;
 
+    /* 关联的赠送申请 */
     private EventApplication application;
 
+    /* 关联的活动 */
     private Event event;
 
+    /* 赠送的商品 */
     private Goods4Customer goods;
 
     public String getOrderId() {

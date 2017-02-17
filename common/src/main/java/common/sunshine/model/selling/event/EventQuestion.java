@@ -6,14 +6,25 @@ import common.sunshine.model.selling.event.support.ChoiceType;
 import java.util.List;
 
 /**
+ * 该类为赠送活动的问题类
  * Created by sunshine on 8/24/16.
  */
 public class EventQuestion extends Entity {
     private String questionId;
+
+    /* 问题所属活动 */
     private Event event;
+
+    /* 问题的内容 */
     private String content;
+
+    /* 问题的序号 */
     private int rank;
+
+    /* 问题的类型 */
     private ChoiceType type;
+
+    /* 问题的所有选项列表 */
     private List<QuestionOption> options;
 
     public EventQuestion() {

@@ -4,23 +4,37 @@ import common.sunshine.model.Entity;
 import common.sunshine.model.selling.goods.support.GoodsType;
 
 /**
+ * 抽象商品类, 所有商品类需继承此类
  * Created by sunshine on 6/16/16.
  */
 public abstract class AbstractGoods extends Entity {
     private String goodsId;
+
+    /* 商品名称 */
     private String name;
+
+    /* 商品别名, 后台统计图表中使用 */
     private String nickname;
+
+    /* 商品描述 */
     private String description;
+
+    /* 商品规格 */
     private String standard;
-    //商品的计量单位
+
+    /* 商品的计量单位 */
     private String measure;
 
+    /* 生产批号 */
     private String produceNo;
 
+    /* 生产日期 */
     private String produceDate;
 
+    /* 商品类型*/
     private GoodsType type;
 
+    /* 商品列表中的位置, 用于固定顾客看到的商品列表中各商品的出现位置 */
     private int position;
 
     public String getGoodsId() {
@@ -94,7 +108,7 @@ public abstract class AbstractGoods extends Entity {
     public void setType(GoodsType type) {
         this.type = type;
     }
-    
+
     public int getPosition() {
         return position;
     }

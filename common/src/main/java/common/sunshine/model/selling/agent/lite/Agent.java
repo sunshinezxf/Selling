@@ -6,7 +6,11 @@ package common.sunshine.model.selling.agent.lite;
  */
 public class Agent {
     private String agentId;
+
+    /* 姓名 */
     private String name;
+
+    /* 手机号 */
     private String phone;
 
     public Agent() {
@@ -19,6 +23,12 @@ public class Agent {
         this.phone = phone;
     }
 
+
+    /**
+     * 将详细的Agent对象转化为轻量级Agent对象
+     *
+     * @param agent
+     */
     public Agent(common.sunshine.model.selling.agent.Agent agent) {
         if (agent == null) {
             return;

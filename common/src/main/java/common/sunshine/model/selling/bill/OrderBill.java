@@ -4,8 +4,16 @@ import common.sunshine.model.selling.agent.lite.Agent;
 import common.sunshine.model.selling.bill.support.BillStatus;
 import common.sunshine.model.selling.order.Order;
 
+/**
+ * 该类为代理商订单账单类
+ * Created by sunshine on 5/10/16.
+ */
 public class OrderBill extends Bill {
+
+    /* 账单对应的代理商 */
     private Agent agent;
+
+    /* 账单对应的订单 */
     private Order order;
 
     public OrderBill() {

@@ -9,14 +9,25 @@ import common.sunshine.model.selling.order.support.OrderType;
 import java.util.List;
 
 /**
+ * 代理商的订单类, 一个Order可包含一个或多个OrderItem
  * Created by sunshine on 4/8/16.
  */
 public class Order extends Entity {
     private String orderId;
+
+    /* 订单所属代理商 */
     private Agent agent;
+
+    /* 订单价格, 该价格为订单下所有OrderItem的总和 */
     private double price;
+
+    /* 订单类型, 购买订单和赠送订单 */
     private OrderType type;
+
+    /* 订单状态 */
     private OrderStatus status;
+
+    /* 该订单下的订单项列表 */
     private List<OrderItem> orderItems;
 
     public Order() {

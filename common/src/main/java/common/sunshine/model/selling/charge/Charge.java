@@ -3,10 +3,14 @@ package common.sunshine.model.selling.charge;
 import common.sunshine.model.Entity;
 
 /**
+ * 该类将订单与ping++的charge进行关联
  * Created by sunshine on 8/3/16.
  */
 public class Charge extends Entity {
+    /* ping++后台的实际chargeId */
     private String chargeId;
+
+    /* 该charge对应的订单编号 */
     private String orderNo;
 
     public Charge() {

@@ -4,15 +4,27 @@ import common.sunshine.model.Entity;
 import common.sunshine.model.selling.bill.support.BillStatus;
 
 /**
+ * 账单抽象类, 所有的账单类继承此方法
  * Created by sunshine on 5/10/16.
  */
 public abstract class Bill extends Entity {
     private String billId;
+
+    /* 客户端ip */
     private String clientIp;
+
+    /* 账单付款渠道 */
     private String channel;
+
+    /* 账单金额 */
     private double billAmount;
+
+    /* 账单状态 */
     private BillStatus status;
 
+    /**
+     * 默认构造方法, 账单默认未付款
+     */
     public Bill() {
         super();
         status = BillStatus.NOT_PAYED;

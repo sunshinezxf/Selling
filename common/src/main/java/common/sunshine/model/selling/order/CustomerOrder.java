@@ -6,20 +6,42 @@ import common.sunshine.model.selling.goods.Goods4Customer;
 import common.sunshine.model.selling.order.support.OrderItemStatus;
 
 /**
+ * 该类为顾客订单类
  * Created by sunshine on 6/14/16.
  */
 public class CustomerOrder extends Entity {
     private String orderId;
+
+    /* 订单中的商品 */
     private Goods4Customer goods;
+
+    /* 优惠码所属代理商 */
     private Agent agent;
+
+    /* 购买商品数量 */
     private int quantity;
+
+    /* 顾客购买微信号openId */
     private String wechat;
+
     private String customerId;
+
+    /* 收货人姓名 */
     private String receiverName;
+
+    /* 收货人手机号 */
     private String receiverPhone;
+
+    /* 收货地址 */
     private String receiverAddress;
+
+    /* 总价格 */
     private double totalPrice;
+
+    /* 兑换的礼券编号 */
     private String couponSerial;
+
+    /* 订单状态 */
     private OrderItemStatus status;
 
     public CustomerOrder() {

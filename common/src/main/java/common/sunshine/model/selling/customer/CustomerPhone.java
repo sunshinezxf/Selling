@@ -3,11 +3,16 @@ package common.sunshine.model.selling.customer;
 import common.sunshine.model.Entity;
 
 /**
+ * 该类为顾客电话
  * Created by sunshine on 5/5/16.
  */
 public class CustomerPhone extends Entity {
     private String phoneId;
+
+    /* 顾客手机号 */
     private String phone;
+
+    /* 顾客信息 */
     private Customer customer;
 
     public CustomerPhone() {

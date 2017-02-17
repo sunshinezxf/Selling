@@ -3,20 +3,43 @@ package common.sunshine.model.selling.express;
 import common.sunshine.model.Entity;
 
 /**
+ * 该类为快递抽象类
  * Created by sunshine on 6/22/16.
  */
 public class Express extends Entity implements Comparable<Express> {
     private String expressId;
+
+    /* 快递单号 */
     private String expressNumber;
+
+    /* 寄件人姓名 */
     private String senderName;
+
+    /* 赠送人手机号 */
     private String senderPhone;
+
+    /* 赠送人地址 */
     private String senderAddress;
+
+    /* 受赠人姓名 */
     private String receiverName;
+
+    /* 受赠人手机号 */
     private String receiverPhone;
+
+    /* 受赠人地址 */
     private String receiverAddress;
+
+    /* 商品名称 */
     private String goodsName;
+
+    /* 物流单描述 */
     private String description;
+
+    /* linkId 为order_item_id 或 customer_order_id*/
     private String linkId;
+
+    /* 商品数量 */
     private int goodsQuantity;
 
     public Express() {
