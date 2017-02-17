@@ -44,7 +44,7 @@ public class EventController {
     private FollowerService followerService;
 
     /**
-     * 活动通用页面
+     * 赠送活动页面
      *
      * @param eventName
      * @return

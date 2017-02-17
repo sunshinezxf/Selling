@@ -2,11 +2,16 @@ package selling.sunshine.model;
 
 import common.sunshine.model.Entity;
 
+/**
+ * 日志记录类
+ * @author wang_min
+ *
+ */
 public class BackOperationLog extends Entity {
-	private String logId;
-	private String adminInfo;
-	private String operationEvent;
-	private String ip;
+	private String logId;//日志ID
+	private String adminInfo;//管理员信息，一般是管理员ID
+	private String operationEvent;//操作事件
+	private String ip;//IP
 	
 	public BackOperationLog(){
 		super();

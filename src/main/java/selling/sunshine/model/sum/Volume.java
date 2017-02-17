@@ -2,12 +2,13 @@ package selling.sunshine.model.sum;
 
 /**
  * Created by sunshine on 8/5/16.
+ * 获取以下数据的类
  */
 public class Volume {
-    private String agentId;
-    private String goodsId;
-    private int quantity;
-    private double price;
+    private String agentId;//代理商ID
+    private String goodsId;//商品ID
+    private int quantity;//数量
+    private double price;//价格
 
     public Volume() {
         super();

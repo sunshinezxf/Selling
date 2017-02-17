@@ -5,6 +5,7 @@ import common.sunshine.model.selling.agent.lite.Agent;
 
 /**
  * Created by sunshine on 6/12/16.
+ * 已废弃
  */
 public class DistributeCode extends Entity {
     private String codeId;

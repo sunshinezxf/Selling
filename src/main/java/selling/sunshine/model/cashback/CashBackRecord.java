@@ -9,14 +9,14 @@ import selling.sunshine.model.cashback.support.CashBackLevel;
  * Created by sunshine on 8/10/16.
  */
 public class CashBackRecord extends Entity {
-    private String recordId;
-    private String title;
-    private double percent;
-    private double amount;
-    private OrderPool orderPool;
-    private String description;
-    private Agent agent;
-    private CashBackLevel level;
+    private String recordId;//返现记录ID
+    private String title;//返现标题
+    private double percent;//返现百分比
+    private double amount;//返现金额
+    private OrderPool orderPool;//关联orderpool
+    private String description;//返现描述
+    private Agent agent;//关联代理商
+    private CashBackLevel level;//返现级别
 
     public CashBackRecord() {
         super();

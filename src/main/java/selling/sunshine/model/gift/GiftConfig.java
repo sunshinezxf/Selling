@@ -8,10 +8,10 @@ import common.sunshine.model.selling.goods.Goods4Agent;
  * Created by sunshine on 7/1/16.
  */
 public class GiftConfig extends Entity {
-    private String giftId;
-    private Agent agent;
-    private Goods4Agent goods;
-    private int amount;
+    private String giftId;//赠送ID
+    private Agent agent;//关联代理商
+    private Goods4Agent goods;//关联商品
+    private int amount;//赠送的数量
 
     public GiftConfig() {
         super();

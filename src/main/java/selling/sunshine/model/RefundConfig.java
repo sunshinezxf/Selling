@@ -6,16 +6,17 @@ import common.sunshine.model.selling.goods.Goods4Customer;
 
 /**
  * Created by sunshine on 5/17/16.
+ * 返现配置
  */
 public class RefundConfig extends Entity {
-    private String refundConfigId;
-    private int amountTrigger;
+    private String refundConfigId;//配置ID
+    private int amountTrigger;//购买数量下限
     private int amountTopTrigger;//购买数量上限，默认值为0，代表购买数量在amountTrigger以上
-    private double level1Percent;
-    private double level2Percent;
-    private double level3Percent;
-    private int monthConfig;
-    private Goods4Agent goods;
+    private double level1Percent;//一级返现百分比
+    private double level2Percent;//二级返现百分比
+    private double level3Percent;//三级返现百分比
+    private int monthConfig;//月份配置
+    private Goods4Agent goods;//商品
     private boolean universal;//是否普遍适用
     private int universalMonth;//假如不是普遍适用的话，代表的是前n个月的返现配置
 

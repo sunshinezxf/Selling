@@ -2,6 +2,7 @@ package selling.sunshine.model.sum;
 
 /**
  * Created by sunshine on 6/24/16.
+ * 订单统计，可能已被废弃
  */
 public class Sum4Order {
     private String goodsId;

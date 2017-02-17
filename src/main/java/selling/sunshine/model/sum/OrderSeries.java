@@ -1,5 +1,9 @@
 package selling.sunshine.model.sum;
 
+/**
+ * Echart的数据封装类
+ * @author wang_min
+ */
 public class OrderSeries {
 
 	private String name;

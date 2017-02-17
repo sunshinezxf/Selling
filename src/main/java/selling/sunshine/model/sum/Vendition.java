@@ -1,5 +1,8 @@
 package selling.sunshine.model.sum;
 
+/**
+ * 可能已被废弃
+ */
 public class Vendition {
 	
 	private String goodsId;

@@ -7,12 +7,12 @@ import common.sunshine.model.selling.agent.lite.Agent;
  * Created by sunshine on 6/18/16.
  */
 public class WithdrawRecord extends Entity {
-    private String withdrawId;
-    private Agent agent;
-    private String openId;
-    private double wealth;
-    private double amount;
-    private WithdrawStatus status;
+    private String withdrawId;//提现ID
+    private Agent agent;//关联代理商
+    private String openId;//微信openID
+    private double wealth;//提现前余额
+    private double amount;//提现数量
+    private WithdrawStatus status;//提现状态
 
     public WithdrawRecord() {
         super();

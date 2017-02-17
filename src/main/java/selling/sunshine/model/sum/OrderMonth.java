@@ -1,16 +1,20 @@
 package selling.sunshine.model.sum;
-
+/**
+ * 月销量统计
+ * @author wang_min
+ *
+ */
 public class OrderMonth {
 
-	private int quantity;
-	private double price;
-	private int totalQuantity;
-	private double totalPrice;
-	private int num;
-	private int totalNum;
-	private int payedMonth;
-	private int shippedMonth;
-	private int giftMonth;
+	private int quantity;//当月订单数量
+	private double price;//当月订单金额
+	private int totalQuantity;//订单总数量
+	private double totalPrice;//订单总金额
+	private int num;//当月代理商人数
+	private int totalNum;//总代理商认识
+	private int payedMonth;//当月已付款状态订单
+	private int shippedMonth;//当月已发货状态订单
+	private int giftMonth;//当月赠送的订单
 
 	public int getQuantity() {
 		return quantity;

@@ -9,14 +9,14 @@ import common.sunshine.model.selling.goods.Goods4Agent;
  * Created by sunshine on 8/5/16.
  */
 public class GiftApply extends Entity {
-    private String applyId;
-    private int potential;
-    private int line;
-    private int last;
-    private int total;
-    private Agent agent;
-    private Goods4Agent goods;
-    private GiftApplyStatus status;
+    private String applyId;//赠送申请ID
+    private int potential;//意向购买人数
+    private int line;//申请盒数
+    private int last;//上月销量
+    private int total;//累计销量
+    private Agent agent;//关联代理商
+    private Goods4Agent goods;//申请的商品
+    private GiftApplyStatus status;//申请状态，默认为applyed，即已申请
 
     private GiftApply() {
         super();

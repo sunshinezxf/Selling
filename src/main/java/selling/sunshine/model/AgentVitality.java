@@ -7,9 +7,9 @@ import common.sunshine.model.Entity;
  */
 public class AgentVitality extends Entity {
 	
-	private String agentVitalityId;
-	private int vitalityQuantity;
-	private double vitalityPrice;
+	private String agentVitalityId;//活跃度ID
+	private int vitalityQuantity;//数量
+	private double vitalityPrice;//金额
 	
 	public AgentVitality() {
 		 super();

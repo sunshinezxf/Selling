@@ -2,10 +2,10 @@ package selling.sunshine.model.sum;
 
 public class AgentGoods {
 	
-	private String agentName;
-	private String goodsName;
-	private int quantity;
-	private double price;
+	private String agentName;//代理商姓名
+	private String goodsName;//商品名称
+	private int quantity;//数量
+	private double price;//价格
 	
 	public String getAgentName() {
 		return agentName;

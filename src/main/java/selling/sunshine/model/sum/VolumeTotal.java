@@ -4,14 +4,14 @@ import common.sunshine.model.selling.goods.Goods4Agent;
 
 public class VolumeTotal {
 
-	private String agentId;
-	private Goods4Agent goods;
-	private int totalQuantity;
-	private double totalPrice;
-	private int yearQuantity;
-	private double yearPrice;
-	private int monthQuantity;
-	private double monthPrice;
+	private String agentId;//代理商ID
+	private Goods4Agent goods;//代理商商品
+	private int totalQuantity;//总卖的数量
+	private double totalPrice;//总卖的金额
+	private int yearQuantity;//年卖的数量
+	private double yearPrice;//年卖的金额
+	private int monthQuantity;//月卖的数量
+	private double monthPrice;//月卖的金额
 
 	public String getAgentId() {
 		return agentId;

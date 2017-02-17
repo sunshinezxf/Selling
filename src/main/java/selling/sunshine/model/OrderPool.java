@@ -7,16 +7,21 @@ import common.sunshine.model.selling.agent.lite.Agent;
 
 import java.sql.Date;
 
+/**
+ * 订单统计
+ * @author wang_min
+ *
+ */
 public class OrderPool extends Entity {
 
-    private String orderPoolId;
-    private int quantity;
-    private double price;
-    private double refundAmount;
-    private Date poolDate;
-    private Agent agent;
-    private Goods4Agent goods;
-    private RefundConfig refundConfig;
+    private String orderPoolId;//ID
+    private int quantity;//卖的数量
+    private double price;//卖的金额
+    private double refundAmount;//返现金额
+    private Date poolDate;//生成Pool的时间
+    private Agent agent;//代理商
+    private Goods4Agent goods;//商品
+    private RefundConfig refundConfig;//管理返现配置
 
     public OrderPool() {
         super();

@@ -4,6 +4,7 @@ import common.sunshine.model.Entity;
 
 /**
  * Created by sunshine on 5/13/16.
+ * 已废弃
  */
 public class ShipConfig extends Entity {
     private String shipConfigId;

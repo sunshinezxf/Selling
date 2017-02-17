@@ -3,6 +3,9 @@ package selling.sunshine.model;
 import common.sunshine.model.Entity;
 import common.sunshine.model.selling.agent.lite.Agent;
 
+/**
+ * 已废弃
+ */
 public class BankCard extends Entity {
     private String bankCardId;
     private String bankCardNo;

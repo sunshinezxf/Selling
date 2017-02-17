@@ -1,12 +1,17 @@
 package selling.sunshine.model.sum;
 
+/**
+ * 代理商的订单统计
+ * @author wang_min
+ *
+ */
 public class OrderStatistics {
 	
-	private String agentName;
-	private int payedQuantity;
-	private int unPayedQuantity;
-	private int finishedQuantity;
-	private int totalQuantity;
+	private String agentName;//代理商姓名
+	private int payedQuantity;//已付款的订单数量
+	private int unPayedQuantity;//未付款的订单数量
+	private int finishedQuantity;//已完成的订单数量
+	private int totalQuantity;//总订单数量
 	
 	public String getAgentName() {
 		return agentName;

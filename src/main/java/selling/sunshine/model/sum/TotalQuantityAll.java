@@ -1,5 +1,8 @@
 package selling.sunshine.model.sum;
-
+/**
+ * 可能已被废弃
+ * @author wang_min
+ */
 public class TotalQuantityAll {
 	private int quantity2;
 	private int quantity1;
