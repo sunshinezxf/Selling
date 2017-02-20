@@ -44,7 +44,7 @@
                                     <i class="brown home icon"></i>${agent.address}
                                 </div>
                                 <div class="item">
-                                    注册时间：<span id="createTime"></span>
+                                    注册时间：${agent.createAt}
                                 </div>
                             </div>
                             <div class="description">
@@ -175,9 +175,9 @@
 <script>
     var upperAgentId;
     $(document).ready(function () {
-        var time="${agent.createAt}";
-        var createAt=(new Date(time)).format("yyyy-MM-dd");
-        $("#createTime").text(createAt);
+        // var time="${agent.createAt}";
+        // var createAt=(new Date(time)).format("yyyy-MM-dd");
+        // $("#createTime").text(createAt);
 
         var wechat = "${agent.wechat}";
         if (wechat && wechat.slice(-1) != "}") {
