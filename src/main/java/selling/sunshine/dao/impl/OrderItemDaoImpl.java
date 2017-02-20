@@ -51,6 +51,7 @@ public class OrderItemDaoImpl extends BaseDao implements OrderItemDao {
     @Override
     public ResultData queryOrderItem(Map<String, Object> condition) {
         ResultData result = new ResultData();
+        condition = handle(condition);
         try {
             List<OrderItem> list = sqlSession.selectList("selling.order.item.query", condition);
             if (list.isEmpty()) {
