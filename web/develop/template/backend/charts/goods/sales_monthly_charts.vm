@@ -1,0 +1,57 @@
+<div class="row" style="height: 350px;">
+    <div id="sales_monthly" class="column"></div>
+</div>
+<script>
+    var sales_monthly = "${path.concat('/statistic/sales')}";
+
+    $(document).ready(function () {
+        $.get(sales_monthly, function (result) {
+            if (result.responseCode != "RESPONSE_ERROR") {
+                var data = result.data;
+                var sales_chart = echarts.init(document.getElementById('sales_monthly'), 'macarons');
+                option = {
+                    title: {
+                        text: '商品销售额统计'
+                    },
+                    tooltip: {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                        data:['销售额']
+                    },
+                    calculable: true,
+                    xAxis: [
+                        {
+                            type: 'category',
+                            boundaryGap : false,
+                            data: data.month
+                        }
+                    ],
+                    yAxis: [
+                        {
+                            type: 'value',
+                            axisLabel : {
+                                formatter: '{value} 元'
+                            }
+                        }
+                    ],
+                    series: [
+                        {
+                            name:'销售额',
+                            type:'bar',
+                            data:data.price
+
+                        }
+                    ]
+
+                };
+                sales_chart.setOption(option);
+                window.addEventListener('resize', function () {
+                    sales_chart.resize();
+                });
+            } else if (result.responseCode == "RESPONSE_ERROR") {
+                console.error(result.description);
+            }
+        });
+    });
+</script>

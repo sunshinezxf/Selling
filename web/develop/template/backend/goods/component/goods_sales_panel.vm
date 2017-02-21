@@ -1,3 +1,4 @@
+#set($role = $session.getAttribute("role"))
 <div class="ui stackable padded grid" name="goods_sales">
     <div class="row">
         <h1 class="ui header">
@@ -16,6 +17,10 @@
         </h1>
     </div>
 
+    #if($role == "admin" || $role == "finance")
+    <h2 class="ui header">商品销售额统计：</h2>
+    #parse("/backend/charts/goods/sales_monthly_charts.vm")
+    #end
     <h2 class="ui header">当月每天各商品销售情况：</h2>
     #parse("/backend/charts/goods/purchase_everyday_charts.vm")
     <h2 class="ui header">最近一年内各商品销售情况：</h2>
