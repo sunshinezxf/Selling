@@ -138,7 +138,7 @@
                 /customer/place = anon
                 /customer/consult = anon
                 /customer/order/search = anon
-                /customer/overview = roles[admin]
+                /customer/overview = roles["admin, agent"]
                 /customer/add = roles[agent]
                 /customer/modify = roles[agent]
 
@@ -163,18 +163,18 @@
                 /indent/overview = roles["admin", "express"]
                 /indent/** = roles["admin"]
 
+                /me = roles[agent]
+
                 /notice/list = anon
 
                 /order/adminpay = roles[admin]
                 /order/check = roles["admin, express"]
-                /order/overview = roles["admin, express"]
-                /order/customerOrder/overview = roles["admin, express"]
+                /order/overview = roles["admin, express, agent"]
+                /order/customerOrder/overview = roles["admin, express, agent"]
                 /order/customerpay = anon
                 /order/search = anon
                 /order/viewexpress/** = anon
-                /order/view/* = roles["admin, express"]
-
-                /payment/bill/* = anon
+                /order/view/* = roles["admin, express, agent"]
 
                 /reimburse/inform = anon
                 /reimburse/apply = roles["admin, express"]

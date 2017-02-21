@@ -217,6 +217,11 @@ public class OrderController {
             return result;
         }
         Map<String, Object> condition = new HashMap<>();
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        if (!StringUtils.isEmpty(user.getAgent())) {
+            condition.put("agentId", user.getAgent().getAgentId());
+        }
         ResultData response = orderService.fetchOrderItemSum(condition, param);
         if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
             result = (DataTablePage<OrderItemSum>) response.getData();

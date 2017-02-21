@@ -96,6 +96,9 @@
                                         <div class="item">
                                             <i class="brown home icon"></i>${agent.address}
                                         </div>
+                                        <div class="item">
+                                            注册时间：<span id="createTime"></span>
+                                        </div>
                                     </div>
                                     <div class="description">
                                         <div class="ui two column stackable grid">

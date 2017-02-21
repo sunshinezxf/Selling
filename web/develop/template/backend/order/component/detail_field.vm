@@ -153,82 +153,84 @@
         </div>
     #end
 </div>
-#if(${order.status} != 'REFUNDED')
-<div class="ui segment">
-    <div class="ui header">
-        订单操作
+#if(${role}  == "admin" || ${role} == "express")
+    #if(${order.status} != 'REFUNDED')
+    <div class="ui segment">
+        <div class="ui header">
+            订单操作
+        </div>
+        <div class="column">
+            #if(${order.status} == 'NOT_PAYED' && ${order.orderItemId})
+                <button class="ui green button" id="pay_btn">确认付款</button>
+            #end
+            #if(${order.status} == 'PAYED')
+                <button class="ui green button" id="express_btn">设置单号</button>
+            #end
+            #if(${order.status} == 'PAYED' && ${order.orderId})
+                <button class="ui green button" id="cancel_btn">取消订单</button>
+            #end
+            #if(${order.status} == 'PAYED' || ${order.status} == 'SHIPPED')
+                <button class="ui green button" id="receive_btn">
+                    #if(${order.status} == 'PAYED')
+                        用户自提
+                    #else
+                        确认签收
+                    #end
+                </button>
+            #end
+            #if(${order.status} == 'RECEIVED')
+                <button class="ui green button">退换订单</button>
+            #end
+        </div>
     </div>
-    <div class="column">
-        #if(${order.status} == 'NOT_PAYED' && ${order.orderItemId})
-            <button class="ui green button" id="pay_btn">确认付款</button>
-        #end
-        #if(${order.status} == 'PAYED')
-            <button class="ui green button" id="express_btn">设置单号</button>
-        #end
-        #if(${order.status} == 'PAYED' && ${order.orderId})
-            <button class="ui green button" id="cancel_btn">取消订单</button>
-        #end
-        #if(${order.status} == 'PAYED' || ${order.status} == 'SHIPPED')
-            <button class="ui green button" id="receive_btn">
-                #if(${order.status} == 'PAYED')
-                    用户自提
-                #else
-                    确认签收
-                #end
-            </button>
-        #end
-        #if(${order.status} == 'RECEIVED')
-            <button class="ui green button">退换订单</button>
-        #end
-    </div>
-</div>
-#end
-#parse("/backend/order/component/reimburse_order_modal.vm")
-#parse("/backend/order/component/receive_order_modal.vm")
-#parse("/backend/order/component/pay_order_modal.vm")
-#if(${order.status} == 'PAYED' && ${order.orderId})
+    #end
     #parse("/backend/order/component/reimburse_order_modal.vm")
-#end
-#if(${order.status} == 'PAYED' && ${order.orderId})
-<script>
-    $("#cancel_btn").on('click', function () {
-        reimburse_inform();
-        $("#reimburse_modal").modal('show');
-    });
-</script>
-#end
-#if(${order.status} == 'PAYED')
-    #parse("/backend/order/component/express_order_modal.vm")
-#end
-#if(${order.status} == 'PAYED')
-<script>
-    $("#express_btn").on('click', function () {
-        express_inform();
-        $("#express_modal").modal('show');
-    });
-</script>
-#end
-#if(${order.status} == 'PAYED' || ${order.status} == 'SHIPPED')
     #parse("/backend/order/component/receive_order_modal.vm")
-#end
-#if(${order.status} == 'PAYED' || ${order.status} == 'SHIPPED')
-<script>
-    $("#receive_btn").on('click', function () {
-        receive_inform();
-        $("#receive_modal").modal('show');
-    });
-</script>
-#end
-#if(${order.status} == 'NOT_PAYED' && ${order.orderItemId})
     #parse("/backend/order/component/pay_order_modal.vm")
-#end
-#if(${order.status} == 'NOT_PAYED' && ${order.orderItemId})
-<script>
-    $("#pay_btn").on('click', function () {
-        pay_inform();
-        $("#pay_modal").modal('show');
-    });
-</script>
+    #if(${order.status} == 'PAYED' && ${order.orderId})
+        #parse("/backend/order/component/reimburse_order_modal.vm")
+    #end
+    #if(${order.status} == 'PAYED' && ${order.orderId})
+    <script>
+        $("#cancel_btn").on('click', function () {
+            reimburse_inform();
+            $("#reimburse_modal").modal('show');
+        });
+    </script>
+    #end
+    #if(${order.status} == 'PAYED')
+        #parse("/backend/order/component/express_order_modal.vm")
+    #end
+    #if(${order.status} == 'PAYED')
+    <script>
+        $("#express_btn").on('click', function () {
+            express_inform();
+            $("#express_modal").modal('show');
+        });
+    </script>
+    #end
+    #if(${order.status} == 'PAYED' || ${order.status} == 'SHIPPED')
+        #parse("/backend/order/component/receive_order_modal.vm")
+    #end
+    #if(${order.status} == 'PAYED' || ${order.status} == 'SHIPPED')
+    <script>
+        $("#receive_btn").on('click', function () {
+            receive_inform();
+            $("#receive_modal").modal('show');
+        });
+    </script>
+    #end
+    #if(${order.status} == 'NOT_PAYED' && ${order.orderItemId})
+        #parse("/backend/order/component/pay_order_modal.vm")
+    #end
+    #if(${order.status} == 'NOT_PAYED' && ${order.orderItemId})
+    <script>
+        $("#pay_btn").on('click', function () {
+            pay_inform();
+            $("#pay_modal").modal('show');
+        });
+    </script>
+    #end
 #end
 <script>
     var order = eval(${order});
