@@ -182,6 +182,7 @@
                 /statistic/agent/** = roles["admin", "express", "finance"]
                 /statistic/goods/** = roles["admin", "express", "finance"]
                 /statistic/sales/** = roles["admin", "express", "finance"]
+                /statistic/sales = roles["admin", "finance"]
                 /statistic/** = roles["admin, express"]
 
                 /wechat = anon

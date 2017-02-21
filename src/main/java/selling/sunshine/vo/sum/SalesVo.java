@@ -1,21 +1,19 @@
 package selling.sunshine.vo.sum;
 
-import java.sql.Timestamp;
-
 /**
  * 每个月的销售金额
  * Created by sunshine on 2017/2/21.
  */
 public class SalesVo {
-    private Timestamp createAt;
+    private String createAt;
 
     private double price;
 
-    public Timestamp getCreateAt() {
+    public String getCreateAt() {
         return createAt;
     }
 
-    public void setCreateAt(Timestamp createAt) {
+    public void setCreateAt(String createAt) {
         this.createAt = createAt;
     }
 

@@ -20,6 +20,7 @@ import selling.sunshine.service.*;
 import selling.sunshine.vo.agent.AgentPurchase;
 import selling.sunshine.vo.customer.CustomerVo;
 import selling.sunshine.vo.order.OrderItemSum;
+import selling.sunshine.vo.sum.SalesVo;
 
 import java.io.IOException;
 import java.util.*;
@@ -531,7 +532,25 @@ public class StatisticController {
     @RequestMapping(method = RequestMethod.GET, value = "/sales")
     public ResultData sales() {
         ResultData result = new ResultData();
-
+        Map<String, Object> condition = new HashMap<>();
+        ResultData response = statisticService.fetchSales(condition);
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            //该list中的数据为按照日期倒序排列的
+            List<SalesVo> list = (List<SalesVo>) response.getData();
+            String[] month = new String[list.size()];
+            double[] price = new double[list.size()];
+            for (int i = list.size() - 1; i >= 0; i--) {
+                month[list.size() - 1 - i] = list.get(i).getCreateAt();
+                price[list.size() - 1 - i] = list.get(i).getPrice();
+            }
+            JSONObject json = new JSONObject();
+            json.put("month", month);
+            json.put("price", price);
+            result.setData(json);
+        } else {
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription(response.getDescription());
+        }
         return result;
     }
 }
