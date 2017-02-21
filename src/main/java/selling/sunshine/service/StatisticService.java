@@ -43,4 +43,5 @@ public interface StatisticService {
     
     ResultData perGoodsPurchaseRecordDay(Map<String, Object> condition);
 
+    ResultData fetchSales(Map<String, Object> condition);
 }

@@ -32,13 +32,14 @@ public interface StatisticDao {
     ResultData purchaseRecord(Map<String, Object> condition);
 
     ResultData queryVolume(Map<String, Object> condition);
-    
+
     ResultData queryAgentGoods(Map<String, Object> condition);
-    
+
     ResultData agentRanking(Map<String, Object> condition);
-    
+
     ResultData purchaseRecordEveryday(Map<String, Object> condition);
-    
+
     ResultData purchaseRecordEveryMonth(Map<String, Object> condition);
 
+    ResultData querySales(Map<String, Object> condition);
 }

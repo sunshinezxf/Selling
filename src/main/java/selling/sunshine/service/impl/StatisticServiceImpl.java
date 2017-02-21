@@ -3,7 +3,6 @@ package selling.sunshine.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import common.sunshine.model.selling.goods.Goods4Agent;
 import common.sunshine.pagination.DataTableParam;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
@@ -435,61 +434,74 @@ public class StatisticServiceImpl implements StatisticService {
 //        return result;
 //    }
 
-	@Override
-	public ResultData perGoodsPurchaseRecordMonth(Map<String, Object> condition) {
-		ResultData result = new ResultData();
+    @Override
+    public ResultData perGoodsPurchaseRecordMonth(Map<String, Object> condition) {
+        ResultData result = new ResultData();
         ResultData response = statisticDao.purchaseRecordEveryMonth(condition);
         if (response.getResponseCode() != ResponseCode.RESPONSE_OK) {
-        	result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
             return result;
         }
         List<Map<String, Object>> list = (List<Map<String, Object>>) response.getData();
         JSONArray categories = new JSONArray();
         JSONArray quantitySeriesData = new JSONArray();
         JSONArray priceSeriesData = new JSONArray();
-        
+
         for (int i = 0; i < list.size(); i++) {
-        	String date=(String)list.get(i).get("date");
-        	String[] dates=date.split("-");
-			categories.add(dates[0]+"年"+Integer.parseInt(dates[1])+"月");
-			quantitySeriesData.add(list.get(i).get("quantity"));
-			priceSeriesData.add(list.get(i).get("price"));
-		}
+            String date = (String) list.get(i).get("date");
+            String[] dates = date.split("-");
+            categories.add(dates[0] + "年" + Integer.parseInt(dates[1]) + "月");
+            quantitySeriesData.add(list.get(i).get("quantity"));
+            priceSeriesData.add(list.get(i).get("price"));
+        }
         JSONObject record = new JSONObject();
         record.put("categories", categories);
         record.put("quantitySeriesData", quantitySeriesData);
         record.put("priceSeriesData", priceSeriesData);
         result.setData(record);
-		return result;
-	}
+        return result;
+    }
 
-	@Override
-	public ResultData perGoodsPurchaseRecordDay(Map<String, Object> condition) {
-		ResultData result = new ResultData();
+    @Override
+    public ResultData perGoodsPurchaseRecordDay(Map<String, Object> condition) {
+        ResultData result = new ResultData();
         ResultData response = statisticDao.purchaseRecordEveryday(condition);
         if (response.getResponseCode() != ResponseCode.RESPONSE_OK) {
-        	result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
             return result;
         }
         List<Map<String, Object>> list = (List<Map<String, Object>>) response.getData();
         JSONArray categories = new JSONArray();
         JSONArray quantitySeriesData = new JSONArray();
         JSONArray priceSeriesData = new JSONArray();
-        
+
         for (int i = 0; i < list.size(); i++) {
-        	String date=(String)list.get(i).get("date");
-        	String[] dates=date.split("-");
-			categories.add(Integer.parseInt(dates[2])+"号");
-			quantitySeriesData.add(list.get(i).get("quantity"));
-			priceSeriesData.add(list.get(i).get("price"));
-		}
+            String date = (String) list.get(i).get("date");
+            String[] dates = date.split("-");
+            categories.add(Integer.parseInt(dates[2]) + "号");
+            quantitySeriesData.add(list.get(i).get("quantity"));
+            priceSeriesData.add(list.get(i).get("price"));
+        }
         JSONObject record = new JSONObject();
         record.put("categories", categories);
         record.put("quantitySeriesData", quantitySeriesData);
         record.put("priceSeriesData", priceSeriesData);
         result.setData(record);
-		return result;
-	}
+        return result;
+    }
 
-
+    @Override
+    public ResultData fetchSales(Map<String, Object> condition) {
+        ResultData result = new ResultData();
+        ResultData response = statisticDao.querySales(condition);
+        result.setResponseCode(response.getResponseCode());
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            result.setData(response.getData());
+        } else if (response.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
+            result.setDescription(response.getDescription());
+        } else {
+            result.setDescription("当前未获取到销售金额数据");
+        }
+        return result;
+    }
 }

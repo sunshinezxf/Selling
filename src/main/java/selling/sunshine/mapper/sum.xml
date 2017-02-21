@@ -7,7 +7,7 @@
         <result property="quantity" column="goods_quantity"></result>
         <result property="num" column="num"></result>
     </resultMap>
-    
+
     <resultMap id="orderMonthVo" type="selling.sunshine.model.sum.OrderStatistics">
         <result property="agentName" column="agent_name"></result>
         <result property="payedQuantity" column="payedQuantity"></result>
@@ -15,14 +15,14 @@
         <result property="finishedQuantity" column="finishedQuantity"></result>
         <result property="totalQuantity" column="totalQuantity"></result>
     </resultMap>
-    
+
     <resultMap id="agentGoodsVo" type="selling.sunshine.model.sum.AgentGoods">
         <result property="agentName" column="agent_name"></result>
         <result property="goodsName" column="goods_name"></result>
         <result property="quantity" column="quantity"></result>
         <result property="price" column="price"></result>
     </resultMap>
-    
+
     <resultMap id="orderMonthVO" type="selling.sunshine.model.sum.OrderMonth">
         <result property="quantity" column="quantity"></result>
         <result property="price" column="price"></result>
@@ -34,17 +34,22 @@
         <result property="shippedMonth" column="shippedMonth"></result>
         <result property="giftMonth" column="giftMonth"></result>
     </resultMap>
-    
+
     <resultMap id="statisticVo" type="java.util.Map">
         <result property="date" column="orderDate"></result>
         <result property="amount" column="num"></result>
     </resultMap>
-    
-   <resultMap id="topThreeAgentVo" type="selling.sunshine.model.sum.TopThreeAgent">
+
+    <resultMap id="salesVo" type="selling.sunshine.vo.sum.SalesVo">
+        <result property="createAt" column="create_time"></result>
+        <result property="price" column="record_price"></result>
+    </resultMap>
+
+    <resultMap id="topThreeAgentVo" type="selling.sunshine.model.sum.TopThreeAgent">
         <result property="agentName" column="agent_name"></result>
         <result property="quantity" column="quantity"></result>
     </resultMap>
-    
+
     <resultMap id="purchaseRecordViewVo" type="selling.sunshine.model.sum.Vendition">
         <result property="goodsId" column="goods_id"></result>
         <result property="goodsName" column="goods_name"></result>
@@ -68,10 +73,9 @@
         group by goods_id, goods_name, goods_quantity
         order by goods_quantity ASC
     </select>
-    
 
-   
-   <select id="sumOrderMonth" parameterType="java.util.Map" resultMap="orderMonthVo">
+
+    <select id="sumOrderMonth" parameterType="java.util.Map" resultMap="orderMonthVo">
       select agent_name,payedQuantity,unPayedQuantity,finishedQuantity,totalQuantity from(select agent_id as id,sum(quantity) as payedQuantity from(
          select agent_id,sum(q1) as quantity from(
             select if(isnull(order_id),0,1) as q1,agent.agent_id from agent 
@@ -154,48 +158,54 @@ select if(isnull(order_id),0,1)as q2, agent.agent_id from agent
 where payedTable.id=unPayedTable.id and payedTable.id=finishedTable.id and payedTable.id=agent.agent_id and payedTable.id=totalTable.id
 and agent.agent_granted=1 and agent.block_flag=0 
    </select>
-   
-  <select id="sumAgentGoodsMonth"  parameterType="java.util.Map" resultMap="agentGoodsVo">
-  select * from(select agent_name,goods_name,quantity,price from(select agentId,goodsId, sum(quantity) as quantity ,sum(price) as price from(select `order`.agent_id as agentId,order_item.goods_id as goodsId,
-       sum(order_item.goods_quantity) as quantity,sum(order_item.order_item_price) as price from `order`
-	left join order_item
-	on `order`.order_id = order_item.order_id 
-	where `order`.order_type=0 and `order`.order_status in(2,3,4,5) 
-	and date_format(`order`.create_time,'%Y-%m')=date_format(now(),'%Y-%m')
-    group by `order`.agent_id,order_item.goods_id
-union all
-select agent_id as agentId,goods_id as goodsId,
-       sum(quantity) as quantity ,sum(total_price) as price from customer_order  
-         where order_status in(1,2,3)
-         and date_format(create_time,'%Y-%m')=date_format(now(),'%Y-%m')
-         group by agent_id,goods_id) t1 group by agentId,goodsId) t2
-left join agent on t2.agentId=agent.agent_id 
-left join goods on t2.goodsId=goods.goods_id) t3 where agent_name is not null 
-<if test="search !=null and search != ''">
- AND (agent_name LIKE #{search} OR goods_name LIKE #{search} OR quantity LIKE #{search} OR price LIKE #{search})
-</if> ORDER BY quantity DESC
-  </select>
-  
-<select id="sumAgentGoods"  parameterType="java.util.Map" resultMap="agentGoodsVo">
-  select * from(select agent_name,goods_name,quantity,price from(select agentId,goodsId, sum(quantity) as quantity ,sum(price) as price from(select `order`.agent_id as agentId,order_item.goods_id as goodsId,
-       sum(order_item.goods_quantity) as quantity,sum(order_item.order_item_price) as price from `order`
-	left join order_item
-	on `order`.order_id = order_item.order_id 
-	where `order`.order_type=0 and `order`.order_status in(2,3,4,5) 
-    group by `order`.agent_id,order_item.goods_id
-union all
-select agent_id as agentId,goods_id as goodsId,
-       sum(quantity) as quantity ,sum(total_price) as price from customer_order  
-         where order_status in(1,2,3)
-         group by agent_id,goods_id) t1 group by agentId,goodsId) t2
-left join agent on t2.agentId=agent.agent_id 
-left join goods on t2.goodsId=goods.goods_id) t3 where agent_name is not null 
-<if test="search !=null and search != ''"> 
- AND (agent_name LIKE #{search} OR goods_name LIKE #{search} OR quantity LIKE #{search} OR price LIKE #{search})
-</if> ORDER BY quantity DESC
-  </select>
-  
-<select id="orderMonth" resultMap="orderMonthVO">
+
+    <select id="sumAgentGoodsMonth" parameterType="java.util.Map" resultMap="agentGoodsVo">
+        select * from(select agent_name,goods_name,quantity,price from(select agentId,goodsId, sum(quantity) as quantity
+        ,sum(price) as price from(select `order`.agent_id as agentId,order_item.goods_id as goodsId,
+        sum(order_item.goods_quantity) as quantity,sum(order_item.order_item_price) as price from `order`
+        left join order_item
+        on `order`.order_id = order_item.order_id
+        where `order`.order_type=0 and `order`.order_status in(2,3,4,5)
+        and date_format(`order`.create_time,'%Y-%m')=date_format(now(),'%Y-%m')
+        group by `order`.agent_id,order_item.goods_id
+        union all
+        select agent_id as agentId,goods_id as goodsId,
+        sum(quantity) as quantity ,sum(total_price) as price from customer_order
+        where order_status in(1,2,3)
+        and date_format(create_time,'%Y-%m')=date_format(now(),'%Y-%m')
+        group by agent_id,goods_id) t1 group by agentId,goodsId) t2
+        left join agent on t2.agentId=agent.agent_id
+        left join goods on t2.goodsId=goods.goods_id) t3 where agent_name is not null
+        <if test="search !=null and search != ''">
+            AND (agent_name LIKE #{search} OR goods_name LIKE #{search} OR quantity LIKE #{search} OR price LIKE
+            #{search})
+        </if>
+        ORDER BY quantity DESC
+    </select>
+
+    <select id="sumAgentGoods" parameterType="java.util.Map" resultMap="agentGoodsVo">
+        select * from(select agent_name,goods_name,quantity,price from(select agentId,goodsId, sum(quantity) as quantity
+        ,sum(price) as price from(select `order`.agent_id as agentId,order_item.goods_id as goodsId,
+        sum(order_item.goods_quantity) as quantity,sum(order_item.order_item_price) as price from `order`
+        left join order_item
+        on `order`.order_id = order_item.order_id
+        where `order`.order_type=0 and `order`.order_status in(2,3,4,5)
+        group by `order`.agent_id,order_item.goods_id
+        union all
+        select agent_id as agentId,goods_id as goodsId,
+        sum(quantity) as quantity ,sum(total_price) as price from customer_order
+        where order_status in(1,2,3)
+        group by agent_id,goods_id) t1 group by agentId,goodsId) t2
+        left join agent on t2.agentId=agent.agent_id
+        left join goods on t2.goodsId=goods.goods_id) t3 where agent_name is not null
+        <if test="search !=null and search != ''">
+            AND (agent_name LIKE #{search} OR goods_name LIKE #{search} OR quantity LIKE #{search} OR price LIKE
+            #{search})
+        </if>
+        ORDER BY quantity DESC
+    </select>
+
+    <select id="orderMonth" resultMap="orderMonthVO">
 select *from(
 select sum(quantity) as quantity,sum(price) as price from(
 select sum(goods_quantity) as quantity,sum(order_item_price) as price from order_item 
@@ -248,30 +258,31 @@ select count(*) as giftMonth from order_item
 	   and `order`.order_type=1) t11;
 </select>
 
-<select id="orderLastYear" parameterType="java.util.Map" resultMap="statisticVo">
-select orderDate, sum(num) as num from(
-select *from(
-select DATE_FORMAT(`order`.create_time,'%Y-%m') as orderDate,count(*) as num from `order`,order_item where `order`.order_id=order_item.order_id 
-	   and date_format(`order`.create_time,'%Y-%m') >= date_format(date_sub(now(), INTERVAL 11 MONTH), '%Y-%m')
-	   and `order`.order_status in (2,3,4,5) 
-	   <if test="orderType != null">
-	   		and `order`.order_type = #{orderType}
-	   </if>
-       GROUP BY DATE_FORMAT(`order`.create_time,'%Y-%m') 
-       ORDER BY  DATE_FORMAT(`order`.create_time,'%Y-%m')) t1
-union all
-select * from(
-select DATE_FORMAT(create_time,'%Y-%m') as orderDate,count(*) as num from customer_order
-	   where date_format(create_time,'%Y-%m') >= date_format(date_sub(now(), INTERVAL 11 MONTH), '%Y-%m')
-	   and order_status in (1,2,3) 
-	   <if test="orderType != null">
-	   		and #{orderType} = 0
-	   </if>
-       GROUP BY DATE_FORMAT(create_time,'%Y-%m') 
-       ORDER BY  DATE_FORMAT(create_time,'%Y-%m')) t2) t3 group by orderDate;
-</select>
+    <select id="orderLastYear" parameterType="java.util.Map" resultMap="statisticVo">
+        select orderDate, sum(num) as num from(
+        select *from(
+        select DATE_FORMAT(`order`.create_time,'%Y-%m') as orderDate,count(*) as num from `order`,order_item where
+        `order`.order_id=order_item.order_id
+        and date_format(`order`.create_time,'%Y-%m') >= date_format(date_sub(now(), INTERVAL 11 MONTH), '%Y-%m')
+        and `order`.order_status in (2,3,4,5)
+        <if test="orderType != null">
+            and `order`.order_type = #{orderType}
+        </if>
+        GROUP BY DATE_FORMAT(`order`.create_time,'%Y-%m')
+        ORDER BY DATE_FORMAT(`order`.create_time,'%Y-%m')) t1
+        union all
+        select * from(
+        select DATE_FORMAT(create_time,'%Y-%m') as orderDate,count(*) as num from customer_order
+        where date_format(create_time,'%Y-%m') >= date_format(date_sub(now(), INTERVAL 11 MONTH), '%Y-%m')
+        and order_status in (1,2,3)
+        <if test="orderType != null">
+            and #{orderType} = 0
+        </if>
+        GROUP BY DATE_FORMAT(create_time,'%Y-%m')
+        ORDER BY DATE_FORMAT(create_time,'%Y-%m')) t2) t3 group by orderDate;
+    </select>
 
-<select id="topThreeAgentMonth" resultMap="topThreeAgentVo">
+    <select id="topThreeAgentMonth" resultMap="topThreeAgentVo">
 select agent.agent_id,agent_name,quantity from(
 select agent_id,sum(quantity) as quantity from(
 select agent_id,sum(goods_quantity) as quantity from order_item 
@@ -292,15 +303,15 @@ select agent_id,sum(quantity) as quantity from customer_order
         
 </select>
 
-<select id="topThreeAgent" resultMap="topThreeAgentVo">
-select agent.agent_id,agent_name,quantity from(
-select agent_id,sum(quantity) as quantity from(
-select agent_id,sum(goods_quantity) as quantity from order_item 
-       left join `order` on `order`.order_id=order_item.order_id 
-        where order_item.order_item_status in(1,2,3)
-        and `order`.order_type=0 
-        group by `order`.agent_id
-union all
+    <select id="topThreeAgent" resultMap="topThreeAgentVo">
+        select agent.agent_id,agent_name,quantity from(
+            select agent_id,sum(quantity) as quantity from(
+                select agent_id,sum(goods_quantity) as quantity from order_item
+                    left join `order` on `order`.order_id=order_item.order_id
+                    where order_item.order_item_status in(1,2,3)
+                    and `order`.order_type=0
+                    group by `order`.agent_id
+  union all
 select agent_id,sum(quantity) as quantity from customer_order 
         where order_status in(1,2,3)
         group by agent_id
@@ -311,57 +322,69 @@ select agent_id,sum(quantity) as quantity from customer_order
         
 </select>
 
-<select id="purchaseRecordView" resultMap="purchaseRecordViewVo">
-select goods_id, goods_name, order_type, sum(goods_quantity) as goods_quantity, sum(record_price) as record_price
-from purchase_record_view 
-where 1 = 1
-<if test="status != null and status != ''">
-	and record_status in 
-	<foreach collection="status" item="item" index="index" open="(" close=")" separator=",">
-		#{item}
-	</foreach>
-</if>
-<if test="type != null">
-	and order_type = #{type}
-</if>
-<if test="monthly != null">
-	and date_format(create_time,'%Y-%m')=date_format(now(),'%Y-%m')
-</if>
-<if test="daily != null">
-	and date_format(create_time,'%Y-%m-%D')=date_format(now(),'%Y-%m-%D')
-</if>
-group by goods_id, goods_name, order_type order by goods_quantity desc;
-        
-</select>
+    <select id="purchaseRecordView" resultMap="purchaseRecordViewVo">
+        select goods_id, goods_name, order_type, sum(goods_quantity) as goods_quantity, sum(record_price) as
+        record_price
+        from purchase_record_view
+        where 1 = 1
+        <if test="status != null and status != ''">
+            and record_status in
+            <foreach collection="status" item="item" index="index" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        <if test="type != null">
+            and order_type = #{type}
+        </if>
+        <if test="monthly != null">
+            and date_format(create_time,'%Y-%m')=date_format(now(),'%Y-%m')
+        </if>
+        <if test="daily != null">
+            and date_format(create_time,'%Y-%m-%D')=date_format(now(),'%Y-%m-%D')
+        </if>
+        group by goods_id, goods_name, order_type order by goods_quantity desc;
+    </select>
 
-<resultMap id="purchaseRecordVo" type="java.util.Map">
+    <select id="querySales" resultMap="salesVo">
+        SELECT date_format(create_time, '%Y-%m') AS create_time, sum(record_price) as record_price
+        FROM purchase_record_view
+        WHERE order_type IN (0, 2)
+        GROUP BY date_format(create_time, '%Y-%m')
+        ORDER BY date_format(create_time, '%Y-%m') DESC
+        limit 12;
+    </select>
+
+    <resultMap id="purchaseRecordVo" type="java.util.Map">
         <result property="date" column="date"></result>
         <result property="goodsId" column="goods_id"></result>
         <result property="goodsName" column="goods_name"></result>
         <result property="quantity" column="quantity"></result>
         <result property="price" column="price"></result>
-</resultMap>
-    
-<select id="purchaseRecordEveryday" parameterType="java.util.Map" resultMap="purchaseRecordVo">
-select substr(create_time,1,10) as date,goods_id,goods_name,sum(goods_quantity) as quantity,sum(record_price) as price 
-from purchase_record_view 
-where date_format(create_time,'%Y-%m')=date_format(now(),'%Y-%m') and order_type='0'
-<if test="goodsId != null and goodsId != ''">
-       AND goods_id = #{goodsId}
-</if>
-group by substr(create_time,1,10),goods_id,goods_name order by substr(create_time,1,10);
-</select>
+    </resultMap>
 
-<select id="purchaseRecordEveryMonth" parameterType="java.util.Map" resultMap="purchaseRecordVo">
-select date_format(create_time,'%Y-%m') as date,goods_id,goods_name,sum(goods_quantity) as quantity,sum(record_price) as price 
-from purchase_record_view 
-where date_format(create_time,'%Y-%m') >= date_format(date_sub(now(), INTERVAL 11 MONTH), '%Y-%m') and order_type='0'
-<if test="goodsId != null and goodsId != ''">
-       AND goods_id = #{goodsId}
-</if>
-group by date_format(create_time,'%Y-%m'),goods_id,goods_name
-order by date_format(create_time,'%Y-%m');
-</select>
+    <select id="purchaseRecordEveryday" parameterType="java.util.Map" resultMap="purchaseRecordVo">
+        select substr(create_time,1,10) as date,goods_id,goods_name,sum(goods_quantity) as quantity,sum(record_price) as
+        price
+        from purchase_record_view
+        where date_format(create_time,'%Y-%m')=date_format(now(),'%Y-%m') and order_type='0'
+        <if test="goodsId != null and goodsId != ''">
+            AND goods_id = #{goodsId}
+        </if>
+        group by substr(create_time,1,10),goods_id,goods_name order by substr(create_time,1,10);
+    </select>
 
-   
+    <select id="purchaseRecordEveryMonth" parameterType="java.util.Map" resultMap="purchaseRecordVo">
+        select date_format(create_time,'%Y-%m') as date,goods_id,goods_name,sum(goods_quantity) as
+        quantity,sum(record_price) as price
+        from purchase_record_view
+        where date_format(create_time,'%Y-%m') >= date_format(date_sub(now(), INTERVAL 11 MONTH), '%Y-%m') and
+        order_type='0'
+        <if test="goodsId != null and goodsId != ''">
+            AND goods_id = #{goodsId}
+        </if>
+        group by date_format(create_time,'%Y-%m'),goods_id,goods_name
+        order by date_format(create_time,'%Y-%m');
+    </select>
+
+
 </mapper>

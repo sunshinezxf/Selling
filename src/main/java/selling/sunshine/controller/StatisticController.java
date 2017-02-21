@@ -522,4 +522,16 @@ public class StatisticController {
         return result;
     }
 
+    /**
+     * 获取近12个月每月平台的销售金额数据
+     *
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.GET, value = "/sales")
+    public ResultData sales() {
+        ResultData result = new ResultData();
+
+        return result;
+    }
 }
