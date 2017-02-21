@@ -1,5 +1,7 @@
 <div class="row" style="height: 350px;">
-    <div id="sales_monthly" class="column"></div>
+    <div class="column">
+        <div id="sales_monthly" class="ui segment"></div>
+    </div>
 </div>
 <script>
     var sales_monthly = "${path.concat('/statistic/sales')}";
@@ -23,7 +25,6 @@
                     xAxis: [
                         {
                             type: 'category',
-                            boundaryGap : false,
                             data: data.month
                         }
                     ],
