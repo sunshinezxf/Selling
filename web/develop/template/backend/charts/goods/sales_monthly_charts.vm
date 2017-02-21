@@ -1,6 +1,6 @@
-<div class="row" style="height: 350px;">
+<div class="row">
     <div class="column">
-        <div id="sales_monthly" class="ui segment"></div>
+        <div id="sales_monthly" class="ui segment" style="height: 350px;"></div>
     </div>
 </div>
 <script>
