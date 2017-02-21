@@ -282,45 +282,68 @@ select count(*) as giftMonth from order_item
         ORDER BY DATE_FORMAT(create_time,'%Y-%m')) t2) t3 group by orderDate;
     </select>
 
+    <!--<select id="topThreeAgentMonth" resultMap="topThreeAgentVo">-->
+<!--select agent.agent_id,agent_name,quantity from(-->
+<!--select agent_id,sum(quantity) as quantity from(-->
+<!--select agent_id,sum(goods_quantity) as quantity from order_item -->
+       <!--left join `order` on `order`.order_id=order_item.order_id -->
+        <!--where order_item.order_item_status in(1,2,3)-->
+		<!--and date_format(`order`.create_time,'%Y-%m')=date_format(now(),'%Y-%m')-->
+        <!--and `order`.order_type=0 -->
+        <!--group by `order`.agent_id-->
+<!--union all-->
+<!--select agent_id,sum(quantity) as quantity from customer_order -->
+        <!--where order_status in(1,2,3)-->
+		<!--and date_format(create_time,'%Y-%m')=date_format(now(),'%Y-%m')-->
+        <!--group by agent_id-->
+<!--) t1-->
+        <!--where agent_id is not null-->
+        <!--group by agent_id-->
+        <!--order by quantity desc) t2,agent where t2.agent_id=agent.agent_id;-->
+        <!-- -->
+<!--</select>-->
+
+    <!--<select id="topThreeAgent" resultMap="topThreeAgentVo">-->
+    <!--select agent.agent_id,agent_name,quantity from(-->
+    <!--select agent_id,sum(quantity) as quantity from(-->
+    <!--select agent_id,sum(goods_quantity) as quantity from order_item-->
+    <!--left join `order` on `order`.order_id=order_item.order_id-->
+    <!--where order_item.order_item_status in(1,2,3)-->
+    <!--and `order`.order_type=0-->
+    <!--group by `order`.agent_id-->
+    <!--union all-->
+    <!--select agent_id,sum(quantity) as quantity from customer_order -->
+    <!--where order_status in(1,2,3)-->
+    <!--group by agent_id-->
+    <!--) t1-->
+    <!--where agent_id is not null-->
+    <!--group by agent_id-->
+    <!--order by quantity desc) t2,agent where t2.agent_id=agent.agent_id;-->
+    <!-- -->
+    <!--</select>-->
+
     <select id="topThreeAgentMonth" resultMap="topThreeAgentVo">
-select agent.agent_id,agent_name,quantity from(
-select agent_id,sum(quantity) as quantity from(
-select agent_id,sum(goods_quantity) as quantity from order_item 
-       left join `order` on `order`.order_id=order_item.order_id 
-        where order_item.order_item_status in(1,2,3)
-		and date_format(`order`.create_time,'%Y-%m')=date_format(now(),'%Y-%m')
-        and `order`.order_type=0 
-        group by `order`.agent_id
-union all
-select agent_id,sum(quantity) as quantity from customer_order 
-        where order_status in(1,2,3)
-		and date_format(create_time,'%Y-%m')=date_format(now(),'%Y-%m')
-        group by agent_id
-) t1
-        where agent_id is not null
-        group by agent_id
-        order by quantity desc) t2,agent where t2.agent_id=agent.agent_id;
-        
-</select>
+        SELECT agent.agent_id,agent_name,quantity FROM(
+           SELECT agent_id,sum(goods_quantity) as quantity
+           FROM order_item_sum
+           WHERE order_item_status IN (1,2,3)
+           AND order_type IN (0,2)
+           AND date_format(order_item_sum.create_time,'%Y-%m')=date_format(now(),'%Y-%m')
+           GROUP BY agent_id
+           order by quantity desc
+        )t,agent WHERE t.agent_id=agent.agent_id;
+    </select>
 
     <select id="topThreeAgent" resultMap="topThreeAgentVo">
-        select agent.agent_id,agent_name,quantity from(
-            select agent_id,sum(quantity) as quantity from(
-                select agent_id,sum(goods_quantity) as quantity from order_item
-                    left join `order` on `order`.order_id=order_item.order_id
-                    where order_item.order_item_status in(1,2,3)
-                    and `order`.order_type=0
-                    group by `order`.agent_id
-  union all
-select agent_id,sum(quantity) as quantity from customer_order 
-        where order_status in(1,2,3)
-        group by agent_id
-) t1
-        where agent_id is not null
-        group by agent_id
-        order by quantity desc) t2,agent where t2.agent_id=agent.agent_id;
-        
-</select>
+       SELECT agent.agent_id,agent_name,quantity FROM(
+           SELECT agent_id,sum(goods_quantity) as quantity
+           FROM order_item_sum
+           WHERE order_item_status IN (1,2,3)
+           AND order_type IN (0,2)
+           GROUP BY agent_id
+           order by quantity desc
+        )t,agent WHERE t.agent_id=agent.agent_id;
+    </select>
 
     <select id="purchaseRecordView" resultMap="purchaseRecordViewVo">
         select goods_id, goods_name, order_type, sum(goods_quantity) as goods_quantity, sum(record_price) as
