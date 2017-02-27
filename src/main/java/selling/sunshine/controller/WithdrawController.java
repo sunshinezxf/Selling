@@ -1,13 +1,17 @@
 package selling.sunshine.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.pingplusplus.model.Event;
 import com.pingplusplus.model.Webhooks;
 import common.sunshine.model.selling.admin.Admin;
 import common.sunshine.model.selling.user.User;
+import common.sunshine.pagination.DataTablePage;
+import common.sunshine.pagination.DataTableParam;
 import common.sunshine.utils.IDGenerator;
+import common.sunshine.utils.ResponseCode;
+import common.sunshine.utils.ResultData;
+import common.sunshine.utils.SortRule;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -18,16 +22,13 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import common.sunshine.utils.SortRule;
 import selling.sunshine.form.TimeRangeForm;
-import selling.sunshine.model.*;
-import common.sunshine.pagination.DataTablePage;
-import common.sunshine.pagination.DataTableParam;
+import selling.sunshine.model.BackOperationLog;
+import selling.sunshine.model.WithdrawRecord;
+import selling.sunshine.model.WithdrawStatus;
 import selling.sunshine.service.LogService;
 import selling.sunshine.service.ToolService;
 import selling.sunshine.service.WithdrawService;
-import common.sunshine.utils.ResponseCode;
-import common.sunshine.utils.ResultData;
 import selling.sunshine.utils.ZipCompressor;
 
 import javax.servlet.http.HttpServletRequest;
@@ -43,6 +44,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 提现controller类
  * Created by sunshine on 6/7/16.
  */
 @RestController
@@ -58,7 +60,12 @@ public class WithdrawController {
 
     @Autowired
     private LogService logService;
-    
+
+    /**
+     * 获取提现金额（pay：当前已申请提现但还未处理的金额；check：当前总申请提现金额）
+     * @param status
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/money/{status}")
     public ResultData money(@PathVariable("status") String status) {
     	ResultData resultData=new ResultData();
@@ -76,7 +83,11 @@ public class WithdrawController {
         resultData.setResponseCode(ResponseCode.RESPONSE_ERROR);
         return resultData;
     }
-    
+
+    /**
+     * 跳转到提现列表界面
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/overview")
     public ModelAndView overview() {
         ModelAndView view = new ModelAndView();
@@ -89,7 +100,12 @@ public class WithdrawController {
         view.setViewName("/backend/withdraw/overview");
         return view;
     }
-    
+
+    /**
+     * 提现列表的datatable数据列表
+     * @param param
+     * @return
+     */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/overview")
     public DataTablePage<WithdrawRecord> overview(DataTableParam param) {
@@ -105,6 +121,11 @@ public class WithdrawController {
         return result;
     }
 
+    /**
+     * 报表区查看提现信息的datatable接口（暂时未用到）
+     * @param param
+     * @return
+     */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/list")
     public DataTablePage<WithdrawRecord> list(DataTableParam param){
@@ -131,7 +152,13 @@ public class WithdrawController {
         }
         return result;
     }
-    
+
+    /**
+     * 下载提现申请excel表格
+     * @param response
+     * @return
+     * @throws UnsupportedEncodingException
+     */
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/check/download")
     public String download(HttpServletResponse response) throws UnsupportedEncodingException {
@@ -163,6 +190,15 @@ public class WithdrawController {
         return null;
     }
 
+    /**
+     * 下载提现单报表excel
+     * @param fileName
+     * @param tempFileName
+     * @param request
+     * @param response
+     * @return
+     * @throws UnsupportedEncodingException
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/download/{fileName}/{tempFileName}")
     public String downloadRecord(@PathVariable("fileName") String fileName, @PathVariable("tempFileName") String tempFileName, HttpServletRequest request,
                                  HttpServletResponse response) throws UnsupportedEncodingException {
@@ -210,6 +246,7 @@ public class WithdrawController {
 
     /**
      * 提现单报表
+     * @return
      */
     @RequestMapping(method = RequestMethod.GET, value = "/overviewreport")
     public ResultData withdraw() {
@@ -237,6 +274,9 @@ public class WithdrawController {
 
     /**
      * 提现单报表
+     * @param form
+     * @param result
+     * @return
      */
     @RequestMapping(method = RequestMethod.POST, value = "/overviewreport")
     public ResultData withdraw(@Valid TimeRangeForm form, BindingResult result) {
@@ -290,6 +330,13 @@ public class WithdrawController {
     }
 
 
+    /**
+     * 用户发起提现，系统转账成功通知
+     * @param request
+     * @param response
+     * @return
+     * @throws IOException
+     */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/inform")
     public ResultData inform(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -325,29 +372,12 @@ public class WithdrawController {
         return result;
     }
 
-    @ResponseBody
-    @RequestMapping(method = RequestMethod.POST, value = "/statistic/{agentId}")
-    public JSONObject statistic(@PathVariable("agentId") String agentId) {
-        JSONObject result = new JSONObject();
-        Map<String, Object> condition = new HashMap<>();
-        condition.put("agentId", agentId);
-        if (withdrawService.statistic(condition).getResponseCode() == ResponseCode.RESPONSE_OK) {
-            List<Map<String, Object>> list = (List<Map<String, Object>>) withdrawService.statistic(condition).getData();
-            JSONArray categories = new JSONArray();
-            JSONArray data = new JSONArray();
-            double totalAmount = 0;
-            for (int i = 0; i < list.size(); i++) {
-                categories.add(list.get(i).get("date"));
-                data.add(list.get(i).get("amount"));
-                totalAmount += (double) list.get(i).get("amount");
-            }
-            result.put("totalAmount", totalAmount);
-            result.put("categories", categories);
-            result.put("data", data);
-        }
-        return result;
-    }
-
+    /**
+     * 确认提现申请
+     * @param withdrawId
+     * @param request
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/{withdrawId}/send")
     public ModelAndView send(@PathVariable("withdrawId") String withdrawId, HttpServletRequest request) {
         ModelAndView view = new ModelAndView();

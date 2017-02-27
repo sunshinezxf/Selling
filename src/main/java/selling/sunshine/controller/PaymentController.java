@@ -10,34 +10,26 @@ import common.sunshine.model.selling.order.support.OrderItemStatus;
 import common.sunshine.model.selling.order.support.OrderStatus;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
-
-import org.apache.poi.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import selling.sunshine.form.PayForm;
 import selling.sunshine.service.BillService;
 import selling.sunshine.service.OrderService;
-import selling.sunshine.utils.PlatformConfig;
 import selling.sunshine.utils.Prompt;
 import selling.sunshine.utils.PromptCode;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
-
 /**
+ * 支付相关接口
  * Created by sunshine on 6/16/16.
  */
 @RestController
@@ -168,7 +160,13 @@ public class PaymentController {
         view.setViewName("/customer/prompt");
         return view;
     }
-    
+
+    /**
+     * 跳转到系统内的订单支付页面（付款前最后一个页面，代理商和客户商城共用页面）
+     * @param request
+     * @param orderId
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value="/bill/{orderId}")
     public ModelAndView bill(HttpServletRequest request, @PathVariable("orderId") String orderId){
     	ModelAndView view = new ModelAndView();

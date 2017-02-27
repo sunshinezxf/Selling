@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 计算退款的接口
  * Created by sunshine on 8/3/16.
  */
 @RestController
@@ -48,6 +49,13 @@ public class ReimburseController {
     @Autowired
     private LogService logService;
 
+    /**
+     * 订单退款的通知
+     * @param request
+     * @param response
+     * @return
+     * @throws IOException
+     */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/inform")
     public ResultData inform(HttpServletRequest request, HttpServletResponse response) throws IOException {

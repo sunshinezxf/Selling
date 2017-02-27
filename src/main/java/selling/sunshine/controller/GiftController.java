@@ -36,6 +36,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.*;
 
+/**
+ * 代理商赠送相关操作接口
+ * created by wxd
+ */
 @RestController
 @RequestMapping("/gift")
 public class GiftController {
@@ -54,6 +58,11 @@ public class GiftController {
     @Autowired
     private LogService logService;
 
+    /**
+     * 跳转到代理商赠送配置页面
+     * @param agentId
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/config/{agentId}")
     public ModelAndView giftConfig(@PathVariable("agentId") String agentId) {
         ModelAndView view = new ModelAndView();
@@ -71,6 +80,12 @@ public class GiftController {
         return view;
     }
 
+    /**
+     * 根据agentId和goodsI得到某个代理商关于某个商品的赠送信息
+     * @param agentId
+     * @param goodsId
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/{agentId}/{goodsId}")
     public ResultData agentGift(@PathVariable("agentId") String agentId, @PathVariable("goodsId") String goodsId) {
         ResultData result = new ResultData();
@@ -85,6 +100,13 @@ public class GiftController {
         return result;
     }
 
+    /**
+     * 修改代理商赠送配置
+     * @param form
+     * @param result
+     * @param request
+     * @return
+     */
     @RequestMapping(method = RequestMethod.POST, value = "/config")
     public ModelAndView giftConfig(@Valid ConfigForm form, BindingResult result, HttpServletRequest request) {
         ModelAndView view = new ModelAndView();
@@ -135,6 +157,10 @@ public class GiftController {
         return view;
     }
 
+    /**
+     * 跳转到代理商申请赠送页面
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/apply")
     public ModelAndView apply() {
         ModelAndView view = new ModelAndView();
@@ -156,6 +182,12 @@ public class GiftController {
         return view;
     }
 
+    /**
+     * 代理商申请赠送
+     * @param form
+     * @param result
+     * @return
+     */
     @RequestMapping(method = RequestMethod.POST, value = "/apply")
     public ModelAndView apply(@Valid ApplyForm form, BindingResult result) {
         ModelAndView view = new ModelAndView();
@@ -198,6 +230,11 @@ public class GiftController {
         return view;
     }
 
+    /**
+     * 跳转到代理商赠送申请列表
+     * @param type
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/check/{type}")
     public ModelAndView check(@PathVariable("type") String type) {
         ModelAndView view = new ModelAndView();
@@ -210,6 +247,12 @@ public class GiftController {
         return view;
     }
 
+    /**
+     * 得到代理商赠送申请的DataTable列表
+     * @param param
+     * @param type
+     * @return
+     */
     @RequestMapping(method = RequestMethod.POST, value = "/check/{type}")
     public DataTablePage<GiftApply> check(DataTableParam param, @PathVariable("type") String type) {
         DataTablePage<GiftApply> result = new DataTablePage<>();
@@ -233,6 +276,11 @@ public class GiftController {
         return result;
     }
 
+    /**
+     * 根据applyId得到赠送申请信息
+     * @param applyId
+     * @return
+     */
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/apply/{applyId}")
     public ResultData view(@PathVariable("applyId") String applyId) {
@@ -248,6 +296,11 @@ public class GiftController {
         return result;
     }
 
+    /**
+     * 后台回绝赠送申请
+     * @param applyId
+     * @return
+     */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/apply/decline")
     public ResultData decline(String applyId) {
@@ -273,6 +326,13 @@ public class GiftController {
         return result;
     }
 
+    /**
+     * 后台确认通过赠送申请并配置赠送相关信息
+     * @param form
+     * @param type
+     * @param result
+     * @return
+     */
     @RequestMapping(method = RequestMethod.POST, value = "/apply/handle/{type}")
     public ModelAndView handleApply(@Valid ApplyConfigForm form, @PathVariable("type") String type, BindingResult result) {
         ModelAndView view = new ModelAndView();

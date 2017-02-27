@@ -43,6 +43,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 报表下载接口
+ * created by wxd
+ */
 @RequestMapping("/statement")
 @RestController
 public class StatementController {
@@ -61,6 +65,10 @@ public class StatementController {
     @Autowired
     private OrderService orderService;
 
+    /**
+     * 跳转到报表专区界面
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/download")
     public ModelAndView download() {
         ModelAndView view = new ModelAndView();
@@ -68,6 +76,16 @@ public class StatementController {
         return view;
     }
 
+    /**
+     * 根据活动ID下载某个赠送活动的相关信息excel
+     * @param request
+     * @param response
+     * @param eventId
+     * @return
+     * @throws IOException
+     * @throws RowsExceededException
+     * @throws WriteException
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/downloadEventExcel/{eventId}")
     public String downloadEventExcel(HttpServletRequest request, HttpServletResponse response,@PathVariable("eventId") String eventId)
             throws IOException, RowsExceededException, WriteException {
@@ -352,6 +370,17 @@ public class StatementController {
         return null;
     }
 
+    /**
+     * 下载日常赠送的相关信息excel
+     * @param request
+     * @param response
+     * @param start
+     * @param end
+     * @return
+     * @throws IOException
+     * @throws RowsExceededException
+     * @throws WriteException
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/downloadGiftExcel")
     public String downloadGiftExcel(HttpServletRequest request, HttpServletResponse response, String start, String end) throws IOException, RowsExceededException, WriteException {
         Map<String, Object> condition = new HashMap<String, Object>();
@@ -512,20 +541,20 @@ public class StatementController {
     	 return null;
     }
     
-    @RequestMapping(method = RequestMethod.GET, value = "/downloadRefundBillExcel")
-    public String downloadRefundBillExcel(HttpServletRequest request, HttpServletResponse response,String start, String end)
-            throws IOException, RowsExceededException, WriteException {
-    	 Map<String, Object> condition=new HashMap<>();
-         if(!StringUtils.isEmpty(start) && !StringUtils.isEmpty(end)){
-         	condition.put("start", start);
-         	condition.put("end", end);
-         }
-    	 ResultData fetchResponse=statementService.refundBillStatement(condition);
-    	 if (fetchResponse.getResponseCode()==ResponseCode.RESPONSE_OK) {
-			
-		 }
-    	 return null;
-    }
+//    @RequestMapping(method = RequestMethod.GET, value = "/downloadRefundBillExcel")
+//    public String downloadRefundBillExcel(HttpServletRequest request, HttpServletResponse response,String start, String end)
+//            throws IOException, RowsExceededException, WriteException {
+//    	 Map<String, Object> condition=new HashMap<>();
+//         if(!StringUtils.isEmpty(start) && !StringUtils.isEmpty(end)){
+//         	condition.put("start", start);
+//         	condition.put("end", end);
+//         }
+//    	 ResultData fetchResponse=statementService.refundBillStatement(condition);
+//    	 if (fetchResponse.getResponseCode()==ResponseCode.RESPONSE_OK) {
+//
+//		 }
+//    	 return null;
+//    }
 
 
 }

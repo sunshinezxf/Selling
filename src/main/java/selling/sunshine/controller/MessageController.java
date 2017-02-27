@@ -21,6 +21,7 @@ import selling.sunshine.service.MessageService;
 import java.util.*;
 
 /**
+ * 短信接口
  * Created by sunshine on 7/14/16.
  */
 @RequestMapping("/message")
@@ -37,6 +38,10 @@ public class MessageController {
     @Autowired
     private EventService eventService;
 
+    /**
+     * 跳转到短信推送页面
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/send")
     public ModelAndView message() {
         ModelAndView view = new ModelAndView();
@@ -44,6 +49,11 @@ public class MessageController {
         return view;
     }
 
+    /**
+     * 发送短信给普通代理商
+     * @param text
+     * @return
+     */
     @RequestMapping(method = RequestMethod.POST, value = "/send")
     public ResultData message(String text) {
         ResultData result = new ResultData();
@@ -62,6 +72,12 @@ public class MessageController {
         return result;
     }
 
+    /**
+     * 测试发送短信
+     * @param phone
+     * @param text
+     * @return
+     */
     @RequestMapping(method = RequestMethod.POST, value = "/preview")
     public ResultData preview(String phone, String text) {
         ResultData result = new ResultData();
@@ -73,6 +89,13 @@ public class MessageController {
         return result;
     }
 
+    /**
+     * 根据type发送短信给gift event的活动申请者、活动被赠送者、两者都发
+     * @param eventId
+     * @param type
+     * @param text
+     * @return
+     */
     @RequestMapping(method = RequestMethod.POST, value = "/gift/{eventId}/send/{type}")
     public ResultData event(@PathVariable("eventId") String eventId, @PathVariable("type") String type, String text) {
         ResultData result = new ResultData();

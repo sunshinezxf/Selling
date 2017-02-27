@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 已废弃接口
  * Created by sunshine on 5/13/16.
  */
 @RequestMapping("/shipment")

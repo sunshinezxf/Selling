@@ -30,6 +30,7 @@ import javax.validation.Valid;
 import java.util.*;
 
 /**
+ * 后台的平台接口
  * Created by sunshine on 4/10/16.
  */
 @RequestMapping("/")
@@ -59,6 +60,10 @@ public class PlatformController {
     @Autowired
     private StatisticService statisticService;
 
+    /**
+     * 跳转到后台登录界面
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/")
     public ModelAndView index() {
         ModelAndView view = new ModelAndView();
@@ -66,6 +71,10 @@ public class PlatformController {
         return view;
     }
 
+    /**
+     * 跳转到后台登录界面
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/login")
     public ModelAndView login() {
         ModelAndView view = new ModelAndView();
@@ -73,6 +82,13 @@ public class PlatformController {
         return view;
     }
 
+    /**
+     * 登录
+     * @param form
+     * @param result
+     * @param request
+     * @return
+     */
     @RequestMapping(method = RequestMethod.POST, value = "/login")
     public ModelAndView login(@Valid AdminLoginForm form, BindingResult result, HttpServletRequest request) {
         ModelAndView view = new ModelAndView();
@@ -101,63 +117,10 @@ public class PlatformController {
         return view;
     }
 
-//    @RequestMapping(method = RequestMethod.GET, value = "/register")
-//    public ModelAndView register() {
-//        ModelAndView view = new ModelAndView();
-//        Map<String, Object> condition = new HashMap<>();
-//        condition.put("blockFlag", false);
-//        ResultData fetchResponse = roleService.queryRole(condition);
-//        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-//            List<Role> list = (List<Role>) fetchResponse.getData();
-//            view.addObject("roles", list);
-//        }
-//        view.setViewName("/backend/admin/admin_register");
-//        return view;
-//    }
-
-//    @RequestMapping(method = RequestMethod.POST, value = "/register")
-//    public ModelAndView register(@Valid AdminForm form, BindingResult result,HttpServletRequest request) {
-//        ModelAndView view = new ModelAndView();
-//
-//        if (result.hasErrors()) {
-//            view.setViewName("redirect:/register");
-//            return view;
-//        }
-//        try {
-//            Map<String, Object> condition = new HashMap<>();
-//            condition.put("username", form.getUsername());
-//            ResultData queryResult = adminService.fetchAdmin(condition);
-//            if (((List<Admin>) queryResult.getData()).size() != 0) {
-//                view.setViewName("redirect:/register");
-//                return view;
-//            }
-//            Role role = new Role();
-//            role.setRoleId(form.getRole());
-//            Admin admin = new Admin(form.getUsername(), form.getPassword());
-//            ResultData resultData = adminService.createAdmin(admin, role);
-//            if (resultData.getResponseCode() == ResponseCode.RESPONSE_OK) {
-//                Subject subject = SecurityUtils.getSubject();
-//                User user = (User) subject.getPrincipal();
-//                if (user == null) {
-//                	view.setViewName("redirect:/register");
-//                    return view;
-//                }
-//                Admin targetAdmin = user.getAdmin();
-//                BackOperationLog backOperationLog = new BackOperationLog(
-//                		targetAdmin.getUsername(), toolService.getIP(request) ,"管理员" + targetAdmin.getUsername() + "新授权了一个管理员账号："+form.getUsername());
-//                logService.createbackOperationLog(backOperationLog);
-//                view.setViewName("redirect:/admin/overview");
-//                return view;
-//            } else {
-//                view.setViewName("redirect:/register");
-//                return view;
-//            }
-//        } catch (Exception e) {
-//            view.setViewName("redirect:/register");
-//            return view;
-//        }
-//    }
-
+    /**
+     * 跳转到后台的首页
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/dashboard")
     public ModelAndView dashboard() {
         ModelAndView view = new ModelAndView();
@@ -258,6 +221,10 @@ public class PlatformController {
         return view;
     }
 
+    /**
+     * 退出后台
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/logout")
     public ModelAndView logout() {
         ModelAndView view = new ModelAndView();
@@ -269,6 +236,10 @@ public class PlatformController {
         return view;
     }
 
+    /**
+     * 导航栏
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/navigate")
     public ModelAndView navigate() {
         ModelAndView view = new ModelAndView();
@@ -276,6 +247,10 @@ public class PlatformController {
         return view;
     }
 
+    /**
+     * 日志
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/log")
     public ModelAndView log() {
         ModelAndView view = new ModelAndView();
@@ -283,6 +258,10 @@ public class PlatformController {
         return view;
     }
 
+    /**
+     * 代理商登录后台后，跳转到代理商个人中心界面
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/me")
     public ModelAndView me() {
         ModelAndView view = new ModelAndView();
@@ -358,4 +337,5 @@ public class PlatformController {
         view.setViewName("/backend/agent/personalcenter");
         return view;
     }
+
 }

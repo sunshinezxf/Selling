@@ -28,6 +28,7 @@ import javax.servlet.http.HttpSession;
 import java.util.*;
 
 /**
+ * 微信相关接口
  * Created by sunshine on 5/24/16.
  */
 @RestController
@@ -40,6 +41,11 @@ public class WechatController {
     @Autowired
     private AgentService agentService;
 
+    /**
+     * 和微信公众号后台配置对接的接口
+     * @param request
+     * @return
+     */
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/wechat")
     public String check(HttpServletRequest request) {
@@ -64,6 +70,12 @@ public class WechatController {
     }
 
 
+    /**
+     * 微信公众号后台的消息和事件（包括文本、图片、地址、菜单的点击）
+     * @param request
+     * @param response
+     * @return
+     */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/wechat", produces = "text/xml;charset=utf-8")
     public String handle(HttpServletRequest request, HttpServletResponse response) {
@@ -161,6 +173,10 @@ public class WechatController {
         return "";
     }
 
+    /**
+     * 生成用户关注自动回复的图文消息的似有方法
+     * @return
+     */
     private List<Article> subscribe() {
         List<Article> list = new ArrayList<>();
         Article welcome = new Article();

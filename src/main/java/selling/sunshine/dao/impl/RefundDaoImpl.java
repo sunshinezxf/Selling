@@ -94,6 +94,10 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
 		return result;
 	}
 
+	/**
+	 * 根据order_pool生成refun_record表
+	 * @return
+	 */
 	@Override
 	public ResultData refundRecord() {
 		ResultData result = new ResultData();
@@ -297,6 +301,10 @@ public class RefundDaoImpl extends BaseDao implements RefundDao {
 		return result;
 	}
 
+	/**
+	 * 更新代理商余额和返现总额，最后update refund_record
+	 * @return
+	 */
 	public ResultData refund() {
 		ResultData resultData = new ResultData();
 		try {

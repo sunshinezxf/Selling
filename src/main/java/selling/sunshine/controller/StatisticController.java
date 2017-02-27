@@ -3,8 +3,6 @@ package selling.sunshine.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import common.sunshine.model.selling.goods.Goods4Agent;
-import common.sunshine.pagination.DataTablePage;
-import common.sunshine.pagination.DataTableParam;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
 import common.sunshine.utils.SortRule;
@@ -13,8 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-import selling.sunshine.model.sum.AgentGoods;
-import selling.sunshine.model.sum.OrderStatistics;
 import selling.sunshine.model.sum.Vendition;
 import selling.sunshine.service.*;
 import selling.sunshine.vo.agent.AgentPurchase;
@@ -26,6 +22,7 @@ import java.io.IOException;
 import java.util.*;
 
 /**
+ * 专门用来提供统计信息的接口
  * Created by sunshine on 6/14/16.
  */
 @RestController
@@ -48,111 +45,10 @@ public class StatisticController {
     @Autowired
     private CommodityService commodityService;
 
-    @ResponseBody
-    @RequestMapping(method = RequestMethod.POST, value = "/order")
-    public JSONObject order() {
-        JSONObject result = new JSONObject();
-        Map<String, Object> condition = new HashMap<>();
-        List<Integer> status = new ArrayList<>();
-        // 查询代理商订单的付款状态
-        int orderNotPayed = 0;
-        int orderPayed = 0;
-        status.add(1);
-        condition.put("status", status);
-        condition.put("blockFlag", false);
-        ResultData fetchResponse = orderService.fetchOrder(condition);
-        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            orderNotPayed = ((List) fetchResponse.getData()).size();
-        }
-        status.clear();
-        condition.clear();
-        status.add(2);
-        status.add(3);
-        status.add(4);
-        condition.put("status", status);
-        condition.put("blockFlag", false);
-        fetchResponse = orderService.fetchOrder(condition);
-        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            orderPayed = ((List) fetchResponse.getData()).size();
-        }
-        JSONArray payState4AgentOrder = new JSONArray();
-        payState4AgentOrder.add(orderNotPayed);
-        payState4AgentOrder.add(orderPayed);
-        result.put("pay", payState4AgentOrder);
-        // 查询订单项的发货状态
-        condition.clear();
-        int orderItemNotDelivered = 0;
-        int orderItemDelivered = 0;
-        condition.put("status", 1);
-        condition.put("blockFlag", false);
-        fetchResponse = orderService.fetchOrderItem(condition);
-        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            orderItemNotDelivered = ((List) fetchResponse.getData()).size();
-        }
-        condition.clear();
-        condition.put("status", 2);
-        condition.put("blockFlag", false);
-        fetchResponse = orderService.fetchOrderItem(condition);
-        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            orderItemDelivered = ((List) fetchResponse.getData()).size();
-        }
-        JSONArray deliverStatus4OrderItem = new JSONArray();
-        deliverStatus4OrderItem.add(orderItemNotDelivered);
-        deliverStatus4OrderItem.add(orderItemDelivered);
-        result.put("deliver4OrderItem", deliverStatus4OrderItem);
-        // 查询网络订单的发货状态
-        condition.clear();
-        status.clear();
-        int cusOrderNotDelivered = 0;
-        int cusOrderDelivered = 0;
-        status.add(1);
-        condition.put("status", status);
-        condition.put("blockFlag", false);
-        fetchResponse = orderService.fetchCustomerOrder(condition);
-        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            cusOrderNotDelivered = ((List) fetchResponse.getData()).size();
-        }
-        condition.clear();
-        status.clear();
-        status.add(2);
-        condition.put("status", status);
-        fetchResponse = orderService.fetchCustomerOrder(condition);
-        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            cusOrderDelivered = ((List) fetchResponse.getData()).size();
-        }
-        JSONArray deliver4CusOrder = new JSONArray();
-        deliver4CusOrder.add(cusOrderNotDelivered);
-        deliver4CusOrder.add(cusOrderDelivered);
-        result.put("deliver4Cus", deliver4CusOrder);
-        return result;
-    }
-
-    @ResponseBody
-    @RequestMapping(method = RequestMethod.POST, value = "/agent")
-    public JSONObject agent() {
-        JSONObject result = new JSONObject();
-        Map<String, Object> condition = new HashMap<>();
-        condition.put("granted", false);
-        condition.put("blockFlag", false);
-        condition.put("agentType", 0);//只查询普通代理商
-        int grantedNum = 0;
-        int checkNum = 0;
-        ResultData fetchResponse = agentService.fetchAgent(condition);
-        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            checkNum = ((List) fetchResponse.getData()).size();
-        }
-        condition.put("granted", true);
-        fetchResponse = agentService.fetchAgent(condition);
-        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            grantedNum = ((List) fetchResponse.getData()).size();
-        }
-        JSONArray agentCheck = new JSONArray();
-        agentCheck.add(grantedNum);
-        agentCheck.add(checkNum);
-        result.put("grant", agentCheck);
-        return result;
-    }
-
+    /**
+     * 获取订单中的商品汇总信息
+     * @return
+     */
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/order/check")
     public ResultData checkOrder() {
@@ -170,48 +66,10 @@ public class StatisticController {
         return result;
     }
 
-    @ResponseBody
-    @RequestMapping(method = RequestMethod.POST, value = "/order/month")
-    public DataTablePage<OrderStatistics> orderMonth(DataTableParam param) {
-        DataTablePage<OrderStatistics> result = new DataTablePage<>();
-        if (StringUtils.isEmpty(param)) {
-            return result;
-        }
-        ResultData fetchResponse = statisticService.orderStatisticsByPage(param);
-        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            result = (DataTablePage<OrderStatistics>) fetchResponse.getData();
-        }
-        return result;
-    }
-
-    @ResponseBody
-    @RequestMapping(method = RequestMethod.POST, value = "/agent/goods/month")
-    public DataTablePage<AgentGoods> agentGoodsMonth(DataTableParam param) {
-        DataTablePage<AgentGoods> result = new DataTablePage<>();
-        if (StringUtils.isEmpty(param)) {
-            return result;
-        }
-        ResultData fetchResponse = statisticService.agentGoodsMonthByPage(param);
-        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            result = (DataTablePage<AgentGoods>) fetchResponse.getData();
-        }
-        return result;
-    }
-
-    @ResponseBody
-    @RequestMapping(method = RequestMethod.POST, value = "/agent/goods")
-    public DataTablePage<AgentGoods> agentGoods(DataTableParam param) {
-        DataTablePage<AgentGoods> result = new DataTablePage<>();
-        if (StringUtils.isEmpty(param)) {
-            return result;
-        }
-        ResultData fetchResponse = statisticService.agentGoodsByPage(param);
-        if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
-            result = (DataTablePage<AgentGoods>) fetchResponse.getData();
-        }
-        return result;
-    }
-
+    /**
+     * 近一年订单笔数
+     * @return
+     */
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/order/summary")
     public ResultData orderLastYear() {
@@ -262,46 +120,11 @@ public class StatisticController {
         return result;
     }
 
-//    @ResponseBody
-//    @RequestMapping(method = RequestMethod.POST, value = "/purchaseRecordEveryday")
-//    public JSONObject purchaseRecordEveryday() {
-//        JSONObject result = new JSONObject();
-//        Map<String, Object> condition=new HashMap<>();
-//        ResultData resultData = statisticService.purchaseRecordEveryday(condition);
-//        result = (JSONObject) resultData.getData();
-//        return result;
-//    }
-
-//    @ResponseBody
-//    @RequestMapping(method = RequestMethod.POST, value = "/purchaseRecordEveryMonth")
-//    public JSONObject purchaseRecordEveryMonth() {
-//        JSONObject result = new JSONObject();
-//        Map<String, Object> condition=new HashMap<>();
-//        ResultData resultData = statisticService.purchaseRecordEveryMonth(condition);
-//        result = (JSONObject) resultData.getData();
-//        return result;
-//    }
-
-//    @ResponseBody
-//    @RequestMapping(method = RequestMethod.POST, value = "/purchaseRecordEveryday2")
-//    public JSONObject purchaseRecordEveryday2() {
-//        JSONObject result = new JSONObject();
-//        Map<String, Object> condition=new HashMap<>();
-//        ResultData resultData = statisticService.purchaseRecordEveryday2(condition);
-//        result = (JSONObject) resultData.getData();
-//        return result;
-//    }
-//
-//    @ResponseBody
-//    @RequestMapping(method = RequestMethod.POST, value = "/purchaseRecordEveryMonth2")
-//    public JSONObject purchaseRecordEveryMonth2() {
-//        JSONObject result = new JSONObject();
-//        Map<String, Object> condition=new HashMap<>();
-//        ResultData resultData = statisticService.purchaseRecordEveryMonth2(condition);
-//        result = (JSONObject) resultData.getData();
-//        return result;
-//    }
-
+    /**
+     * 全国客户区域分布
+     * @return
+     * @throws IOException
+     */
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/sales/area")
     public ResultData salesArea() throws IOException {
@@ -335,6 +158,10 @@ public class StatisticController {
         return resultData;
     }
 
+    /**
+     * 各个商品的代理商销售排名情况
+     * @return
+     */
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/agent/rank")
     public ResultData agentRanking() {
@@ -432,6 +259,7 @@ public class StatisticController {
     }
 
     /**
+     * 当日、当月、累计销售金额
      * @param type, type的取值daily, monthly, overall
      * @return
      */
@@ -463,6 +291,10 @@ public class StatisticController {
         return result;
     }
 
+    /**
+     * 统计每个商品的每月购买信息
+     * @return
+     */
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/goods/purchaseRecord/month")
     public ResultData perGoodsPurchaseRecordMonth() {
@@ -493,6 +325,10 @@ public class StatisticController {
         return result;
     }
 
+    /**
+     * 统计每个商品的每天购买信息
+     * @return
+     */
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/goods/purchaseRecord/day")
     public ResultData perGoodsPurchaseRecordDay() {
@@ -553,4 +389,5 @@ public class StatisticController {
         }
         return result;
     }
+
 }

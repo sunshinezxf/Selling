@@ -26,6 +26,7 @@ import java.util.Map;
 
 
 /**
+ * 系统日志相关接口
  * Created by sunshine on 7/15/16.
  */
 @RequestMapping("/log")
@@ -36,13 +37,22 @@ public class LoggerController {
     @Autowired
     private LogService logService;
 
+    /**
+     * 跳转到日志查询页面
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/overview")
     public ModelAndView overview() {
         ModelAndView view = new ModelAndView();
         view.setViewName("/backend/system/log");
         return view;
     }
-    
+
+    /**
+     * 根据日期查询系统日志
+     * @param param
+     * @return
+     */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value="/fetch")
     public MobilePage<BackOperationLog> fetchLog(MobilePageParam param){

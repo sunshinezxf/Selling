@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * 顾客商城的相关公告接口
  * Created by sunshine on 2016/12/17.
  */
 @RestController
@@ -32,12 +33,21 @@ public class NoticeController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/create")
 
+    /**
+     * 跳转到创建公告界面（未完成）
+     */
     public ModelAndView create() {
         ModelAndView view = new ModelAndView();
         view.setViewName("");
         return view;
     }
 
+    /**
+     * 创建公告（未完成）
+     * @param form
+     * @param result
+     * @return
+     */
     @RequestMapping(method = RequestMethod.POST, value = "/create")
     public ModelAndView create(@Valid NoticeForm form, BindingResult result) {
         ModelAndView view = new ModelAndView();
@@ -55,6 +65,10 @@ public class NoticeController {
         return view;
     }
 
+    /**
+     * 跳转到公告概览界面（未完成）
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/overview")
     public ModelAndView overview() {
         ModelAndView view = new ModelAndView();
@@ -62,6 +76,10 @@ public class NoticeController {
         return view;
     }
 
+    /**
+     * 得到公告列表
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/list")
     public ResultData list() {
         ResultData result = new ResultData();

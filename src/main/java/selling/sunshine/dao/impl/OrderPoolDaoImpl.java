@@ -41,6 +41,11 @@ public class OrderPoolDaoImpl extends BaseDao implements OrderPoolDao {
         }
     }
 
+    /**
+     * 检查是否有遗漏的order_pool没有生成refund_record，有的话添加上去
+     * @param condition
+     * @return
+     */
     @Override
     public ResultData checkOrderPool(Map<String, Object> condition) {
 

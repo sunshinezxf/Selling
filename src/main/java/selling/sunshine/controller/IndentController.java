@@ -35,6 +35,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
+ * 订货单报表接口
  * Created by sunshine on 7/7/16.
  */
 @RestController
@@ -51,7 +52,10 @@ public class IndentController {
     @Autowired
     private EventService eventService;
 
-
+    /**
+     * 查询并生成订货单信息
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/overview")
     public ResultData indent() {
         ResultData result = new ResultData();
@@ -84,6 +88,12 @@ public class IndentController {
         return result;
     }
 
+    /**
+     * 在服务器上生成相关的订货单数据压缩包
+     * @param form
+     * @param result
+     * @return
+     */
     @RequestMapping(method = RequestMethod.POST, value = "/overview")
     public ResultData indent(@Valid TimeRangeForm form, BindingResult result) {
         ResultData data = new ResultData();
@@ -158,6 +168,15 @@ public class IndentController {
         return data;
     }
 
+    /**
+     * 从服务器上下载之前生成的订货单压缩包
+     * @param fileName
+     * @param tempFileName
+     * @param request
+     * @param response
+     * @return
+     * @throws UnsupportedEncodingException
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/download/{fileName}/{tempFileName}")
     public String download(@PathVariable("fileName") String fileName, @PathVariable("tempFileName") String tempFileName, HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
         // 1.设置文件ContentType类型，这样设置，会自动判断下载文件类型
@@ -202,6 +221,11 @@ public class IndentController {
         return "";
     }
 
+    /**
+     * 报表专区中订货单界面上显示的订货单列表（没有部署到服务器上）
+     * @param param
+     * @return
+     */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/list")
     public DataTablePage<OrderItemSum> list(DataTableParam param) {

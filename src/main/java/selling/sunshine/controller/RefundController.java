@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 已废弃的返现接口（跟返现相关的接口已移到CashBackController类）
  * Created by sunshine on 5/17/16.
  */
 @RequestMapping("/refund")

@@ -36,6 +36,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
+ * 返现相关操作接口
  * Created by sunshine on 8/12/16.
  */
 @RestController
@@ -61,6 +62,10 @@ public class CashBackController {
 	@Autowired
 	private ToolService toolService;
 
+    /**
+     * 跳转到当月预期返现
+     * @return
+     */
 	@RequestMapping(method = RequestMethod.GET, value = "/month")
 	public ModelAndView monthly() {
 		ModelAndView view = new ModelAndView();
@@ -78,6 +83,11 @@ public class CashBackController {
 		return view;
 	}
 
+    /**
+     * 当月预期返现的DataTable数据
+     * @param param
+     * @return
+     */
 	@RequestMapping(method = RequestMethod.POST, value = "/month")
 	public DataTablePage<CashBack4AgentPerMonth> monthly(DataTableParam param) {
 		DataTablePage<CashBack4AgentPerMonth> result = new DataTablePage<>(param);
@@ -92,6 +102,11 @@ public class CashBackController {
 		return result;
 	}
 
+    /**
+     * 根据agentID和month查询某个代理商某月的返现信息
+     * @param agentId
+     * @return
+     */
 	@RequestMapping(method = RequestMethod.GET, value = "/{agentId}/month")
 	public ModelAndView cashback(@PathVariable("agentId") String agentId) {
 		ModelAndView view = new ModelAndView();
@@ -153,6 +168,10 @@ public class CashBackController {
 		return view;
 	}
 
+    /**
+     * 跳转到返现概览界面
+     * @return
+     */
 	@RequestMapping(method = RequestMethod.GET, value = "/overview")
 	public ModelAndView overview() {
 		ModelAndView view = new ModelAndView();
@@ -160,6 +179,10 @@ public class CashBackController {
 		return view;
 	}
 
+    /**
+     * 跳转到返现记录界面
+     * @return
+     */
 	@RequestMapping(method = RequestMethod.GET, value = "/record")
 	public ModelAndView record() {
 		ModelAndView view = new ModelAndView();
@@ -167,6 +190,11 @@ public class CashBackController {
 		return view;
 	}
 
+    /**
+     * 返现记录的DataTable数据
+     * @param param
+     * @return
+     */
 	@ResponseBody
 	@RequestMapping(method = RequestMethod.POST, value = "/record")
 	public DataTablePage<CashBack4Agent> record(DataTableParam param) {
@@ -182,6 +210,13 @@ public class CashBackController {
 		return result;
 	}
 
+    /**
+     * 生成月度返现报表压缩包供下载
+     * @param request
+     * @param response
+     * @return
+     * @throws UnsupportedEncodingException
+     */
 	@ResponseBody
 	@RequestMapping(method = RequestMethod.GET, value = "/produce")
 	public String produce(HttpServletRequest request, HttpServletResponse response)
@@ -253,6 +288,10 @@ public class CashBackController {
 		return "";
 	}
 
+    /**
+     * 跳转到返现配置页面
+     * @return
+     */
 	@RequestMapping(method = RequestMethod.GET, value = "/config")
 	public ModelAndView config() {
 		ModelAndView view = new ModelAndView();
@@ -260,6 +299,11 @@ public class CashBackController {
 		return view;
 	}
 
+    /**
+     * 跳转到某个商品的返现配置页面
+     * @param goodsId
+     * @return
+     */
 	@RequestMapping(method = RequestMethod.GET, value = "/config/list/goods/{goodsId}")
 	public ModelAndView configList(@PathVariable("goodsId") String goodsId) {
 		ModelAndView view = new ModelAndView();
@@ -268,6 +312,12 @@ public class CashBackController {
 		return view;
 	}
 
+    /**
+     * 得到某个商品当前的所有返现配置
+     * @param goodsId
+     * @param param
+     * @return
+     */
 	@ResponseBody
 	@RequestMapping(method = RequestMethod.POST, value = "/config/overview/{goodsId}")
 	public DataTablePage<RefundConfig> configOverview(@PathVariable("goodsId") String goodsId, DataTableParam param) {
@@ -285,6 +335,11 @@ public class CashBackController {
 		return result;
 	}
 
+    /**
+     * 根据refundConfigId得到相应的返现信息
+     * @param refundConfigId
+     * @return
+     */
 	@ResponseBody
 	@RequestMapping(method = RequestMethod.GET, value = "/config/goods/{refundConfigId}")
 	public ResultData goodsConfig(@PathVariable("refundConfigId") String refundConfigId) {
@@ -449,12 +504,5 @@ public class CashBackController {
 		view.setViewName("redirect:/cashback/config/list/goods/" + goodsId);
 		return view;
 	}
-
-	// @RequestMapping(method = RequestMethod.GET, value = "/overview")
-	// public ModelAndView overview() {
-	// ModelAndView view = new ModelAndView();
-	// view.setViewName("/backend/refund/refund_record");
-	// return view;
-	// }
 
 }
