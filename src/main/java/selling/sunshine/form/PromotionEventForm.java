@@ -15,6 +15,9 @@ public class PromotionEventForm {
 
 	@NotNull
 	private String endTime;
+
+	@NotNull
+	private String promotionEventType;
 	
 	private PromotionConfigForm[] promotionConfigList;
 
@@ -57,7 +60,12 @@ public class PromotionEventForm {
 	public void setPromotionConfigList(PromotionConfigForm[] promotionConfigList) {
 		this.promotionConfigList = promotionConfigList;
 	}
-	
-	
 
+	public String getPromotionEventType() {
+		return promotionEventType;
+	}
+
+	public void setPromotionEventType(String promotionEventType) {
+		this.promotionEventType = promotionEventType;
+	}
 }

@@ -1,10 +1,7 @@
 package selling.sunshine.controller;
 
 import common.sunshine.model.selling.event.*;
-import common.sunshine.model.selling.event.support.ApplicationStatus;
-import common.sunshine.model.selling.event.support.ChoiceType;
-import common.sunshine.model.selling.event.support.EventType;
-import common.sunshine.model.selling.event.support.PromotionConfig;
+import common.sunshine.model.selling.event.support.*;
 import common.sunshine.model.selling.express.Express4Agent;
 import common.sunshine.model.selling.express.Express4Application;
 import common.sunshine.model.selling.express.Express4Customer;
@@ -163,6 +160,12 @@ public class EventController {
         event.setStart(Timestamp.valueOf(form.getStartTime()));
         event.setEnd(Timestamp.valueOf(form.getEndTime()));
         event.setType(EventType.PROMOTION);
+        switch (form.getPromotionEventType()){
+            case "0" : event.setPromotionEventType(PromotionEventType.ALL);break;
+            case "1" : event.setPromotionEventType(PromotionEventType.MALE);
+            case "2" : event.setPromotionEventType(PromotionEventType.FEMALE);
+            default : break;
+        }
         PromotionConfigForm[] promotionConfigList = form.getPromotionConfigList();
         List<PromotionConfig> promotionConfigs = new ArrayList<>();
         for (PromotionConfigForm promotionConfigForm : promotionConfigList) {

@@ -875,3 +875,8 @@ update goods set goods_position='1' where goods_id='COMlezflw12' limit 1;
 
 ALTER TABLE `selling`.`refund_config`
 ADD COLUMN `refund_trigger_amount_top` INT NOT NULL DEFAULT 0  AFTER `refund_trigger_amount`;
+
+
+##2017年2月27日
+ALTER TABLE `selling`.`event`
+ADD COLUMN `promotion_event_type` TINYINT NOT NULL DEFAULT 0  AFTER `event_type`;
