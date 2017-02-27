@@ -34,6 +34,27 @@
 			</div>
 			<div class="ui segment event_step">
 				<div class="ui form">
+                    <div class="inline fields">
+                        <label for="people">适用人群:</label>
+                        <div class="field">
+                            <div class="ui radio checkbox">
+                                <input type="radio" name="people" checked="" tabindex="0" value="0">
+                                <label>所有人</label>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="ui radio checkbox">
+                                <input type="radio" name="people" tabindex="0" value="1">
+                                <label>男性</label>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="ui radio checkbox">
+                                <input type="radio" name="people" tabindex="0" value="2">
+                                <label>女性</label>
+                            </div>
+                        </div>
+                    </div>
 					<div class="field">
 						<label for="event_title">活动标题</label> <input type="text"
 							id="event_title" name="title" placeholder="活动标题"
@@ -138,6 +159,7 @@
 <script>
     $('#dialog_modal').modal('hide');
     $(".ui.dropdown").dropdown();
+    $('.ui.radio.checkbox').checkbox();
 	var starttime = new Date();
 	var start_flatpickr, end_flatpickr;
 
@@ -256,6 +278,7 @@
 
 	var goodsList = eval(${goodsList});
 	$("#publish_btn").click(function() {
+		var people=$("input[name='people']:checked").val();
 		var title=$("#event_title").val();
 		var nickname=$("#event_nickname").val();
         var startTime = $('#start_time').val();
@@ -287,7 +310,7 @@
 			$("#info").html("赠送商品没有配置！");
   		    $('#dialog_modal').modal('show');
 		}else{
-	    	var data = {"promotionEventTitle":title, "promotionEventNickname": nickname,"startTime":startTime,"endTime":endTime,"promotionConfigList":promotionConfigList};
+	    	var data = {"promotionEventType":people,"promotionEventTitle":title, "promotionEventNickname": nickname,"startTime":startTime,"endTime":endTime,"promotionConfigList":promotionConfigList};
 	    	$.ajax({
 	            type: "POST",
 	            url: "${path.concat('/event/promotion/create')}",
