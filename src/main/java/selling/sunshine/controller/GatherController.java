@@ -52,13 +52,22 @@ public class GatherController {
     @Autowired
     private GatherService gatherService;
     
-
+    /**
+     * 后台报表下载-收款单页面
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/overview")
     public ResultData gather() {
     	ResultData result = new ResultData();
         return result;
     }
 
+    /**
+     * 后台收款单下载表单，需要提供一个时间段
+     * @param form
+     * @param result
+     * @return
+     */
     @RequestMapping(method = RequestMethod.POST, value = "/overview")
     public ResultData gather(@Valid TimeRangeForm form, BindingResult result) {
         ResultData data = new ResultData();
@@ -131,6 +140,15 @@ public class GatherController {
         return data;
     }
 
+    /**
+     * 后台收款单下载
+     * @param fileName
+     * @param tempFileName
+     * @param request
+     * @param response
+     * @return
+     * @throws UnsupportedEncodingException
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/download/{fileName}/{tempFileName}")
     public String download(@PathVariable("fileName") String fileName, @PathVariable("tempFileName") String tempFileName, HttpServletRequest request,
                            HttpServletResponse response) throws UnsupportedEncodingException {
@@ -177,6 +195,11 @@ public class GatherController {
         return "";
     }
     
+    /**
+     * 后台获取账单信息列表
+     * @param param
+     * @return
+     */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/list")
     public DataTablePage<BillSumVo> list(DataTableParam param) {

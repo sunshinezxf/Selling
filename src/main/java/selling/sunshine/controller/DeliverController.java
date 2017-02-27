@@ -58,6 +58,10 @@ public class DeliverController {
     @Autowired
     private ExpressService expressService;
 
+    /**
+     * 后台报表下载-发货单页面
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/overview")
     public ResultData deliver() {
         ResultData result = new ResultData();
@@ -77,6 +81,12 @@ public class DeliverController {
         return result;
     }
 
+    /**
+     * 后台发货单下载表单
+     * @param form
+     * @param result
+     * @return
+     */
     @RequestMapping(method = RequestMethod.POST, value = "/overview")
     public ResultData deliver(@Valid TimeRangeForm form, BindingResult result) {
         ResultData data = new ResultData();
@@ -131,6 +141,15 @@ public class DeliverController {
         return data;
     }
 
+    /**
+     * 发货单excel下载
+     * @param fileName
+     * @param tempFileName
+     * @param request
+     * @param response
+     * @return
+     * @throws UnsupportedEncodingException
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/download/{fileName}/{tempFileName}")
     public String download(@PathVariable("fileName") String fileName, @PathVariable("tempFileName") String tempFileName, HttpServletRequest request,
                            HttpServletResponse response) throws UnsupportedEncodingException {
@@ -176,6 +195,11 @@ public class DeliverController {
         return "";
     }
     
+    /**
+     * 获取发货数据列表
+     * @param param
+     * @return
+     */
     @ResponseBody
 	@RequestMapping(method = RequestMethod.POST, value = "/list")
     public DataTablePage<Express> list(DataTableParam param) {

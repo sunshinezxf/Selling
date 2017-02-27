@@ -85,6 +85,10 @@ public class CustomerController {
     @Autowired
     private EventService eventService;
 
+    /**
+     * 后台客户信息首页
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/overview")
     public ModelAndView overview() {
         ModelAndView view = new ModelAndView();
@@ -92,6 +96,11 @@ public class CustomerController {
         return view;
     }
 
+    /**
+     * 后台单个客户信息页面
+     * @param agentId
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/overview/{agentId}")
     public ModelAndView overview(@PathVariable String agentId) {
         ModelAndView view = new ModelAndView();
@@ -129,6 +138,11 @@ public class CustomerController {
 //        return result;
 //    }
 
+    /**
+     * 后台客户详细信息
+     * @param customerId
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/detail/{customerId}")
     @ResponseBody
     public ModelAndView detail(@PathVariable("customerId") String customerId) {
@@ -164,6 +178,12 @@ public class CustomerController {
         return view;
     }
 
+    /**
+     * 查询某个客户的所有代理商订单
+     * @param param
+     * @param customerId
+     * @return
+     */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/orderItem/{customerId}")
     public DataTablePage<OrderItem> orderItem(DataTableParam param, @PathVariable("customerId") String customerId) {
@@ -183,6 +203,12 @@ public class CustomerController {
         return result;
     }
 
+    /**
+     * 查询某个客户的所有客户订单(根据电话查)
+     * @param param
+     * @param customerId
+     * @return
+     */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/customerOrder/{customerId}")
     public DataTablePage<CustomerOrder> customerOrder(DataTableParam param, @PathVariable("customerId") String customerId) {
@@ -211,6 +237,12 @@ public class CustomerController {
         return result;
     }
 
+    /**
+     * 新增客户
+     * @param customerForm
+     * @param result
+     * @return
+     */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/add")
     public ResultData addCustomer(@Valid CustomerForm customerForm, BindingResult result) {
@@ -246,6 +278,13 @@ public class CustomerController {
         return resultData;
     }
 
+    /**
+     * 修改客户
+     * @param customerId
+     * @param customerForm
+     * @param result
+     * @return
+     */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/modify")
     public ResultData updateCustomer(String customerId, @Valid CustomerForm customerForm, BindingResult result) {
@@ -281,6 +320,13 @@ public class CustomerController {
         return response;
     }
 
+    /**
+     * 修改客户地址
+     * @param customerId
+     * @param customerAddressForm
+     * @param result
+     * @return
+     */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/modifyAddress/{customerId}")
     public ResultData updateCustomerAddress(@PathVariable("customerId") String customerId, @Valid CustomerAddressForm customerAddressForm, BindingResult result) {
@@ -304,6 +350,11 @@ public class CustomerController {
         return response;
     }
 
+    /**
+     * 删除客户
+     * @param customerId
+     * @return
+     */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/delete/{customerId}")
     public ResultData deleteCustomer(@PathVariable String customerId) {
@@ -341,6 +392,11 @@ public class CustomerController {
         return response;
     }
 
+    /**
+     * 获取客户信息ajax
+     * @param customerId
+     * @return
+     */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/{customerId}")
     public ResultData fetchCustomer(@PathVariable("customerId") String customerId) {
@@ -358,6 +414,11 @@ public class CustomerController {
         return result;
     }
 
+    /**
+     * 获取客户信息，客户购买信息，客户最近一次购买信息
+     * @param customerId
+     * @return
+     */
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/info/{customerId}")
     public ResultData fetchCustomerInfo(@PathVariable("customerId") String customerId) {
@@ -470,6 +531,11 @@ public class CustomerController {
         return result;
     }
 
+    /**
+     * 查询客户所有的订单
+     * @param customerId
+     * @return
+     */
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/allOrder/{customerId}")
     public ModelAndView fetchCustomerAllOrder(@PathVariable("customerId") String customerId) {
@@ -548,6 +614,11 @@ public class CustomerController {
         return view;
     }
 
+    /**
+     * 查询客户地址
+     * @param customerId
+     * @return
+     */
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/address/{customerId}")
     public ResultData fetchCustomerAddress(@PathVariable("customerId") String customerId) {
@@ -572,6 +643,12 @@ public class CustomerController {
         return result;
     }
 
+    /**
+     * 客户商城下单，非常重要
+     * @param form
+     * @param result
+     * @return
+     */
     @RequestMapping(method = RequestMethod.POST, value = "/place")
     public ResultData placeOrder(@Valid PurchaseForm form, BindingResult result) {
         ResultData resultData = new ResultData();
@@ -649,6 +726,10 @@ public class CustomerController {
         return resultData;
     }
 
+    /**
+     * 客户查询订单页面
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/consult")
     public ModelAndView consult() {
         ModelAndView view = new ModelAndView();
@@ -656,6 +737,11 @@ public class CustomerController {
         return view;
     }
 
+    /**
+     * 客户查询订单表单
+     * @param phone
+     * @return
+     */
     @RequestMapping(method = RequestMethod.POST, value = "/order/search")
     public ModelAndView search(String phone) {
         ModelAndView view = new ModelAndView();
@@ -730,6 +816,11 @@ public class CustomerController {
     }
 
 
+    /**
+     * 客户购买统计
+     * @param param
+     * @return
+     */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/summary")
     public DataTablePage<CustomerPurchase> summary(DataTableParam param) {
@@ -759,6 +850,13 @@ public class CustomerController {
         return result;
     }
 
+    /**
+     * 下载客户信息excel
+     * @param request
+     * @param response
+     * @return
+     * @throws IOException
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/download")
     public String download(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Map<String, Object> condition = new HashMap<>();

@@ -56,6 +56,10 @@ public class AccountController {
     @Autowired
     private WithdrawService withdrawService;
 
+    /**
+     * 代理商账户余额首页
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/info")
     public ModelAndView info() {
         ModelAndView view = new ModelAndView();
@@ -75,6 +79,10 @@ public class AccountController {
         return view;
     }
 
+    /**
+     * 提现页面
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/withdraw")
     public ModelAndView withdraw() {
         ModelAndView view = new ModelAndView();
@@ -101,7 +109,12 @@ public class AccountController {
         view.setViewName("/agent/account/withdraw");
         return view;
     }
-
+	/**
+	 * 提现表单
+	 * @param form
+	 * @param result
+	 * @return
+	 */
     @RequestMapping(method = RequestMethod.POST, value = "/withdraw")
     public ModelAndView withdraw(@Valid WithdrawForm form, BindingResult result) {
         ModelAndView view = new ModelAndView();
@@ -162,7 +175,11 @@ public class AccountController {
         view.setViewName("/agent/prompt");
         return view;
     }
-
+	
+    /**
+	 * 充值页面
+	 * @return
+	 */
     @RequestMapping(method = RequestMethod.GET, value = "/deposit")
     public ModelAndView deposit() {
         ModelAndView view = new ModelAndView();
@@ -170,7 +187,12 @@ public class AccountController {
         view.setViewName("/agent/account/recharge");
         return view;
     }
-
+    
+    /**
+	 * 充值表单
+	 * @param request
+	 * @return
+	 */
     @RequestMapping(method = RequestMethod.POST, value = "/deposit")
     public Charge deposit(HttpServletRequest request) {
         Charge charge = new Charge();
@@ -189,6 +211,12 @@ public class AccountController {
         return charge;
     }
 
+    /**
+     * 充值提示页面
+     * @param billId
+     * @param result
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/charge/{billId}/prompt")
     public ModelAndView prompt(@PathVariable("billId") String billId, String result) {
         ModelAndView view = new ModelAndView();

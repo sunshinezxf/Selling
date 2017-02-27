@@ -64,7 +64,13 @@ public class BillController {
     @Autowired
     private CouponService couponService;
 
-
+    /**
+     * 充值完成pingXX的回调方法
+     * @param request
+     * @param response
+     * @return
+     * @throws IOException
+     */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/inform")
     public ResultData inform(HttpServletRequest request, HttpServletResponse response) throws IOException {

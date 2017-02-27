@@ -488,6 +488,10 @@ public class AgentController {
         return view;
     }
 
+    /**
+     * 邀请代理页面
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/invite")
     public ModelAndView inviteAgent() {
         ModelAndView view = new ModelAndView();
@@ -503,7 +507,7 @@ public class AgentController {
         Map<String, Object> condition = new HashMap<String, Object>();
         condition.put("longUrl", url);
         condition.put("blockFlag", false);
-        ResultData fetchShortUrl = shortUrlService.fetchShortUrl(condition);
+        ResultData fetchShortUrl = shortUrlService.fetchShortUrl(condition);//这里是长链转短链，保证二维码的简洁
         if (fetchShortUrl.getResponseCode() == ResponseCode.RESPONSE_OK) {
             url = ((List<ShortUrl>) fetchShortUrl.getData()).get(0).getShortUrl();
         } else if (fetchShortUrl.getResponseCode() == ResponseCode.RESPONSE_NULL) {
@@ -525,6 +529,10 @@ public class AgentController {
         return view;
     }
 
+    /**
+     * 查看已邀请的代理商页面
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/viewinvite")
     public ModelAndView viewInvitedAgent() {
         ModelAndView view = new ModelAndView();
@@ -561,7 +569,11 @@ public class AgentController {
         view.addObject("agents", agents);
         return view;
     }
-
+    
+    /**
+     * 个人商城邀请页面，即代理商给客户的二维码页面
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/personalsale")
     public ModelAndView personalSale() {
         ModelAndView view = new ModelAndView();
@@ -589,6 +601,9 @@ public class AgentController {
                 condition.clear();
                 condition.put("longUrl", shareURL);
                 condition.put("blockFlag", false);
+                /**
+                 * 长链转短链，保证二维码的简洁
+                 */
                 ResultData fetchShortUrl = shortUrlService.fetchShortUrl(condition);
                 if (fetchShortUrl.getResponseCode() == ResponseCode.RESPONSE_OK) {
                     shareURL = ((List<ShortUrl>) fetchShortUrl.getData()).get(0).getShortUrl();
@@ -626,6 +641,11 @@ public class AgentController {
         return view;
     }
 
+    /**
+     * 代理商给客户下单的二维码页面，这个页面是某个具体商品的页面
+     * @param goodsId
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/personalsale/{goodsId}")
     public ModelAndView personalSaleDetail(@PathVariable("goodsId") String goodsId) {
         ModelAndView view = new ModelAndView();
@@ -657,6 +677,9 @@ public class AgentController {
             if (StringUtils.isEmpty(link)) {
                 link = shareURL;
             }
+            /*
+             * 长链转短链，保证二维码的简洁
+             */
             condition.clear();
             condition.put("longUrl", shareURL);
             condition.put("blockFlag", false);
@@ -698,6 +721,10 @@ public class AgentController {
         return view;
     }
 
+    /**
+     * 赠送页面
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/gift")
     public ModelAndView sendGift() {
         ModelAndView view = new ModelAndView();
@@ -732,6 +759,11 @@ public class AgentController {
         return view;
     }
 
+    /**
+     * 验证有没有相同号码的用户注册过
+     * @param phone
+     * @return
+     */
     @RequestMapping(method = RequestMethod.POST, value = "/validate/{phone}")
     @ResponseBody
     public ResultData validate(@PathVariable String phone) {
@@ -881,6 +913,11 @@ public class AgentController {
         return view;
     }
 
+    /**
+     * 代理商下单首页
+     * @param code
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/order/place")
     public ModelAndView placeOrder(String code) {
         ModelAndView view = new ModelAndView();
@@ -956,6 +993,11 @@ public class AgentController {
         return view;
     }
 
+    /**
+     * 代理商修改订单页面
+     * @param orderId
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/order/modify/{orderId}")
     public ModelAndView modifyOrder(@PathVariable("orderId") String orderId) {
         ModelAndView view = new ModelAndView();
@@ -1009,6 +1051,10 @@ public class AgentController {
         return view;
     }
 
+    /**
+     * 赠送页面
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/order/gift")
     public ModelAndView giftOrder() {
         ModelAndView view = new ModelAndView();
@@ -1049,6 +1095,7 @@ public class AgentController {
         if (fetchGoodsResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             List<Goods4Agent> goodsList = (List<Goods4Agent>) fetchGoodsResponse.getData();
             List<GiftConfig> giftConfigList = (List<GiftConfig>) fetchGiftConfigResponse.getData();
+            //这里很显然，是对两个list进行比对,从而判断哪些商品可以赠送
             for (int i = 0; i < goodsList.size(); i++) {
                 boolean canBuy = false;
                 for (GiftConfig giftConfig : giftConfigList) {
@@ -1086,6 +1133,14 @@ public class AgentController {
         return view;
     }
 
+    /**
+     * 代理商下单的表单，非常重要
+     * @param form
+     * @param result
+     * @param attr
+     * @param type
+     * @return
+     */
     @RequestMapping(method = RequestMethod.POST, value = "/order/place/{type}")
     public ModelAndView placeOrder(@Valid OrderItemForm form, BindingResult result, RedirectAttributes attr,
                                    @PathVariable("type") String type) {
@@ -1184,6 +1239,7 @@ public class AgentController {
             default:
                 order.setStatus(OrderStatus.SAVED);
         }
+        //这里下单了
         ResultData fetchResponse = orderService.placeOrder(order);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             if (type.equals("save")) {
@@ -1212,6 +1268,11 @@ public class AgentController {
         return view;
     }
 
+    /**
+     * 代理商查看订单页面首页
+     * @param type
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/order/manage/{type}")
     public ModelAndView manageOrder(@PathVariable("type") String type) {
         ModelAndView view = new ModelAndView();
@@ -1221,6 +1282,10 @@ public class AgentController {
         return view;
     }
 
+    /**
+     * 代理商订单信息概览页面
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/order/overview")
     public ModelAndView overviewOrder() {
         ModelAndView view = new ModelAndView();
@@ -1380,6 +1445,11 @@ public class AgentController {
         return view;
     }
 
+    /**
+     * 代理商查看未付款订单列表
+     * @param type
+     * @return
+     */
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/order/listnotpay/{type}")
     public ResultData viewOrderListNotPay(@PathVariable("type") String type) {
@@ -1420,6 +1490,13 @@ public class AgentController {
         return result;
     }
 
+    /**
+     * 代理商ajax查询已付款订单数据，有分页
+     * @param type
+     * @param offset
+     * @param limit
+     * @return
+     */
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/order/listpayed/{type}/{offset}/{limit}")
     public ResultData viewOrderListPayed(@PathVariable("type") String type, @PathVariable("offset") int offset,
@@ -1619,6 +1696,10 @@ public class AgentController {
         return view;
     }
 
+    /**
+     * 代理商管理客户首页
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/customer/manage")
     public ModelAndView manageCustomer() {
         ModelAndView view = new ModelAndView();
@@ -1643,6 +1724,10 @@ public class AgentController {
         return view;
     }
 
+    /**
+     * 代理商查看客户列表数据ajax
+     * @return
+     */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/customer/list")
     public ResultData viewCustomerList() {
@@ -1667,6 +1752,10 @@ public class AgentController {
         return result;
     }
 
+    /**
+     * 代理商查看返现的页面
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/statement")
     public ModelAndView statement() {
         ModelAndView view = new ModelAndView();
@@ -1703,6 +1792,7 @@ public class AgentController {
             if (cashBacks.containsKey(cashBack.getMonth())) {
                 cashBacks.get(cashBack.getMonth()).add(cashBack);
             } else {
+            	//按月排序返现，使用treemap即可
                 List<CashBack> cashBackMonthly = new ArrayList<CashBack>();
                 cashBackMonthly.add(cashBack);
                 cashBacks.put(cashBack.getMonth(), cashBackMonthly);
@@ -1713,6 +1803,12 @@ public class AgentController {
         return view;
     }
 
+    /**
+     * 返现详细信息页面，传入返现层级和日期yyyy-MM即可
+     * @param level
+     * @param date
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/statementdetail/{level}/{date}")
     public ModelAndView statementDetail(@PathVariable("level") int level, @PathVariable("date") String date) {
         ModelAndView view = new ModelAndView();
@@ -1756,6 +1852,10 @@ public class AgentController {
         return view;
     }
 
+    /**
+     * 返现配置页面
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/refundConfig")
     public ModelAndView refundConfig() {
         ModelAndView view = new ModelAndView();
@@ -1772,6 +1872,10 @@ public class AgentController {
         return view;
     }
 
+    /**
+     * 代理商联系我们页面
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/contact")
     public ModelAndView contact() {
         ModelAndView view = new ModelAndView();
@@ -1780,6 +1884,10 @@ public class AgentController {
         return view;
     }
 
+    /**
+     * 代理商修改自己信息页面
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/modifyinfo")
     public ModelAndView modifyInfo() {
         ModelAndView view = new ModelAndView();
@@ -1788,6 +1896,10 @@ public class AgentController {
         return view;
     }
 
+    /**
+     * 代理商修改密码页面
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/modifypassword")
     public ModelAndView modifyPassword() {
         ModelAndView view = new ModelAndView();
@@ -1796,6 +1908,12 @@ public class AgentController {
         return view;
     }
 
+    /**
+     * 代理商修改密码提交表单
+     * @param form
+     * @param result
+     * @return
+     */
     @RequestMapping(method = RequestMethod.POST, value = "/modifypassword")
     public ModelAndView modifyPassword(@Valid PasswordForm form, BindingResult result) {
         ModelAndView view = new ModelAndView();
@@ -1878,6 +1996,10 @@ public class AgentController {
         return result;
     }
 
+    /**
+     * 代理商修改群规模页面
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/modifyscale")
     public ModelAndView modifyScale() {
         ModelAndView view = new ModelAndView();
@@ -1898,6 +2020,12 @@ public class AgentController {
         return view;
     }
 
+    /**
+     * 代理商修改群规模表单
+     * @param form
+     * @param result
+     * @return
+     */
     @RequestMapping(method = RequestMethod.POST, value = "/modifyscale")
     public ModelAndView modifyScale(@Valid ScaleForm form, BindingResult result) {
         ModelAndView view = new ModelAndView();
@@ -1935,6 +2063,10 @@ public class AgentController {
         return view;
     }
 
+    /**
+     * 通用提示页面
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/prompt")
     public ModelAndView prompt() {
         ModelAndView view = new ModelAndView();
@@ -1943,6 +2075,10 @@ public class AgentController {
         return view;
     }
 
+    /**
+     * 代理商审核列表页面
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/check")
     public ModelAndView check() {
         ModelAndView view = new ModelAndView();
@@ -1950,6 +2086,11 @@ public class AgentController {
         return view;
     }
 
+    /**
+     * 单个代理商审核页面
+     * @param agentId
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/check/{agentId}")
     public ModelAndView check(@PathVariable String agentId) {
 
@@ -1994,6 +2135,11 @@ public class AgentController {
         return view;
     }
 
+    /**
+     * 代理商审核获取信息datatable
+     * @param param
+     * @return
+     */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/check")
     public DataTablePage<Agent> check(DataTableParam param) {
@@ -2012,6 +2158,12 @@ public class AgentController {
         return result;
     }
 
+    /**
+     * 代理商审核通过表单
+     * @param agentId
+     * @param request
+     * @return
+     */
     @RequestMapping(method = RequestMethod.POST, value = "/grant")
     public ModelAndView grant(String agentId, HttpServletRequest request) {
         ModelAndView view = new ModelAndView();
@@ -2065,6 +2217,7 @@ public class AgentController {
             BackOperationLog backOperationLog = new BackOperationLog(admin.getUsername(), toolService.getIP(request),
                     "管理员" + admin.getUsername() + "授权了代理商" + targetAgent.getName() + ",手机：" + targetAgent.getPhone());
             logService.createbackOperationLog(backOperationLog);
+            //发短信通知
             messageService.send(targetAgent.getPhone(),
                     "尊敬的代理商" + targetAgent.getName() + ",您提交的申请信息已经审核通过,欢迎您的加入.【云草纲目】");
         }
@@ -2072,6 +2225,12 @@ public class AgentController {
         return view;
     }
 
+    /**
+     * 代理商审核不通过
+     * @param agentId
+     * @param request
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/grantNotPass/{agentId}")
     public ModelAndView grantNotPass(@PathVariable("agentId") String agentId, HttpServletRequest request) {
         ModelAndView view = new ModelAndView();
@@ -2208,6 +2367,13 @@ public class AgentController {
     // return resultData;
     // }
 
+    /**
+     * 修改上级代理商表单
+     * @param agentId
+     * @param upperAgentId
+     * @param request
+     * @return
+     */
     @RequestMapping(method = RequestMethod.POST, value = "/modifyUpperAgent/{agentId}/{upperAgentId}")
     public ResultData modifyUpperAgent(@PathVariable("agentId") String agentId,
                                        @PathVariable("upperAgentId") String upperAgentId, HttpServletRequest request) {
@@ -2293,6 +2459,12 @@ public class AgentController {
         return resultData;
     }
 
+    /**
+     * 禁用(封禁)代理商的账号
+     * @param agentId
+     * @param request
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/forbid/{agentId}")
     public ModelAndView forbid(@PathVariable("agentId") String agentId, HttpServletRequest request) {
         ModelAndView view = new ModelAndView();
@@ -2341,6 +2513,10 @@ public class AgentController {
         return view;
     }
 
+    /**
+     * 后台代理商部分首页
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/overview")
     public ModelAndView overview() {
         ModelAndView view = new ModelAndView();
@@ -2348,6 +2524,10 @@ public class AgentController {
         return view;
     }
 
+    /**
+     * 后台代理商列表页面
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/list")
     public ModelAndView list() {
         ModelAndView view = new ModelAndView();
@@ -2355,6 +2535,11 @@ public class AgentController {
         return view;
     }
 
+    /**
+     * 后天代理商列表页面，param有三种：本月新注册代理商， 本月已购买代理商， 当前代理商总人数
+     * @param param
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/list/{param}")
     public ModelAndView list(@PathVariable("param") String param) {
         ModelAndView view = new ModelAndView();
@@ -2452,7 +2637,7 @@ public class AgentController {
         }
     }
 
-    /*
+    /**
      * 返回某一个代理商的统计数据
      */
     @RequestMapping(method = RequestMethod.POST, value = "/statistics/{agentId}")
@@ -2508,6 +2693,11 @@ public class AgentController {
         return resultData;
     }
 
+    /**
+     * 代理商详细信息页面
+     * @param agentId
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/detail/{agentId}")
     @ResponseBody
     public ModelAndView detail(@PathVariable String agentId) {
@@ -2587,6 +2777,11 @@ public class AgentController {
         return view;
     }
 
+    /**
+     * 查询某代理商下级方法
+     * @param agentId
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/subordinate/{agentId}")
     public JSONArray subordinate(@PathVariable String agentId) {
         JSONArray data = new JSONArray();
@@ -2639,10 +2834,9 @@ public class AgentController {
         return data;
     }
 
-	/*
+	/**
      * 购买商品时验证代理商是否存在
 	 */
-
     @RequestMapping(method = RequestMethod.POST, value = "/agentValidate/{agentId}")
     @ResponseBody
     public ResultData agentValidate(@PathVariable("agentId") String agentId) {
@@ -2679,6 +2873,11 @@ public class AgentController {
     // return view;
     // }
 
+    /**
+     * 代理商申请赠送商品时，ajax查询上月销售和累计销售
+     * @param goodsId
+     * @return
+     */
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/{goodsId}/volume")
     public ResultData volume(@PathVariable("goodsId") String goodsId) {
@@ -2711,6 +2910,11 @@ public class AgentController {
         return result;
     }
 
+    /**
+     * 后天代理商列表页面datatable
+     * @param param
+     * @return
+     */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/listagent")
     public DataTablePage<Agent> listAgent(DataTableParam param) {
@@ -2736,6 +2940,17 @@ public class AgentController {
         return result;
     }
 
+    /**
+     * 后台下载代理商信息excel
+     * @param request
+     * @param response
+     * @param start
+     * @param end
+     * @return
+     * @throws IOException
+     * @throws RowsExceededException
+     * @throws WriteException
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/downloadAgentExcel")
     public String downloadAgentExcel(HttpServletRequest request, HttpServletResponse response, String start, String end)
             throws IOException, RowsExceededException, WriteException {
@@ -2831,6 +3046,10 @@ public class AgentController {
         return null;
     }
 
+    /**
+     * 代理商活跃度页面
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/vitality")
     public ModelAndView agentVitalityView() {
         ModelAndView view = new ModelAndView();
@@ -2838,6 +3057,11 @@ public class AgentController {
         return view;
     }
 
+    /**
+     * 代理商活跃度表单
+     * @param param
+     * @return
+     */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/vitality")
     public DataTablePage<AgentVitality> agentVitalityView(DataTableParam param) {
@@ -2854,6 +3078,14 @@ public class AgentController {
         return result;
     }
 
+    /**
+     * 代理商活跃度配置
+     * @param agentVitalityId
+     * @param form
+     * @param result
+     * @param request
+     * @return
+     */
     @RequestMapping(method = RequestMethod.POST, value = "/vitality/config/{agentVitalityId}")
     public ModelAndView agentVitalityConfig(@PathVariable("agentVitalityId") String agentVitalityId,
                                             @Valid AgentVitalityForm form, BindingResult result, HttpServletRequest request) {
@@ -2884,6 +3116,11 @@ public class AgentController {
         return view;
     }
 
+    /**
+     * 后台代理商KPI表单
+     * @param param
+     * @return
+     */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/kpi")
     public DataTablePage<AgentKPI> agentKPI(DataTableParam param) {
@@ -2900,6 +3137,10 @@ public class AgentController {
         return result;
     }
 
+    /**
+     * 后台代理商KPI页面
+     * @return
+     */
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/kpi")
     public ModelAndView agentKPI() {
@@ -2968,6 +3209,11 @@ public class AgentController {
         return result;
     }
 
+    /**
+     * 后台查询返现详细信息
+     * @param agentId
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/cashback/detail/{agentId}")
     public ModelAndView statement(@PathVariable("agentId") String agentId) {
         ModelAndView view = new ModelAndView();
@@ -3008,6 +3254,13 @@ public class AgentController {
         return view;
     }
 
+    /**
+     * 后台查询返现时ajax获取返现数据
+     * @param agentId
+     * @param year
+     * @param month
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/cashback/detail/{agentId}/{year}/{month}")
     public ResultData cashback(@PathVariable("agentId") String agentId, @PathVariable("year") String year,
                                @PathVariable("month") String month) {
@@ -3054,6 +3307,10 @@ public class AgentController {
         return result;
     }
 
+    /**
+     * 配置贡献度计算的因子
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/contributionFactor")
     public ModelAndView contributionFactorView() {
         ModelAndView view = new ModelAndView();
@@ -3077,6 +3334,9 @@ public class AgentController {
         return view;
     }
 
+    /**
+     * 修改贡献度计算的因子
+     */
     @RequestMapping(method = RequestMethod.POST, value = "/contributionFactor/update")
     public ModelAndView updateContributionFactor(@Valid ContributionFactorForm form, BindingResult result,
                                                  HttpServletRequest request) {

@@ -234,6 +234,11 @@ public class EventController {
         return result;
     }
 
+    /**
+     * 后台活动数据获取datatable
+     * @param param
+     * @return
+     */
     @RequestMapping(method = RequestMethod.POST, value = "/overview")
     public DataTablePage<Event> overview(DataTableParam param) {
         DataTablePage<Event> result = new DataTablePage<>(param);

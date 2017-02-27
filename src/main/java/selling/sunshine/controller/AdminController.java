@@ -61,6 +61,10 @@ public class AdminController {
     @Autowired
     private RoleService roleService;
 
+    /**
+     * 管理员管理页面
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/overview")
     public ModelAndView overview() {
         ModelAndView view = new ModelAndView();
@@ -75,6 +79,11 @@ public class AdminController {
         return view;
     }
 
+    /**
+     * 管理员信息DataTable
+     * @param param
+     * @return
+     */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/overview")
     public DataTablePage<User> overview(DataTableParam param) {
@@ -91,6 +100,13 @@ public class AdminController {
         return result;
     }
     
+    /**
+     * 新管理员授权页面
+     * @param form
+     * @param result
+     * @param request
+     * @return
+     */
     @RequestMapping(method = RequestMethod.POST, value = "/register")
     public ModelAndView register(@Valid AdminForm form, BindingResult result,HttpServletRequest request) {
         ModelAndView view = new ModelAndView();
@@ -133,6 +149,11 @@ public class AdminController {
         }
     }
     
+    /**
+     * 管理员详细信息页面
+     * @param userId
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/detail/{userId}")
     public ModelAndView detail(@PathVariable("userId") String userId) {
         ModelAndView view = new ModelAndView();
@@ -147,6 +168,12 @@ public class AdminController {
         return view;
     }
     
+    /**
+     * 删除管理员ajax
+     * @param userId
+     * @param request
+     * @return
+     */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/delete/{userId}")
     public ResultData deleteAdmin(@PathVariable("userId") String userId,HttpServletRequest request) {
@@ -188,6 +215,14 @@ public class AdminController {
     }
     
 
+    /**
+     * 管理员修改信息页面
+     * @param adminId
+     * @param adminLoginForm
+     * @param result
+     * @param request
+     * @return
+     */
     @RequestMapping(method = RequestMethod.POST, value = "/modify/{adminId}")
     public ModelAndView updateAdmin(@PathVariable("adminId") String adminId, @Valid AdminLoginForm adminLoginForm, BindingResult result,HttpServletRequest request) {
         ResultData response = new ResultData();

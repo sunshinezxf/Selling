@@ -55,6 +55,11 @@ public class CouponController {
 
     private Object lock = new Object();
 
+    /**
+     * 兑换券页面
+     * @param couponSerial
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/exchange")
     public ModelAndView coupon(String couponSerial) {
         ModelAndView view = new ModelAndView();
@@ -75,6 +80,13 @@ public class CouponController {
         return view;
     }
 
+    /**
+     * 兑换券提交表单
+     * @param form
+     * @param result
+     * @param couponSerial
+     * @return
+     */
     @RequestMapping(method = RequestMethod.POST, value = "/exchange")
     public synchronized ModelAndView coupon(@Valid PurchaseForm form, BindingResult result, String couponSerial) {
         ModelAndView view = new ModelAndView();
@@ -156,6 +168,11 @@ public class CouponController {
         }
     }
 
+    /**
+     * 客户兑换券列表
+     * @param code
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/list")
     public ModelAndView list(String code) {
         ModelAndView view = new ModelAndView();

@@ -70,6 +70,13 @@ public class CommodityController {
     @Autowired
     private StatisticService statisticService;
 
+    /**
+     * 创建商品
+     * @param form
+     * @param result
+     * @param request
+     * @return
+     */
     @RequestMapping(method = RequestMethod.POST, value = "/create")
     public ModelAndView create(@Valid GoodsForm form, BindingResult result, HttpServletRequest request) {
         ModelAndView view = new ModelAndView();
@@ -109,6 +116,11 @@ public class CommodityController {
         }
     }
 
+    /**
+     * 修改商品页面
+     * @param goodsId
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/edit/{goodsId}")
     public ModelAndView edit(@PathVariable("goodsId") String goodsId) {
         ModelAndView view = new ModelAndView();
@@ -126,6 +138,11 @@ public class CommodityController {
         return view;
     }
 
+    /**
+     * 上传商品图片-type:slide 表示轮播
+     * @param goodsId
+     * @return
+     */
     @RequestMapping(method = RequestMethod.POST, value = "/thumbnails/{goodsId}")
     @ResponseBody
     public String thumbnails(@PathVariable("goodsId") String goodsId) {
@@ -158,6 +175,11 @@ public class CommodityController {
 
     }
 
+    /**
+     * 上传商品图片-type:cover 表示封面
+     * @param goodsId
+     * @return
+     */
     @RequestMapping(method = RequestMethod.POST, value = "/picture/{goodsId}")
     @ResponseBody
     public String picture(@PathVariable("goodsId") String goodsId) {
@@ -190,6 +212,14 @@ public class CommodityController {
 
     }
 
+    /**
+     * 修改商品表单
+     * @param goodsId
+     * @param form
+     * @param result
+     * @param request
+     * @return
+     */
     @RequestMapping(method = RequestMethod.POST, value = "/edit/{goodsId}")
     public ModelAndView edit(@PathVariable("goodsId") String goodsId, @Valid GoodsForm form, BindingResult result,
                              HttpServletRequest request) {
@@ -229,6 +259,10 @@ public class CommodityController {
 
     }
 
+    /**
+     * 后台商品列表页
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/overview")
     public ModelAndView overview() {
         ModelAndView view = new ModelAndView();
@@ -236,6 +270,11 @@ public class CommodityController {
         return view;
     }
 
+    /**
+     * 后台获取客户商品的表单
+     * @param param
+     * @return
+     */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/overview")
     public DataTablePage<Goods4Customer> overview(DataTableParam param) {
@@ -270,10 +309,20 @@ public class CommodityController {
         return result;
     }
 
+    /**
+     * 客户商城首页——商品列表
+     * @param request
+     * @param agentId
+     * @param code
+     * @param state
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/viewlist")
     public ModelAndView viewList(HttpServletRequest request, String agentId, String code, String state) {
         ModelAndView view = new ModelAndView();
+        //先判断微信，若是则需要openID
         if (request.getHeader("user-agent").toLowerCase().contains("micromessenger")) {
+        	//一系列的openID获取代码，最后放入session中
             String openId = null;
             if (StringUtils.isEmpty(code) || StringUtils.isEmpty(state)) {
                 HttpSession session = request.getSession();
@@ -315,6 +364,7 @@ public class CommodityController {
         }
         List<Goods4Customer> goods4Customers = (List<Goods4Customer>) fetchGoodsData.getData();
         for (Goods4Customer goods : goods4Customers) {
+        	//商品缩略图的封面获取
             List<Thumbnail> thumbnails = goods.getThumbnails();
             List<Thumbnail> newThumbnails = new ArrayList<Thumbnail>();
             for (Thumbnail thumbnail : thumbnails) {
@@ -329,11 +379,23 @@ public class CommodityController {
         return view;
     }
 
+    
+    /**
+     * 客户商城-单个商品
+     * @param request
+     * @param goodsId
+     * @param agentId
+     * @param code
+     * @param state
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/{goodsId}")
     public ModelAndView view(HttpServletRequest request, @PathVariable("goodsId") String goodsId, String agentId, String code, String state) {
         ModelAndView view = new ModelAndView();
         String openId = null;
+        //先判断微信
         if (request.getHeader("user-agent").toLowerCase().contains("micromessenger")) {
+        	//一系列的openID获取代码，最后放入session中
             if (StringUtils.isEmpty(code) || StringUtils.isEmpty(state)) {
                 HttpSession session = request.getSession();
                 if (session.getAttribute("openId") == null || session.getAttribute("openId").equals("")) {
@@ -410,6 +472,11 @@ public class CommodityController {
         return view;
     }
 
+    /**
+     * 客户商城-查询客户订单
+     * @param orderId
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/customerorder")
     public ModelAndView customerOrder(String orderId) {
         ModelAndView view = new ModelAndView();
@@ -437,6 +504,11 @@ public class CommodityController {
         return view;
     }
 
+    /**
+     * 后台商品详情页
+     * @param goodsId
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/detail/{goodsId}")
     public ModelAndView detail(@PathVariable("goodsId") String goodsId) {
         ModelAndView view = new ModelAndView();
@@ -457,6 +529,12 @@ public class CommodityController {
         return view;
     }
 
+    /**
+     * 后台管理员下架商品
+     * @param goodsId
+     * @param request
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/forbid/{goodsId}")
     public ModelAndView forbid(@PathVariable("goodsId") String goodsId, HttpServletRequest request) {
         ModelAndView view = new ModelAndView();
@@ -488,6 +566,12 @@ public class CommodityController {
         return view;
     }
 
+    /**
+     * 后台管理员上架商品
+     * @param goodsId
+     * @param request
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/enable/{goodsId}")
     public ModelAndView enable(@PathVariable("goodsId") String goodsId, HttpServletRequest request) {
         ModelAndView view = new ModelAndView();
@@ -519,6 +603,11 @@ public class CommodityController {
         return view;
     }
 
+    /**
+     * 上传商品图片-slide轮播ajax
+     * @param request
+     * @return
+     */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/thumbnail/upload")
     public ResultData uploadThumbnail(MultipartHttpServletRequest request) {
@@ -557,6 +646,11 @@ public class CommodityController {
         return result;
     }
 
+    /**
+     * 上传商品封面cover的ajax
+     * @param request
+     * @return
+     */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/cover/upload")
     public ResultData uploadCover(MultipartHttpServletRequest request) {
@@ -594,6 +688,11 @@ public class CommodityController {
         return result;
     }
 
+    /**
+     * 删除商品封面
+     * @param thumbnailId
+     * @return
+     */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/delete/thumbnail/{thumbnailId}")
     public ResultData deleteThumbnail(@PathVariable("thumbnailId") String thumbnailId) {
@@ -611,6 +710,10 @@ public class CommodityController {
         return result;
     }
 
+    /**
+     * 获取商品销售详情
+     * @return
+     */
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/volume")
     public ResultData volume() {
@@ -671,6 +774,10 @@ public class CommodityController {
         return resultData;
     }
 
+    /**
+     * 后台商品销售统计
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/summary")
     public ModelAndView summary() {
         ModelAndView view = new ModelAndView();

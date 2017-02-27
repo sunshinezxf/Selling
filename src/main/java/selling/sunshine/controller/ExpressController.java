@@ -68,6 +68,11 @@ public class ExpressController {
 	@Autowired
 	private EventService eventService;
 
+	/**
+	 * 获取发货express信息ajax
+	 * @param id
+	 * @return
+	 */
     @RequestMapping(method = RequestMethod.POST, value = "/detail/{id}")
     public ResultData detail(@PathVariable("id") String id) {
         ResultData resultData = new ResultData();
@@ -113,6 +118,10 @@ public class ExpressController {
         return resultData;
     }
 
+    /**
+     * 发货上传页面
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/upload")
     public ModelAndView overview() {
         ModelAndView view = new ModelAndView();
@@ -120,6 +129,12 @@ public class ExpressController {
         return view;
     }
 
+    /**
+     * 发货上传页面表单
+     * @param request
+     * @return
+     * @throws IOException
+     */
     @RequestMapping(method = RequestMethod.POST, value = "/upload")
     public ModelAndView overview(MultipartHttpServletRequest request)
             throws IOException {
@@ -249,6 +264,11 @@ public class ExpressController {
     }
 
 
+    /**
+     * 根据快递单号查询快递
+     * @param expressNumber
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/queryExpress/{expressNumber}")
     public ResultData queryExpress(@PathVariable("expressNumber") String expressNumber) {
         ResultData result = new ResultData();
@@ -261,6 +281,11 @@ public class ExpressController {
         return result;
     }
     
+    /**
+     * 根据orderId查快递单号
+     * @param orderId
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/{orderId}/query")
     public ResultData queryExpressByOrderId(@PathVariable("orderId") String orderId){
     	ResultData result = new ResultData();

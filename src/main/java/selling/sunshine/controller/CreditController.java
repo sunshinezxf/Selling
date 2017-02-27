@@ -25,6 +25,11 @@ public class CreditController {
     @Autowired
     private UploadService uploadService;
 
+    /**
+     * 上传身份证
+     * @param request
+     * @return
+     */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/upload")
     public ResultData upload(MultipartHttpServletRequest request) {
