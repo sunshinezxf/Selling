@@ -129,8 +129,8 @@ public class HttpUtil {
     /**
      * 将map转换为请求字符串
      *
-     * @param {Map}    params, 请求的参数信息
-     * @param {String} charset, 字符集
+     * @param {Map}    params 请求的参数信息
+     * @param {String} charset 字符集
      * @return 构建好的查询条件
      * @throws IOException
      */
