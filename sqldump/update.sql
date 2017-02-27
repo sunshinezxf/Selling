@@ -604,17 +604,17 @@ AS SELECT
        ON oi.customer_id = c.customer_id
    UNION ALL
    SELECT
-     co.agent_id      AS agent_id,
+     co.agent_id                                                 AS agent_id,
      if(co.coupon_serial IS NULL OR co.coupon_serial = '', 2, 3) AS order_type,
-     co.order_id      AS order_id,
-     co.goods_id      AS goods_id,
-     co.order_status  AS order_item_status,
-     co.quantity      AS goods_quantity,
-     co.total_price   AS order_item_price,
-     co.customer_id   AS customer_id,
-     co.receiver_name AS customer_name,
-     co.block_flag    AS block_flag,
-     co.create_time   AS create_time
+     co.order_id                                                 AS order_id,
+     co.goods_id                                                 AS goods_id,
+     co.order_status                                             AS order_item_status,
+     co.quantity                                                 AS goods_quantity,
+     co.total_price                                              AS order_item_price,
+     co.customer_id                                              AS customer_id,
+     co.receiver_name                                            AS customer_name,
+     co.block_flag                                               AS block_flag,
+     co.create_time                                              AS create_time
    FROM customer_order co;
 
 -- -----------------------------------------------------
@@ -864,19 +864,48 @@ ALTER TABLE `selling`.`coupon`
 CHANGE COLUMN `coupon_status` `coupon_status` TINYINT(1) NOT NULL DEFAULT '0';
 
 ALTER TABLE `selling`.`goods`
-ADD COLUMN `goods_position` INT NOT NULL DEFAULT 0 COMMENT 'this column aims to sort goods list that showed to the customer & agent' AFTER `goods_produce_date`;
+ADD COLUMN `goods_position` INT NOT NULL DEFAULT 0
+COMMENT 'this column aims to sort goods list that showed to the customer & agent'
+AFTER `goods_produce_date`;
 
 
-update goods set goods_position='5' where goods_id='COMyfxwez26' limit 1;
-update goods set goods_position='4' where goods_id='COMyeivfe49' limit 1;
-update goods set goods_position='3' where goods_id='COMoelyxf22' limit 1;
-update goods set goods_position='2' where goods_id='COMwilflf20' limit 1;
-update goods set goods_position='1' where goods_id='COMlezflw12' limit 1;
+UPDATE goods
+SET goods_position = '5'
+WHERE goods_id = 'COMyfxwez26'
+LIMIT 1;
+UPDATE goods
+SET goods_position = '4'
+WHERE goods_id = 'COMyeivfe49'
+LIMIT 1;
+UPDATE goods
+SET goods_position = '3'
+WHERE goods_id = 'COMoelyxf22'
+LIMIT 1;
+UPDATE goods
+SET goods_position = '2'
+WHERE goods_id = 'COMwilflf20'
+LIMIT 1;
+UPDATE goods
+SET goods_position = '1'
+WHERE goods_id = 'COMlezflw12'
+LIMIT 1;
 
 ALTER TABLE `selling`.`refund_config`
-ADD COLUMN `refund_trigger_amount_top` INT NOT NULL DEFAULT 0  AFTER `refund_trigger_amount`;
+ADD COLUMN `refund_trigger_amount_top` INT NOT NULL DEFAULT 0
+AFTER `refund_trigger_amount`;
 
 
 ##2017年2月27日
 ALTER TABLE `selling`.`event`
-ADD COLUMN `promotion_event_type` TINYINT NOT NULL DEFAULT 0  AFTER `event_type`;
+ADD COLUMN `promotion_event_type` TINYINT NOT NULL DEFAULT 0
+AFTER `event_type`;
+
+##买赠活动性别统计表
+CREATE TABLE IF NOT EXISTS `selling`.`order_gender` (
+  `order_id`     VARCHAR(20) NOT NULL,
+  `order_gender` TINYINT(1)  NULL     DEFAULT 0,
+  `block_flag`   TINYINT(1)  NOT NULL DEFAULT 0,
+  `create_time`  DATETIME    NOT NULL,
+  PRIMARY KEY (`order_id`)
+)
+  ENGINE = InnoDB;
