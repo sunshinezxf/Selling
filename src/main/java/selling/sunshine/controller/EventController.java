@@ -57,9 +57,6 @@ public class EventController {
     private EventService eventService;
 
     @Autowired
-    private MessageService messageService;
-
-    @Autowired
     private CommodityService commodityService;
 
     @Autowired
@@ -68,12 +65,17 @@ public class EventController {
     @Autowired
     private OrderService orderService;
 
+    /**
+     * 根据活动的类别不同跳转到不同的活动创建界面（目前有两种类型的活动）
+     * @param type
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/create/{type}")
     public ModelAndView create(@PathVariable("type") String type) {
         ModelAndView view = new ModelAndView();
         if (type.equals("gift")) {
             view.setViewName("backend/event/gift_create");
-        } else {
+        } else if(type.equals("promotion")){
             Map<String, Object> condition = new HashMap<>();
             condition.put("blockFlag", false);
             ResultData response = commodityService.fetchGoods4Customer(condition);
@@ -90,6 +92,12 @@ public class EventController {
         return view;
     }
 
+    /**
+     * 添加一个新的gift活动
+     * @param form
+     * @param session
+     * @return
+     */
     @RequestMapping(method = RequestMethod.POST, value = "/gift/create")
     public ResultData create(@RequestBody GiftEventForm form, HttpSession session) {
         ResultData resultData = new ResultData();
@@ -133,6 +141,12 @@ public class EventController {
         return resultData;
     }
 
+    /**
+     * 添加一个新的promotion活动
+     * @param form
+     * @param session
+     * @return
+     */
     @RequestMapping(method = RequestMethod.POST, value = "/promotion/create")
     public ResultData create(@RequestBody PromotionEventForm form, HttpSession session) {
         ResultData resultData = new ResultData();
@@ -169,6 +183,12 @@ public class EventController {
         return resultData;
     }
 
+    /**
+     * 根据eventID得到满赠活动（promotion event）的商品配置
+     * @param eventId
+     * @param goodsId
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/promotion/{eventId}/config/{goodsId}")
     public ResultData promotionConfig(@PathVariable("eventId") String eventId, @PathVariable("goodsId") String goodsId) {
         ResultData result = new ResultData();
@@ -184,6 +204,12 @@ public class EventController {
         return result;
     }
 
+    /**
+     * 根据eventID修改满赠活动（promotion event）的商品配置
+     * @param form
+     * @param eventId
+     * @return
+     */
     @RequestMapping(method = RequestMethod.POST, value = "/promotionConfig/{eventId}")
     public ResultData promotionConfig(@RequestBody PromotionConfigForm form, @PathVariable("eventId") String eventId) {
         ResultData result = new ResultData();
@@ -219,6 +245,10 @@ public class EventController {
         return result;
     }
 
+    /**
+     * 跳转到活动列表页面
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/overview")
     public ModelAndView overview() {
         ModelAndView view = new ModelAndView();
@@ -226,6 +256,10 @@ public class EventController {
         return view;
     }
 
+    /**
+     * 跳转到活动详情页面
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/{eventId}")
     public ModelAndView preview(@PathVariable("eventId") String eventId) {
         ModelAndView view = new ModelAndView();
@@ -256,6 +290,11 @@ public class EventController {
         return view;
     }
 
+    /**
+     * 跳转到gift event的活动申请列表页面
+     * @param eventId
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/application/{eventId}")
     public ModelAndView application(@PathVariable("eventId") String eventId) {
         ModelAndView view = new ModelAndView();
@@ -276,6 +315,12 @@ public class EventController {
         return view;
     }
 
+    /**
+     * 得到gift event的活动申请列表信息
+     * @param eventId
+     * @param param
+     * @return
+     */
     @RequestMapping(method = RequestMethod.POST, value = "/application/{eventId}")
     public DataTablePage<EventApplication> application(@PathVariable("eventId") String eventId, DataTableParam param) {
         DataTablePage<EventApplication> result = new DataTablePage<>(param);
@@ -291,6 +336,11 @@ public class EventController {
         return result;
     }
 
+    /**
+     * 跳转到gift event的赠送订单页面
+     * @param eventId
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/present/{eventId}")
     public ModelAndView present(@PathVariable("eventId") String eventId) {
         ModelAndView view = new ModelAndView();
@@ -316,6 +366,12 @@ public class EventController {
         return view;
     }
 
+    /**
+     * 得到gift event的赠送订单信息
+     * @param eventId
+     * @param param
+     * @return
+     */
     @RequestMapping(method = RequestMethod.POST, value = "/present/{eventId}")
     public DataTablePage<EventOrder> present(@PathVariable("eventId") String eventId, DataTableParam param) {
         DataTablePage<EventOrder> result = new DataTablePage<>(param);
@@ -331,6 +387,11 @@ public class EventController {
         return result;
     }
 
+    /**
+     * 同意gift event的某一条申请赠送
+     * @param applicationId
+     * @return
+     */
     @RequestMapping(method = RequestMethod.POST, value = "/agree/{applicationId}")
     public ResultData agree(@PathVariable("applicationId") String applicationId) {
         ResultData resultData = new ResultData();
@@ -359,6 +420,11 @@ public class EventController {
         return resultData;
     }
 
+    /**
+     * 同意gift event的所有申请赠送
+     * @param eventId
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/presentAll/{eventId}")
     public ResultData presentAll(@PathVariable("eventId") String eventId) {
         ResultData resultData = new ResultData();
@@ -387,6 +453,11 @@ public class EventController {
         return resultData;
     }
 
+    /**
+     * 拒绝gift event的某一条申请赠送
+     * @param applicationId
+     * @return
+     */
     @RequestMapping(method = RequestMethod.POST, value = "/reject/{applicationId}")
     public ResultData reject(@PathVariable("applicationId") String applicationId) {
         ResultData resultData = new ResultData();
@@ -416,6 +487,13 @@ public class EventController {
 //		return resultData;
 //	}
 
+    /**
+     * 生成所有event order的快递信息excel供下载
+     * @param request
+     * @param response
+     * @return
+     * @throws IOException
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/order/expressAll")
     public String expressAll(HttpServletRequest request, HttpServletResponse response) throws IOException {
         ResultData resultData = new ResultData();
@@ -476,6 +554,14 @@ public class EventController {
         return "";
     }
 
+    /**
+     * 生成一个event order的快递单信息excel供下载
+     * @param orderId
+     * @param request
+     * @param response
+     * @return
+     * @throws IOException
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/order/express/{orderId}")
     public String express(@PathVariable("orderId") String orderId, HttpServletRequest request, HttpServletResponse response) throws IOException {
         ResultData resultData = new ResultData();
@@ -537,6 +623,10 @@ public class EventController {
         return "";
     }
 
+    /**
+     * 得到所有的event
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/all")
     public ResultData all() {
         ResultData resultData = new ResultData();
@@ -551,6 +641,10 @@ public class EventController {
         return resultData;
     }
 
+    /**
+     * 查询得到当前正在进行的promotion event
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/promotion/current")
     public ResultData current() {
         ResultData result = new ResultData();
@@ -569,6 +663,11 @@ public class EventController {
         return result;
     }
 
+    /**
+     * 手动设置快递单号生成event order的快递单信息
+     * @param eventId
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/promotion/setExpressNumber/{eventId}")
     public ModelAndView setExpressNumber(@PathVariable("eventId") String eventId) {
         ModelAndView view = new ModelAndView();

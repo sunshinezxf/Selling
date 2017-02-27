@@ -261,6 +261,9 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
     }
 
     @Override
+    /**
+     * 生成order_pool表
+     */
     public ResultData sumOrder() {
         ResultData result = new ResultData();
         // 获取当月的前一个月的日期 xxxx年xx月

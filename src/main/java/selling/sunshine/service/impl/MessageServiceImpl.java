@@ -26,6 +26,12 @@ import java.util.Set;
 public class MessageServiceImpl implements MessageService {
     private Logger logger = LoggerFactory.getLogger(MessageServiceImpl.class);
 
+    /**
+     * 发送短信给一个号码
+     * @param phone
+     * @param message
+     * @return
+     */
     @Override
     public ResultData send(final String phone, final String message) {
         ResultData result = new ResultData();
@@ -56,6 +62,12 @@ public class MessageServiceImpl implements MessageService {
         return result;
     }
 
+    /**
+     * 发送短信给一个list的手机号
+     * @param phone
+     * @param message
+     * @return
+     */
     @Override
     public ResultData send(final Set<String> phone, final String message) {
         ResultData result = new ResultData();
@@ -89,6 +101,12 @@ public class MessageServiceImpl implements MessageService {
         return result;
     }
 
+    /**
+     * 测试发送的短信（发送一条）
+     * @param phone
+     * @param message
+     * @return
+     */
     @Override
     public ResultData preview(String phone, String message) {
         ResultData result = new ResultData();
