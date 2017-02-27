@@ -2,6 +2,7 @@
 <!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
     <mappers>
+        <!-- 这里要将所有的数据库sql语句文件引入以实现调用 -->
         <mapper resource="selling/sunshine/mapper/admin.xml"/>
         <mapper resource="selling/sunshine/mapper/agentgift.xml"/>
         <mapper resource="selling/sunshine/mapper/backoperationlog.xml"/>

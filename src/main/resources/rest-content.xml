@@ -71,6 +71,7 @@
         <property name="cacheManager" ref="shiroEhcacheManager"/>
     </bean>
 
+    <!-- 配置各个URL的权限, 如不添加, 默认需要授权才能访问, 新的URL可以通过注解或者在下方添加来完成 -->
     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean" depends-on="roleAuth">
         <property name="securityManager" ref="securityManager"/>
         <property name="loginUrl" value="/login"/>

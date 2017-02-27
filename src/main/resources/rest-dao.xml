@@ -2,6 +2,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!-- 所有的dao需要添加到该文件中才能正常调用 -->
     <bean id="commodityDao" class="selling.sunshine.dao.impl.CommodityDaoImpl">
         <property name="sqlSession" ref="sqlSession"></property>
     </bean>

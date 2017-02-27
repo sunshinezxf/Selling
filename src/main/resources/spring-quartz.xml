@@ -2,24 +2,34 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!-- 系统每月初将上月的平台订单进行汇总 -->
     <bean id="poolSchedule" class="selling.sunshine.schedule.PoolSchedule"></bean>
 
+    <!-- 系统根据pool的执行结果生成相应的返现记录 -->
     <bean id="refundSchedule" class="selling.sunshine.schedule.RefundSchedule"></bean>
 
+    <!-- 系统定时刷新微信的access_token -->
     <bean id="wechatSchedule" class="selling.sunshine.schedule.WechatSchedule"></bean>
 
+    <!-- 提现定时转账 -->
     <bean id="withdrawSchedule" class="selling.sunshine.schedule.WithdrawSchedule"></bean>
 
+    <!-- 查询系统物流单的最新状态 -->
     <bean id="expressSchedule" class="selling.sunshine.schedule.ExpressSchedule"></bean>
 
+    <!-- 查询顾客订单, 将新顾客添加到相应代理商的顾客列表中; 同时回填客户订单中的顾客的ID信息 -->
     <bean id="customerOrderSchedule" class="selling.sunshine.schedule.CustomerOrderSchedule"></bean>
 
+    <!-- 根据顾客的地址, 解析地址中的省市区 -->
     <bean id="customerAddressSchedule" class="selling.sunshine.schedule.CustomerAddressSchedule"></bean>
 
+    <!-- 计算代理商的贡献度 -->
     <bean id="agentKPISchedule" class="selling.sunshine.schedule.AgentKPISchedule"></bean>
 
+    <!-- 买赠活动计算赠送订单 -->
     <bean id="promotionSchedule" class="selling.sunshine.schedule.PromotionSchedule"></bean>
 
+    <!-- 查询有哪些顾客转变成了代理商 -->
     <bean id="customerSchedule" class="selling.sunshine.schedule.CustomerSchedule"></bean>
 
     <bean id="poolDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
@@ -147,7 +157,7 @@
     <bean id="checkTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="checkDetail"></property>
         <property name="cronExpression">
-            <value>0 0 0 * * ?</value>
+            <value>0 24 23 * * ?</value>
         </property>
     </bean>
 
@@ -175,7 +185,7 @@
     <bean id="customerTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="customerDetail"></property>
         <property name="cronExpression">
-            <value>0 30 1 * * ?</value>
+            <value>0 20 23 * * ?</value>
         </property>
     </bean>
 
