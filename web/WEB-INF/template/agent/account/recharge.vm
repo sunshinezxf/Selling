@@ -8,6 +8,7 @@
 <div class="container">
     <div class="hd">
         <h1 class="page_title">账户充值</h1>
+
         <p class="page_desc">给您的账户充值,下单更快捷</p>
     </div>
     <div class="bd">
@@ -37,39 +38,39 @@
 </body>
 <script type="text/javascript" src="${path.concat('/plugins/pingxx/pingpp_one.js')}"></script>
 <script>
-$("#fail_dialog").find(".weui_btn_dialog.primary").click(function () {
-    $("#fail_dialog").hide();
-});
-$("#fail_money_dialog").find(".weui_btn_dialog.primary").click(function () {
-    $("#fail_money_dialog").hide();
-});
+    $("#fail_dialog").find(".weui_btn_dialog.primary").click(function () {
+        $("#fail_dialog").hide();
+    });
+    $("#fail_money_dialog").find(".weui_btn_dialog.primary").click(function () {
+        $("#fail_money_dialog").hide();
+    });
 
-document.addEventListener('pingpp_one_ready', function () {
+    document.addEventListener('pingpp_one_ready', function () {
         $("#confirm").click(function () {
-        	if(!is_weixin()){
-	    		$.pay("alipay_wap", "");
-	    	}else{
-		    	var url = "${path.concat('/agent/checkbinding')}"
-		    	$.get(url, function(result){
-		    		if(result.responseCode == "RESPONSE_NULL"){
-		    			$("#bind_dialog").show();
-		    			return;
-		    		}
-		    		if(result.responseCode == "RESPONSE_ERROR"){
-		    			window.location == "${path.concat('/agent/login')}";
-		    		} else {
-		    			$.pay("wx_pub", result.data.wechat);
-			        }
-		         });
-	         }
+            if (!is_weixin()) {
+                $.pay("alipay_wap", "");
+            } else {
+                var url = "${path.concat('/agent/checkbinding')}"
+                $.get(url, function (result) {
+                    if (result.responseCode == "RESPONSE_NULL") {
+                        $("#bind_dialog").show();
+                        return;
+                    }
+                    if (result.responseCode == "RESPONSE_ERROR") {
+                        window.location == "${path.concat('/agent/login')}";
+                    } else {
+                        $.pay("wx_pub", result.data.wechat);
+                    }
+                });
+            }
         });
     });
-    
-    $.pay = function(channel, open_id){
-    	if($.checkMoney() != 0){
-			$("#fail_money_dialog").show();
-			return;
-		} 
+
+    $.pay = function (channel, open_id) {
+        if ($.checkMoney() != 0) {
+            $("#fail_money_dialog").show();
+            return;
+        }
         var amount = $("#amount").val();
         pingpp_one.init({
             app_id: "app_K4evXLKq50O8CuL8",
@@ -110,19 +111,19 @@ document.addEventListener('pingpp_one_ready', function () {
             }
         });
     }
-    
-    $.checkMoney = function(){
-		var money_input = parseFloat($("#amount").val());
-		if($("#money_input").val() == ""){
-			return -1;
-		}
-		var reNum = /^([1-9][\d]{0,10}|0)(\.[\d]{1,2})?$/;
-		if(!reNum.test($("#amount").val())){
-			return 1;
-		}
-		return 0;
-	}
-	
+
+    $.checkMoney = function () {
+        var money_input = parseFloat($("#amount").val());
+        if ($("#money_input").val() == "") {
+            return -1;
+        }
+        var reNum = /^([1-9][\d]{0,10}|0)(\.[\d]{1,2})?$/;
+        if (!reNum.test($("#amount").val())) {
+            return 1;
+        }
+        return 0;
+    }
+
     function is_weixin() {
         var ua = navigator.userAgent.toLowerCase();
         if (ua.match(/MicroMessenger/i) == "micromessenger") {
@@ -132,4 +133,5 @@ document.addEventListener('pingpp_one_ready', function () {
         }
     }
 </script>
+    #parse("/agent/wechat/component/wxhide.vm")
 </html>
