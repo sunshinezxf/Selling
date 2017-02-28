@@ -1,3 +1,4 @@
+#set($role = $session.getAttribute("role"))
 <div class="ui stackable padded grid" name="agent_overview">
     <div class="row">
         <h1 class="ui header">
@@ -19,12 +20,14 @@
             </div>
         </h1>
     </div>
+    #if($role == "admin" || $role == "auditor")
     <div class="row">
         <a class="ui primary basic button" href="${path.concat('/agent/overview')}">返回</a>
         <button type="button" class="ui negative basic button" id="fobid">禁用</button>
         <a class="ui positive basic button" href="${path.concat('/gift/config/')}${agent.agentId}">赠送配置</a>
         <a class="ui blue basic button" href="${path.concat('/gift/check/')}${agent.agentId}">个人赠送申请列表</a>
     </div>
+    #end
     <div class="row">
         <div class="column">
             <div class="ui segment">
