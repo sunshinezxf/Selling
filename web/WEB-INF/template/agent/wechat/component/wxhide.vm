@@ -1,0 +1,30 @@
+#if(${configuration})
+<script src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script>
+    if(is_weixin()){
+        wx.config({
+            debug: false,
+            appId: '${configuration.appId}',
+            timestamp: '${configuration.timestamp}',
+            nonceStr: '${configuration.nonceStr}',
+            signature: '${configuration.signature}',
+            jsApiList: ['hideOptionMenu', 'hideAllNonBaseMenuItem']
+        });
+
+        wx.ready(function(){
+            wx.hideAllNonBaseMenuItem();
+
+            wx.hideOptionMenu();
+        });
+    }
+
+    function is_weixin() {
+        var ua = navigator.userAgent.toLowerCase();
+        if (ua.match(/MicroMessenger/i) == "micromessenger") {
+            return true;
+        } else {
+            return false;
+        }
+    }
+</script>
+#end
