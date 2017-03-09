@@ -345,7 +345,7 @@ public class EventController {
     }
 
     /**
-     * 跳转到gift event的赠送订单页面
+     * 跳转到event的赠送订单页面
      * @param eventId
      * @return
      */
@@ -359,7 +359,7 @@ public class EventController {
             view.addObject("giftEvent", ((List<Event>) queryResult.getData()).get(0));
             condition.put("eventId", ((List<Event>) queryResult.getData()).get(0).getEventId());
             List<Integer> status = new ArrayList<>();
-            status.add(1);
+            status.add(OrderItemStatus.PAYED.getCode());
             condition.put("status", status);
             ResultData fetchResponse = eventService.fetchEventOrder(condition);
             if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
@@ -375,7 +375,7 @@ public class EventController {
     }
 
     /**
-     * 得到gift event的赠送订单信息
+     * 得到event的赠送订单信息
      * @param eventId
      * @param param
      * @return
@@ -388,6 +388,7 @@ public class EventController {
         }
         Map<String, Object> condition = new HashMap<>();
         condition.put("eventId", eventId);
+        condition.put("blockFlag", 0);
         ResultData fetchResponse = eventService.fetchEventOrderByPage(condition, param);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             result = (DataTablePage<EventOrder>) fetchResponse.getData();

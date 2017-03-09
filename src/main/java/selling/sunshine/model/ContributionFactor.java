@@ -3,7 +3,7 @@ package selling.sunshine.model;
 import common.sunshine.model.Entity;
 
 /**
- * 已废弃
+ * 代理商贡献度配置类
  */
 public class ContributionFactor extends Entity {
 	
