@@ -1,22 +1,23 @@
 package selling.sunshine.service.impl;
 
+import common.sunshine.model.selling.agent.Agent;
 import common.sunshine.model.selling.bill.CustomerOrderBill;
 import common.sunshine.model.selling.bill.DepositBill;
 import common.sunshine.model.selling.bill.OrderBill;
+import common.sunshine.model.selling.bill.RefundBill;
 import common.sunshine.model.selling.order.CustomerOrder;
 import common.sunshine.model.selling.order.Order;
 import common.sunshine.model.selling.order.OrderItem;
 import common.sunshine.utils.IDGenerator;
+import common.sunshine.utils.ResponseCode;
+import common.sunshine.utils.ResultData;
 import org.apache.poi.ss.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import selling.sunshine.dao.*;
-import common.sunshine.model.selling.agent.Agent;
 import selling.sunshine.service.GatherService;
 import selling.sunshine.utils.PlatformConfig;
-import common.sunshine.utils.ResponseCode;
-import common.sunshine.utils.ResultData;
 import selling.sunshine.utils.WorkBookUtil;
 
 import java.io.File;
@@ -364,13 +365,13 @@ public class GatherServiceImpl implements GatherService {
                 sellPrice1.setCellValue(bill.getBillAmount());
                 Cell sellPrice2 = current.createCell(10);
                 sellPrice2.setCellValue(bill.getBillAmount());
-                Cell sellPrice3 = current.createCell(11);
-                sellPrice3.setCellValue(0);
-                Cell sellPrice4 = current.createCell(12);
+//                Cell sellPrice3 = current.createCell(11);
+//                sellPrice3.setCellValue(0);
+                Cell sellPrice4 = current.createCell(11);
                 sellPrice4.setCellValue(bill.getBillAmount());
-                Cell sellManInfo = current.createCell(13);
+                Cell sellManInfo = current.createCell(12);
                 sellManInfo.setCellValue(order.getAgent().getName());
-                Cell num = current.createCell(14);
+                Cell num = current.createCell(13);
                 condition.clear();
                 condition.put("orderId", bill.getOrder().getOrderId());
                 queryResponse = orderDao.queryOrder(condition);
@@ -432,13 +433,13 @@ public class GatherServiceImpl implements GatherService {
                 sellPrice1.setCellValue(bill.getBillAmount());
                 Cell sellPrice2 = current.createCell(10);
                 sellPrice2.setCellValue(bill.getBillAmount());
-                Cell sellPrice3 = current.createCell(11);
-                sellPrice3.setCellValue(0);
-                Cell sellPrice4 = current.createCell(12);
+//                Cell sellPrice3 = current.createCell(11);
+//                sellPrice3.setCellValue(0);
+                Cell sellPrice4 = current.createCell(11);
                 sellPrice4.setCellValue(bill.getBillAmount());
-                Cell sellManInfo = current.createCell(13);
+                Cell sellManInfo = current.createCell(12);
                 sellManInfo.setCellValue("无");
-                Cell num = current.createCell(14);
+                Cell num = current.createCell(13);
                 num.setCellValue(order.getQuantity());
                 row++;
             } else if (item instanceof DepositBill) {
@@ -481,15 +482,72 @@ public class GatherServiceImpl implements GatherService {
                 sellPrice1.setCellValue(bill.getBillAmount());
                 Cell sellPrice2 = current.createCell(10);
                 sellPrice2.setCellValue(bill.getBillAmount());
-                Cell sellPrice3 = current.createCell(11);
-                sellPrice3.setCellValue(0);
-                Cell sellPrice4 = current.createCell(12);
+//                Cell sellPrice3 = current.createCell(11);
+//                sellPrice3.setCellValue(0);
+                Cell sellPrice4 = current.createCell(11);
                 sellPrice4.setCellValue(bill.getBillAmount());
-                Cell sellManInfo = current.createCell(13);
+                Cell sellManInfo = current.createCell(12);
                 sellManInfo.setCellValue("无");
-                Cell description = current.createCell(15);
+                Cell description = current.createCell(14);
                 description.setCellValue("账户充值");
                 row++;
+            }else if (item instanceof RefundBill){
+                RefundBill bill = (RefundBill) item;
+//                Map<String,Object> condition=new HashMap<>();
+//                condition.put("billId",bill.getBillId());
+//                ResultData queryResponse = billDao.queryBillSum(condition);
+//                if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK){
+//                    BillSumVo billSumVo= ((List<BillSumVo>)queryResponse.getData()).get(0);
+                    Row current = sheet.createRow(row);
+                    Cell noCell = current.createCell(0);
+                    noCell.setCellValue("NO." + bill.getRefundBillId());
+                    Cell dateCell = current.createCell(1);
+                    SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日");
+                    dateCell.setCellValue(format.format(bill.getCreateAt()));
+                    Cell orderNoCell = current.createCell(2);
+                    orderNoCell.setCellValue(bill.getRefundBillId());
+//                    Cell channel = current.createCell(3);
+//                    if (billSumVo.getChannel().equals("wx_pub")) {
+//                        channel.setCellValue("微信付款");
+//                    } else if (billSumVo.getChannel().equals("coffer")) {
+//                        channel.setCellValue("余额付款");
+//                    } else {
+//                        channel.setCellValue("");
+//                    }
+                    Cell priceCell = current.createCell(4);
+                    priceCell.setCellValue("-"+bill.getBillAmount());
+                    Cell timeCell = current.createCell(5);
+                    timeCell.setCellValue(format.format(bill.getCreateAt()));
+//                    Cell account = current.createCell(6);
+//                    account.setCellValue("");
+//                    Cell phone = current.createCell(7);
+//                    Map<String, Object> condition = new HashMap<>();
+//                    condition.put("agentId", bill.getAgent().getAgentId());
+//                    ResultData queryResponse = agentDao.queryAgent(condition);
+//                    if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+//                        List<Agent> agentList = (List<Agent>) queryResponse.getData();
+//                        if (!agentList.isEmpty()) {
+//                            phone.setCellValue(agentList.get(0).getPhone());
+//                        }
+//                    }
+                    Cell sellNo = current.createCell(8);
+                    sellNo.setCellValue("NO." + bill.getBillId());
+                    Cell sellPrice1 = current.createCell(9);
+                    sellPrice1.setCellValue("-"+bill.getBillAmount());
+                    Cell sellPrice2 = current.createCell(10);
+                    sellPrice2.setCellValue("-"+bill.getBillAmount());
+//                Cell sellPrice3 = current.createCell(11);
+//                sellPrice3.setCellValue(0);
+                    Cell sellPrice4 = current.createCell(11);
+                    sellPrice4.setCellValue(bill.getBillAmount());
+//                    Cell sellManInfo = current.createCell(12);
+//                    sellManInfo.setCellValue("无");
+                    Cell description = current.createCell(14);
+                    description.setCellValue("退款单");
+                    row++;
+//                }else {
+//                    continue;
+//                }
             }
         }
         String name = IDGenerator.generate("SUMMARY");

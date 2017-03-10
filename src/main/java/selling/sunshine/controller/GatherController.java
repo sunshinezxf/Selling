@@ -1,5 +1,6 @@
 package selling.sunshine.controller;
 
+import common.sunshine.model.selling.bill.RefundBill;
 import common.sunshine.utils.IDGenerator;
 
 import org.slf4j.Logger;
@@ -101,6 +102,13 @@ public class GatherController {
             List<DepositBill> list = ((List<DepositBill>) queryResponse.getData());
             total.addAll(list);
             gatherService.produce(list);
+        }
+        //查询退款单
+        queryResponse = billService.fetchRefundBill(condition);
+        if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK){
+            empty=false;
+            List<RefundBill> list = ((List<RefundBill>) queryResponse.getData());
+            total.addAll(list);
         }
 
         if (empty) {
