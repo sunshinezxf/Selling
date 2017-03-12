@@ -94,31 +94,31 @@
                 /account/charge/*/prompt = roles[agent]
                 /account/withdraw = roles[agent]
                 /account/deposit = roles[agent]
-                /admin/modify/* = roles[admin]
-                /admin/delete/* = roles[admin]
-                /admin/overview = roles[admin]
+                /admin/modify/* = roles["admin, salesman"]
+                /admin/delete/* = roles["admin, salesman"]
+                /admin/overview = roles["admin, salesman"]
 
-                /agent/check = roles["admin, auditor"]
-                /agent/check/* = roles["admin, auditor"]
-                /agent/list/* = roles["admin, auditor"]
+                /agent/check = roles["admin, auditor, salesman"]
+                /agent/check/* = roles["admin, auditor, salesman"]
+                /agent/list/* = roles["admin, auditor, salesman"]
                 /agent/gift/* = roles[admin]
-                /agent/grant = roles["admin, auditor"]
+                /agent/grant = roles["admin, auditor, salesman"]
                 /agent/login = anon
                 /agent/me = anon
                 /agent/modifypassword = roles[agent]
                 /agent/modifyscale = roles[agent]
                 /agent/order/modify/* = roles[agent]
                 /agent/order/place = anon
-                /agent/overview = roles["admin, auditor"]
+                /agent/overview = roles["admin, auditor, salesman"]
                 /agent/prompt = anon
                 /agent/register = anon
-                /agent/setUpperAgent/** = roles[admin]
+                /agent/setUpperAgent/** = roles["admin, salesman"]
 
                 /agent/** = anon
 
                 /bill/inform = anon
 
-                /dashboard = roles["admin", "express", "finance"]
+                /dashboard = roles["admin", "express", "finance", "salesman"]
 
                 /express/queryExpress/* = anon
                 /express/*/query = anon
@@ -139,52 +139,52 @@
                 /customer/place = anon
                 /customer/consult = anon
                 /customer/order/search = anon
-                /customer/overview = roles["admin, agent"]
+                /customer/overview = roles["admin, agent, salesman"]
                 /customer/add = roles[agent]
                 /customer/modify = roles[agent]
 
-                /deliver/download/** = roles["admin", "express"]
-                /deliver/overview = roles["admin", "express"]
-                /deliver/** = roles["admin"]
+                /deliver/download/** = roles["admin", "express", "salesman"]
+                /deliver/overview = roles["admin", "express", "salesman"]
+                /deliver/** = roles["admin, salesman"]
 
-                /event/create = roles["admin, express"]
-                /event/overview = roles["admin, express"]
+                /event/create = roles["admin, express, salesman"]
+                /event/overview = roles["admin, express, salesman"]
                 /event/promotion/current = anon
                 /event/promotion/*/config/* = anon
-                /event/* = roles["admin, express"]
+                /event/* = roles["admin, express, salesman"]
                 /event/*/ = anon
 
-                /gather/** = roles["admin, finance"]
+                /gather/** = roles["admin, finance, salesman"]
 
                 /gift/apply = roles[agent]
                 /gift/check = roles["admin, auditor"]
                 /gift/apply/decline = roles["admin, auditor"]
 
-                /indent/download/** = roles["admin", "express"]
-                /indent/overview = roles["admin", "express"]
-                /indent/** = roles["admin"]
+                /indent/download/** = roles["admin", "express", "salesman"]
+                /indent/overview = roles["admin", "express", "salesman"]
+                /indent/** = roles["admin", "salesman"]
 
                 /me = roles[agent]
 
                 /notice/list = anon
 
-                /order/adminpay = roles[admin]
-                /order/check = roles["admin, express"]
-                /order/overview = roles["admin, express, agent"]
-                /order/customerOrder/overview = roles["admin, express, agent"]
+                /order/adminpay = roles["admin, salesman"]
+                /order/check = roles["admin, express, salesman"]
+                /order/overview = roles["admin, express, agent, salesman"]
+                /order/customerOrder/overview = roles["admin, express, agent, salesman"]
                 /order/customerpay = anon
                 /order/search = anon
                 /order/viewexpress/** = anon
-                /order/view/* = roles["admin, express, agent"]
+                /order/view/* = roles["admin, express, agent, salesman"]
 
                 /reimburse/inform = anon
-                /reimburse/apply = roles["admin, express"]
+                /reimburse/apply = roles["admin, express, salesman"]
 
-                /statistic/agent/** = roles["admin", "express", "finance"]
-                /statistic/goods/** = roles["admin", "express", "finance"]
-                /statistic/sales/** = roles["admin", "express", "finance"]
-                /statistic/sales = roles["admin", "finance"]
-                /statistic/** = roles["admin, express"]
+                /statistic/agent/** = roles["admin", "express", "finance", "salesman"]
+                /statistic/goods/** = roles["admin", "express", "finance", "salesman"]
+                /statistic/sales/** = roles["admin", "express", "finance", "salesman"]
+                /statistic/sales = roles["admin", "finance", "salesman"]
+                /statistic/** = roles["admin, express, salesman"]
 
                 /wechat = anon
 

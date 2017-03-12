@@ -1,12 +1,12 @@
 #set($role = $session.getAttribute("role"))
 <div id="sidebar" class="ui large left fixed vertical accordion menu">
-    #if($role == "admin" || $role == "express" || $role == "auditor" || $role == "finance")
+    #if($role == "admin" || $role == "express" || $role == "auditor" || $role == "finance" || $role == "salesman")
         <a href="${path.concat('/dashboard')}" class="item">
             <i class=" teal dashboard icon left"></i>
             首页
         </a>
     #end
-    #if($role == "admin" || $role == "auditor")
+    #if($role == "admin" || $role == "auditor" || $role == "salesman")
         <div class="item">
             <a class="title"><i class="teal spy icon left"></i><i class="dropdown icon"></i>代理管理</a>
 
@@ -17,7 +17,7 @@
             </div>
         </div>
     #end
-    #if($role == "admin" || $role == "agent")
+    #if($role == "admin" || $role == "agent" || $role == "salesman")
         <div class="item">
             <a class="title"><i class="teal user icon left"></i><i class="dropdown icon"></i>顾客管理</a>
 
@@ -26,12 +26,12 @@
             </div>
         </div>
     #end
-    #if($role == "admin" || $role == "express"||$role == "agent")
+    #if($role == "admin" || $role == "express"||$role == "agent" || $role == "salesman")
         <div class="item">
             <a class="title"><i class="teal file text icon left"></i><i class="dropdown icon"></i>订单管理</a>
 
             <div class="content menu">
-                #if($role == "admin" || $role == "express")
+                #if($role == "admin" || $role == "express" || $role == "salesman")
                     <a id="order_summary" class="item" href="${path.concat('/order/summary')}">订单概览</a>
                 #end
                 <a id="order_list" class="item" href="${path.concat('/order/overview')}">订单列表</a>
@@ -66,7 +66,7 @@
             </div>
         </div>
     #end
-    #if($role == "admin" || $role == "express")
+    #if($role == "admin" || $role == "express" || $role == "salesman")
         <div class="item">
             <a class="title"><i class="teal calendar icon left"></i><i class="dropdown icon"></i>活动管理</a>
 
@@ -75,7 +75,7 @@
             </div>
         </div>
     #end
-    #if($role == "admin"|| $role == "finance" ||$role == "express")
+    #if($role == "admin"|| $role == "finance" ||$role == "express" || $role == "salesman")
         <a id="statement_area" class="item" href="${path.concat('/statement/download')}">
             <i class="teal line chart icon left"></i>报表专区
         </a>

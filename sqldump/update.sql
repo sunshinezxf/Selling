@@ -900,12 +900,6 @@ ALTER TABLE `selling`.`event`
 ADD COLUMN `promotion_event_type` TINYINT NOT NULL DEFAULT 0
 AFTER `event_type`;
 
-##买赠活动性别统计表
-CREATE TABLE IF NOT EXISTS `selling`.`order_gender` (
-  `order_id`     VARCHAR(20) NOT NULL,
-  `order_gender` TINYINT(1)  NULL     DEFAULT 0,
-  `block_flag`   TINYINT(1)  NOT NULL DEFAULT 0,
-  `create_time`  DATETIME    NOT NULL,
-  PRIMARY KEY (`order_id`)
-)
-  ENGINE = InnoDB;
+##2017年3月12日
+INSERT INTO `selling`.`role` (`role_id`, `role_name`, `block_flag`, `create_time`, `role_description`) VALUES ('ROL00000006', 'salesman', '0', '2017-03-12 13:00:30', '营销管理');
+
