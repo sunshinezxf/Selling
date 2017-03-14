@@ -776,7 +776,7 @@ public class OrderController {
     }
 
     /**
-     * 确认签收
+     * 手动发货（手动设置单号）
      *
      * @param request
      * @param orderId
