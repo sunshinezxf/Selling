@@ -72,7 +72,7 @@
         <div id="download_directly_btn" class="ui positive button">下载</div>
     </div>
 </div>
-#parse("/backend/statement/component/statement_record_table.vm")
+##parse("/backend/statement/component/statement_record_table.vm")
 <script>
     var indent = {"name": "indent", "url": "${path.concat('/indent/overview')}"};
     var deliver = {"name": "deliver", "url": "${path.concat('/deliver/overview')}"};
@@ -87,10 +87,10 @@
     var allEvent = "${path.concat('/event/all')}";
     var allEventDownload = "${path.concat('/statement/downloadEventExcel/')}"
     var urls = new Array();
-        #if($role == "admin" || $role == "express" || $role == "salesman")
+        #if($role == "admin" || $role == "express" || $role == "salesman" || $role == "finance")
         urls.push(indent);
         #end
-        #if($role == "admin" || $role == "express" || $role == "salesman")
+        #if($role == "admin" || $role == "express" || $role == "salesman" || $role == "finance")
         urls.push(deliver);
         #end
         #if($role == "admin" || $role == "finance")
