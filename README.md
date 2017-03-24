@@ -1,5 +1,3 @@
-# 中文简介: 
-
 # 移动端开源直销系统(可接入微信公众号)
 
 ## 1.系统介绍
@@ -23,7 +21,6 @@
 
 * 系统本身的所有代码采用MIT LICENSE，其中的插件遵循原LICENSE，请参考LICENSE文件查阅
 
-# Brief Introduction
 
 # Mobile Selling System
 
