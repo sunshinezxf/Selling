@@ -25,7 +25,7 @@
 
 # Brief Introduction
 
-# Mobile Selling System(Can be applied to Wechat official account)
+# Mobile Selling System
 
 ## 1.System introduction
 
