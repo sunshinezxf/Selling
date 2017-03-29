@@ -39,7 +39,7 @@ public class WechatController {
 //    private static String KEFU3 = "Fk1CCke3zdxLUi-x3PGAxTOUCE1pVLf2dLbvr-1EfTM";
 //    private static String KEFU4 = "Fk1CCke3zdxLUi-x3PGAxahgQ0VEBAKlKYoPr_9ezzQ";
 //    private static String SHARE = "Fk1CCke3zdxLUi-x3PGAxR42Uic4siplrF5Z1TFQAeg";
-      private static String picture = "cUgh209kI0IQhy-NqjIXRkM84BNEXx8m9iiHnMpNZM8";
+      private static String picture = "Fk1CCke3zdxLUi-x3PGAxRRQFz87FVgo2Ox2x8jZZzo";
 
 
     @Autowired
