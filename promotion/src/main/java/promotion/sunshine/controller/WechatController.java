@@ -576,6 +576,26 @@ public class WechatController {
                         logger.debug(JSON.toJSONString(xml));
                         return xml;
                     }
+                    if (message.getContent().contains("购买")) {
+                        content.alias("xml", Articles.class);
+                        content.alias("item", Article.class);
+                        Articles result = new Articles();
+                        result.setFromUserName(message.getToUserName());
+                        result.setToUserName(message.getFromUserName());
+                        result.setCreateTime(new Date().getTime());
+                        List<Article> list = new ArrayList<>();
+                        Article article = new Article();
+                        article.setTitle("您好。如果您想购买云草产品，请扫码添加我们的健康大使微信。他将帮助您完成购买，还有优惠价格哦！");
+                        article.setPicUrl("https://mmbiz.qlogo.cn/mmbiz_jpg/LvSutA9l9GqK35jwIpWass9jEic2wSXo7ybDTAsAiaUswibForsuHswrRCOAwCx2WdiaS74gTfTgTj3lzekOsiaicM8w/0?wx_fmt=jpeg");
+//                        article.setUrl("http://mp.weixin.qq.com/s?__biz=MzI1OTMyNTI1NQ==&mid=2247484266&idx=3&sn=0d3c9e5b6c3f54960146625387d8759b&chksm=ea7bef42dd0c66546dc3897691eaf77056558f893bff0098c6430c8d8d88b840f8ce699738f2&scene=21#wechat_redirect");
+                        list.add(article);
+                        result.setArticles(list);
+                        result.setArticleCount(list.size());
+                        content.processAnnotations(Article.class);
+                        String xml = content.toXML(result);
+                        logger.debug(JSON.toJSONString(xml));
+                        return xml;
+                    }
 
                     break;
             }
