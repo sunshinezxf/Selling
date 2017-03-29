@@ -35,11 +35,12 @@ public class WechatController {
     /**
      * 客服的图片资源号(微信用)
      */
-    private static String KEFU1 = "Fk1CCke3zdxLUi-x3PGAxWYVEMWgEM8W8iDAjv-LV9A";
-    private static String KEFU2 = "Fk1CCke3zdxLUi-x3PGAxWkGUzd-t5-BktNRO2ZVOtE";
-    private static String KEFU3 = "Fk1CCke3zdxLUi-x3PGAxTOUCE1pVLf2dLbvr-1EfTM";
-    private static String KEFU4 = "Fk1CCke3zdxLUi-x3PGAxahgQ0VEBAKlKYoPr_9ezzQ";
-    private static String SHARE = "Fk1CCke3zdxLUi-x3PGAxR42Uic4siplrF5Z1TFQAeg";
+//    private static String KEFU1 = "Fk1CCke3zdxLUi-x3PGAxWYVEMWgEM8W8iDAjv-LV9A";
+//    private static String KEFU2 = "Fk1CCke3zdxLUi-x3PGAxWkGUzd-t5-BktNRO2ZVOtE";
+//    private static String KEFU3 = "Fk1CCke3zdxLUi-x3PGAxTOUCE1pVLf2dLbvr-1EfTM";
+//    private static String KEFU4 = "Fk1CCke3zdxLUi-x3PGAxahgQ0VEBAKlKYoPr_9ezzQ";
+//    private static String SHARE = "Fk1CCke3zdxLUi-x3PGAxR42Uic4siplrF5Z1TFQAeg";
+      private static String picture = "cUgh209kI0IQhy-NqjIXRpVOWfP_j7U2XWFqg5vgH6w";
 
     @Autowired
     private FollowerService followerService;
@@ -577,23 +578,16 @@ public class WechatController {
                         return xml;
                     }
                     if (message.getContent().contains("购买")) {
-                        content.alias("xml", Articles.class);
-                        content.alias("item", Article.class);
-                        Articles result = new Articles();
+                        String openId = message.getFromUserName();
+                        content.alias("xml", TextOutMessage.class);
+                        TextOutMessage result = new TextOutMessage();
                         result.setFromUserName(message.getToUserName());
                         result.setToUserName(message.getFromUserName());
                         result.setCreateTime(new Date().getTime());
-                        List<Article> list = new ArrayList<>();
-                        Article article = new Article();
-                        article.setTitle("您好。如果您想购买云草产品，请扫码添加我们的健康大使微信。他将帮助您完成购买，还有优惠价格哦！");
-                        article.setPicUrl("https://mmbiz.qlogo.cn/mmbiz_jpg/LvSutA9l9GqK35jwIpWass9jEic2wSXo7ybDTAsAiaUswibForsuHswrRCOAwCx2WdiaS74gTfTgTj3lzekOsiaicM8w/0?wx_fmt=jpeg");
-//                        article.setUrl("http://mp.weixin.qq.com/s?__biz=MzI1OTMyNTI1NQ==&mid=2247484266&idx=3&sn=0d3c9e5b6c3f54960146625387d8759b&chksm=ea7bef42dd0c66546dc3897691eaf77056558f893bff0098c6430c8d8d88b840f8ce699738f2&scene=21#wechat_redirect");
-                        list.add(article);
-                        result.setArticles(list);
-                        result.setArticleCount(list.size());
-                        content.processAnnotations(Article.class);
+                        result.setContent("您好。如果您想购买云草产品，请扫码添加我们的健康大使微信。他将帮助您完成购买，还有优惠价格哦！");
                         String xml = content.toXML(result);
-                        logger.debug(JSON.toJSONString(xml));
+                        String token = WechatUtil.queryAccessToken();
+                        WechatUtil.sendImageMessage(token, openId, picture);
                         return xml;
                     }
 
