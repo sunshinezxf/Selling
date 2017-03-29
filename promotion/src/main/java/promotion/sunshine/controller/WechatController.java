@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import promotion.sunshine.service.ArticleService;
 import promotion.sunshine.service.FollowerService;
 import promotion.sunshine.utils.PlatformConfig;
 import promotion.sunshine.utils.WechatUtil;
@@ -44,9 +43,9 @@ public class WechatController {
 
     @Autowired
     private FollowerService followerService;
-
-    @Autowired
-    private ArticleService articleService;
+//
+//    @Autowired
+//    private ArticleService articleService;
 
     /**
      * @param request
