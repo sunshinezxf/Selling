@@ -803,7 +803,7 @@ public class AgentController {
             }
             // 根据用户提交的表单构造代理信息
             Agent agent = new Agent(form.getName(), form.getGender(), form.getPhone(), form.getAddress(),
-                    form.getCard(), form.getPassword(), form.getWechat(),
+                    form.getCard(), form.getPassword(), form.getWechat(), form.getWechat_id(),
                     StringUtils.isEmpty(form.getMemberNum()) ? 0 : Integer.parseInt(form.getMemberNum()));
             if (!StringUtils.isEmpty(form.getUpper())) {
                 condition.clear();
