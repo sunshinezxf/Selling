@@ -233,10 +233,10 @@
         var img_width = $("#personal_info img").width();
         $("#personal_info img").css("height", img_width * 2 / 3);
 
-        var wechat = "${agent.wechat}";
+        var wechat = "${agent.wechat_id}";
         if (wechat && wechat.slice(-1) != "}") {
-            var new_wechat = wechat.replace(wechat.slice(7, -8), "***");
-            $("#wechat").text(new_wechat);
+            //var new_wechat = wechat.replace(wechat.slice(7, -8), "***");
+            $("#wechat").text(wechat);
         } else {
             $("#wechat").text("无");
         }
