@@ -30,8 +30,11 @@ public class Agent extends Entity {
     /* 账号密码 */
     private String password;
 
-    /* 微信号 */
+    /* 微信号(open_id) */
     private String wechat;
+    
+    /* 微信号(用户设置的WeChat ID) */
+    private String wechat_id; 
 
     /* 授权标识位 */
     private boolean granted;
@@ -77,20 +80,23 @@ public class Agent extends Entity {
         this.password = password;
     }
 
-    public Agent(String name, String gender, String phone, String address, String card, String password, String wechat) {
+    public Agent(String name, String gender, String phone, String address, String card, String password, String wechat, String wechat_id) {
         this(name, gender, phone, address, card, password);
         if (!StringUtils.isEmpty(wechat)) {
             this.wechat = wechat;
         }
+        if (!StringUtils.isEmpty(wechat_id)) {
+            this.wechat_id = wechat_id;
+        }
     }
 
-    public Agent(String name, String gender, String phone, String address, String card, String password, String wechat, int claimScale) {
-        this(name, gender, phone, address, card, password, wechat);
+    public Agent(String name, String gender, String phone, String address, String card, String password, String wechat, String wechat_id, int claimScale) {
+        this(name, gender, phone, address, card, password, wechat, wechat_id);
         this.claimScale = claimScale;
     }
 
-    public Agent(String agentId, String name, String gender, String phone, String address, String card, String password, String wechat, boolean granted, double coffer, double agentRefund, int claimScale, AgentType agentType, common.sunshine.model.selling.agent.lite.Agent upperAgent) {
-        this(name, gender, phone, address, card, password, wechat, claimScale);
+    public Agent(String agentId, String name, String gender, String phone, String address, String card, String password, String wechat, String wechat_id, boolean granted, double coffer, double agentRefund, int claimScale, AgentType agentType, common.sunshine.model.selling.agent.lite.Agent upperAgent) {
+        this(name, gender, phone, address, card, password, wechat, wechat_id, claimScale);
         this.agentId = agentId;
         this.granted = granted;
         this.coffer = coffer;
@@ -162,8 +168,16 @@ public class Agent extends Entity {
     public void setWechat(String wechat) {
         this.wechat = wechat;
     }
+    
+    public String getWechat_id() {
+		return wechat_id;
+	}
 
-    public boolean isGranted() {
+	public void setWechat_id(String wechat_id) {
+		this.wechat_id = wechat_id;
+	}
+
+	public boolean isGranted() {
         return granted;
     }
 
