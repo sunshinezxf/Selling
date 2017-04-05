@@ -36,22 +36,22 @@
         customer_name, block_flag, create_time
         FROM order_item_sum
         WHERE 1 = 1
-        <if test="agentId != null and agentId !=''">
+        <if test="agentId != null ">
             AND agent_id = #{agentId}
         </if>
         <if test="customerId != null">
             AND customer_id = #{customerId}
         </if>
-        <if test="orderId != null and orderId != ''">
+        <if test="orderId != null ">
             AND order_id = #{orderId}
         </if>
-        <if test="goodsId != null and goodsId != ''">
+        <if test="goodsId != null ">
             AND goods_id = #{goodsId}
         </if>
-        <if test="orderType != null and orderType !=''">
+        <if test="orderType != null ">
             AND order_type = #{orderType}
         </if>
-        <if test="orderTypeList != null and orderTypeList != ''">
+        <if test="orderTypeList != null ">
             AND order_type IN
             <foreach collection="orderTypeList" item="mode" index="index" open="(" close=")" separator=",">
                 #{mode}
@@ -60,7 +60,7 @@
         <if test="status != null">
             AND order_item_status = #{status}
         </if>
-        <if test="statusList != null and statusList != ''">
+        <if test="statusList != null ">
             AND order_item_status IN
             <foreach collection="statusList" item="mode" index="index" open="(" close=")" separator=",">
                 #{mode}
@@ -74,14 +74,17 @@
             create_time LIKE BINARY #{search}
             )
         </if>
-        <if test="blockFlag != null and blockFlag !=''">
+        <if test="blockFlag != null ">
             AND block_flag = #{blockFlag}
         </if>
         <if test="start != null and end != null and start != '' and end != ''">
             AND (date_format(create_time, '%Y-%m-%d') &gt;= #{start} AND date_format(create_time, '%Y-%m-%d') &lt;=
             #{end})
         </if>
-        <if test="rule != null and rule != ''">
+        <if test="date != null ">
+            AND create_time LIKE #{date}
+        </if>
+        <if test="rule != null ">
             ORDER BY ${rule}
         </if>
         <if test="rule == null">
