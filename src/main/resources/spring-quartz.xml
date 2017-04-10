@@ -32,6 +32,9 @@
     <!-- 查询有哪些顾客转变成了代理商 -->
     <bean id="customerSchedule" class="selling.sunshine.schedule.CustomerSchedule"></bean>
 
+    <!-- 用来处理将过期未自动转化为已签收状态的已发货订单的状态改为已签收 -->
+    <bean id="orderSchedule" class="selling.sunshine.schedule.OrderSchedule"></bean>
+
     <bean id="poolDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <property name="targetObject" ref="poolSchedule"></property>
         <property name="targetMethod" value="schedule"></property>
@@ -105,17 +108,23 @@
         <property name="concurrent" value="false"></property>
     </bean>
 
+    <bean id="orderDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="orderSchedule"></property>
+        <property name="targetMethod" value="schedule"></property>
+        <property name="concurrent" value="false"></property>
+    </bean>
+
     <bean id="poolTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="poolDetail"></property>
         <property name="cronExpression">
-            <value>0 10 0 1 * ?</value>
+            <value>0 15 10 7 * ?</value>
         </property>
     </bean>
 
     <bean id="poolRefundTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="poolRefundDetail"></property>
         <property name="cronExpression">
-            <value>0 30 0 1 * ?</value>
+            <value>0 28 10 7 * ?</value>
         </property>
     </bean>
 
@@ -189,6 +198,13 @@
         </property>
     </bean>
 
+    <bean id="orderTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="orderDetail"></property>
+        <property name="cronExpression">
+            <value>0 27 21 10 * ?</value>
+        </property>
+    </bean>
+
 
     <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="triggers">
@@ -203,8 +219,9 @@
                 <ref bean="checkOrderPoolTrigger"></ref>
                 <ref bean="customerAddressUpdateTrigger"></ref>
                 <ref bean="agentKPIUpdateTrigger"></ref>
-                <ref bean="promotionTrigger"></ref>
+                <!--<ref bean="promotionTrigger"></ref>-->
                 <ref bean="customerTrigger"></ref>
+                <ref bean="orderTrigger"></ref>
             </list>
         </property>
     </bean>
