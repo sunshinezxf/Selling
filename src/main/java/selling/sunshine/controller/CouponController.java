@@ -88,7 +88,7 @@ public class CouponController {
      * @return
      */
     @RequestMapping(method = RequestMethod.POST, value = "/exchange")
-    public synchronized ModelAndView coupon(@Valid PurchaseForm form, BindingResult result, String couponSerial) {
+    public ModelAndView coupon(@Valid PurchaseForm form, BindingResult result, String couponSerial) {
         ModelAndView view = new ModelAndView();
         if (result.hasErrors()) {
             Prompt prompt = new Prompt(PromptCode.WARNING, "出问题了", "您的兑换申请未能成功提交", "");

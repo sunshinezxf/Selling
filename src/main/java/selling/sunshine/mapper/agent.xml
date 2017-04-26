@@ -16,7 +16,6 @@
         <result property="createAt" column="create_time"></result>
         <result property="agentRefund" column="agent_refund"></result>
         <result property="claimScale" column="scale"></result>
-        <!--     <result property="customerService" column="customer_service"></result> -->
         <result property="agentType" column="agent_type"
                 typeHandler="common.sunshine.mybatis.handler.agent.AgentTypeHandler"></result>
         <association property="upperAgent" column="agentId = upper_agent_id" select="agentLiteQuery"></association>

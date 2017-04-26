@@ -54,13 +54,14 @@ public class IndentController {
 
     /**
      * 查询并生成订货单信息
+     *
      * @return
      */
     @RequestMapping(method = RequestMethod.GET, value = "/overview")
     public ResultData indent() {
         ResultData result = new ResultData();
         Map<String, Object> condition = new HashMap<>();
-        List<Integer> status = new ArrayList<>(Arrays.asList(1, 2, 3, 4));
+        List<Integer> status = new ArrayList<>(Arrays.asList(OrderItemStatus.PAYED.getCode(), OrderItemStatus.SHIPPED.getCode(), OrderItemStatus.RECEIVED.getCode(), 4));
         condition.put("statusList", status);
         condition.put("blockFlag", false);
         List<SortRule> rule = new ArrayList<>();
@@ -90,6 +91,7 @@ public class IndentController {
 
     /**
      * 在服务器上生成相关的订货单数据压缩包
+     *
      * @param form
      * @param result
      * @return
@@ -170,6 +172,7 @@ public class IndentController {
 
     /**
      * 从服务器上下载之前生成的订货单压缩包
+     *
      * @param fileName
      * @param tempFileName
      * @param request
@@ -223,6 +226,7 @@ public class IndentController {
 
     /**
      * 报表专区中订货单界面上显示的订货单列表（没有部署到服务器上）
+     *
      * @param param
      * @return
      */

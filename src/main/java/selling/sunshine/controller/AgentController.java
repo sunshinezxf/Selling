@@ -7,6 +7,7 @@ import common.sunshine.model.selling.admin.Admin;
 import common.sunshine.model.selling.agent.Agent;
 import common.sunshine.model.selling.agent.AgentKPI;
 import common.sunshine.model.selling.agent.Credit;
+import common.sunshine.model.selling.agent.support.AgentType;
 import common.sunshine.model.selling.customer.Customer;
 import common.sunshine.model.selling.customer.CustomerPhone;
 import common.sunshine.model.selling.goods.Goods4Agent;
@@ -3163,7 +3164,7 @@ public class AgentController {
         // 获取当前未审核的代理商的人数
         condition.put("granted", false);
         condition.put("blockFlag", false);
-        condition.put("agentType", 0);//只查询普通代理商
+        condition.put("agentType", AgentType.ORDINARY.getCode());//只查询普通代理商
         ResultData response = agentService.fetchAgent(condition);
         if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
             List<Agent> list = (List<Agent>) response.getData();
