@@ -125,13 +125,13 @@
     <update id="update" parameterType="common.sunshine.model.selling.order.OrderItem" useGeneratedKeys="false">
         UPDATE order_item
         <set>
-            <if test="status != null and status != ''">
+            <if test="status != null ">
                 order_item_status = #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler},
             </if>
-            <if test="order != null and order.orderId != null and order.orderId != ''">
+            <if test="order != null and order.orderId != null ">
                 order_id = #{order.orderId},
             </if>
-            <if test="customer != null and customer.customerId != null and customer.customerId != ''">
+            <if test="customer != null and customer.customerId != null ">
                 customer_id = #{customer.customerId},
             </if>
             <if test="goodsQuantity != null">
@@ -143,19 +143,19 @@
             <if test="description != null">
                 order_item_description = #{description},
             </if>
-            <if test="goods != null and goods.goodsId != null and goods.goodsId != ''">
+            <if test="goods != null and goods.goodsId != null ">
                 goods_id = #{goods.goodsId},
             </if>
-            <if test="receiveAddress != null and receiveAddress != ''">
+            <if test="receiveAddress != null ">
                 receive_address = #{receiveAddress},
             </if>
-            <if test="blockFlag != null and blockFlag != ''">
+            <if test="blockFlag != null ">
                 block_flag = #{blockFlag},
             </if>
-            <if test="createAt != null and createAt != ''">
+            <if test="createAt != null ">
                 create_time = #{createAt},
             </if>
-            <if test="order != null and order.orderId != null and order.orderId != ''">
+            <if test="orderItemId != null">
                 order_item_id = #{orderItemId}
             </if>
         </set>

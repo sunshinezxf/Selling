@@ -10,6 +10,7 @@
         <result property="address" column="agent_address"></result>
         <result property="card" column="agent_card"></result>
         <result property="wechat" column="agent_wechat"></result>
+        <result property="wechat_id" column="wechat_id"></result>
         <result property="password" column="agent_password"></result>
         <result property="granted" column="agent_granted"></result>
         <result property="blockFlag" column="block_flag"></result>
@@ -41,6 +42,7 @@
             agent_card = #{card},
             agent_password = #{password},
             agent_wechat = #{wechat},
+            wechat_id = #{wechat_id},
             agent_granted = #{granted},
             scale = #{claimScale},
             agent_refund = #{agentRefund},
@@ -61,7 +63,7 @@
     <select id="query" parameterType="java.util.Map" resultMap="agentVo">
         SELECT agent_id, upper_agent_id,agent_coffer, agent_name, agent_gender, agent_phone, agent_address, agent_card,
         agent_password,
-        agent_wechat, agent_refund, agent_granted, block_flag, create_time, scale,agent_type
+        agent_wechat, wechat_id, agent_refund, agent_granted, block_flag, create_time, scale,agent_type
         FROM agent
         WHERE 1 = 1
         <if test="agentId != null">
@@ -99,6 +101,9 @@
         </if>
         <if test="wechat != null">
             AND agent_wechat = #{wechat}
+        </if>
+        <if test="wechat_id != null">
+        	AND wechat_id = #{wechat_id}
         </if>
         <if test="granted != null">
             AND agent_granted = #{granted}
@@ -154,6 +159,9 @@
             </if>
             <if test="wechat != null and wechat != ''">
                 agent_wechat = #{wechat},
+            </if>
+            <if test="wechat_id != null and wechat_id != ''">
+            	wechat_id = #{wechat_id},
             </if>
             <if test="granted != null">
                 agent_granted = #{granted},

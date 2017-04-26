@@ -9,10 +9,10 @@
     <div class="row">
         <div class="column">
             <div class="ui teal pointing secondary menu">
-                #if($role == "admin" || $role == "express" || $role == "finance")
+                #if($role == "admin" || $role == "express" || $role == "finance" || $role == "salesman")
                     <a id="indent" class="active item">订货单</a>
                 #end
-                #if($role == "admin" || $role == "express" || $role == "finance")
+                #if($role == "admin" || $role == "express" || $role == "finance" || $role == "salesman")
                     <a id="deliver" class="item">发货单</a>
                 #end
                 #if($role == "admin" || $role == "finance")
@@ -21,7 +21,7 @@
                 #if($role == "admin" || $role == "finance")
                     <a id="withdraw" class="item">提现单</a>
                 #end
-                #if($role == "admin" || $role == "auditor")
+                #if($role == "admin" || $role == "auditor" || $role == "salesman")
                     <a id="agent" class="item">代理商信息表</a>
                 #end
                 #if($role == "admin")
@@ -41,7 +41,7 @@
 </div>
 <div class="ui page inverted dimmer transition hidden">
     <div class="ui large loader"></div>
-</div>
+|</div>
 <div class="ui modal" id="consult_modal">
     <i class="close icon"></i>
 
@@ -72,7 +72,7 @@
         <div id="download_directly_btn" class="ui positive button">下载</div>
     </div>
 </div>
-#parse("/backend/statement/component/statement_record_table.vm")
+##parse("/backend/statement/component/statement_record_table.vm")
 <script>
     var indent = {"name": "indent", "url": "${path.concat('/indent/overview')}"};
     var deliver = {"name": "deliver", "url": "${path.concat('/deliver/overview')}"};
@@ -87,10 +87,10 @@
     var allEvent = "${path.concat('/event/all')}";
     var allEventDownload = "${path.concat('/statement/downloadEventExcel/')}"
     var urls = new Array();
-        #if($role == "admin" || $role == "express")
+        #if($role == "admin" || $role == "express" || $role == "salesman" || $role == "finance")
         urls.push(indent);
         #end
-        #if($role == "admin" || $role == "express")
+        #if($role == "admin" || $role == "express" || $role == "salesman" || $role == "finance")
         urls.push(deliver);
         #end
         #if($role == "admin" || $role == "finance")

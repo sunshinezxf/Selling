@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import promotion.sunshine.service.ArticleService;
 import promotion.sunshine.service.FollowerService;
 import promotion.sunshine.utils.PlatformConfig;
 import promotion.sunshine.utils.WechatUtil;
@@ -35,17 +34,19 @@ public class WechatController {
     /**
      * 客服的图片资源号(微信用)
      */
-    private static String KEFU1 = "Fk1CCke3zdxLUi-x3PGAxWYVEMWgEM8W8iDAjv-LV9A";
-    private static String KEFU2 = "Fk1CCke3zdxLUi-x3PGAxWkGUzd-t5-BktNRO2ZVOtE";
-    private static String KEFU3 = "Fk1CCke3zdxLUi-x3PGAxTOUCE1pVLf2dLbvr-1EfTM";
-    private static String KEFU4 = "Fk1CCke3zdxLUi-x3PGAxahgQ0VEBAKlKYoPr_9ezzQ";
-    private static String SHARE = "Fk1CCke3zdxLUi-x3PGAxR42Uic4siplrF5Z1TFQAeg";
+//    private static String KEFU1 = "Fk1CCke3zdxLUi-x3PGAxWYVEMWgEM8W8iDAjv-LV9A";
+//    private static String KEFU2 = "Fk1CCke3zdxLUi-x3PGAxWkGUzd-t5-BktNRO2ZVOtE";
+//    private static String KEFU3 = "Fk1CCke3zdxLUi-x3PGAxTOUCE1pVLf2dLbvr-1EfTM";
+//    private static String KEFU4 = "Fk1CCke3zdxLUi-x3PGAxahgQ0VEBAKlKYoPr_9ezzQ";
+//    private static String SHARE = "Fk1CCke3zdxLUi-x3PGAxR42Uic4siplrF5Z1TFQAeg";
+      private static String picture = "Fk1CCke3zdxLUi-x3PGAxRRQFz87FVgo2Ox2x8jZZzo";
+
 
     @Autowired
     private FollowerService followerService;
-
-    @Autowired
-    private ArticleService articleService;
+//
+//    @Autowired
+//    private ArticleService articleService;
 
     /**
      * @param request
@@ -574,6 +575,19 @@ public class WechatController {
                         content.processAnnotations(Article.class);
                         String xml = content.toXML(result);
                         logger.debug(JSON.toJSONString(xml));
+                        return xml;
+                    }
+                    if (message.getContent().contains("购买")) {
+                        String openId = message.getFromUserName();
+                        content.alias("xml", TextOutMessage.class);
+                        TextOutMessage result = new TextOutMessage();
+                        result.setFromUserName(message.getToUserName());
+                        result.setToUserName(message.getFromUserName());
+                        result.setCreateTime(new Date().getTime());
+                        result.setContent("您好。如果您想购买云草产品，请扫码添加我们的健康大使微信。他将帮助您完成购买，还有优惠价格哦！");
+                        String xml = content.toXML(result);
+                        String token = WechatUtil.queryAccessToken();
+                        WechatUtil.sendImageMessage(token, openId, picture);
                         return xml;
                     }
 

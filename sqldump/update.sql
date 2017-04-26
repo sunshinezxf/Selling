@@ -903,3 +903,7 @@ AFTER `event_type`;
 ##2017年3月12日
 INSERT INTO `selling`.`role` (`role_id`, `role_name`, `block_flag`, `create_time`, `role_description`) VALUES ('ROL00000006', 'salesman', '0', '2017-03-12 13:00:30', '营销管理');
 
+##2017年4月1日
+ALTER TABLE `selling`.`agent`
+ADD COLUMN `wechat_id` VARCHAR(255) NULL
+AFTER `agent_wechat`;

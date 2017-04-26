@@ -143,9 +143,9 @@
                 /customer/add = roles[agent]
                 /customer/modify = roles[agent]
 
-                /deliver/download/** = roles["admin", "express", "salesman"]
-                /deliver/overview = roles["admin", "express", "salesman"]
-                /deliver/** = roles["admin, salesman"]
+                /deliver/download/** = roles["admin", "express", "salesman","finance"]
+                /deliver/overview = roles["admin", "express", "salesman","finance"]
+                /deliver/** = roles["admin, salesman","finance"]
 
                 /event/create = roles["admin, express, salesman"]
                 /event/overview = roles["admin, express, salesman"]
@@ -160,9 +160,9 @@
                 /gift/check = roles["admin, auditor"]
                 /gift/apply/decline = roles["admin, auditor"]
 
-                /indent/download/** = roles["admin", "express", "salesman"]
-                /indent/overview = roles["admin", "express", "salesman"]
-                /indent/** = roles["admin", "salesman"]
+                /indent/download/** = roles["admin", "express", "salesman","finance"]
+                /indent/overview = roles["admin", "express", "salesman","finance"]
+                /indent/** = roles["admin", "salesman","finance"]
 
                 /me = roles[agent]
 

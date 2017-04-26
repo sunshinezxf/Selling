@@ -174,7 +174,7 @@ public class WechatController {
     }
 
     /**
-     * 生成用户关注自动回复的图文消息的似有方法
+     * 生成用户关注自动回复的图文消息的私有方法
      * @return
      */
     private List<Article> subscribe() {
@@ -209,6 +209,8 @@ public class WechatController {
         manufact.setPicUrl("https://mmbiz.qlogo.cn/mmbiz/zhe7KjM5iaS8Z1VmBFxR793iaJhia9fKCkzOXSogNWy72UyffanIVxDrWYNibWibVGODmpacwhCWRHBZTALzMfDCHpg/0?wx_fmt=png");
         manufact.setUrl("http://mp.weixin.qq.com/s?__biz=MzI1OTMyNTI1NQ==&mid=2247483673&idx=1&sn=2f5f641373d96503219dae12eda7f4d4");
         list.add(manufact);
+
+
         return list;
     }
 }

@@ -28,6 +28,8 @@ public class AgentForm {
     private String password;
 
     private String wechat;
+    
+    private String wechat_id;
 
     private String memberNum = "0";
 
@@ -102,8 +104,16 @@ public class AgentForm {
     public void setWechat(String wechat) {
         this.wechat = wechat;
     }
+    
+    public String getWechat_id() {
+		return wechat_id;
+	}
 
-    public String getMemberNum() {
+	public void setWechat_id(String wechat_id) {
+		this.wechat_id = wechat_id;
+	}
+
+	public String getMemberNum() {
         return memberNum;
     }
 
