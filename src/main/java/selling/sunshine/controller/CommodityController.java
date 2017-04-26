@@ -29,12 +29,18 @@ import selling.sunshine.form.GoodsForm;
 import selling.sunshine.model.BackOperationLog;
 import selling.sunshine.model.sum.Vendition;
 import selling.sunshine.service.*;
+import selling.sunshine.utils.PlatformConfig;
 import selling.sunshine.utils.WechatConfig;
 import selling.sunshine.utils.WechatUtil;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -318,8 +324,18 @@ public class CommodityController {
      * @return
      */
     @RequestMapping(method = RequestMethod.GET, value = "/viewlist")
-    public ModelAndView viewList(HttpServletRequest request, String agentId, String code, String state) {
+    public ModelAndView viewList(HttpServletRequest request, HttpServletResponse response, String agentId, String code, String state) {
         ModelAndView view = new ModelAndView();
+        String linkUrl = "https://" + PlatformConfig.getValue("server_url") + "/commodity/viewlist";
+        String link = "";
+		try {
+			link = "https://open.weixin.qq.com/connect/oauth2/authorize?appid="
+			      + PlatformConfig.getValue("wechat_appid") + "&redirect_uri=" + URLEncoder.encode(linkUrl, "utf-8")
+			      + "&response_type=code&scope=snsapi_base&state=view#wechat_redirect";
+		} catch (UnsupportedEncodingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
         //先判断微信，若是则需要openID
         if (request.getHeader("user-agent").toLowerCase().contains("micromessenger")) {
         	//一系列的openID获取代码，最后放入session中
@@ -327,7 +343,12 @@ public class CommodityController {
             if (StringUtils.isEmpty(code) || StringUtils.isEmpty(state)) {
                 HttpSession session = request.getSession();
                 if (session.getAttribute("openId") == null || session.getAttribute("openId").equals("")) {
-                    WechatConfig.oauthWechat(view, "/customer/component/goods_error_msg");
+                    try {
+						response.sendRedirect(link);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+                	WechatConfig.oauthWechat(view, "/customer/component/goods_error_msg");
                     view.setViewName("/customer/component/goods_error_msg");
                     return view;
                 }
@@ -342,6 +363,11 @@ public class CommodityController {
                 }
             }
             if (openId == null || openId.equals("")) {
+            	try {
+					response.sendRedirect(link);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
                 WechatConfig.oauthWechat(view, "/customer/component/goods_error_msg");
                 view.setViewName("/customer/component/goods_error_msg");
                 return view;
@@ -390,16 +416,32 @@ public class CommodityController {
      * @return
      */
     @RequestMapping(method = RequestMethod.GET, value = "/{goodsId}")
-    public ModelAndView view(HttpServletRequest request, @PathVariable("goodsId") String goodsId, String agentId, String code, String state) {
+    public ModelAndView view(HttpServletRequest request, HttpServletResponse response, @PathVariable("goodsId") String goodsId, String agentId, String code, String state) {
         ModelAndView view = new ModelAndView();
         String openId = null;
+        String linkUrl = "https://" + PlatformConfig.getValue("server_url") + "/commodity/" + goodsId
+        + "?agentId=" + agentId;
+        String link = "";
+		try {
+			link = "https://open.weixin.qq.com/connect/oauth2/authorize?appid="
+			      + PlatformConfig.getValue("wechat_appid") + "&redirect_uri=" + URLEncoder.encode(linkUrl, "utf-8")
+			      + "&response_type=code&scope=snsapi_base&state=view#wechat_redirect";
+		} catch (UnsupportedEncodingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
         //先判断微信
         if (request.getHeader("user-agent").toLowerCase().contains("micromessenger")) {
         	//一系列的openID获取代码，最后放入session中
             if (StringUtils.isEmpty(code) || StringUtils.isEmpty(state)) {
                 HttpSession session = request.getSession();
                 if (session.getAttribute("openId") == null || session.getAttribute("openId").equals("")) {
-                    WechatConfig.oauthWechat(view, "/customer/component/goods_error_msg");
+                	try {
+ 						response.sendRedirect(link);
+ 					} catch (IOException e) {
+ 						e.printStackTrace();
+ 					}
+                	WechatConfig.oauthWechat(view, "/customer/component/goods_error_msg");
                     view.setViewName("/customer/component/goods_error_msg");
                     return view;
                 }
@@ -415,6 +457,11 @@ public class CommodityController {
             }
             view.addObject("wechat", openId);
             if (openId == null || openId.equals("")) {
+            	try {
+						response.sendRedirect(link);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
                 WechatConfig.oauthWechat(view, "/customer/component/goods_error_msg");
                 view.setViewName("/customer/component/goods_error_msg");
                 return view;
@@ -430,9 +477,9 @@ public class CommodityController {
             List<SortRule> rules = new ArrayList<>();
             rules.add(new SortRule("create_time", "desc"));
             condition.put("sort", rules);
-            ResultData response = orderService.fetchCustomerOrder(condition);
-            if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
-                List<CustomerOrder> list = (List<CustomerOrder>) response.getData();
+            ResultData customerOrderResponse = orderService.fetchCustomerOrder(condition);
+            if (customerOrderResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+                List<CustomerOrder> list = (List<CustomerOrder>) customerOrderResponse.getData();
                 view.addObject("history", list.get(0));
             }
         }
