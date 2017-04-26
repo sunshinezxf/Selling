@@ -66,7 +66,6 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.sql.Timestamp;
 import java.text.ParseException;
@@ -491,6 +490,7 @@ public class AgentController {
 
     /**
      * 邀请代理页面
+     *
      * @return
      */
     @RequestMapping(method = RequestMethod.GET, value = "/invite")
@@ -532,6 +532,7 @@ public class AgentController {
 
     /**
      * 查看已邀请的代理商页面
+     *
      * @return
      */
     @RequestMapping(method = RequestMethod.GET, value = "/viewinvite")
@@ -570,9 +571,10 @@ public class AgentController {
         view.addObject("agents", agents);
         return view;
     }
-    
+
     /**
      * 个人商城邀请页面，即代理商给客户的二维码页面
+     *
      * @return
      */
     @RequestMapping(method = RequestMethod.GET, value = "/personalsale")
@@ -630,13 +632,14 @@ public class AgentController {
         view.addObject("urls", urls);
         String linkUrl = "https://" + PlatformConfig.getValue("server_url") + "/commodity/viewlist";
         String link = "";
-        try {
-            link = "https://open.weixin.qq.com/connect/oauth2/authorize?appid="
-                    + PlatformConfig.getValue("wechat_appid") + "&redirect_uri=" + URLEncoder.encode(linkUrl, "utf-8")
-                    + "&response_type=code&scope=snsapi_base&state=view#wechat_redirect";
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            link = "https://open.weixin.qq.com/connect/oauth2/authorize?appid="
+//                    + PlatformConfig.getValue("wechat_appid") + "&redirect_uri=" + URLEncoder.encode(linkUrl, "utf-8")
+//                    + "&response_type=code&scope=snsapi_base&state=view#wechat_redirect";
+        link = linkUrl;
+//        } catch (UnsupportedEncodingException e) {
+//            e.printStackTrace();
+//        }
         WechatConfig.oauthWechat(view, "/agent/personalsale", link);
         view.setViewName("/agent/link/personal_sale");
         return view;
@@ -644,6 +647,7 @@ public class AgentController {
 
     /**
      * 代理商给客户下单的二维码页面，这个页面是某个具体商品的页面
+     *
      * @param goodsId
      * @return
      */
@@ -672,9 +676,10 @@ public class AgentController {
         String url = "https://" + PlatformConfig.getValue("server_url") + "/commodity/" + goods.getGoodsId()
                 + "?agentId=" + user.getAgent().getAgentId();
         try {
-            String shareURL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid="
-                    + PlatformConfig.getValue("wechat_appid") + "&redirect_uri=" + URLEncoder.encode(url, "utf-8")
-                    + "&response_type=code&scope=snsapi_base&state=view#wechat_redirect";
+//            String shareURL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid="
+//                    + PlatformConfig.getValue("wechat_appid") + "&redirect_uri=" + URLEncoder.encode(url, "utf-8")
+//                    + "&response_type=code&scope=snsapi_base&state=view#wechat_redirect";
+            String shareURL = url;
             if (StringUtils.isEmpty(link)) {
                 link = shareURL;
             }
@@ -724,6 +729,7 @@ public class AgentController {
 
     /**
      * 赠送页面
+     *
      * @return
      */
     @RequestMapping(method = RequestMethod.GET, value = "/gift")
@@ -762,6 +768,7 @@ public class AgentController {
 
     /**
      * 验证有没有相同号码的用户注册过
+     *
      * @param phone
      * @return
      */
@@ -916,6 +923,7 @@ public class AgentController {
 
     /**
      * 代理商下单首页
+     *
      * @param code
      * @return
      */
@@ -996,6 +1004,7 @@ public class AgentController {
 
     /**
      * 代理商修改订单页面
+     *
      * @param orderId
      * @return
      */
@@ -1054,6 +1063,7 @@ public class AgentController {
 
     /**
      * 赠送页面
+     *
      * @return
      */
     @RequestMapping(method = RequestMethod.GET, value = "/order/gift")
@@ -1136,6 +1146,7 @@ public class AgentController {
 
     /**
      * 代理商下单的表单，非常重要
+     *
      * @param form
      * @param result
      * @param attr
@@ -1271,6 +1282,7 @@ public class AgentController {
 
     /**
      * 代理商查看订单页面首页
+     *
      * @param type
      * @return
      */
@@ -1285,6 +1297,7 @@ public class AgentController {
 
     /**
      * 代理商订单信息概览页面
+     *
      * @return
      */
     @RequestMapping(method = RequestMethod.GET, value = "/order/overview")
@@ -1448,6 +1461,7 @@ public class AgentController {
 
     /**
      * 代理商查看未付款订单列表
+     *
      * @param type
      * @return
      */
@@ -1493,6 +1507,7 @@ public class AgentController {
 
     /**
      * 代理商ajax查询已付款订单数据，有分页
+     *
      * @param type
      * @param offset
      * @param limit
@@ -1699,6 +1714,7 @@ public class AgentController {
 
     /**
      * 代理商管理客户首页
+     *
      * @return
      */
     @RequestMapping(method = RequestMethod.GET, value = "/customer/manage")
@@ -1727,6 +1743,7 @@ public class AgentController {
 
     /**
      * 代理商查看客户列表数据ajax
+     *
      * @return
      */
     @ResponseBody
@@ -1755,6 +1772,7 @@ public class AgentController {
 
     /**
      * 代理商查看返现的页面
+     *
      * @return
      */
     @RequestMapping(method = RequestMethod.GET, value = "/statement")
@@ -1793,7 +1811,7 @@ public class AgentController {
             if (cashBacks.containsKey(cashBack.getMonth())) {
                 cashBacks.get(cashBack.getMonth()).add(cashBack);
             } else {
-            	//按月排序返现，使用treemap即可
+                //按月排序返现，使用treemap即可
                 List<CashBack> cashBackMonthly = new ArrayList<CashBack>();
                 cashBackMonthly.add(cashBack);
                 cashBacks.put(cashBack.getMonth(), cashBackMonthly);
@@ -1806,6 +1824,7 @@ public class AgentController {
 
     /**
      * 返现详细信息页面，传入返现层级和日期yyyy-MM即可
+     *
      * @param level
      * @param date
      * @return
@@ -1855,6 +1874,7 @@ public class AgentController {
 
     /**
      * 返现配置页面
+     *
      * @return
      */
     @RequestMapping(method = RequestMethod.GET, value = "/refundConfig")
@@ -1875,6 +1895,7 @@ public class AgentController {
 
     /**
      * 代理商联系我们页面
+     *
      * @return
      */
     @RequestMapping(method = RequestMethod.GET, value = "/contact")
@@ -1887,6 +1908,7 @@ public class AgentController {
 
     /**
      * 代理商修改自己信息页面
+     *
      * @return
      */
     @RequestMapping(method = RequestMethod.GET, value = "/modifyinfo")
@@ -1899,6 +1921,7 @@ public class AgentController {
 
     /**
      * 代理商修改密码页面
+     *
      * @return
      */
     @RequestMapping(method = RequestMethod.GET, value = "/modifypassword")
@@ -1911,6 +1934,7 @@ public class AgentController {
 
     /**
      * 代理商修改密码提交表单
+     *
      * @param form
      * @param result
      * @return
@@ -1999,6 +2023,7 @@ public class AgentController {
 
     /**
      * 代理商修改群规模页面
+     *
      * @return
      */
     @RequestMapping(method = RequestMethod.GET, value = "/modifyscale")
@@ -2023,6 +2048,7 @@ public class AgentController {
 
     /**
      * 代理商修改群规模表单
+     *
      * @param form
      * @param result
      * @return
@@ -2066,6 +2092,7 @@ public class AgentController {
 
     /**
      * 通用提示页面
+     *
      * @return
      */
     @RequestMapping(method = RequestMethod.GET, value = "/prompt")
@@ -2078,6 +2105,7 @@ public class AgentController {
 
     /**
      * 代理商审核列表页面
+     *
      * @return
      */
     @RequestMapping(method = RequestMethod.GET, value = "/check")
@@ -2089,6 +2117,7 @@ public class AgentController {
 
     /**
      * 单个代理商审核页面
+     *
      * @param agentId
      * @return
      */
@@ -2138,6 +2167,7 @@ public class AgentController {
 
     /**
      * 代理商审核获取信息datatable
+     *
      * @param param
      * @return
      */
@@ -2161,6 +2191,7 @@ public class AgentController {
 
     /**
      * 代理商审核通过表单
+     *
      * @param agentId
      * @param request
      * @return
@@ -2228,6 +2259,7 @@ public class AgentController {
 
     /**
      * 代理商审核不通过
+     *
      * @param agentId
      * @param request
      * @return
@@ -2370,6 +2402,7 @@ public class AgentController {
 
     /**
      * 修改上级代理商表单
+     *
      * @param agentId
      * @param upperAgentId
      * @param request
@@ -2462,6 +2495,7 @@ public class AgentController {
 
     /**
      * 禁用(封禁)代理商的账号
+     *
      * @param agentId
      * @param request
      * @return
@@ -2516,6 +2550,7 @@ public class AgentController {
 
     /**
      * 后台代理商部分首页
+     *
      * @return
      */
     @RequestMapping(method = RequestMethod.GET, value = "/overview")
@@ -2527,6 +2562,7 @@ public class AgentController {
 
     /**
      * 后台代理商列表页面
+     *
      * @return
      */
     @RequestMapping(method = RequestMethod.GET, value = "/list")
@@ -2538,6 +2574,7 @@ public class AgentController {
 
     /**
      * 后天代理商列表页面，param有三种：本月新注册代理商， 本月已购买代理商， 当前代理商总人数
+     *
      * @param param
      * @return
      */
@@ -2696,6 +2733,7 @@ public class AgentController {
 
     /**
      * 代理商详细信息页面
+     *
      * @param agentId
      * @return
      */
@@ -2780,6 +2818,7 @@ public class AgentController {
 
     /**
      * 查询某代理商下级方法
+     *
      * @param agentId
      * @return
      */
@@ -2835,9 +2874,9 @@ public class AgentController {
         return data;
     }
 
-	/**
+    /**
      * 购买商品时验证代理商是否存在
-	 */
+     */
     @RequestMapping(method = RequestMethod.POST, value = "/agentValidate/{agentId}")
     @ResponseBody
     public ResultData agentValidate(@PathVariable("agentId") String agentId) {
@@ -2876,6 +2915,7 @@ public class AgentController {
 
     /**
      * 代理商申请赠送商品时，ajax查询上月销售和累计销售
+     *
      * @param goodsId
      * @return
      */
@@ -2913,6 +2953,7 @@ public class AgentController {
 
     /**
      * 后天代理商列表页面datatable
+     *
      * @param param
      * @return
      */
@@ -2943,6 +2984,7 @@ public class AgentController {
 
     /**
      * 后台下载代理商信息excel
+     *
      * @param request
      * @param response
      * @param start
@@ -3049,6 +3091,7 @@ public class AgentController {
 
     /**
      * 代理商活跃度页面
+     *
      * @return
      */
     @RequestMapping(method = RequestMethod.GET, value = "/vitality")
@@ -3060,6 +3103,7 @@ public class AgentController {
 
     /**
      * 代理商活跃度表单
+     *
      * @param param
      * @return
      */
@@ -3081,6 +3125,7 @@ public class AgentController {
 
     /**
      * 代理商活跃度配置
+     *
      * @param agentVitalityId
      * @param form
      * @param result
@@ -3119,6 +3164,7 @@ public class AgentController {
 
     /**
      * 后台代理商KPI表单
+     *
      * @param param
      * @return
      */
@@ -3140,6 +3186,7 @@ public class AgentController {
 
     /**
      * 后台代理商KPI页面
+     *
      * @return
      */
     @ResponseBody
@@ -3212,6 +3259,7 @@ public class AgentController {
 
     /**
      * 后台查询返现详细信息
+     *
      * @param agentId
      * @return
      */
@@ -3257,6 +3305,7 @@ public class AgentController {
 
     /**
      * 后台查询返现时ajax获取返现数据
+     *
      * @param agentId
      * @param year
      * @param month
@@ -3310,6 +3359,7 @@ public class AgentController {
 
     /**
      * 配置贡献度计算的因子
+     *
      * @return
      */
     @RequestMapping(method = RequestMethod.GET, value = "/contributionFactor")
