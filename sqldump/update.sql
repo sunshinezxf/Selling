@@ -911,9 +911,10 @@ AFTER `agent_wechat`;
 ##2017年5月2日
 CREATE TABLE IF NOT EXISTS `selling`.`vouchers` (
   `vouchers_id`      VARCHAR(20)  NOT NULL,
-  `price`            DOUBLE     NOT NULL,
-  `block_flag`     TINYINT(1)   NOT NULL DEFAULT 0,
-  `create_time`    DATETIME     NOT NULL,
+  `agent_id`         VARCHAR(20)  NOT NULL,
+  `price`            DOUBLE       NOT NULL,
+  `block_flag`       TINYINT(1)   NOT NULL DEFAULT 0,
+  `create_time`      DATETIME     NOT NULL,
   PRIMARY KEY (`vouchers_id`)
 )
   ENGINE = InnoDB;
