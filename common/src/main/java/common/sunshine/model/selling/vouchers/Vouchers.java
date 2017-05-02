@@ -1,6 +1,7 @@
 package common.sunshine.model.selling.vouchers;
 
 import common.sunshine.model.Entity;
+import common.sunshine.model.selling.agent.lite.Agent;
 
 /**
  * Created by wxd on 2017/5/2.
@@ -10,7 +11,7 @@ public class Vouchers extends Entity {
     private String vouchersId;
 
     /* 代理商 */
-    private String agentId;
+    private Agent agent;
 
     /* 金额 */
     private double price;
@@ -22,10 +23,10 @@ public class Vouchers extends Entity {
         super();
     }
 
-    public Vouchers(String vouchersId, String agentId, double price, boolean used) {
+    public Vouchers(String vouchersId, Agent agent, double price, boolean used) {
         super();
         this.vouchersId = vouchersId;
-        this.agentId = agentId;
+        this.agent = agent;
         this.price = price;
         this.used = used;
     }
@@ -34,9 +35,6 @@ public class Vouchers extends Entity {
         return vouchersId;
     }
 
-    public String getAgentId() {
-        return agentId;
-    }
 
     public double getPrice() {
         return price;
@@ -50,11 +48,15 @@ public class Vouchers extends Entity {
         this.vouchersId = vouchersId;
     }
 
-    public void setAgentId(String agentId) {
-        this.agentId = agentId;
-    }
+    public Agent getAgent() {
+		return agent;
+	}
 
-    public void setPrice(double price) {
+	public void setAgent(Agent agent) {
+		this.agent = agent;
+	}
+
+	public void setPrice(double price) {
         this.price = price;
     }
 
