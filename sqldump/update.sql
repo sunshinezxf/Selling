@@ -913,6 +913,7 @@ CREATE TABLE IF NOT EXISTS `selling`.`vouchers` (
   `vouchers_id`      VARCHAR(20)  NOT NULL,
   `agent_id`         VARCHAR(20)  NOT NULL,
   `price`            DOUBLE       NOT NULL,
+  `used`             TINYINT(1)   NOT NULL DEFAULT 0,
   `block_flag`       TINYINT(1)   NOT NULL DEFAULT 0,
   `create_time`      DATETIME     NOT NULL,
   PRIMARY KEY (`vouchers_id`)
