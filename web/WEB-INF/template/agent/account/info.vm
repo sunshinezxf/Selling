@@ -22,6 +22,8 @@
     <div class="weui_panel weui_panel_access">
         <a class="weui_panel_ft" href="${path.concat('/agent/statement')}">
             查看返现记录
+        </a><a class="weui_panel_ft" href="${path.concat('/agent/vouchers')}">
+	 查看代金券
         </a>
     </div>
     #parse("/agent/component/navigate.vm")
