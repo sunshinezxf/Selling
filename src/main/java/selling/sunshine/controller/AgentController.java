@@ -1821,7 +1821,33 @@ public class AgentController {
         view.setViewName("/agent/account/statement");
         return view;
     }
-
+    
+    /**
+     * 代理商查看代金券的页面
+     *
+     * @return
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "/vouchers")
+    public ModelAndView vouchers() {
+    	ModelAndView view = new ModelAndView();
+    	Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        if (user == null) {
+            WechatConfig.oauthWechat(view, "/agent/login");
+            view.setViewName("/agent/login");
+            return view;
+        }
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("agentId", user.getAgent().getAgentId());
+        ResultData fetchAgentResponse = agentService.fetchAgent(condition);
+        if (fetchAgentResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
+            view.setViewName("/agent/account/vouchers");
+            return view;
+        }
+        view.setViewName("/agent/account/vouchers");
+        return view;
+    }
+    
     /**
      * 返现详细信息页面，传入返现层级和日期yyyy-MM即可
      *
@@ -3302,6 +3328,7 @@ public class AgentController {
         view.setViewName("/backend/agent/cashback");
         return view;
     }
+    
 
     /**
      * 后台查询返现时ajax获取返现数据

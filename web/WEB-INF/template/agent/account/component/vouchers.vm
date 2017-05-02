@@ -1,0 +1,44 @@
+#parse("/common/util.vm")
+<html lang="zh_CN">
+<head>
+    #parse("/agent/component/init.vm")
+    <title>我的代金券</title>
+</head>
+<body ontouchstart>
+<div class="container">
+    <div class="hd">
+        <h1 class="page_title">
+            我的代金券
+        </h1>
+    </div>
+    <div class="bd weui_tab_bd">
+        <div class="weui_cells">
+        	#foreach($cashBackMonth in ${cashBacks.entrySet()})
+        		<a class="weui_cell weui_cells_access month_hd">
+        			<div class="weui_cell_bd weui_cell_primary">${cashBackMonth.key}</div>
+        			<div class='weui_cell_ft'></div>
+        		</a>
+        		<div class="cashMonth" style="display:none">
+        		#foreach($cashBack in $cashBackMonth.value)
+        		<a class="weui_cell weui_cells_access">
+        			<div class="weui_cell_bd weui_cell_primary">
+        			#if(${cashBack.level} == 0)
+        			自销
+        			#elseif(${cashBack.level} == 1)
+        			直接代理
+        			#else
+        			间接代理
+        			#end
+        			</div>
+        			<div class='weui_cell_ft'><span class="money">${cashBack.amount}</span>元</div>
+        		</a>
+        		#end	
+        		</div>
+        	#end
+        </div>
+    </div>
+</div>
+#parse("/agent/component/navigate.vm")
+</body>
+<script>
+</html>
