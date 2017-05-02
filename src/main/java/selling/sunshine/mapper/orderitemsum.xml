@@ -85,7 +85,7 @@
             AND create_time LIKE #{date}
         </if>
         <if test="scheduleDate != null ">
-            AND DATE_SUB(CURDATE(), INTERVAL #{scheduleDate} DAY) > create_time
+            AND DATE_SUB(CURDATE(), INTERVAL #{scheduleDate} DAY) &gt; create_time
         </if>
         <if test="rule != null ">
             ORDER BY ${rule}

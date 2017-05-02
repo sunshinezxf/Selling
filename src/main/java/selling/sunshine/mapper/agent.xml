@@ -129,6 +129,12 @@
             AND (agent_name LIKE BINARY #{search} OR create_time LIKE BINARY #{search} OR agent_phone LIKE BINARY
             #{search})
         </if>
+        <if test="vouchersDate !=null ">
+            AND create_time &gt;= #{vouchersDate}
+        </if>
+        <if test="vouchersDays !=null ">
+            AND date_format(create_time,'%Y-%m-%D') = date_format(DATE_SUB(CURDATE(), INTERVAL #{vouchersDays} DAY),'%Y-%m-%D')
+        </if>
         <if test="rule != null and rule != ''">
             ORDER BY ${rule}
         </if>

@@ -35,6 +35,9 @@
     <!-- 用来处理将过期未自动转化为已签收状态的已发货订单的状态改为已签收 -->
     <bean id="orderSchedule" class="selling.sunshine.schedule.OrderSchedule"></bean>
 
+    <!-- 用来处理跟代金券发放相关的操作 -->
+    <bean id="vouchersSchedule" class="selling.sunshine.schedule.VouchersSchedule"></bean>
+
     <bean id="poolDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <property name="targetObject" ref="poolSchedule"></property>
         <property name="targetMethod" value="schedule"></property>
@@ -111,6 +114,18 @@
     <bean id="orderDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <property name="targetObject" ref="orderSchedule"></property>
         <property name="targetMethod" value="schedule"></property>
+        <property name="concurrent" value="false"></property>
+    </bean>
+
+    <bean id="registerVouchersDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="vouchersSchedule"></property>
+        <property name="targetMethod" value="registerSchedule"></property>
+        <property name="concurrent" value="false"></property>
+    </bean>
+
+    <bean id="rewardVouchersDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="vouchersSchedule"></property>
+        <property name="targetMethod" value="rewardSchedule"></property>
         <property name="concurrent" value="false"></property>
     </bean>
 
@@ -205,6 +220,20 @@
         </property>
     </bean>
 
+    <bean id="registerVouchersTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="registerVouchersDetail"></property>
+        <property name="cronExpression">
+            <value>0 15 10 7 * ?</value>
+        </property>
+    </bean>
+
+    <bean id="rewardVouchersTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="rewardVouchersDetail"></property>
+        <property name="cronExpression">
+            <value>0 15 10 7 * ?</value>
+        </property>
+    </bean>
+
 
     <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="triggers">
@@ -222,6 +251,8 @@
                 <!--<ref bean="promotionTrigger"></ref>-->
                 <ref bean="customerTrigger"></ref>
                 <ref bean="orderTrigger"></ref>
+                <ref bean="registerVouchersTrigger"></ref>
+                <ref bean="rewardVouchersTrigger"></ref>
             </list>
         </property>
     </bean>
