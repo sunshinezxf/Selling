@@ -5,6 +5,7 @@
         <result property="vouchersId" column="vouchers_id"></result>
         <result property="price" column="price"></result>
         <result property="used" column="used"></result>
+        <result property="type" column="vouchers_type" typeHandler="common.sunshine.mybatis.handler.vouchers.VouchersTypeHandler"></result>
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
         <association property="agent" column="agentId = agent_id" select="agentLiteQuery"></association>
@@ -17,12 +18,12 @@
     </resultMap>
     
     <insert id="insert" parameterType="common.sunshine.model.selling.vouchers.Vouchers" useGeneratedKeys="false">
-        INSERT INTO selling.vouchers(vouchers_id, agent_id, price, used, block_flag, create_time)
-        VALUES (#{vouchersId}, #{agent.agentId}, #{price}, #{used}, #{blockFlag}, #{createAt})
+        INSERT INTO selling.vouchers(vouchers_id, agent_id, vouchers_type, price, used, block_flag, create_time)
+        VALUES (#{vouchersId}, #{agent.agentId}, #{type, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler}, #{price}, #{used}, #{blockFlag}, #{createAt})
     </insert>
     
     <select id="query" parameterType="java.util.Map" resultMap="vouchersVo">
-        SELECT vouchers_id, agent_id, price, used, block_flag, create_time
+        SELECT vouchers_id, agent_id, vouchers_type, price, used, block_flag, create_time
         FROM selling.vouchers
         WHERE 1 = 1
         <if test="vouchersId != null">
@@ -30,6 +31,9 @@
         </if>
         <if test="agentId != null">
             AND agent_id = #{agentId}
+        </if>
+        <if test="type != null">
+            AND vouchers_type = #{type}
         </if>
         <if test="price != null">
             AND price = #{price}
@@ -39,6 +43,9 @@
         </if>
         <if test="blockFlag != null">
             AND block_flag = #{blockFlag}
+        </if>
+         <if test="rule == null">
+            ORDER BY create_time DESC
         </if>
     </select>
     
