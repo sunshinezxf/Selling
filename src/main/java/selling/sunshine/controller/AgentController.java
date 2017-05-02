@@ -20,6 +20,7 @@ import common.sunshine.model.selling.order.support.OrderStatus;
 import common.sunshine.model.selling.order.support.OrderType;
 import common.sunshine.model.selling.user.User;
 import common.sunshine.model.selling.util.ShortUrl;
+import common.sunshine.model.selling.vouchers.Vouchers;
 import common.sunshine.pagination.DataTablePage;
 import common.sunshine.pagination.DataTableParam;
 import common.sunshine.utils.Encryption;
@@ -104,6 +105,9 @@ public class AgentController {
 
     @Autowired
     private CashBackService cashBackService;
+    
+    @Autowired
+    private VouchersService vouchersService;
 
     @Autowired
     private ShipmentService shipmentService;
@@ -1837,12 +1841,19 @@ public class AgentController {
             view.setViewName("/agent/login");
             return view;
         }
-        Map<String, Object> condition = new HashMap<>();
+        Map<String, Object> condition = new HashMap<String, Object>();
         condition.put("agentId", user.getAgent().getAgentId());
         ResultData fetchAgentResponse = agentService.fetchAgent(condition);
         if (fetchAgentResponse.getResponseCode() != ResponseCode.RESPONSE_OK) {
             view.setViewName("/agent/account/vouchers");
             return view;
+        }
+        condition.put("blockFlag", false);
+        condition.put("used",0);
+        ResultData fetchVouchersResponse = vouchersService.fetchVouchers(condition);
+        if(fetchVouchersResponse.getResponseCode() == ResponseCode.RESPONSE_OK){
+        	List<Vouchers> vouchersList = (List<Vouchers>)fetchVouchersResponse.getData();
+        	view.addObject("vouchersList", vouchersList);
         }
         view.setViewName("/agent/account/vouchers");
         return view;

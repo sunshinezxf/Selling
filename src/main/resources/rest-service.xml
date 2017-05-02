@@ -62,4 +62,6 @@
     <bean id="noticeService" class="selling.sunshine.service.impl.NoticeServiceImpl"></bean>
 
     <bean id="couponService" class="selling.sunshine.service.impl.CouponServiceImpl"></bean>
+    
+    <bean id="vouchersService" class="selling.sunshine.service.impl.VouchersServiceImpl"></bean>
 </beans>
