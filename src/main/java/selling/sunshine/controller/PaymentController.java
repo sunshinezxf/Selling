@@ -195,7 +195,11 @@ public class PaymentController {
 	    	}
 	    	view.addObject("charge_url", "/order/otherpay");
 	    	view.addObject("return_url", "/agent/order/manage/2");
-	    	view.addObject("total_price", order.getPrice());
+	    	double totalPrice = order.getPrice();
+	    	if(order.getVouchers() != null){
+	    		totalPrice = order.getTotalPrice();
+	    	}
+	    	view.addObject("total_price", totalPrice);
 	    	view.addObject("orderId", orderId);
 	    	view.addObject("type", "agent");
 	    	view.setViewName("/customer/pay/bill");

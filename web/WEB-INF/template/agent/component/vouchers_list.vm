@@ -1,0 +1,65 @@
+<div id="vouchers_option" style="display: none;">
+	<div class="weui_cells_title">点击可选择相应代金券</div>
+	<div class="weui_cells weui_cells_radio">
+	    #foreach($vouchers in $vouchersList)
+	    <label class="weui_cell vouchers" id="${vouchers.vouchersId}">
+	        <div class="weui_cell_bd weui_cell_primary">
+	        	#if(${vouchers.type} == "REGISTER")
+	            <span>新注册奖励代金券</span>(<span>${vouchers.price}</span>元)
+	            #else
+	            <span>拓展奖励代金券</span>(<span>${vouchers.price}</span>元)
+	            #end
+	        </div>
+	        <div class="weui_cell_ft">
+	        	<input type="radio" class="weui_check" checked="checked">
+	        	<span id="radio${vouchers.vouchersId}" class="weui_icon_checked"></span>
+	        </div>
+	    </label>
+	    #end
+	</div>
+	<div class="weui_btn_area">
+	    <a type="button" class="weui_btn weui_btn_default" id="return_vouchers">返回</a>
+	</div>
+</div>
+<script>
+	//进入这个页面之前先初始化该页面
+	$.init_vouchers_list = function(){
+		$(".weui_check").next().removeClass("weui_icon_checked");
+		if(typeof vouchers_id != "undefined"){
+			$("#radio" + vouchers_id).addClass("weui_icon_checked");
+		}
+	}
+
+    $(".weui_cell.vouchers").find(".weui_check").click(function () {
+    	if(isAdd){
+	        var id_value = $(this).closest(".vouchers").attr("id");
+	        vouchers_id = id_value;
+	        vouchers_name = $(this).closest(".vouchers").find(".weui_cell_bd").children("span").eq(0).html();
+	        vouchers_price = $(this).closest(".vouchers").find(".weui_cell_bd").children("span").eq(1).html();
+	        $("#vouchers").find(".weui_cell_bd").html("<p>" + vouchers_name + "(" + vouchers_price + "元)</p>");
+	        var should_price = total_price - vouchers_price;
+	        $("#should_price").html("应付" +  should_price + "元");
+	        $("#vouchers_option").hide();
+	        $("#pay_form").fadeIn();
+        } else {
+        	isAdd = true;
+        	var pre_vouchers_id = vouchers_id;
+        	var id_value = $(this).closest(".vouchers").attr("id");
+        	vouchers_id = id_value;
+	        vouchers_name = $(this).closest(".vouchers").find(".weui_cell_bd").children("span").eq(0).html();
+	        //修改了js的商品名称，那当然要修改默认的代金券为该代金券
+	        $("#vouchers").find(".weui_cell_ft").html(vouchers_name);
+	        vouchers_price = $(this).closest(".vouchers").find(".weui_cell_bd").children("span").eq(1).html();
+	        $("#vouchers").find(".weui_cell_bd").html("<p>" + vouchers_name + "(" + vouchers_price + "元)</p>");
+	        var should_price = total_price - vouchers_price;
+	        $("#should_price").html("应付" +  should_price + "元");
+        	$("#vouchers_option").hide();
+	        $("#pay_form").fadeIn();
+        }
+    });
+    
+    $("#return_vouchers").click(function(){
+    	$("#vouchers_option").hide();
+    	$("#pay_form").fadeIn();
+    });
+</script>

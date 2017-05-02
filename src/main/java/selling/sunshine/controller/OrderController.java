@@ -23,10 +23,13 @@ import common.sunshine.model.selling.order.OrderItem;
 import common.sunshine.model.selling.order.support.OrderItemStatus;
 import common.sunshine.model.selling.order.support.OrderStatus;
 import common.sunshine.model.selling.user.User;
+import common.sunshine.model.selling.vouchers.Vouchers;
 import common.sunshine.pagination.DataTablePage;
 import common.sunshine.pagination.DataTableParam;
 import common.sunshine.utils.ResponseCode;
 import common.sunshine.utils.ResultData;
+import common.sunshine.utils.SortRule;
+
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -81,6 +84,9 @@ public class OrderController {
 
     @Autowired
     private AgentService agentService;
+    
+    @Autowired
+    private VouchersService vouchersService;
 
     @Autowired
     private BillService billService;
@@ -530,11 +536,101 @@ public class OrderController {
             view.setViewName("redirect:/agent/prompt");
             return view;
         }
+        //下面添加代金券
+        if(order.getVouchers() != null) {
+        	view.addObject("vouchersUsed", true);
+        	view.addObject("vouchers",order.getVouchers());
+        } else {
+	       condition.clear();
+	        condition.put("agentId", agent.getAgentId());
+	        condition.put("used", 0);
+	        condition.put("blockFlag", false);
+	        List<SortRule> orderBy = new ArrayList<>();
+	        orderBy.add(new SortRule("price","desc"));
+	        orderBy.add(new SortRule("create_time", "asc"));
+	        condition.put("sort", orderBy);
+	        ResultData fetchVouchersResponse = vouchersService.fetchVouchers(condition);
+	        if(fetchVouchersResponse.getResponseCode() == ResponseCode.RESPONSE_OK){
+	        	List<Vouchers> vouchersList = (List<Vouchers>)fetchVouchersResponse.getData();
+	        	view.addObject("vouchersList", vouchersList);
+	        	view.addObject("vouchersUsed", false);
+	        }
+        }
+        
         view.addObject("order", JSON.toJSON(order));
         view.addObject("agent", target);
         WechatConfig.oauthWechat(view, "agent/order/pay");
         view.setViewName("agent/order/pay");
         return view;
+    }
+    
+    /**
+     * 代理商付款前使用代金券
+     *
+     * @param type
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.GET, value = "/usevouchers/{orderId}/{vouchersId}")
+    public ResultData useVouchers(@PathVariable("orderId") String orderId, @PathVariable("vouchersId") String vouchersId) { 
+    	ResultData result = new ResultData();
+    	Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        if (user == null || user.getAgent() == null) {
+            result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription("您需要重新登录");
+            return result;
+        }
+        if(StringUtils.isEmpty(vouchersId)){
+        	return result;
+        }
+    	Map<String, Object> condition = new HashMap<String, Object>();
+    	condition.put("orderId", orderId);
+    	ResultData fetchOrderResponse = orderService.fetchOrder(condition);
+    	if(fetchOrderResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
+    		result.setResponseCode(fetchOrderResponse.getResponseCode());
+    		result.setDescription("未找到订单");
+    		return result;
+    	}
+    	Order order = ((List<Order>)fetchOrderResponse.getData()).get(0);
+    	if(!user.getAgent().getAgentId().equals(order.getAgent().getAgentId())){
+    		result.setResponseCode(ResponseCode.RESPONSE_ERROR);
+            result.setDescription("订单与账户不匹配");
+            return result;
+    	}
+    	if(order.getVouchers() != null){
+    		result.setResponseCode(ResponseCode.RESPONSE_OK);
+    		return result;
+    	}
+    	condition.clear();
+    	condition.put("vouchersId", vouchersId);
+    	condition.put("agentId", order.getAgent().getAgentId());
+    	condition.put("used", 0);
+    	condition.put("blockFlag", false);
+    	ResultData fetchVouchersResponse = vouchersService.fetchVouchers(condition);
+    	if(fetchVouchersResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
+    		result.setResponseCode(fetchVouchersResponse.getResponseCode());
+    		result.setDescription("未找到代金券");
+    		return result;
+    	}
+    	Vouchers vouchers = ((List<Vouchers>)fetchVouchersResponse.getData()).get(0);
+    	vouchers.setUsed(true);
+    	ResultData updateVouchersResponse = vouchersService.useVouchers(vouchers);
+    	if(updateVouchersResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
+    		result.setResponseCode(updateVouchersResponse.getResponseCode());
+    		result.setDescription("代金券使用失败");
+    		return result;
+    	}
+    	order.setVouchers(vouchers);
+    	order.setTotalPrice(order.getPrice() - vouchers.getPrice());
+    	ResultData updateOrderResponse = orderService.useVouchers(order);
+    	if(updateOrderResponse.getResponseCode() != ResponseCode.RESPONSE_OK){
+    		result.setResponseCode(updateOrderResponse.getResponseCode());
+    		result.setDescription("使用代金券失败");
+    		return result;
+    	}
+    	result.setResponseCode(ResponseCode.RESPONSE_OK);
+    	return result;
     }
 
     /**
@@ -572,6 +668,9 @@ public class OrderController {
         }
         // 计算总价
         double totalPrice = order.getPrice();
+        if(order.getVouchers() != null){
+        	totalPrice = order.getTotalPrice();
+        } 
         // 创建账单
         OrderBill orderBill = new OrderBill(totalPrice, "coffer",
                 toolService.getIP(request), user.getAgent(), order);

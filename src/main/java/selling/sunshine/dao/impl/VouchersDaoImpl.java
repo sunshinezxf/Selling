@@ -25,6 +25,7 @@ public class VouchersDaoImpl extends BaseDao implements VouchersDao {
     public ResultData queryVouchers(Map<String, Object> condition) {
         ResultData result = new ResultData();
         try {
+        	condition = handle(condition);
             List<Vouchers> list = sqlSession.selectList("selling.vouchers.query", condition);
             result.setData(list);
         } catch (Exception e) {

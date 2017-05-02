@@ -7,17 +7,39 @@
     <div class="weui_panel_bd">
         <div id="total_goods" class="weui_media_box">
             总计:
-            <p class="weui_media_text">共计0元</p>
+            <p class="weui_media_text" id = "total_price">共计0元</p>
+            <p class="weui_media_text" id = "should_price">应付0元</p>
         </div>
     </div>
 </div>
-<div class="bd">
-##    #parse("/agent/account/rebate.vm")
+#if($vouchersUsed)
+<div class="weui_cells weui_cells_access">
+<a class="weui_cell" id="vouchers">
+    <div class="weui_cell_bd weui_cell_primary">
+    	#if(${vouchers.type} == "REGISTER")
+       	<p>新注册奖励代金券(${vouchers.price}元)</p>
+        #else
+        <p>拓展奖励代金券(${vouchers.price}元)</p>
+        #end
+        </p>
+    </div>
+    <div class="weui_cell_ft">点击选择</div>
+</a>
+#elseif($vouchersList)
+<div class="weui_cells weui_cells_access">
+<a class="weui_cell" id="vouchers">
+    <div class="weui_cell_bd weui_cell_primary">
+        <p>代金券</p>
+    </div>
+    <div class="weui_cell_ft">点击选择</div>
+</a>
 </div>
+#end
 <button type="button" class="weui_btn weui_btn_plain_primary" id="coffer_pay">账户余额付款</button>
 <button type="button" class="weui_btn weui_btn_primary" id="other_pay">其他支付方式</button>
 <input type="hidden" name="orderId" id="orderIdForm" value="">
 </form>
+#parse("/agent/component/vouchers_list.vm")
 <div class="weui_dialog_confirm" id="coffer_pay_dialog" style="display: none;">
     <div class="weui_mask"></div>
     <div class="weui_dialog">
@@ -46,6 +68,7 @@
 	total_price = 0.0;
 	order_id = "";
 	$(document).ready(function(){
+		isAdd = true;
 		var order = eval('('+'${order}'+')');
 		order_id = order.orderId;
 		//显示订单号
@@ -73,7 +96,14 @@
         		+ order_info + ": " + order_info_list[order_info]['quantity'] +
  				"件")
         }
-        $("#total_goods").append(" <p class='weui_media_text'>共计" + total_price + "元</p>");
+        $("#total_goods").append(" <p class='weui_media_text' id='total_price'>共计" + total_price + "元</p>");
+        #if($vouchersUsed)
+        var vouchers_price = ${vouchers.price};
+        var should_price = total_price - vouchers_price;
+        $("#total_goods").append(" <p class='weui_media_text' id='should_price'>应付" + should_price + "元</p>");
+        #else
+        $("#total_goods").append(" <p class='weui_media_text' id='should_price'>应付" + total_price + "元</p>");
+        #end
         
         //判断账户余额是否充足
         $.cofferCheck();
@@ -82,6 +112,14 @@
 	$("#coffer_pay").click(function(){
 		$("#coffer_pay_dialog").fadeIn();
 	});
+	
+	#if(!$vouchersUsed)
+	$("#vouchers").click(function(){
+		$("#pay_form").hide();
+		$("#vouchers_option").fadeIn();
+		$.init_vouchers_list();
+	});
+	#end
 	
 	$.cofferCheck = function(){
 		if(total_price > agent_coffer){
@@ -112,9 +150,34 @@
     });
     
     $("#coffer_pay_dialog").find(".weui_btn_dialog.primary").click(function(){
+    	#if(!$vouchersUsed)
+    	if(typeof vouchers_id != "undefined" && vouchers_id != ""){
+	    	var url = "${path.concat('/order/usevouchers/')}" + order_id + "/" + vouchers_id;
+			$.getJSON(url, function(data){
+				if(data.responseCode != "RESPONSE_OK"){
+					$("#pay_form").attr("action", "${path.concat('/order/cofferpay')}");
+			    	$("#pay_form").attr("method","post");
+			    	$("#pay_form").submit();
+					return;
+				}
+	    		if(data.description == "您需要重新登录"){
+	    			window.location="${path.concat('/agent/login')}"; 
+	    			return;
+	    		}
+	    		$("#pay_form").attr("action", "${path.concat('/order/cofferpay')}");
+		    	$("#pay_form").attr("method","post");
+		    	$("#pay_form").submit();
+	    	});
+	    } else {
+	    	$("#pay_form").attr("action", "${path.concat('/order/cofferpay')}");
+		    $("#pay_form").attr("method","post");
+		    $("#pay_form").submit();
+	    }
+    	#else
     	$("#pay_form").attr("action", "${path.concat('/order/cofferpay')}");
     	$("#pay_form").attr("method","post");
     	$("#pay_form").submit();
+    	#end
     });
     
     $("#bind_dialog").find(".weui_btn_dialog.default").click(function(){

@@ -8,10 +8,21 @@
         <result property="status" column="order_status"
                 typeHandler="selling.sunshine.handler.mybatis.order.OrderStatusHandler"></result>
         <result property="price" column="order_price"></result>
+        <result property="totalPrice" column="total_price"></result>
         <result property="blockFlag" column="block_flag"></result>
         <result property="createAt" column="create_time"></result>
         <association property="agent" column="agentId = agent_id" select="agentLiteQuery"></association>
+        <association property="vouchers" column="vouchersId = vouchers_id" select="vouchersQuery"></association>
         <collection property="orderItems" column="orderId = order_id" select="orderItemQuery"></collection>
+    </resultMap>
+    
+    <resultMap id="vouchersVo" type="common.sunshine.model.selling.vouchers.Vouchers">
+        <result property="vouchersId" column="vouchers_id"></result>
+        <result property="price" column="price"></result>
+        <result property="used" column="used"></result>
+        <result property="type" column="vouchers_type" typeHandler="common.sunshine.mybatis.handler.vouchers.VouchersTypeHandler"></result>
+        <result property="blockFlag" column="block_flag"></result>
+        <result property="createAt" column="create_time"></result>
     </resultMap>
 
     <resultMap id="agentLiteVo" type="common.sunshine.model.selling.agent.lite.Agent">
@@ -73,15 +84,21 @@
         FROM agent
         WHERE agent_id = #{agentId}
     </select>
+    
+    <select id="vouchersQuery" parameterType="java.util.Map" resultMap="vouchersVo">
+        SELECT vouchers_id, agent_id, vouchers_type, price, used, block_flag, create_time
+        FROM selling.vouchers
+        WHERE vouchers_id = #{vouchersId}
+    </select>
 
 
     <insert id="insert" parameterType="common.sunshine.model.selling.order.Order" useGeneratedKeys="false">
-        INSERT INTO `order`(order_id, order_type, order_status, order_price, agent_id, block_flag, create_time)
-        VALUES (#{orderId}, #{type, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler}, #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler}, #{price}, #{agent.agentId}, #{blockFlag}, #{createAt})
+        INSERT INTO `order`(order_id, order_type, order_status, order_price, total_price, agent_id, block_flag, create_time)
+        VALUES (#{orderId}, #{type, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler}, #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler}, #{price}, #{totalPrice}, #{agent.agentId}, #{blockFlag}, #{createAt})
     </insert>
 
     <select id="query" parameterType="java.util.Map" resultMap="orderVo">
-        SELECT order_id, order_type, order_status, order_price, agent_id, block_flag, create_time
+        SELECT order_id, vouchers_id, order_type, order_status, order_price, total_price, agent_id, block_flag, create_time
         FROM `order`
         WHERE 1 = 1
         <if test="orderId != null">
@@ -136,6 +153,9 @@
     <update id="update" parameterType="common.sunshine.model.selling.order.Order">
         UPDATE `order`
         <set>
+        	<if test="vouchers != null and vouchers.vouchersId != null">
+                vouchers_id = #{vouchers.vouchersId},
+            </if>
             <if test="status != null and status != ''">
                 order_status = #{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler},
             </if>
@@ -146,7 +166,10 @@
                 block_flag = #{blockFlag},
             </if>
             <if test="price != null">
-                order_price = #{price}
+                order_price = #{price},
+            </if>
+            <if test="totalPrice != null">
+                total_price = #{totalPrice}
             </if>
         </set>
         WHERE order_id = #{orderId}
