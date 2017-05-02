@@ -912,6 +912,7 @@ AFTER `agent_wechat`;
 CREATE TABLE IF NOT EXISTS `selling`.`vouchers` (
   `vouchers_id`      VARCHAR(20)  NOT NULL,
   `agent_id`         VARCHAR(20)  NOT NULL,
+  `vouchers_type`    INT(11) NOT NULL DEFAULT '0',
   `price`            DOUBLE       NOT NULL,
   `used`             TINYINT(1)   NOT NULL DEFAULT 0,
   `block_flag`       TINYINT(1)   NOT NULL DEFAULT 0,
