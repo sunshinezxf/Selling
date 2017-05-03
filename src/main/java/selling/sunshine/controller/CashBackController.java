@@ -138,12 +138,15 @@ public class CashBackController {
 		condition.put("createAt", format.format(date.getTime()) + "%");
 		condition.put("level", CashBackLevel.SELF.getCode());
 		response = refundService.fetchRefundRecord(condition);
-		if (response.getResponseCode() != ResponseCode.RESPONSE_OK) {
-			view.setViewName("redirect:/cashback/month");
-			return view;
+//		if (response.getResponseCode() != ResponseCode.RESPONSE_OK) {
+//			view.setViewName("redirect:/cashback/month");
+//			return view;
+//		}
+		if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+			List<CashBackRecord> self = ((List<CashBackRecord>) response.getData());
+			view.addObject("self", self);
 		}
-		List<CashBackRecord> self = ((List<CashBackRecord>) response.getData());
-		view.addObject("self", self);
+
 		condition.clear();
 		// 获取所有的直接拓展代理的返现详情
 		condition.put("agentId", agentId);
@@ -235,7 +238,7 @@ public class CashBackController {
 		String date = dateFormat.format(calendar.getTime());
 		String summaryPath = produceResponse.getData().toString();
 
-		String path = DeliverController.class.getResource("/").getPath();
+		String path = CashBackController.class.getResource("/").getPath();
 		String os = System.getProperty("os.name").toLowerCase();
 		if (os.indexOf("windows") >= 0) {
 			path = path.substring(1);
