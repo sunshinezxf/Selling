@@ -17,7 +17,7 @@
         	#foreach($vouchers in $vouchersList)
         		<div class="weui_panel weui_panel_access order_panel">
 	                <div class="weui_panel_hd col1">
-	                	#if(${vouchers.type} == "RESGISTER")
+	                	#if(${vouchers.type} == "REGISTER")
 	                	 <h4 class="order_id">新注册奖励代金券</h4>
 	                	#else
 	                   	 <h4 class="order_id">拓展奖励代金券</h4>

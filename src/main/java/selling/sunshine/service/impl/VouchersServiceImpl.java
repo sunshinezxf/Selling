@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import selling.sunshine.dao.VouchersDao;
 import selling.sunshine.service.VouchersService;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -40,6 +41,9 @@ public class VouchersServiceImpl implements VouchersService {
         ResultData queryResponse = vouchersDao.queryVouchers(condition);
         result.setResponseCode(queryResponse.getResponseCode());
         if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+        	if (((List) queryResponse.getData()).isEmpty()) {
+				result.setResponseCode(ResponseCode.RESPONSE_NULL);
+			}
             result.setData(queryResponse.getData());
         } else if (queryResponse.getResponseCode() == ResponseCode.RESPONSE_ERROR) {
             result.setDescription(queryResponse.getDescription());
@@ -48,7 +52,7 @@ public class VouchersServiceImpl implements VouchersService {
     }
 
     @Override
-    public ResultData uesVouchers(Vouchers vouchers) {
+    public ResultData useVouchers(Vouchers vouchers) {
         ResultData result = new ResultData();
         vouchers.setUsed(true);
         ResultData updateResponse = vouchersDao.updateVouchers(vouchers);

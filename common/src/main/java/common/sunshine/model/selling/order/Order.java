@@ -5,6 +5,7 @@ import common.sunshine.model.Entity;
 import common.sunshine.model.selling.agent.lite.Agent;
 import common.sunshine.model.selling.order.support.OrderStatus;
 import common.sunshine.model.selling.order.support.OrderType;
+import common.sunshine.model.selling.vouchers.Vouchers;
 
 import java.util.List;
 
@@ -20,6 +21,9 @@ public class Order extends Entity {
 
     /* 订单价格, 该价格为订单下所有OrderItem的总和 */
     private double price;
+    
+    /* 订单最终支付金额,该金额为price减去代金券的值*/
+    private double totalPrice;
 
     /* 订单类型, 购买订单和赠送订单 */
     private OrderType type;
@@ -29,6 +33,9 @@ public class Order extends Entity {
 
     /* 该订单下的订单项列表 */
     private List<OrderItem> orderItems;
+    
+    /* 该订单使用的代金券*/
+    private Vouchers vouchers;
 
     public Order() {
         super();
@@ -88,8 +95,24 @@ public class Order extends Entity {
     public void setPrice(double price) {
         this.price = price;
     }
+    
+    public Vouchers getVouchers() {
+		return vouchers;
+	}
 
-    @Override
+	public void setVouchers(Vouchers vouchers) {
+		this.vouchers = vouchers;
+	}
+	
+	public double getTotalPrice() {
+		return totalPrice;
+	}
+
+	public void setTotalPrice(double totalPrice) {
+		this.totalPrice = totalPrice;
+	}
+
+	@Override
     public String toString() {
         return JSONObject.toJSONString(this);
     }

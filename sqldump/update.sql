@@ -921,3 +921,10 @@ CREATE TABLE IF NOT EXISTS `selling`.`vouchers` (
 )
   ENGINE = InnoDB;
 
+ALTER TABLE `selling`.`order`
+ADD COLUMN `total_price` DOUBLE DEFAULT 0
+AFTER `order_price`;
+
+ALTER TABLE `selling`.`order`
+ADD COLUMN `vouchers_id` VARCHAR(20) DEFAULT NULL
+AFTER `agent_id`;

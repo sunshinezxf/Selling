@@ -22,7 +22,26 @@
     });
     
     $("#other_pay").click(function(){
-    	window.location = "${path.concat('/payment/bill/')}" + order_id;
+    	#if(!$vouchersUsed)
+    	if(typeof vouchers_id != "undefined" && vouchers_id != ""){
+	    	var url = "${path.concat('/order/usevouchers/')}" + order_id + "/" + vouchers_id;
+			$.getJSON(url, function(data){
+				if(data.responseCode != "RESPONSE_OK"){
+					window.location = "${path.concat('/payment/bill/')}" + order_id;
+					return;
+				}
+	    		if(data.description == "您需要重新登录"){
+	    			window.location="${path.concat('/agent/login')}"; 
+	    			return;
+	    		}
+	    		window.location = "${path.concat('/payment/bill/')}" + order_id;
+	    	});
+    	} else {
+    		window.location = "${path.concat('/payment/bill/')}" + order_id;
+    	}
+    	#else
+    		window.location = "${path.concat('/payment/bill/')}" + order_id;
+    	#end
     });
 
 </script>

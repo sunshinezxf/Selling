@@ -240,6 +240,19 @@ public class OrderServiceImpl implements OrderService {
         }
         return result;
     }
+    
+    @Override
+    public ResultData useVouchers(Order order){
+    	 ResultData result = new ResultData();
+         ResultData cancelResponse = orderDao.updateOrderLite(order);
+         result.setResponseCode(cancelResponse.getResponseCode());
+         if (cancelResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
+             result.setData(cancelResponse.getData());
+         } else {
+             result.setDescription(cancelResponse.getDescription());
+         }
+         return result;
+    }
 
     @Override
     public ResultData fetchOrder(Map<String, Object> condition, MobilePageParam param) {

@@ -14,6 +14,6 @@ public interface VouchersService {
 
     ResultData fetchVouchers(Map<String, Object> condition);
 
-    ResultData uesVouchers(Vouchers vouchers);
+    ResultData useVouchers(Vouchers vouchers);
 
 }
