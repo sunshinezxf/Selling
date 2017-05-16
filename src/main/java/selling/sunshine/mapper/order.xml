@@ -168,7 +168,7 @@
             <if test="price != null">
                 order_price = #{price},
             </if>
-            <if test="totalPrice != null">
+            <if test="totalPrice != null and totalPrice != 0">
                 total_price = #{totalPrice}
             </if>
         </set>
