@@ -133,6 +133,9 @@ public class BillController {
                 for (OrderItem orderItem : order.getOrderItems()) {
                     total_price_database += orderItem.getOrderItemPrice();
                 }
+                if(order.getVouchers() != null && order.getTotalPrice() != 0){
+                	total_price_database = order.getTotalPrice();
+                }
                 if (orderBill.getBillAmount() >= total_price_database) {
                     for (OrderItem orderItem : order.getOrderItems()) {
                         //判断是否是礼券

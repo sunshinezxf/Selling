@@ -21,6 +21,13 @@
                     <div class="weui_btn_area">
                     </div>
                 </div>
+                <article id="view_tuozhan_link" class="weui_article">
+			    		<label class="weui_cell weui_check_label">
+			                <div class="weui_cell_bd weui_cell_primary problock" style="text-align:center;">
+			                   <a href="http://mp.weixin.qq.com/s/qRg5fIm-BHQ5btSwsNZq7g">拓展活动送豪礼</a>
+			                </div>
+			            </label>
+			    </article>
             </div>
         </div>
         <div class="order_summary" id="order_summary" style="display:none">
@@ -94,6 +101,7 @@
 
     $("#add_order_btn").click(function () {
         if ($("#view_sum_btn").length > 0) {
+        	$("#view_tuozhan_link").remove();
             $("#view_sum_btn").remove();
         }
         isAdd = true;
