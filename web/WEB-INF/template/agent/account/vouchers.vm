@@ -12,33 +12,30 @@
             我的代金券
         </h1>
     </div>
-    <div class="bd weui_tab_bd">
-        <div class="weui_cells">
-        	#foreach($vouchers in $vouchersList)
-        		<div class="weui_panel weui_panel_access order_panel">
-	                <div class="weui_panel_hd col1">
-	                	#if(${vouchers.type} == "REGISTER")
-	                	 <h4 class="order_id">新注册奖励代金券</h4>
-	                	#else
-	                   	 <h4 class="order_id">拓展奖励代金券</h4>
-	                    #end
-	                </div>
-	                <div class="weui_panel_bd">
-	                    <div class="weui_media_box weui_media_text col2">
-	                        <h4 class="weui_media_title goods">领取时间:</h4>
-	                        <p class="weui_media_title quantity create_time">${vouchers.createAt}</p>
-	                    </div>
-	                </div>
-	                <div class="weui_panel_bd">
-	                    <div class="weui_media_box weui_media_text col2">
-	                        <h4 class="weui_media_title goods">金额:</h4>
-	
-	                        <p class="weui_media_title quantity">${vouchers.price}</p>
-	                    </div>
-	                </div>
-            	</div>
-        	#end
+    <div class="bd">
+        #foreach($vouchers in $vouchersList)
+    	<div class="weui_form_preview" style="margin-bottom: 1em">
+    	    <div class="weui_form_preview_hd">
+                <div class="weui_form_preview_item">
+                    #if(${vouchers.type} == "REGISTER")
+                    <label class="weui_form_preview_label" style="color:#000">新注册奖励代金券</label>
+                    #else
+                    <label class="weui_form_preview_label" style="color:#000">拓展奖励代金券</label>
+                    #end
+                </div>
+            </div>
+            <div class="weui_form_preview_bd">
+                <div class="weui_form_preview_item">
+                    <label class="weui_form_preview_label">领取时间</label>
+                    <span class="weui_form_preview_value create_time">${vouchers.createAt}</span>
+                </div>
+                <div class="weui_form_preview_item">
+                    <label class="weui_form_preview_label">代金券金额</label>
+                    <span class="weui_form_preview_value">${vouchers.price}</span>
+                </div>
+            </div>
         </div>
+        #end
     </div>
 </div>
 #parse("/agent/component/navigate.vm")
