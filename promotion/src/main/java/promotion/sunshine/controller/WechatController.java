@@ -89,10 +89,11 @@ public class WechatController {
             String input = WechatUtil.inputStream2String(stream);
             XStream content = XStreamFactory.init(false);
             content.alias("xml", InMessage.class);
+            logger.debug("input:" + input);
             final InMessage message = (InMessage) content.fromXML(input);
             HttpSession session = request.getSession();
             session.setAttribute("openId", message.getFromUserName());
-            logger.debug(JSONObject.toJSONString(message));
+            logger.debug("message: " + JSONObject.toJSONString(message));
             switch (message.getMsgType()) {
             	/*
             	 * event事件
@@ -590,8 +591,34 @@ public class WechatController {
                         WechatUtil.sendImageMessage(token, openId, picture);
                         return xml;
                     }
-
+                    if(message.getContent().contains("亲") || message.getContent().contains("在吗") || message.getContent().contains("有人吗") || message.getContent().contains("省") || message.getContent().contains("市") || message.getContent().contains("地址") || message.getContent().contains("你好") || message.getContent().contains("您好") || message.getContent().contains("晚上好") || message.getContent().contains("点赞") || message.getContent().contains("集赞") || message.getContent().contains("积攒") || message.getContent().contains("积赞") || message.getContent().contains("活动")) {
+                        String openId = message.getFromUserName();
+                        content.alias("xml", TextOutMessage.class);
+                        TextOutMessage result = new TextOutMessage();
+                        result.setFromUserName(message.getToUserName());
+                        result.setToUserName(message.getFromUserName());
+                        result.setCreateTime(new Date().getTime());
+                        result.setContent("您好，感谢您对我们活动的支持，公号后台只用作答疑，发给公号的截图无法参与活动。请将集赞截图发送给我们的健康大使，扫描下方二维码即可添加健康大使微信~直接添加，无需对方同意；目前参与活动人数较多，由于名额有限，健康大使会按顺序回复，收到他回复的『收到』即表示参与活动成功。感谢您的支持！");
+                        String xml = content.toXML(result);
+                        String token = WechatUtil.queryAccessToken();
+                        WechatUtil.sendImageMessage(token, openId, picture);
+                        return xml;
+                    }
                     break;
+                case "image":
+                    logger.debug("picture message");
+                    logger.debug("message content: " + JSON.toJSONString(message));
+                    String openId = message.getFromUserName();
+                    content.alias("xml", TextOutMessage.class);
+                    TextOutMessage result = new TextOutMessage();
+                    result.setFromUserName(message.getToUserName());
+                    result.setToUserName(message.getFromUserName());
+                    result.setCreateTime(new Date().getTime());
+                    result.setContent("您好，感谢您对我们活动的支持，公号后台只用作答疑，发给公号的截图无法参与活动。请将集赞截图发送给我们的健康大使，扫描下方二维码即可添加健康大使微信~直接添加，无需对方同意；目前参与活动人数较多，由于名额有限，健康大使会按顺序回复，收到他回复的『收到』即表示参与活动成功。感谢您的支持！");
+                    String xml = content.toXML(result);
+                    String token = WechatUtil.queryAccessToken();
+                    WechatUtil.sendImageMessage(token, openId, picture);
+                    return xml;
             }
         } catch (Exception e) {
             logger.error(e.getMessage());

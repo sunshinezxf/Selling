@@ -11,6 +11,9 @@ public class InMessage {
     private String Content;
     private long MsgId;
     private String Event;
+    private String PicUrl;
+    private String MediaId;
+    private String URL;
     private String EventKey;
 
     public InMessage() {
@@ -71,6 +74,30 @@ public class InMessage {
 
     public void setEvent(String event) {
         Event = event;
+    }
+
+    public String getPicUrl() {
+        return PicUrl;
+    }
+
+    public void setPicUrl(String picUrl) {
+        PicUrl = picUrl;
+    }
+
+    public String getMediaId() {
+        return MediaId;
+    }
+
+    public void setMediaId(String mediaId) {
+        MediaId = mediaId;
+    }
+
+    public String getURL() {
+        return URL;
+    }
+
+    public void setURL(String URL) {
+        this.URL = URL;
     }
 
     public String getEventKey() {
