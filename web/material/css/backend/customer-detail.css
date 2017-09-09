@@ -1,0 +1,13 @@
+#agent_div {
+  margin-left: 2em; }
+
+.floated_div {
+  position: relative;
+  zoom: 1; }
+
+.floated_div:after {
+  content: ".";
+  display: block;
+  clear: both;
+  visibility: hidden;
+  height: 0; }

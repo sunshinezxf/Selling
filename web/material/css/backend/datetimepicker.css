@@ -1,0 +1,11 @@
+.datetime_field {
+  padding-left: 3em !important; }
+  .datetime_field > .dateLabel {
+    width: 6em !important;
+    font-size: 1.1em !important; }
+
+.datetime_btn_field {
+  justify-content: center !important; }
+
+.flatpickr-input {
+  z-index: auto; }

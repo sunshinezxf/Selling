@@ -1,0 +1,5 @@
+#events_segment .ui.center.aligned.segment {
+  cursor: pointer; }
+
+#events_segment .ui.center.aligned.segment:hover {
+  background-color: #00B5AD !important; }

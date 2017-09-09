@@ -7,7 +7,7 @@ import java.util.Random;
  */
 public class IDGenerator {
     private static final Random seed = new Random();
-    private static final char[] code = {'z', 'x', 'f', 'w', 'i', 'l', 'l', 'l', 'o', 'v', 'e', 'f', 'y', 'y', 'f', 'o', 'e', 'v', 'e', 'r'};
+    private static final char[] code = {'z', 'x', 'f', 'w', 'i', 'l', 'l', 'l', 'o', 'v', 'e', 'f', 'y', 'y', 'f', 'o', 'e', 'v', 'e', 'r', 'h', 'a', 'n', 'g', 'u', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
 
     private static int num(int min, int max) {
         return min + seed.nextInt(max - min);

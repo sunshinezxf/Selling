@@ -579,7 +579,7 @@ public class IndentServiceImpl implements IndentService {
                 consumerNameCell.setCellValue(o.getCustomer().getName());
                 //设置顾客联系电话
                 Cell phoneCell = current.createCell(4);
-                phoneCell.setCellValue(customer.getPhone().getPhone());
+                phoneCell.setCellValue(StringUtils.isEmpty(customer.getPhone()) ? "无" : customer.getPhone().getPhone());
                 //设置顾客收货地址
                 Cell addressCell = current.createCell(5);
                 addressCell.setCellValue(o.getReceiveAddress());

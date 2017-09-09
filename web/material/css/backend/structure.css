@@ -1,0 +1,78 @@
+@media only screen and (min-width: 768px) {
+  #mobileTopMenu {
+    display: none; }
+  .ui.container {
+    width: 100%;
+    margin-left: 2em !important;
+    margin-right: 2em !important; }
+  .ui.accordion.menu .item .content.menu > .item {
+    margin-left: 2em; } }
+
+@media only screen and (max-width: 767px) {
+  #dashboard .full.height > .constant {
+    display: none; }
+  .ui.container {
+    width: 100% !important; } }
+
+body.pushable {
+  background: none !important; }
+
+.pushable > .pusher {
+  overflow: visible; }
+
+#dashboard > .pusher > .full.height {
+  background-color: #FFFFFF;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  margin-top: 71px; }
+
+#dashboard .full.height > .constant {
+  position: relative;
+  z-index: 1;
+  width: 182px;
+  background-color: #1b1c1d;
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 0 auto;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto; }
+
+#dashboard .full.height > .ui.main.container {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  min-width: 0px;
+  padding-bottom: 2em; }
+
+#sidebar {
+  background: #F0F0F0;
+  width: 182px;
+  top: 71px; }
+
+#mobileLogo {
+  font-family: STXingkai;
+  font-size: 1.4em;
+  font-weight: normal;
+  color: #16BCB4; }
+
+.ui.vertical.menu .item {
+  letter-spacing: .2em;
+  cursor: pointer; }
+
+.ui.vertical.menu .item i.icon.left {
+  float: left;
+  margin: 0 .5em 0 0; }
+
+.ui.accordion.menu .item .title > .dropdown.icon {
+  transform: rotate(0deg); }
+
+.ui.top.menu .header.item:before {
+  display: none; }
+
+.ui.pointing.label:before {
+  z-index: auto !important; }

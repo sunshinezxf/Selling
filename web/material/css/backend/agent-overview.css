@@ -1,0 +1,13 @@
+.ui.horizontal.statistic {
+  -webkit-box-align: baseline;
+  -ms-flex-align: baseline;
+  align-items: baseline; }
+
+.ui.segment > .ui.statistic {
+  margin-top: 0; }
+
+.agent_block {
+  cursor: pointer !important; }
+
+#check_block:hover, #register_block:hover, #purchase_block:hover, #total_block:hover {
+  background-color: #2185D0 !important; }

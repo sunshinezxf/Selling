@@ -836,10 +836,13 @@ public class AgentController {
                     CustomerPhone phone = ((List<CustomerPhone>) fetchResponse.getData()).get(0);
                     condition.clear();
                     condition.put("customerId", phone.getCustomer().getCustomerId());
-                    Customer customer = ((List<Customer>) customerService.fetchCustomer(condition).getData()).get(0);
-                    agent.setUpperAgent(customer.getAgent());
+                    CustomerVo vo = ((List<CustomerVo>) customerService.fetchCustomer(condition).getData()).get(0);
+                    Customer customer = new Customer();
+                    customer.setCustomerId(vo.getCustomerId());
                     customer.setTransformed(true);
-                    customerService.updateCustomer(customer);
+                    agent.setUpperAgent(vo.getAgent());
+                    ResultData response = customerService.updateCustomer(customer);
+                    logger.debug(JSON.toJSONString("update customer response: " + response));
                 }
             }
             ResultData createResponse = null;

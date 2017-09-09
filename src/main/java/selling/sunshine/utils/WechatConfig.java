@@ -25,7 +25,8 @@ public class WechatConfig {
         String jsapiTicket = getJsapiTicket();
         StringBuffer sb = new StringBuffer();
         sb.append("jsapi_ticket=").append(jsapiTicket).append("&noncestr=")
-                .append(nonceStr).append("&timestamp=").append(timestamp).append("&url=").append(url);
+                .append(nonceStr).append("&timestamp=").append(timestamp)
+                .append("&url=").append(url);
         try {
             MessageDigest crypt = MessageDigest.getInstance("SHA-1");
             crypt.reset();
