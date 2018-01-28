@@ -1,6 +1,8 @@
 package selling.sunshine.controller;
 
+import com.alibaba.fastjson.JSON;
 import common.sunshine.model.selling.agent.Agent;
+import common.sunshine.model.selling.agent.support.AgentType;
 import common.sunshine.model.selling.event.EventApplication;
 import common.sunshine.model.selling.event.support.ApplicationStatus;
 import common.sunshine.utils.ResponseCode;
@@ -15,8 +17,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import selling.sunshine.service.AgentService;
+import selling.sunshine.service.CustomerService;
 import selling.sunshine.service.EventService;
 import selling.sunshine.service.MessageService;
+import selling.sunshine.vo.customer.CustomerVo;
 
 import java.util.*;
 
@@ -38,8 +42,12 @@ public class MessageController {
     @Autowired
     private EventService eventService;
 
+    @Autowired
+    private CustomerService customerService;
+
     /**
      * 跳转到短信推送页面
+     *
      * @return
      */
     @RequestMapping(method = RequestMethod.GET, value = "/send")
@@ -49,8 +57,16 @@ public class MessageController {
         return view;
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/customer/send")
+    public ModelAndView message2customer() {
+        ModelAndView view = new ModelAndView();
+        view.setViewName("/backend/message/customer_send");
+        return view;
+    }
+
     /**
      * 发送短信给普通代理商
+     *
      * @param text
      * @return
      */
@@ -60,7 +76,7 @@ public class MessageController {
         Map<String, Object> condition = new HashMap<>();
         condition.put("granted", true);
         condition.put("blockFlag", false);
-        condition.put("agentType", 0);//只查询普通代理商
+        condition.put("agentType", AgentType.ORDINARY.getCode());//只查询普通代理商
         ResultData fetchResponse = agentService.fetchAgent(condition);
         if (fetchResponse.getResponseCode() == ResponseCode.RESPONSE_OK) {
             List<Agent> list = (List<Agent>) fetchResponse.getData();
@@ -73,7 +89,32 @@ public class MessageController {
     }
 
     /**
+     * 发送短信给客户
+     *
+     * @param text
+     * @return
+     */
+    @RequestMapping(method = RequestMethod.POST, value = "/customer/send")
+    public ResultData message2customer(String text) {
+        ResultData result = new ResultData();
+        Map<String, Object> condition = new HashMap<>();
+        condition.put("blockFlag", false);
+        ResultData response = customerService.fetchCustomer(condition);
+        if (response.getResponseCode() == ResponseCode.RESPONSE_OK) {
+            List<CustomerVo> list = (List<CustomerVo>) response.getData();
+            Set<String> mobile = new HashSet<>();
+            list.forEach(item -> mobile.add(item.getPhone()));
+            logger.debug("receiver: " + mobile.size() + ", detail: " + JSON.toJSONString(mobile));
+            logger.debug("message: " + text);
+            response = messageService.send(mobile, text + "【云草纲目】");
+            result.setResponseCode(response.getResponseCode());
+        }
+        return result;
+    }
+
+    /**
      * 测试发送短信
+     *
      * @param phone
      * @param text
      * @return
@@ -91,6 +132,7 @@ public class MessageController {
 
     /**
      * 根据type发送短信给gift event的活动申请者、活动被赠送者、两者都发
+     *
      * @param eventId
      * @param type
      * @param text
